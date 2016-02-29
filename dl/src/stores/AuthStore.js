@@ -1,33 +1,41 @@
 import alt from "alt-instance"
-import Immutable from "immutable"
+import { Map } from "immutable"
 import { rfc822Email } from "@graphene/wallet-client"
 import { extractSeed } from "@graphene/time-token"
 import { validation } from "@graphene/chain"
 import WalletDb from "stores/WalletDb"
 
+/** Additional instances */
+let instances = new Map()
+
 class AuthStore {
     
     constructor() {
-        const init = ()=> ({
+        this.init = ()=> ({
             password: "", confirm: "", password_error: null, auth_error: null,
             username: "", username_error: "",
             email: "", email_error: null,
-            valid: false
-        })
-        this.state = init()
-        this.clear = ()=>{
-            this.setState(init())
-            // this.defaultEmailFromToken()
-        }
-        this.exportPublicMethods({
+            valid: false,
+            
+            setup: this.setup.bind(this),
+            update: this.update.bind(this),
             defaults: this.defaults.bind(this),
             useEmailFromToken: this.useEmailFromToken.bind(this),
             login: this.login.bind(this),
             changePassword: this.changePassword.bind(this),
             verifyPassword: this.verifyPassword.bind(this),
-            setup: this.setup.bind(this),
-            update: this.update.bind(this),
-            clear: this.clear.bind(this),
+            clear: ()=> this.clear(),
+        })
+        this.clear = ()=> this.setState(this.init())
+        this.state = this.init()
+        
+        this.instance = name => (
+            instances = instances
+            // By `name`, create new or return prior alt store
+            .update(name, store => store ? store : alt.createStore(AuthStore, name + "AuthStore"))
+        ).get(name)
+        this.exportPublicMethods({
+            instance: this.instance.bind(this),
         })
     }
     
@@ -142,7 +150,8 @@ class AuthStore {
             return
         }
         
-        var password_error
+        var password_error = null
+        
         // Don't report until typing begins
         if(password.length !== 0 && password.length < 8)
             password_error = "password_length"
@@ -168,5 +177,5 @@ function emailFromToken() {
     }
 }
 
-export var AuthStoreWrapped = alt.createStore(AuthStore, "AuthStore");
-export default AuthStoreWrapped
+export default alt.createStore(AuthStore, "AuthStore")
+

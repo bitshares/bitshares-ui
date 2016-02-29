@@ -13,7 +13,7 @@ export default class Alt extends Component {
     render() {
         return (
             <AltContainer stores={{ auth: AuthStore }}>
-                <VerifyPassword  {...this.props}/>
+                <VerifyPassword {...this.props} />
             </AltContainer>
         )
     }
@@ -29,23 +29,23 @@ class VerifyPassword extends Component {
         super()
         this.init = ()=> ({
             verified: false,
-            password_input_reset: Date.now(),
         })
         this.state = this.init()
     }
     
     componentWillUnmount() {
         this.setState(this.init())
+        this.props.auth.clear()
     }
     
     render() {
-        if(this.state.verified) return <span>{this.props.children}</span>
+        if(this.state.verified) return <span>{ this.props.children }</span>
         // let { wallet } = WalletDb.getWallet()
         // console.log('wallet.storage.get("weak_password")', wallet.storage.get("weak_password"))
         return <span>
             <label><Translate content="wallet.existing_password"/></label>
             <form onSubmit={this.onPassword.bind(this)}>
-                <AuthInput hasConfirmation={false} key={this.state.password_input_reset}/>
+                <AuthInput auth={this.props.auth} hasConfirmation={false}/>
             </form>
             <span className={cname("button", "success", {disabled: !this.props.auth.valid})}
                 onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
@@ -56,7 +56,7 @@ class VerifyPassword extends Component {
         e.preventDefault()
         e.stopPropagation()
         if( ! this.props.auth.valid) return
-        if(AuthStore.verifyPassword()) {
+        if(this.props.auth.verifyPassword()) {
             this.setState({ verified: true, password_input_reset: Date.now() })
             if(this.props.onValid)
                 this.props.onValid()

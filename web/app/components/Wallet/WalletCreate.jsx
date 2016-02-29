@@ -64,6 +64,10 @@ class CreateNewWallet extends Component {
         }
     }
     
+    componentWillMount() {
+        this.validate()
+    }
+    
     render() {
         let state = this.state
         let errors = state.errors
@@ -77,7 +81,6 @@ class CreateNewWallet extends Component {
                     className="button success"><Translate content="wallet.done" /></span>
             </div>
         }
-        
         return (<span>
             {this.props.hideTitle ? null:
                 <h3><Translate content="wallet.create_wallet" /></h3>}
@@ -86,9 +89,9 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <AuthInput hasConfirm={true} hasEmail={false} hasUsername={false} />
+                <AuthInput auth={this.props.auth} hasConfirm={true} hasEmail={false} hasUsername={false} />
                 { has_wallet ? (
-                    <div className="grid-content no-overflow">
+                    <div className=" no-overflow">
                         <br/>
                         <label><Translate content="wallet.name" /></label>
                         <input type="text" id="wallet_public_name"
@@ -97,7 +100,7 @@ class CreateNewWallet extends Component {
                         <div className="has-error">{errors.wallet_public_name}</div>
                         <br/>
                     </div>) : null}
-                <div className="grid-content no-overflow">
+                <div className=" no-overflow">
                     { this.state.custom_brainkey ? <div>
                         <label><Translate content="wallet.brainkey" /></label>
                         <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
@@ -105,7 +108,7 @@ class CreateNewWallet extends Component {
                         <br/>(Use a backup file instead)
                         <br/>&nbsp;
                     </div>:null}
-                    <button className={cname("button",{disabled: !(this.state.isValid && this.props.auth.valid) })}>
+                    <button className={cname("button",{disabled: ! (this.state.isValid && this.props.auth.valid) })}>
                         <Translate content="wallet.create_wallet" /></button>
                     <button className="button secondary" onClick={this.onBack.bind(this)}>
                         <Translate content="wallet.cancel" /> </button>
@@ -129,9 +132,7 @@ class CreateNewWallet extends Component {
     }
     
     onBrainkey(brnkey) {
-        this.state.brnkey = brnkey
-        this.setState({ brnkey })
-        this.validate()
+        this.setState({ brnkey }, ()=> this.validate())
     }
     
     validate() {
@@ -142,10 +143,11 @@ class CreateNewWallet extends Component {
             wallet_names.has(state.wallet_public_name) ?
             `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name` :
             null
+
+        var isValid = errors.wallet_public_name == null && state.wallet_public_name != ""
+        if(state.custom_brainkey && isValid)
+            isValid = state.brnkey != null
         
-        var isValid = errors.wallet_public_name === null && this.props.auth.valid !== null
-        if(this.state.custom_brainkey && isValid)
-            isValid = this.state.brnkey !== null
         this.setState({ isValid, errors })
     }
 
@@ -170,8 +172,7 @@ class CreateNewWallet extends Component {
         // Set state is updated directly because validate is going to 
         // require a merge of new and old state
         this.state[key_id] = value
-        this.setState(this.state)
-        this.validate()
+        this.setState(this.state, ()=> this.validate())
     }
     
     onDone() {

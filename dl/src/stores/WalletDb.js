@@ -51,7 +51,7 @@ class WalletDb extends BaseStore {
     
     constructor() {
         super()
-        
+        this.legacy_wallet_names = Set()
         this.state = {
             saving_keys: false,
             current_wallet: undefined,
@@ -555,6 +555,7 @@ class WalletDb extends BaseStore {
 }
 
 export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
+// WalletDbWrapped.instance = WalletDb
 export default WalletDbWrapped
 
 function reject(error) {

@@ -45,11 +45,11 @@ export default class BrainkeyInput extends Component {
             }
         }
         return (
-            <span className="">
-                <div style={{width: '400px'}}>
-                    <textarea onChange={this.formChange.bind(this)}
-                        value={this.state.brnkey} id="brnkey"
-                        style={{width: '400px', height:'80px'}} />
+            <div style={{width: '400px'}}>
+                <textarea onChange={this.formChange.bind(this)}
+                    value={this.state.brnkey} id="brnkey"
+                    style={{width: '400px', height:'80px'}} />
+                <span className="grid-content">
                     <div className="grid-block">{ checked_words }</div>
                     { this.state.check_digits && ! this.props.hideCheckDigits ? <div>
                         <br/>
@@ -57,12 +57,13 @@ export default class BrainkeyInput extends Component {
                         <br/>
                     </div>:null}
                     <p><i className={cname({error: warn})}>{ word_count_label }</i></p>
-                </div>
-            </span>
+                </span>
+            </div>
         )
     }
 
     formChange(event) {
+        event.stopPropagation()// don't let a parent form onChange event receive the brainkey, instead use this.props.onChange
         var {id, value} = event.target
         var state = {}
         state[id] = value

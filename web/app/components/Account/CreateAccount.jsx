@@ -6,6 +6,7 @@ import AccountStore from "stores/AccountStore";
 import AuthStore from "stores/AuthStore";
 import AccountNameInput from "../Forms/AccountNameInput";
 import AuthInput from "./../Forms/AuthInput";
+import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router";
@@ -232,7 +233,9 @@ class CreateAccount extends React.Component {
                                 {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <AuthInput hasConfirm={WalletDb.isEmpty()} hasUsername={false} hasEmail={false} focus={false}/>
+                                    <AltContainer stores={{ auth: AuthStore }}>
+                                        <AuthInput hasConfirm={WalletDb.isEmpty()} hasUsername={false} hasEmail={false} focus={false}/>
+                                    </AltContainer>
                                 }
                                 {
                                     first_account ? null : (

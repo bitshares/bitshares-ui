@@ -33,6 +33,7 @@ class WalletChangePassword extends Component {
     
     componentWillUnmount() {
         this.setState(this.init())
+        this.props.auth.clear()
     }
     
     render() {
@@ -45,7 +46,7 @@ class WalletChangePassword extends Component {
             <h3><Translate content="wallet.change_password"/></h3>
             <VerifyPassword>
                 <form onSubmit={this.onAccept.bind(this)}>
-                    <AuthInput hasConfirm={true}/>
+                    <AuthInput auth={this.props.auth} hasConfirm={true}/>
                 </form>
                 {this.state.loading ? <div className="center-content"><LoadingIndicator type="circle"/><br/></div>:null}
                 <div className={cname("button success", {disabled: ! this.props.auth.valid || this.state.loading })}

@@ -2,22 +2,27 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import Translate from "react-translate-component";
-import connectToStores from "alt/utils/connectToStores"
+// import connectToStores from "alt/utils/connectToStores"
 import cname from "classnames"
 
 import AccountSelector from "../Account/AccountSelector"
-import AuthStore from "stores/AuthStore"
+// import AuthStore from "stores/AuthStore"
+import WalletDb from "stores/WalletDb"
 
-let tabIndex = 2 // AccountCreate -> AccountNameInput  is 1
+let tabIndex = 2 // AccountCreate -> AccountNameInput is 1
 
-@connectToStores
+// connectToStores
 export default class AuthInput extends Component {
     
     static propTypes = {
         
+        // Properties from AuthStore.getState()
+        // auth: PropTypes.object.isRequired,
+        
         email: PropTypes.string,
         username: PropTypes.string,
         password: PropTypes.string,
+        confirm: PropTypes.string,
         
         // Called with frequently with `null` (invalid) or fully validated data: { email, username, password }.  Use this to enable or disable the submit button and to capture the latest values. 
         onValid: PropTypes.func,
@@ -48,44 +53,50 @@ export default class AuthInput extends Component {
         weak: true, // support local only wallets by default..
         hasPassword: true,
         hasConfirm: false,
-        hasUsername: true,
-        hasEmail: true,
+        // hasUsername: true,
+        // hasEmail: true,
         focus: true,
         authError: false,
     }
     
-    static getStores() {
-        return [AuthStore]
-    }
-    
-    static getPropsFromStores() {
-        return AuthStore.getState()
-    }
-    
-    // componentWillMount() {
-    //     
+    // static getStores() {
+    //     return [AuthStore]
+    // }
+    // 
+    // static getPropsFromStores() {
+    //     return AuthStore.getState()
     // }
     
     componentDidMount() {
         if( this.props.focus ) this.focus()
-        // AuthStore.defaultEmailFromToken()
     }
     
-    // componentWillReceiveProps(nextProps) {
-    //     let { hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
-    //     AuthStore.setup({ hasPassword, hasConfirm, hasUsername, hasEmail })
-    // }
-    
     render() {
+        // Simply turining email and username on does not "require" them... Weak = false will make those required.
         let { weak, hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
-        AuthStore.setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail })
+        if( weak == false ) {
+            hasEmail = true
+            hasUsername = true
+        }
+        if( hasEmail === undefined || hasUsername === undefined) {
+            let { wallet } = WalletDb.getState()
+            if( wallet && wallet.storage.state.has("weak_password")) {
+                let weak_wallet = wallet.storage.state.get("weak_password")
+                if(hasEmail === undefined)
+                    hasEmail = ! weak_wallet
+                
+                if(hasUsername === undefined)
+                    hasUsername = ! weak_wallet
+            }
+        }
+        this.props.auth.setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail })
         return (
             <div>
-                { this.props.hasPassword ? this.passwordForm(this.props) : null } <br/>
-                { this.props.hasEmail ? this.emailForm(this.props) : null}
-                { this.props.hasUsername ? this.usernameForm(this.props) : null}
+                { this.props.hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
+                { this.props.hasEmail ? this.emailForm(this.props.auth) : null}
+                { this.props.hasUsername ? this.usernameForm(this.props.auth) : null}
                 <p className="has-error">
-                    <Translate content={ this.props.auth_error ? "wallet.invalid_auth" : null }/>
+                    <Translate content={ this.props.auth.auth_error ? "wallet.invalid_auth" : null }/>
                 </p>
             </div>
         );
@@ -104,8 +115,8 @@ export default class AuthInput extends Component {
     
     passwordForm({password, confirm, password_valid, password_error}) {
         
-        let passwordChange = event => AuthStore.update({ password: event.target.value })
-        let confirmChange = event => AuthStore.update({ confirm: event.target.value })
+        let passwordChange = event => this.props.auth.update({ password: event.target.value })
+        let confirmChange = event => this.props.auth.update({ confirm: event.target.value })
         
         // "grid-content", "no-overflow", 
         return <div className={cname("form-group", "no-margin", {"has-error": password_error != null })}>
@@ -130,42 +141,31 @@ export default class AuthInput extends Component {
     }
     
     emailForm({ email }) {
-        let emailChange = event => AuthStore.update({ email: event.target.value })
+        let emailChange = event => this.props.auth.update({ email: event.target.value })
         return <div className={cname("form-group", "no-margin", {"has-error": false})}>
             <div>
                 <Translate component="label" content="wallet.email" />
                 <input id="email" type="text" value={email} onChange={emailChange.bind(this)} autoComplete="on" tabIndex={tabIndex++} ref="auth_email"/>
             </div>
-            { this.props.email_valid ? null :
+            { this.props.auth.email_valid ? null :
             <p className="has-error">
-                <Translate content={this.props.email_error}/>
+                <Translate content={this.props.auth.email_error}/>
             </p>}
         </div>
     }
 
     usernameForm({ username }) {
-        let userChange = event => AuthStore.update({ username: event.target.value })
+        let userChange = event => this.props.auth.update({ username: event.target.value })
         return <div className={cname("form-group", "no-margin", {"has-error": false})}>
             <div>
                 <Translate component="label" content="account.name" />
                 <input id="username" type="text" value={username} onChange={userChange.bind(this)} autoComplete="on" tabIndex={tabIndex++} ref="auth_username"/>
             </div>
-            { this.props.username_valid ? null :
+            { this.props.auth.username_valid ? null :
             <p className="has-error">
-                <Translate content={this.props.username_error}/>
+                <Translate content={this.props.auth.username_error}/>
             </p>}
         </div>
     }
     
 }
-
-// import AltContainer from "alt-container"
-// export default class Atl extends Component {
-//     render() {
-//         return (
-//             <AltContainer store={AuthStore}>
-//                 <AuthInput/>
-//             </AltContainer>
-//         )
-//     }
-// }

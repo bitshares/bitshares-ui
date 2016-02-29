@@ -251,7 +251,8 @@ export default class WalletStorage {
         let dt = new Date().toISOString()
         let init = ()=> {
             // Provide default values (don't over-write)
-            let defaults = { chain_id, created: dt, last_modified: dt, weak_password }
+            let defaults = { chain_id, created: dt, last_modified: dt }
+            this.storage.setState({ weak_password })
             let wallet_object = Map(defaults).merge(this.wallet_object)
             // console.log("WalletStorage("+this.instance+") login defaults " + (wallet_object !== this.wallet_object ? "added" : "not added") ) // debug
             this.wallet_object = wallet_object
@@ -453,8 +454,8 @@ export default class WalletStorage {
         
         this.wallet_object = this.wallet_object.merge({
             last_modified: new Date().toISOString(),
-            weak_password
         })
+        this.storage.setState({ weak_password })
         
         return new Promise( (resolve, reject) => {
             encrypt(this.wallet_object, new_public_key).then( encrypted_data => {

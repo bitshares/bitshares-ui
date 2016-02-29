@@ -22,7 +22,7 @@ export default class Atl extends React.Component {
     render() {
         return (
             <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore }}>
-                <WalletUnlockModal {...this.props}/>
+                <WalletUnlockModal />
             </AltContainer>
         )
     }
@@ -42,13 +42,12 @@ class WalletUnlockModal extends React.Component {
     
     _getInitialState() {
         return {
-            authInput_reset: Date.now(),
             working: false
         }
     }
     
     reset() {
-        AuthStore.clear()
+        this.props.auth.clear()
         this.setState(this._getInitialState())
     }
 
@@ -65,7 +64,7 @@ class WalletUnlockModal extends React.Component {
                         this.props.unlock.resolve()
                 }
                 WalletUnlockActions.cancel()// Warning, cancel() triggers another update from WalletUnlockStore
-                AuthStore.clear()
+                this.props.auth.clear()
                 this.open = false
             } //else if (msg === "open") { }
         })
@@ -86,16 +85,19 @@ class WalletUnlockModal extends React.Component {
     onPasswordEnter(e) {
         e.preventDefault()
         e.stopPropagation()
-        this.setState({working: true}, ()=>
-            AuthStore.login().then(()=>{
-                AuthStore.clear()
+        this.setState({working: true}, ()=>// setTimeout( ()=>
+            this.props.auth.login().then(()=>{
+                this.props.auth.clear()
                 ZfApi.publish(this.props.modalId, "close")
                 this.props.unlock.resolve()
                 WalletUnlockActions.change()
-                this.setState({authInput_reset: Date.now(), working: false})
+                this.setState({ working: false})
             })
-            .catch( error =>{ this.setState({ working: false }) })
-        )
+            .catch( error =>{
+                console.error(error);
+                this.setState({ working: false })
+            })
+        )//, 200)
     }
     
     render() {
@@ -103,7 +105,7 @@ class WalletUnlockModal extends React.Component {
         let unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
 
         // Modal overlayClose must be false pending a fix that allows us to detect
-        // this event and clear the password (via AuthStore.clear())
+        // this event and clear the password (via this.props.auth.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
         return ( 
             // U N L O C K
@@ -116,7 +118,9 @@ class WalletUnlockModal extends React.Component {
                 
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     
-                    <AuthInput key={this.state.authInput_reset} hasConfirm={false} />
+                    <AltContainer stores={{ auth: AuthStore }}>
+                        <AuthInput hasConfirm={false} />
+                    </AltContainer>
                     
                     <div className="button-group">
                         <button 

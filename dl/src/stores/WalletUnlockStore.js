@@ -45,7 +45,11 @@ class WalletUnlockStore {
             resolve()
             return
         }
-        WalletDb.logout()
+        try {
+            WalletDb.logout()
+        } catch(error) {
+            console.error(error);
+        }
         this.setState({resolve:null, reject:null, locked: WalletDb.isLocked()})
         resolve()
     }
