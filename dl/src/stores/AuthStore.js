@@ -102,7 +102,7 @@ class AuthStore {
         const check_email = this.checkEmail(new_state)
         const check_username = this.checkUsername(new_state)
         const check_password = this.checkPassword(new_state)
-        
+
         this.setState({
             ...state,
             ...check_email,
@@ -118,7 +118,7 @@ class AuthStore {
     checkEmail({ email }) {
         if( ! this.config.hasEmail || (email === "" && this.config.weak)) {
             this.setState({ email_valid: true, email_error: null })
-            return
+            return { email_valid: true, email_error: null }
         }
         let email_valid = rfc822Email(this.state.email)
         let email_error = email.length > 0 ?
@@ -130,7 +130,7 @@ class AuthStore {
     checkUsername({ username }) {
         if( ! this.config.hasUsername || (username === ""  && this.config.weak)) {
             this.setState({ username_valid: true, username_error: null })
-            return
+            return { username_valid: true, username_error: null }
         }
         let username_valid = validation.is_account_name(username)
         let username_error = username.length > 0 ?
@@ -151,7 +151,7 @@ class AuthStore {
         }
         
         var password_error = null
-        
+
         // Don't report until typing begins
         if(password.length !== 0 && password.length < 8)
             password_error = "password_length"
