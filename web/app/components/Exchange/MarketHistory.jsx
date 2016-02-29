@@ -31,7 +31,7 @@ class MarketHistory extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.viewSettings.get("historyTab") || "history"
+            activeTab: props.viewSettings.get("historyTab", "history")
         }
     }
 

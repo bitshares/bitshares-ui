@@ -27,8 +27,8 @@ class OrderBookRowVertical extends React.Component {
 
         return (
             <tr key={order.price_full} onClick={this.props.onClick} className={classnames({"final-row": final})}>
-                <td>{utils.format_number(order.value, base.get("precision") - 1)}</td>
-                <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
+                <td>{utils.format_number(order.value, base.get("precision"))}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
@@ -56,9 +56,9 @@ class OrderBookRowHorizontal extends React.Component {
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
-                <td>{utils.format_number(order.amount, quote.get("precision") - 2)}</td>
-                <td>{utils.format_number(order.value, base.get("precision") - 2)}</td>
-                <td>{utils.format_number(order.totalValue, base.get("precision") - 2)}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
+                <td>{utils.format_number(order.value, base.get("precision"))}</td>
+                <td>{utils.format_number(order.totalValue, base.get("precision"))}</td>
 
             </tr>
         )
