@@ -707,8 +707,10 @@
     wallet: {
         title: "Wallet",
         email: "Email",
+        username: "Username",
         confirm_email: "Confirm Email",
         email_token: "Email a token",
+        enable_remote_copy: "Enable remote copy",
         invalid_auth: "Incorrect authentication",
         local_backup: "Local Backup",
         server_backup: "Server Backup",

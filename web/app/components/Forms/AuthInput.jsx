@@ -92,9 +92,9 @@ export default class AuthInput extends Component {
         this.props.auth.setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail })
         return (
             <div>
-                { this.props.hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
-                { this.props.hasEmail ? this.emailForm(this.props.auth) : null}
-                { this.props.hasUsername ? this.usernameForm(this.props.auth) : null}
+                { hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
+                { hasEmail ? this.emailForm(this.props.auth) : null}
+                { hasUsername ? this.usernameForm(this.props.auth) : null}
                 <p className="has-error">
                     <Translate content={ this.props.auth.auth_error ? "wallet.invalid_auth" : null }/>
                 </p>
@@ -158,7 +158,7 @@ export default class AuthInput extends Component {
         let userChange = event => this.props.auth.update({ username: event.target.value })
         return <div className={cname("form-group", "no-margin", {"has-error": false})}>
             <div>
-                <Translate component="label" content="account.name" />
+                <Translate component="label" content="wallet.username" />
                 <input id="username" type="text" value={username} onChange={userChange.bind(this)} autoComplete="on" tabIndex={tabIndex++} ref="auth_username"/>
             </div>
             { this.props.auth.username_valid ? null :

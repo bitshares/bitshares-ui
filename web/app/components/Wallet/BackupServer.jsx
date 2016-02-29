@@ -13,6 +13,7 @@ import BackupServerStore from "stores/BackupServerStore"
 import { extractSeed } from "@graphene/time-token"
 import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
+import LoadingIndicator from "components/LoadingIndicator"
 
 global.tabIndex = global.tabIndex || 0
 
@@ -30,12 +31,17 @@ export default class Atl extends Component {
 
 class BackupServer extends Component {
     
-    componentWillReceiveProps(nextProps) {
-        // if( ! WalletDb.isLocked()) {
-        //     this.props.auth.defaults()// <- pickup username from account creation
-        //     this.props.auth.useEmailFromToken()// email change or the 1st email
-        // }
+    constructor() {
+        super()
+        this.state = { busy: false }
     }
+    
+    componentWillMount() {
+        this.props.auth.defaults()// <- pickup username from account creation
+        this.props.auth.useEmailFromToken()// email change or the 1st email
+    }
+    
+    // componentWillReceiveProps(nextProps) { }
     
     componentWillUnmount() {
         this.props.auth.clear()
@@ -51,34 +57,46 @@ class BackupServer extends Component {
     }
     
     render_unlocked() {
-        const requestCode = ()=> this.props.wallet_store.wallet.api.requestCode(this.props.auth.email)
+        let wallet = this.props.wallet_store.wallet
+        const requestCode = ()=> wallet.api.requestCode(this.props.auth.email)
+        const weak_password = <div>
+            {this.props.auth.email_verified ? <div>
+                
+                <p>You <b>must</b> remember this information.  This will be<br/>your new password.  Please write it down.</p>
+                    
+                <AuthInput auth={this.props.auth} weak={false} />
+                
+                {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                <button className="button" className={ cname({disabled: ! this.state.busy}) }  onClick={this.changePassword.bind(this)}><Translate content="i_agree"/></button>
+                
+            </div>
+            :
+                <div>
+                    <AuthInput auth={this.props.auth} hasPassword={false} hasUsername={false} hasEmail={true} />
+                    <button 
+                        className={cname("button", {disabled: ! this.props.auth.email_valid}) }
+                        onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
+                    </button>
+                </div>
+            }
+        </div>
+        
+        const enable_remote_copy = evt => // toggle
+            wallet.keepRemoteCopy( ! wallet.storage.state.get("remote_copy"))
+        
         return (
             <div className="grid-block vertical medium-horizontal">
                 <div className="grid-content full-width-content no-overflow">
+                    
                     <h4>Enable Server Backups</h4>
+                    
+                    {wallet.storage.state.get("weak_password") === false ?  <div>
                         
-                    {this.props.auth.email_verified ? <div>
+                        <label><Translate content="wallet.enable_remote_copy"/></label>
+                        <input type="checkbox" checked={wallet.storage.state.get("remote_copy")}
+                            onClick={enable_remote_copy.bind(this)} />
                         
-                        <p>You <b>MUST</b> remember this information to unlock or recover your wallet.  Write it down, this information can not be recovered.  In the future, if you loose access to your email account you can still retrieve this wallet by complete this form.</p>
-                            
-                        <AltContainer stores={{ auth: BackupAuthStore }}>
-                            <AuthInput weak={false} />
-                        </AltContainer>
-                        
-                        <button className="button" onClick={this.changePassword.bind(this)}><Translate content="i_agree"/></button>
-                        
-                    </div>
-                    :
-                        <div>
-                            <AltContainer stores={{ auth: BackupAuthStore }}>
-                                <AuthInput hasPassword={false} hasUsername={false} hasEmail={true} />
-                            </AltContainer>
-                            <button 
-                                className={cname("button", {disabled: ! this.props.auth.email_valid}) }
-                                onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
-                            </button>
-                        </div>
-                    }
+                    </div> : weak_password }
                 </div>
                 <br/>
                 <br/>
@@ -91,7 +109,10 @@ class BackupServer extends Component {
     
     
     changePassword() {
-        //this.props.auth.getState().password
+        this.setState({ busy: true }), ()=>(
+            this.props.auth.changePassword()
+            .then(()=> this.setState({ busy: false }) )
+        )
     }
     
     emailForm() {
@@ -123,8 +144,9 @@ export function readBackupToken(nextState, replaceState) {
         console.error("BackupServer\tERROR Token parameter but their is no wallet");
     
     wallet.keepRemoteCopy(null/*Leave remote copy (yes, no) unchanged*/, token)
-    // let email = extractSeed(token)
-    // wallet.storage.setState({ email })
+    let auth = BackupAuthStore.getState()
+    auth.defaults()
+    auth.useEmailFromToken()
 }
 
 // class BackupStatus extends Component {
