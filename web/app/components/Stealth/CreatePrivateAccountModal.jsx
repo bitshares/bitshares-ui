@@ -10,7 +10,7 @@ class CreatePrivateAccountModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {label: "", key: null};
+        this.state = {label: null, key: null};
         this._onCreateClick = this._onCreateClick.bind(this);
         this._onLabelChange = this._onLabelChange.bind(this);
         this._onKeyChange = this._onKeyChange.bind(this);
@@ -23,9 +23,9 @@ class CreatePrivateAccountModal extends React.Component {
     }
 
     _onCreateClick() {
-        console.log("-- CreatePrivateAccountModal._onCreateClick -->");
+        const label = this.state.label.slice(1);
         try {
-            AccountActions.addPrivateAccount(this.state.label);
+            AccountActions.addPrivateAccount(label);
         }
         catch (error) {
             alert(error);
@@ -35,12 +35,10 @@ class CreatePrivateAccountModal extends React.Component {
 
     _onLabelChange({value}) {
         if (!value) return;
-        console.log("-- CreatePrivateAccountModal._onLabelChange -->", value);
         this.setState({label: value});
     }
 
     _onKeyChange(key) {
-        console.log("-- CreatePrivateAccountModal._onKeyChange -->", key);
         this.setState({key});
     }
 
@@ -57,6 +55,7 @@ class CreatePrivateAccountModal extends React.Component {
                     <AccountNameInput ref="label" cheapNameOnly={false}
                         onChange={this._onLabelChange}
                         accountShouldNotExist={false}
+                        prefixSymbol="~"
                         labelMode
                     />
                 </div>

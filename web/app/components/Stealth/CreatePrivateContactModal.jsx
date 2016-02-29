@@ -25,19 +25,17 @@ class CreatePrivateContactModal extends React.Component {
     }
 
     _onCreateClick() {
-        console.log("-- CreatePrivateContactModal._onCreateClick -->");
-        AccountActions.addPrivateContact(this.state.label, this.state.public_key);
+        const label = this.state.label.slice(1);
+        AccountActions.addPrivateContact(label, this.state.public_key);
         ZfApi.publish("add_private_contact_modal", "close");
     }
 
     _onLabelChange({value}) {
         if (!value) return;
-        console.log("-- CreatePrivateAccountModal._onLabelChange -->", value);
         this.setState({ label: value });
     }
 
     _onKeyChange({ private_key, public_key }) {
-        console.log("-- CreatePrivateContactModal._onPayFromChange -->", public_key);
         this.setState({ public_key });
     }
 
@@ -53,6 +51,7 @@ class CreatePrivateContactModal extends React.Component {
                     <AccountNameInput ref="label" cheapNameOnly={false}
                         onChange={this._onLabelChange}
                         accountShouldNotExist={false}
+                        prefixSymbol="~"
                         labelMode
                     />
                 </div>

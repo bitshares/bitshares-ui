@@ -69,10 +69,10 @@ export function is_account_name_error(value, allow_too_short) {
     ref = value.split('.');
     for (i = 0, len = ref.length; i < len; i++) {
         label = ref[i];
-        if (!/^[a-z]/.test(label)) {
+        if (!/^[~a-z]/.test(label)) {
             return suffix + "start with a letter.";
         }
-        if (!/^[a-z0-9-]*$/.test(label)) {
+        if (!/^[~a-z0-9-]*$/.test(label)) {
             return suffix + "have only letters, digits, or dashes.";
         }
         if (/--/.test(label)) {

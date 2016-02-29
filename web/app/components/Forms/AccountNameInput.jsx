@@ -21,14 +21,13 @@ class AccountNameInput extends BaseComponent {
         accountShouldNotExist: PropTypes.bool,
         cheapNameOnly: PropTypes.bool,
         labelMode: PropTypes.bool,
-        focus: PropTypes.bool
+        focus: PropTypes.bool,
+        prefixSymbol: PropTypes.string
     };
 
     constructor(props) {
         super(props, AccountStore);
-        this.state.value = null;
-        this.state.error = null;
-        this.state.existing_account = false;
+        this.state = {value: null, error: null, existing_account: null, account_name: props.prefixSymbol};
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
     }
@@ -59,7 +58,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     clear() {
-        this.setState({ account_name: null, error: null, warning: null });
+        this.setState({ account_name: this.props.prefixSymbol, error: null, warning: null });
     }
 
     focus() {
@@ -109,10 +108,12 @@ class AccountNameInput extends BaseComponent {
         e.preventDefault();
         e.stopPropagation();
         // Simplify the rules (prevent typing of invalid characters)
-        var account_name = e.target.value.toLowerCase()
-        account_name = account_name.match(/[a-z0-9\.-]+/)
-        account_name = account_name ? account_name[0] : null
-        this.setState({ account_name })
+        var account_name = e.target.value.toLowerCase();
+        console.log("-- AccountNameInput.handleChange -->", account_name, this.state.account_name);
+        if (account_name.length === 0 && this.state.account_name.length === 1 && this.state.account_name[0] === this.props.prefixSymbol) return;
+        account_name = account_name.match(/[~a-z0-9\.-]+/);
+        account_name = account_name ? account_name[0] : null;
+        this.setState({ account_name });
         this.validateAccountName(account_name);
     }
 

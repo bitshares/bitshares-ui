@@ -353,8 +353,6 @@ class Transfer extends React.Component {
         accountsList = accountsList.add(from_account);
         let tabIndex = 1;
 
-        console.log("-- Transfer.render -->", this.props.wallet_locked);
-
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
             <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>

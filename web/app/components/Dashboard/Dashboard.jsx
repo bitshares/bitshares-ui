@@ -19,6 +19,7 @@ import ReceiveFundsModal from "../Stealth/ReceiveFundsModal";
 import PubKey from "../Utility/PubKey";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import {Link} from "react-router";
 
 class Dashboard extends React.Component {
 
@@ -178,7 +179,9 @@ class Dashboard extends React.Component {
                             {
                                 private_accounts.filter(name => name.indexOf(df) !== -1).map(name => {
                                     return (<tr key={name}>
-                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td ref={"$name$" + name}>
+                                            <Link to={`/transfer/?from=~${name}`}><span className="name-prefix">~</span>{name}</Link>
+                                            <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
                                         <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name)}/></td>
                                     </tr>);
                                 })
