@@ -56,10 +56,14 @@ class RecentTransactions extends React.Component {
     }
 
     componentDidMount() {
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.initialize(t);
+        if (!this.props.fullHeight) {
+            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            ps.initialize(t);
 
-        this._setHeaderHeight();
+            this._setHeaderHeight();
+
+        }
+
     }
 
     _setHeaderHeight() {
@@ -102,10 +106,14 @@ class RecentTransactions extends React.Component {
             saveAs(blob, "btshist-" + today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate() + ".csv");
         }
 
-        let t = ReactDOM.findDOMNode(this.refs.transactions);
-        ps.update(t);
+        if (!this.props.fullHeight) {
+            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            ps.update(t);
 
-        this._setHeaderHeight();
+            this._setHeaderHeight();
+
+        }
+
     }
 
     _onIncreaseLimit() {
