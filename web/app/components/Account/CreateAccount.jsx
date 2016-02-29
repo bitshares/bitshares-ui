@@ -40,18 +40,13 @@ class CreateAccount extends React.Component {
             hide_refcode: true,
             show_identicon: false
         };
-        this.validPassword = false;
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        
-        let validChanged = this.validPassword !== this.props.auth.valid;
-        this.validPassword = this.props.auth.valid;
-        
         return nextState.validAccountName !== this.state.validAccountName ||
             nextState.accountName !== this.state.accountName ||
-            validChanged ||
+            nextProps.auth.valid !== this.props.auth.valid ||
             nextState.registrar_account !== this.state.registrar_account ||
             nextState.loading !== this.state.loading ||
             nextState.hide_refcode !== this.state.hide_refcode ||
@@ -61,7 +56,7 @@ class CreateAccount extends React.Component {
     isValid() {
         let first_account = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
-        if (WalletDb.isLocked()) valid = valid && this.validPassword;
+        if (WalletDb.isLocked()) valid = valid && this.props.auth.valid;
         if (!first_account) valid = valid && this.state.registrar_account;
         return valid;
     }

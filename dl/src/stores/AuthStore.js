@@ -58,38 +58,41 @@ class AuthStore extends BaseStore {
     }
     
     update(state) {
-        this.setState(state)
-        this.checkEmail(this.state)
-        this.checkUsername(this.state)
-        this.checkPassword(this.state)
-        this.setState({ valid:
-            this.state.password_valid &&
-            this.state.email_valid &&
-            this.state.username_valid })
+        const new_state = {...this.state, ...state};
+        const check_email = this.checkEmail(new_state)
+        const check_username = this.checkUsername(new_state)
+        const check_password = this.checkPassword(new_state)
+        this.setState({
+            ...state,
+            ...check_email,
+            ...check_username,
+            ...check_password,
+            valid:
+                check_password.password_valid &&
+                check_email.email_valid &&
+                check_username.username_valid })
     }
     
     checkEmail({ email }) {
         if( ! this.config.hasEmail ) {
-            this.setState({ email_valid: true, email_error: null })
-            return
+            return { email_valid: true, email_error: null }
         }
         let email_valid = rfc822Email(this.state.email)
         let email_error = email.length > 0 ?
             email_valid ? null : "invalid_email" : null
         
-        this.setState({ email_valid, email_error })
+        return { email_valid, email_error }
     }
     
     checkUsername({ username }) {
         if( ! this.config.hasUsername ) {
-            this.setState({ username_valid: true, username_error: null })
-            return
+            return { username_valid: true, username_error: null }
         }
         let username_valid = validation.is_account_name(username)
         let username_error = username.length > 0 ?
             username_valid ? null : "invalid_username" : null
         
-        this.setState({ username_valid, username_error })
+        return { username_valid, username_error }
     }
     
     /**
@@ -102,11 +105,10 @@ class AuthStore extends BaseStore {
         password = password.trim()
         
         var password_error
-        
         // Don't report until typing begins
         if(password.length !== 0 && password.length < 8)
             password_error = "password_length"
-        
+
         // Don't report it until the confirm is populated
         else if( password !== "" && this.config.hasConfirm && password !== confirm)
             password_error = "password_match"
@@ -114,8 +116,7 @@ class AuthStore extends BaseStore {
         var password_valid = password.length >= 8 &&
             ( ! this.config.hasConfirm || password === confirm)
         
-        this.setState({ password, confirm,
-            password_error, password_valid })
+        return { password, confirm, password_error, password_valid }
     }
     
 }
