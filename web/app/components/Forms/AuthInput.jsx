@@ -23,6 +23,7 @@ export default class AuthInput extends Component {
         // Focus the top element after mounting
         focus: PropTypes.bool,
         clearOnUnmount: PropTypes.bool,
+        hasConfirm: PropTypes.bool,
     }
     
     static defaultProps = {
@@ -33,6 +34,10 @@ export default class AuthInput extends Component {
     componentDidMount() {
         if( this.props.focus )
             this.focus()
+    }
+    
+    componentWillMount() {
+        this.props.auth.setup({ hasConfirm: this.props.hasConfirm })
     }
     
     componentWillUnmount() {

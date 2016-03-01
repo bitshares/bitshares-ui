@@ -173,7 +173,7 @@ export function readBackupToken(nextState, replaceState) {
     if( ! wallet )
         console.error("BackupServer\tERROR Token parameter but their is no wallet");
     
-    wallet.keepRemoteCopy(null/*Leave remote copy (yes, no) unchanged*/, token)
+    wallet.keepRemoteCopy(true, token)
     let auth = BackupAuthStore.getState()
     // auth.defaults()
     auth.useEmailFromToken()

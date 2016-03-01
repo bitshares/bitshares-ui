@@ -16,12 +16,10 @@ let instances = new Map()
 export default (name, setup) => {
     instances = instances
         // By `name`, create new or return prior alt store
-        .update(name, store =>{
-            let s = store ? store : alt.createStore(AuthStore, name + "AuthStore")
-            s.getState().setup(setup)
-            return s
-        })
-    return instances.get(name)
+        .update(name, store => store ? store : alt.createStore(AuthStore, name + "AuthStore"))
+    let store = instances.get(name)
+    if(setup) store.setup(steup)
+    return store
 }
 
 /**
@@ -50,6 +48,7 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
+        this.config = { weak: true, hasPassword: true, hasConfirm: false, hasUsername: false, hasEmail: false }
     }
     
     
@@ -105,6 +104,9 @@ class AuthStore {
     }
     
     /**
+        // password re-entry ?
+        config.confirm: PropTypes.bool,
+        
         // Require email and username (as well as password)
         config.weak: PropTypes.bool,
         
@@ -119,32 +121,15 @@ class AuthStore {
         
         // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
         config.hasEmail: PropTypes.bool,
+
     */
-    setup({ weak = true, hasPassword = true, hasConfirm = false, hasUsername, hasEmail } = {}) {
-        // weak: true, // support local only wallets by default..
-        
-        // Simply turining email and username on does not "require" them... Weak = false will make those required.
-        if( weak == false ) {
-            hasEmail = true
-            hasUsername = true
-        }
-        if( hasEmail === undefined || hasUsername === undefined) {
-            let { wallet } = WalletDb.getState()
-            if( wallet && wallet.storage.state.has("weak_password")) {
-                let weak_wallet = wallet.storage.state.get("weak_password")
-                if(hasEmail === undefined)
-                    hasEmail = ! weak_wallet
-                
-                if(hasUsername === undefined)
-                    hasUsername = ! weak_wallet
-            }
-        }
-        this.config = { weak, hasPassword, hasConfirm, hasUsername, hasEmail }
-        return this
+    setup(config) {
+        this.config = { ...this.config, ...config }
     }
     
     update(state) {
         let new_state = {...this.state, ...state};
+        
         if(new_state.username)
             new_state.username = new_state.username.toLowerCase().trim()
         
@@ -153,16 +138,38 @@ class AuthStore {
         
         new_state.auth_error = null
         
+        if(this.config.hasConfirm == null) this.config.hasConfirm = WalletDb.isEmpty() 
+        
+        let { wallet } = WalletDb.getState()
+        if( wallet ) {
+            if(wallet.storage.state.has("remote_url")) {
+                if(wallet.storage.state.has("weak_password") && WalletDb.isLocked()) {
+                    let weak_password = wallet.storage.state.get("weak_password")
+                    if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
+                    if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
+                }
+            }
+        }
+        // hide extra remote backup fields (until everything is ready)
+        if(this.config.hasEmail === undefined) {
+            this.config.hasEmail = false
+            this.config.hasUsername = false
+        }
+        
         // If the email token is being used (via useEmailFromToken)
         if(new_state.email_verified != null ) {
             // Wallet password upgrade mode... AuthInput.jsx is watching `email_verified`.
             // Let the user work with a verified email and add other fields, but still let them change the email so it becomes unverified (allowing them to send a new token to a different email).
             new_state.email_verified = new_state.email === emailFromToken()
-            this.state.setup(
-                new_state.email_verified ?
-                { weak: false, hasConfirm: true} :
-                { hasPassword: false, hasUsername: false, hasEmail: true}
-            )
+            if(new_state.email_verified) {
+                this.config.hasEmail = true
+                this.config.hasUsername = true
+                this.config.hasConfirm = true
+            } else {
+                this.config.hasEmail = true
+                this.config.hasUsername = false
+                this.config.hasPassword = false
+            }
         }
         
         const check_email = this.checkEmail(new_state)

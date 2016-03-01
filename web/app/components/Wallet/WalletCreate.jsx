@@ -34,7 +34,7 @@ class WalletCreate extends Component {
     
 }
 
-let CreateAuthStore = AuthStore("Create", {hasConfirm: true, hasEmail: false, hasUsername: false})
+let CreateAuthStore = AuthStore("Create")
 
 @connectToStores
 class CreateNewWallet extends Component {
