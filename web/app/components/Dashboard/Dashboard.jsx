@@ -204,7 +204,9 @@ class Dashboard extends React.Component {
                             {
                                 private_contacts.filter(name => name.indexOf(df) !== -1).map(name => {
                                     return (<tr key={name}>
-                                        <td ref={"$name$" + name}><span className="name-prefix">~</span>{name} <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
+                                        <td ref={"$name$" + name}>
+                                            <Link to={`/transfer/?to=~${name}`}><span className="name-prefix">~</span>{name}</Link>
+                                            <a href onClick={this._copyToClipboard.bind(this, name)} data-tip="Copy to Clipboard" data-type="light"><Icon name="clipboard-copy"/></a></td>
                                         <td><PubKey getValue={() =>  WalletDb.getState().cwallet.getPublicKey(name)}/></td>
                                         <td><button className="button outline" onClick={this._removePrivateContact.bind(this, name)} data-tip="Remove Contact" data-type="light">-</button></td>
                                     </tr>);
