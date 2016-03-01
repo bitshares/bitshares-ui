@@ -158,7 +158,9 @@ class WalletDb extends BaseStore {
             let _wallet = new WalletStorage(storage)
             BackupServerStore.setWallet(_wallet)
             try {
-                _wallet.useBackupServer(SettingsStore.getSetting("backup_server"))
+                let url = SettingsStore.getSetting("backup_server")
+                if( url === "" ) url = null
+                _wallet.useBackupServer(url)
             }catch(error) { console.error(error); }
             
             let _cwallet = new ConfidentialWallet(_wallet)
@@ -606,7 +608,7 @@ let importKeyWalletObject = (wallet_object, key_objects) => {
                 assert(private_wif, "private key required to derive addresses")
             }
             
-            let key = {public_key, private_wif}
+            let key = { private_wif }
             
             if(import_account_names != null) key.import_account_names = import_account_names
             if(brainkey_sequence != null) key.brainkey_sequence = brainkey_sequence
