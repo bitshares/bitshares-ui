@@ -162,7 +162,7 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                         <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: 1}}>
+                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: 5}}>
                                         <select style={feeAssets.length === 1 ? {background: "none"} : null} disabled={feeAssets.length === 1} value={this.props.feeAsset.get("id")} className="form-control" onChange={this.props.onChangeFeeAsset}>
                                             {options}
                                         </select>
