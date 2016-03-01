@@ -25,9 +25,14 @@ class CreatePrivateContactModal extends React.Component {
     }
 
     _onCreateClick() {
-        const label = this.state.label.slice(1);
-        AccountActions.addPrivateContact(label, this.state.public_key);
         ZfApi.publish("add_private_contact_modal", "close");
+        const label = this.state.label.slice(1);
+        try {
+            AccountActions.addPrivateContact(label, this.state.public_key);
+        }
+        catch (error) {
+                alert(error);
+        }
     }
 
     _onLabelChange({value}) {
@@ -40,23 +45,23 @@ class CreatePrivateContactModal extends React.Component {
     }
 
     render() {
-        let my_accounts = AccountStore.getMyAccounts();
         return (<Modal id="add_private_contact_modal" overlay>
             <Trigger close="add_private_contact_modal">
                 <a href="#" className="close-button">&times;</a>
             </Trigger>
             <h3>Create Private Contact</h3>
-            <form style={{paddingTop: "1rem"}}>
+            <form style={{paddingTop: "1rem"}} autoComplete="off">
                 <div className="form-group">
                     <AccountNameInput ref="label" cheapNameOnly={false}
                         onChange={this._onLabelChange}
+                        onEnter={this._onCreateClick}
                         accountShouldNotExist={false}
                         prefixSymbol="~"
                         labelMode
                     />
                 </div>
                 <div className="full-width-content form-group">
-                    <PrivateKeyInput ref="key" onChange={this._onKeyChange} publicKeyOnly />
+                    <PrivateKeyInput ref="key" onChange={this._onKeyChange} publicKeyOnly onEnter={this._onCreateClick} />
                 </div>
                 <div className="button-group">
                     <a className="button" href onClick={this._onCreateClick}>Create Contact</a>

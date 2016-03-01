@@ -68,8 +68,8 @@ class PubKey extends React.Component {
         if (typeof value !== "string") value = value.toString();
 
         let full_value = value;
-        if (value && !fullLength && value.length > 35) {
-            value = value.substr(0, 35) + "...";
+        if (value && !fullLength && value.length > 80) {
+            value = value.substr(0, 80) + "...";
         }
 
         return (

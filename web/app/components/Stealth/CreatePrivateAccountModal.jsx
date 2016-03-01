@@ -23,6 +23,7 @@ class CreatePrivateAccountModal extends React.Component {
     }
 
     _onCreateClick() {
+        ZfApi.publish("add_private_account_modal", "close");
         const label = this.state.label.slice(1);
         try {
             AccountActions.addPrivateAccount(label);
@@ -30,7 +31,6 @@ class CreatePrivateAccountModal extends React.Component {
         catch (error) {
             alert(error);
         }
-        ZfApi.publish("add_private_account_modal", "close");
     }
 
     _onLabelChange({value}) {
@@ -50,10 +50,11 @@ class CreatePrivateAccountModal extends React.Component {
                 <a href="#" className="close-button">&times;</a>
             </Trigger>
             <h3>Create Private Account</h3>
-            <form style={{paddingTop: "1rem"}}>
+            <form style={{paddingTop: "1rem"}} autoComplete="off">
                 <div className="form-group">
                     <AccountNameInput ref="label" cheapNameOnly={false}
                         onChange={this._onLabelChange}
+                        onEnter={this._onCreateClick}
                         accountShouldNotExist={false}
                         prefixSymbol="~"
                         labelMode

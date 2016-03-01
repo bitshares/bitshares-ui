@@ -116,7 +116,7 @@ class WalletUnlockModal extends React.Component {
                 
                 <h3><Translate content="header.unlock" /> {unlock_what}</h3>
                 
-                <form onSubmit={this.onPasswordEnter} noValidate>
+                <form onSubmit={this.onPasswordEnter} noValidate autoComplete="off">
                     
                     <AuthInput ref="auth_input" auth={this.props.auth} />
                     
