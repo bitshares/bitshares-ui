@@ -77,7 +77,7 @@ export default class WalletStorage {
         
         {PrivateKey} this.private_key - Present only when unlocked
          
-        @arg {LocalStoragePersistence} storage
+        @arg {IndexedDbPersistence} storage
     */
     constructor(storage) {
         this.wallet_object = Map()

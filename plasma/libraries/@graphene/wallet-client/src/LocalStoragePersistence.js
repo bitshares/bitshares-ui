@@ -63,6 +63,19 @@ export default class LocalStoragePersistence {
         return this.state
     }
     
+    /** If an implementation needed local storage wallets, this will fetch the list of wallet names. */
+    // getAllKeys(prefix) {
+    //     let wallet_names = Set()
+    //     // const prefix = "LocalStoragePersistence::wallet::" + chain_config.address_prefix + "::"
+    //     for(let i = 0; i < localStorage.length; i++) {
+    //         // console.log('localStorage.key('+i+')', localStorage.key(i))
+    //         let key = localStorage.key(i)
+    //         if(key.indexOf(prefix) === 0) 
+    //             wallet_names = wallet_names.add( key.substring(prefix.length) )
+    //     }
+    //     return wallet_names
+    // }
+    
     /**
         Ensures that memory is cleared.  If save to disk is enabled, persistent storage is also cleared.
     */

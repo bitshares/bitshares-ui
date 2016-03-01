@@ -13,7 +13,7 @@ const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
 const remote_url = process.env.npm_package_config_remote_url
-
+// import fakeIndexedDB from "fake-indexeddb"
 const storage = ()=> new LocalStoragePersistence("wallet_spec", false/*save*/).clear()
 const code = (e = email) => createToken(hash.sha1(e, 'binary'))
 
@@ -133,13 +133,11 @@ describe('Single wallet', () => {
         .then( ()=> wallet.login(email, username, password, chain_id) )
         .then( ()=> wallet.keepRemoteCopy(true, code()) )
         
-        .then( ()=>{ assert.throws(()=> wallet.changePassword("invalid_"+password, "new_"+password), /invalid_auth/, "invalid_auth") })
-        
         // Trigger a wallet modified exception.
         // Unsubscribe and disconnect, then modify locally only
         .then( ()=>{ wallet.useBackupServer(null) })
         .then( ()=> wallet.setState({ test_wallet: 'two' }) )
-        .then( ()=>{ assert.throws(()=> wallet.changePassword(password, "new_"+password), /wallet_modified/, "wallet_modified") })
+        .then( ()=>{ assert.throws(()=> wallet.changePassword("new_"+password, email, username), /wallet_modified/, "wallet_modified") })
         
         // Recover from the wallet_modified exception
         .then( ()=> wallet.logout() )
@@ -151,7 +149,7 @@ describe('Single wallet', () => {
         .then( ()=> wallet.login(email, username, password, chain_id) )
         
         // now the wallet is not modified, the local copy matches the server
-        .then( ()=> wallet.changePassword(password, "new_"+password) )
+        .then( ()=> wallet.changePassword("new_"+password, email, username) )
         .then( ()=> wallet.logout() )
         .then( ()=> wallet.login(email, username, "new_"+password, chain_id) )
     })

@@ -27,6 +27,7 @@
     "babel-cli": "^6.2.0",
     "babel-core": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
+    "fake-indexeddb": "^1.0.3",
     "localStorage": "^1.0.3",
     "mocha": "^2.3.4",
     "secure-random": "^1.1.1",

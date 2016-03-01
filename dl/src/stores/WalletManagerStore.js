@@ -31,7 +31,7 @@ class WalletManagerStore extends BaseStore {
         }
     }
     
-    /** This will change the current wallet the newly restored wallet. */
+    /** Create the wallet. */
     onRestore({ wallet_name, wallet_object, password }) {
         
         console.log('WalletManagerStore\trestore', wallet_name)
@@ -43,17 +43,15 @@ class WalletManagerStore extends BaseStore {
         let username = ""
         
         WalletDb.logout()
-        let { wallet } = WalletDb.openWallet(wallet_name)
-        
-        wallet_object = wallet_object.set("public_name", wallet_name)// if different
-        wallet.wallet_object = wallet_object
-        
-        wallet.login(email, username, password, Apis.chainId())
+        WalletDb.openWallet(wallet_name).then( wallet => {
+            wallet_object = wallet_object.set("public_name", wallet_name)// if different
+            wallet.wallet_object = wallet_object
+            return wallet.login(email, username, password, Apis.chainId())
+        })
         .then(()=> this.onSetWallet({ wallet_name }))
         .then(()=> this.setState({ restored_wallet_name: wallet_name }))
         .catch( error =>{
             this.setState({ restore_error: error })
-            
             throw error
         })
         .then(()=> this.setState({ restore_error: null }))
@@ -81,7 +79,7 @@ class WalletManagerStore extends BaseStore {
             // Stores may reset when loadDbData is called
             // Make sure the database is ready when calling CachedPropertyStore.reset() 
             CachedPropertyStore.reset()
-            WalletDb.openWallet(wallet_name)
+            return WalletDb.openWallet(wallet_name)
         })
         .then(()=> AccountStore.loadDbData())
         .then(()=> AccountRefsStore.loadDbData())

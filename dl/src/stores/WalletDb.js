@@ -22,7 +22,7 @@ import SettingsActions from "actions/SettingsActions"
 import SettingsStore from "stores/SettingsStore"
 
 import {
-    LocalStoragePersistence, WalletStorage, ConfidentialWallet, AddressIndex
+    IndexedDbPersistence, WalletStorage, ConfidentialWallet, AddressIndex
 } from "@graphene/wallet-client"
 
 var aes_private
@@ -99,41 +99,44 @@ class WalletDb extends BaseStore {
     /** Loads the last active wallet. */
     loadDbData() {
         
-        let current_wallet
-        let cur = iDB.root.getProperty("current_wallet").then( c => current_wallet = c)
-        
         // All wallets new and old
         let wallet_names = Set()
-        
-        // wallet_names
-        const prefix = "LocalStoragePersistence::wallet::" + chain_config.address_prefix + "::"
-        for(let i = 0; i < localStorage.length; i++) {
-            // console.log('localStorage.key('+i+')', localStorage.key(i))
-            let key = localStorage.key(i)
-            if(key.indexOf(prefix) === 0) 
-                wallet_names = wallet_names.add( key.substring(prefix.length) )
-        }
-        
-        // legacy wallet_names
         this.legacy_wallet_names = Set()
-        let leg = iDB.root.getProperty("wallet_names", []).then( legacy_wallet_names => {
-            for(let name of legacy_wallet_names) {
+        
+        let current_wallet, storage
+        
+        return Promise.resolve()
+
+        // get all wallet names
+        .then(()=> new IndexedDbPersistence("wallet::" + chain_config.address_prefix).open())
+        .then( db => db.getAllKeys())
+        .then( keys => {
+            for(let name of keys)
                 wallet_names = wallet_names.add(name)
-                this.legacy_wallet_names = this.legacy_wallet_names.add(name)
-            }
         })
         
-        return Promise.all([ cur, leg ])
-            .then( ()=>{
-                if(! wallet_names.has(current_wallet))
-                    current_wallet = wallet_names.size ? wallet_names.first() : undefined
+        // legacy wallet_names
+        .then(()=>
+            iDB.root.getProperty("wallet_names", []).then( legacy_wallet_names => {
+                for(let name of legacy_wallet_names) {
+                    wallet_names = wallet_names.add(name)
+                    this.legacy_wallet_names = this.legacy_wallet_names.add(name)
+                }
             })
-            .then( ()=> this.setState({ current_wallet, wallet_names }) )
-            .then( ()=> this.openWallet( current_wallet ))
+        )
+        
+        .then(()=> iDB.root.getProperty("current_wallet").then(c => current_wallet = c))
+        .then(()=>{
+            if(! wallet_names.has(current_wallet))
+                current_wallet = wallet_names.size ? wallet_names.first() : undefined
+        })
+        .then( ()=> this.setState({ current_wallet, wallet_names }) )
+        .then( ()=> this.openWallet(current_wallet) )
     }
     
     /**
         Change or open a wallet, this may or may not be empty.  It is necessary to call onCreateWallet to complete this process.
+        @return Promise
     */
     openWallet(wallet_name) {
         
@@ -141,57 +144,59 @@ class WalletDb extends BaseStore {
             wallet = undefined
             cwallet = undefined
             this.setState({ current_wallet: undefined, wallet, cwallet })
-            return
+            return Promise.resolve()
         }
         
         if( wallet_name === this.state.current_wallet && wallet != null )
-            return { wallet }
+            return Promise.resolve({ wallet })
         
         console.log("WalletDb\topenWallet", wallet_name);
-        let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
-        let storage = new LocalStoragePersistence( key )
-        
-        let _wallet = new WalletStorage(storage)
-        BackupServerStore.setWallet(_wallet)
-        try {
-            _wallet.useBackupServer(SettingsStore.getSetting("backup_server"))
-        }catch(error) { console.error(error); }
-        
-        let _cwallet = new ConfidentialWallet(_wallet)
-        // Transaction confirmations
-        _cwallet.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
-            this.process_transaction( tr, null /*signer_private_keys*/, true, broadcast_confirmed_callback )
-        
-        
-        // No exceptions so update state:
-        cwallet = _cwallet
-        wallet = _wallet
-        let wallet_names = this.state.wallet_names.add(wallet_name)
-        this.setState({ current_wallet: wallet_name, wallet_names, wallet, cwallet }) // public
-        iDB.root.setProperty("current_wallet", wallet_name)
-        try {
-            // browser console references
-            window.wallet = wallet
-            window.cwallet = cwallet
-        } catch(error){
-            //nodejs:ReferenceError: window is not defined
-        }
-        return { wallet }
+
+        let key = "wallet::" + chain_config.address_prefix
+        let storage = new IndexedDbPersistence( key )
+        storage.open(wallet_name).then(()=>{
+            let _wallet = new WalletStorage(storage)
+            BackupServerStore.setWallet(_wallet)
+            try {
+                _wallet.useBackupServer(SettingsStore.getSetting("backup_server_url"))
+            }catch(error) { console.error(error); }
+            
+            let _cwallet = new ConfidentialWallet(_wallet)
+            // Transaction confirmations
+            _cwallet.process_transaction = (tr, broadcast, broadcast_confirmed_callback) =>
+                this.process_transaction( tr, null /*signer_private_keys*/, true, broadcast_confirmed_callback )
+            
+            // No exceptions so update state:
+            cwallet = _cwallet
+            wallet = _wallet
+            let wallet_names = this.state.wallet_names.add(wallet_name)
+            this.setState({ current_wallet: wallet_name, wallet_names, wallet, cwallet }) // public
+            iDB.root.setProperty("current_wallet", wallet_name)
+            try {
+                // browser console references
+                window.wallet = wallet
+                window.cwallet = cwallet
+            } catch(error){
+                //nodejs:ReferenceError: window is not defined
+            }
+            return Promise.resolve({ wallet })
+        })
     }
     
     deleteWallet(wallet_name) {
         if( ! this.state.wallet_names.has(wallet_name) )
             throw new Error("Can't delete wallet '"+ wallet_name + "', does not exist")
         
+        var p
         if(this.legacy_wallet_names.has(wallet_name)) {
             var database_name = iDB.getDatabaseName(wallet_name)
             iDB.impl.deleteDatabase(database_name)
             this.legacy_wallet_names = this.legacy_wallet_names.remove(wallet_name)
-            iDB.root.setProperty("wallet_names", this.legacy_wallet_names)
+            p = iDB.root.setProperty("wallet_names", this.legacy_wallet_names)
         }
         else {
-            let key = "wallet::" + chain_config.address_prefix + "::" + wallet_name
-            localStorage.removeItem("LocalStoragePersistence::" + key)
+            let key = "wallet::" + chain_config.address_prefix
+            p = new IndexedDbPersistence( key ).open(wallet_name).then( db => db.clear())
         }
         
         let wallet_names = this.state.wallet_names.remove(wallet_name)
@@ -200,8 +205,11 @@ class WalletDb extends BaseStore {
         if(current_wallet === wallet_name) {
             current_wallet = wallet_names.size ? wallet_names.first() : undefined
             this.openWallet(current_wallet)
+                .then(()=> this.setState({ current_wallet, wallet_names }))
+            return
         }
         this.setState({ current_wallet, wallet_names })
+        return p
     }
     
     /** Discover derived keys that are not in this wallet */
@@ -548,8 +556,6 @@ class WalletDb extends BaseStore {
     
     // /** Might be useful when RAM wallets are implemented */
     // hasDiskWallet(name = this.getState().get("current_wallet")) {
-    //     let key = "LocalStoragePersistence::wallet::" + chain_config.address_prefix
-    //     return localStorage.getItem(key) != null
     // }
     
 }
