@@ -358,6 +358,7 @@ class AccountStore extends BaseStore {
     }
 
     onAddPrivateContact(name) {
+        WalletDb.
         iDB.add_to_store("private_contacts", { name });
         this.state.privateContacts = this.state.privateContacts.add(name);
     }

@@ -4,6 +4,7 @@ import { rfc822Email } from "@graphene/wallet-client"
 import { extractSeed } from "@graphene/time-token"
 import { validation } from "@graphene/chain"
 import WalletDb from "stores/WalletDb"
+import counterpart from "counterpart"
 
 /** Singleton instances */
 let instances = new Map()
@@ -17,7 +18,7 @@ export default (name, setup) => {
         // By `name`, create new or return prior alt store
         .update(name, store =>{
             let s = store ? store : alt.createStore(AuthStore, name + "AuthStore")
-            s.setup(setup)
+            s.getState().setup(setup)
             return s
         })
     return instances.get(name)
@@ -31,12 +32,14 @@ class AuthStore {
     constructor() {
         this.init = ()=> ({
             password: "", confirm: "", password_error: null, auth_error: null,
+            email: "", email_error: null, email_verified: undefined,
             username: "", username_error: "",
-            email: "", email_error: null,
             valid: false,
+            api_error: null,
             
             // Singleton store methods, these could move to actions where needed: 
-            setup: ()=> this.config,
+            config: ()=> this.config,
+            setup: this.setup.bind(this),
             update: this.update.bind(this),
             defaults: this.defaults.bind(this),
             useEmailFromToken: this.useEmailFromToken.bind(this),
@@ -47,10 +50,6 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        this.exportPublicMethods({
-            // setup can change
-            setup: this.setup.bind(this),
-        })
     }
     
     
@@ -65,9 +64,9 @@ class AuthStore {
     
     useEmailFromToken() {
         let email = emailFromToken()
-        let email_verified = this.state.email === emailFromToken()
-        if( email )
-            this.setState({ email, email_verified })
+        if( ! email) return
+        if(this.state.email === email && this.state.email_verified) return
+        this.state.update({ email, email_verified: true })
     }
     
     /** @return {Promise} */
@@ -79,17 +78,20 @@ class AuthStore {
             .catch( error =>{
                 if(/invalid_auth/.test(error)) {
                     this.setState({ auth_error: true })
+                    throw error // lets the caller know
                 }
-                throw error
+                if(error.cause) {// Server Wallet API error
+                    this.setState({ api_error: error.cause.message })
+                    console.error(error)
+                    // release the unlock dialog, did not re-throw
+                }
             })
     }
     
-    /** @return undefined */
+    /** @return {Promise} */
     changePassword() {
         if( ! this.state.valid ) return
-        WalletDb
-            .changePassword( this.state )
-            .catch( error => this.setState({ auth_error: true }))
+        return WalletDb.changePassword( this.state )
     }
     
     /** @return {boolean} */
@@ -118,9 +120,8 @@ class AuthStore {
         // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
         config.hasEmail: PropTypes.bool,
     */
-    setup(config) {
+    setup({ weak = true, hasPassword = true, hasConfirm = false, hasUsername, hasEmail } = {}) {
         // weak: true, // support local only wallets by default..
-        let { weak = true, hasPassword = true, hasConfirm = true, hasUsername, hasEmail } = (config || {})
         
         // Simply turining email and username on does not "require" them... Weak = false will make those required.
         if( weak == false ) {
@@ -139,38 +140,55 @@ class AuthStore {
             }
         }
         this.config = { weak, hasPassword, hasConfirm, hasUsername, hasEmail }
+        return this
     }
     
     update(state) {
-        const new_state = {...this.state, ...state};
+        let new_state = {...this.state, ...state};
         if(new_state.username)
-            new_state.username = new_state.username.toLowerCase()
+            new_state.username = new_state.username.toLowerCase().trim()
         
-        new_state.email_verified = this.state.email === emailFromToken()
+        if(new_state.email)
+            new_state.email = new_state.email.toLowerCase().trim()
+        
         new_state.auth_error = null
+        
+        // If the email token is being used (via useEmailFromToken)
+        if(new_state.email_verified != null ) {
+            // Wallet password upgrade mode... AuthInput.jsx is watching `email_verified`.
+            // Let the user work with a verified email and add other fields, but still let them change the email so it becomes unverified (allowing them to send a new token to a different email).
+            new_state.email_verified = new_state.email === emailFromToken()
+            this.state.setup(
+                new_state.email_verified ?
+                { weak: false, hasConfirm: true} :
+                { hasPassword: false, hasUsername: false, hasEmail: true}
+            )
+        }
         
         const check_email = this.checkEmail(new_state)
         const check_username = this.checkUsername(new_state)
         const check_password = this.checkPassword(new_state)
 
-        this.setState({
-            ...state,
+        new_state = {
+            ...new_state,
             ...check_email,
             ...check_username,
             ...check_password,
             valid:
                 check_password.password_valid &&
                 check_email.email_valid &&
-                check_username.username_valid })
-        // console.log('this.state', this.state, this.config)
+                check_username.username_valid
+        }
+        
+        // console.log('AuthStore\tnew_state', new_state, this.config)
+        this.setState(new_state)
     }
     
     checkEmail({ email }) {
         if( ! this.config.hasEmail || (email === "" && this.config.weak)) {
-            this.setState({ email_valid: true, email_error: null })
             return { email_valid: true, email_error: null }
         }
-        let email_valid = rfc822Email(this.state.email)
+        let email_valid = rfc822Email(email)
         let email_error = email.length > 0 ?
             email_valid ? null : "invalid_email" : null
         
@@ -179,7 +197,6 @@ class AuthStore {
     
     checkUsername({ username }) {
         if( ! this.config.hasUsername || (username === ""  && this.config.weak)) {
-            this.setState({ username_valid: true, username_error: null })
             return { username_valid: true, username_error: null }
         }
         let username_valid = validation.is_account_name(username)
@@ -195,10 +212,8 @@ class AuthStore {
     */
     checkPassword({ password = "", confirm = null }) {
 
-        if( ! this.config.hasPassword ) {
-            this.setState({ password_valid: true, password_error: null })
-            return
-        }
+        if( ! this.config.hasPassword )
+            return { password_valid: true, password_error: null }
         
         var password_error = null
 

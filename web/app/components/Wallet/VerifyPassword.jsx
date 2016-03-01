@@ -48,7 +48,7 @@ class VerifyPassword extends Component {
         return <span>
             <label><Translate content="wallet.existing_password"/></label>
             <form onSubmit={this.onPassword.bind(this)}>
-                <AuthInput auth={this.props.auth} hasConfirmation={false}/>
+                <AuthInput auth={this.props.auth}/>
             </form>
             <span className={cname("button", "success", {disabled: !this.props.auth.valid})}
                 onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>

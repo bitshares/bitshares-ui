@@ -40,19 +40,19 @@ class BackupBaseComponent extends Component {
 //The default component is WalletManager.jsx 
 
 @connectToStores
-export class BackupCreate extends BackupBaseComponent {
+export class CreateLocalBackup extends BackupBaseComponent {
     render() {
         return <span>
 
             <h3><Translate content="wallet.create_backup" /></h3>
             
             <WalletUnlock>
-                <Create>
+                <LocalBackup>
                     <NameSizeModified/>
                     <Sha1/>
                     <Download/>
                     <Reset/>
-                </Create>
+                </LocalBackup>
             </WalletUnlock>
             
         </span>
@@ -60,7 +60,38 @@ export class BackupCreate extends BackupBaseComponent {
 }
 
 @connectToStores
-export class BackupRestore extends BackupBaseComponent {
+class LocalBackup extends BackupBaseComponent {
+    
+    render() {
+        var has_backup = !!this.props.backup.contents
+        if( has_backup ) return <div>{this.props.children}</div>
+        
+        var ready = ! WalletDb.isLocked()
+        
+        return <div>
+            <div onClick={this.onCreateBackup.bind(this)}
+                className={cname("button success", {disabled: !ready})}>
+                <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
+            <LastBackupDate/>
+        </div>
+    }
+    
+    onCreateBackup(e) {
+        if(e) e.preventDefault()
+        let { current_wallet, wallet } = WalletDb.getState()
+        let name = current_wallet
+        var address_prefix = chain_config.address_prefix.toLowerCase()
+        if(name.indexOf(address_prefix) !== 0)
+            name = address_prefix + "_" + name
+        name = name + ".bin"
+        let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
+        BackupActions.incommingBuffer({name, contents})
+    }
+
+}
+
+@connectToStores
+export class UploadRestore extends BackupBaseComponent {
     
     static propTypes = {
         wallet: React.PropTypes.object
@@ -96,7 +127,9 @@ export class BackupRestore extends BackupBaseComponent {
         return <span>
 
             <h3><Translate content="wallet.import_backup" /></h3>
-            {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
+            {(new FileReader).readAsBinaryString ? null : <p className="error">
+                <Translate content="wallet.bad_backup_support"/>
+            </p>}
             <Upload>
                 <NameSizeModified/>
                 <DecryptBackup>
@@ -226,37 +259,6 @@ class Download extends BackupBaseComponent {
         saveAs(blob, this.props.backup.name);
         WalletActions.setBackupDate()
     }
-}
-
-@connectToStores
-class Create extends BackupBaseComponent {
-    
-    render() {
-        var has_backup = !!this.props.backup.contents
-        if( has_backup ) return <div>{this.props.children}</div>
-        
-        var ready = ! WalletDb.isLocked()
-        
-        return <div>
-            <div onClick={this.onCreateBackup.bind(this)}
-                className={cname("button success", {disabled: !ready})}>
-                <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
-            <LastBackupDate/>
-        </div>
-    }
-    
-    onCreateBackup(e) {
-        if(e) e.preventDefault()
-        let { current_wallet, wallet } = WalletDb.getState()
-        let name = current_wallet
-        var address_prefix = chain_config.address_prefix.toLowerCase()
-        if(name.indexOf(address_prefix) !== 0)
-            name = address_prefix + "_" + name
-        name = name + ".bin"
-        let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
-        BackupActions.incommingBuffer({name, contents})
-    }
-
 }
 
 class LastBackupDate extends Component {
@@ -390,10 +392,10 @@ class DecryptBackup extends BackupBaseComponent {
                 
                 BackupStore.setWalletObject(wallet_object)
             
-                // verified releases DecryptBackup so children like BackupRestore will appear
+                // verified releases DecryptBackup so children like UploadRestore will appear
                 this.setState({verified: true})
                 
-                // Next, Backup.jsx {BackupRestore} will review and edit wallet name then call BackupRestore.onNewName  which calls: WalletActions.restore => WalletManagerStore.onRestore
+                // Next, Backup.jsx {UploadRestore} will review and edit wallet name then call UploadRestore.onNewName  which calls: WalletActions.restore => WalletManagerStore.onRestore
                 
             })
         )
@@ -465,36 +467,3 @@ class Reset extends BackupBaseComponent {
         window.history.back()
     }
 }
-
-// @connectToStores
-// export class BackupVerify extends BackupBaseComponent {
-//     render() {
-//         return <span>
-// 
-//             <h3><Translate content="wallet.verify_prior_backup" /></h3>
-// 
-//             <Upload>
-//                 <NameSizeModified/>
-//                 <DecryptBackup saveWalletObject={true}>
-//                     <h4><Translate content="wallet.verified" /></h4>
-//                     <WalletObjectInspector
-//                         walletObject={this.props.backup.wallet_object}/>
-//                 </DecryptBackup>
-//                 <Reset/>
-//             </Upload>
-//         
-//         </span>
-//     }
-// }
-
-// layout is a small project
-// class WalletObjectInspector extends Component {
-//     static propTypes={ walletObject: PropTypes.object }
-//     render() {
-//         return <div style={{overflowY:'auto'}}>
-//             <Inspector
-//                 data={ this.props.walletObject || {} }
-//                 search={false}/>
-//         </div>
-//     }
-// }

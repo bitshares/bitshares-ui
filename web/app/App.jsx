@@ -55,7 +55,7 @@ import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import { ChainStore } from "@graphene/chain";
 import { AddressIndex } from "@graphene/wallet-client";
-import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
+import {CreateLocalBackup, UploadRestore} from "./components/Wallet/Backup";
 import BackupServer, { readBackupToken } from "./components/Wallet/BackupServer";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
@@ -272,8 +272,8 @@ let routes = (
             <Route name="wmc-brainkey" path="brainkey" component={Brainkey}/>
             <Route name="wmc-wallet-create" path="create" component={WalletCreate}/>
             <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
-            <Route name="wmc-backup-verify-restore" path="backup/restore" component={BackupRestore}/>
-            <Route name="wmc-backup-create" path="backup/create" component={BackupCreate}/>
+            <Route name="wmc-backup-verify-restore" path="backup/restore" component={UploadRestore}/>
+            <Route name="wmc-backup-create" path="backup/create" component={CreateLocalBackup}/>
             <Route name="wmc-backup-create" path="backup/server(/:token)" component={BackupServer} onEnter={readBackupToken}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
@@ -291,7 +291,7 @@ let routes = (
         <Route name="create-account" path="create-account" component={CreateAccount}/>
         <Route name="existing-account" path="existing-account" component={ExistingAccount}>
             <IndexRoute component={ExistingAccountOptions}/>
-            <Route name="welcome-import-backup" path="import-backup" component={BackupRestore}/>
+            <Route name="welcome-import-backup" path="import-backup" component={UploadRestore}/>
             <Route name="welcome-import-keys" path="import-keys" component={ImportKeys}/>
             <Route name="welcome-brainkey" path="brainkey" component={Brainkey}/>
             <Route name="welcome-balance-claim" path="balance-claim" component={BalanceClaimActive}/>

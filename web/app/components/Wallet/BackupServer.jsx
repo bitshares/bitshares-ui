@@ -4,6 +4,7 @@ import {PropTypes, Component} from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
 import AltContainer from "alt-container"
+import counterpart from "counterpart"
 import cname from "classnames"
 
 import AuthInput from "components/Forms/AuthInput"
@@ -14,6 +15,7 @@ import { extractSeed } from "@graphene/time-token"
 import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 import LoadingIndicator from "components/LoadingIndicator"
+import notify from "actions/NotificationActions"
 
 global.tabIndex = global.tabIndex || 0
 
@@ -37,8 +39,7 @@ class BackupServer extends Component {
     }
     
     componentWillMount() {
-        this.props.auth.defaults()// <- pickup username from account creation
-        this.props.auth.useEmailFromToken()// email change or the 1st email
+        // this.props.auth.defaults()// <- pickup username from account creation
     }
     
     // componentWillReceiveProps(nextProps) { }
@@ -50,6 +51,7 @@ class BackupServer extends Component {
     componentDidMount() {
         let em = ReactDOM.findDOMNode(this.refs.confirm_email)
         if(em) em.focus()
+        this.props.auth.useEmailFromToken()// email change or the 1st email
     }
     
     render() {
@@ -57,22 +59,52 @@ class BackupServer extends Component {
     }
     
     render_unlocked() {
+        
         let wallet = this.props.wallet_store.wallet
-        const requestCode = ()=> wallet.api.requestCode(this.props.auth.email)
+        
+        const requestCode = ()=> this.setState({ busy: true },
+            ()=> wallet.api.requestCode(this.props.auth.email)
+            .then(()=> this.setState({ busy: false }))
+            .catch( error =>{
+                this.setState({ busy: false })
+                notify.error("Unable to request token: " + error.toString())
+            })
+        )
+        
+        const changePassword = ()=> this.setState({ busy: true },
+            ()=> this.props.auth.changePassword()
+            .then(()=> this.setState({ busy: false }))
+            .catch( error =>{
+                this.setState({ busy: false })
+                notify.error("Unable to change password: " + error.toString())
+            })
+        )
+        
         const weak_password = <div>
             {this.props.auth.email_verified ? <div>
                 
-                <p>You <b>must</b> remember this information.  This will be<br/>your new password.  Please write it down.</p>
+                <p><Translate content="wallet.remember_auth"/></p>{/* You <b>must</b> remember... */}
                     
-                <AuthInput auth={this.props.auth} weak={false} />
+                {/* Password, Email, Username */}
+                <AuthInput auth={this.props.auth} clearOnUnmount={false} />
                 
-                {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                <button className="button" className={ cname({disabled: ! this.state.busy}) }  onClick={this.changePassword.bind(this)}><Translate content="i_agree"/></button>
+                 <div className="center-content">
+                     {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                     <br/>
+                 </div>
+                
+                <button className={cname("button", {disabled: this.state.busy || ! this.props.auth.valid }) }  onClick={changePassword.bind(this)}><Translate content="i_agree"/></button>
                 
             </div>
             :
                 <div>
-                    <AuthInput auth={this.props.auth} hasPassword={false} hasUsername={false} hasEmail={true} />
+                    
+                    {/* E M A I L */}
+                    <AuthInput auth={this.props.auth} clearOnUnmount={false} />
+                     <div className="center-content">
+                         {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                         <br/>
+                     </div>
                     <button 
                         className={cname("button", {disabled: ! this.props.auth.email_valid}) }
                         onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
@@ -81,8 +113,18 @@ class BackupServer extends Component {
             }
         </div>
         
-        const enable_remote_copy = evt => // toggle
+        const remote_copy_toggle = ()=>
             wallet.keepRemoteCopy( ! wallet.storage.state.get("remote_copy"))
+                .then(()=> this.setState({ busy: false }))
+                .catch( error =>{
+                    this.setState({ busy: false })
+                    if( error.cause && error.cause.message === "expired") {
+                        notify.error(counterpart.translate("wallet.token_expired"))
+                        wallet.storage.setState("remote_token", null)
+                    }
+                    console.error("BackupServer\tERROR", error)
+                    throw error
+                })
         
         return (
             <div className="grid-block vertical medium-horizontal">
@@ -92,10 +134,19 @@ class BackupServer extends Component {
                     
                     {wallet.storage.state.get("weak_password") === false ?  <div>
                         
-                        <label><Translate content="wallet.enable_remote_copy"/></label>
-                        <input type="checkbox" checked={wallet.storage.state.get("remote_copy")}
-                            onClick={enable_remote_copy.bind(this)} />
+                        <label><Translate content="wallet.remote_copy"/></label>
                         
+                        <input type="checkbox"
+                            className={cname({ disabled: this.state.busy })}
+                            checked={wallet.storage.state.get("remote_copy")}
+                            onChange={remote_copy_toggle.bind(this)} />
+                        &nbsp;
+                        <Translate content={"wallet." + this.props.backups.ui_status}/>
+                    
+                        <div className="center-content">
+                            {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                            <br/>
+                        </div>
                     </div> : weak_password }
                 </div>
                 <br/>
@@ -106,28 +157,7 @@ class BackupServer extends Component {
             </div>
         )
     }
-    
-    
-    changePassword() {
-        this.setState({ busy: true }), ()=>(
-            this.props.auth.changePassword()
-            .then(()=> this.setState({ busy: false }) )
-        )
-    }
-    
-    emailForm() {
-        let emailChange = event => BackupServerStore.update({ email: event.target.value })
-        return <div className={cname("grid-content", "no-overflow", {"has-error": false})}>
-            <div className="content-block">
-                <Translate component="label" content="wallet.confirm_email" />
-                <input type="text" value={this.props.backups.email} onChange={emailChange.bind(this)} autoComplete="on" tabIndex={++global.tabIndex} ref="confirm_email"/>
-            </div>
-            { this.props.backups.email_valid ? null :
-            <p className="grid-content has-error">
-                <Translate content={this.props.backups.email_error}/>
-            </p>}
-        </div>
-    }
+        
 }
 
 /** Target for React Route's onEnter event. */
@@ -145,47 +175,6 @@ export function readBackupToken(nextState, replaceState) {
     
     wallet.keepRemoteCopy(null/*Leave remote copy (yes, no) unchanged*/, token)
     let auth = BackupAuthStore.getState()
-    auth.defaults()
+    // auth.defaults()
     auth.useEmailFromToken()
 }
-
-// class BackupStatus extends Component {
-//     render() {
-//         return <AltContainer store={ BackupServerStore }>
-//             <small><Translate content="wallet.backup.status"/>:</small>
-//             <Translate content={"wallet.backup." + this.props.ui_status}/>
-//         </AltContainer>
-//     }
-// }
-// 
-// class RemoteUrl extends Component {
-//     
-//     render() {
-//         const change = event => BackupServerStore.update({ remote_url: event.target.value })
-//         return <div>
-//             <input onChange={change.bind(this)}/>
-//         </div>
-//     }
-// }
-// 
-// class Settings extends Component {
-//     render() { return (
-//         <div className="grid-block page-layout">
-//             <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
-//                 <div className="grid-content">
-//                     {this.props.children}
-//                 </div>
-//             </div>
-//         </div>
-//     )}
-// }
-// 
-// class Setting extends Component {
-//     static propTypes = { header: PropTypes.string }
-//     render() { return (
-//         <section className="block-list">
-//             <header><Translate component="span" content={this.props.header} /></header>
-//             {this.props.children}
-//         </section>
-//     )}
-// }

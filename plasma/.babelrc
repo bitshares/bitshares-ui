@@ -1,7 +1,7 @@
+{// "presets": ['es2015'] 
+}
+
 // Note, the .babelrc file here correctly stops babel in these sub-projects from seeing ../.babelrc
 
 // The preset is required when runing plasma unit tests and programs.  The "web" package however has a bug and will not work if "presets" is found in this file.
 // The work around is to change this by hand but leave it commented out in the repository (so the web works).
-{
-//   "presets": ['es2015']
-}

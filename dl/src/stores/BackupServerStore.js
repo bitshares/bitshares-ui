@@ -6,12 +6,12 @@ class BackupServerStore {
     
     constructor() {
         this.init = ()=> ({
-            ui_status: "unknown"
+            ui_status: null
         })
         this.state = this.init()
         this.exportPublicMethods({
             setWallet: this.setWallet.bind(this),
-            update: this.update.bind(this),
+            // update: this.update.bind(this),
         })
     }
     
@@ -26,25 +26,17 @@ class BackupServerStore {
         this.wallet.subscribe(this._notify_subscription)
     }
     
-    update(state) {
-        this.setState(state)
-        this.checkEmail(state)
-    }
-    
-    checkEmail({ email }) {
-        let email_valid = rfc822Email(email)
-        let email_error = email.length > 0 ?
-            email_valid ? null : "invalid_email" : null
-        
-        this.setState({ email_valid, email_error })
-    }
+    // update(state) {
+    //     this.setState(state)
+    //     this.checkEmail(state)
+    // }
     
     notify() {
         let { socket_status, remote_status, local_status } = this.wallet
         let { remote_url, remote_copy, remote_token } = this.wallet.storage.state.toJS()
         let weak_password  = this.wallet.wallet_object.get("weak_password")
         
-        let ui_status = remote_copy != null ? "configure" : "unknown"
+        let ui_status = remote_copy === true ? remote_status : local_status
         let state = { 
             socket_status, remote_status, local_status,
             remote_url, remote_copy, remote_token,
@@ -52,7 +44,7 @@ class BackupServerStore {
             ui_status
         }
         this.setState(state)
-        // console.log('BackupServerStore\tstate', state)
+        console.log('BackupServerStore\tstate', state)
     }
     
     

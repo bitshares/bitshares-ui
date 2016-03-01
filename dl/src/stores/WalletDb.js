@@ -158,7 +158,7 @@ class WalletDb extends BaseStore {
             let _wallet = new WalletStorage(storage)
             BackupServerStore.setWallet(_wallet)
             try {
-                _wallet.useBackupServer(SettingsStore.getSetting("backup_server_url"))
+                _wallet.useBackupServer(SettingsStore.getSetting("backup_server"))
             }catch(error) { console.error(error); }
             
             let _cwallet = new ConfidentialWallet(_wallet)

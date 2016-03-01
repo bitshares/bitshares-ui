@@ -74,8 +74,11 @@ class WalletUnlockModal extends React.Component {
         //DEBUG console.log('WalletUnlockModal componentDidUpdate this.props.unlock.resolve', this.props.unlock.resolve)
         if(this.props.unlock.resolve) {
             if (WalletDb.isLocked()) {
-                if( ! this.open)
+                if( ! this.open) {
                     ZfApi.publish(this.props.modalId, "open")
+                    setTimeout(()=> this.refs.auth_input.focus(), 200)
+                    this.open = true
+                }
             } else {
                 this.props.unlock.resolve()
             }
@@ -93,10 +96,7 @@ class WalletUnlockModal extends React.Component {
                 WalletUnlockActions.change()
                 this.setState({ working: false})
             })
-            .catch( error =>{
-                console.error(error);
-                this.setState({ working: false })
-            })
+            .catch( error => this.setState({ working: false }))
         )//, 200)
     }
     
@@ -118,7 +118,7 @@ class WalletUnlockModal extends React.Component {
                 
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     
-                    <AuthInput auth={this.props.auth} hasConfirm={false} />
+                    <AuthInput ref="auth_input" auth={this.props.auth} />
                     
                     <div className="button-group">
                         <button 

@@ -1,7 +1,6 @@
 import React, {Component} from "react"
 
 import Translate from "react-translate-component";
-import {BackupRestore} from "components/Wallet/Backup"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
 import AuthInput from "components/Forms/AuthInput"
 import AuthStore from "stores/AuthStore"

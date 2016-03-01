@@ -1,6 +1,6 @@
 var Immutable = require("immutable")
 
-const SOCKET_DEBUG = JSON.parse( process.env.npm_config__graphene_wallet_client_socket_debug || false )
+const SOCKET_DEBUG = true //JSON.parse( process.env.npm_config__graphene_wallet_client_socket_debug || false )
 let instance = 0
 
 export default class WalletWebSocket {

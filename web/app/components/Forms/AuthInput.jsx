@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import Translate from "react-translate-component";
-// import connectToStores from "alt/utils/connectToStores"
+import notify from "actions/NotificationActions"
 import cname from "classnames"
-
+import counterpart from "counterpart"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import AccountSelector from "../Account/AccountSelector"
 import WalletDb from "stores/WalletDb"
 
@@ -21,24 +22,34 @@ export default class AuthInput extends Component {
         
         // Focus the top element after mounting
         focus: PropTypes.bool,
-        clearONUnmount: PropTypes.bool,
+        clearOnUnmount: PropTypes.bool,
     }
     
     static defaultProps = {
         focus: true,
-        clearONUnmount: true,
+        clearOnUnmount: true,
     }
     
     componentDidMount() {
-        if( this.props.focus ) this.focus()
+        if( this.props.focus )
+            this.focus()
     }
     
     componentWillUnmount() {
-        this.props.auth.clear()
+        if(this.props.clearOnUnmount)
+            this.props.auth.clear()
+    }
+    
+    componentWillReceiveProps(nextProps) {
+        if(this.props.auth.api_error) {
+            notify.error(counterpart.translate("wallet." + this.props.auth.api_error))
+            this.props.auth.update({ api_error: null })
+            CachedPropertyActions.set("backup_recommended", true)// draw them back into the backup screen
+        }
     }
     
     render() {
-        let { hasPassword, hasUsername, hasEmail } = this.props.auth.setup()
+        let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
         return (
             <div>
                 { hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
@@ -51,9 +62,9 @@ export default class AuthInput extends Component {
         );
     }
     
-    focus() { try {
+    focus() {
         if( this.props.focus ) {
-            let { hasPassword, hasUsername, hasEmail } = this.props.auth.setup()
+            let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
             if( hasPassword  )
                 ReactDOM.findDOMNode(this.refs.auth_password).focus()
             else if( hasEmail )
@@ -61,13 +72,14 @@ export default class AuthInput extends Component {
             else if( hasUsername )
                 ReactDOM.findDOMNode(this.refs.auth_username).focus()
         }
-    } catch(e) {}}
+    }
     
     passwordForm({password, confirm, password_valid, password_error}) {
         
         let passwordChange = event => this.props.auth.update({ password: event.target.value })
         let confirmChange = event => this.props.auth.update({ confirm: event.target.value })
-        let { hasConfirm } = this.props.auth.setup()
+        let { hasConfirm } = this.props.auth.config()
+        
         // "grid-content", "no-overflow", 
         return <div className={cname("form-group", "no-margin", {"has-error": password_error != null })}>
         

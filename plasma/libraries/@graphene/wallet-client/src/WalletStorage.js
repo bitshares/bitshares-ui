@@ -598,10 +598,10 @@ function fetchWallet(server_wallet, private_key) {
     
     // Another connecton deleted the wallet, but this connection is still backing up.. So, push it anyways.
     if( ! has_remote )
-        return this.updateWallet(private_key).then(()=> this.remote_status = "Not Modified")
+        return this.updateWallet(private_key)
     
     if( ! has_local )
-        return this.saveServerWallet(server_wallet, private_key).then(()=> this.remote_status = "Not Modified")
+        return this.saveServerWallet(server_wallet, private_key)
 
     // Two wallets and a new wallet is arriving
     
@@ -632,7 +632,7 @@ function fetchWallet(server_wallet, private_key) {
     }
     // The server had this copy of this wallet when another device changed it (meaning that the other device must have been in sync with the wallet when the change was made).  It is safe to pull this wallet and overwrite the local version.
     if( server_mod )
-        return this.saveServerWallet(server_wallet, private_key).then(()=> this.remote_status = "Not Modified")
+        return this.saveServerWallet(server_wallet, private_key)
         
     assert(old_hash === new_hash, "Conflict")
     
@@ -666,6 +666,7 @@ function saveServerWallet(server_wallet, private_key) {
         })        
         // assert.equal(server_wallet.local_hash, toBase64(this.localHash()))
         this.wallet_object = fromJS( wallet_object )
+        this.remote_status = "Not Modified"
         this.local_status = null
         this.notify = true
         // console.log(this.instance + " saveServerWallet new hash", this.storage.state.get("remote_hash"), this.localHash().toString('base64'))
