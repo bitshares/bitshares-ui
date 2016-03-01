@@ -104,7 +104,7 @@ export default class IndexedDbPersistence {
             p = this.dbSave(stateStr)
         } else {
             this.status = "ok"
-            p = Promise.resovle()
+            p = Promise.resolve()
         }
         if( this.saveToDisk === false )
             this.status = "ok"

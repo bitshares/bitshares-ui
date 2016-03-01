@@ -6,90 +6,39 @@ import Translate from "react-translate-component";
 import cname from "classnames"
 
 import AccountSelector from "../Account/AccountSelector"
-// import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 
 let tabIndex = 2 // AccountCreate -> AccountNameInput is 1
 
-// connectToStores
 export default class AuthInput extends Component {
     
     static propTypes = {
-        
-        // Properties from AuthStore.getState()
-        // auth: PropTypes.object.isRequired,
-        
+
         email: PropTypes.string,
         username: PropTypes.string,
         password: PropTypes.string,
         confirm: PropTypes.string,
         
-        // Called with frequently with `null` (invalid) or fully validated data: { email, username, password }.  Use this to enable or disable the submit button and to capture the latest values. 
-        onValid: PropTypes.func,
-        
-        // Display default auth error (invalid authentication)
-        authError: PropTypes.bool,
-        
-        // Require email and username (as well as password)
-        weak: PropTypes.bool,
-        
-        // Off to collect just an email (allows one to verify the email before password prompt)
-        hasPassword: PropTypes.bool,
-        
-        // password re-entry ?
-        hasConfirm: PropTypes.bool,
-        
-        // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
-        hasUsername: PropTypes.bool,
-        
-        // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
-        hasEmail: PropTypes.bool,
-        
         // Focus the top element after mounting
         focus: PropTypes.bool,
+        clearONUnmount: PropTypes.bool,
     }
     
     static defaultProps = {
-        weak: true, // support local only wallets by default..
-        hasPassword: true,
-        hasConfirm: false,
-        // hasUsername: true,
-        // hasEmail: true,
         focus: true,
-        authError: false,
+        clearONUnmount: true,
     }
-    
-    // static getStores() {
-    //     return [AuthStore]
-    // }
-    // 
-    // static getPropsFromStores() {
-    //     return AuthStore.getState()
-    // }
     
     componentDidMount() {
         if( this.props.focus ) this.focus()
     }
     
+    componentWillUnmount() {
+        this.props.auth.clear()
+    }
+    
     render() {
-        // Simply turining email and username on does not "require" them... Weak = false will make those required.
-        let { weak, hasPassword, hasConfirm, hasUsername, hasEmail } = this.props
-        if( weak == false ) {
-            hasEmail = true
-            hasUsername = true
-        }
-        if( hasEmail === undefined || hasUsername === undefined) {
-            let { wallet } = WalletDb.getState()
-            if( wallet && wallet.storage.state.has("weak_password")) {
-                let weak_wallet = wallet.storage.state.get("weak_password")
-                if(hasEmail === undefined)
-                    hasEmail = ! weak_wallet
-                
-                if(hasUsername === undefined)
-                    hasUsername = ! weak_wallet
-            }
-        }
-        this.props.auth.setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail })
+        let { hasPassword, hasUsername, hasEmail } = this.props.auth.setup()
         return (
             <div>
                 { hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
@@ -104,11 +53,12 @@ export default class AuthInput extends Component {
     
     focus() { try {
         if( this.props.focus ) {
-            if( this.props.hasPassword  )
+            let { hasPassword, hasUsername, hasEmail } = this.props.auth.setup()
+            if( hasPassword  )
                 ReactDOM.findDOMNode(this.refs.auth_password).focus()
-            else if( this.props.hasEmail )
+            else if( hasEmail )
                 ReactDOM.findDOMNode(this.refs.auth_email).focus()
-            else if( this.props.hasUsername )
+            else if( hasUsername )
                 ReactDOM.findDOMNode(this.refs.auth_username).focus()
         }
     } catch(e) {}}
@@ -117,7 +67,7 @@ export default class AuthInput extends Component {
         
         let passwordChange = event => this.props.auth.update({ password: event.target.value })
         let confirmChange = event => this.props.auth.update({ confirm: event.target.value })
-        
+        let { hasConfirm } = this.props.auth.setup()
         // "grid-content", "no-overflow", 
         return <div className={cname("form-group", "no-margin", {"has-error": password_error != null })}>
         
@@ -129,7 +79,7 @@ export default class AuthInput extends Component {
             </div>
             
             {/* C O N F I R M */}
-            { this.props.hasConfirm ?
+            { hasConfirm ?
             <div>
                 <Translate component="label" content="wallet.confirm" />
                 <input type="password" value={confirm} onChange={confirmChange.bind(this)} id="auth_confirm" tabIndex={tabIndex++} />

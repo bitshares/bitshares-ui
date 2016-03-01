@@ -21,7 +21,7 @@ import { Apis } from "@graphene/chain"
 export default class Atl extends React.Component {
     render() {
         return (
-            <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore }}>
+            <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore("UnlockModal") }}>
                 <WalletUnlockModal />
             </AltContainer>
         )
@@ -118,9 +118,7 @@ class WalletUnlockModal extends React.Component {
                 
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     
-                    <AltContainer stores={{ auth: AuthStore }}>
-                        <AuthInput hasConfirm={false} />
-                    </AltContainer>
+                    <AuthInput auth={this.props.auth} hasConfirm={false} />
                     
                     <div className="button-group">
                         <button 

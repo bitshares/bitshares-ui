@@ -148,13 +148,13 @@ class WalletDb extends BaseStore {
         }
         
         if( wallet_name === this.state.current_wallet && wallet != null )
-            return Promise.resolve({ wallet })
+            return Promise.resolve(wallet)
         
         console.log("WalletDb\topenWallet", wallet_name);
 
         let key = "wallet::" + chain_config.address_prefix
         let storage = new IndexedDbPersistence( key )
-        storage.open(wallet_name).then(()=>{
+        return storage.open(wallet_name).then(()=>{
             let _wallet = new WalletStorage(storage)
             BackupServerStore.setWallet(_wallet)
             try {
@@ -179,7 +179,7 @@ class WalletDb extends BaseStore {
             } catch(error){
                 //nodejs:ReferenceError: window is not defined
             }
-            return Promise.resolve({ wallet })
+            return Promise.resolve(wallet)
         })
     }
     

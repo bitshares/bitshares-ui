@@ -17,7 +17,7 @@ import LoadingIndicator from "components/LoadingIndicator"
 
 global.tabIndex = global.tabIndex || 0
 
-let BackupAuthStore = AuthStore.instance("Backup")
+let BackupAuthStore = AuthStore("Backup")
 
 export default class Atl extends Component {
     render() {

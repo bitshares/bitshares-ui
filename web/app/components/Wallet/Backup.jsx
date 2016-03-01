@@ -59,39 +59,6 @@ export class BackupCreate extends BackupBaseComponent {
     }
 }
 
-// @connectToStores
-// export class BackupVerify extends BackupBaseComponent {
-//     render() {
-//         return <span>
-// 
-//             <h3><Translate content="wallet.verify_prior_backup" /></h3>
-// 
-//             <Upload>
-//                 <NameSizeModified/>
-//                 <DecryptBackup saveWalletObject={true}>
-//                     <h4><Translate content="wallet.verified" /></h4>
-//                     <WalletObjectInspector
-//                         walletObject={this.props.backup.wallet_object}/>
-//                 </DecryptBackup>
-//                 <Reset/>
-//             </Upload>
-//         
-//         </span>
-//     }
-// }
-
-// layout is a small project
-// class WalletObjectInspector extends Component {
-//     static propTypes={ walletObject: PropTypes.object }
-//     render() {
-//         return <div style={{overflowY:'auto'}}>
-//             <Inspector
-//                 data={ this.props.walletObject || {} }
-//                 search={false}/>
-//         </div>
-//     }
-// }
-
 @connectToStores
 export class BackupRestore extends BackupBaseComponent {
     
@@ -404,6 +371,7 @@ class DecryptBackup extends BackupBaseComponent {
         let username = ""
         let password = this.state.backup_password || ""
         
+        // function, different passwords are attempted
         let backupDecrypt = private_key => Promise.resolve().then(()=>
 
             Backup.decrypt(this.props.backup.contents, private_key).then( restored_object => {
@@ -497,3 +465,36 @@ class Reset extends BackupBaseComponent {
         window.history.back()
     }
 }
+
+// @connectToStores
+// export class BackupVerify extends BackupBaseComponent {
+//     render() {
+//         return <span>
+// 
+//             <h3><Translate content="wallet.verify_prior_backup" /></h3>
+// 
+//             <Upload>
+//                 <NameSizeModified/>
+//                 <DecryptBackup saveWalletObject={true}>
+//                     <h4><Translate content="wallet.verified" /></h4>
+//                     <WalletObjectInspector
+//                         walletObject={this.props.backup.wallet_object}/>
+//                 </DecryptBackup>
+//                 <Reset/>
+//             </Upload>
+//         
+//         </span>
+//     }
+// }
+
+// layout is a small project
+// class WalletObjectInspector extends Component {
+//     static propTypes={ walletObject: PropTypes.object }
+//     render() {
+//         return <div style={{overflowY:'auto'}}>
+//             <Inspector
+//                 data={ this.props.walletObject || {} }
+//                 search={false}/>
+//         </div>
+//     }
+// }

@@ -9,10 +9,13 @@ import AuthStore from "stores/AuthStore"
 import AuthInput from "components/Forms/AuthInput"
 
 import AltContainer from "alt-container"
+
+let VerifyAuthStore = AuthStore("Verify")
+
 export default class Alt extends Component {
     render() {
         return (
-            <AltContainer stores={{ auth: AuthStore }}>
+            <AltContainer stores={{ auth: VerifyAuthStore }}>
                 <VerifyPassword {...this.props} />
             </AltContainer>
         )

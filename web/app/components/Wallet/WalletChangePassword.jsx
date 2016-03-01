@@ -11,10 +11,13 @@ import VerifyPassword from "components/Wallet/VerifyPassword"
 import counterpart from "counterpart"
 
 import AltContainer from "alt-container"
+
+let ChangePasswordAuthStore = AuthStore("ChangePassword")
+
 export default class Alt extends Component {
     render() {
         return (
-            <AltContainer stores={{ auth: AuthStore }}>
+            <AltContainer stores={{ auth: ChangePasswordAuthStore }}>
                 <WalletChangePassword {...this.props}/>
             </AltContainer>
         )

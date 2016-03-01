@@ -18,7 +18,7 @@ class SettingsStore {
             //connection: "wss://bitshares.openledger.info/ws",
             connection: "ws://testnet.bitshares.eu/ws",
             faucet_address: "http://testnet.bitshares.eu",
-            backup_server: "ws://localhost:9080",
+            backup_server: "",
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10,

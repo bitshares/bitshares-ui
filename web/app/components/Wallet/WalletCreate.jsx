@@ -35,16 +35,18 @@ class WalletCreate extends Component {
     
 }
 
+let CreateAuthStore = AuthStore("Create", {hasConfirm: true, hasEmail: false, hasUsername: false})
+
 @connectToStores
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletDb, AuthStore]
+        return [WalletDb, CreateAuthStore]
     }
     
     static getPropsFromStores() {
         var wallet = WalletDb.getState()
-        wallet.auth = AuthStore.getState()
+        wallet.auth = CreateAuthStore.getState()
         return wallet
     }
     
@@ -89,7 +91,7 @@ class CreateNewWallet extends Component {
                 onSubmit={this.onSubmit.bind(this)}
                 onChange={this.formChange.bind(this)} noValidate
             >
-                <AuthInput auth={this.props.auth} hasConfirm={true} hasEmail={false} hasUsername={false} />
+                <AuthInput auth={this.props.auth} />
                 { has_wallet ? (
                     <div className=" no-overflow">
                         <br/>

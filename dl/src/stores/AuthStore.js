@@ -5,9 +5,27 @@ import { extractSeed } from "@graphene/time-token"
 import { validation } from "@graphene/chain"
 import WalletDb from "stores/WalletDb"
 
-/** Additional instances */
+/** Singleton instances */
 let instances = new Map()
 
+/**
+    @arg {string} name - Singleton instance name
+    @arg {object} setup - now or later (via props.auth.setup(...).  Also, setup is optional (see AuthStore.setup())
+*/
+export default (name, setup) => {
+    instances = instances
+        // By `name`, create new or return prior alt store
+        .update(name, store =>{
+            let s = store ? store : alt.createStore(AuthStore, name + "AuthStore")
+            s.setup(setup)
+            return s
+        })
+    return instances.get(name)
+}
+
+/**
+    Usage: AuthStore("MyComponent") or AuthStore("MyComponent", {hasConfirm: true, ...})
+*/
 class AuthStore {
     
     constructor() {
@@ -17,7 +35,8 @@ class AuthStore {
             email: "", email_error: null,
             valid: false,
             
-            setup: this.setup.bind(this),
+            // Singleton store methods, these could move to actions where needed: 
+            setup: ()=> this.config,
             update: this.update.bind(this),
             defaults: this.defaults.bind(this),
             useEmailFromToken: this.useEmailFromToken.bind(this),
@@ -28,16 +47,12 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        
-        this.instance = name => (
-            instances = instances
-            // By `name`, create new or return prior alt store
-            .update(name, store => store ? store : alt.createStore(AuthStore, name + "AuthStore"))
-        ).get(name)
         this.exportPublicMethods({
-            instance: this.instance.bind(this),
+            // setup can change
+            setup: this.setup.bind(this),
         })
     }
+    
     
     defaults() {
         let { wallet } = WalletDb.getState()
@@ -87,7 +102,42 @@ class AuthStore {
         return true
     }
     
-    setup({ weak, hasPassword, hasConfirm, hasUsername, hasEmail }) {
+    /**
+        // Require email and username (as well as password)
+        config.weak: PropTypes.bool,
+        
+        // Off to collect just an email (allows one to verify the email before password prompt)
+        config.hasPassword: PropTypes.bool,
+        
+        // password re-entry ?
+        config.hasConfirm: PropTypes.bool,
+        
+        // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
+        config.hasUsername: PropTypes.bool,
+        
+        // Wallets without a server backup may turn this off and use a weak password.  Or this data may be obtained elsewhere.
+        config.hasEmail: PropTypes.bool,
+    */
+    setup(config) {
+        // weak: true, // support local only wallets by default..
+        let { weak = true, hasPassword = true, hasConfirm = true, hasUsername, hasEmail } = (config || {})
+        
+        // Simply turining email and username on does not "require" them... Weak = false will make those required.
+        if( weak == false ) {
+            hasEmail = true
+            hasUsername = true
+        }
+        if( hasEmail === undefined || hasUsername === undefined) {
+            let { wallet } = WalletDb.getState()
+            if( wallet && wallet.storage.state.has("weak_password")) {
+                let weak_wallet = wallet.storage.state.get("weak_password")
+                if(hasEmail === undefined)
+                    hasEmail = ! weak_wallet
+                
+                if(hasUsername === undefined)
+                    hasUsername = ! weak_wallet
+            }
+        }
         this.config = { weak, hasPassword, hasConfirm, hasUsername, hasEmail }
     }
     
@@ -170,12 +220,13 @@ class AuthStore {
 
 function emailFromToken() {
     let { wallet } = WalletDb.getState()
-    if( wallet.storage.state.has("remote_token")) {
+    // `wallet` could be undefined, AuthStore is used to unlock the wallet.. 
+    if( wallet && wallet.storage.state.has("remote_token")) {
         let remote_token = wallet.storage.state.get("remote_token")
         let email = extractSeed(remote_token)
         return email
     }
 }
 
-export default alt.createStore(AuthStore, "AuthStore")
+// export default alt.createStore(AuthStore, "AuthStore")
 

@@ -20,15 +20,18 @@ import Translate from "react-translate-component";
 import RefcodeInput from "../Forms/RefcodeInput";
 import {TransitionMotion, spring} from 'react-motion';
 
+let CreateAccountAuthStore = AuthStore("CreateAccount",
+    {hasConfirm: WalletDb.isEmpty(), hasUsername: false, hasEmail: false})
+
 @connectToStores
 class CreateAccount extends React.Component {
 
     static getStores() {
-        return [AccountStore, AuthStore];
+        return [AccountStore, CreateAccountAuthStore];
     }
 
     static getPropsFromStores() {
-        return { auth: AuthStore.getState() };
+        return { auth: CreateAccountAuthStore.getState() };
     }
 
     constructor() {
@@ -47,7 +50,7 @@ class CreateAccount extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.validAccountName !== this.state.validAccountName ||
             nextState.accountName !== this.state.accountName ||
-            nextProps.auth.valid !== this.props.auth.valid ||
+            nextProps.auth !== this.props.auth ||
             nextState.registrar_account !== this.state.registrar_account ||
             nextState.loading !== this.state.loading ||
             nextState.hide_refcode !== this.state.hide_refcode ||
@@ -233,9 +236,7 @@ class CreateAccount extends React.Component {
                                 {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <AltContainer stores={{ auth: AuthStore }}>
-                                        <AuthInput hasConfirm={WalletDb.isEmpty()} hasUsername={false} hasEmail={false} focus={false}/>
-                                    </AltContainer>
+                                    <AuthInput auth={this.props.auth} focus={false} />
                                 }
                                 {
                                     first_account ? null : (
