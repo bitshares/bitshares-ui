@@ -44,7 +44,7 @@ class BackupServerStore {
             ui_status
         }
         this.setState(state)
-        console.log('BackupServerStore\tstate', state)
+        // console.log('BackupServerStore\tstate', state)
     }
     
     
