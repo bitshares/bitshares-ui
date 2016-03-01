@@ -185,7 +185,7 @@ class Transfer extends React.Component {
                         console.log("-- transferToBlind res -->", res);
                         //TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
                         //TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipt});
+                        this.setState({transfer_receipt: res.confirmation_receipts[0]});
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);

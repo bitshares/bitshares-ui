@@ -31,7 +31,8 @@ class CreatePrivateContactModal extends React.Component {
             AccountActions.addPrivateContact(label, this.state.public_key);
         }
         catch (error) {
-                alert(error);
+            console.error("-- CreatePrivateContactModal._onCreateClick -->", error);
+            alert(error);
         }
     }
 

@@ -23,7 +23,7 @@ class TransferReceiptModal extends React.Component {
 
     _selectElementText(el) {
         const range = document.createRange();
-        range.selectNodeContents(el);
+        range.selectNode(el);
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);

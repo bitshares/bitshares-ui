@@ -109,7 +109,10 @@ class AccountNameInput extends BaseComponent {
         e.stopPropagation();
         // Simplify the rules (prevent typing of invalid characters)
         var account_name = e.target.value.toLowerCase();
-        if (account_name.length === 0 && this.state.account_name.length === 1 && this.state.account_name[0] === this.props.prefixSymbol) return;
+        if (this.props.prefixSymbol) {
+            if (account_name[0] !== this.props.prefixSymbol) return;
+            if (account_name.length === 0 && this.state.account_name.length === 1 && this.state.account_name[0] === this.props.prefixSymbol) return;
+        }
         account_name = account_name.match(/[~a-z0-9\.-]+/);
         account_name = account_name ? account_name[0] : null;
         this.setState({ account_name });

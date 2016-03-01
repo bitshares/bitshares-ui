@@ -19,7 +19,7 @@ class CreatePrivateAccountModal extends React.Component {
     clear() {
         this.refs.label.clear();
         //this.refs.key.clear();
-        this.setState({label: ""});
+        this.setState({label: null, key: null});
     }
 
     _onCreateClick() {
@@ -29,6 +29,7 @@ class CreatePrivateAccountModal extends React.Component {
             AccountActions.addPrivateAccount(label);
         }
         catch (error) {
+            console.error("-- CreatePrivateAccountModal._onCreateClick -->", error);
             alert(error);
         }
     }
