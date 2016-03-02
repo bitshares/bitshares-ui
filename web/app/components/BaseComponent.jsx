@@ -20,6 +20,7 @@ class BaseComponent extends React.Component {
                 }
             }
         }
+        this.onChange = this.onChange.bind(this)
     }
 
     _bind(...methods) {
@@ -29,7 +30,8 @@ class BaseComponent extends React.Component {
     componentWillMount() {
         if (this.stores) {
             for (let storeName in this.stores) {
-                this.stores[storeName].listen(this.onChange.bind(this));
+                // console.log('BaseStore\tlisten', storeName)
+                this.stores[storeName].listen(this.onChange);
             }
         }
     }
@@ -37,7 +39,8 @@ class BaseComponent extends React.Component {
     componentWillUnmount() {
         if (this.stores) {
             for (let storeName in this.stores) {
-                this.stores[storeName].unlisten(this.onChange.bind(this));
+                // console.log('BaseStore\tunlisten', storeName)
+                this.stores[storeName].unlisten(this.onChange);
             }
         }
     }
