@@ -17,10 +17,10 @@ class TransactionConfirmActions {
         }, chain_config.expire_in_secs * 2000);
         
         let tr_resolve = transaction.__resolve;
-        let cb = transaction.__broadcast_confirmed_callback; // semi-colon required
+        let cb = transaction.__broadcast_confirmed_callback
         
-        // broadcast_confirmed_callback (optional) will save the receipts and backup the wallet
-        (cb ? cb() : Promise.resolve())
+        // broadcast_confirmed_callback  will save the receipts and backup the wallet
+        ;(cb ? cb() : Promise.resolve())
         .then(()=> transaction.broadcast(() =>
             this.actions.wasBroadcast())
             .then((res)=> {

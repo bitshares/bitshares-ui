@@ -687,7 +687,7 @@ export default class ConfidentialWallet {
             .then( amount_with_fee =>
                 this.blind_transfer_help(
                     from_blind_account_key_or_label, from_blind_account_key_or_label,
-                    amount_with_fee, asset_symbol, false, true/*to_temp*/
+                    amount_with_fee, asset_symbol, false/*broadcast*/, true/*to_temp*/
                 )
             )
             .then( conf => {
@@ -1112,7 +1112,7 @@ function blind_transfer_help(
                             // make sure the receipts are stored first before broadcasting
                             p1 = ()=> this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
                         }
-                        return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, null, p1)
+                        return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, null, p1, to_temp)
                         .then( tr => {
                             confirm.trx = tr
                             confirm.one_time_keys = one_time_keys.toJS()
@@ -1150,7 +1150,7 @@ let confirmation_receipts = outputs => List(outputs)
         return r.push(out.confirmation)
     }, List())
 
-function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadcast_confirmed_callback) {
+function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadcast_confirmed_callback, to_temp = false) {
     
     let tr = new TransactionBuilder()
 
@@ -1193,8 +1193,12 @@ function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadca
                     sign( one_time_key )
         }
     }
-
-    return this.process_transaction(tr, broadcast, broadcast_confirmed_callback).then(()=> tr)
+    if(to_temp)
+        // don't trigger the confirmation dialog
+        return tr.process_transaction(this, null/*signer keys*/, false/*broadcast*/).then(()=> tr)
+    else
+        // confirmation dialog
+        return this.process_transaction(tr, broadcast, broadcast_confirmed_callback).then(()=> tr)
 }
 
 /** Feeds need to be obtained in advance before calculating inputs and outputs. */
