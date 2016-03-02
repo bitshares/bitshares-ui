@@ -85,14 +85,14 @@ class WalletManagerStore extends BaseStore {
         // .then(()=> AccountRefsStore.loadDbData())
         // .then(()=>{
         // })
-        // return resolve ? resolve(p) : p
             
-        return Promise.resolve()
+        let p = Promise.resolve()
         .then(()=> WalletDb.openWallet(wallet_name))
         .then(()=>{
             if(create_wallet_auth)
                 return WalletDb.onCreateWallet( create_wallet_auth, brnkey )
         })
+        return resolve ? resolve(p) : p
     }
     
     /** Pending new wallet name (not the current_wallet).. Used by the components during a pending wallet create. */

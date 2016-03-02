@@ -30,6 +30,7 @@ class AccountNameInput extends BaseComponent {
         this.state = {value: null, error: null, existing_account: null, account_name: props.prefixSymbol};
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.hasAccountName = ()=> this.state.value != null && this.state.value.trim() != ""
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -46,7 +47,7 @@ class AccountNameInput extends BaseComponent {
     }
 
     componentDidUpdate() {
-        if (this.props.onChange) this.props.onChange({valid: !this.getError()});
+        if (this.props.onChange) this.props.onChange({valid: this.hasAccountName() && ! this.getError() });
     }
 
     value() {
@@ -100,7 +101,7 @@ class AccountNameInput extends BaseComponent {
                 this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
         }
         this.setState({value: value, error: this.state.error, warning: this.state.warning});
-        if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
+        if (this.props.onChange) this.props.onChange({ value: value, valid: this.hasAccountName() && ! this.getError() });
         if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
     }
 

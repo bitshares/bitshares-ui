@@ -86,6 +86,7 @@ class CreateAccount extends React.Component {
 
     createAccount(name) {
         let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
+        if ( refcode ) console.log("CreateAccount\trefcode", refcode)
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
             AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account, 0, refcode).then(() => {
@@ -97,9 +98,9 @@ class CreateAccount extends React.Component {
                 }
                 
                 // defaults for the login 
-                let { email, username } = this.props.auth
-                let { wallet } = WalletDb.getState()
-                wallet.storage.setState({ email, username })
+                // let { email, username } = this.props.auth
+                // let { wallet } = WalletDb.getState()
+                // wallet.storage.setState({ email, username })
                 
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
