@@ -234,7 +234,7 @@ class BorrowModalContent extends React.Component {
 
         if (props && props.hasCallOrders && props.call_orders) {
             for (let key in props.call_orders) {
-                if (props.call_orders.hasOwnProperty(key)) {
+                if (props.call_orders.hasOwnProperty(key) && props.call_orders[key]) {
                     if (props.quote_asset.get("id") === props.call_orders[key].getIn(["call_price", "quote", "asset_id"])) {
                         currentPosition = props.call_orders[key].toJS();
                     }
