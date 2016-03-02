@@ -660,7 +660,11 @@ module.exports = {
         showSettles: "在深度图中显示清算订单",
         yes: "是",
         no: "否",
-        walletLockTimeout: "钱包自动锁定时间（秒）"
+        walletLockTimeout: "钱包自动锁定时间（秒）",
+        themes: "主题",
+        darkTheme: "黑色主题",
+        lightTheme: "白色主题",
+        olDarkTheme: "Openledger黑"
     },
     pagination: {
         newer: "更近",
@@ -733,7 +737,8 @@ module.exports = {
         show_bids: "显示所有买单",
         show_asks: "显示所有卖单",
         hide: "隐藏",
-        "short": "做空"
+        "short": "做空",
+        others: "其他"
     },
     markets: {
         title: "交易所",

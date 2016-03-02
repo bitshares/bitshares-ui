@@ -1,762 +1,776 @@
 @import "../utils/utils";
 
 @mixin theme(
-    $primary-text-color,
-    $bg-color,
-    $dark-text-color,
-    $link-text-color,
-    $light-text-color,
-    $secondary-text-color,
-    $success-color,
-    $info-color,
-    $warning-color,
-    $alert-color,
-    $super-light-panel-bg-color,
-    $panel-bg-color,
-    $button-bg-color,
-    $secondary-button-bg-color,
-    $fee-color,
-    $bid-color,
-    $ask-color,
-    $call-color,
-    $light-panel-bg-color,
-    $positive-color,
-    $negative-color,
-    $row-accent-color,
-    $header-color
-    ) {
+  $primary-text-color,
+  $bg-color,
+  $dark-text-color,
+  $link-text-color,
+  $light-text-color,
+  $secondary-text-color,
+  $success-color,
+  $info-color,
+  $warning-color,
+  $alert-color,
+  $super-light-panel-bg-color,
+  $panel-bg-color,
+  $button-bg-color,
+  $secondary-button-bg-color,
+  $fee-color,
+  $bid-color,
+  $ask-color,
+  $call-color,
+  $light-panel-bg-color,
+  $positive-color,
+  $negative-color,
+  $row-accent-color,
+  $header-color
+  ) {
 
-    #content-wrapper {
-      @include color($primary-text-color, $bg-color);
+  #content-wrapper {
+    @include color($primary-text-color, $bg-color);
+  }
+
+  hr {
+    border-color: $dark-text-color;
+    background-color: $dark-text-color !important;
+  }
+
+  a {
+    color: $link-text-color;
+    &:hover, &:focus, &:active {
+      color: lighten($link-text-color, 4%);
     }
+  }
 
-    hr {
-      border-color: $dark-text-color;
-      background-color: $dark-text-color !important;
+  label, label > span {
+    color: $secondary-text-color;
+  }
+
+  select:hover {
+    background-color: $panel-bg-color;;
+  }
+
+  .label.success {
+    color: $success-color;
+    border-color: $success-color;
+  }
+
+  .label.info {
+    color: $info-color;
+    border-color: $info-color;
+  }
+
+  .label.warning {
+    color: $warning-color;
+    border-color: $warning-color;
+  }
+
+  .label.cancel, .label.alert {
+    color: $alert-color;
+    border-color: $alert-color;
+  }
+
+  .txtlabel.success {
+    color: $success-color;
+  }
+
+  .txtlabel.info {
+    color: $info-color;
+  }
+
+  .txtlabel.warning {
+    color: $warning-color;
+  }
+
+  .txtlabel.cancel, .label.alert {
+    color: $alert-color;
+  }
+
+  // notification
+
+  .notification {
+    @include color($primary-text-color, $super-light-panel-bg-color, true);
+  }
+
+  .notification-dismiss {
+    @include color($primary-text-color, $super-light-panel-bg-color, true);
+  }
+
+  .notification-success {
+    border-left-color: $success-color !important;
+  }
+
+  .action-sheet {
+    @include color($light-text-color, $super-light-panel-bg-color);
+    &::after {
+      border-bottom-color: $super-light-panel-bg-color;
     }
-
-    a {
-      color: $link-text-color;
-      &:hover, &:focus, &:active {
-        color: lighten($link-text-color, 4%);
-      }
-    }
-
-    label, label > span {
-      color: $secondary-text-color;
-    }
-
-    select:hover {
-      background-color: $panel-bg-color;;
-    }
-
-    .label.success {
-      color: $success-color;
-      border-color: $success-color;
-    }
-
-    .label.info {
-      color: $info-color;
-      border-color: $info-color;
-    }
-
-    .label.warning {
-      color: $warning-color;
-      border-color: $warning-color;
-    }
-
-    .label.cancel, .label.alert {
-      color: $alert-color;
-      border-color: $alert-color;
-    }
-
-    .txtlabel.success {
-      color: $success-color;
-    }
-
-    .txtlabel.info {
-      color: $info-color;
-    }
-
-    .txtlabel.warning {
-      color: $warning-color;
-    }
-
-    .txtlabel.cancel, .label.alert {
-      color: $alert-color;
-    }
-
-    // notification
-
-    .notification {
-      @include color($primary-text-color, $super-light-panel-bg-color, true);
-    }
-
-    .notification-dismiss {
-      @include color($primary-text-color, $super-light-panel-bg-color, true);
-    }
-
-    .notification-success {
-      border-left-color: $success-color !important;
-    }
-
-    .action-sheet {
-      @include color($light-text-color, $super-light-panel-bg-color);
-      &::after {
-        border-bottom-color: $super-light-panel-bg-color;
-      }
-      > ul > li > a {
-        color: $light-text-color;
-        border-top-color: $panel-bg-color;
-        &:hover {
-          @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
-        }
-      }
-    }
-
-    .__react_component_tooltip.type-light {
-      @include color($light-text-color, $super-light-panel-bg-color, true);
-      &.place-bottom:after {
-        border-bottom-color: $super-light-panel-bg-color !important;
-      }
-      &.place-top:after {
-        border-top-color: $super-light-panel-bg-color !important;
-      }
-      &.place-right:after {
-        border-right-color: $super-light-panel-bg-color !important;
-      }
-      &.place-left:after {
-        border-left-color: $super-light-panel-bg-color !important;
-      }
-    }
-
-    .json-inspector__key {
-      color: $secondary-text-color !important;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      color: $primary-text-color;
-    }
-
-    .modal {
-      @include color($light-text-color, $light-panel-bg-color);
-      .close-button {
-        color: $secondary-text-color;
-        &:hover {
-          color: $primary-text-color;
-        }
-      }
-      .modal-header {
-        > h6 {
-          color: $secondary-text-color;
-        }
-        &.has-error > h6 {
-          color: $error-text-color
-        }
-      }
-      .circle-wrapper {
-        .circle:before {
-          background-color: $primary-text-color;
-        }
-      }
-      .table {
-        > thead > tr > th, > tbody > tr > td {
-          border-bottom-color: darken($secondary-text-color, 10%);
-        }
-      }
-    }
-
-    .footer {
-      @include color($secondary-text-color, $panel-bg-color);
-      svg > path {
-        fill: $secondary-text-color;
-      }
-      .logo .version {
-        color: darken($secondary-text-color, 10%);
-      }
-    }
-
-    .panel-left {
-      @include color($light-text-color, $light-panel-bg-color);
-      .block-list li > a {
-        color: $light-text-color;
-        &:hover {
-          background-color: darken($light-panel-bg-color, 4%);
-        }
-      }
-    }
-
-    .tabs {
-    @include color($secondary-text-color, $bg-color);
-    }
-
-
-    .page-layout {
-      background-color: $bg-color;
-
-      .left-column {
-        border-top-color: $bg-color;
-        border-bottom-color: $bg-color;
-        background-color: $panel-bg-color; //lighten($bg-color, 4%);
-
-      }
-
-      .left-column-2 {
-        border-top-color: $bg-color;
-        border-bottom-color: $bg-color;
-        background-color: darken($bg-color, 4%);
-      }
-
-      .main-content {
-        background-color: $bg-color;
-      }
-
-      .right-column {
-        border-top-color: $bg-color;
-        border-bottom-color: $bg-color;
-        background-color: darken($bg-color, 4%);
-      }
-
-    }
-
-    .transfer-top {
-      background-color: $light-panel-bg-color;
-      label, label > span {
-        color: $light-text-color;
-      }
-    }
-
-    // buttons
-
-    .button {
-      background-color: $button-bg-color;
-      &:hover, &:focus, &:active {
-        background-color: lighten($button-bg-color, 4%) !important;
-      }
-      &.outline {
-        color: $secondary-text-color;
-        border-color: $secondary-text-color;
-        &:hover {
-          color: $light-text-color;
-          border-color: $light-text-color;
-        }
-      }
-    }
-
-    .button.secondary {
-      @include color($dark-text-color, $secondary-button-bg-color);
-      &:hover, &:focus, &:active {
-        @include color(lighten($dark-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
-      }
-    }
-
-    .header .button,  header .button:active {
-      background-color: $panel-bg-color !important;
-    }
-
-    .grp-menu-item button {
-      &:hover, &:focus, &:active {
-        background-color: #4c4c4c !important;
-      }
-    }
-
-    .header .logo {
-      color: $secondary-text-color;
-    }
-
-    .header-right-menu {
-      a > span { color: $secondary-text-color; }
-      svg > path { fill: $secondary-text-color; }
-      a:hover > span { color: $primary-text-color; }
-      svg:hover > path { fill: $primary-text-color; }
-    }
-
-    // cards
-
-
-    .card-section {
-      color: black;
-      padding-left: 0.5rem;
-      > ul {
-        color: $light-text-color;
-        list-style: none;
-        font-size: 85%;
-        margin-left: 0;
-      }
-    }
-
-
-    .card {
-      @include color($primary-text-color, $panel-bg-color);
-      background-color: $panel-bg-color;
+    > ul > li > a {
+      color: $light-text-color;
+      border-top-color: $panel-bg-color;
       &:hover {
-        background-color: lighten($panel-bg-color, 4%);
-        > h4 {
-          background-color: lighten($light-panel-bg-color, 4%);
-        }
+        @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
       }
-      a {
+    }
+  }
+
+  .__react_component_tooltip.type-light {
+    @include color($light-text-color, $super-light-panel-bg-color, true);
+    &.place-bottom:after {
+      border-bottom-color: $super-light-panel-bg-color !important;
+    }
+    &.place-top:after {
+      border-top-color: $super-light-panel-bg-color !important;
+    }
+    &.place-right:after {
+      border-right-color: $super-light-panel-bg-color !important;
+    }
+    &.place-left:after {
+      border-left-color: $super-light-panel-bg-color !important;
+    }
+  }
+
+  .json-inspector__key {
+    color: $secondary-text-color !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $primary-text-color;
+  }
+
+  .modal {
+    @include color($light-text-color, $light-panel-bg-color);
+    .close-button {
+      color: $secondary-text-color;
+      &:hover {
         color: $primary-text-color;
       }
-      .card-divider {
-        @include color($primary-text-color, $light-panel-bg-color);
-      }
-      > h4 {
-        background-color: $light-panel-bg-color;
-      }
     }
-
-    // tables
-    .table {
-      > thead > tr > th {
-        border-bottom-color: $dark-text-color;
+    .modal-header {
+      > h6 {
         color: $secondary-text-color;
       }
-      > tbody > tr > td {
-        border-bottom-color: $dark-text-color;
-      }
-      &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
-        background-color: lighten($bg-color, 4%);
+      &.has-error > h6 {
+        color: $error-text-color
       }
     }
-
-    // block-list
-
-    .block-list {
-      color: $primary-text-color;
-      li {
-        border-bottom: 1px solid $dark-text-color;
-      }
-      li > a {
-        color: $secondary-text-color;
-      }
-      li > a:hover, li > label:hover, li select:hover, li.active > a {
-        color: $light-text-color;
-        background-color: lighten($bg-color, 4%);
-      }
-      li:first-child {
-        border-top: 1px solid $dark-text-color;
-      }
-      header {
-        color: $secondary-text-color;
-      }
-    }
-
-
-    // forms
-
-    .has-error, div.has-error > label, div.has-error > label > span {
-      color: $error-text-color;
-    }
-
-    div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
-      border-color: $error-text-color;
-    }
-
-    .has-error input, .has-error select, .has-error textarea {
-      border-color: $error-text-color;
-    }
-
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
-      background-color: #ddd;
-      &:hover, &:focus, &:active {
-        background-color: #ddd;
-      }
-      &:focus {
-        border-color: #aaa;
-      }
-    }
-
-
-    // Tabs
-
-    .tabs {
-      border-bottom-color: $dark-text-color;
-      > .tab-item {
-        color: $secondary-text-color;
-        &.is-active {
-          color: $primary-text-color;
-          border-bottom-color: $button-bg-color;
-        }
-        &:hover, &:focus, &:active {
-          color: $primary-text-color;
-        }
-      }
-    }
-
-
-
-    // Exchange
-
-    .depthchart {
-      background-color: $bg-color;
-      &:hover {
-      background-color: $bg-color;
-      }
-      &.area {
-        color: #FFF;
-      }
-    }
-
-    // Account page
-    .account-left-panel {
-      h5 {
-        color: $primary-text-color;
-      }
-      h6 {
-        color: $secondary-text-color;
-      }
-      .bottom {
-        border-top-color: $bg-color;
-      }
-    }
-
-    .my-account h5, .my-account h4, td.my-account {
-      color: $info-color;
-    }
-
-    .account-left-menu {
-      > li > a:hover, > li > label:hover, > li select:hover {
-        color: $light-text-color;
-        background-color: $panel-bg-color;
-      }
-      > li > a.active {
-        color: $light-text-color;
-        background-color: lighten($panel-bg-color, 4%);
-        border-left-color: darken($button-bg-color, 4%);
-      }
-    }
-
-
-    .pagination {
-        background-color: $panel-bg-color;
-    }
-
-    .invoice {
-      .item-description {
-        color: $secondary-text-color;
-      }
-    }
-
-    // Formatted assets
-    .facolor-success {
-      color: $success-color;
-    }
-
-    .facolor-alert {
-      color: $alert-color;
-    }
-
-    .facolor-warning {
-      color: $warning-color;
-    }
-
-    .facolor-info {
-      color: $info-color;
-    }
-
-    .facolor-error {
-      color: $error-text-color;
-    }
-
-    .facolor-fee {
-      color: $fee-color;
-    }
-
-    // AccountSelector component
-
-    .account-selector {
-      .error-area {
-        color: $error-text-color;
-      }
-      .right-label {
-        color: $secondary-text-color;
-      }
-    }
-
-    .icon.success {
-      padding-right: 1rem;
-      > svg > path {
-        fill: $success-color;
-      }
-    }
-
     .circle-wrapper {
-       .circle:before {
-         background-color: $secondary-text-color;
-       }
-    }
-
-    // Misc
-
-    .chart-zoom-dropdown {
-      width:24px;
-      height: 28px;
-      padding: 4px;
-      opacity: 0.5;
-      overflow: hidden;
-      -webkit-transition: all .5s ease;
-      -moz-transition: all .5s ease;
-      transition: all .5s ease;
-
-      &:hover, &:active, &:focus {
-        background-color: $bg-color;
-        padding: 4px;
-        opacity: 0.85;
-        border-radius: 2px;
-        color: $light-text-color;
-        font-size: 60%;
-        width:348px;
-        height: 48px;
+      .circle:before {
+        background-color: $primary-text-color;
       }
     }
-
-    .remove {
-      color: $alert-color;
-      border: none;
-      padding: 2px 4px;
-      font-size: 120%;
-      background-color: transparent;
-      border-radius: 0;
-      -webkit-transition: all .5s ease;
-      -moz-transition: all .5s ease;
-      transition: all .5s ease;
-      &:hover, &:active, &:focus {
-        color: $light-text-color;
-        background-color: $alert-color;
-        font-size: 120%;
-        border-radius: 2px;
+    .table {
+      > thead > tr > th, > tbody > tr > td {
+        border-bottom-color: darken($secondary-text-color, 10%);
       }
     }
+  }
 
-    .memo {
+  .footer {
+    @include color($secondary-text-color, $panel-bg-color);
+    svg > path {
+      fill: $secondary-text-color;
+    }
+    .logo .version {
+      color: darken($secondary-text-color, 10%);
+    }
+  }
+
+  .panel-left {
+    @include color($light-text-color, $light-panel-bg-color);
+    .block-list li > a {
+      color: $light-text-color;
+      &:hover {
+        background-color: darken($light-panel-bg-color, 4%);
+      }
+    }
+  }
+
+  .tabs {
+  @include color($secondary-text-color, $bg-color);
+  }
+
+
+  .page-layout {
+    background-color: $bg-color;
+
+    .left-column {
+      border-top-color: $bg-color;
+      border-bottom-color: $bg-color;
+      background-color: $panel-bg-color; //lighten($bg-color, 4%);
+
+    }
+
+    .left-column-2 {
+      border-top-color: $bg-color;
+      border-bottom-color: $bg-color;
+      background-color: darken($bg-color, 4%);
+    }
+
+    .main-content {
+      background-color: $bg-color;
+    }
+
+    .right-column {
+      border-top-color: $bg-color;
+      border-bottom-color: $bg-color;
+      background-color: darken($bg-color, 4%);
+    }
+
+  }
+
+  .transfer-top {
+    background-color: $light-panel-bg-color;
+    label, label > span {
+      color: $light-text-color;
+    }
+  }
+
+  // buttons
+
+  .button {
+    background-color: $button-bg-color;
+    &:hover, &:focus, &:active {
+      background-color: lighten($button-bg-color, 4%) !important;
+    }
+    &.outline {
+      color: $secondary-text-color;
+      border-color: $secondary-text-color;
+      &:hover {
+        color: $light-text-color;
+        border-color: $light-text-color;
+      }
+    }
+  }
+
+  .button.secondary {
+    @include color($dark-text-color, $secondary-button-bg-color);
+    &:hover, &:focus, &:active {
+      @include color(lighten($dark-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
+    }
+  }
+
+  .header .button,  header .button:active {
+    background-color: $panel-bg-color !important;
+  }
+
+  .grp-menu-item button {
+    &:hover, &:focus, &:active {
+      background-color: #4c4c4c !important;
+    }
+  }
+
+  .header .logo {
+    color: $secondary-text-color;
+  }
+
+  .header-right-menu {
+    a > span { color: $secondary-text-color; }
+    svg > path { fill: $secondary-text-color; }
+    a:hover > span { color: $primary-text-color; }
+    svg:hover > path { fill: $primary-text-color; }
+  }
+
+  // cards
+
+
+  .card-section {
+    color: black;
+    padding-left: 0.5rem;
+    > ul {
+      color: $light-text-color;
+      list-style: none;
+      font-size: 85%;
+      margin-left: 0;
+    }
+  }
+
+
+  .card {
+    @include color($primary-text-color, $panel-bg-color);
+    background-color: $panel-bg-color;
+    &:hover {
+      background-color: lighten($panel-bg-color, 4%);
+      > h4 {
+        background-color: lighten($light-panel-bg-color, 4%);
+      }
+    }
+    a {
+      color: $primary-text-color;
+    }
+    .card-divider {
+      @include color($primary-text-color, $light-panel-bg-color);
+    }
+    > h4 {
+      background-color: $light-panel-bg-color;
+    }
+  }
+
+  // tables
+  .table {
+    > thead > tr > th {
+      border-bottom-color: $dark-text-color;
       color: $secondary-text-color;
     }
+    > tbody > tr > td {
+      border-bottom-color: $dark-text-color;
+    }
+    &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+      background-color: lighten($bg-color, 4%);
+    }
+  }
 
-    .help-content {
-      code {
+  // block-list
+
+  .block-list {
+    color: $primary-text-color;
+    li {
+      border-bottom: 1px solid $dark-text-color;
+    }
+    li > a {
+      color: $secondary-text-color;
+    }
+    li > a:hover, li > label:hover, li select:hover, li.active > a {
+      color: $light-text-color;
+      background-color: lighten($bg-color, 4%);
+    }
+    li:first-child {
+      border-top: 1px solid $dark-text-color;
+    }
+    header {
+      color: $secondary-text-color;
+    }
+  }
+
+
+  // forms
+
+  .has-error, div.has-error > label, div.has-error > label > span {
+    color: $error-text-color;
+  }
+
+  div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
+    border-color: $error-text-color;
+  }
+
+  .has-error input, .has-error select, .has-error textarea {
+    border-color: $error-text-color;
+  }
+
+  input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
+    background-color: #ddd;
+    &:hover, &:focus, &:active {
+      background-color: #ddd;
+    }
+    &:focus {
+      border-color: #aaa;
+    }
+  }
+
+
+  // Tabs
+
+  .tabs {
+    border-bottom-color: $dark-text-color;
+    > .tab-item {
+      color: $secondary-text-color;
+      &.is-active {
         color: $primary-text-color;
-        background-color: transparent;
-        border-color: $dark-text-color;
+        border-bottom-color: $button-bg-color;
+      }
+      &:hover, &:focus, &:active {
+        color: $primary-text-color;
       }
     }
+  }
 
 
-    .click-for-help {
-      border-bottom-color: $secondary-text-color !important;
+
+  // Exchange
+
+  .depthchart {
+    background-color: $bg-color;
+    &:hover {
+    background-color: $bg-color;
     }
-
-    // Block List (section)
-    section input[type="text"] {
-      background-color: transparent;
-      &:hover, &:active, &:focus {
-        color: $primary-text-color;
-        background-color: transparent;
-      }
+    &.area {
+      color: #FFF;
     }
+  }
 
-    .remove {
-      color: $alert-color;
-      border: none;
-      padding: 2px 4px;
+  // Account page
+  .account-left-panel {
+    h5 {
+      color: $primary-text-color;
+    }
+    h6 {
+      color: $secondary-text-color;
+    }
+    .bottom {
+      border-top-color: $bg-color;
+    }
+  }
+
+  .my-account h5, .my-account h4, td.my-account {
+    color: $info-color;
+  }
+
+  .account-left-menu {
+    > li > a:hover, > li > label:hover, > li select:hover {
+      color: $light-text-color;
+      background-color: $panel-bg-color;
+    }
+    > li > a.active {
+      color: $light-text-color;
+      background-color: lighten($panel-bg-color, 4%);
+      border-left-color: darken($button-bg-color, 4%);
+    }
+  }
+
+
+  .pagination {
+      background-color: $panel-bg-color;
+  }
+
+  .invoice {
+    .item-description {
+      color: $secondary-text-color;
+    }
+  }
+
+  // Formatted assets
+  .facolor-success {
+    color: $success-color;
+  }
+
+  .facolor-alert {
+    color: $alert-color;
+  }
+
+  .facolor-warning {
+    color: $warning-color;
+  }
+
+  .facolor-info {
+    color: $info-color;
+  }
+
+  .facolor-error {
+    color: $error-text-color;
+  }
+
+  .facolor-fee {
+    color: $fee-color;
+  }
+
+  // AccountSelector component
+
+  .account-selector {
+    .error-area {
+      color: $error-text-color;
+    }
+    .right-label {
+      color: $secondary-text-color;
+    }
+  }
+
+  .icon.success {
+    padding-right: 1rem;
+    > svg > path {
+      fill: $success-color;
+    }
+  }
+
+  .circle-wrapper {
+     .circle:before {
+       background-color: $secondary-text-color;
+     }
+  }
+
+  // Misc
+
+  .chart-zoom-dropdown {
+    width:24px;
+    height: 28px;
+    padding: 4px;
+    opacity: 0.5;
+    overflow: hidden;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    transition: all .5s ease;
+
+    &:hover, &:active, &:focus {
+      background-color: $bg-color;
+      padding: 4px;
+      opacity: 0.85;
+      border-radius: 2px;
+      color: $light-text-color;
+      font-size: 60%;
+      width:348px;
+      height: 48px;
+    }
+  }
+
+  .remove {
+    color: $alert-color;
+    border: none;
+    padding: 2px 4px;
+    font-size: 120%;
+    background-color: transparent;
+    border-radius: 0;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    transition: all .5s ease;
+    &:hover, &:active, &:focus {
+      color: $light-text-color;
+      background-color: $alert-color;
       font-size: 120%;
+      border-radius: 2px;
+    }
+  }
+
+  .memo {
+    color: $secondary-text-color;
+  }
+
+  .help-content {
+    code {
+      color: $primary-text-color;
       background-color: transparent;
-      border-radius: 0;
-      -webkit-transition: all .5s ease;
-      -moz-transition: all .5s ease;
-      transition: all .5s ease;
-      &:hover, &:active, &:focus {
-        color: $light-text-color;
-        background-color: $alert-color;
-        font-size: 120%;
-        border-radius: 2px;
-      }
+      border-color: $dark-text-color;
     }
+  }
 
-    .menu-group.primary, .menu-group.primary .menu-bar {
-        background-color: $panel-bg-color;
 
-        .menu-bar > li {
+  .click-for-help {
+    border-bottom-color: $secondary-text-color !important;
+  }
 
-            > a {
-                color: $primary-text-color;
-            }
-
-            > a:hover {
-              background-color: darken($panel-bg-color, 20%) !important;
-            }
-
-            > a.active {
-              background-color: darken($panel-bg-color, 10%) !important;
-            }
-        }
+  // Block List (section)
+  section input[type="text"] {
+    background-color: transparent;
+    &:hover, &:active, &:focus {
+      color: $primary-text-color;
+      background-color: transparent;
     }
+  }
 
-
-    // Asset Detail
-
-    .asset-card {
-      .card-divider {
-        background: $panel-bg-color;
-      }
-    }
-
-
-    // Exchange
-    .mymarkets-header {
-      border-bottom-color: $button-bg-color;
-      &.inactive {
-        border-bottom-color: transparent;
-        color: $secondary-text-color;
-      }
-    }
-
-    div.exchange-content-header {
+  .remove {
+    color: $alert-color;
+    border: none;
+    padding: 2px 4px;
+    font-size: 120%;
+    background-color: transparent;
+    border-radius: 0;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    transition: all .5s ease;
+    &:hover, &:active, &:focus {
       color: $light-text-color;
-      font-size: 1.1rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      padding: 0.55rem 10px;
-      background-color: $header-color !important;
-      border-bottom: 1px solid #8c88ff;
-      
-      &.bid {
-        border-bottom: 1px solid $bid-color;
-      }
-
-      &.ask {
-        border-bottom: 1px solid $ask-color;
-      }
+      background-color: $alert-color;
+      font-size: 120%;
+      border-radius: 2px;
     }
+  }
 
-    td.orderHistoryBid {
-      > span.price-integer, > span > span.price-integer {
-        font-weight: bold;
-        color: $bid-color;
-      }
-
-      > span.price-decimal, > span > span.price-decimal {
-        color: $primary-text-color;
-        opacity: 0.6;
-      }
-    }
-
-    td.orderHistoryAsk {
-      > span.price-integer, > span > span.price-integer {
-        font-weight: bold;
-        color: $ask-color;
-      }
-
-      > span.price-decimal, > span >span.price-decimal {
-        color: $primary-text-color;
-        opacity: 0.6;
-      }
-    }
-
-    td.orderHistoryCall {
-      > span.price-integer, > span > span.price-integer {
-        font-weight: bold;
-        color: $call-color;
-      }
-
-      > span.price-decimal, > span >span.price-decimal {
-        color: $primary-text-color;
-        opacity: 0.6;
-      }
-    }
-
-    .bid {
-      background-color: $bid-color !important;
-    }
-
-    .ask {
-      background-color: $ask-color !important;
-    }
-
-    .orderbook-latest-price {
-        div {
-          background-color: #4C4C4C !important;
-          border-bottom: 1px solid grey !important;
-          border-top: 1px solid grey !important;
-          padding: 10px 0 !important;
-          font-weight: bold;
-          font-size: 13px;
-        }
-    }
-
-
-    .order-table {
-
-        > tbody > tr:nth-of-type(even) {
-          background-color: $row-accent-color;
-        }
-    }
-
-    .mymarkets-header {
-      background-color: $header-color;
-    }
-
-    tr.activeMarket, tr.activeMarket:hover {
-      color: #4C85D8;
-      background-color: $header-color;
-    }
-
-    .market-stats .stat .value {
-        color: $primary-text-color;
-    }
-
-    .stats .stat {
-      > span {
-        > span:first-of-type {
-          color: $primary-text-color;
-        }
-
-        > span:last-of-type {
-          color: #468EDE;
-        }
-      }
-    }
-
-    .buy-sell-box {
-        background-color: lighten($panel-bg-color, 12%);
-
-        > select {
-            padding: 0;
-            margin: 0;
-            height: 1.75rem;
-            line-height: 1.75rem;
-            border: none;
-            color: white;
-            background-size: 8px 8px;
-            background-color: lighten($panel-bg-color, 12%);
-            font-size: 12px;
-        }
-    }
-
-    .change-up {
-      color: $positive-color !important;
-    }
-
-    .change-down {
-      color: $negative-color !important;
-    }
-
-    .header-sub-title {
-      font-size: 80%;
-      color: $light-text-color;
-    }
-
-    .label {
+  .menu-group.primary, .menu-group.primary .menu-bar {
       background-color: $panel-bg-color;
+
+      .menu-bar > li {
+
+          > a {
+              color: $primary-text-color;
+          }
+
+          > a:hover {
+            background-color: lighten($panel-bg-color, 5%) !important;
+          }
+
+          > a.active {
+            background-color: lighten($panel-bg-color, 5%) !important;
+          }
+      }
+  }
+
+
+  // Asset Detail
+
+  .asset-card {
+    .card-divider {
+      background: $panel-bg-color;
+    }
+  }
+
+
+  // Exchange
+  .mymarkets-header {
+    border-bottom-color: $button-bg-color;
+    &.inactive {
+      border-bottom-color: transparent;
+      color: $secondary-text-color;
+    }
+  }
+
+  .exchange-content-header {
+    color: $light-text-color;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    padding: 0.55rem 10px;
+    background-color: $header-color !important;
+    border-bottom: 1px solid $button-bg-color;
+    overflow: hidden;
+    &.bid {
+      border-bottom: 1px solid $bid-color;
     }
 
-    .mymarkets-group-header {
-      background-color: $panel-bg-color;
-      padding: 8px 35px;
-      border-bottom: 1px solid grey;
+    &.ask {
+      border-bottom: 1px solid $ask-color;
+    }
+  }
+
+  .block-content-header {
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+    //text-transform: uppercase;
+    @include RobotoLight;
+  }
+
+  td.orderHistoryBid {
+    > span.price-integer, > span > span.price-integer {
       font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
+      color: $bid-color;
     }
-      
+
+    > span.price-decimal, > span > span.price-decimal {
+      color: $primary-text-color;
+      opacity: 0.6;
+    }
+  }
+
+  td.orderHistoryAsk {
+    > span.price-integer, > span > span.price-integer {
+      font-weight: bold;
+      color: $ask-color;
+    }
+
+    > span.price-decimal, > span >span.price-decimal {
+      color: $primary-text-color;
+      opacity: 0.6;
+    }
+  }
+
+  td.orderHistoryCall {
+    > span.price-integer, > span > span.price-integer {
+      font-weight: bold;
+      color: $call-color;
+    }
+
+    > span.price-decimal, > span >span.price-decimal {
+      color: $primary-text-color;
+      opacity: 0.6;
+    }
+  }
+
+  .bid {
+    background-color: $bid-color !important;
+  }
+
+  .ask {
+    background-color: $ask-color !important;
+  }
+
+  .orderbook-latest-price {
+      div {
+        background-color: #4C4C4C !important;
+        border-bottom: 1px solid grey !important;
+        border-top: 1px solid grey !important;
+        padding: 10px 0 !important;
+        font-weight: bold;
+        font-size: 13px;
+      }
+  }
+
+
+  .order-table {
+
+      > tbody > tr:nth-of-type(even) {
+        background-color: $row-accent-color;
+      }
+  }
+
+  .mymarkets-header {
+    background-color: $header-color;
+  }
+
+  tr.activeMarket, tr.activeMarket:hover {
+    color: #4C85D8;
+    background-color: $header-color;
+  }
+
+  .market-stats .stat .value {
+      color: $primary-text-color;
+  }
+
+  .stats .stat {
+    > span {
+      > span:first-of-type {
+        color: $primary-text-color;
+      }
+
+      > span:last-of-type {
+        color: #468EDE;
+      }
+    }
+  }
+
+  .buy-sell-box {
+      background-color: lighten($panel-bg-color, 12%);
+
+      > select {
+          padding: 0;
+          margin: 0;
+          height: 1.75rem;
+          line-height: 1.75rem;
+          border: none;
+          color: white;
+          background-size: 8px 8px;
+          background-color: lighten($panel-bg-color, 12%);
+          font-size: 12px;
+      }
+  }
+
+  .change-up {
+    color: $positive-color !important;
+  }
+
+  .change-down {
+    color: $negative-color !important;
+  }
+
+  .header-sub-title {
+    font-size: 80%;
+    color: $light-text-color;
+  }
+
+  .label {
+    background-color: $panel-bg-color;
+  }
+
+  .mymarkets-group-header {
+    background-color: $header-color;
+    padding: 8px 35px;
+    border-bottom: 1px solid grey;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  div.bordered-header, div.left-orderbook-header {
+    //background-color: $header-color !important;
+  }
+
+  .table > tbody > tr:nth-of-type(even) {
+    background-color: lighten($bg-color, 4%);
+  }
 }

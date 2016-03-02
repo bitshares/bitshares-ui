@@ -182,7 +182,6 @@ class DepthHighChart extends React.Component {
                         enabled: false
                     },
                     series: {
-                        fillOpacity: 0.25,
                         enableMouseTracking: false
                     }
                 }
@@ -327,7 +326,8 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Settle ${quoteSymbol}`,
                 data: flat_settles,
-                color: colors[theme].settleColor
+                color: colors[theme].settleColor,
+                fillColor: colors[theme].settleFillColor
             })
 
         }
@@ -338,7 +338,8 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Bid ${quoteSymbol}`,
                 data: flatBids,
-                color: colors[theme].bidColor
+                color: colors[theme].bidColor,
+                fillColor: colors[theme].bidFillColor
             })
         }
 
@@ -346,7 +347,8 @@ class DepthHighChart extends React.Component {
             config.series.push({
                 name: `Ask ${quoteSymbol}`,
                 data: flatAsks,
-                color: colors[theme].askColor
+                color: colors[theme].askColor,
+                fillColor: colors[theme].askFillColor
             });
         }
 

@@ -80,6 +80,15 @@ class SettingsEntry extends React.Component {
                 input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
                 break;
 
+            case "faucet_address":
+                if (!selected) {
+                    value = "http";
+                } else {
+                    value = selected;
+                }
+                input = <input type="text" defaultValue={value} onChange={this.props.onChange.bind(this, setting)}/>
+                break;
+
             default:
 
                 if (typeof selected === "number") {
@@ -108,6 +117,8 @@ class SettingsEntry extends React.Component {
                 break;
 
         }
+
+
 
         if (!value && !options) return null;
 

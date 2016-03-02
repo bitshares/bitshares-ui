@@ -114,10 +114,10 @@ class WitnessRow extends React.Component {
 
         let missed = witness_data.get('total_missed');
         let missedClass = classNames("txtlabel",
-            {"success": missed <= 25 },
-            {"info": missed > 25 && missed <= 50},
-            {"warning": missed > 50 && missed <= 150},
-            {"error": missed >= 150}
+            {"success": missed <= 500 },
+            {"info": missed > 500 && missed <= 1250},
+            {"warning": missed > 1250 && missed <= 2000},
+            {"error": missed >= 200}
         );
 
         return (
@@ -127,7 +127,7 @@ class WitnessRow extends React.Component {
                 <td><TimeAgo time={new Date(last_aslot_time)} /></td>
                 <td>{witness_data.get('last_confirmed_block_num')}</td>
                 <td className={missedClass}>{missed}</td>
-                <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" /></td>
+                <td><FormattedAsset amount={witness_data.get('total_votes')} asset="1.3.0" decimalOffset={5} /></td>
             </tr>
         )
     }

@@ -156,6 +156,10 @@ var Utils = {
         if (typeof price !== "number" || !base || !quote) {
             return;
         }
+
+        if (price === Infinity) {
+            price = 0;
+        }
         let precision;
         let priceText;
 
@@ -170,24 +174,27 @@ var Utils = {
         let i;
 
         let zeros = 0;
-        if (price > 1) {
-            let l = dec.length;
-            for (i = l - 1; i >= 0; i--) {
-                if (dec[i] !== "0") {
-                    break;
-                }
-                zeros++;
-            };
-        } else {
-            let l = dec.length;
-            for (i = 0; i < l; i++) {
-                if (dec[i] !== "0") {
-                    i--;
-                    break;
-                }
-                zeros++;
-            };
+        if (dec) {
+            if (price > 1) {
+                let l = dec.length;
+                for (i = l - 1; i >= 0; i--) {
+                    if (dec[i] !== "0") {
+                        break;
+                    }
+                    zeros++;
+                };
+            } else {
+                let l = dec.length;
+                for (i = 0; i < l; i++) {
+                    if (dec[i] !== "0") {
+                        i--;
+                        break;
+                    }
+                    zeros++;
+                };
+            }
         }
+        
         let trailing = zeros ? dec.substr(Math.max(0, i + 1), dec.length) : null;
 
         if (trailing) {

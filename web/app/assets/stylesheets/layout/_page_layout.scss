@@ -4,7 +4,7 @@
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     > .grid-content, > .grid-block {
-      padding: 20px 1.75rem 1rem 1.75rem;
+      padding: 10px;
     }
   }
 
@@ -36,5 +36,34 @@
 @media (max-width: 1100px) {
   .hide-column-small {
     display: none !important;
+  }
+}
+
+div.bordered-header {
+  text-transform: uppercase;
+  font-size: 1.10rem;
+  padding-left: 10px;
+  padding-top: 0.55rem;
+  font-weight: 500;   
+  overflow: hidden;
+}
+
+.exchange-bordered {
+  border: 1px solid rgba(183, 183, 183, 0.29);
+
+  div:first-child & {
+    margin: 0 10px 0 10px;
+  }
+
+  div:last-child & {
+    margin: 0 10px 0 10px;
+  }
+}
+
+.generic-bordered-box {
+  //border: 1px solid rgba(183, 183, 183, 0.29);
+
+  .box-content {
+    //padding-left: 10px;
   }
 }

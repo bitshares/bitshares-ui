@@ -558,7 +558,8 @@ class MyMarkets extends React.Component {
         let allClass = cnames(hc, {inactive: activeTab === "starred"});
 
         let listStyle = {
-            minWidth: this.state.minWidth
+            minWidth: this.state.minWidth,
+            paddingTop: 8
         };
         if (listHeight) {
             listStyle.height = listHeight;
@@ -571,7 +572,10 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
+                <div
+                    style={this.props.headerStyle}
+                    className="grid-block shrink left-orderbook-header bottom-header"
+                >
                     <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "starred")}>
                         <Translate content="exchange.market_name" />
                     </div>

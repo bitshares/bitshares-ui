@@ -206,9 +206,9 @@ class AccountPermissions extends React.Component {
         accountsList = accountsList.add(this.props.account.get("id"));
         return (
             <div className="grid-content">
-
-                <Tabs setting="permissionsTabs" style={{maxWidth: "800px"}} contentClass="grid-content no-overflow large-8">
-                
+                <div className="generic-bordered-box">
+                    <Tabs setting="permissionsTabs" tabsClass="no-padding bordered-header" contentClass="grid-content no-overflow large-8">
+                    
                     <Tab title="account.perm.active">
                             <HelpContent style={{maxWidth: "800px"}} path="components/AccountPermActive" />
                             <form className="threshold">
@@ -276,20 +276,23 @@ class AccountPermissions extends React.Component {
 
                     </Tab>
                 </Tabs>
-
-                <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
-                    <Translate content="account.perm.publish"/>
-                </button>
-                <button className={reset_buttons_class} onClick={this.onReset} tabIndex={9}>
-                    <Translate content="account.perm.reset"/>
-                </button>
+                
+                    <div style={{padding: 15}}>
+                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
+                        <Translate content="account.perm.publish"/>
+                    </button>
+                    <button className={reset_buttons_class} onClick={this.onReset} tabIndex={9}>
+                        <Translate content="account.perm.reset"/>
+                    </button>
+                    </div>
+                </div>
 
                 <RecentTransactions
                     accountsList={accountsList}
                     limit={25}
                     compactView={false}
                     filter="account_update"
-                    style={{paddingTop: "2rem", maxWidth: "1000px"}}
+                    style={{paddingTop: "2rem"}}
                 />
 
             </div>

@@ -234,7 +234,7 @@ class BorrowModalContent extends React.Component {
 
         if (props && props.hasCallOrders && props.call_orders) {
             for (let key in props.call_orders) {
-                if (props.call_orders.hasOwnProperty(key)) {
+                if (props.call_orders.hasOwnProperty(key) && props.call_orders[key]) {
                     if (props.quote_asset.get("id") === props.call_orders[key].getIn(["call_price", "quote", "asset_id"])) {
                         currentPosition = props.call_orders[key].toJS();
                     }
@@ -320,7 +320,7 @@ class BorrowModalContent extends React.Component {
                     </form>
                     <div className="grid-content button-group text-center no-overflow">
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button warning"><Translate content="account.perm.cancel" /></a>
+                            <div href className="secondary button warning"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </div>)
@@ -397,8 +397,8 @@ class BorrowModalContent extends React.Component {
                             <div>{utils.format_number(collateral_ratio, 2)}</div>
                         </div>) : null}
                     <div className="grid-content button-group no-overflow">
-                        <a onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></a>
-                        <a onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></a>
+                        <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
+                        <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></div>
                         {/*<Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>*/}

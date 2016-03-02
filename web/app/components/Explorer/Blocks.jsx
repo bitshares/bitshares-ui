@@ -361,9 +361,11 @@ class Blocks extends React.Component {
                 <div ref ="transactionsBlock" className="grid-block no-overflow">
                     
                     <div className="grid-block small-12 medium-6 vertical no-overflow" style={{paddingBottom: 0}}>
-                        <div className="grid-block vertical no-overflow">
+                        <div className="grid-block vertical no-overflow generic-bordered-box">
                             <div ref="operationsText">
-                                <h3><Translate content="account.recent" /> </h3>
+                                <div className="block-content-header">
+                                    <Translate content="account.recent" />
+                                </div>
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -382,31 +384,31 @@ class Blocks extends React.Component {
                         </div>
                     </div>
                     <div className="grid-block medium-6 show-for-medium vertical no-overflow" style={{paddingBottom: 0}}>
-                        <div className="grid-block vertical no-overflow">
-                            <div ref="blocksText">
-                                <h3>
-                                    <Translate component="span" content="explorer.blocks.recent" />
-                                </h3>
-                            </div>
-                            <div className="grid-block vertical" style={{maxHeight: blocksHeight || "438px", overflow: "hidden", }} ref="blocks">
-                            
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th><Translate component="span" content="explorer.block.id" /></th>
-                                        <th><Translate component="span" content="explorer.block.date" /></th>
-                                        <th><Translate component="span" content="explorer.block.witness" /></th>
-                                        <th><Translate component="span" content="explorer.block.count" /></th>
-                                    </tr>
-                                </thead>
+                        <div className="grid-block vertical no-overflow generic-bordered-box">
+                                <div ref="blocksText">
+                                    <div className="block-content-header">
+                                        <Translate component="span" content="explorer.blocks.recent" />
+                                    </div>
+                                </div>
+                                <div className="grid-block vertical" style={{maxHeight: blocksHeight || "438px", overflow: "hidden", }} ref="blocks">
+                                
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th><Translate component="span" content="explorer.block.id" /></th>
+                                            <th><Translate component="span" content="explorer.block.date" /></th>
+                                            <th><Translate component="span" content="explorer.block.witness" /></th>
+                                            <th><Translate component="span" content="explorer.block.count" /></th>
+                                        </tr>
+                                    </thead>
 
-                                <TransitionWrapper
-                                    component="tbody"
-                                    transitionName="newrow"
-                                >
-                                    {blocks}
-                                </TransitionWrapper>
-                            </table>
+                                    <TransitionWrapper
+                                        component="tbody"
+                                        transitionName="newrow"
+                                    >
+                                        {blocks}
+                                    </TransitionWrapper>
+                                </table>
                             </div>
                         </div>
                     </div>
