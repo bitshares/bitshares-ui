@@ -726,7 +726,6 @@ export default class ConfidentialWallet {
                     // make sure the change is stored before broadcasting (durable)
                     p1 = ()=> this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
                 }
-                // return (p1 ? p1 : Promise.resolve()).then(()=>{
                     
                 // console.log("conf.trx", JSON.stringify(conf.trx))
                 return this.send_blind_tr(
@@ -743,7 +742,6 @@ export default class ConfidentialWallet {
                     delete conf.confirmation_receipts
                     return conf
                 })
-                // })
             })
         })
     }
@@ -1114,7 +1112,6 @@ function blind_transfer_help(
                             // make sure the receipts are stored first before broadcasting
                             p1 = ()=> this.receiveBlindTransfer(confirm.outputs, from_key_or_label)
                         }
-                        // return (p1 ? p1 : Promise.resolve()).then(()=>{
                         return this.send_blind_tr([blind_tr], from_key_or_label, broadcast, null, p1)
                         .then( tr => {
                             confirm.trx = tr
@@ -1125,7 +1122,6 @@ function blind_transfer_help(
                             
                             return confirm
                         })
-                        // })
                     })
                 })
             })
@@ -1198,7 +1194,7 @@ function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadca
         }
     }
 
-    return this.process_transaction(tr, broadcast, broadcast_confirmed_callback)
+    return this.process_transaction(tr, broadcast, broadcast_confirmed_callback).then(()=> tr)
 }
 
 /** Feeds need to be obtained in advance before calculating inputs and outputs. */
