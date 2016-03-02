@@ -143,25 +143,38 @@ class Header extends React.Component {
                                 <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
-        if (this.props.multiAccountMode || linkedAccounts.size > 1) {
-            linkToAccountOrDashboard = (
-                <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
-                    <Translate component="span" content="header.dashboard" />
-                </a>
-            );
-        } else if (linkedAccounts.size === 1) {
-                linkToAccountOrDashboard = (
-                    <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
-                        <Translate component="span" content="header.account" />
-                    </a>
-                );
-        } else {
+        if(WalletDb.isEmpty())
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active.indexOf("create-account") !== -1})} onClick={this._onNavigate.bind(this, "/create-account")}>
                     <Translate content="header.create_account" />
                 </a>
             );
-        }
+        else
+            linkToAccountOrDashboard = (
+                <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
+                    <Translate component="span" content="header.dashboard" />
+                </a>
+            );
+        
+        // if (this.props.multiAccountMode || linkedAccounts.size > 1) {
+        //     linkToAccountOrDashboard = (
+        //         <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
+        //             <Translate component="span" content="header.dashboard" />
+        //         </a>
+        //     );
+        // } else if (linkedAccounts.size === 1) {
+        //         linkToAccountOrDashboard = (
+        //             <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
+        //                 <Translate component="span" content="header.account" />
+        //             </a>
+        //         );
+        // } else {
+        //     linkToAccountOrDashboard = (
+        //         <a className={cnames({active: active.indexOf("create-account") !== -1})} onClick={this._onNavigate.bind(this, "/create-account")}>
+        //             <Translate content="header.create_account" />
+        //         </a>
+        //     );
+        // }
         let lock_unlock = null;
         if (this.props.current_wallet) lock_unlock = (
             <div className="grp-menu-item" >

@@ -17,7 +17,6 @@ import { ChainStore } from "@graphene/chain"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import BackupServerStore from "stores/BackupServerStore"
 import SettingsActions from "actions/SettingsActions"
 import SettingsStore from "stores/SettingsStore"
 
@@ -51,14 +50,16 @@ class WalletDb extends BaseStore {
     
     constructor() {
         super()
+        this.subscribers = Set()
         this.legacy_wallet_names = Set()
+        this.memoCache = Map()
         this.state = {
             saving_keys: false,
             current_wallet: undefined,
             wallet_names: Set(),
             locked: true,
         } 
-        
+        this.notify = notify.bind(this)
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
         })
@@ -84,8 +85,29 @@ class WalletDb extends BaseStore {
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
             "logout","isLocked","onCreateWallet","login","changePassword","verifyPassword",
             "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
-            "loadDbData",
+            "loadDbData", "subscribe", "unsubscribe", 
         )
+    }
+    
+    /** @arg {function} callback - called for current wallet by WalletStorage.subscribe(callback) 
+    */
+    subscribe( callback ) {
+        if(this.subscribers.has(callback)) {
+            console.error("WalletDb\tSubscribe callback already exists", callback)
+            return
+        }
+        this.subscribers = this.subscribers.add(callback)
+    }
+    
+    /**
+    *  Remove a callback that was previously added via {@link this.subscribe}
+    */
+    unsubscribe( callback ) {
+        if( ! this.subscribers.has(callback)) {
+            console.log("WalletDb\tWARN Unsubscribe callback does not exists")
+            return
+        }
+        this.subscribers = this.subscribers.remove( callback )
     }
     
     onChangeSetting(payload) {
@@ -96,7 +118,7 @@ class WalletDb extends BaseStore {
         }
     }
     
-    /** Loads the last active wallet. */
+    /** Loads wallet lists and last active wallet. */
     loadDbData() {
         
         // All wallets new and old
@@ -140,6 +162,12 @@ class WalletDb extends BaseStore {
     */
     openWallet(wallet_name) {
         
+        if( wallet_name === this.state.current_wallet && wallet != null )
+            return Promise.resolve(wallet)
+        
+        if( wallet )
+            wallet.unsubscribe(this.notify)
+        
         if(! wallet_name) {
             wallet = undefined
             cwallet = undefined
@@ -147,16 +175,18 @@ class WalletDb extends BaseStore {
             return Promise.resolve()
         }
         
-        if( wallet_name === this.state.current_wallet && wallet != null )
-            return Promise.resolve(wallet)
-        
         console.log("WalletDb\topenWallet", wallet_name);
 
         let key = "wallet::" + chain_config.address_prefix
         let storage = new IndexedDbPersistence( key )
-        return storage.open(wallet_name).then(()=>{
-            let _wallet = new WalletStorage(storage)
-            BackupServerStore.setWallet(_wallet)
+        
+        return Promise.resolve()
+        .then(()=> storage.open(wallet_name))
+        .then(()=>{
+            
+            let _wallet = new WalletStorage(storage)            
+            _wallet.subscribe(this.notify)
+            
             try {
                 let url = SettingsStore.getSetting("backup_server")
                 if( url === "" ) url = null
@@ -173,7 +203,6 @@ class WalletDb extends BaseStore {
             wallet = _wallet
             let wallet_names = this.state.wallet_names.add(wallet_name)
             this.setState({ current_wallet: wallet_name, wallet_names, wallet, cwallet }) // public
-            iDB.root.setProperty("current_wallet", wallet_name)
             try {
                 // browser console references
                 window.wallet = wallet
@@ -181,8 +210,17 @@ class WalletDb extends BaseStore {
             } catch(error){
                 //nodejs:ReferenceError: window is not defined
             }
-            return Promise.resolve(wallet)
         })
+        .then(()=> iDB.root.setProperty("current_wallet", wallet_name))
+        .then(()=>{
+            // The database must be closed and re-opened first before the current
+            // application code can initialize its new state.
+            iDB.close()
+            ChainStore.clearCache()
+            // BalanceClaimActiveStore.reset()
+        })
+        .then(()=> iDB.init_instance().init_promise )
+        .then(()=> wallet)
     }
     
     deleteWallet(wallet_name) {
@@ -257,6 +295,7 @@ class WalletDb extends BaseStore {
     */
     logout() {
         if( ! wallet) return
+        this.memoCache = Map()
         return wallet.logout().then( ()=> this.setState({ locked: true }) )
     }
     
@@ -299,17 +338,14 @@ class WalletDb extends BaseStore {
         return wallet.wallet_object.get("brainkey")
     }
     
-    // getBrainKeyPrivate(brainkey = this.getBrainKey()) {
-    //     if( ! brainkey) throw new Error("missing brainkey")
-    //     return PrivateKey.fromSeed( key.normalize_brain_key(brainkey) )
-    // }
-    
     /** Call openWallet first, unless creating the default wallet */
     onCreateWallet( auth, brainkey ) {
         
         return new Promise( (resolve, reject) => {
             if( auth == null)
                 throw new Error("password string is required")
+            
+            assert(wallet, "Call openWallet first")
             
             var brainkey_backup_date
             if(brainkey) {
@@ -397,7 +433,7 @@ class WalletDb extends BaseStore {
                 legacy_upgrade() :
                 wallet.login(email, username, password, Apis.chainId())
         )
-        .then( ()=> AccountRefsStore.loadDbData() )
+        // .then( ()=> AccountRefsStore.loadDbData() )// TODO Store can use WalletDb.subscribe instead
         .then( ()=> this.setState({locked: false }) )
     }
     
@@ -515,6 +551,9 @@ class WalletDb extends BaseStore {
     }
     
     decodeMemo(memo) {
+        if(this.memoCache.has(memo))
+            return this.memoCache.get(memo)
+        
         let lockedWallet = false;
         let memo_text, isMine = false;
         try {
@@ -541,10 +580,12 @@ class WalletDb extends BaseStore {
             // private_key = null;
             isMine = true;
         }
-        return {
+        let m = {
             text: memo_text,
             isMine
         }
+        this.memoCache = this.memoCache.set(memo, m)
+        return m
     }
     
     /** Saves wallet object to disk.  Always updates the last_modified date. */
@@ -671,6 +712,10 @@ export function legacyUpgrade(password, legacy_backup) {
     
     return wallet_object
 }
+// getBrainKeyPrivate(brainkey = this.getBrainKey()) {
+//     if( ! brainkey) throw new Error("missing brainkey")
+//     return PrivateKey.fromSeed( key.normalize_brain_key(brainkey) )
+// }
 
 /**
     @arg {string} name of a Map within the wallet
@@ -686,4 +731,13 @@ function map(wallet, name) {
 function assertLogin() {
     if( ! wallet || ! wallet.private_key )
         throw new Error("Wallet is locked")
+}
+
+function notify() {
+    this.subscribers.forEach( callback => {
+        try { callback() }
+        catch(error) {
+            console.error("WalletDb\tnotify" , error, 'stack', error.stack)
+        }
+    })
 }

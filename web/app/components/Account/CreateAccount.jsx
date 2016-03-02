@@ -235,7 +235,7 @@ class CreateAccount extends React.Component {
                                 {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
-                                    <AuthInput auth={this.props.auth} focus={false} hasConfirm={true} />
+                                    <AuthInput auth={this.props.auth} focus={false} />
                                 }
                                 {
                                     first_account ? null : (

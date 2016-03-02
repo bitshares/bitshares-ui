@@ -12,7 +12,7 @@ import counterpart from "counterpart"
 
 import AltContainer from "alt-container"
 
-let ChangePasswordAuthStore = AuthStore("ChangePassword")
+let ChangePasswordAuthStore = AuthStore("ChangePassword", { hasConfirm: true })
 
 export default class Alt extends Component {
     render() {
@@ -49,7 +49,7 @@ class WalletChangePassword extends Component {
             <h3><Translate content="wallet.change_password"/></h3>
             <VerifyPassword>
                 <form onSubmit={this.onAccept.bind(this)}>
-                    <AuthInput auth={this.props.auth} hasConfirm={true}/>
+                    <AuthInput auth={this.props.auth}/>
                 </form>
                 {this.state.loading ? <div className="center-content"><LoadingIndicator type="circle"/><br/></div>:null}
                 <div className={cname("button success", {disabled: ! this.props.auth.valid || this.state.loading })}

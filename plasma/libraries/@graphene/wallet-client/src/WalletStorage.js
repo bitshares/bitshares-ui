@@ -305,7 +305,7 @@ export default class WalletStorage {
         } else {
             unsub = Promise.resolve()
         }
-        
+        this.notify = true
         return this.notifyResolve( unsub
             // useBackupServer() will close the connection (this does not change the configuration)
             .then(()=> this.useBackupServer())

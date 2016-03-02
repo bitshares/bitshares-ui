@@ -8,17 +8,19 @@ import counterpart from "counterpart"
 
 /** Singleton instances */
 let instances = new Map()
+let instanceConfig, instanceName
 
 /**
     @arg {string} name - Singleton instance name
     @arg {object} setup - now or later (via props.auth.setup(...).  Also, setup is optional (see AuthStore.setup())
 */
-export default (name, setup) => {
+export default (name, config = {}) => {
+    instanceName = name
+    instanceConfig = config
     instances = instances
         // By `name`, create new or return prior alt store
         .update(name, store => store ? store : alt.createStore(AuthStore, name + "AuthStore"))
     let store = instances.get(name)
-    if(setup) store.setup(steup)
     return store
 }
 
@@ -44,13 +46,37 @@ class AuthStore {
             login: this.login.bind(this),
             changePassword: this.changePassword.bind(this),
             verifyPassword: this.verifyPassword.bind(this),
-            clear: ()=> this.clear(),
+            clear: ()=> this.clear(),//can't bind, this.clear is undefined at this point
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        this.config = { weak: true, hasPassword: true, hasConfirm: false, hasUsername: false, hasEmail: false }
+        this.config = { weak: true, hasPassword: true, hasConfirm: null, hasUsername: null, hasEmail: null }
+        this.config = { ...this.config, ...instanceConfig }
+        this.instanceName = instanceName
     }
     
+    /** Called after a wallet is opened (if one exists).  Helps with configuration default values. */ 
+    setup() {
+        if(this.config.hasConfirm == null)
+            this.config.hasConfirm = WalletDb.isEmpty() 
+        
+        let { wallet } = WalletDb.getState()
+        if( wallet ) {
+            if(wallet.storage.state.has("remote_url")) {
+                if(wallet.storage.state.has("weak_password") && WalletDb.isLocked()) {
+                    let weak_password = wallet.storage.state.get("weak_password")
+                    if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
+                    if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
+                }
+            }
+        }
+        // hide extra remote backup fields (until everything is ready)
+        if(this.config.hasEmail == null) {
+            this.config.hasEmail = false
+            this.config.hasUsername = false
+        }
+        // console.log('instanceName,config', this.instanceName,this.config)
+    }
     
     defaults() {
         let { wallet } = WalletDb.getState()
@@ -123,9 +149,9 @@ class AuthStore {
         config.hasEmail: PropTypes.bool,
 
     */
-    setup(config) {
-        this.config = { ...this.config, ...config }
-    }
+    // setup(config) {
+    //     this.config = { ...this.config, ...config }
+    // }
     
     update(state) {
         let new_state = {...this.state, ...state};
@@ -137,24 +163,6 @@ class AuthStore {
             new_state.email = new_state.email.toLowerCase().trim()
         
         new_state.auth_error = null
-        
-        if(this.config.hasConfirm == null) this.config.hasConfirm = WalletDb.isEmpty() 
-        
-        let { wallet } = WalletDb.getState()
-        if( wallet ) {
-            if(wallet.storage.state.has("remote_url")) {
-                if(wallet.storage.state.has("weak_password") && WalletDb.isLocked()) {
-                    let weak_password = wallet.storage.state.get("weak_password")
-                    if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
-                    if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
-                }
-            }
-        }
-        // hide extra remote backup fields (until everything is ready)
-        if(this.config.hasEmail === undefined) {
-            this.config.hasEmail = false
-            this.config.hasUsername = false
-        }
         
         // If the email token is being used (via useEmailFromToken)
         if(new_state.email_verified != null ) {

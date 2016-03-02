@@ -3,6 +3,7 @@ import iDB from "../idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
 import { ChainStore } from "@graphene/chain"
+import WalletDb from "stores/WalletDb"
 // import { chain_config } from "@graphene/chain"
 // import { LocalStoragePersistence } from "@graphene/wallet-client"
 
@@ -15,52 +16,49 @@ class AccountRefsStore extends BaseStore {
         super()
         this._export("loadDbData")
         this.state = this._getInitialState()
-        // this.bindListeners({ onAddPrivateKey: PrivateKeyActions.addKey })
         this.no_account_refs = Immutable.Set() // Set of account ids
+
+        iDB.subscribeToReset(this.loadDbData.bind(this))
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+        WalletDb.subscribe(this.walletStoreUpdate.bind(this))
         
-        // private
-        this.updateNoAccountRefs = updateNoAccountRefs.bind(this)
+        this.updateAccountRefs = updateAccountRefs.bind(this)
         this.loadNoAccountRefs = loadNoAccountRefs.bind(this)
         this.saveNoAccountRefs = saveNoAccountRefs.bind(this)
     }
     
     _getInitialState() {
         this.chainstore_account_ids_by_key = null
+        this.key_map = null
         return {
-            account_refs: Immutable.Set()
+            account_refs: Immutable.Set(),
         }
     }
-    
-    // onAddPrivateKey({private_key_object}) {
-    //     if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
-    //         this.chainStoreUpdate()
-    // }
     
     loadDbData() {
         this.setState(this._getInitialState())
         return this.loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
-            .then( ()=> this.updateNoAccountRefs() )
+            .then( ()=> this.updateAccountRefs() )
     }
 
+    walletStoreUpdate() {
+        if(WalletDb.keys() === this.key_map) return
+        this.key_map = WalletDb.keys()
+        this.updateAccountRefs()
+    }
+    
     chainStoreUpdate() {
-        let key_map = WalletDb.keys()
-        if(
-            this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
-            key_map === this.last_key_map
-        ) return
-        this.last_key_map = key_map
+        if( this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key ) return
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
-        this.updateNoAccountRefs()
+        this.updateAccountRefs()
     }
     
 }
 
 export default alt.createStore(AccountRefsStore, "AccountRefsStore")
 
-function updateNoAccountRefs() {
-    
+function updateAccountRefs() {
     var account_refs = Immutable.Set()
     var no_account_refs = this.no_account_refs
     WalletDb.keys().forEach( (key, pubkey) => {

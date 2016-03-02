@@ -95,7 +95,7 @@ class App extends React.Component {
             NotificationStore.listen(this._onNotificationChange.bind(this));
 
             Promise.all([
-                AccountStore.loadDbData()            
+                // AccountStore.loadDbData()            
             ]).then(() => {
                 AccountStore.tryToSetCurrentAccount();
                 this.setState({loading: false});
@@ -226,7 +226,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             
             return Promise.resolve()
             .then(()=> WalletDb.loadDbData())
-            .then(()=> AccountRefsStore.loadDbData())
+            // .then(()=> AccountRefsStore.loadDbData())
             .then(()=> AddressIndex.init())
             .catch((error) => {
                 console.error("----- WalletDb.willTransitionTo app error ----->", error, "stack", error.stack);

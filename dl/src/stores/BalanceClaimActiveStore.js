@@ -17,8 +17,8 @@ class BalanceClaimActiveStore extends BaseStore {
         super()
         this.state = this._getInitialState()
         this.no_balance_address = new Set() // per chain
-        this._export("reset")
-        // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+        iDB.subscribeToReset(this.reset.bind(this))
+
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
             onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
@@ -59,12 +59,12 @@ class BalanceClaimActiveStore extends BaseStore {
     
     onTransactionBroadcasted() {
         // Balance claims are included in a block...
-        // chainStoreUpdate did not include removal of balance claim objects
-        // This is a hack to refresh balance claims after a transaction.
+        // Refresh balance claims after a transaction.
         this.refreshBalances()
     }
     
     // chainStoreUpdate did not include removal of balance claim objects
+    // This is better done on request anyways.. Balance claims are not viewed very often.
     // chainStoreUpdate() {
     //     if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
     //         console.log("ChainStore.balance_objects_by_address")

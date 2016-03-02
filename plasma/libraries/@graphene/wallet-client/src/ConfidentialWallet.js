@@ -46,11 +46,14 @@ export default class ConfidentialWallet {
             broadcast_confirmed_callback()
             .then(()=> tr.process_transaction(this, null/*signer keys*/, broadcast))
         
-        // Convenience function to access the wallet object (ensure friendly return values)
+        // Convenience functions (ensure friendly return values)
         this.keys = () => this.wallet.wallet_object.getIn(["keys"], Map())
         this.blind_receipts = () => this.wallet.wallet_object.get("blind_receipts", List())
         this.commitments = (receipts = this.blind_receipts()) => receipts
             .reduce( (r, receipt) => r.push(receipt.getIn(["data", "commitment"])), List())
+        
+        this.labels = (filter = key => true)=> this.keys()
+            .reduce( (s, key) => key.has("label") && filter(key) ? s.add(key.get("label")) : s, Set())
         
         // BTS 1.0 addresses for shorts and balance claims
         // Update the index if needed

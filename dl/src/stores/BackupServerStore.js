@@ -1,6 +1,7 @@
 import alt from "alt-instance"
 import { fromJS } from "immutable"
 import { rfc822Email } from "@graphene/wallet-client"
+import WalletDb from "stores/WalletDb"
 
 class BackupServerStore {
     
@@ -10,20 +11,8 @@ class BackupServerStore {
         })
         this.state = this.init()
         this.exportPublicMethods({
-            setWallet: this.setWallet.bind(this),
-            // update: this.update.bind(this),
         })
-    }
-    
-    setWallet(wallet) {
-        this.state = this.init()
-        if(this.wallet && this._notify_subscription)
-            this.wallet.unsubscribe(this._notify_sub)
-        
-        this.wallet = wallet
-        this.notify()
-        this._notify_subscription = this.notify.bind(this)
-        this.wallet.subscribe(this._notify_subscription)
+        WalletDb.subscribe(this.notify.bind(this))
     }
     
     // update(state) {
@@ -32,9 +21,10 @@ class BackupServerStore {
     // }
     
     notify() {
-        let { socket_status, remote_status, local_status } = this.wallet
-        let { remote_url, remote_copy, remote_token } = this.wallet.storage.state.toJS()
-        let weak_password  = this.wallet.wallet_object.get("weak_password")
+        let wallet = WalletDb.getState().wallet
+        let { socket_status, remote_status, local_status } = wallet
+        let { remote_url, remote_copy, remote_token } = wallet.storage.state.toJS()
+        let weak_password  = wallet.wallet_object.get("weak_password")
         
         let ui_status = remote_copy === true ? remote_status : local_status
         let state = { 

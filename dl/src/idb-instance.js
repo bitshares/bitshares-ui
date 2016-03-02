@@ -1,15 +1,17 @@
 import { Apis } from "@graphene/chain"
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
+import Immuable from "immutable"
 
-const DB_VERSION = 4 // Initial value was 1
-const DB_PREFIX = "graphene_v4"
+const DB_VERSION = 2 // Initial value was 1
+const DB_PREFIX = "graphene_v5"
 
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
 
 var current_wallet_name = "default"
+var init_subscribers = Immuable.Set()
 
 var upgrade = function(db, oldVersion) {
     // DEBUG console.log('... upgrade oldVersion',oldVersion)
@@ -21,14 +23,6 @@ var upgrade = function(db, oldVersion) {
     if (oldVersion < 2) {
         // Cache only, do not backup...
         db.createObjectStore("cached_properties", { keyPath: "name" })
-    }
-    if (oldVersion < 3) {
-        // Cache only, do not backup...
-        db.createObjectStore("private_accounts", { keyPath: "name" })
-        db.createObjectStore("private_contacts", { keyPath: "name" })
-    }
-    if (oldVersion < 4) {
-        db.createObjectStore("my_accounts", { keyPath: "name" })
     }
 }
 
@@ -94,6 +88,7 @@ var iDB = (function () {
         let promise = openIndexedDB(chain_id);
         promise.then(db => {
             idb = db;
+            init_subscribers.forEach(cb =>{ try{cb()} catch(e){console.error(e)} })
         });
         return {
             init_promise: promise,
@@ -139,6 +134,8 @@ var iDB = (function () {
             }
             return _instance;
         },
+        
+        subscribeToReset: cb => init_subscribers = init_subscribers.add(cb),
         
         instance: function () {
             if (!_instance) {
@@ -245,21 +242,6 @@ var iDB = (function () {
             })
         },
         
-        // restore: function(wallet_name, object) {
-        //     var database_name = getDatabaseName(wallet_name)
-        //     return openDatabase(database_name).then( db => {
-        //         var store_names = Object.keys(object)
-        //         var trx = db.transaction(store_names, "readwrite")
-        //         for(let store_name of store_names) {
-        //             var store = trx.objectStore(store_name)
-        //             var records = object[store_name]
-        //             for(let record of records) {
-        //                 store.put(record)
-        //             }
-        //         }
-        //         return idb_helper.on_transaction_end(trx)
-        //     })
-        // }
     };
 
 })();

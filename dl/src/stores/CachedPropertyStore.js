@@ -14,6 +14,7 @@ class CachedPropertyStore extends BaseStore {
             onGet: CachedPropertyActions.get
         })
         this._export("get", "reset")
+        iDB.subscribeToReset(this.reset.bind(this))
     }
 
     _getInitialState() {
