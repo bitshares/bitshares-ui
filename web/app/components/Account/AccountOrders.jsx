@@ -84,7 +84,7 @@ class AccountOrders extends React.Component {
                 tables.push(
                     <div key={market} style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
                     <div className="exchange-bordered">
-                            <div className="exchange-content-header">
+                            <div className="block-content-header">
                                 <MarketLink quote={markets[market].quote.id} base={markets[market].base.id} />
                             </div>
                             <table className="table table-striped text-right ">

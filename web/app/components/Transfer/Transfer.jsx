@@ -233,10 +233,8 @@ class Transfer extends React.Component {
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
                 <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                    <div className="exchange-bordered">
-                        <div className="exchange-content-header" style={{marginBottom: 15}}>
-                            Transfer
-                        </div>
+                    <div>
+
                     <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
                         
 

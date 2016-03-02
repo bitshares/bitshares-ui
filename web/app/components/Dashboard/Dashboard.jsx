@@ -78,7 +78,7 @@ class Dashboard extends React.Component {
                 <div className={firstDiv} style={{minWidth: "50%"}}>
                     <div ref="container" className="grid-content">
                         <div className="generic-bordered-box">
-                            <div className="exchange-content-header" style={{marginBottom: 15}}>
+                            <div className="block-content-header" style={{marginBottom: 15}}>
                                 <Translate content="account.overview" />
                             </div>
                             <div className="box-content">

@@ -45,7 +45,7 @@ class VestingBalance extends React.Component {
             return (
                 <div style={{paddingBottom: "1rem"}}>
                     <div className="exchange-bordered">
-                        <div className="exchange-content-header" style={{marginBottom: 15}}>
+                        <div className="block-content-header" style={{marginBottom: 15}}>
                             <Translate content="account.vesting.balance_number" id={vb.get("id")} />
                         </div>
                         <table className="table key-value-table">
@@ -64,7 +64,7 @@ class VestingBalance extends React.Component {
         return (
             <div style={{paddingBottom: "1rem"}}>
                 <div className="exchange-bordered">
-                    <div className="exchange-content-header" style={{marginBottom: 15}}>
+                    <div className="block-content-header" style={{marginBottom: 15}}>
                         <Translate content="account.vesting.balance_number" id={vb.get("id")} />
                     </div>
                     <div className="grid-content">

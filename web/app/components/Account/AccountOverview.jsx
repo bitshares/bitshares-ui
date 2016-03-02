@@ -144,7 +144,7 @@ class AccountOverview extends React.Component {
             <div className="grid-content">
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
-                        <div className="exchange-content-header">
+                        <div className="block-content-header">
                             <Translate content="transfer.balances" />
                         </div>
                         <table className="table">
@@ -186,7 +186,7 @@ class AccountOverview extends React.Component {
 
                 <div className="content-block">
                     <div className="generic-bordered-box">
-                        <div className="exchange-content-header">
+                        <div className="block-content-header">
                             <Translate content="account.collaterals" />
                         </div>
                         <table className="table">

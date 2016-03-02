@@ -363,7 +363,7 @@ class Blocks extends React.Component {
                     <div className="grid-block small-12 medium-6 vertical no-overflow" style={{paddingBottom: 0}}>
                         <div className="grid-block vertical no-overflow generic-bordered-box">
                             <div ref="operationsText">
-                                <div className="exchange-content-header">
+                                <div className="block-content-header">
                                     <Translate content="account.recent" />
                                 </div>
                                 <table className="table">
@@ -386,7 +386,7 @@ class Blocks extends React.Component {
                     <div className="grid-block medium-6 show-for-medium vertical no-overflow" style={{paddingBottom: 0}}>
                         <div className="grid-block vertical no-overflow generic-bordered-box">
                                 <div ref="blocksText">
-                                    <div className="exchange-content-header">
+                                    <div className="block-content-header">
                                         <Translate component="span" content="explorer.blocks.recent" />
                                     </div>
                                 </div>

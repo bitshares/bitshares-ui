@@ -175,17 +175,17 @@ class RecentTransactions extends React.Component {
             <div className="recent-transactions no-overflow" style={style}>
                 <div className="generic-bordered-box">
                     <div ref="header">
-                    
-                        <div className="exchange-content-header">
+
+                        <div className="block-content-header">
                         {historyCount > 0 ?
-                            <div className="float-right">
+                            <div className="float-right small">
                                 <a
                                     onClick={this._downloadCSV.bind(this)}
                                     data-tip="Download as CSV"
                                     data-place="left"
                                     data-type="light"
                                 >
-                                    <span>CSV</span>
+                                    <span className="small-caps">CSV</span>
                                 </a>
                             </div> : null}
                             <Translate content="account.recent" />

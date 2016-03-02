@@ -583,11 +583,11 @@
           }
 
           > a:hover {
-            background-color: darken($panel-bg-color, 20%) !important;
+            background-color: lighten($panel-bg-color, 5%) !important;
           }
 
           > a.active {
-            background-color: darken($panel-bg-color, 10%) !important;
+            background-color: lighten($panel-bg-color, 5%) !important;
           }
       }
   }
@@ -611,7 +611,7 @@
     }
   }
 
-  div.exchange-content-header {
+  .exchange-content-header {
     color: $light-text-color;
     font-size: 1.1rem;
     font-weight: 500;
@@ -627,6 +627,13 @@
     &.ask {
       border-bottom: 1px solid $ask-color;
     }
+  }
+
+  .block-content-header {
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+    //text-transform: uppercase;
+    @include RobotoLight;
   }
 
   td.orderHistoryBid {
@@ -760,10 +767,10 @@
   }
 
   div.bordered-header, div.left-orderbook-header {
-    background-color: $header-color !important;
+    //background-color: $header-color !important;
   }
 
   .table > tbody > tr:nth-of-type(even) {
-    background-color: darken($light-panel-bg-color, 5%);
+    background-color: lighten($bg-color, 4%);
   }
 }
