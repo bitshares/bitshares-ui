@@ -41,6 +41,8 @@ class AccountMembership extends React.Component {
     }
 
     render() {
+
+        console.log("location", window.location.origin);
         let gprops = this.props.gprops;
         let dprops = this.props.dprops;
 
@@ -81,7 +83,7 @@ class AccountMembership extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
-                <div className="content-block">
+                <div className="content-block no-margin">
                     <h3><Translate content={membership}/> {expiration}</h3>
                     { member_status=== "lifetime" ? null : (
                        <div>
@@ -103,9 +105,16 @@ class AccountMembership extends React.Component {
                     )}
                 </div>
 
-                <div className="grid-block vertical large-horizontal">
-                    <div className="grid-block large-4">
-                        <div className="grid-content regular-padding">
+                <div className="content-block no-margin">
+                <div className="no-margin grid-block vertical large-horizontal">
+                    <div className="no-margin grid-block large-5">
+                        <div className="grid-content">
+                            {member_status=== "lifetime" ? (
+                            <div>
+                                <h4><Translate content="account.member.referral_link"/></h4>
+                                <Translate content="account.member.referral_text"/>:
+                                <h5>{`https://bitshares.openledger.info?r=${account.name}`}</h5>
+                            </div>) : null}
                             <h4><Translate content="account.member.fee_allocation"/></h4>
                             <table className="table key-value-table">
                                 <tbody>
@@ -146,9 +155,8 @@ class AccountMembership extends React.Component {
                             <VestingBalance vb={account.cashback_vb} account={account}/>                            
                         </div>
                     </div>
-                    <div className="grid-block large-1">&nbsp;</div>
                     <div className="grid-block large-7">
-                        <div className="grid-content regular-padding">
+                        <div className="grid-content">
                             <HelpContent path="components/AccountMembership"
                                          section="fee-division"
                                          account={account_name}
@@ -163,6 +171,7 @@ class AccountMembership extends React.Component {
                                          vestingPeriod={gprops.parameters.cashback_vesting_period_seconds/60/60/24}/>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         );
