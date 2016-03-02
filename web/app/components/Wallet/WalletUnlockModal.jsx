@@ -21,7 +21,7 @@ import { Apis } from "@graphene/chain"
 export default class Atl extends React.Component {
     render() {
         return (
-            <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore("UnlockModal") }}>
+            <AltContainer stores={{ unlock: WalletUnlockStore, auth: AuthStore("UnlockModal", { hasConfirm: false }) }}>
                 <WalletUnlockModal />
             </AltContainer>
         )

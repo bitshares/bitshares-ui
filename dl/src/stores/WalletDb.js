@@ -259,10 +259,13 @@ class WalletDb extends BaseStore {
         if( ! wallet.private_key ) return // locked
         if( ! wallet.wallet_object.has("brainkey")) return // no brainkey
         
-        if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key)
-            return // no change
+        if(
+            this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
+            this.chainstore_objects_by_id === ChainStore.objects_by_id
+        ) return // no change
             
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
+        this.chainstore_objects_by_id = ChainStore.objects_by_id
         
         // Helps to ensure we are looking at an un-used key
         try { this.generateNextKey() } catch(e) {

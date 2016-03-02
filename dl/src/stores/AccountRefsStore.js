@@ -29,6 +29,7 @@ class AccountRefsStore extends BaseStore {
     
     _getInitialState() {
         this.chainstore_account_ids_by_key = null
+        this.chainstore_objects_by_id = null
         this.key_map = null
         return {
             account_refs: Immutable.Set(),
@@ -49,8 +50,11 @@ class AccountRefsStore extends BaseStore {
     }
     
     chainStoreUpdate() {
-        if( this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key ) return
+        if( this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
+            this.chainstore_objects_by_id === ChainStore.objects_by_id
+        ) return
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
+        this.chainstore_objects_by_id = ChainStore.objects_by_id
         this.updateAccountRefs()
     }
     

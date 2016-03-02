@@ -22,6 +22,7 @@ class AccountStore extends BaseStore {
     constructor() {
         super();
         this.state = this._getInitialState()
+        WalletDb.subscribe(this.walletUpdate.bind(this))
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
@@ -34,13 +35,15 @@ class AccountStore extends BaseStore {
             onRemovePrivateContact: AccountActions.removePrivateContact,
             onWalletUnlocked: WalletUnlockActions.unlocked
         });
-        WalletDb.subscribe(this.walletUpdate.bind(this))
         this._export("tryToSetCurrentAccount", "onCreateAccount",
             "getMyAccounts", "isMyAccount", "getMyAuthorityForAccount", "getAccountType");
     }
     
     _getInitialState() {
-        this.account_refs = null
+        this.wallet_keys = Immutable.Map()
+        this.account_refs = Immutable.Set()
+        this.objects_by_id = Immutable.Map()
+        this.account_ids_by_key = Immutable.Map()
         return { 
             // update: false,
             currentAccount: null,
@@ -74,19 +77,24 @@ class AccountStore extends BaseStore {
             privateAccounts: cwallet.labels(key => key.has("private_wif")),
             privateContacts: cwallet.labels(key => ! key.has("private_wif")),
         })
+        this.updateLinkedAccounts()
     }
     
     chainStoreUpdate() {
-
-        // If either ID references (via public key) to an account or if the acccounts become available, update the account store...
-        
+        // If either ID references (via public key) to an account or if the acccounts become available, update this store...
         if( this.account_refs === AccountRefsStore.getState().account_refs &&
-            this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key
+            this.account_ids_by_key === ChainStore.account_ids_by_key &&
+            this.objects_by_id === ChainStore.objects_by_id
         ) return
         
-        this.account_refs = AccountRefsStore.getState().account_refs
-        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
-        
+        if( ! this.updateLinkedAccounts()) { // FIXME checking pending should not be necessary
+            this.account_refs = AccountRefsStore.getState().account_refs
+            this.account_ids_by_key = ChainStore.account_ids_by_key
+            this.objects_by_id = ChainStore.objects_by_id
+        }
+    }
+    
+    updateLinkedAccounts() {
         this.pending = false
         let linkedAccounts = Immutable.Set().asMutable()
         this.account_refs.forEach(id => {
@@ -116,6 +124,7 @@ class AccountStore extends BaseStore {
         })
         // console.log("AccountStore chainStoreUpdate linkedAccounts",this.state.linkedAccounts.size);
         this.setState({ linkedAccounts: linkedAccounts.asImmutable() }, ()=> this.tryToSetCurrentAccount())
+        return this.pending
     }
     
     getMyAccounts() {

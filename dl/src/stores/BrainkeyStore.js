@@ -68,8 +68,9 @@ class BrainkeyStoreImpl extends BaseStore {
             account_ids: Immutable.Set()
         }
         this.derived_keys = new Array()
-        // Compared with ChainStore.account_ids_by_key
-        this.account_ids_by_key = null
+        // Compared with ChainStore
+        this.chainstore_account_ids_by_key = null
+        this.chainstore_objects_by_id = null
     }
     
     /** Saves the brainkey and begins the lookup for derived account referneces */
@@ -93,8 +94,12 @@ class BrainkeyStoreImpl extends BaseStore {
     
     chainStoreUpdate() {
         if(! this.derived_keys.length) return
-        if(this.account_ids_by_key === ChainStore.account_ids_by_key) return
-        this.account_ids_by_key = ChainStore.account_ids_by_key
+        if( this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
+            this.chainstore_objects_by_id === ChainStore.objects_by_id
+        ) return
+        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
+        this.chainstore_objects_by_id = ChainStore.objects_by_id
+        
         this.updateAccountIds()
     }
     

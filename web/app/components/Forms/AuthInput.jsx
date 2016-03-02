@@ -30,11 +30,6 @@ export default class AuthInput extends Component {
         clearOnUnmount: true,
     }
     
-    componentWillMount() {
-        // If their is a wallet, it will be available now
-        this.props.auth.setup()
-    }
-    
     componentDidMount() {
         if( this.props.focus )
             this.focus()
@@ -54,6 +49,7 @@ export default class AuthInput extends Component {
     }
     
     render() {
+        this.props.auth.setup()
         let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
         return (
             <div>
