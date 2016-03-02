@@ -65,6 +65,7 @@ class CreateAccount extends React.Component {
 
     onAccountNameChange(e) {
         const state = {};
+        console.log("-- CreateAccount.onAccountNameChange -->", e.value);
         if(e.valid !== undefined) state.validAccountName = e.valid;
         if(e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
@@ -72,6 +73,7 @@ class CreateAccount extends React.Component {
     }
 
     onPasswordChange(e) {
+        console.log("-- CreateAccount.onPasswordChange -->", e);
         this.setState({validPassword: e.valid});
     }
 
@@ -175,7 +177,8 @@ class CreateAccount extends React.Component {
     }
 
     render() {
-        let my_accounts = AccountStore.getMyAccounts()
+        console.log("-- CreateAccount.render -->", this.state);
+        let my_accounts = AccountStore.getMyAccounts();
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
         let buttonClass = classNames("button no-margin", {disabled: !valid});
