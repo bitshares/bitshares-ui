@@ -27,6 +27,10 @@ const AssetBalance = ({onClick, balance, asset_id}) => {
     return <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={onClick}><Translate component="span" content="transfer.available"/>: {balance_value}</span>
 };
 
+const SimpleAssetBalance = ({balance, asset_id}) => {
+    return utils.is_object_id(balance) ? <BalanceComponent balance={balance}/> : <FormattedAsset amount={balance} asset={asset_id}/>;
+};
+
 @connectToStores
 class Transfer extends React.Component {
 
@@ -74,6 +78,7 @@ class Transfer extends React.Component {
 
     componentWillMount() {
         this.nestedRef = null;
+        this.queryBlindBalance();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,7 +101,7 @@ class Transfer extends React.Component {
             }
         }
     }
-    
+
     fromChanged(from_name) {
         this.queryBlindBalance(from_name);
         this.setState({from_name, asset: undefined, amount: undefined, error: null, propose: false, propose_account: "", blind_balances: null})
@@ -293,7 +298,7 @@ class Transfer extends React.Component {
         }
 
         let asset_types = [], fee_asset_types = [];
-        let balance = null;
+        let balance = null, all_balances = null;
 
         // Estimate fee
         let globalObject = ChainStore.getObject("2.0.0");
@@ -338,6 +343,10 @@ class Transfer extends React.Component {
             } else {
                 balance = "No funds";
             }
+
+            all_balances = Object.keys(account_balances).map(current_asset_id => {
+                return <li key={current_asset_id}><SimpleAssetBalance balance={account_balances[current_asset_id]} asset_id={current_asset_id} /></li>;
+            });
         }
 
         let propose_incomplete = propose && ! propose_account
@@ -446,6 +455,11 @@ class Transfer extends React.Component {
                 <TransferReceiptModal value={this.state.transfer_receipt}/>
             </form>
             <div className="grid-content medium-6 right-column">
+                {all_balances && all_balances.length > 0 && <div className="grid-content">
+                    <h3>{from_name}'s balances</h3>
+                    <ul>{all_balances}</ul>
+                    <br/>
+                </div>}
                 <div className="grid-content">
                     <RecentTransactions
                         accountsList={accountsList}
