@@ -128,18 +128,18 @@ class Transaction extends React.Component {
 
                     let lockedWallet = false;
                     if(op[1].memo) {
-                        let {text, isMine} = WalletDb.decodeMemo(op[1].memo);
-
-                        memo = text ? (
-                            <td>{text}</td>
-                        ) : !text && isMine ? (
-                            <td>
+                        
+                        if( WalletDb.isLocked() )
+                            memo = <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
                                     <Icon name="locked"/>
                                 </a>
                             </td>
-                        ) : null;
+                        else {
+                            let text = WalletDb.decodeMemo(op[1].memo);
+                            memo = <td>{text}</td>
+                        }
                     }
 
                     rows.push(

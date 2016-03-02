@@ -31,9 +31,7 @@ class MemoText extends React.Component {
             return null;
         }
 
-        let {text, isMine} = WalletDb.decodeMemo(memo);
-
-        if ( !text && isMine) {
+        if ( WalletDb.isLocked() ) {
             return (
                 <div className="memo">
                     <span>{counterpart.translate("transfer.memo_unlock")} </span>
@@ -43,7 +41,8 @@ class MemoText extends React.Component {
                 </div>
             );
         }
-
+        
+        let text = WalletDb.decodeMemo(memo);
         let full_memo = text;
         if (text && !fullLength && text.length > 35) {
             text = text.substr(0, 35) + "...";

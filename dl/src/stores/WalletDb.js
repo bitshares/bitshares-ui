@@ -554,41 +554,32 @@ class WalletDb extends BaseStore {
     }
     
     decodeMemo(memo) {
-        if(this.memoCache.has(memo))
-            return this.memoCache.get(memo)
+        if( this.isLocked() )
+            return
         
-        let lockedWallet = false;
-        let memo_text, isMine = false;
+        let immMemo = fromJS(memo)
+        if(this.memoCache.has(immMemo))
+            return this.memoCache.get(immMemo)
+        
+        let from_private_key = cwallet.getPrivateKey(memo.from)
+        let to_private_key = cwallet.getPrivateKey(memo.to)
+        let private_key = from_private_key ? from_private_key : to_private_key;
+        let public_key = from_private_key ? memo.to : memo.from;
+        
+        let memo_text;
         try {
-            let from_private_key = cwallet.getPrivateKey(memo.from)
-            let to_private_key = cwallet.getPrivateKey(memo.to)
-            let private_key = from_private_key ? from_private_key : to_private_key;
-            let public_key = from_private_key ? memo.to : memo.from;
-            
-            try {
-                memo_text = private_key ? Aes.decrypt_with_checksum(
-                    private_key,
-                    public_key,
-                    memo.nonce,
-                    memo.message
-                ).toString("utf-8") : null;
-            } catch(e) {
-                console.log("transfer memo exception ...", e);
-                memo_text = "*";
-            }
+            memo_text = private_key ? Aes.decrypt_with_checksum(
+                private_key,
+                public_key,
+                memo.nonce,
+                memo.message
+            ).toString("utf-8") : null;
+        } catch(e) {
+            console.log("WalletDb\tdecodeMemo", e);
+            memo_text = "*";
         }
-        catch(e) {
-            // Failed because Wallet is locked
-            lockedWallet = true;
-            // private_key = null;
-            isMine = true;
-        }
-        let m = {
-            text: memo_text,
-            isMine
-        }
-        this.memoCache = this.memoCache.set(memo, m)
-        return m
+        this.memoCache = this.memoCache.set(fromJS(memo), memo_text)
+        return memo_text
     }
     
     /** Saves wallet object to disk.  Always updates the last_modified date. */
