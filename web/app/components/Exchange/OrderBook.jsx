@@ -27,8 +27,8 @@ class OrderBookRowVertical extends React.Component {
 
         return (
             <tr key={order.price_full} onClick={this.props.onClick} className={classnames({"final-row": final})}>
-                <td>{utils.format_number(order.value, base.get("precision") - 1)}</td>
-                <td>{utils.format_number(order.amount, quote.get("precision") - 1)}</td>
+                <td>{utils.format_number(order.value, base.get("precision"))}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
@@ -56,9 +56,9 @@ class OrderBookRowHorizontal extends React.Component {
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
-                <td>{utils.format_number(order.amount, quote.get("precision") - 2)}</td>
-                <td>{utils.format_number(order.value, base.get("precision") - 2)}</td>
-                <td>{utils.format_number(order.totalValue, base.get("precision") - 2)}</td>
+                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
+                <td>{utils.format_number(order.value, base.get("precision"))}</td>
+                <td>{utils.format_number(order.totalValue, base.get("precision"))}</td>
 
             </tr>
         )
@@ -85,6 +85,7 @@ class OrderBook extends React.Component {
             !Immutable.is(nextProps.calls, this.props.calls) ||
             nextProps.horizontal !== this.props.horizontal ||
             nextProps.latest !== this.props.latest ||
+            nextProps.smallScreen !== this.props.smallScreen ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }
@@ -343,11 +344,11 @@ class OrderBook extends React.Component {
             let totalAsksLength = askRows.length;
 
             if (!showAllBids) {
-                bidRows.splice(13, bidRows.length);
+                bidRows.splice(12, bidRows.length);
             }
 
             if (!showAllAsks) {
-                askRows.splice(13, askRows.length);
+                askRows.splice(12, askRows.length);
             }
 
             return (
@@ -359,7 +360,7 @@ class OrderBook extends React.Component {
                                     {this.state.flip ? (
                                     <span>
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
-                                        <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
+                                        {!this.props.smallScreen ? <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span> : null}
                                     </span>) : null}
                                     <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
@@ -378,7 +379,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 252}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
@@ -426,7 +427,7 @@ class OrderBook extends React.Component {
                                         </tr>
                                     </thead>
                                 </table>    
-                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 264}}>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 252}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"

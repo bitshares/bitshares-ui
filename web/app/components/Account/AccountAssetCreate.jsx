@@ -200,14 +200,14 @@ class AccountAssetCreate extends React.Component {
             isBitAsset, is_prediction_market, bitasset_opts} = this.state;
         
         let {account} = this.props;
-        console.log("_createAsset:", permissionBooleans);
+
         let flags = assetUtils.getFlags(flagBooleans, isBitAsset);
         let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
-        console.log("flags:", flags);
+
         let description = JSON.stringify(update.description);
 
         AssetActions.createAsset(account.get("id"), update, flags, permissions, core_exchange_rate, isBitAsset, is_prediction_market, bitasset_opts, description).then(result => {
-            console.log("... AssetActions.updateAsset(account_id, update)", account.get("id"),  update, flags, permissions)
+            console.log("... AssetActions.createAsset(account_id, update)", account.get("id"),  update, flags, permissions)
         });
     }
 
@@ -600,7 +600,7 @@ class AccountAssetCreate extends React.Component {
                                     <div>
                                         <h5>
                                             <Translate content="exchange.price" />
-                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount, {precision: update.precision}, core_exchange_rate.base.amount, core)}</span>
+                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision), {precision: update.precision}, core_exchange_rate.base.amount * utils.get_asset_precision(core), core)}</span>
                                             <span> {update.symbol}/{core.get("symbol")}</span>
                                         </h5> 
                                     </div>

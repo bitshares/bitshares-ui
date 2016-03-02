@@ -84,7 +84,8 @@ class PriceChart extends React.Component {
             latestCheck ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             !utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings) ||
-            nextProps.verticalOrderbook !== this.props.verticalOrderbook
+            nextProps.verticalOrderbook !== this.props.verticalOrderbook ||
+            nextProps.height !== this.props.height
         );
     }
 
@@ -275,7 +276,9 @@ class PriceChart extends React.Component {
                 enabled: false
             },
             navigator: {
-                enabled: true
+                enabled: true,
+                height: 30,
+                margin: 10
             },
             rangeSelector: {
                 enabled: false

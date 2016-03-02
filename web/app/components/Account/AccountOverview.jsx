@@ -143,64 +143,76 @@ class AccountOverview extends React.Component {
         return (
             <div className="grid-content">
                 <div className="content-block small-12">
-                    <h3><Translate content="transfer.balances" /></h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
-                                {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
-                                <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
-                                <th>{/* Hide button */}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {includedBalances}
-                            {includedBalancesList.size > 1 ? <tr>
-                                <td></td>
-                                <td style={{textAlign: "right", fontWeight: "bold"}}>{totalBalance}</td>
-                                <td colSpan="2"></td>
-                            </tr> : null}
-                            {showHidden ? hiddenBalances : null}
-                            {hiddenBalancesList.size ? (
+                    <div className="generic-bordered-box">
+                        <div className="block-content-header">
+                            <Translate content="transfer.balances" />
+                        </div>
+                        <table className="table">
+                            <thead>
                                 <tr>
-                                    <td colSpan="4" style={{textAlign: "right"}}>
-                                        <div    
-                                            className="button outline"
-                                            onClick={this._toggleHiddenAssets.bind(this)}
-                                        >
-                                            <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 2})</span>
-                                        </div>
-                                    </td>
-                                </tr>) : null}
-                        </tbody>
-                    </table>
-                    <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
+                                    {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
+                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
+                                    {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
+                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
+                                    <th>{/* Hide button */}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {includedBalances}
+                                {includedBalancesList.size > 1 ? <tr>
+                                    <td></td>
+                                    <td style={{textAlign: "right", fontWeight: "bold"}}>{totalBalance}</td>
+                                    <td colSpan="2"></td>
+                                </tr> : null}
+                                {showHidden ? hiddenBalances : null}
+                                {hiddenBalancesList.size ? (
+                                    <tr>
+                                        <td colSpan="4" style={{textAlign: "right"}}>
+                                            <div    
+                                                className="button outline"
+                                                onClick={this._toggleHiddenAssets.bind(this)}
+                                            >
+                                                <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 2})</span>
+                                            </div>
+                                        </td>
+                                    </tr>) : null}
+                            </tbody>
+                        </table>
+                        <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
+                    </div>
                 </div>
-                {call_orders.length > 0 ? <div className="content-block">
-                    <h3><Translate content="account.collaterals" /></h3>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th><Translate content="transaction.borrow_amount" /></th>
-                            <th><Translate content="transaction.collateral" /></th>
-                            <th><Translate content="borrow.coll_ratio" /></th>
-                            <th><Translate content="exchange.call" /></th>
-                            <th><Translate content="borrow.adjust" /></th>
-                            <th><Translate content="borrow.close" /></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        { call_orders.map(id =><CollateralPosition key={id} object={id} account={account}/>) }
-                        </tbody>
-                    </table>
-                </div> : null}
+                {call_orders.length > 0 ? (
+
+                <div className="content-block">
+                    <div className="generic-bordered-box">
+                        <div className="block-content-header">
+                            <Translate content="account.collaterals" />
+                        </div>
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th><Translate content="transaction.borrow_amount" /></th>
+                                <th><Translate content="transaction.collateral" /></th>
+                                <th><Translate content="borrow.coll_ratio" /></th>
+                                <th><Translate content="exchange.call" /></th>
+                                <th><Translate content="borrow.adjust" /></th>
+                                <th><Translate content="borrow.close" /></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            { call_orders.map(id =><CollateralPosition key={id} object={id} account={account}/>) }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>) : null}
+                
                 <div className="content-block">
                     <RecentTransactions
                         accountsList={Immutable.fromJS([account.get("id")])}
                         compactView={false}
                         showMore={true}
+                        fullHeight={true}
                     />
                 </div>
             </div>

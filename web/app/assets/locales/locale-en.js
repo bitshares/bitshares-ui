@@ -96,7 +96,9 @@
             required: "Coin days required",
             remaining: "Days left of vesting period",
             claim: "Claim now",
-            available: "Available to claim"
+            available: "Available to claim",
+            referral_link: "Your referral link",
+            referral_text: "Give this to link to people you want to refer to Bitshares"
         },
         user_issued_assets: {
             symbol: "Symbol",

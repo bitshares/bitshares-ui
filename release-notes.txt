@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------
+Release 2.0.160302
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Various exchange layout improvements
+- Add rgba fill colors for depth charts
+- Use full precision for Orderbook and MarketHistory asset amounts
+
+BUG FIXES:
+- Check for price equal to infinity when parsing fill history
+- Fix membership button text being invisible #752
+- Fix asset creation CER precision issues #753
+- Fix disappearing faucet address in Settings #751
+- Fix AccountMembership spelling errors, also remove reference to annual membership #749
+- Fix AccountMembership margin issues and add referral link for lifetime members
+
+---------------------------------------------------------------------
 Release 2.0.160225
 ---------------------------------------------------------------------
 

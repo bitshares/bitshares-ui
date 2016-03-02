@@ -2,13 +2,7 @@
 ### Get {feesCashback}% Cashback on Fees
 
 Lifetime Members get {feesCashback}% cashback on every transaction fee they pay and
-qualify to earn referral income from users they register with or referer to the network. A
-Lifetime membership is just {price}.
-
-[# annual]
-
-If a lifetime membership is too much you can still get {feesCashback}%  cashback for the next year by becoming an
-annual subscriber for just {price} per year.
+qualify to earn referral income from users they register with or refer to the network. A Lifetime Membership is just {price}.
 
 [# fee-division]
 #### Fee Division
