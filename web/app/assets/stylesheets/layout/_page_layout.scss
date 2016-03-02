@@ -51,11 +51,11 @@ div.bordered-header {
 .exchange-bordered {
   border: 1px solid rgba(183, 183, 183, 0.29);
 
-  .order-1 & {
+  div:first-child & {
     margin: 0 10px 0 10px;
   }
 
-  .order-2 & {
+  div:last-child & {
     margin: 0 10px 0 10px;
   }
 }
