@@ -126,7 +126,8 @@ class MyOpenOrders extends React.Component {
 
                 return b_price.full - a_price.full;
             }).map((order, index) => {
-                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -137,7 +138,8 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -169,7 +171,7 @@ class MyOpenOrders extends React.Component {
         }
 
         rows.sort((a, b) => {
-            return b.props.date - a.props.date;
+            return a.props.price - b.props.price;
         })
 
         // if (bids.length === 0 && asks.length ===0) {

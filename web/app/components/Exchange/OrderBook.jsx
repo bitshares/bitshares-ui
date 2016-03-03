@@ -51,14 +51,29 @@ class OrderBookRowHorizontal extends React.Component {
         let {order, quote, base, type} = this.props;
 
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
+        
         return (
             <tr onClick={this.props.onClick} >
                 <td className={integerClass}>
                     <PriceText preFormattedPrice={order.price} />
                 </td>
-                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
-                <td>{utils.format_number(order.value, base.get("precision"))}</td>
-                <td>{utils.format_number(order.totalValue, base.get("precision"))}</td>
+                <td>{type === "bid" ?
+                    utils.format_number(order.amount, quote.get("precision")) :
+                    utils.format_asset(order.for_sale, quote, true)
+                }
+                </td>
+                <td>{type === "bid" ?
+                    utils.format_asset(order.for_sale, base, true) :
+                    utils.format_number(order.value, base.get("precision"))
+                }
+                </td>
+                <td>{type === "bid" ? 
+                    utils.format_asset(order.totalForSale, base, true) :
+                    utils.format_asset(order.totalValue, base, true)
+
+                }
+
+                </td>
 
             </tr>
         )
@@ -226,7 +241,7 @@ class OrderBook extends React.Component {
         let totalBidValue = 0;
         let totalAskAmount = 0;
 
-        let totalAsks = 0, totalBids = 0;
+        let totalAsks = 0, totalBids = 0, totalBidForSale = 0;
 
         if(base && quote) {
             let totalBidAmount = 0;
@@ -250,8 +265,11 @@ class OrderBook extends React.Component {
                 totalBidAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
 
                 totalBidValue += order.value;
+                totalBidForSale += order.for_sale;
+
                 order.totalValue = totalBidValue;
                 order.totalAmount = totalBidAmount;
+                order.totalForSale = totalBidForSale;
 
                 return (horizontal ?
                     <OrderBookRowHorizontal
@@ -287,7 +305,7 @@ class OrderBook extends React.Component {
                 return total > a.price_full ? a.price_full : total;
             }, null) : 0;
 
-            let totalAskValue = 0;
+            let totalAskValue = 0, totalAskForSale = 0;
 
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
@@ -299,9 +317,13 @@ class OrderBook extends React.Component {
             }).map((order, index) => {
                 totalAskAmount = market_utils.limitByPrecision(totalAskAmount + order.amount, base);
                 // totalAskAmount += order.amount;
-                totalAskValue += order.value;
+                totalAskValue += (order.sell_price.quote.amount * order.for_sale / order.sell_price.base.amount);
+                totalAskForSale += order.for_sale;
+                // console.log("order:", order);
+                // console.log(order.sell_price.quote.amount * order.for_sale / order.sell_price.base.amount);
                 order.totalValue = totalAskValue;
                 order.totalAmount = totalAskAmount;
+                order.totalForSale = totalAskForSale;
 
                 return (horizontal ?
 
