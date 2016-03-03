@@ -596,6 +596,7 @@ class Exchange extends React.Component {
             value = market_utils.limitByPrecision(e.target.value, base);
         }
 
+
         let amount = this.getBuyAmount(this.state.buyPrice, value);
 
         this.setState({
@@ -778,19 +779,20 @@ class Exchange extends React.Component {
     _getBuyPrice(price) {
         let nominator = utils.get_satoshi_amount(price, this.props.baseAsset)
         let denominator = utils.get_satoshi_amount(1, this.props.quoteAsset);
-        
+
+        let integerRatio = market_utils.priceToObject(price, "ask");
         let {baseAsset, quoteAsset} = this.props;
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
 
         return {
-            base: {
-                 asset_id: baseAsset.get("id"),
-                 amount: denominator
-            },
             quote: {
+                 asset_id: baseAsset.get("id"),
+                 amount: integerRatio.base * basePrecision
+            },
+            base: {
                 asset_id: quoteAsset.get("id"),
-                amount: nominator
+                amount: integerRatio.quote * quotePrecision
             }
         };
     }
@@ -821,19 +823,20 @@ class Exchange extends React.Component {
         let nominator = utils.get_satoshi_amount(price, this.props.baseAsset)
         let denominator = utils.get_satoshi_amount(1, this.props.quoteAsset);
         
+        let integerRatio = market_utils.priceToObject(price, "bid");
         let {baseAsset, quoteAsset} = this.props;
-
+        
         let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
         let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
 
         return {
-            base: {
-                 asset_id: this.props.quoteAsset.get("id"),
-                 amount: nominator
-            },
             quote: {
-                asset_id: this.props.baseAsset.get("id"),
-                amount: denominator
+                 asset_id: baseAsset.get("id"),
+                 amount: integerRatio.base * quotePrecision
+            },
+            base: {
+                asset_id: quoteAsset.get("id"),
+                amount: integerRatio.quote * basePrecision
             }
         };
     }

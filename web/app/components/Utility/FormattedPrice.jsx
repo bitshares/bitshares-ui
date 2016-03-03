@@ -71,7 +71,7 @@ class FormattedPrice extends React.Component {
             let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
             decimals = Math.min(8, decimals);
             if (base_asset.get("id") === "1.3.0") {
-              decimals = 4;
+              base_asset.get("precision");
             }
             formatted_value = (
                 <FormattedNumber
