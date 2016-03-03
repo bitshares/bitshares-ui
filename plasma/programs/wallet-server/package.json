@@ -24,12 +24,14 @@
     "ws": "^1.0.1",
     "mysql": "^2.9.0",
     "redux": "^3.0.4",
-    "sequelize": "^3.14.2"
+    "sequelize": "^3.14.2",
+    "bs58": "^3.0.0"
   },
   "scripts": {
     "start": "babel-node ./index.js",
     "cli": "babel-node ./src/Repl.js",
     "dev": "mocha --compilers js:babel-core/register ./index_dev.js --watch",
+    "mysql-init": "babel-node ./src/db/models.js",
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm test -- --watch"
   },

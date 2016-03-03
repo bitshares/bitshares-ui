@@ -6,9 +6,9 @@ npm install
 
 # Create Database
 ```bash
-#  Assumes your user is the default root (with no password)
+#  Assumes your user is the default root (with no password) or you configured .npmrc (see below)
 mysqladmin -u root create wallet_server
-node src/db/models.js
+npm run mysql-init
 ```
 
 # Run
