@@ -766,8 +766,8 @@
     cursor: pointer;
   }
 
-  div.bordered-header, div.left-orderbook-header {
-    //background-color: $header-color !important;
+  div.exchange-content-header {
+    background-color: $header-color !important;
   }
 
   .table > tbody > tr:nth-of-type(even) {
