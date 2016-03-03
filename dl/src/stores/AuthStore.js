@@ -50,31 +50,32 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        this.config = { weak: true, hasPassword: true, hasConfirm: null, hasUsername: null, hasEmail: null }
+        // weak means the username is optional ( supports old wallets )
+        this.config = { hasPassword: true, hasUsername: false, weak: true, hasConfirm: null, hasEmail: null }
         this.config = { ...this.config, ...instanceConfig }
         this.instanceName = instanceName
     }
     
     /** Called after a wallet is opened (if one exists).  Helps with configuration default values. */ 
     setup() {
-        if(this.config.hasConfirm == null)
-            this.config.hasConfirm = WalletDb.isEmpty() 
-        
-        let { wallet } = WalletDb.getState()
-        if( wallet ) {
-            if(wallet.storage.state.has("remote_url")) {
-                if(wallet.storage.state.has("weak_password") && WalletDb.isLocked()) {
-                    let weak_password = wallet.storage.state.get("weak_password")
-                    if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
-                    if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
-                }
-            }
-        }
-        // hide extra remote backup fields (until everything is ready)
-        if(this.config.hasEmail == null) {
-            this.config.hasEmail = false
-            this.config.hasUsername = false
-        }
+        // if(this.config.hasConfirm == null)
+        //     this.config.hasConfirm = WalletDb.isEmpty() 
+        // 
+        // let { wallet } = WalletDb.getState()
+        // if( wallet ) {
+        //     if(wallet.storage.state.has("remote_url")) {
+        //         if(wallet.storage.state.has("weak_password") && ! WalletDb.isLocked()) {
+        //             let weak_password = wallet.storage.state.get("weak_password")
+        //             if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
+        //             if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
+        //         }
+        //     }
+        // }
+        // // hide extra remote backup fields (until everything is ready)
+        // if(this.config.hasEmail == null) {
+        //     this.config.hasEmail = false
+        //     this.config.hasUsername = false
+        // }
         // console.log('instanceName,config', this.instanceName,this.config)
     }
     
@@ -200,7 +201,7 @@ class AuthStore {
     }
     
     checkEmail({ email }) {
-        if( ! this.config.hasEmail || (email === "" && this.config.weak)) {
+        if( ! this.config.hasEmail || (email === "")) {
             return { email_valid: true, email_error: null }
         }
         let email_valid = rfc822Email(email)
@@ -253,7 +254,7 @@ function emailFromToken() {
     // `wallet` could be undefined, AuthStore is used to unlock the wallet.. 
     if( wallet && wallet.storage.state.has("remote_token")) {
         let remote_token = wallet.storage.state.get("remote_token")
-        let email = extractSeed(remote_token)
+        let [ email ] = extractSeed(remote_token)
         return email
     }
 }

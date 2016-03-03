@@ -36,7 +36,7 @@ describe('Confidential wallet', () => {
     
     it('keys', ()=> {
         
-        return wallet.login(username, password, email, Apis.chainId())
+        return wallet.login(username, password, Apis.chainId())
         .then(()=>{
         
             let public_key = PrivateKey.fromSeed("").toPublicKey().toString()
@@ -80,7 +80,7 @@ describe('Confidential wallet', () => {
         assert.throws(create, /locked/, "This test should require an unlocked wallet" )
         
         // unlock
-        return wallet.login(username, password, email, Apis.chainId())
+        return wallet.login(username, password, Apis.chainId())
         .then(()=>{
             
             assert.deepEqual( cw.getBlindAccounts().toJS(), {} )
@@ -113,7 +113,7 @@ describe('Confidential wallet', () => {
     
     it("account to blind", function() {
     
-        return wallet.login(username, password, email, Apis.chainId())
+        return wallet.login(username, password, Apis.chainId())
         .then(()=>{
             create("alice", "alice-brain-key", cw)
             create("bob", "bob-brain-key", cw)
@@ -157,7 +157,7 @@ describe('Confidential wallet', () => {
     
     it("blind to account", function() {
     
-        return wallet.login(username, password, email, Apis.chainId())
+        return wallet.login(username, password, Apis.chainId())
         .then(()=>{
             create("alice", "alice-brain-key", cw)
             cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "@nathan" )
@@ -199,7 +199,7 @@ describe('Confidential wallet', () => {
         // must wait for a blocks...
         this.timeout(30 * 1000)
     
-        return wallet.login(username, password, email, Apis.chainId())
+        return wallet.login(username, password, Apis.chainId())
         .then(()=>{
             
             create("alice", "alice-brain-key", cw)
@@ -244,7 +244,7 @@ describe('Confidential wallet', () => {
         this.timeout(10 * 1000)
         
         return Promise.resolve()
-        .then(()=> wallet.login(username, password, email, Apis.chainId()) )
+        .then(()=> wallet.login(username, password, Apis.chainId()) )
         .then(()=>{
 
             create("alice", "alice-brain-key", cw)

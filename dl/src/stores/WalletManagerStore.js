@@ -32,21 +32,20 @@ class WalletManagerStore extends BaseStore {
     }
     
     /** Create the wallet. */
-    onRestore({ wallet_name, wallet_object, password }) {
+    onRestore({ wallet_name, wallet_object, username = "", password }) {
         
         console.log('WalletManagerStore\trestore', wallet_name)
         
         if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
             throw new Error("Invalid wallet name")
         
-        let email = ""
         let username = ""
         
         WalletDb.logout()
         WalletDb.openWallet(wallet_name).then( wallet => {
             wallet_object = wallet_object.set("public_name", wallet_name)// if different
             wallet.wallet_object = wallet_object
-            return wallet.login(email, username, password, Apis.chainId())
+            return wallet.login(username, password, Apis.chainId())
         })
         .then(()=> this.onSetWallet({ wallet_name }))
         .then(()=> this.setState({ restored_wallet_name: wallet_name }))

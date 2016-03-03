@@ -8,6 +8,10 @@ import lzma from "lzma"
 */
 export function encrypt(wallet_object, backup_pubkey) {
     // console.log("Backup.encrypt")
+    
+    if( ! backup_pubkey )
+        return Promise.resolve()
+    
     return new Promise( resolve => {
         let compression_mode = 9 
         let entropy = secureRandom.randomBuffer(32)
@@ -33,6 +37,8 @@ export function encrypt(wallet_object, backup_pubkey) {
 */
 export function decrypt(backup_buffer, private_key) {
     // console.log("Backup.decrypt")
+    if( ! private_key )
+        return Promise.resolve()
     
     if( ! Buffer.isBuffer(backup_buffer))
         backup_buffer = new Buffer(backup_buffer, 'binary')

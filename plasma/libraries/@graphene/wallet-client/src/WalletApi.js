@@ -157,14 +157,15 @@ export default class WalletApi {
     }
 
     /** Permanently remove a wallet.
+        @arg {string} code - from {@link requestCode}
         @arg {string} deleteWallet.local_hash - base64 sha256 encrypted_data
         @arg {string} deleteWallet.signature - base64
         @return {Promise} resolve (successful) or cache (error) 
     */
-    deleteWallet(local_hash, signature) {
+    deleteWallet(code, local_hash, signature) {
         local_hash = toBase64(req(local_hash, 'local_hash'))
         signature = toBase64(req(signature, 'signature'))
-        let params = { local_hash, signature }
+        let params = { code, local_hash, signature }
         return this.ws_rpc.call("deleteWallet", params) 
             .then(res => assertRes(res, "OK" ))
             .then( json => { return {status: 200, statusText: "OK"} })

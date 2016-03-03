@@ -374,7 +374,7 @@ class WalletDb extends BaseStore {
             let chain_id = Apis.instance().chain_id
             resolve(Promise.resolve()
             
-                .then(()=> wallet.login(auth.email, auth.username, auth.password, chain_id)) //login and sync
+                .then(()=> wallet.login(auth.username, auth.password, chain_id)) //login and sync
                 
                 .then(()=> assert(wallet.wallet_object.get("created"),
                     "Wallet exists: " + this.state.current_wallet))
@@ -405,12 +405,12 @@ class WalletDb extends BaseStore {
         @return {boolean} true if password matches
         @throws {Error} "Wallet is locked"
     */
-    verifyPassword({ password, email = "", username = "" }) {
+    verifyPassword({ password, username = "" }) {
         assertLogin()
-        return wallet.verifyPassword(email, username, password)
+        return wallet.verifyPassword(username, password)
     }
     
-    login({ password, email = "", username = "" }) {
+    login({ password, username = "" }) {
         
         assert(this.isLocked(), "Wallet is already unlocked")
         
@@ -426,7 +426,7 @@ class WalletDb extends BaseStore {
             .then( legacy_backup =>{
                 wallet.wallet_object = legacyUpgrade(password, legacy_backup)
                 // create the new wallet
-                return wallet.login(email, username, password, Apis.chainId())
+                return wallet.login(username, password, Apis.chainId())
             })
         }
         
@@ -434,15 +434,15 @@ class WalletDb extends BaseStore {
         .then( ()=> 
             is_legacy() ?
                 legacy_upgrade() :
-                wallet.login(email, username, password, Apis.chainId())
+                wallet.login(username, password, Apis.chainId())
         )
         // .then( ()=> AccountRefsStore.loadDbData() )// TODO Store can use WalletDb.subscribe instead
         .then( ()=> this.setState({locked: false }) )
     }
     
     /** This will unlock the wallet (if successful). */
-    changePassword({ password, email, username }) {
-        return wallet.changePassword( password, email, username )
+    changePassword({ password, username }) {
+        return wallet.changePassword( password, username )
     }
     
     /**

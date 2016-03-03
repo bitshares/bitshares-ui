@@ -81,11 +81,25 @@ class BackupServer extends Component {
         )
         
         const weak_password = <div>
-            {this.props.auth.email_verified ? <div>
+            { ! this.props.auth.email_verified ? <div>
+                
+                {/* E M A I L */}
+                <AuthInput auth={this.props.auth} clearOnUnmount={false} />
+                 <div className="center-content">
+                     {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                     <br/>
+                 </div>
+                <button 
+                    className={cname("button", {disabled: ! this.props.auth.email_valid}) }
+                    onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
+                </button>
+            </div>
+            :
+            <div>
                 
                 <p><Translate content="wallet.remember_auth"/></p>{/* You <b>must</b> remember... */}
                     
-                {/* Password, Email, Username */}
+                {/* Password, Username */}
                 <AuthInput auth={this.props.auth} clearOnUnmount={false} />
                 
                  <div className="center-content">
@@ -96,20 +110,7 @@ class BackupServer extends Component {
                 <button className={cname("button", {disabled: this.state.busy || ! this.props.auth.valid }) }  onClick={changePassword.bind(this)}><Translate content="i_agree"/></button>
                 
             </div>
-            :
-                <div>
-                    
-                    {/* E M A I L */}
-                    <AuthInput auth={this.props.auth} clearOnUnmount={false} />
-                     <div className="center-content">
-                         {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                         <br/>
-                     </div>
-                    <button 
-                        className={cname("button", {disabled: ! this.props.auth.email_valid}) }
-                        onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
-                    </button>
-                </div>
+                
             }
         </div>
         

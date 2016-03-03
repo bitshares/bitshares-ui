@@ -20,7 +20,7 @@ import Translate from "react-translate-component";
 import RefcodeInput from "../Forms/RefcodeInput";
 import {TransitionMotion, spring} from 'react-motion';
 
-let CreateAccountAuthStore = AuthStore("CreateAccount")
+let CreateAccountAuthStore = AuthStore("CreateAccount", { hasConfirm: true })
 
 @connectToStores
 class CreateAccount extends React.Component {
@@ -98,9 +98,9 @@ class CreateAccount extends React.Component {
                 }
                 
                 // defaults for the login 
-                // let { email, username } = this.props.auth
+                // let { username } = this.props.auth
                 // let { wallet } = WalletDb.getState()
-                // wallet.storage.setState({ email, username })
+                // wallet.storage.setState({ username })
                 
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
@@ -116,7 +116,9 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet() {
+    createWallet(username) {
+        let auth = this.props.auth
+        auth.username = username
         return WalletActions.setWallet(
             "default", //wallet name
             this.props.auth
@@ -233,7 +235,6 @@ class CreateAccount extends React.Component {
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true} focus={true}/>
 
-                                {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
                                     <AuthInput auth={this.props.auth} focus={false} />
