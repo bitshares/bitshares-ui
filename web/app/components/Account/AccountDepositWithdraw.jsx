@@ -499,8 +499,7 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="eth"
                                 deposit_wallet_type="ethereum"
                                 receive_asset="OPEN.ETH"
-                                receive_coin_type="open.eth"
-                                deposit_memo_name="data" />
+                                receive_coin_type="open.eth" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-openltc"
                                 gateway="openledger"
@@ -541,7 +540,8 @@ class AccountDepositWithdraw extends React.Component {
                                 receive_asset="OPENMUSE"
                                 receive_coin_type="openmuse"
                                 deprecated_in_favor_of="OPEN.MUSE" 
-                                deprecated_message={openledger_deprecated_message} />
+                                deprecated_message={openledger_deprecated_message} 
+                                deposit_memo_name="memo" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.muse"
                                 gateway="openledger"
@@ -554,7 +554,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_account="openledger-wallet"
                                 deposit_wallet_type="muse"
                                 receive_asset="OPEN.MUSE"
-                                receive_coin_type="open.muse" />
+                                receive_coin_type="open.muse"
+                                deposit_memo_name="memo" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-opennbt"
                                 gateway="openledger"
