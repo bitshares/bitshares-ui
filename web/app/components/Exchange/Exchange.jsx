@@ -1171,7 +1171,7 @@ class Exchange extends React.Component {
                     <div className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block no-padding shrink overflow-visible top-bar" style={{minHeight: "67px"}}>
+                        <div className="grid-block no-padding shrink overflow-visible top-bar">
                             <div className="grid-block no-overflow">
                                 <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
                                     <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol">
@@ -1233,11 +1233,10 @@ class Exchange extends React.Component {
                                     <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
                                         <ul className="market-stats stats bottom-stats">
                                             {!this.state.showDepthChart ? (
-                                                    <li className="stat" style={{minHeight: "2rem"}}>
+                                                    <li className="stat">
                                                     <span>
                                                         <span><Translate content="exchange.time" />:</span>
                                                         <span>{bucketOptions}</span>
-                                                        <span></span>
                                                     </span>
                                                 </li>) : null}
                                             {!this.state.showDepthChart && this.props.priceData.length ? (
@@ -1262,7 +1261,7 @@ class Exchange extends React.Component {
                                                     </div>
                                                 </li>) : null}
 
-                                                <li className="stat float-right clickable" style={{borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px"}} onClick={this._toggleCharts.bind(this)}>
+                                                <li className="stat float-right clickable" style={{borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this._toggleCharts.bind(this)}>
                                                     <div className="indicators">
                                                        {!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
                                                     </div>
@@ -1293,25 +1292,7 @@ class Exchange extends React.Component {
                                     latest={latestPrice}
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
-                                >
-                                    <div className="float-right">
-                                    <ul className="market-stats stats bottom-stats">
-                                        <li className="stat" style={{minHeight: "2rem"}}>
-                                            <span>
-                                                <span><Translate content="exchange.time" />:</span>
-                                                <span>{bucketOptions}</span>
-                                                <span></span>
-                                            </span>
-                                        </li>
-                                        <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
-                                            <div className="indicators">
-                                                <Translate content="header.settings" />
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    </div>
-
-                                </PriceChart>
+                                />                                
                                 <IndicatorModal
                                     ref="indicators"
                                     indicators={indicators}
@@ -1360,7 +1341,7 @@ class Exchange extends React.Component {
                             <div className="grid-block small-vertical medium-horizontal align-spaced">
                                 {quote && base ?
                                 <BuySell
-                                    style={!smallScreen ? {minHeight: 273} : null}
+                                    style={!smallScreen ? {minHeight: 266} : null}
                                     isOpen={this.state.buySellOpen}
                                     onToggleOpen={this._toggleOpenBuySell.bind(this)}
                                     className={cnames("small-12 no-padding", smallScreen ? "medium-6" : "medium-4", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
@@ -1398,7 +1379,7 @@ class Exchange extends React.Component {
 
                                 {quote && base ?
                                 <BuySell
-                                    style={!smallScreen ? {minHeight: 273} : null}
+                                    style={!smallScreen ? {minHeight: 266} : null}
                                     isOpen={this.state.buySellOpen}
                                     onToggleOpen={this._toggleOpenBuySell.bind(this)}
                                     className={cnames("small-12 no-padding", smallScreen ? "medium-6" : "medium-4", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}

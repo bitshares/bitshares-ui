@@ -613,13 +613,8 @@
 
   .exchange-content-header {
     color: $light-text-color;
-    font-size: 1.1rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    padding: 0.55rem 10px;
     background-color: $header-color !important;
     border-bottom: 1px solid $button-bg-color;
-    overflow: hidden;
     &.bid {
       border-bottom: 1px solid $bid-color;
     }

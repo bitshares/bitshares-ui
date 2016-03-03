@@ -361,7 +361,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         {!this.props.smallScreen ? <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span> : null}
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "16px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalAsks, quote.get("precision"))}
@@ -392,10 +392,10 @@ class OrderBook extends React.Component {
                                 </div>
                                 {totalAsksLength > 13 ? (
                                 <div className="orderbook-showall">
-                                    <div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline">
+                                    <a onClick={this._onToggleShowAll.bind(this, "asks")}>
                                         <Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} />
                                         {!showAllAsks ? <span> ({totalAsksLength})</span> : null}
-                                    </div>
+                                    </a>
                                 </div>) : null}
                             </div>
                         </div>
@@ -409,7 +409,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "16px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalBids, base.get("precision"))}
@@ -440,10 +440,10 @@ class OrderBook extends React.Component {
                                 </div>
                                 {totalBidsLength > 13 ? (
                                 <div className="orderbook-showall">
-                                    <div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline ">
+                                    <a onClick={this._onToggleShowAll.bind(this, "bids")}>
                                         <Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} />
                                         {!showAllBids ? <span> ({totalBidsLength})</span> : null}
-                                    </div>
+                                    </a>
                                 </div>) : null}
                             </div>
                         </div>
