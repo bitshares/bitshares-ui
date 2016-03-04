@@ -640,7 +640,11 @@
     footer: {
         title: "Graphene",
         block: "Head block",
-        loading: "Loading..."
+        loading: "Loading...",
+        backup: "Backup Required",
+        nosync: "Blockchain is out of sync, please wait until it's synchronized..",
+        connection: "No Blockchain connection",
+        brainkey: "Backup brainkey recommended"
     },
     exchange: {
         market: "Market",
