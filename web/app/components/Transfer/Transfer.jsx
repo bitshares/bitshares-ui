@@ -21,6 +21,7 @@ import {number_utils} from "@graphene/chain";
 import FormattedAsset from "../Utility/FormattedAsset";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import LoadingIndicator from "../LoadingIndicator";
 
 const AssetBalance = ({onClick, balance, asset_id}) => {
     const balance_value = utils.is_object_id(balance) ? <BalanceComponent balance={balance}/> : <FormattedAsset amount={balance} asset={asset_id}/>;
@@ -64,7 +65,8 @@ class Transfer extends React.Component {
             propose_account: "",
             blind_balances: null,
             blind_history: null,
-            transfer_receipt: null
+            transfer_receipt: null,
+            loading: false
         };
     };
     
@@ -93,11 +95,11 @@ class Transfer extends React.Component {
             const cwallet = WalletDb.getState().cwallet;
             try {
                 cwallet.getBlindBalances(from).then(res => {
-                    console.log("-- getBlindBalances -->", res.toJS(), cwallet.blindHistory(from).toJS());
+                    console.log("-- getBlindBalances -->", from_name, res.toJS(), cwallet.blindHistory(from).toJS());
                     this.setState({blind_balances: res.toJS(), blind_history: cwallet.blindHistory(from).toJS()});
                 });
             } catch (error) {
-                console.log("-- getBlindBalances error -->", error);
+                console.log("-- getBlindBalances error -->", from_name, error);
             }
         }
     }
@@ -190,10 +192,11 @@ class Transfer extends React.Component {
                         console.log("-- transferToBlind res -->", res);
                         //TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
                         //TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipts[0]});
+                        this.setState({transfer_receipt: res.confirmation_receipts[0], loading: false});
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);
+                        this.setState({error: error.message, loading: false});
                         //TransactionConfirmActions.error(error.message);
                     })
             //}
@@ -207,10 +210,12 @@ class Transfer extends React.Component {
                     .then(res => {
                         console.log("-- blindTransfer res -->", res);
                         //TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipt});
+                        this.setState({transfer_receipt: res.confirmation_receipt, loading: false});
+                        this.queryBlindBalance();
                         ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- blindTransfer error -->", error);
+                        this.setState({error: error.message, loading: false});
                         //TransactionConfirmActions.error(error.message);
                     })
             //}
@@ -222,9 +227,12 @@ class Transfer extends React.Component {
                 cwallet.transferFromBlind(from, this.state.to_account.get("id"), parseFloat(amount), asset.get("id"), true)
                     .then(res => {
                         console.log("-- transferFromBlind res -->", res);
+                        this.setState({loading: false});
+                        this.queryBlindBalance();
                         //TransactionConfirmActions.wasIncluded(res.confirmation_receipt);
                     }).catch(error => {
                         console.error("-- transferFromBlind error -->", error);
+                        this.setState({error: error.message, loading: false});
                         //TransactionConfirmActions.error(error.message);
                     })
             //}
@@ -235,7 +243,7 @@ class Transfer extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        this.setState({error: null});
+        this.setState({error: null, loading: true});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.amount.replace( /,/g, "" )
@@ -253,10 +261,11 @@ class Transfer extends React.Component {
             ).then( () => {
                 TransactionConfirmStore.unlisten(this.onTrxIncluded);
                 TransactionConfirmStore.listen(this.onTrxIncluded);
+                this.setState({loading: false});
             }).catch( e => {
                 let msg = e.message ? e.message.split( '\n' )[1] : null;
-                console.log( "error: ", e, msg)
-                this.setState({error: msg})
+                console.error( "transfer error: ", e, msg);
+                this.setState({error: msg, loading: false});
             } );
         }
     }
@@ -352,11 +361,16 @@ class Transfer extends React.Component {
         let propose_incomplete = propose && ! propose_account
         let submitButtonClass = "button";
 
-        if(
-            !(from_account || (from_name && from_name[0] === "~"))
+        if( !(from_account || (from_name && from_name[0] === "~"))
             || !(to_account || (to_name && to_name[0] === "~"))
             || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
+        {
             submitButtonClass += " disabled";
+        }
+        else if (to_name && to_name[0] === "~") {
+            const to_name_type = AccountStore.getAccountType(to_name);
+            if (!to_name_type) submitButtonClass += " disabled";
+        }
 
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
@@ -443,9 +457,9 @@ class Transfer extends React.Component {
                                 <Translate component="span" content="cancel" />
                             </button>
                         </span>:<span>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                            {this.state.loading ? <LoadingIndicator type="circle"/> : <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
                                 <Translate component="span" content="transfer.send" />
-                            </button>
+                            </button>}
                         </span>}
                     </div>
 
