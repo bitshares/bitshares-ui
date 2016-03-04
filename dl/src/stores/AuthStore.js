@@ -254,7 +254,7 @@ function emailFromToken() {
     // `wallet` could be undefined, AuthStore is used to unlock the wallet.. 
     if( wallet && wallet.storage.state.has("remote_token")) {
         let remote_token = wallet.storage.state.get("remote_token")
-        let [ email ] = extractSeed(remote_token)
+        let [ email ] = extractSeed(remote_token).split("\t")
         return email
     }
 }

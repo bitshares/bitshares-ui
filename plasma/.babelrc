@@ -1,4 +1,5 @@
-{// "presets": ['es2015'] 
+{
+// "presets": ['es2015'] 
 }
 
 // Note, the .babelrc file here correctly stops babel in these sub-projects from seeing ../.babelrc

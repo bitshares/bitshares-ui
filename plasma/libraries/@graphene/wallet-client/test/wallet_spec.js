@@ -1,7 +1,7 @@
 import assert from "assert"
 import { Map, is } from "immutable"
 import { encrypt, decrypt } from "../src/Backup"
-import {createToken} from '@graphene/time-token'
+import { createToken, extractSeed } from "@graphene/time-token"
 import {Signature, PrivateKey, Aes, hash} from "@graphene/ecc"
 import LocalStoragePersistence from "../src/LocalStoragePersistence"
 import WalletStorage from "../src/WalletStorage"
@@ -13,22 +13,22 @@ const username = "username"
 const password = "password"
 const email = "alice_spec@example.bitbucket"
 const remote_url = process.env.npm_package_config_remote_url
-// import fakeIndexedDB from "fake-indexeddb"
 const storage = ()=> new LocalStoragePersistence("wallet_spec", false/*save*/).clear()
-const code = (e = email) => createToken(hash.sha1(e, 'binary'))
+const code = (e = email) => createToken(e + "\t" + "apik")
 
 const localWallet = ()=> {
     let storage = new LocalStoragePersistence("wallet_spec", false/*save*/)
     storage.clear() // Clearing memory (ignore disk contents)
     return new WalletStorage(storage)
 }
-const remoteWallet = (e = email, remote_copy = true)=> {
+
+const remoteWallet = (e = email)=> {
     let wallet
     return Promise.resolve()
     .then(()=> wallet = localWallet())
     .then(()=> wallet.useBackupServer(remote_url))
     .then(()=> wallet.login(username, password, chain_id) )
-    .then(()=> wallet.keepRemoteCopy(true, remote_copy ? code(e) : undefined) )
+    .then(()=> wallet.keepRemoteCopy(true, code(e)) )
     .then(()=> wallet )
 }
 
@@ -40,9 +40,11 @@ describe('Single wallet', () => {
     beforeEach(()=> Promise.resolve()
         .then(()=> wallet = localWallet())
         .then(()=> wallet.useBackupServer(remote_url))
-        .then(()=> wallet.keepRemoteCopy(false))//delete
+        .then(()=> wallet.keepRemoteCopy(false, code()))//delete
         .then(()=> wallet.login(username, password, chain_id) )//delete
         .then(()=> wallet.logout())
+        
+        // Leave every test with a empty unconfigured wallet (localWallet) 
         .then(()=> wallet = localWallet())
         // .catch( error=>{ console.error("wallet_spec\tbeforeEach", error.stack); throw error })
     )
@@ -50,7 +52,7 @@ describe('Single wallet', () => {
 
     afterEach(()=> wallet ? wallet.logout() : null)
 
-    it("login then sync", ()=> {
+    it("login no-sync", ()=> {
         
         return Promise.resolve()
         .then(()=> wallet.useBackupServer(remote_url) )
@@ -124,7 +126,7 @@ describe('Single wallet', () => {
         .then( ()=> assertNoServerWallet(wallet) )
     })
     
-    it("password", function() {
+    it("password change", function() {
         
         this.timeout(5000)
         wallet.useBackupServer(remote_url)
@@ -345,39 +347,53 @@ let assertSubscribe = (expected, label) => wallet =>{
 }
 
 function assertNoServerWallet(walletParam) {
-    if( ! walletParam.private_key ) throw new Error("wallet locked")
+    
+    let private_key = walletParam.private_key
+    if( ! private_key )
+        throw new Error("wallet locked")
+    
+    let seed = extractSeed(code())
+    let [ /*email*/, api_key ] = seed.split("\t")
+    let private_api_key = PrivateKey.fromSeed( private_key.toWif() + api_key )
+    
     let ws_rpc = new WalletWebSocket(remote_url)
     let api = new WalletApi(ws_rpc)
     let p1 = new Promise( (resolve, reject) => {
-        let public_key = walletParam.private_key.toPublicKey()
-        let p2 = api.fetchWallet( public_key, null, json => {
+        let public_api_key = private_api_key.toPublicKey()
+        let p2 = api.fetchWallet( public_api_key, null, json => {
             try {
                 assert.equal(json.statusText, "No Content")
             } catch( error ) {
                 reject( error )
             }
         }).catch( error => reject(error))
-        resolve(p2.then(()=> api.fetchWalletUnsubscribe(public_key)))
+        resolve(p2.then(()=> api.fetchWalletUnsubscribe(public_api_key)))
     })
     return p1.then(()=> ws_rpc.close())
 }
 
 function assertServerWallet(test_wallet, walletParam) {
     
-    if( ! walletParam.private_key ) throw new Error("wallet locked")
+    let private_key = walletParam.private_key
+    if( ! private_key )
+        throw new Error("wallet locked")
+    
+    let seed = extractSeed(code())
+    let [ /*email*/, api_key ] = seed.split("\t")
+    let private_api_key = PrivateKey.fromSeed( private_key.toWif() + api_key )
     
     let ws_rpc = new WalletWebSocket(remote_url)
     let api = new WalletApi(ws_rpc)
     let p1 = new Promise( (resolve, reject) => {
-        let public_key = walletParam.private_key.toPublicKey()
-        let p2 = api.fetchWallet( public_key, null, json => {
+        let public_api_key = walletParam.private_api_key.toPublicKey()
+        let p2 = api.fetchWallet( public_api_key, null, json => {
             try {
                 assert(json.encrypted_data, 'No Server Wallet')
                 let backup_buffer = new Buffer(json.encrypted_data, 'base64')
-                let p3 = decrypt(backup_buffer, walletParam.private_key).then( wallet_object => {
+                let p3 = decrypt(backup_buffer, walletParam.private_api_key).then( wallet_object => {
                     assert.equal( test_wallet, wallet_object.test_wallet )
                 })
-                let p4 = api.fetchWalletUnsubscribe(public_key)
+                let p4 = api.fetchWalletUnsubscribe(public_api_key)
                 resolve(Promise.all([ p3, p4 ]))
             } catch( error ) {
                 reject( error )

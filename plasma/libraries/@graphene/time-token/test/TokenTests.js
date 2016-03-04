@@ -20,26 +20,16 @@ describe('time-token', () => {
         assert.equal(null, result.error)
         done()
     })
-/*
+
     it('invalid_tokens', done => {
         let token = createToken("seed")
         let result = checkToken(token+'a')
         assert.equal(false, result.valid)
         assert.equal(null, result.seed)
-        assert.equal('unmatched', result.error)
-        
-        result = checkToken('a'+token)
-        assert.equal(false, result.valid)
-        assert.equal(null, result.seed)
-        assert.equal('unmatched', result.error)
-        
-        result = checkToken('a'+token.substring(1))
-        assert.equal(false, result.valid)
-        assert.equal(null, result.seed)
-        assert.equal('unmatched', result.error)
+        assert(result.error)
         done()
     })
-*/
+
     it('expired_token', done => {
         let old_expire = process.env.npm_config__graphene_time_token_expire_min
         try {

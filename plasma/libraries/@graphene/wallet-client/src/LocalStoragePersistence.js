@@ -40,6 +40,7 @@ export default class LocalStoragePersistence {
         }
         this.status = "ok"
         this.saveToDisk = save
+        return Promise.resolve()
     }
     
     /**
@@ -57,6 +58,7 @@ export default class LocalStoragePersistence {
             localStorage.setItem(this.STATE, JSON.stringify(this.state.toJS(),null,0))
         }
         this.status = "ok"
+        return Promise.resolve()
     }
     
     getState() {
@@ -84,7 +86,7 @@ export default class LocalStoragePersistence {
         if( this.saveToDisk ) localStorage.removeItem(this.STATE)
         this.state = Map()
         this.status = "ok"
-        return this
+        return Promise.resolve()
     }
     
 }
