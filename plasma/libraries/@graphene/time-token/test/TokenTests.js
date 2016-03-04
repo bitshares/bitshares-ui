@@ -6,9 +6,9 @@ describe('time-token', () => {
         let token = createToken("seed")
         assert(token.length)
         let result = checkToken(token)
-        assert.equal(true, result.valid)
+        assert.equal(true, result.valid, result.error)
         assert.equal("seed", result.seed)
-        assert.equal(null, result.error)
+        assert.equal(null, result.error, "error")
         done()
     })
     it('non_seeded_token', done => {

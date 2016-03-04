@@ -3,6 +3,8 @@ import crypto from "crypto"
 import local_secret from "@graphene/local-secret"
 import bs58 from "bs58"
 
+const sha1 = data => crypto.createHash("sha1").update(data).digest('binary')
+
 export const expire_min = ()=> process.env.npm_config__graphene_time_token_expire_min != null ?
     Number(process.env.npm_config__graphene_time_token_expire_min) : 10
 
@@ -29,9 +31,15 @@ export function createToken(seed, include_seed = true) {
         .update(seed)
         .digest('binary')
         .substring(0, 10)
+    
     newToken += now_string
     if( include_seed ) newToken += '\t' + seed
-    return bs58.encode(new Buffer(newToken, 'binary'))
+    
+    // Add outter validation so the a client (without the server's secret) can validate too
+    let check = sha1(newToken).toString("binary").substring(0, 5)
+    let token = new Buffer(check + newToken, 'binary')
+    
+    return bs58.encode(token)
 }
 
 /** This requires the same `local_secret` used to create the token.
@@ -49,6 +57,9 @@ export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
             throw new Error("expire_min_arg should be a number")
         
         token = new Buffer(bs58.decode(token)).toString('binary')
+        token = validate(token)
+        
+        // server's secret hash
         let raw_token = token.substring(0, 10)
         token = token.substring(10, token.length)
         
@@ -88,12 +99,23 @@ export function extractSeed(token) {
         throw new TypeError("token " + typeof(token))
     
     token = new Buffer( bs58.decode(token) ).toString( 'binary' )//array to binary
+    token = validate(token)
+    
     // skip the hash, this could contain a tab
     token = token.substring(10, token.length)
-
+    
     // numeric time value \t seed data
     let tab = token.indexOf("\t")
     let then_string = tab !== -1 ? token.substring(0, tab) : token
     let token_seed = tab !== -1 ? token.substring(tab + 1) : null
     return token_seed
+}
+
+function validate(token) {
+    assert(typeof token, "string")
+    let check = token.substring(0, 5)
+    token = token.substring(5, token.length)
+    if( check !== sha1(token).toString('binary').substring(0, 5))
+        throw new Error("invalid token")
+    return token
 }
