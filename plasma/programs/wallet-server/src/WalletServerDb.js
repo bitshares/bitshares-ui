@@ -25,12 +25,12 @@ export function createWallet(encrypted_data, signature, email_sha1, walletNotify
         wallet = w
         if( wallet )
             // returning `wallet.local_hash` lets the client know what version
-            throw { message: 'wallet already exists', local_hash: wallet.local_hash, created: wallet.createdAt }
+            throw { message: 'wallet_already_exists', local_hash: wallet.local_hash, created: wallet.createdAt }
     })
     .then(()=> Account.findOne({ where: {email_sha1} }))
     .then(account => {
         if( account )
-            throw { message: 'wallet with this email exists' }
+            throw { message: "email_has_wallet" }
             
         local_hash = lh.toString('base64')
     })

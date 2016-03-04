@@ -11,6 +11,7 @@ import WalletActions from "actions/WalletActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletManagerStore from "stores/WalletManagerStore"
 import WalletDb, { legacyUpgrade } from "stores/WalletDb"
+import AuthStore from "stores/AuthStore"
 import BackupStore from "stores/BackupStore"
 import { Backup } from "@graphene/wallet-client"
 import {saveAs} from "common/filesaver.js"
@@ -20,11 +21,14 @@ import { hash } from "@graphene/ecc"
 import Translate from "react-translate-component";
 import { chain_config } from "@graphene/chain"
 import LoadingIndicator from "components/LoadingIndicator"
+import AuthInput from "components/Forms/AuthInput"
+
+let DownloadAuthStore = AuthStore("Download")
 
 class BackupBaseComponent extends Component {
     
     static getStores() {
-        return [WalletManagerStore, WalletDb, BackupStore]
+        return [WalletManagerStore, WalletDb, BackupStore, DownloadAuthStore]
     }
     
     static getPropsFromStores() {
@@ -32,7 +36,8 @@ class BackupBaseComponent extends Component {
         var ww = WalletDb.getState()
         wallet.current_wallet = ww.current_wallet
         var backup = BackupStore.getState()
-        return { wallet, backup }
+        var auth = DownloadAuthStore.getState()
+        return { wallet, backup, auth }
     }
     
 }
@@ -336,13 +341,8 @@ class DecryptBackup extends BackupBaseComponent {
     
     _getInitialState() {
         return {
-            backup_password: null,
             verified: false
         }
-    }
-    
-    componentDidMount() {
-        ReactDOM.findDOMNode(this.refs.pw).focus()
     }
     
     componentWillUnmount() {
@@ -353,25 +353,20 @@ class DecryptBackup extends BackupBaseComponent {
     render() {
         if(this.state.verified) return <span>{this.props.children}</span>
         return <span>
-            <label><Translate content="wallet.enter_password" /></label>
-            <form onSubmit={this.onPassword.bind(this)}>
-                <input type="password" id="backup_password" ref="pw"
-                    onChange={this.formChange.bind(this)}
-                    value={this.state.backup_password}/>
+            <form onSubmit={this.onSubmit.bind(this)}>
+                <AuthInput auth={this.props.auth} />
             </form>
-            <Sha1/>
             {/* be cautious about wrapping span (in a form for example), span has another button on the same line from a different component */}
             <span className="button success"
-                onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
+                onClick={this.onSubmit.bind(this)}><Translate content="wallet.verify" /></span>
         </span>
     }
     
-    onPassword(e) {
+    onSubmit(e) {
         if(e) e.preventDefault()
         
-        let email = ""
-        let username = ""
-        let password = this.state.backup_password || ""
+        let username = this.props.auth.username
+        let password = this.props.auth.password
         
         // function, different passwords are attempted
         let backupDecrypt = private_key => Promise.resolve().then(()=>
@@ -411,7 +406,6 @@ class DecryptBackup extends BackupBaseComponent {
         }
         
         let private_key = PrivateKey.fromSeed(
-            email.trim().toLowerCase() + "\t" +
             username.trim().toLowerCase() + "\t" +
             password
         )

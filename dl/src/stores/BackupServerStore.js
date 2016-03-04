@@ -1,18 +1,26 @@
 import alt from "alt-instance"
 import { fromJS } from "immutable"
-import { rfc822Email } from "@graphene/wallet-client"
+import { rfc822Email, WalletWebSocket } from "@graphene/wallet-client"
 import WalletDb from "stores/WalletDb"
 
 class BackupServerStore {
     
     constructor() {
         this.init = ()=> ({
-            ui_status: null
+            // UI Backup status (will check for wallet.backup_status.xxxx internationalization)
+            backup_status: null
         })
         this.state = this.init()
-        this.exportPublicMethods({
-        })
-        WalletDb.subscribe(this.notify.bind(this))
+        // this.exportPublicMethods({
+        // })
+        
+        WalletDb.subscribe(this.onWalletUpdate.bind(this))
+        WalletWebSocket.api_error_callbacks.add(this.onApiError.bind(this))
+    }
+    
+    onApiError(api_error) {
+        this.setState({ api_error: api_error.message })
+        console.log('BackupServerStore\tapi_error', api_error)
     }
     
     // update(state) {
@@ -20,18 +28,23 @@ class BackupServerStore {
     //     this.checkEmail(state)
     // }
     
-    notify() {
+    onWalletUpdate() {
         let wallet = WalletDb.getState().wallet
-        let { socket_status, remote_status, local_status } = wallet
+        if(!wallet) {
+            this.setState(this.init())
+            return
+        }
+        
+        let { remote_status, local_status } = wallet // socket_status
         let { remote_url, remote_copy, remote_token } = wallet.storage.state.toJS()
         let weak_password  = wallet.wallet_object.get("weak_password")
         
-        let ui_status = remote_copy === true ? remote_status : local_status
+        let backup_status = remote_status // remote_copy === true ? remote_status : local_status
         let state = { 
-            socket_status, remote_status, local_status,
+            remote_status, local_status,
             remote_url, remote_copy, remote_token,
             weak_password, 
-            ui_status
+            backup_status
         }
         this.setState(state)
         // console.log('BackupServerStore\tstate', state)

@@ -3,8 +3,11 @@ var Immutable = require("immutable")
 const SOCKET_DEBUG = true //JSON.parse( process.env.npm_config__graphene_wallet_client_socket_debug || false )
 let instance = 0
 
+
 export default class WalletWebSocket {
 
+    static api_error_callbacks = new Set()
+    
     /**
         @arg {string} ws_server_url - WebSocket URL
         @arg {function} update_rpc_connection_status_callback called with ("open"|"error"|"closed").
@@ -220,6 +223,8 @@ export default class WalletWebSocket {
             
             if (response.error) {
                 callback.reject(response.error);
+                WalletWebSocket.api_error_callbacks.forEach(cb=>Promise.resolve().then(()=>cb(response.error)))
+                // WalletWebSocket.api_error_callbacks.forEach(cb=>{try{cb(response.error)} catch(error){console.error(error)}})
             } else {
                 callback.resolve(response.result);
             }

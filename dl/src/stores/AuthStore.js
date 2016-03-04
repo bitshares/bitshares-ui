@@ -50,7 +50,7 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        // weak means the username is optional ( supports old wallets )
+        // weak means the username is optional ( supports local wallets using only a password )
         this.config = { hasPassword: true, hasUsername: true, weak: true, hasConfirm: null, hasEmail: null }
         this.config = { ...this.config, ...instanceConfig }
         this.instanceName = instanceName
@@ -161,25 +161,9 @@ class AuthStore {
             new_state.username = new_state.username.toLowerCase().trim()
         
         if(new_state.email)
-            new_state.email = new_state.email.toLowerCase().trim()
+            new_state.email = new_state.email.trim()
         
         new_state.auth_error = null
-        
-        // // If the email token is being used (via useEmailFromToken)
-        // if(new_state.email_verified != null ) {
-        //     // Wallet password upgrade mode... AuthInput.jsx is watching `email_verified`.
-        //     // Let the user work with a verified email and add other fields, but still let them change the email so it becomes unverified (allowing them to send a new token to a different email).
-        //     new_state.email_verified = new_state.email === emailFromToken()
-        //     if(new_state.email_verified) {
-        //         this.config.hasEmail = true
-        //         this.config.hasUsername = true
-        //         this.config.hasConfirm = true
-        //     } else {
-        //         this.config.hasEmail = true
-        //         this.config.hasUsername = false
-        //         this.config.hasPassword = false
-        //     }
-        // }
         
         const check_email = this.checkEmail(new_state)
         const check_username = this.checkUsername(new_state)
@@ -195,7 +179,6 @@ class AuthStore {
                 check_email.email_valid &&
                 check_username.username_valid
         }
-        
         // console.log('AuthStore\tnew_state', new_state, this.config)
         this.setState(new_state)
     }

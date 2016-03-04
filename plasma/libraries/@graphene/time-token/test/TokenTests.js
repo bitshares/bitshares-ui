@@ -1,26 +1,38 @@
-import {createToken, checkToken} from '../index'
+import {createToken, checkToken, extractSeed, validToken} from '../index'
 import assert from "assert"
 
 describe('time-token', () => {
-    it('seeded_token', done => {
+    
+    it("validToken", ()=> {
+        let token = createToken("seed")
+        assert(validToken(token), "validToken")
+    })
+    
+    it('checkToken_Secret', () => {
         let token = createToken("seed")
         assert(token.length)
         let result = checkToken(token)
         assert.equal(true, result.valid, result.error)
         assert.equal("seed", result.seed)
         assert.equal(null, result.error, "error")
-        done()
     })
-    it('non_seeded_token', done => {
+    
+    it('non_seeded_token', () => {
         let token = createToken("seed", false)
         assert(token.length)
         let result = checkToken(token, "seed")
         assert.equal(true, result.valid)
         assert.equal("seed", result.seed)
         assert.equal(null, result.error)
-        done()
+    })
+    
+    it("extractSeed", ()=> {
+        let token = createToken("seed")
+        assert.equal("seed", extractSeed(token))
+        assert.equal(undefined, extractSeed(token+"a"))
     })
 
+    
     it('invalid_tokens', done => {
         let token = createToken("seed")
         let result = checkToken(token+'a')

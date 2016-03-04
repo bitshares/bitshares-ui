@@ -41,10 +41,11 @@ export default class AuthInput extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
-        if(this.props.auth.api_error) {
-            notify.error(counterpart.translate("wallet." + this.props.auth.api_error))
-            this.props.auth.update({ api_error: null })
-            CachedPropertyActions.set("backup_recommended", true)// draw them back into the backup screen
+        if(this.props.auth.api_error && this.last_api_error != this.props.auth.api_error) {
+            this.last_api_error = this.props.auth.api_error
+            // notify.error(counterpart.translate("wallet." + this.props.auth.api_error))
+            // draw them back into the backup screen
+            // CachedPropertyActions.set("backup_recommended", true)//ALT: Invariant Violation: Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.
         }
     }
     
@@ -53,9 +54,9 @@ export default class AuthInput extends Component {
         let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
         return (
             <div>
+                { hasUsername ? this.usernameForm(this.props.auth) : null}
                 { hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
                 { hasEmail ? this.emailForm(this.props.auth) : null}
-                { hasUsername ? this.usernameForm(this.props.auth) : null}
                 <p className="has-error">
                     <Translate content={ this.props.auth.auth_error ? "wallet.invalid_auth" : null }/>
                 </p>

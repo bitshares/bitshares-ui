@@ -35,10 +35,10 @@ export function createToken(seed, include_seed = true) {
     newToken += now_string
     if( include_seed ) newToken += '\t' + seed
     
-    // Add outter validation so the a client (without the server's secret) can validate too
-    let check = sha1(newToken).toString("binary").substring(0, 5)
-    let token = new Buffer(check + newToken, 'binary')
-    
+    // // Add outter validation so the a client (without the server's secret) can validate too
+    // let check = sha1(newToken).toString("binary").substring(0, 5)
+    // let token = new Buffer(check + newToken, 'binary')
+    let token = new Buffer(newToken, 'binary')
     return bs58.encode(token)
 }
 
@@ -51,13 +51,17 @@ export function createToken(seed, include_seed = true) {
 export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
     try {
         if( ! token || typeof token !== 'string' )
-            throw new Error("Required parameter: {string} token", typeof token)
+            throw new Error("token should be a string : ", typeof token)
         
         if( expire_min_arg && typeof expire_min_arg !== "number")
             throw new Error("expire_min_arg should be a number")
         
         token = new Buffer(bs58.decode(token)).toString('binary')
-        token = validate(token)
+        // if( ! validDecodedToken(token))
+        //     throw "invalid token"
+        // 
+        // // skip the public validation hash
+        // token = token.substring(5, token.length)
         
         // server's secret hash
         let raw_token = token.substring(0, 10)
@@ -92,30 +96,44 @@ export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
 
 /** Anyone can extrat the seed data, the `local_secret` is not required.
 
-    @return {string} seed data (embedded data) in token or `null` if the token was created without any seed data.  The seed is not encrypted, so the secret used to validate the token is not required to view the seed data.
+     The seed is not encrypted, so the secret used to validate the token is not required to view the seed data.
+    
+    @return {string} seed data (embedded data) in token or `null` if the token was created without any seed data, or undefined if the token is invalid.
 */
 export function extractSeed(token) {
-    if( typeof token !== 'string' )
-        throw new TypeError("token " + typeof(token))
+    if( ! token)
+        return null
     
-    token = new Buffer( bs58.decode(token) ).toString( 'binary' )//array to binary
-    token = validate(token)
+    assert.equal(typeof token, "string", "token should be a string")
     
-    // skip the hash, this could contain a tab
+    token = new Buffer(bs58.decode(token)).toString( 'binary' )//array to binary
+    // if( ! validDecodedToken(token))
+    //     return undefined
+    // 
+    // // skip the public validation hash
+    // token = token.substring(5, token.length)
+    // skip the server-validation hash
     token = token.substring(10, token.length)
     
-    // numeric time value \t seed data
+    // numeric time value then optional (\t and seed data)
     let tab = token.indexOf("\t")
     let then_string = tab !== -1 ? token.substring(0, tab) : token
     let token_seed = tab !== -1 ? token.substring(tab + 1) : null
     return token_seed
 }
 
-function validate(token) {
-    assert(typeof token, "string")
+function validDecodedToken(token) {
+    assert.equal(typeof token, "string", "token should be a string")
     let check = token.substring(0, 5)
     token = token.substring(5, token.length)
-    if( check !== sha1(token).toString('binary').substring(0, 5))
-        throw new Error("invalid token")
-    return token
+    // FIXME breaks client-side only
+    return true//check === sha1(token).toString('binary').substring(0, 5)
+}
+
+export function validToken(token) {
+    if( ! token)
+        return false
+    assert.equal(typeof token, "string", "token should be a string")
+    token = new Buffer(bs58.decode(token)).toString('binary')// array to buffer
+    return validDecodedToken(token)
 }

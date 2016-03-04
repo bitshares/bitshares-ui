@@ -6,12 +6,6 @@ import { hash } from "@graphene/ecc"
 import local_secret from "@graphene/local-secret"
 import bs58 from "bs58"
 
-// When validating, there is no email we only have a email_sha1
-function apiKey(email_sha1) {
-    let key = hash.sha1(email_sha1 + local_secret() + "apiKey")
-    return bs58.encode(key).substring(0, 4)
-}
-
 export default function reducer(state, action) {
     if( /redux/.test(action.type) ) return state
     // console_error("reducer\t", action.type)
@@ -35,7 +29,8 @@ export default function reducer(state, action) {
                 var { code, encrypted_data, signature } = action
                 var email_sha1 = emailSha1(code)
                 if( ! email_sha1 ) {
-                    reply("Unauthorized", { message: "invalid_token" })
+                    throw "invalid_token"
+                    // reply("Unauthorized", { message: "invalid_token" })
                     break
                 }
                 reply( WalletServerDb.createWallet(encrypted_data, signature, email_sha1,
@@ -75,7 +70,8 @@ export default function reducer(state, action) {
                 var { code } = action
                 var email_sha1 = emailSha1(code)
                 if( ! email_sha1 ) {
-                    reply("Unauthorized", { message: "invalid_token" })
+                    throw "invalid_token"
+                    // reply("Unauthorized", { message: "invalid_token" })
                     break
                 }
                 action.email_sha1 = email_sha1
@@ -103,4 +99,10 @@ function emailSha1(code) {
     let [ email ] = seed.split("\t")
     var email_sha1 = hash.sha1(email.toLowerCase().trim())
     return email_sha1.toString("base64")
+}
+
+// When validating, there is no email we only have a email_sha1
+function apiKey(email_sha1) {
+    let key = hash.sha1(email_sha1 + local_secret() + "apiKey")
+    return bs58.encode(key).substring(0, 4)
 }

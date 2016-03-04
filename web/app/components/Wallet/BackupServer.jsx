@@ -11,7 +11,7 @@ import AuthInput from "components/Forms/AuthInput"
 import WalletUnlock from "components/Wallet/WalletUnlock"
 import VerifyPassword from "components/Wallet/VerifyPassword"
 import BackupServerStore from "stores/BackupServerStore"
-import { extractSeed } from "@graphene/time-token"
+import { validToken } from "@graphene/time-token"
 import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 import LoadingIndicator from "components/LoadingIndicator"
@@ -65,31 +65,43 @@ class BackupServer extends Component {
     
     render_unlocked() {
         
-        let wallet = this.props.wallet_store.wallet
-
-        const requestCode = ()=> this.setState({ busy: true },
-            ()=> wallet.api.requestCode(this.props.auth_email.email)
-            .then(()=> this.setState({ busy: false }))
-            .catch( error =>{
-                this.setState({ busy: false })
-                notify.error("Unable to request token: " + error.toString())
-            })
-        )
-        const email_token = <div>
+        let wallet = WalletDb.getState().wallet
+        
+        let connected = wallet.api && wallet.api.ws_rpc.status === "open"
+        if( ! connected )
+            return <div className="error">Not connected to the backup server</div>
+        
+        const onRequestCode = e=> {
+            e.preventDefault()
+            this.setState({ busy: true }, 
+                ()=> wallet.api.requestCode(this.props.auth_email.email).then(()=>{
+                    this.setState({ busy: false })
+                    notify.success(counterpart.translate("wallet.token_emailed"))
+                })
+                .catch( error =>{
+                    this.setState({ busy: false })
+                    notify.error("Unable to request token: " + error.toString())
+                })
+            )
+        }
+        const token_request_form = <div>
             {/* E M A I L */}
-            <AuthInput auth={this.props.auth_email} clearOnUnmount={false} />
-             <div className="center-content">
+            <form onSubmit={onRequestCode.bind(this)}>
+                <AuthInput auth={this.props.auth_email} clearOnUnmount={false} />
+            </form>
+            <div className="center-content">
                  {this.state.busy ? <LoadingIndicator type="circle"/> : null }
                  <br/>
-             </div>
+            </div>
             <button 
                 className={cname("button success", {disabled: ! this.props.auth_email.email_valid}) }
-                onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
+                onClick={onRequestCode.bind(this)}><Translate content="wallet.email_token" />
             </button>
         </div>
         
+        
         const changePassword = ()=> this.setState({ busy: true },
-            ()=> this.props.auth_email.changePassword()
+            ()=> this.props.auth_change.changePassword()
             .then(()=> this.setState({ busy: false }))
             .catch( error =>{
                 this.setState({ busy: false })
@@ -97,7 +109,10 @@ class BackupServer extends Component {
             })
         )
         const change_password = <div>
-            <p><Translate content="wallet.remember_auth"/></p>{/* You <b>must</b> remember... */}
+            <p>
+                <Translate content="wallet.remember_auth1"/><br/>
+                <Translate content="wallet.remember_auth2"/>
+            </p>{/* You <b>must</b> remember... */}
                 
             {/* Password, Username */}
             <AuthInput auth={this.props.auth_change} clearOnUnmount={false} />
@@ -107,62 +122,82 @@ class BackupServer extends Component {
                  <br/>
              </div>
             
-            <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_email.valid }) }  onClick={changePassword.bind(this)}><Translate content="i_agree"/></button>
+            <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_change.valid }) }  onClick={changePassword.bind(this)}><Translate content="wallet.change_password"/></button>
         </div>
         
         const download_option = ! WalletDb.isEmpty() ? <div><br/><Link to="wallet/backup/download">
             <label className="secondary"><Translate content="wallet.download_backup" /></label></Link></div> : null
         
-        const weak_password = <div>
-            { ! this.props.auth_email.email_verified ? <div>
-                { email_token }
-                { download_option }
+        const onRemoteCopy = ()=>
+            wallet.keepRemoteCopy( ! wallet.storage.state.get("remote_copy"))
+            .then(()=> this.setState({ busy: false }))
+            .catch( error =>{
+                this.setState({ busy: false })
+                if( error.cause && error.cause.message === "expired") {
+                    notify.error(counterpart.translate("wallet.token_expired"))
+                    wallet.storage.setState("remote_token", null)
+                }
+                console.error("BackupServer\tERROR", error)
+                throw error
+            })
+        
+        const toggle_backups_form = <div>
+            <label><Translate content="wallet.remote_backup"/></label>
+            <p>
+                <input type="checkbox"
+                    className={cname({ disabled: this.state.busy })}
+                    checked={wallet.storage.state.get("remote_copy")}
+                    onChange={onRemoteCopy.bind(this)} />
+                &nbsp;
+                <Translate content={"wallet.server_toggle." +
+                    (wallet.storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
+            </p>
+            <div className="center-content">
+                {this.state.busy ? <LoadingIndicator type="circle"/> : null }
             </div>
-            :
-            <div>
-                { change_password }
-            </div>
-            }
+            <br/>
+        </div>
+
+        const show_restore_key = <div>
+            <p>
+                <Translate content="wallet.remember_restore_key"/>
+                <pre className="no-overflow">{wallet.getTokenSeed()}</pre>
+            </p>
         </div>
         
-        const remote_copy_toggle = ()=>
-            wallet.keepRemoteCopy( ! wallet.storage.state.get("remote_copy"))
-                .then(()=> this.setState({ busy: false }))
-                .catch( error =>{
-                    this.setState({ busy: false })
-                    if( error.cause && error.cause.message === "expired") {
-                        notify.error(counterpart.translate("wallet.token_expired"))
-                        wallet.storage.setState("remote_token", null)
-                    }
-                    console.error("BackupServer\tERROR", error)
-                    throw error
-                })
+        const show_api_error = <div>
+            <Translate content={"wallet.backup_status." + this.props.backups.api_error}/>
+        </div>
+        
+        const show_remote_status = <div>
+            <label><Translate content="wallet.remote_status"/></label>
+            <Translate content={"wallet.backup_status." + this.props.backups.backup_status}/>
+            {this.props.backups.api_error ? ` (${show_api_error})` : null}
+        </div>
+        
+        // return <div/>
+        let need_token =
+            ! wallet.wallet_object.has("create_token") &&
+            ! validToken(wallet.storage.state.get("remote_token"))// request another
+        
+        let weak_password = wallet.storage.state.get("weak_password") === true
+        let in_sync = wallet.storage.state.get("remote_copy") === false ||
+            wallet.storage.state.get("remote_status") === "Not Modified"
+        
+        const body = <div>{
+            need_token ? token_request_form :
+            weak_password ? change_password :
+            in_sync ? <div>{toggle_backups_form} {show_restore_key}</div> :
+            show_remote_status
+        }</div>
         
         return (
             <div className="grid-block vertical medium-horizontal">
                 <div className="grid-content full-width-content no-overflow">
-                    
-                    <h4>Enable Server Backups</h4>
-                    
-                    {wallet.storage.state.get("weak_password") === false ?  <div>
-                        
-                        <label><Translate content="wallet.remote_copy"/></label>
-                        
-                        <input type="checkbox"
-                            className={cname({ disabled: this.state.busy })}
-                            checked={wallet.storage.state.get("remote_copy")}
-                            onChange={remote_copy_toggle.bind(this)} />
-                        &nbsp;
-                        <Translate content={"wallet." + this.props.backups.ui_status}/>
-                    
-                        <div className="center-content">
-                            {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                            <br/>
-                        </div>
-                    </div> : weak_password }
+                    <h4><Translate content={"wallet.server_backup"}/></h4>
+                    <br/>{body}
+                    <hr/>{download_option}
                 </div>
-                <br/>
-                <br/>
             </div>
         )
     }
@@ -179,11 +214,9 @@ export function readBackupToken(nextState, replaceState) {
     path = path.replace(token, "")
     replaceState(null, path)
     let { wallet } = WalletDb.getState()
-    if( ! wallet )
-        console.error("BackupServer\tERROR Token parameter but their is no wallet");
-    
+    if( ! wallet ) {
+        console.error("BackupServer\tERROR Token parameter but no wallet");
+        return
+    }
     wallet.keepRemoteCopy(true, token)
-    // let auth = BackupAuthStore.getState()
-    // auth.defaults()
-    // auth.useEmailFromToken()
 }
