@@ -84,7 +84,9 @@ export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
     @return {string} seed data (embedded data) in token or `null` if the token was created without any seed data.  The seed is not encrypted, so the secret used to validate the token is not required to view the seed data.
 */
 export function extractSeed(token) {
-    if( typeof token !== 'string' ) throw new TypeError("token")
+    if( typeof token !== 'string' )
+        throw new TypeError("token " + typeof(token))
+    
     token = new Buffer( bs58.decode(token) ).toString( 'binary' )//array to binary
     // skip the hash, this could contain a tab
     token = token.substring(10, token.length)

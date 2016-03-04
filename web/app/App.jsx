@@ -273,7 +273,7 @@ let routes = (
             <Route name="wmc-wallet-create" path="create" component={WalletCreate}/>
             <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
             <Route name="wmc-backup-verify-restore" path="backup/restore" component={UploadRestore}/>
-            <Route name="wmc-backup-create" path="backup/create" component={CreateLocalBackup}/>
+            <Route name="wmc-backup-create" path="backup/download" component={CreateLocalBackup}/>
             <Route name="wmc-backup-create" path="backup/server(/:token)" component={BackupServer} onEnter={readBackupToken}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>

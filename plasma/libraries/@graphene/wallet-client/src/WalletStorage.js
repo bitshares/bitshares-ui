@@ -445,7 +445,7 @@ export default class WalletStorage {
     changePassword( password, username = "") {
         
         req(password, "password")
-
+        
         if( ! this.private_key )
             throw new Error("Wallet is locked")
         
@@ -456,7 +456,6 @@ export default class WalletStorage {
         assert( ! weak_password || ! this.storage.state.get("remote_copy"),
             "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
         
-        let old_public_api_key = this.private_api_key.toPublicKey()
         let original_local_hash = this.localHash()
         let remote_copy = this.storage.state.get("remote_copy")
         
@@ -469,6 +468,7 @@ export default class WalletStorage {
         }
         
         let new_private_key = PrivateKey.fromSeed( username.trim().toLowerCase() + "\t" + password )
+        let old_public_api_key = this.private_api_key ? this.private_api_key.toPublicKey() : null
         let new_private_api_key = this.getPrivateApiKey(new_private_key, false/* null unless remote copy */)
         
         // If new_public_api_key is null it will avoid extra encryption below
@@ -530,6 +530,19 @@ export default class WalletStorage {
             return this.notifyResolve( changePromise )
         })
     }
+    
+    /** @return {string} seed - `null` or tab delimited data: "email\tapi_key" */
+    getTokenSeed() {
+        let create_token = this.wallet_object.get("create_token") || this.storage.state.get("remote_token")
+        if( ! create_token)
+            return null
+        
+        return extractSeed(create_token)
+        let [ /*email*/, api_key ] = seed.split("\t")
+        assert(api_key, "Token is missing api_key")
+        // console.log('api_key', api_key)
+    }
+    
 }
 
 function sync(private_key = this.private_key, private_api_key = this.getPrivateApiKey(private_key)) {
@@ -737,9 +750,9 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
     let remote_copy = this.storage.state.get("remote_copy")
     let code = this.storage.state.get("remote_token")
     
-    if((remote_hash == null) !== (this.remote_status === "No Content"))
-        console.error("Null remote_hash / No Content remote_status mismatch",
-            (remote_hash == null), (this.remote_status === "No Content"))
+    if((remote_hash == null) !== (this.remote_status == null || this.remote_status === "No Content"))
+        console.log("WalletStorage\tDEBUG Null remote_hash / No Content remote_status mismatch",
+            remote_hash, this.remote_status)
     
     let should_create = code != null && remote_hash == null // several unit test may have the same code
     let wallet_object = should_create ? this.wallet_object.set("create_token", code) : this.wallet_object
@@ -876,15 +889,13 @@ function getPrivateApiKey(private_key, if_remote_copy_enabled = false) {
     if(if_remote_copy_enabled && (this.api == null || this.storage.state.get("remote_copy") !== true))
         return null
     
-    let create_token = this.wallet_object.get("create_token") || this.storage.state.get("remote_token")
-    if( ! create_token)
+    let seed = this.getTokenSeed()
+    if( seed == null)
         return null
     
-    let seed = extractSeed(create_token)
     let [ /*email*/, api_key ] = seed.split("\t")
     assert(api_key, "Token is missing api_key")
     // console.log('api_key', api_key)
-    
     return PrivateKey.fromSeed( private_key.toWif() + api_key )
 }
 

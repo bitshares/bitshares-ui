@@ -34,7 +34,7 @@ export default class WalletApi {
         curl http://localhost:9080/requestCode?email=alice@example.com
         ```
         @arg {string} email
-        @return {Promise} object { status: 200, statusText: "OK", expire_min: 10 }
+        @return {Promise} object { status: 200, statusText: "OK" }
     */
     requestCode(email) {
         if( ! rfc822Email(email) ) throw new Error("invalid email " + email)
@@ -42,9 +42,8 @@ export default class WalletApi {
         return this.ws_rpc.call("requestCode", params) 
             .then( json => {
             assertRes(json, "OK")
-            let { status, statusText, expire_min } = json
-            assert(expire_min, 'expire_min')
-            return { status, statusText, expire_min }
+            let { status, statusText } = json
+            return { status, statusText }
         })
     }
 

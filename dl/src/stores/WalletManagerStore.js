@@ -39,8 +39,6 @@ class WalletManagerStore extends BaseStore {
         if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
             throw new Error("Invalid wallet name")
         
-        let username = ""
-        
         WalletDb.logout()
         WalletDb.openWallet(wallet_name).then( wallet => {
             wallet_object = wallet_object.set("public_name", wallet_name)// if different

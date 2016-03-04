@@ -21,9 +21,12 @@ export default class WalletWebSocket {
         this.web_socket = new WebSocketClient(ws_server_url);
         this.current_reject = null;
         this.on_reconnect = null;
+        this.status = null;//re-connecting websocket can be noisy
+        
         this.connect_promise = new Promise((resolve, reject) => {
             this.current_reject = reject;
             this.web_socket.onopen = () => {
+                this.status = "open";
                 if(this.update_rpc_connection_status_callback)
                     this.update_rpc_connection_status_callback("open");
                 
@@ -32,7 +35,10 @@ export default class WalletWebSocket {
             }
             // Warning, onerror callback is over-written on each request.  Be cautious to dulicate some logic here.
             this.web_socket.onerror = evt => {
-                console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
+                if( this.status != "error" ) {
+                    console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
+                }
+                this.status = "error";
                 if(this.update_rpc_connection_status_callback)
                     this.update_rpc_connection_status_callback("error");
                 
@@ -40,8 +46,12 @@ export default class WalletWebSocket {
                     this.current_reject(evt);
                 }
             };
-            this.web_socket.onmessage = (message) => this.listener(JSON.parse(message.data));
+            this.web_socket.onmessage = (message) =>{
+                this.status = "open";
+                return this.listener(JSON.parse(message.data));
+            }
             this.web_socket.onclose = () => {
+                // this.status = null;
                 if(this.update_rpc_connection_status_callback)
                     this.update_rpc_connection_status_callback("closed");
             };

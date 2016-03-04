@@ -44,7 +44,7 @@ export class CreateLocalBackup extends BackupBaseComponent {
     render() {
         return <span>
 
-            <h3><Translate content="wallet.create_backup" /></h3>
+            <h3><Translate content="wallet.download_backup" /></h3>
             
             <WalletUnlock>
                 <LocalBackup>

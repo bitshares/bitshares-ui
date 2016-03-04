@@ -81,7 +81,7 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.history.pushState(null, "/wallet/backup/create");
+        this.context.history.pushState(null, "/wallet/backup/server");
     }
 
     onBackupBrainkey() {

@@ -19,12 +19,17 @@ import notify from "actions/NotificationActions"
 
 global.tabIndex = global.tabIndex || 0
 
-let BackupAuthStore = AuthStore("Backup")
+let AuthEmail = AuthStore("Email", {hasEmail: true, hasPassword: false, hasUsername: false})
+let AuthChange = AuthStore("AuthChange", {weak: false, hasConfirm: true})
 
 export default class Atl extends Component {
     render() {
         return (
-            <AltContainer stores={{ backups: BackupServerStore, wallet_store: WalletDb, auth: BackupAuthStore }}>
+            <AltContainer stores={{
+                    backups: BackupServerStore,
+                    wallet_store: WalletDb,
+                    auth_email: AuthEmail,
+                    auth_change: AuthChange }}>
                 <BackupServer/>
             </AltContainer>
         )
@@ -39,19 +44,19 @@ class BackupServer extends Component {
     }
     
     componentWillMount() {
-        // this.props.auth.defaults()// <- pickup username from account creation
+        // this.props.auth_email.defaults()// <- pickup username from account creation
     }
     
     // componentWillReceiveProps(nextProps) { }
     
     componentWillUnmount() {
-        this.props.auth.clear()
+        this.props.auth_email.clear()
     }
     
     componentDidMount() {
         let em = ReactDOM.findDOMNode(this.refs.confirm_email)
         if(em) em.focus()
-        this.props.auth.useEmailFromToken()// email change or the 1st email
+        // this.props.auth_email.useEmailFromToken()// email change or the 1st email
     }
     
     render() {
@@ -61,56 +66,62 @@ class BackupServer extends Component {
     render_unlocked() {
         
         let wallet = this.props.wallet_store.wallet
-        
+
         const requestCode = ()=> this.setState({ busy: true },
-            ()=> wallet.api.requestCode(this.props.auth.email)
+            ()=> wallet.api.requestCode(this.props.auth_email.email)
             .then(()=> this.setState({ busy: false }))
             .catch( error =>{
                 this.setState({ busy: false })
                 notify.error("Unable to request token: " + error.toString())
             })
         )
+        const email_token = <div>
+            {/* E M A I L */}
+            <AuthInput auth={this.props.auth_email} clearOnUnmount={false} />
+             <div className="center-content">
+                 {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                 <br/>
+             </div>
+            <button 
+                className={cname("button success", {disabled: ! this.props.auth_email.email_valid}) }
+                onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
+            </button>
+        </div>
         
         const changePassword = ()=> this.setState({ busy: true },
-            ()=> this.props.auth.changePassword()
+            ()=> this.props.auth_email.changePassword()
             .then(()=> this.setState({ busy: false }))
             .catch( error =>{
                 this.setState({ busy: false })
                 notify.error("Unable to change password: " + error.toString())
             })
         )
+        const change_password = <div>
+            <p><Translate content="wallet.remember_auth"/></p>{/* You <b>must</b> remember... */}
+                
+            {/* Password, Username */}
+            <AuthInput auth={this.props.auth_change} clearOnUnmount={false} />
+            
+             <div className="center-content">
+                 {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+                 <br/>
+             </div>
+            
+            <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_email.valid }) }  onClick={changePassword.bind(this)}><Translate content="i_agree"/></button>
+        </div>
+        
+        const download_option = ! WalletDb.isEmpty() ? <div><br/><Link to="wallet/backup/download">
+            <label className="secondary"><Translate content="wallet.download_backup" /></label></Link></div> : null
         
         const weak_password = <div>
-            { ! this.props.auth.email_verified ? <div>
-                
-                {/* E M A I L */}
-                <AuthInput auth={this.props.auth} clearOnUnmount={false} />
-                 <div className="center-content">
-                     {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                     <br/>
-                 </div>
-                <button 
-                    className={cname("button", {disabled: ! this.props.auth.email_valid}) }
-                    onClick={requestCode.bind(this)}><Translate content="wallet.email_token" />
-                </button>
+            { ! this.props.auth_email.email_verified ? <div>
+                { email_token }
+                { download_option }
             </div>
             :
             <div>
-                
-                <p><Translate content="wallet.remember_auth"/></p>{/* You <b>must</b> remember... */}
-                    
-                {/* Password, Username */}
-                <AuthInput auth={this.props.auth} clearOnUnmount={false} />
-                
-                 <div className="center-content">
-                     {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                     <br/>
-                 </div>
-                
-                <button className={cname("button", {disabled: this.state.busy || ! this.props.auth.valid }) }  onClick={changePassword.bind(this)}><Translate content="i_agree"/></button>
-                
+                { change_password }
             </div>
-                
             }
         </div>
         
@@ -152,9 +163,6 @@ class BackupServer extends Component {
                 </div>
                 <br/>
                 <br/>
-                {/*<Link to="wallet/backup/create"><label className="inline">
-                    <Translate content="wallet.local_backup"/>
-                </label></Link>*/}
             </div>
         )
     }
@@ -175,7 +183,7 @@ export function readBackupToken(nextState, replaceState) {
         console.error("BackupServer\tERROR Token parameter but their is no wallet");
     
     wallet.keepRemoteCopy(true, token)
-    let auth = BackupAuthStore.getState()
+    // let auth = BackupAuthStore.getState()
     // auth.defaults()
-    auth.useEmailFromToken()
+    // auth.useEmailFromToken()
 }

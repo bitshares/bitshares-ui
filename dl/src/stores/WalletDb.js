@@ -481,7 +481,7 @@ class WalletDb extends BaseStore {
         
         let keys = []
         for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
-            // console.log('WalletDb\tgenerateNextKey', !!this.generateNextKey_pubcache[i],i)
+            // if( ! this.generateNextKey_pubcache[i]) console.log('WalletDb\tgenerateNextKey', i)
             var private_key = key.get_brainkey_private( brainkey, i )
             var pubkey =
                 this.generateNextKey_pubcache[i] ?

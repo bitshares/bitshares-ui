@@ -64,15 +64,13 @@ export default class AuthInput extends Component {
     }
     
     focus() {
-        if( this.props.focus ) {
-            let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
-            if( hasPassword  )
-                ReactDOM.findDOMNode(this.refs.auth_password).focus()
-            else if( hasEmail )
-                ReactDOM.findDOMNode(this.refs.auth_email).focus()
-            else if( hasUsername )
-                ReactDOM.findDOMNode(this.refs.auth_username).focus()
-        }
+        let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
+        if( hasPassword  )
+            ReactDOM.findDOMNode(this.refs.auth_password).focus()
+        else if( hasEmail )
+            ReactDOM.findDOMNode(this.refs.auth_email).focus()
+        else if( hasUsername )
+            ReactDOM.findDOMNode(this.refs.auth_username).focus()
     }
     
     passwordForm({password, confirm, password_valid, password_error}) {

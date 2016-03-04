@@ -19,17 +19,14 @@ import { AddressIndex } from "@graphene/wallet-client"
 
 module.exports = {
     
-    PrivateKey, PublicKey, Aes, key,
-    WalletDb, WalletManagerStore,
-    WalletActions,
-    AccountStore, 
-    BackupActions,
-    ChainStore,
-    SettingsActions,
-    chain_config, ecc_config,
+    PrivateKey, PublicKey, Aes,
+    WalletDb, ChainStore,
     
-    // Debugging, these may be removed
+    // For debugging, these may be moved
+    chain_config, ecc_config, key,
+    WalletManagerStore, WalletActions, AccountStore, 
     AccountRefsStore, AddressIndex,
+    SettingsActions, BackupActions,
     
     alt, iDB,  Apis,
     db: ()=> Apis.instance().db_api(),
