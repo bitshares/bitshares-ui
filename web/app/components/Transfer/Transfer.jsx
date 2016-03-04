@@ -47,7 +47,7 @@ class Transfer extends React.Component {
         if(query.memo) this.state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name && query.to !== currentAccount) this.state.from_name = currentAccount;
-        this.onTrxIncluded = this.onTrxIncluded.bind(this);
+        this.onTransactionConfirmStateChanged = this.onTransactionConfirmStateChanged.bind(this);
     }
 
     _getInitialState() {
@@ -138,14 +138,15 @@ class Transfer extends React.Component {
         this.setState({memo: e.target.value});
     }
 
-    onTrxIncluded(confirm_store_state) {
+    onTransactionConfirmStateChanged(confirm_store_state) {
         if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             // this.setState(Transfer.getInitialState());
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.unlisten(this.onTransactionConfirmStateChanged);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.unlisten(this.onTransactionConfirmStateChanged);
             TransactionConfirmStore.reset();
+            this.setState({loading: false});
         }
     }
     
@@ -182,7 +183,7 @@ class Transfer extends React.Component {
             asset: asset.get("symbol")
         }
 
-        if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+        if (from_account_type === "My Account" && (to_account_type === "Private Account" || to_account_type === "Private Contact")) {
             // transfer from public to blind
             const to = this.state.to_name.slice(1);
             //trx.broadcast = () => {
@@ -192,15 +193,17 @@ class Transfer extends React.Component {
                         console.log("-- transferToBlind res -->", res);
                         //TransactionConfirmActions.wasIncluded(res.confirmation_receipts[0]);
                         //TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipts[0], loading: false});
-                        ZfApi.publish("transfer_receipt_modal", "open");
+                        if (to_account_type == "Private Contact") {
+                            this.setState({transfer_receipt: res.confirmation_receipts[0], loading: false});
+                            ZfApi.publish("transfer_receipt_modal", "open");
+                        }
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);
                         this.setState({error: error.message, loading: false});
                         //TransactionConfirmActions.error(error.message);
                     })
             //}
-        } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type == "Private Contact")) {
+        } else if ((from_account_type === "Private Account" || from_account_type == "Private Contact") && (to_account_type === "Private Account" || to_account_type === "Private Contact")) {
             // transfer from blind to blind
             const from = this.state.from_name.slice(1);
             const to = this.state.to_name.slice(1);
@@ -210,16 +213,18 @@ class Transfer extends React.Component {
                     .then(res => {
                         console.log("-- blindTransfer res -->", res);
                         //TransactionConfirmActions.close();
-                        this.setState({transfer_receipt: res.confirmation_receipt, loading: false});
+                        if (to_account_type == "Private Contact") {
+                            this.setState({transfer_receipt: res.confirmation_receipt, loading: false});
+                            ZfApi.publish("transfer_receipt_modal", "open");
+                        }
                         this.queryBlindBalance();
-                        ZfApi.publish("transfer_receipt_modal", "open");
                     }).catch(error => {
                         console.error("-- blindTransfer error -->", error);
                         this.setState({error: error.message, loading: false});
                         //TransactionConfirmActions.error(error.message);
                     })
             //}
-        } else if (from_account_type === "Private Account" || from_account_type == "Private Contact") {
+        } else if (from_account_type === "Private Account" || from_account_type === "Private Contact") {
             // transfer from blind to public
             const from = this.state.from_name.slice(1);
             //trx.broadcast = () => {
@@ -246,7 +251,9 @@ class Transfer extends React.Component {
         this.setState({error: null, loading: true});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
-        let amount = this.state.amount.replace( /,/g, "" )
+        let amount = this.state.amount.replace( /,/g, "" );
+        TransactionConfirmStore.unlisten(this.onTransactionConfirmStateChanged);
+        TransactionConfirmStore.listen(this.onTransactionConfirmStateChanged);
         if (this.isBlindTransfer(this.state.from_name, this.state.to_name)) {
             this.blindTransfer(amount, asset);
         } else {
@@ -259,8 +266,6 @@ class Transfer extends React.Component {
                 this.state.propose ? this.state.propose_account : null,
                 this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
             ).then( () => {
-                TransactionConfirmStore.unlisten(this.onTrxIncluded);
-                TransactionConfirmStore.listen(this.onTrxIncluded);
                 this.setState({loading: false});
             }).catch( e => {
                 let msg = e.message ? e.message.split( '\n' )[1] : null;
@@ -470,7 +475,7 @@ class Transfer extends React.Component {
             </form>
             <div className="grid-content medium-6 right-column">
                 {all_balances && all_balances.length > 0 && <div className="grid-content">
-                    <h3>{from_name}'s balances</h3>
+                    <h3>{from_name}'s balance</h3>
                     <ul>{all_balances}</ul>
                     <br/>
                 </div>}

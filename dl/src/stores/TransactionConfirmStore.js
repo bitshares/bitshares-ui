@@ -59,7 +59,7 @@ class TransactionConfirmStore {
             included: true,
             broadcasted_transaction: state.transaction
         };
-        if (state.transaction.type && state.transaction.type === "blind") {
+        if (state.transaction && state.transaction.type && state.transaction.type === "blind") {
             new_state.trx_id = res;
         } else {
             new_state.trx_id = res[0].id;
