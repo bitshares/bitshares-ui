@@ -712,7 +712,6 @@
         expired: "Backup token expired",
         remote_backup: "Remote Backup",
         invalid_auth: "Invalid Password",
-        invalid_token: "Invalid token",
         remember_auth1: "You must remember this information.  This will be",
         remember_auth2: "your new login (with USERNAME).  Please write it down.",
         remember_restore_key: "Keep your Restore Key incase you can't receive an email.",
@@ -727,7 +726,10 @@
         },
         backup_status: {
             "No Content": "No Content",
+            "Not Modified": "In Sync",
             email_has_wallet: "Invalid Password",
+            invalid_token: "Invalid token",
+            unknown: "Unknown",
         },
         confirm: "Password (confirm)",
         password: "Password",

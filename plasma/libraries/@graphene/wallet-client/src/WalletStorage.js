@@ -97,7 +97,7 @@ export default class WalletStorage {
         // enable the backup server if one is configured (see useBackupServer)
         let remote_url = this.storage.state.get("remote_url")
         if( remote_url ) {
-            this.ws_rpc = new WalletWebSocket(remote_url, status => this.socket_status = status)
+            this.ws_rpc = new WalletWebSocket(remote_url)
             this.api = new WalletApi(this.ws_rpc)
             this.instance = this.ws_rpc.instance // log instance number
         }
@@ -145,7 +145,7 @@ export default class WalletStorage {
         // close (if applicable)
         let p = this.ws_rpc ? this.ws_rpc.close() : null
         if(remote_url != null) {
-            this.ws_rpc = new WalletWebSocket(remote_url,status => this.socket_status = status)
+            this.ws_rpc = new WalletWebSocket(remote_url)
             this.api = new WalletApi(this.ws_rpc)
             this.instance = this.ws_rpc.instance
         } else {
@@ -752,13 +752,13 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
     let public_key = private_key.toPublicKey()
     let remote_hash = this.storage.state.get("remote_hash")
     let remote_copy = this.storage.state.get("remote_copy")
-    let code = this.storage.state.get("remote_token")
+    let code = this.wallet_object.get("create_token") || this.storage.state.get("remote_token")
     
     if((remote_hash == null) !== (this.remote_status == null || this.remote_status === "No Content"))
-        console.log("WalletStorage\tDEBUG Null remote_hash / No Content remote_status mismatch",
+        console.log("WalletStorage\tDEBUG remote_hash / remote_status mismatch",
             remote_hash, this.remote_status)
     
-    let should_create = code != null && remote_hash == null // several unit test may have the same code
+    let should_create = code != null && (remote_hash == null || this.remote_status === "No Content")
     let wallet_object = should_create ? this.wallet_object.set("create_token", code) : this.wallet_object
     let public_api_key = private_api_key ? private_api_key.toPublicKey() : null
     
@@ -767,21 +767,17 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
     this.local_status = null
     this.notify = true
     
-    if( this.api == null || remote_copy !== true ) {
-        return encrypt(wallet_object, public_key)
-            .then(e =>{
-                let local_hash = hash.sha256(e).toString("base64")
-                return this.storage.setState({ encrypted_wallet: e.toString('base64'), local_hash })
-            })
-    }
+    const enc_local = ()=> encrypt(wallet_object, public_key)
+        .then(e =>{
+            let local_hash = hash.sha256(e).toString("base64")
+            return this.storage.setState({ encrypted_wallet: e.toString('base64'), local_hash })
+        })
     
-    if( code == null && this.remote_status === "No Content" ) {
-        return encrypt(wallet_object, public_key)
-            .then(e =>{
-                let local_hash = hash.sha256(e).toString("base64")
-                return this.storage.setState({ encrypted_wallet: e.toString('base64'), local_hash })
-            })
-    }
+    if( this.api == null || remote_copy !== true )
+        return enc_local()
+    
+    if( code == null && this.remote_status === "No Content" )
+        return enc_local()
     
     let p1 = Promise.resolve()
     .then(()=> encrypt(wallet_object, public_key)).then( e => encrypted_wallet = e)
@@ -821,6 +817,7 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
                 if( error.message === "invalid_token" ) {
                     console.log("WalletStorage\tremoving invalid token")
                     this.storage.setState({ remote_token: null })
+                    this.setState({ create_token: null })
                 }
                 throw error
             })

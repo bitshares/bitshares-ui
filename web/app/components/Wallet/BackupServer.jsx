@@ -165,14 +165,12 @@ class BackupServer extends Component {
             </p>
         </div>
         
-        const show_api_error = <div>
-            <Translate content={"wallet.backup_status." + this.props.backups.api_error}/>
-        </div>
-        
+        // const show_api_error = <Translate content={"wallet.backup_status." + this.props.backups.api_error}/>
+        // {this.props.backups.api_error ? <span> ({show_api_error})</span> : null}
+
         const show_remote_status = <div>
             <label><Translate content="wallet.remote_status"/></label>
             <Translate content={"wallet.backup_status." + this.props.backups.backup_status}/>
-            {this.props.backups.api_error ? ` (${show_api_error})` : null}
         </div>
         
         // return <div/>

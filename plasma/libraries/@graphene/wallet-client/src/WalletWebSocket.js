@@ -6,17 +6,20 @@ let instance = 0
 
 export default class WalletWebSocket {
 
-    static api_error_callbacks = new Set()
+    static api_status = new Set()
+    
+    /** @arg {function} update_stocket_status called with ("open"|"error"|"closed"). */
+    static socket_status = new Set()
     
     /**
         @arg {string} ws_server_url - WebSocket URL
-        @arg {function} update_rpc_connection_status_callback called with ("open"|"error"|"closed").
     */
-    constructor(ws_server_url, update_rpc_connection_status_callback) {
+    constructor(ws_server_url) {
         this.instance = ++instance
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
-        this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
+        this.update_stocket_status = status =>
+            WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
         
         // var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("ws");
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
@@ -30,9 +33,7 @@ export default class WalletWebSocket {
             this.current_reject = reject;
             this.web_socket.onopen = () => {
                 this.status = "open";
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("open");
-                
+                this.update_stocket_status("open");
                 if(this.on_reconnect) this.on_reconnect();
                 resolve();
             }
@@ -42,8 +43,7 @@ export default class WalletWebSocket {
                     console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
                 }
                 this.status = "error";
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("error");
+                this.update_stocket_status("error");
                 
                 if (this.current_reject) {
                     this.current_reject(evt);
@@ -55,8 +55,7 @@ export default class WalletWebSocket {
             }
             this.web_socket.onclose = () => {
                 // this.status = null;
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("closed");
+                this.update_stocket_status("closed");
             };
         });
         this.current_callback_id = 0;
@@ -83,8 +82,7 @@ export default class WalletWebSocket {
                     console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"active subscriptions",
                         Object.keys(this.subscriptions).length)
                 
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("closed");
+                this.update_stocket_status("closed");
                 
                 resolve()
             }
@@ -171,8 +169,7 @@ export default class WalletWebSocket {
                 
                 this.web_socket.onerror = (evt) => {
                     
-                    if(this.update_rpc_connection_status_callback)
-                        this.update_rpc_connection_status_callback("error")
+                    this.update_stocket_status("error")
                     
                     console.log("ERROR\tWalletWebSocket\trequest",this.instance, evt.data ? evt.data : "")
                     reject(evt);
@@ -223,8 +220,7 @@ export default class WalletWebSocket {
             
             if (response.error) {
                 callback.reject(response.error);
-                WalletWebSocket.api_error_callbacks.forEach(cb=>Promise.resolve().then(()=>cb(response.error)))
-                // WalletWebSocket.api_error_callbacks.forEach(cb=>{try{cb(response.error)} catch(error){console.error(error)}})
+                WalletWebSocket.api_status.forEach(cb=>Promise.resolve().then(()=>cb(response.error)))
             } else {
                 callback.resolve(response.result);
             }
