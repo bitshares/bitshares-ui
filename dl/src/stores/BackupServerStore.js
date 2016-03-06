@@ -8,10 +8,10 @@ class BackupServerStore {
     constructor() {
         this.init = ()=> ({
             // UI Backup status (will check for wallet.backup_status.xxxx internationalization)
-            backup_status: "unknown"
+            backup_status: "unknown",
+            api_error: null,
         })
         this.state = this.init()
-        
         WalletDb.subscribe(this.onWalletUpdate.bind(this))
         WalletWebSocket.api_status.add(this.onApiError.bind(this))
         WalletWebSocket.socket_status.add(this.onSocketChange.bind(this))
@@ -25,12 +25,6 @@ class BackupServerStore {
     onSocketChange(socket_status) {
         this.setState({ socket_status })
         console.log('BackupServerStore\tsocket_status', socket_status)
-        let wallet = WalletDb.getState().wallet
-        if(!wallet) return
-        
-        let { remote_status } = wallet // socket_status
-        // if( remote_status === null && socket_status === "open")
-        //     wallet.sync()
     }
     
     onWalletUpdate() {

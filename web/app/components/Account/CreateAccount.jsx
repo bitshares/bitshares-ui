@@ -94,13 +94,10 @@ class CreateAccount extends React.Component {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
-                    this.props.history.pushState(null, `/account/${name}/overview`);
+                    // make a local or server backup
+                    this.props.history.pushState(null, `/wallet/backup/server`);
+                    // this.props.history.pushState(null, `/account/${name}/overview`);
                 }
-                
-                // defaults for the login 
-                // let { username } = this.props.auth
-                // let { wallet } = WalletDb.getState()
-                // wallet.storage.setState({ username })
                 
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
@@ -116,9 +113,8 @@ class CreateAccount extends React.Component {
         });
     }
 
-    createWallet(username) {
+    createWallet() {
         let auth = this.props.auth
-        auth.username = username
         return WalletActions.setWallet(
             "default", //wallet name
             this.props.auth

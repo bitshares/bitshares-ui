@@ -91,7 +91,7 @@ export default function reducer(state, action) {
 var console_error = (...message) =>{ console.error("ERROR reducer", ...message) }
 
 function emailSha1(code) {
-    let result = checkToken( code )
+    let result = checkToken( code, null, null )
     if( ! result.valid )
         return null
     

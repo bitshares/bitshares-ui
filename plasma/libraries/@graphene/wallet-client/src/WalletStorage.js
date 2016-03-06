@@ -1,7 +1,7 @@
 import { fromJS, Map, is } from "immutable"
 import { encrypt, decrypt } from "./Backup"
 import { PrivateKey, Signature, hash } from "@graphene/ecc"
-import { extractSeed, validToken } from "@graphene/time-token"
+import { extractSeed } from "@graphene/time-token"
 import WalletWebSocket from "./WalletWebSocket"
 import WalletApi from "./WalletApi"
 import assert from "assert"
@@ -173,9 +173,6 @@ export default class WalletStorage {
         @return {Promise} - only important if the wallet is communicating with the server
     */
     keepRemoteCopy( remote_copy = true, remote_token = this.storage.state.get("remote_token")) {
-        
-        if( remote_token && ! validToken(remote_token))
-            throw new Error("Invalid remote token")
         
         if( remote_copy != null)
             assert.equal(typeof remote_copy, "boolean", "remote_copy")
@@ -507,9 +504,9 @@ export default class WalletStorage {
                 return
             }
             
-            let subId = this.ws_rpc.getSubscriptionId("fetchWallet", old_public_key.toString())
+            let subId = this.ws_rpc.getSubscriptionId("fetchWallet", old_public_api_key.toString())
             if( subId != null )
-                this.api.fetchWalletUnsubscribe(old_public_key).catch( error => reject(error))
+                this.api.fetchWalletUnsubscribe(old_public_api_key).catch( error => reject(error))
                     .catch(error => console.error("WalletStorage\tunsubscribe error", error))//non fatal
             
             let original_signature = Signature.signBufferSha256(original_local_hash, old_private_api_key)

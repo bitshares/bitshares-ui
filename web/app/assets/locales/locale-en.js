@@ -40,7 +40,7 @@
         market_value: "Market Value",
         hour_24: "24hr Change",
         recent: "Recent activity",
-        name: "Account name",
+        name: "Public account name",
         label: "Label",
         id: "Account ID",
         more: "see more",
@@ -706,7 +706,7 @@
     wallet: {
         title: "Wallet",
         email: "Email",
-        username: "Username",
+        username: "Private Username",
         confirm_email: "Confirm Email",
         email_token: "Email a token",
         expired: "Backup token expired",
@@ -719,6 +719,9 @@
         token_emailed: "Please check your email and click on the verification link.",
         local_backup: "Local Backup",
         server_backup: "Server Backup",
+        server_backup_description1: "You may verify your email and we will keep your wallet backed up.",
+        server_backup_description2: "Disclaimer: Your wallet is encrypted before it leaves your device.  We can't recover a lost username, password or email.",
+        backup_download_description: "Download or enable server backups at any point.",
         remote_status: "Remote Status",
         server_toggle: {
             enabled: "Delete Backup from Server",
@@ -726,7 +729,7 @@
         },
         backup_status: {
             "No Content": "No Content",
-            "Not Modified": "In Sync",
+            "Not Modified": "Not Modified",//"In Sync",
             email_has_wallet: "Invalid Password",
             invalid_token: "Invalid token",
             unknown: "Unknown",

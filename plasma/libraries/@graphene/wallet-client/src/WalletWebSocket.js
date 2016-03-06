@@ -6,15 +6,11 @@ let instance = 0
 
 export default class WalletWebSocket {
 
-    static api_status = new Set()
-    
-    /** @arg {function} update_stocket_status called with ("open"|"error"|"closed"). */
-    static socket_status = new Set()
-    
     /**
         @arg {string} ws_server_url - WebSocket URL
     */
     constructor(ws_server_url) {
+        
         this.instance = ++instance
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
@@ -250,3 +246,7 @@ export default class WalletWebSocket {
     }
 
 }
+// mocha babel does not support class { static ... 
+// {Set<function>} update_stocket_status called with ("open"|"error"|"closed")
+WalletWebSocket.socket_status = new Set()
+WalletWebSocket.api_status = new Set()

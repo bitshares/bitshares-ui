@@ -3,7 +3,7 @@ import crypto from "crypto"
 import local_secret from "@graphene/local-secret"
 import bs58 from "bs58"
 
-const sha1 = data => crypto.createHash("sha1").update(data).digest('binary')
+const sha1 = data => crypto.createHash("sha1").update(data).digest('base64')
 
 export const expire_min = ()=> process.env.npm_config__graphene_time_token_expire_min != null ?
     Number(process.env.npm_config__graphene_time_token_expire_min) : 10
@@ -29,17 +29,17 @@ export function createToken(seed, include_seed = true) {
         .update(local_secret())
         .update(now_string)
         .update(seed)
-        .digest('binary')
+        .digest('base64')
         .substring(0, 10)
     
     newToken += now_string
     if( include_seed ) newToken += '\t' + seed
     
     // // Add outter validation so the a client (without the server's secret) can validate too
-    // let check = sha1(newToken).toString("binary").substring(0, 5)
-    // let token = new Buffer(check + newToken, 'binary')
-    let token = new Buffer(newToken, 'binary')
-    return bs58.encode(token)
+    let check = sha1(newToken).substring(0, 5)
+    let token = new Buffer(check + newToken, 'binary')
+    token = bs58.encode(token)
+    return token
 }
 
 /** This requires the same `local_secret` used to create the token.
@@ -57,11 +57,11 @@ export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
             throw new Error("expire_min_arg should be a number")
         
         token = new Buffer(bs58.decode(token)).toString('binary')
-        // if( ! validDecodedToken(token))
-        //     throw "invalid token"
-        // 
-        // // skip the public validation hash
-        // token = token.substring(5, token.length)
+        if( ! validDecodedToken(token))
+            throw "invalid token"
+        
+        // remove public validation hash
+        token = token.substring(5, token.length)
         
         // server's secret hash
         let raw_token = token.substring(0, 10)
@@ -84,7 +84,7 @@ export function checkToken(token, seed = null, expire_min_arg = expire_min()) {
             .update(local_secret())
             .update(then_string)
             .update(token_seed)
-            .digest('binary')
+            .digest('base64')
             .substring(0, 10)
         
         let valid = raw_token === token_verify
@@ -107,12 +107,12 @@ export function extractSeed(token) {
     assert.equal(typeof token, "string", "token should be a string")
     
     token = new Buffer(bs58.decode(token)).toString( 'binary' )//array to binary
-    // if( ! validDecodedToken(token))
-    //     return undefined
-    // 
-    // // skip the public validation hash
-    // token = token.substring(5, token.length)
-    // skip the server-validation hash
+    if( ! validDecodedToken(token))
+        return undefined
+    
+    // remove public validation hash
+    token = token.substring(5, token.length)
+    // remove server-validation hash
     token = token.substring(10, token.length)
     
     // numeric time value then optional (\t and seed data)
@@ -123,17 +123,16 @@ export function extractSeed(token) {
 }
 
 function validDecodedToken(token) {
-    assert.equal(typeof token, "string", "token should be a string")
+    assert.equal(typeof token, "string", "token should be a string: ", typeof token)
     let check = token.substring(0, 5)
     token = token.substring(5, token.length)
-    // FIXME breaks client-side only
-    return true//check === sha1(token).toString('binary').substring(0, 5)
+    return check === sha1(token).substring(0, 5)
 }
 
 export function validToken(token) {
     if( ! token)
         return false
-    assert.equal(typeof token, "string", "token should be a string")
+    assert.equal(typeof token, "string", "token should be a string: ", typeof token)
     token = new Buffer(bs58.decode(token)).toString('binary')// array to buffer
     return validDecodedToken(token)
 }

@@ -1,12 +1,12 @@
-import {createToken, checkToken, extractSeed, validToken} from '../index'
+import {createToken, checkToken, extractSeed} from '../index'
 import assert from "assert"
 
 describe('time-token', () => {
     
-    it("validToken", ()=> {
-        let token = createToken("seed")
-        assert(validToken(token), "validToken")
-    })
+    // it("validToken", ()=> {
+    //     let token = createToken("seed")
+    //     assert(validToken(token), "validToken")
+    // })
     
     it('checkToken_Secret', () => {
         let token = createToken("seed")

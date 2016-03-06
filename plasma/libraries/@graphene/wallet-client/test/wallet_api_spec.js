@@ -63,7 +63,7 @@ describe('Wallet API client', () => {
             .then( json =>{ asert(false, 'should not happen') })
             .catch( error =>{
                 assert.equal(error.statusText, "Bad Request")
-                assert.equal(error.message, "wallet with this email exists", error)
+                assert.equal(error.message, "email_has_wallet", error)
                 assert(! error.local_hash, "local_hash")
                 assert(! error.created, "created")
             })
@@ -76,7 +76,7 @@ describe('Wallet API client', () => {
             .then( json =>{ asert(false, 'should not happen') })
             .catch( error =>{
                 assert.equal(error.statusText, "Bad Request")
-                assert.equal(error.message, "wallet already exists", error)
+                assert.equal(error.message, "wallet_already_exists", error)
                 assert(error.local_hash, "local_hash")
                 assert(error.created, "created")
             })
@@ -152,7 +152,10 @@ function deleteWallet(code, private_key_seed, wallet_data) {
     let local_hash = hash.sha256(encrypted_data)
     let signature = Signature.signBufferSha256(local_hash, private_key)
     return api.deleteWallet( code, local_hash, signature )
-        .then( res => assert(/OK|Unauthorized/.test(res.statusText), "Expecting OK or Unauthorized response"))
+        // .then( res => console.log('res', res))
+        // .catch( err => console.log('err', err.res.statusText))
+        .then( res => assert(/OK/.test(res.statusText), "Expecting OK result"))
+        .catch( err => assert(/Not Found/.test(err.res.statusText), "Expecting OK result"))
 }
 
 function assertRes(res, statusText) {

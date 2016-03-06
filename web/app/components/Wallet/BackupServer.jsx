@@ -70,7 +70,7 @@ class BackupServer extends Component {
         let connected = wallet.api && wallet.api.ws_rpc.status === "open"
         if( ! connected )
             return <div className="error">Not connected to the backup server</div>
-        
+
         const onRequestCode = e=> {
             e.preventDefault()
             this.setState({ busy: true }, 
@@ -85,6 +85,9 @@ class BackupServer extends Component {
             )
         }
         const token_request_form = <div>
+            <p><Translate content={"wallet.server_backup_description1"}/></p>
+            {/*<div className="error">{counterpart.translate(this.props.backups.api_error)}</div>*/}
+
             {/* E M A I L */}
             <form onSubmit={onRequestCode.bind(this)}>
                 <AuthInput auth={this.props.auth_email} clearOnUnmount={false} />
@@ -97,6 +100,10 @@ class BackupServer extends Component {
                 className={cname("button success", {disabled: ! this.props.auth_email.email_valid}) }
                 onClick={onRequestCode.bind(this)}><Translate content="wallet.email_token" />
             </button>
+            <br/>
+            <br/>
+            <p><Translate content={"wallet.server_backup_description2"}/></p>
+            
         </div>
         
         
@@ -175,12 +182,12 @@ class BackupServer extends Component {
         
         // return <div/>
         let need_token =
-            ! wallet.wallet_object.has("create_token") &&
-            ! validToken(wallet.storage.state.get("remote_token"))// request another
+            ! (wallet.wallet_object.get("create_token") || 
+                wallet.storage.state.get("remote_token"))// request another
         
         let weak_password = wallet.storage.state.get("weak_password") === true
         let in_sync = wallet.storage.state.get("remote_copy") === false ||
-            wallet.storage.state.get("remote_status") === "Not Modified"
+            wallet.remote_status === "Not Modified"
         
         const body = <div>{
             need_token ? token_request_form :
@@ -191,22 +198,35 @@ class BackupServer extends Component {
         
         return (
             <div className="grid-block vertical medium-horizontal">
-                <div className="grid-content full-width-content no-overflow">
+                <div className="grid-content full-width-content no-overflow" style={{width: "150px"}}>
                     <h4><Translate content={"wallet.server_backup"}/></h4>
-                    <br/>{body}
-                    <hr/>{download_option}
+                    {body}
+                    <hr/>
+                    <p><Translate content={"wallet.backup_download_description"}/></p>
+                    {download_option}
                 </div>
             </div>
         )
     }
         
 }
+// function api_error() {
+//     console.log('this.last_api_error, this.props.backups.api_error', this.last_api_error, this.props.backups.api_error)
+//     if(this.last_api_error != this.props.backups.api_error) {
+//         this.last_api_error = this.props.backups.api_error
+//         // don't dispatch during render
+//         setTimeout(()=> notify.error(counterpart.translate("wallet." + this.props.backups.api_error)), 100)
+//     }
+// }
 
 /** Target for React Route's onEnter event. */
 export function readBackupToken(nextState, replaceState) {
     let token = nextState.params.token
     if( ! token )
         return
+    
+    if( ! validToken(token) )
+        throw new Error("invalid_token")
     
     let path = nextState.location.pathname
     path = path.replace(token, "")
