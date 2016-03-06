@@ -89,7 +89,7 @@ export default class WalletApi {
         @return {Promise} object - { status: 200, statusText: "OK" }
     */
     fetchWallet(secret_public_key, local_hash, callback = null) {
-        secret_public_key = toString(req(secret_public_key, 'secret_public_key'))
+        secret_public_key = toStringWithoutPrefix(req(secret_public_key, 'secret_public_key'))
         local_hash = toBase64(local_hash)
         let params = { public_key: secret_public_key, local_hash }
         
@@ -101,7 +101,7 @@ export default class WalletApi {
         @arg {string|PublicKey} public_key - derived from {@link createWallet.signature}.  This is considered private (it was created by hashing: email+username+password); this is not nearly random enough for this to be public.
     */
     fetchWalletUnsubscribe(secret_public_key) {
-        secret_public_key = toString(req(secret_public_key, 'secret_public_key'))
+        secret_public_key = toStringWithoutPrefix(req(secret_public_key, 'secret_public_key'))
         return this.ws_rpc.unsubscribe("fetchWallet", null, secret_public_key)
     }
 
@@ -190,8 +190,8 @@ var toBase64 = data => data == null ? data :
     data["toBuffer"] ? data.toBuffer().toString('base64') :
     Buffer.isBuffer(data) ? data.toString('base64') : data
 
-var toString = data => data == null ? data :
-    data["toString"] ? data.toString() : data // PublicKey.toString()
+var toStringWithoutPrefix = data => data == null ? data :
+    data["toString"] ? data.toString("") : data // PublicKey.toString()
 
 // required
 function req(data, field_name) {

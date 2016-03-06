@@ -31,7 +31,7 @@
     "start": "babel-node ./index.js",
     "cli": "babel-node ./src/Repl.js",
     "dev": "mocha --compilers js:babel-core/register ./index_dev.js --watch",
-    "mysql-init": "babel-node ./src/db/models.js",
+    "mysql": "babel-node ./src/db/models.js",
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm test -- --watch"
   },

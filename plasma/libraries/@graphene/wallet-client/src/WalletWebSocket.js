@@ -219,6 +219,7 @@ export default class WalletWebSocket {
                 WalletWebSocket.api_status.forEach(cb=>Promise.resolve().then(()=>cb(response.error)))
             } else {
                 callback.resolve(response.result);
+                WalletWebSocket.api_status.forEach(cb=>Promise.resolve().then(()=>cb(null)))
             }
             delete this.callbacks[response.id]
             if (this.unsub[response.id]) {
@@ -249,4 +250,4 @@ export default class WalletWebSocket {
 // mocha babel does not support class { static ... 
 // {Set<function>} update_stocket_status called with ("open"|"error"|"closed")
 WalletWebSocket.socket_status = new Set()
-WalletWebSocket.api_status = new Set()
+WalletWebSocket.api_status = new Set() // rename to api_error ?

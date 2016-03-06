@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import {hash} from "@graphene/ecc"
 import {Wallet, Account} from "./db/models.js"
-import {Signature, PrivateKey} from "@graphene/ecc"
+import {Signature, PrivateKey, ecc_config} from "@graphene/ecc"
 import * as subscriptions from "./subscriptions"
 
 /**
@@ -17,7 +17,7 @@ export function createWallet(encrypted_data, signature, email_sha1, walletNotify
     if( ! sig.verifyHash(lh, pub))
         return Promise.reject("signature_verify")
     
-    let public_key = pub.toString()
+    let public_key = pub.toString(""/*address_prefix*/)
     let wallet, local_hash
     return Promise.resolve()
     .then(()=> Wallet.findOne({ where: {public_key} }))
@@ -61,7 +61,7 @@ export function saveWallet(original_local_hash, encrypted_data, signature, walle
     if( ! sig.verifyHash(lh, pub))
         return Promise.reject("signature_verify")
 
-    let public_key = pub.toString()
+    let public_key = pub.toString(""/*address_prefix*/)
     let local_hash = lh.toString('base64')
     return Wallet.findOne({ where: {public_key} }).then( wallet =>{
         if( ! wallet) return "Not Found"
@@ -86,7 +86,7 @@ export function changePassword({ original_local_hash, original_signature,
         let public_key = sig.recoverPublicKey(local_hash)
         if( ! sig.verifyHash(local_hash, public_key))
             return Promise.reject("signature_verify (original)")
-        original_pubkey = public_key.toString()
+        original_pubkey = public_key.toString(""/*address_prefix*/)
     }
     let new_local_hash, new_pubkey
     {
@@ -96,7 +96,7 @@ export function changePassword({ original_local_hash, original_signature,
         if( ! sig.verifyHash(local_hash, public_key))
             return Promise.reject("signature_verify (new)")
         new_local_hash = local_hash.toString('base64')
-        new_pubkey = public_key.toString()
+        new_pubkey = public_key.toString(""/*address_prefix*/)
     }
     return Wallet.findOne({where: {public_key: original_pubkey}}).then( wallet =>{
         if( ! wallet ) return "Not Found"
@@ -122,7 +122,7 @@ export function deleteWallet({ local_hash, signature, email_sha1 }, walletNotify
     if( ! sig.verifyHash(local_hash, public_key))
         return Promise.reject("signature_verify")
     
-    public_key = public_key.toString()
+    public_key = public_key.toString(""/*address_prefix*/)
     
     return Promise.resolve()
     .then(()=> Account.findOne({ where: {email_sha1} }) )

@@ -148,17 +148,18 @@ class BackupServer extends Component {
                 throw error
             })
         
+                    // checked={wallet.storage.state.get("remote_copy")}
+            // <label><Translate content="wallet.remote_backup"/></label>
         const toggle_backups_form = <div>
-            <label><Translate content="wallet.remote_backup"/></label>
-            <p>
-                <input type="checkbox"
-                    className={cname({ disabled: this.state.busy })}
-                    checked={wallet.storage.state.get("remote_copy")}
-                    onChange={onRemoteCopy.bind(this)} />
-                &nbsp;
-                <Translate content={"wallet.server_toggle." +
-                    (wallet.storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
-            </p>
+            <div>
+                <button
+                    className={cname("button success", { disabled: this.state.busy,
+                        secondary: ! wallet.storage.state.get("remote_copy") })}
+                    onClick={onRemoteCopy.bind(this)}>
+                    <Translate content={"wallet.server_toggle." +
+                        (wallet.storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
+                </button>
+            </div>
             <div className="center-content">
                 {this.state.busy ? <LoadingIndicator type="circle"/> : null }
             </div>
@@ -166,14 +167,16 @@ class BackupServer extends Component {
         </div>
 
         const show_restore_key = <div>
-            <p>
+            <div>
                 <Translate content="wallet.remember_restore_key"/>
+                <br/>
+                <br/>
                 <pre className="no-overflow">{wallet.getTokenSeed()}</pre>
-            </p>
+            </div>
         </div>
         
-        // const show_api_error = <Translate content={"wallet.backup_status." + this.props.backups.api_error}/>
-        // {this.props.backups.api_error ? <span> ({show_api_error})</span> : null}
+        const show_api_error =this.props.backups.api_error ?
+            <Translate content={"wallet.backup_status." + this.props.backups.api_error}/> : null
 
         const show_remote_status = <div>
             <label><Translate content="wallet.remote_status"/></label>
@@ -196,13 +199,14 @@ class BackupServer extends Component {
             show_remote_status
         }</div>
         
+                    // <p><Translate content={"wallet.backup_download_description"}/></p>
         return (
             <div className="grid-block vertical medium-horizontal">
                 <div className="grid-content full-width-content no-overflow" style={{width: "150px"}}>
                     <h4><Translate content={"wallet.server_backup"}/></h4>
+                    <span className="error">{show_api_error}</span>
                     {body}
                     <hr/>
-                    <p><Translate content={"wallet.backup_download_description"}/></p>
                     {download_option}
                 </div>
             </div>

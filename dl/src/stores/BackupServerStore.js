@@ -18,7 +18,7 @@ class BackupServerStore {
     }
     
     onApiError(api_error) {
-        this.setState({ api_error: api_error.message })
+        this.setState({ api_error: api_error ? api_error.message : null })
         console.log('BackupServerStore\tapi_error', api_error)
     }
     

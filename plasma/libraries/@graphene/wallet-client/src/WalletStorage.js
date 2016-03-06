@@ -560,6 +560,7 @@ function sync(private_key = this.private_key, private_api_key = this.getPrivateA
             
             // Rely on the callback to "resolve"
             // This promise can't server as the return value, we are only after the error.
+            console.log('fetchWallet public_api_key', public_api_key.toString())
             this.api.fetchWallet(
                 public_api_key, this.localHash(),
                 server_wallet => resolve(this.fetchWalletCallback(server_wallet, private_key, private_api_key))
@@ -603,7 +604,7 @@ function fetchWallet(server_wallet, private_key, private_api_key) {
     let old_hash = this.storage.state.get("remote_hash")
     // let had_remote = old_hash != null
     
-    let new_hash = server_wallet.local_hash
+    let new_hash = server_wallet.statusText === "Not Modified" ? local_hash : server_wallet.local_hash
     let has_remote = new_hash != null // deleted
     
     if( new_hash )
@@ -789,6 +790,7 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
         if( should_create ) {
             
             assert.equal( this.remote_status, "No Content", "remote_status")
+            console.log('createWallet public_api_key', public_api_key.toString())
             
             // Create the server-side wallet for the first time
             // This will not trigger a subscription event to this connection (this connection knows about the wallet)

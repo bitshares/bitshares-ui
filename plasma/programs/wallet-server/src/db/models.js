@@ -6,7 +6,7 @@ var connection = require("./connection");
 // Don't use an ID sequence for Wallet and Account .. The records should not be linkable by the server (makes brute-forcing harder)
 
 export var Wallet = connection.define('wallets', {
-    public_key: { type: Sequelize.STRING(60), allowNull: false, primaryKey: true },// 50 base58 chars + prefix
+    public_key: { type: Sequelize.STRING(50), allowNull: false, primaryKey: true },// 50 base58 chars ( prefix removed )
     signature: { type: Sequelize.STRING(88), allowNull: false },// 4*Math.ceil( 65 / 3 ) === 88
     local_hash: { type: Sequelize.STRING(44), allowNull: false },// 4*Math.ceil( (256/8) / 3 ) === 44
     encrypted_data: { type: Sequelize.BLOB, allowNull: false }

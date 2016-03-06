@@ -69,11 +69,9 @@ export default function reducer(state, action) {
             case 'deleteWallet':
                 var { code } = action
                 var email_sha1 = emailSha1(code)
-                if( ! email_sha1 ) {
+                if( ! email_sha1 )
                     throw "invalid_token"
-                    // reply("Unauthorized", { message: "invalid_token" })
-                    break
-                }
+                
                 action.email_sha1 = email_sha1
                 reply( WalletServerDb.deleteWallet(action, wallet => walletNotify(wallet)) )
                 break

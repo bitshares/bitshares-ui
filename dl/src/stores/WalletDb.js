@@ -165,8 +165,10 @@ class WalletDb extends BaseStore {
         if( wallet_name === this.state.current_wallet && wallet != null )
             return Promise.resolve(wallet)
         
-        if( wallet )
+        if( wallet ) {
+            // this.logout()
             wallet.unsubscribe(this.notify)
+        }
         
         if(! wallet_name) {
             wallet = undefined
