@@ -326,7 +326,7 @@ export default class WalletStorage {
         this.private_api_key = null // logout
         
         let unsub
-        if( public_api_key && this.api && this.ws_rpc.getSubscriptionId("fetchWallet", public_api_key.toString()) ) {
+        if( public_api_key && this.api && this.ws_rpc.getSubscriptionId("fetchWallet", public_api_key.toString(""/*address prefix*/)) ) {
             unsub = this.api.fetchWalletUnsubscribe(public_api_key)
         } else {
             unsub = Promise.resolve()
@@ -504,7 +504,7 @@ export default class WalletStorage {
                 return
             }
             
-            let subId = this.ws_rpc.getSubscriptionId("fetchWallet", old_public_api_key.toString())
+            let subId = this.ws_rpc.getSubscriptionId("fetchWallet", old_public_api_key.toString(""/*address prefix*/))
             if( subId != null )
                 this.api.fetchWalletUnsubscribe(old_public_api_key).catch( error => reject(error))
                     .catch(error => console.error("WalletStorage\tunsubscribe error", error))//non fatal
@@ -553,14 +553,13 @@ function sync(private_key = this.private_key, private_api_key = this.getPrivateA
         return Promise.resolve()
     
     let public_api_key = private_api_key.toPublicKey()
-    let subscription_id = this.ws_rpc.getSubscriptionId("fetchWallet", public_api_key.toString())
+    let subscription_id = this.ws_rpc.getSubscriptionId("fetchWallet", public_api_key.toString(""/*address prefix*/))
     if( subscription_id == null ) {
         // Create subscription .. `resolve` is for the server wallet's callback
         return new Promise( (resolve, reject) => {
             
             // Rely on the callback to "resolve"
             // This promise can't server as the return value, we are only after the error.
-            console.log('fetchWallet public_api_key', public_api_key.toString())
             this.api.fetchWallet(
                 public_api_key, this.localHash(),
                 server_wallet => resolve(this.fetchWalletCallback(server_wallet, private_key, private_api_key))
@@ -683,30 +682,30 @@ function fetchWallet(server_wallet, private_key, private_api_key) {
     
 }
 
-function deleteRemoteWallet(private_key, private_api_key, hash = this.localHash()) {
+function deleteRemoteWallet(private_key, private_api_key, local_hash = this.localHash()) {
     
     let create_token = this.wallet_object.get("create_token") || this.storage.state.get("remote_token")
     assert(create_token, "create_token missing")
     
-    if( ! Buffer.isBuffer(hash))
-        hash = new Buffer(hash, "base64")
+    if( ! Buffer.isBuffer(local_hash))
+        local_hash = new Buffer(local_hash, "base64")
     
-    let signature = Signature.signBufferSha256(hash, private_api_key)
+    let signature = Signature.signBufferSha256(local_hash, private_api_key)
     let public_key = private_key.toPublicKey()
     
-    return this.api.deleteWallet( create_token, hash, signature ).then(()=> {
+    return this.api.deleteWallet( create_token, local_hash, signature ).then(()=> {
         this.notify = true
-        let wallet_object = this.wallet_object.remove("create_token")
-        encrypt(this.wallet_object, public_key).then( encrypted_wallet =>{
-            this.storage.setState({
-                encrypted_wallet: encrypted_wallet.toString('base64'),
-                local_hash: hash.sha256(encrypted_wallet).toString("base64"),
-                remote_hash: undefined,
-                remote_created_date: undefined,
-                remote_updated_date: undefined,
+        // let wallet_object = this.wallet_object.remove("create_token")
+        // return encrypt(this.wallet_object, public_key).then( encrypted_wallet =>{
+            return this.storage.setState({
+                // encrypted_wallet: encrypted_wallet.toString('base64'),
+                // local_hash: hash.sha256(encrypted_wallet).toString("base64"),
+                remote_hash: null,
+                remote_created_date: null,
+                remote_updated_date: null,
             })
-            this.wallet_object = wallet_object
-        })
+            // this.wallet_object = wallet_object
+        // })
     })
 }
 
@@ -723,7 +722,7 @@ function saveServerWallet(server_wallet, private_key, private_api_key) {
     .then(()=> decrypt(backup_buffer, private_api_key)).then( w => wallet_object = w)
     .then(()=> encrypt(wallet_object, public_key)).then( w => encrypted_wallet = w)
     .then(()=> {
-        this.storage.setState({
+        let p = this.storage.setState({
             encrypted_wallet: encrypted_wallet.toString("base64"),
             local_hash: server_wallet.local_hash,
             remote_hash: server_wallet.local_hash,
@@ -736,6 +735,7 @@ function saveServerWallet(server_wallet, private_key, private_api_key) {
         this.local_status = null
         this.notify = true
         if(trace) console.log("WalletStorage("+this.instance + ")\tsaveServerWallet local wallet updated", this.storage.state.get("remote_hash"))
+        return p
     })
 }
 
@@ -790,7 +790,6 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
         if( should_create ) {
             
             assert.equal( this.remote_status, "No Content", "remote_status")
-            console.log('createWallet public_api_key', public_api_key.toString())
             
             // Create the server-side wallet for the first time
             // This will not trigger a subscription event to this connection (this connection knows about the wallet)

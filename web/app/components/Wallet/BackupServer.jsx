@@ -155,7 +155,7 @@ class BackupServer extends Component {
                 <button
                     className={cname("button success", { disabled: this.state.busy,
                         secondary: ! wallet.storage.state.get("remote_copy") })}
-                    onClick={onRemoteCopy.bind(this)}>
+                        onClick={onRemoteCopy.bind(this)}>
                     <Translate content={"wallet.server_toggle." +
                         (wallet.storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
                 </button>
