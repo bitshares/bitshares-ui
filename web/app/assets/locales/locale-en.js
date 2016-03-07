@@ -709,7 +709,9 @@
         show_asks: "Show all asks",
         hide: "Hide",
         short: "Short",
-        others: "Others"
+        others: "Others",
+        invert: "Invert the price",
+        to_market: "Go to market"
     },
     fees: {
      title: "Fee Schedule"
