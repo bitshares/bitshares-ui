@@ -382,7 +382,9 @@ class OrderBook extends React.Component {
             let rightHeader = (
                 <thead>
                     <tr key="top-header" className="top-header">
-                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title"content="exchange.price" /></th>
+                        <th style={{paddingRight: 18, textAlign: "right"}}>
+                            <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
+                        </th>
                         <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
                         <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
                         <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
@@ -396,7 +398,9 @@ class OrderBook extends React.Component {
                         <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
                         <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
                         <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title"content="exchange.price" /></th>
+                        <th style={{paddingRight: 18, textAlign: "right"}}>
+                            <Translate className={(this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
+                        </th>
                     </tr>
                 </thead>
             );
