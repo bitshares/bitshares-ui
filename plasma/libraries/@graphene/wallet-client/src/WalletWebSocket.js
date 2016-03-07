@@ -65,7 +65,8 @@ export default class WalletWebSocket {
         for (let id in this.subscriptions) {
             try {
                 let { method, params, key } = this.subscriptions[id]
-                unsubs.push(this.unsubscribe(method, params, key))
+                let unsub = this.unsubscribe.bind(this, method, params, key)
+                unsubs.push(unsub)
             } catch( error ) {
                 console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"unsubscribe",error, "stack", error.stack)
             }

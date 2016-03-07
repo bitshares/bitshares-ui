@@ -310,6 +310,9 @@ export default class WalletStorage {
         })
     }
     
+    // static restore( api_key, username, password, chain_id = null ) {
+    // }
+    
     /**
         Remove unencrypted wallet from memory, and unsubscribe to wallet updates.
         
@@ -695,6 +698,7 @@ function deleteRemoteWallet(private_key, private_api_key, local_hash = this.loca
     
     return this.api.deleteWallet( create_token, local_hash, signature ).then(()=> {
         this.notify = true
+        this.remote_status = null
         // let wallet_object = this.wallet_object.remove("create_token")
         // return encrypt(this.wallet_object, public_key).then( encrypted_wallet =>{
             return this.storage.setState({

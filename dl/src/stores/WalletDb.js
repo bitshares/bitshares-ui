@@ -13,6 +13,7 @@ import { suggest_brain_key } from "../common/brainkey"
 import { PrivateKey } from "@graphene/ecc";
 import { chain_config } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
+import { WalletWebSocket, WalletApi } from "@graphene/wallet-client"
 
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
@@ -84,9 +85,16 @@ class WalletDb extends BaseStore {
             "keys", "deposit_keys", "data", "prop",
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
             "logout","isLocked","onCreateWallet","login","changePassword","verifyPassword",
-            "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
+            "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended", "api",// "tryRestoreKey",
             "loadDbData", "subscribe", "unsubscribe", 
         )
+    }
+    
+    api() {
+        let url = SettingsStore.getSetting("backup_server")
+        let ws_rpc = new WalletWebSocket(url)
+        let api = new WalletApi(ws_rpc)
+        return api
     }
     
     /** @arg {function} callback - called for current wallet by WalletStorage.subscribe(callback) 
@@ -553,6 +561,12 @@ class WalletDb extends BaseStore {
     
     binaryBackupRecommended() {
         CachedPropertyActions.set("backup_recommended", true)
+    }
+    
+    tryRestoreKey(key, username, password) {
+        console.log('key', key)
+        // WalletDb.restore(
+        return Promise.reject("no")
     }
     
     decodeMemo(memo) {
