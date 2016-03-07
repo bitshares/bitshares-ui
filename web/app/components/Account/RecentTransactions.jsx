@@ -13,25 +13,29 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {chain_types, ChainStore} from "@graphene/chain";
 import TimeAgo from "../Utility/TimeAgo";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import TransferReceiptModal from "../Stealth/TransferReceiptModal";
 
 let {operations} = chain_types;
 
-const BlindTransferRow = ({t}) => {
+const BlindTransferRow = ({t, onShowReceipt}) => {
     const date = new Date(t.date);
     return (
         <tr>
             <td className="right-td" style={{padding: "8px 5px"}}>
-                <div><TranslateWithLinks
-                    string="operation.transfer"
-                    keys={[
-                        {type: "account", value: t.from_label, arg: "from"},
-                        {type: "amount", value: t.amount, arg: "amount", decimalOffset: t.amount.asset_id === "1.3.0" ? 5 : null},
-                        {type: "account", value: t.to_label, arg: "to"}
-                    ]}
-                /></div>
+                <div>
+                    <TranslateWithLinks
+                        string="operation.transfer"
+                        keys={[
+                            {type: "account", value: t.from_label, arg: "from"},
+                            {type: "amount", value: t.amount, arg: "amount", decimalOffset: t.amount.asset_id === "1.3.0" ? 5 : null},
+                            {type: "account", value: t.to_label, arg: "to"}
+                        ]}
+                    />
+                </div>
                 <div style={{fontSize: 14, paddingTop: 5}}>
                     <span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${t.block_num}`}>{utils.format_number(t.block_num, 0)}</Link></span>
-                    &nbsp;- <span className="time"><TimeAgo time={date}/></span></div>
+                    &nbsp;- <span className="time"><TimeAgo time={date}/></span> - <a href onClick={e => {e.preventDefault(); onShowReceipt(t);}}>show receipt</a></div>
             </td>
         </tr>
     );
@@ -67,8 +71,10 @@ class RecentTransactions extends React.Component {
         super();
         this.state = {
             limit: props.limit ? Math.max(20, props.limit) : 20,
-            csvExport: false
+            csvExport: false,
+            transferReceipt: ""
         };
+        this._onShowReceiptClick = this._onShowReceiptClick.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -80,6 +86,7 @@ class RecentTransactions extends React.Component {
             let nsa = this.props.accountsList[key];
             if (npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
         }
+        if (this.state.transferReceipt !== nextState.transferReceipt) return true;
         return false;
     }
 
@@ -128,6 +135,18 @@ class RecentTransactions extends React.Component {
         this.setState({csvExport: true});
     }
 
+    _onShowReceiptClick(trx) {
+        const cwallet = WalletDb.getState().cwallet;
+        if (cwallet) {
+            let transferReceipt = cwallet.getEncodedReceipt(trx.conf);
+            this.setState({transferReceipt});
+            ZfApi.publish("transfer_receipt_modal", "open");
+        } else {
+            alert('Unlock wallet to see receipt');
+        }
+
+    }
+
     render() {
         let {accountsList, compactView, filter} = this.props;
         let {limit} = this.state;
@@ -163,7 +182,7 @@ class RecentTransactions extends React.Component {
                             hideFee
                             inverted={false}
                             hideOpLabel={compactView}
-                        /> : <BlindTransferRow key={`tr-${o.date}-${o.from_label}-${o.to_label}`} t={o} />
+                        /> : <BlindTransferRow key={`tr-${o.date}-${o.from_label}-${o.to_label}`} t={o} onShowReceipt={this._onShowReceiptClick} />
                     );
                 }) : <tr>
             <td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent"/></td>
@@ -226,6 +245,7 @@ class RecentTransactions extends React.Component {
                         }
                     </div>
                 }
+                <TransferReceiptModal value={this.state.transferReceipt}/>
             </div>
         );
     }
