@@ -151,7 +151,8 @@
             maximum_force_settlement_volume: "Max force settle volume (percent)",
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
-            error_invalid: "That asset may not be used"
+            error_invalid: "That asset may not be used",
+            market: "Preferred market pairing"
         },
         connections: {
             known: "Known by",

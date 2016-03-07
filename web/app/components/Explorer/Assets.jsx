@@ -84,15 +84,21 @@ class Assets extends React.Component {
         let {assets} = this.props;
 
         let placeholder = counterpart.translate("markets.filter").toUpperCase();
+        let coreAsset = ChainStore.getAsset("1.3.0");
 
         let uia = assets.filter(a => {
             return !a.market_asset  && a.symbol.indexOf(this.state.filterUIA) !== -1;
         }).map((asset) => {
+            let description = assetUtils.parseDescription(asset.options.description);
+
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
+
             return (
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -108,11 +114,17 @@ class Assets extends React.Component {
         let mia = assets.filter(a => {
             return a.bitasset_data && !a.bitasset_data.is_prediction_market && a.symbol.indexOf(this.state.filterMPA) !== -1;
         }).map((asset) => {
+            let description = assetUtils.parseDescription(asset.options.description);
+            console.log(asset.symbol, description);
+            
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
+
             return (
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -125,7 +137,7 @@ class Assets extends React.Component {
             }
         }).toArray();
 
-        let coreAsset = ChainStore.getAsset("1.3.0");
+        
 
         let pm = assets.filter(a => {
 
@@ -137,10 +149,8 @@ class Assets extends React.Component {
                 (a.symbol.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1 || description.main.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1)
             );
         }).map((asset) => {
-
-            let marketID = asset.symbol + "_" + (coreAsset ? coreAsset.get("symbol") : "BTS");
-            
             let description = assetUtils.parseDescription(asset.options.description);
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
 
             return (
                 <tr key={asset.id.split(".")[2]}>
@@ -196,6 +206,7 @@ class Assets extends React.Component {
                                                 <th><Translate component="span" content="explorer.assets.symbol" /></th>
                                                 <th><Translate component="span" content="explorer.assets.issuer" /></th>
                                                 <th><Translate component="span" content="markets.supply" /></th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                                 <tbody>
@@ -216,6 +227,7 @@ class Assets extends React.Component {
                                                 <th><Translate component="span" content="explorer.assets.symbol" /></th>
                                                 <th><Translate component="span" content="explorer.assets.issuer" /></th>
                                                 <th><Translate component="span" content="markets.supply" /></th>
+                                                <th></th>
                                             </tr>
                                             </thead>
 

@@ -11,6 +11,7 @@ import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
 import ChainStore from "api/ChainStore";
 import SettingsActions from "actions/SettingsActions";
+import assetUtils from "common/asset_utils";
 
 class AccountOverview extends React.Component {
 
@@ -59,11 +60,18 @@ class AccountOverview extends React.Component {
 
             const core_asset = ChainStore.getAsset("1.3.0");
             
-            let assetInfoLinks = asset && <ul>
-                <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
-                {asset.get("id") !== "1.3.0" ? <li><a href={`#/market/${asset.get("symbol")}_${core_asset?core_asset.get("symbol"):"BTS"}`}><Translate content="exchange.market"/></a></li> : null}
-                {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
-            </ul>;
+            let assetInfoLinks;
+            if (asset) {
+                let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
+
+                let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
+                assetInfoLinks = (
+                <ul>
+                    <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                    {asset.get("id") !== "1.3.0" ? <li><a href={`#/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="exchange.market"/></a></li> : null}
+                    {isBitAsset && <li><a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a></li>}
+                </ul>);
+            }
 
             let includeAsset = !hiddenAssets.includes(asset_type);
 
