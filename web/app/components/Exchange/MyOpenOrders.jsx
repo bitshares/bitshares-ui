@@ -26,7 +26,7 @@ class TableHeader extends React.Component {
                     <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
                     <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
                     <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
-                    <th style={{minWidth: 91}}></th>
+                    <th><span style={{visibility: "hidden"}}>Cancel</span></th>
                 </tr>
             </thead>
         );
@@ -95,6 +95,7 @@ class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
                 nextProps.currentAccount !== this.props.currentAccount ||
+                nextProps.className !== this.props.className ||
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
@@ -179,9 +180,13 @@ class MyOpenOrders extends React.Component {
         // }
 
         return (
-            <div style={{marginBottom: "15px"}} key="open_orders" className="small-12 large-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
+            <div
+                style={{marginBottom: "15px"}}
+                key="open_orders"
+                className={this.props.className}
+                ref="orders">
 
-                <div className="exchange-bordered small-12" style={{height: 286}}>
+                <div className="exchange-bordered small-12" style={{height: 266}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.my_orders" />
                     </div>
@@ -189,7 +194,7 @@ class MyOpenOrders extends React.Component {
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
 
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 220}}>
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 200}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
                             <TransitionWrapper
                                 component="tbody"

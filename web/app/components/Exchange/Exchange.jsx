@@ -768,7 +768,7 @@ class Exchange extends React.Component {
                 displayBuyPrice: displayBuyPrice,
                 buyPrice: order.sell_price,
                 buyAmount: buyAmount,
-                buyTotal: utils.get_asset_amount(order.totalValue, base),
+                buyTotal: market_utils.limitByPrecision(utils.get_asset_amount(order.totalValue, base), base),
                 displaySellPrice: displayBuyPrice,
                 sellPrice: {
                     quote: order.sell_price.base,
@@ -1154,6 +1154,93 @@ class Exchange extends React.Component {
             leftOrderBook = false;
         }
 
+        let buyForm = (
+            <BuySell
+                style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
+                isOpen={this.state.buySellOpen}
+                onToggleOpen={this._toggleOpenBuySell.bind(this)}
+                className={cnames("small-12 no-padding middle-content", leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
+                type="bid"
+                amount={buyAmount}
+                price={displayBuyPrice}
+                total={buyTotal}
+                quote={quote}
+                base={base}
+                amountChange={this._buyAmountChanged.bind(this, base, quote)}
+                priceChange={this._buyPriceChanged.bind(this, base, quote)}
+                setPrice={this._currentPriceClick.bind(this, base, quote)}
+                totalChange={this._buyTotalChanged.bind(this, base, quote)}
+                balance={baseBalance}
+                onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance, buyFeeAsset, "buy")}
+                balancePrecision={base.get("precision")}
+                quotePrecision={quote.get("precision")}
+                totalPrecision={base.get("precision")}
+                currentPrice={lowestAsk.price_full}
+                currentPriceObject={lowestAsk.sell_price}
+                account={currentAccount.get("name")}
+                fee={buyFee}
+                feeAssets={buyFeeAssets}
+                feeAsset={buyFeeAsset}
+                onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
+                isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
+                onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+            />
+        );
+
+        let sellForm = (
+            <BuySell
+                style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
+                isOpen={this.state.buySellOpen}
+                onToggleOpen={this._toggleOpenBuySell.bind(this)}
+                className={cnames("small-12 no-padding middle-content", leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
+                type="ask"
+                amount={sellAmount}
+                price={displaySellPrice}
+                total={sellTotal}
+                quote={quote}
+                base={base}
+                amountChange={this._sellAmountChanged.bind(this, base, quote)}
+                priceChange={this._sellPriceChanged.bind(this, base, quote)}
+                setPrice={this._currentPriceClick.bind(this, base, quote)}
+                totalChange={this._sellTotalChanged.bind(this, base, quote)}
+                balance={quoteBalance}
+                onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance, sellFeeAsset, "sell")}
+                balancePrecision={quote.get("precision")}
+                quotePrecision={quote.get("precision")}
+                totalPrecision={base.get("precision")}
+                currentPrice={highestBid.price_full}
+                currentPriceObject={highestBid.sell_price}
+                account={currentAccount.get("name")}
+                fee={sellFee}
+                feeAssets={sellFeeAssets}
+                feeAsset={sellFeeAsset}
+                onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
+                isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
+                onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+            />
+        );
+
+        let orderBook = (
+            <OrderBook
+                latest={latestPrice}
+                changeClass={changeClass}
+                orders={limit_orders}
+                calls={call_orders}
+                invertedCalls={invertedCalls}
+                combinedBids={combinedBids}
+                combinedAsks={combinedAsks}
+                base={base}
+                quote={quote}
+                baseSymbol={baseSymbol}
+                quoteSymbol={quoteSymbol}
+                onClick={this._orderbookClick.bind(this, base, quote)}
+                horizontal={!leftOrderBook}
+                moveOrderBook={this._moveOrderBook.bind(this)}
+                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                marketReady={marketReady}
+            />
+        );
+
         return (
                 <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
@@ -1162,25 +1249,8 @@ class Exchange extends React.Component {
 
                     {/* Left Column - Open Orders */}
                     {leftOrderBook ? (
-                        <div className="grid-block left-column shrink no-overflow">
-                            <OrderBook
-                                latest={latestPrice}
-                                changeClass={changeClass}
-                                orders={limit_orders}
-                                calls={call_orders}
-                                invertedCalls={invertedCalls}
-                                combinedBids={combinedBids}
-                                combinedAsks={combinedAsks}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onClick={this._orderbookClick.bind(this, base, quote)}
-                                horizontal={!leftOrderBook}
-                                moveOrderBook={this._moveOrderBook.bind(this)}
-                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
-                                marketReady={marketReady}
-                            />
+                    <div className="grid-block left-column shrink no-overflow">
+                        {orderBook}
                     </div>) : null}
 
                     {/* Center Column */}
@@ -1299,7 +1369,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1000 ? 425 : 300}
+                                    height={this.state.height > 1100 ? 425 : 300}
                                     leftOrderBook={leftOrderBook}
                                     marketReady={marketReady}
                                     indicators={indicators}
@@ -1333,7 +1403,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1000 ? 425 : 300}
+                                    height={this.state.height > 1100 ? 425 : 300}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
@@ -1348,85 +1418,21 @@ class Exchange extends React.Component {
                                 />
                             </div>)}                        
 
-                        {/* Buy/Sell forms */}
+                        {/* OrderBook and Market History */}
 
                         {isNullAccount ? null : (
-                            <div className="grid-block vertical shrink buy-sell middle-content">
+                            <div className="grid-block vertical shrink buy-sell">
                             {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
                             
-                            <div className="grid-block small-vertical medium-horizontal align-spaced">
-                                {quote && base ?
-                                <BuySell
-                                    style={!smallScreen ? {minHeight: 266} : null}
-                                    isOpen={this.state.buySellOpen}
-                                    onToggleOpen={this._toggleOpenBuySell.bind(this)}
-                                    className={cnames("small-12 no-padding", smallScreen ? "medium-6" : "medium-4", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
-                                    type="bid"
-                                    amount={buyAmount}
-                                    price={displayBuyPrice}
-                                    total={buyTotal}
-                                    quote={quote}
-                                    base={base}
-                                    amountChange={this._buyAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._buyPriceChanged.bind(this, base, quote)}
-                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
-                                    totalChange={this._buyTotalChanged.bind(this, base, quote)}
-                                    balance={baseBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance, buyFeeAsset, "buy")}
-                                    balancePrecision={base.get("precision")}
-                                    quotePrecision={quote.get("precision")}
-                                    totalPrecision={base.get("precision")}
-                                    currentPrice={lowestAsk.price_full}
-                                    currentPriceObject={lowestAsk.sell_price}
-                                    account={currentAccount.get("name")}
-                                    fee={buyFee}
-                                    feeAssets={buyFeeAssets}
-                                    feeAsset={buyFeeAsset}
-                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
-                                    isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
-                                    onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                                /> : null}
-                                <ConfirmOrderModal
-                                    type="buy"
-                                    ref="buy"
-                                    onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance)}
-                                    diff={buyDiff}
-                                />
+                            <div className="grid-block align-spaced wrap">
+                                {!leftOrderBook ? orderBook : null}
 
-                                {quote && base ?
-                                <BuySell
-                                    style={!smallScreen ? {minHeight: 266} : null}
-                                    isOpen={this.state.buySellOpen}
-                                    onToggleOpen={this._toggleOpenBuySell.bind(this)}
-                                    className={cnames("small-12 no-padding", smallScreen ? "medium-6" : "medium-4", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
-                                    type="ask"
-                                    amount={sellAmount}
-                                    price={displaySellPrice}
-                                    total={sellTotal}
-                                    quote={quote}
-                                    base={base}
-                                    amountChange={this._sellAmountChanged.bind(this, base, quote)}
-                                    priceChange={this._sellPriceChanged.bind(this, base, quote)}
-                                    setPrice={this._currentPriceClick.bind(this, base, quote)}
-                                    totalChange={this._sellTotalChanged.bind(this, base, quote)}
-                                    balance={quoteBalance}
-                                    onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, sellTotal, sellAmount, quoteBalance, coreBalance, sellFeeAsset, "sell")}
-                                    balancePrecision={quote.get("precision")}
-                                    quotePrecision={quote.get("precision")}
-                                    totalPrecision={base.get("precision")}
-                                    currentPrice={highestBid.price_full}
-                                    currentPriceObject={highestBid.sell_price}
-                                    account={currentAccount.get("name")}
-                                    fee={sellFee}
-                                    feeAssets={sellFeeAssets}
-                                    feeAsset={sellFeeAsset}
-                                    onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
-                                    isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
-                                    onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                                /> : null}
+                                {leftOrderBook && quote && base ? buyForm : null}
 
-                                {!smallScreen ? <MarketHistory
-                                    className={cnames("no-padding no-overflow order-3", smallScreen ? "medium-6" : "medium-4")}
+                                {leftOrderBook && quote && base ? sellForm : null}
+                                
+                                <MarketHistory
+                                    className={cnames(leftOrderBook ? "hide-for-small" : "show-for-large", "no-padding no-overflow middle-content order-3 large-4")}
                                     headerStyle={{paddingTop: 0}}
                                     history={activeMarketHistory}
                                     myHistory={currentAccount.get("history")}
@@ -1435,8 +1441,14 @@ class Exchange extends React.Component {
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     isNullAccount={isNullAccount}
+                                />
 
-                                /> : null}
+                                <ConfirmOrderModal
+                                    type="buy"
+                                    ref="buy"
+                                    onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance)}
+                                    diff={buyDiff}
+                                />
 
                                 <ConfirmOrderModal
                                     type="sell"
@@ -1447,29 +1459,20 @@ class Exchange extends React.Component {
                             </div>
                         </div>)}
 
-                        {!leftOrderBook ? <div className="grid-block small-12" style={{overflow: "hidden"}}>
-                            <OrderBook
-                                smallScreen={smallScreen}
-                                orders={limit_orders}
-                                calls={call_orders}
-                                invertedCalls={invertedCalls}
-                                combinedBids={combinedBids}
-                                combinedAsks={combinedAsks}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                                onClick={this._orderbookClick.bind(this, base, quote)}
-                                horizontal={!leftOrderBook}
-                                moveOrderBook={this._moveOrderBook.bind(this)}
-                                flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
-                            />
-                    </div> : null}
+                        <div className="grid-block no-overflow wrap shrink no-padding">
+                            {!leftOrderBook && quote && base ? buyForm : null}
 
-                        {smallScreen ? 
-                        <div className="grid-block no-overflow shrink no-padding middle-content">
-                            <MarketHistory  
-                                className={cnames("no-padding no-overflow", "small-12")}
+                            {leftOrderBook ? <ConfirmOrderModal
+                                type="buy"
+                                ref="buy"
+                                onForce={this._forceBuy.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance)}
+                                diff={buyDiff}
+                            /> : null}
+
+                            {!leftOrderBook && quote && base ? sellForm : null}
+
+                            <MarketHistory
+                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 large-4" : "medium-12 large-6", {"hide-for-large" : !leftOrderBook}, "no-padding no-overflow middle-content order-3 small-12 medium-6")}
                                 headerStyle={{paddingTop: 0}}
                                 history={activeMarketHistory}
                                 myHistory={currentAccount.get("history")}
@@ -1478,13 +1481,12 @@ class Exchange extends React.Component {
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 isNullAccount={isNullAccount}
-
                             />
-                        </div> : null}
-                        <div className="grid-block no-overflow shrink no-padding">
+
                             {!isNullAccount && limit_orders.size > 0 && base && quote ? (
                             <MyOpenOrders
-                                className=""
+                                smallScreen={this.props.smallScreen}
+                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 large-4" : "medium-12 large-6", "small-12 no-padding align-spaced ps-container middle-content order-4")}
                                 key="open_orders"
                                 orders={limit_orders}
                                 currentAccount={currentAccount.get("id")}
@@ -1570,6 +1572,7 @@ class Exchange extends React.Component {
                                 />                                
                         </div>
                     </div>
+
                     {!isNullAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"

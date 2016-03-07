@@ -632,6 +632,7 @@
   }
 
   td.orderHistoryBid {
+   
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $bid-color;
@@ -641,9 +642,20 @@
       color: $primary-text-color;
       opacity: 0.6;
     }
+
+
   }
 
-  td.orderHistoryAsk {
+  .orderbook td.orderHistoryBid {
+    > span.price-integer, > span > span.price-integer {
+      font-weight: bold;
+      color: $primary-text-color;
+    }
+  }
+
+  td.orderHistoryAsk  {
+
+    
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $ask-color;
@@ -653,6 +665,15 @@
       color: $primary-text-color;
       opacity: 0.6;
     }
+
+  }
+
+.orderbook td.orderHistoryAsk {
+   
+  > span.price-integer, > span > span.price-integer {
+    font-weight: bold;
+    color: $primary-text-color;
+  }
   }
 
   td.orderHistoryCall {
