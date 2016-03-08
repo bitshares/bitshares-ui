@@ -16,5 +16,5 @@ Date: $(date)
 Content-Type: text/html
 
 <p>Click here to <a href="${token_url}">validate</a> your email.</p>
-<p><small>Code: <code>$token</code></small></p>
+<p><small>${token_url}</small></p>
 EndOfMail

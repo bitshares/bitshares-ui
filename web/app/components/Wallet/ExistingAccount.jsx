@@ -114,7 +114,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
         //     this.setState({ recover_key: true })
         // }
         // const recoverKeyLink = <div>
-        //     <label onClick={recoverKeyLinkClick.bind(this)}><Translate content="wallet.recover_restore_key" /></label>
+        //     <label onClick={recoverKeyLinkClick.bind(this)}><Translate content="wallet.recover_wallet_key" /></label>
         //     <br/><br/>
         // </div>
         
