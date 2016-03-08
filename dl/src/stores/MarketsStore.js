@@ -781,7 +781,8 @@ class MarketsStore {
                 price_int: price.int,
                 amount: amount,
                 type: "call",
-                sell_price: order.call_price
+                sell_price: order.call_price,
+                for_sale: !this.invertedCalls ? order.debt : order.collateral
             });
         });
 

@@ -141,9 +141,7 @@ class OrderBook extends React.Component {
 
             this.setState({
                 vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2),
-                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2,
-                leftHeaderWidth,
-                rightHeaderWidth
+                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2
             }, this.psUpdate);
         }
     }
@@ -495,7 +493,7 @@ class OrderBook extends React.Component {
         } else {
             // Vertical orderbook
             return (
-                <div className="left-order-book orderbook no-padding no-overflow">
+                <div className="left-order-book no-padding no-overflow">
                     <div className="grid-block shrink left-orderbook-header" style={{paddingRight: 15, zIndex: 10}}>
                         <table className="table expand order-table table-hover text-right">
                             <thead>
@@ -520,7 +518,7 @@ class OrderBook extends React.Component {
                                         <table style={{position: "relative", bottom: 0}} className="table order-table table-hover text-right">
                                             <TransitionWrapper
                                                 ref="askTransition"
-                                                className="orderbook ps-container orderbook-top"
+                                                className="ps-container orderbook-top"
                                                 component="tbody"
                                                 transitionName="newrow"                                            
                                             >
@@ -543,7 +541,7 @@ class OrderBook extends React.Component {
                                     <table className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
-                                            className="orderbook ps-container orderbook-top"
+                                            className="ps-container orderbook-top"
                                             component="tbody"
                                             transitionName="newrow"                                            
                                         >

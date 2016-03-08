@@ -140,20 +140,20 @@ class Exchange extends React.Component {
             sellAmount: 0,
             sellTotal: 0,
             sub: null,
-            flipBuySell: ws.get("flipBuySell"),
+            flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
-            showDepthChart: ws.get("showDepthChart"),
-            leftOrderBook: ws.get("leftOrderBook"),
+            showDepthChart: ws.get("showDepthChart", false),
+            leftOrderBook: ws.get("leftOrderBook", false),
             buyDiff: false,
             sellDiff: false,
-            indicators: ws.get("indicators") || {
+            indicators: ws.get("indicators", {
                 rsi: false,
                 sma: false,
                 atr: false,
                 ema: false
-            },
-            preferCoreBuyFee: ws.get("preferCoreBuyFee") !== undefined ? ws.get("preferCoreBuyFee") : true,
-            preferCoreSellFee: ws.get("preferCoreSellFee") !== undefined ? ws.get("preferCoreSellFee") : true,
+            }),
+            preferCoreBuyFee: ws.get("preferCoreBuyFee", true) ,
+            preferCoreSellFee: ws.get("preferCoreSellFee", true),
             indicatorSettings: ws.get("indicatorSettings") || {
                 rsi: {
                     period: 14,
@@ -172,7 +172,8 @@ class Exchange extends React.Component {
                 }
             },
             height: window.innerHeight,
-            width: window.innerWidth
+            width: window.innerWidth,
+            chartHeight: ws.get("chartHeight", 425),
         };
     }
 
@@ -1010,6 +1011,18 @@ class Exchange extends React.Component {
         }
     }
 
+    onChangeChartHeight(increase) {
+        let newHeight = this.state.chartHeight + (increase ? 20 : -20);
+
+        this.setState({
+            chartHeight: newHeight
+        });
+
+        SettingsActions.changeViewSetting({
+            "chartHeight": newHeight
+        });
+    }
+
     render() {
         let { currentAccount, linkedAccounts, limit_orders, call_orders, totalCalls, activeMarketHistory,
             totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, bids, asks, starredMarkets,
@@ -1363,13 +1376,14 @@ class Exchange extends React.Component {
                                 {/* Price history chart */}
 
                                 <PriceChart
+                                    onChangeSize={this.onChangeChartHeight.bind(this)}
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1100 ? 425 : 300}
+                                    height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     leftOrderBook={leftOrderBook}
                                     marketReady={marketReady}
                                     indicators={indicators}
@@ -1403,7 +1417,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1100 ? 425 : 300}
+                                    height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     plotLine={this.state.depthLine}
                                     settlementPrice={settlementPrice}
