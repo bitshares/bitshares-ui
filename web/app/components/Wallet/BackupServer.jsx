@@ -7,7 +7,7 @@ import AltContainer from "alt-container"
 import counterpart from "counterpart"
 import cname from "classnames"
 import bs58 from "bs58"
-import { Apis } from "@graphene/chain"
+// import { Apis } from "@graphene/chain"
 
 import AuthInput from "components/Forms/AuthInput"
 import WalletUnlock from "components/Wallet/WalletUnlock"
@@ -48,7 +48,9 @@ class BackupServer extends Component {
         super()
         this.init = ()=>({ busy: false, key: null,
             forgot_restore_key: false, restore_key_entered: false,
-            server_wallet: null,
+            server_wallet: null, new_wallet_name: null, wallet_exists_change_name: null,
+            private_key: null, private_api_key: null,
+            new_wallet_name: "default",
         })
         this.state = this.init()
     }
@@ -115,7 +117,7 @@ class BackupServer extends Component {
                             notify.error(counterpart.translate("wallet.token_expired"))
                             wallet().storage.setState("remote_token", null)
                         }
-                        console.error("BackupServer\tERROR", error)
+                        console.error("BackupServer\tERROR", error, "stack", error.stack)
                         throw error
                     })
                     resolve(p)
@@ -125,20 +127,7 @@ class BackupServer extends Component {
         const loading_indicator = <div className="center-content">
             {this.state.busy ? <LoadingIndicator type="circle"/> : null }
         </div>
-                    // checked={wallet().storage.state.get("remote_copy")}
-            // <label><Translate content="wallet().remote_backup"/></label>
-        const toggle_backups_form = ()=> <div>
-            <button
-                className={cname("button success", { disabled: this.state.busy,
-                    secondary: ! wallet().storage.state.get("remote_copy") })}
-                    onClick={onRemoteCopy.bind(this)}>
-                <Translate content={"wallet.server_toggle." +
-                    (wallet().storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
-            </button>
-            <br/>
-        </div>
 
-        
         const show_restore_key = ()=> <div>
             <div>
                 <Translate content={ "wallet." + (url_token ? "remember_restore_key":"restore_key")}/>
@@ -152,11 +141,6 @@ class BackupServer extends Component {
         const show_api_error =this.props.backups.api_error ?
             <Translate content={"wallet.backup_status." + this.props.backups.api_error}/> : null
 
-        const show_remote_status = <div>
-            <label><Translate content="wallet.remote_status"/></label>
-            <Translate content={"wallet.backup_status." + this.props.backups.backup_status}/>
-        </div>
-        
         const onRequestCode = e=> {
             e.preventDefault()
             let api = WalletDb.api()
@@ -226,6 +210,45 @@ class BackupServer extends Component {
             <br/>
         </div>
         
+        const openWalletErrorMessage = ()=> WalletDb.getState().wallet_names.has(this.state.new_wallet_name) ?
+            counterpart.translate("wallet.exists_change_name", { wallet_name: this.state.new_wallet_name}) :
+            null
+        const openWalletSubmit = e=>{
+            e.preventDefault()
+            let { server_wallet, private_key, private_api_key, username, password } = this.state
+            WalletDb.openWallet(this.state.new_wallet_name)
+            .then(()=> wallet().keepRemoteCopy(true))
+            .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key))
+            .then(()=> wallet().login(username, password))
+            .then(()=> this.setState({ busy: false }))
+        }
+        const openWalletChange = e =>{
+            e.preventDefault()
+            let value = e.target.value
+
+            value = value.toLowerCase()
+            if( /[^a-z0-9_-]/.test(value) ) return
+            
+            // console.log('current_wallet, wallet_names', current_wallet, wallet_names)
+            // var current_wallet = WalletDb.getState().current_wallet
+            this.setState({
+                new_wallet_name: value,
+            })
+        }
+        const openWallet = <div>
+            <label><Translate content="wallet.name" /></label>
+            <form onSubmit={openWalletSubmit.bind(this)}>
+                <input type="text" value={this.state.new_wallet_name} onChange={openWalletChange.bind(this)}/>
+            </form>
+            <div className="error">{openWalletErrorMessage()}</div>
+            <br/>
+            <button
+                onClick={openWalletSubmit.bind(this)} 
+                className={cname("button", {disabled: !!openWalletErrorMessage()})}>
+                <Translate content="ok"/>
+            </button>
+        </div>
+        
         const getApiKey = ()=> {
             let seed = ! WalletDb.isLocked() ? wallet().getTokenSeed() : url_token ? extractSeed(url_token) : null
             if(seed) {
@@ -234,15 +257,14 @@ class BackupServer extends Component {
             }
             return this.state.key
         }
-        
         const checkServerClick = e => {
             e.preventDefault()
             let username = this.props.auth_password.username.toLowerCase().trim()
             let password = this.props.auth_password.password
+            let private_key = PrivateKey.fromSeed(username + "\t" + password)
+            let private_api_key = PrivateKey.fromSeed(private_key.toWif() + getApiKey())
             let pubkey
             {
-                let private_key = PrivateKey.fromSeed(username + "\t" + password)
-                let private_api_key = PrivateKey.fromSeed(private_key.toWif() + getApiKey())
                 let public_key_api = private_api_key.toPublicKey()
                 pubkey = public_key_api.toString(""/*address_prefix*/)
             }
@@ -250,25 +272,15 @@ class BackupServer extends Component {
             let local_hash = null
             this.setState({ busy: true }, ()=>{
                 setTimeout(()=> api.fetchWallet(pubkey, local_hash, server_wallet =>{
+                    this.setState({ busy: false })
                     api.ws_rpc.close()
-                    this.setState({ server_wallet })
                     if(server_wallet.statusText === "No Content")
                         notify.error(counterpart.translate("wallet.not_found"))
                     else if(server_wallet.statusText === "OK") {
-                        this.setState({ server_wallet })
-                        if(WalletDb.isEmpty()) {
-                            WalletDb.openWallet("default").then( wallet => {
-                                wallet.storage.setState({
-                                    remote_hash: server_wallet.local_hash,
-                                    encrypted_wallet: server_wallet.encrypted_wallet,
-                                })
-                                wallet.login(username, password, Apis.chainId()).then(()=>
-                                    this.setState({ busy: false }))
-                            })
-                        }
+                        this.setState({ server_wallet, private_key, private_api_key, username, password })
                     } else
                         console.error("Unknown Response", server_wallet)
-                }), 1300)
+                }), 600)
             })
         }
         const checkServer = <div>
@@ -282,7 +294,24 @@ class BackupServer extends Component {
             </form>
         </div>
         
-        // return <div/>
+                // checked={wallet().storage.state.get("remote_copy")}
+        // <label><Translate content="wallet().remote_backup"/></label>
+        const toggle_backups_form = ()=> <div>
+            <button
+                className={cname("button success", { disabled: this.state.busy,
+                    secondary: ! wallet().storage.state.get("remote_copy") })}
+                    onClick={onRemoteCopy.bind(this)}>
+                <Translate content={"wallet.server_toggle." +
+                    (wallet().storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
+            </button>
+            <br/>
+        </div>
+        
+        const show_remote_status = <div>
+            <label><Translate content="wallet.remote_status"/></label>
+            <Translate content={"wallet.backup_status." + this.props.backups.backup_status}/>
+        </div>
+        
         let have_token = 
             this.state.restore_key_entered ||
             url_token ||
@@ -297,6 +326,7 @@ class BackupServer extends Component {
         
         const body = WalletDb.isLocked() ?
             ! have_token ? (this.state.forgot_restore_key ? emailRestoreKey : restoreKeyInput ) :
+            this.state.server_wallet ? openWallet :
             checkServer
         :
             // backup_wallet

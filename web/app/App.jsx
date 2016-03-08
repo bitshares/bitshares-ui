@@ -94,9 +94,7 @@ class App extends React.Component {
         try {
             NotificationStore.listen(this._onNotificationChange.bind(this));
 
-            Promise.all([
-                // AccountStore.loadDbData()            
-            ]).then(() => {
+            Promise.resolve().then(() => {
                 AccountStore.tryToSetCurrentAccount();
                 this.setState({loading: false});
             }).catch(error => {

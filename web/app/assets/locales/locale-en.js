@@ -721,7 +721,7 @@
         restore_key: "Restore Key (case-sensitive)",
         forgot_restore_key: "Forgot Restore Key",
         restore_from_server: "Restore from Server",
-        // wallet_exists_change_name: "Wallet %(wallet_name)s exists, please change the name",
+        exists_change_name: "Wallet %(wallet_name)s exists, please change the name",
         not_found: "Wallet was not found",
         check_server: "Check Server",
         bad_backup_support: "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",

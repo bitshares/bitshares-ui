@@ -351,7 +351,7 @@ class WalletDb extends BaseStore {
         return wallet.wallet_object.get("brainkey")
     }
     
-    /** Call openWallet first, unless creating the default wallet */
+    /** Call openWallet first, unless creating the default wallet. */
     onCreateWallet( auth, brainkey ) {
         
         return new Promise( (resolve, reject) => {
