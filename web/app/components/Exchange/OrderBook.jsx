@@ -67,14 +67,14 @@ class OrderBookRowHorizontal extends React.Component {
         return (
             <tr onClick={this.props.onClick} >
                 {position === "left" ? <td>{total}</td> :
-                <td className={integerClass}>
+                <td style={{width: "25%"}} className={integerClass}>
                     {price}
                 </td>
                 }
                 <td>{position === "left" ? value : amount}</td>
                 <td>{position === "left" ? amount : value}</td>
                 {position === "right" ? <td>{total}</td> :
-                <td className={integerClass}>
+                <td style={{width: "25%"}} className={integerClass}>
                     {price}
                 </td>
                 }
@@ -141,7 +141,9 @@ class OrderBook extends React.Component {
 
             this.setState({
                 vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2),
-                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2
+                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2,
+                leftHeaderWidth,
+                rightHeaderWidth
             }, this.psUpdate);
         }
     }
@@ -380,25 +382,25 @@ class OrderBook extends React.Component {
             }
 
             let rightHeader = (
-                <thead>
+                <thead ref="rightHeader">
                     <tr key="top-header" className="top-header">
-                        <th style={{paddingRight: 18, textAlign: "right"}}>
+                        <th style={{width: "25%", textAlign: "center"}}>
                             <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
                         </th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
                     </tr>
                 </thead>
             );
 
             let leftHeader = (
-                <thead>
+                <thead ref="leftHeader">
                     <tr key="top-header" className="top-header">
-                        <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                        <th style={{paddingRight: 18, textAlign: "right"}}>
+                        <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}>
                             <Translate className={(this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
                         </th>
                     </tr>
