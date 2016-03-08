@@ -18,6 +18,7 @@ import { validToken, extractSeed } from "@graphene/time-token"
 import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
 import LoadingIndicator from "components/LoadingIndicator"
+import WalletUnlockActions from "actions/WalletUnlockActions"
 import notify from "actions/NotificationActions"
 
 global.tabIndex = global.tabIndex || 0
@@ -66,15 +67,36 @@ class BackupServer extends Component {
     
     render() {
         
+        const download_option = ! WalletDb.isEmpty() ? <div>
+            <hr/><br/>
+            <Link to="wallet/backup/download">
+            <label className="secondary"><Translate content="wallet.download_backup" /></label></Link>
+        </div> : null
+        
         if( ! WalletDb.isLocked()) {
             let wallet = WalletDb.getState().wallet
             let connected = wallet.api && wallet.api.ws_rpc.status === "open"
             if(! connected )
                 //Link to Settings?
-                return <div className="error">Not connected to the backup server</div>
+                return <div>
+                    <div className="error">Not connected to the backup server</div>
+                    {download_option}    
+                </div>
         }
         
         let wallet = ()=> WalletDb.getState().wallet
+        
+        
+        const unlockClick = e => {
+            e.preventDefault()
+            WalletUnlockActions.unlock()
+        }
+        const unlockButton = WalletDb.isLocked() ? 
+            <button 
+                className={cname("button secondary") }
+                onClick={unlockClick.bind(this)}><Translate content="unlock" />
+            </button>
+        : <span/>
         
         const changePassword = ()=> this.setState({ busy: true },
             ()=> this.props.auth_change.changePassword()
@@ -99,12 +121,6 @@ class BackupServer extends Component {
             </div>
             <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_change.valid }) }  onClick={changePassword.bind(this)}><Translate content="wallet.change_password"/></button>
         </div>
-        
-        const download_option = ! WalletDb.isEmpty() ? <div>
-            <hr/><br/>
-            <Link to="wallet/backup/download">
-            <label className="secondary"><Translate content="wallet.download_backup" /></label></Link>
-        </div> : null
         
         const onRemoteCopy = ()=>
             new Promise( resolve =>{
@@ -157,6 +173,11 @@ class BackupServer extends Component {
                 })
             )
         }
+        
+        const emailRestoreKeyBack = e => {
+            e.preventDefault()
+            this.setState({ forgot_restore_key: false })
+        }
         const emailRestoreKey = <div>
             {/* E M A I L */}
             <form onSubmit={onRequestCode.bind(this)}>
@@ -166,6 +187,10 @@ class BackupServer extends Component {
             <button 
                 className={cname("button success", {disabled: ! this.props.auth_email.email_valid}) }
                 onClick={onRequestCode.bind(this)}><Translate content="wallet.email_token" />
+            </button>
+            <button 
+                className={cname("button secondary") }
+                onClick={emailRestoreKeyBack.bind(this)}><Translate content="back" />
             </button>
         </div>
         
@@ -206,6 +231,7 @@ class BackupServer extends Component {
                     <input type="text" ref="restoreKeyInput" value={this.state.key} onChange={restoreKeyInputChange.bind(this)} tabIndex={1}></input>
                     <button className={cname("button", {disabled: restoreKeyInvalid()})} onClick={restoreKeyOk.bind(this)}><Translate content="ok"/></button>
                     <button className="button secondary" onClick={restoreKeyRecover.bind(this)}><Translate content="wallet.forgot_restore_key"/></button>
+                    {unlockButton}
                 </form>
             </div>
             <br/>

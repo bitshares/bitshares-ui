@@ -143,21 +143,22 @@ export default class WalletStorage {
             remote_url = null
         
         // close (if applicable)
-        let p = this.ws_rpc ? this.ws_rpc.close() : null
-        if(remote_url != null) {
-            this.ws_rpc = new WalletWebSocket(remote_url, true)
-            this.api = new WalletApi(this.ws_rpc)
-            this.instance = this.ws_rpc.instance
-        } else {
-            this.ws_rpc = null
-            this.api = null
-            this.instance = null
-        } 
-        if(remote_url != this.storage.state.get("remote_url")) {
-            this.notify = true
-            this.storage.setState({ remote_url })
-        }
-        return this.notifyResolve( p )
+        let p = this.ws_rpc ? this.ws_rpc.close() : Promise.resolve()
+        return this.notifyResolve(p.then(()=>{// wait for close so the socket events remain in order
+            if(remote_url != null) {
+                this.ws_rpc = new WalletWebSocket(remote_url, true)
+                this.api = new WalletApi(this.ws_rpc)
+                this.instance = this.ws_rpc.instance
+            } else {
+                this.ws_rpc = null
+                this.api = null
+                this.instance = null
+            } 
+            if(remote_url != this.storage.state.get("remote_url")) {
+                this.notify = true
+                this.storage.setState({ remote_url })
+            }
+        }))
     }
     
     /**
@@ -322,15 +323,18 @@ export default class WalletStorage {
         this.wallet_object = Map()
         this.remote_status = null
         
+        if( ! this.private_key )
+            return Promise.resolve()
+        
         // Capture the public key first (for unsubscribe)
-        let public_api_key = this.private_api_key ? this.private_api_key.toPublicKey() : null
+        let api_pubkey = this.private_api_key ? this.private_api_key.toPublicKey().toString(""/*address prefix*/) : null
         
         this.private_key = null // logout
         this.private_api_key = null // logout
         
         let unsub
-        if( public_api_key && this.api && this.ws_rpc.getSubscriptionId("fetchWallet", public_api_key.toString(""/*address prefix*/)) ) {
-            unsub = this.api.fetchWalletUnsubscribe(public_api_key)
+        if(api_pubkey && this.api && this.ws_rpc.getSubscriptionId("fetchWallet", api_pubkey)) {
+            unsub = this.api.fetchWalletUnsubscribe(api_pubkey)
         } else {
             unsub = Promise.resolve()
         }
@@ -698,18 +702,12 @@ function deleteRemoteWallet(private_key, private_api_key, local_hash = this.loca
     
     return this.api.deleteWallet( create_token, local_hash, signature ).then(()=> {
         this.notify = true
-        this.remote_status = null
-        // let wallet_object = this.wallet_object.remove("create_token")
-        // return encrypt(this.wallet_object, public_key).then( encrypted_wallet =>{
-            return this.storage.setState({
-                // encrypted_wallet: encrypted_wallet.toString('base64'),
-                // local_hash: hash.sha256(encrypted_wallet).toString("base64"),
-                remote_hash: null,
-                remote_created_date: null,
-                remote_updated_date: null,
-            })
-            // this.wallet_object = wallet_object
-        // })
+        this.remote_status = "No Content"
+        return this.storage.setState({
+            remote_hash: null,
+            remote_created_date: null,
+            remote_updated_date: null,
+        })
     })
 }
 

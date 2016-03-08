@@ -34,6 +34,7 @@
     back: "Back",
     cancel: "Cancel",
     success: "Success",
+    unlock: "Unlock",
     invalid_email: "Invalid email",
     invalid_username: "Invalid username",
     

@@ -16,6 +16,7 @@ export default class WalletWebSocket {
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
         this.update_stocket_status = status => {
+            console.log("WalletWebSocket(" + this.instance + ")\t" + status)
             if(sendEvents === true)
                 WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
         }
@@ -26,7 +27,7 @@ export default class WalletWebSocket {
         this.web_socket = new WebSocketClient(ws_server_url);
         this.current_reject = null;
         this.on_reconnect = null;
-        this.status = null;//re-connecting websocket can be noisy
+        this.status = "closed";//re-connecting websocket can be noisy
         
         this.connect_promise = new Promise((resolve, reject) => {
             this.current_reject = reject;
@@ -50,10 +51,11 @@ export default class WalletWebSocket {
             };
             this.web_socket.onmessage = (message) =>{
                 this.status = "open";
+                this.update_stocket_status("open");
                 return this.listener(JSON.parse(message.data));
             }
             this.web_socket.onclose = () => {
-                // this.status = null;
+                this.status = "closed";
                 this.update_stocket_status("closed");
             };
         });
@@ -83,7 +85,7 @@ export default class WalletWebSocket {
                         Object.keys(this.subscriptions).length)
                 
                 this.update_stocket_status("closed");
-                
+                this.status = "closed"
                 resolve()
             }
             this.web_socket.close()
@@ -131,21 +133,22 @@ export default class WalletWebSocket {
         @return {Promise}
     */
     unsubscribe(method, params, subscribe_key = { method, params }) {
+        let _this = this // babel 5 did not set `this` correctly
         return new Promise( (resolve, reject) => {
-            this.current_callback_id ++
-            let subscription_id = this.getSubscriptionId(method, subscribe_key)
+            _this.current_callback_id ++
+            let subscription_id = _this.getSubscriptionId(method, subscribe_key)
             
             if( ! subscription_id ) {
-                let msg = ("WARN: unsubscribe did not find subscribe_key",this.instance,
+                let msg = ("WARN: unsubscribe did not find subscribe_key", _this.instance,
                     "subscribe_key", subscribe_key, " for method", method).join(' ')
                 console.error(msg)
                 return Promise.reject(msg)
             }
             
-            this.unsub[this.current_callback_id] = { subscription_id, resolve }
+            _this.unsub[_this.current_callback_id] = { subscription_id, resolve }
             // Wrap parameters, send the subscription ID to the server
             params = { unsubscribe_id: subscription_id, subscribe_key, params }
-            this.request(this.current_callback_id, method, params).catch( error => reject(error))
+            _this.request(_this.current_callback_id, method, params).catch( error => reject(error))
         })
     }
     
@@ -168,7 +171,7 @@ export default class WalletWebSocket {
                 this.callbacks[id] = { time, resolve, reject }
                 
                 this.web_socket.onerror = (evt) => {
-                    
+                    this.status = "error"
                     this.update_stocket_status("error")
                     
                     console.log("ERROR\tWalletWebSocket\trequest",this.instance, evt.data ? evt.data : "")
