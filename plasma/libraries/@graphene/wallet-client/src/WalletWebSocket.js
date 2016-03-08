@@ -3,17 +3,23 @@ var Immutable = require("immutable")
 const SOCKET_DEBUG = true //JSON.parse( process.env.npm_config__graphene_wallet_client_socket_debug || false )
 let instance = 0
 
+
 export default class WalletWebSocket {
 
     /**
         @arg {string} ws_server_url - WebSocket URL
-        @arg {function} update_rpc_connection_status_callback called with ("open"|"error"|"closed").
+        @arg {boolean} [sendEvents = false] - events are global, just use this on the main websocket
     */
-    constructor(ws_server_url, update_rpc_connection_status_callback) {
+    constructor(ws_server_url, sendEvents = false) {
+        
         this.instance = ++instance
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
-        this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
+        this.update_stocket_status = status => {
+            console.log("WalletWebSocket(" + this.instance + ")\t" + status)
+            if(sendEvents === true)
+                WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
+        }
         
         // var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("ws");
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
@@ -21,29 +27,36 @@ export default class WalletWebSocket {
         this.web_socket = new WebSocketClient(ws_server_url);
         this.current_reject = null;
         this.on_reconnect = null;
+        this.status = "closed";//re-connecting websocket can be noisy
+        
         this.connect_promise = new Promise((resolve, reject) => {
             this.current_reject = reject;
             this.web_socket.onopen = () => {
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("open");
-                
+                this.status = "open";
+                this.update_stocket_status("open");
                 if(this.on_reconnect) this.on_reconnect();
                 resolve();
             }
             // Warning, onerror callback is over-written on each request.  Be cautious to dulicate some logic here.
             this.web_socket.onerror = evt => {
-                console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("error");
+                if( this.status != "error" ) {
+                    console.error("ERROR\tWalletWebSocket\tconstructor onerror\t", evt)
+                }
+                this.status = "error";
+                this.update_stocket_status("error");
                 
                 if (this.current_reject) {
                     this.current_reject(evt);
                 }
             };
-            this.web_socket.onmessage = (message) => this.listener(JSON.parse(message.data));
+            this.web_socket.onmessage = (message) =>{
+                this.status = "open";
+                this.update_stocket_status("open");
+                return this.listener(JSON.parse(message.data));
+            }
             this.web_socket.onclose = () => {
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("closed");
+                this.status = "closed";
+                this.update_stocket_status("closed");
             };
         });
         this.current_callback_id = 0;
@@ -57,7 +70,8 @@ export default class WalletWebSocket {
         for (let id in this.subscriptions) {
             try {
                 let { method, params, key } = this.subscriptions[id]
-                unsubs.push(this.unsubscribe(method, params, key))
+                let unsub = this.unsubscribe.bind(this, method, params, key)
+                unsubs.push(unsub)
             } catch( error ) {
                 console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"unsubscribe",error, "stack", error.stack)
             }
@@ -70,9 +84,8 @@ export default class WalletWebSocket {
                     console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"active subscriptions",
                         Object.keys(this.subscriptions).length)
                 
-                if(this.update_rpc_connection_status_callback)
-                    this.update_rpc_connection_status_callback("closed");
-                
+                this.update_stocket_status("closed");
+                this.status = "closed"
                 resolve()
             }
             this.web_socket.close()
@@ -120,21 +133,22 @@ export default class WalletWebSocket {
         @return {Promise}
     */
     unsubscribe(method, params, subscribe_key = { method, params }) {
+        let _this = this // babel 5 did not set `this` correctly
         return new Promise( (resolve, reject) => {
-            this.current_callback_id ++
-            let subscription_id = this.getSubscriptionId(method, subscribe_key)
+            _this.current_callback_id ++
+            let subscription_id = _this.getSubscriptionId(method, subscribe_key)
             
             if( ! subscription_id ) {
-                let msg = ("WARN: unsubscribe did not find subscribe_key",this.instance,
+                let msg = ("WARN: unsubscribe did not find subscribe_key", _this.instance,
                     "subscribe_key", subscribe_key, " for method", method).join(' ')
                 console.error(msg)
                 return Promise.reject(msg)
             }
             
-            this.unsub[this.current_callback_id] = { subscription_id, resolve }
+            _this.unsub[_this.current_callback_id] = { subscription_id, resolve }
             // Wrap parameters, send the subscription ID to the server
             params = { unsubscribe_id: subscription_id, subscribe_key, params }
-            this.request(this.current_callback_id, method, params).catch( error => reject(error))
+            _this.request(_this.current_callback_id, method, params).catch( error => reject(error))
         })
     }
     
@@ -157,9 +171,8 @@ export default class WalletWebSocket {
                 this.callbacks[id] = { time, resolve, reject }
                 
                 this.web_socket.onerror = (evt) => {
-                    
-                    if(this.update_rpc_connection_status_callback)
-                        this.update_rpc_connection_status_callback("error")
+                    this.status = "error"
+                    this.update_stocket_status("error")
                     
                     console.log("ERROR\tWalletWebSocket\trequest",this.instance, evt.data ? evt.data : "")
                     reject(evt);
@@ -210,8 +223,10 @@ export default class WalletWebSocket {
             
             if (response.error) {
                 callback.reject(response.error);
+                WalletWebSocket.api_status.forEach(cb=>Promise.resolve().then(()=>cb(response.error)))
             } else {
                 callback.resolve(response.result);
+                WalletWebSocket.api_status.forEach(cb=>Promise.resolve().then(()=>cb(null)))
             }
             delete this.callbacks[response.id]
             if (this.unsub[response.id]) {
@@ -239,3 +254,7 @@ export default class WalletWebSocket {
     }
 
 }
+// mocha babel does not support class { static ... 
+// {Set<function>} update_stocket_status called with ("open"|"error"|"closed")
+WalletWebSocket.socket_status = new Set()
+WalletWebSocket.api_status = new Set() // rename to api_error ?

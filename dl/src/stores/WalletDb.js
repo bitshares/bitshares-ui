@@ -13,6 +13,7 @@ import { suggest_brain_key } from "../common/brainkey"
 import { PrivateKey } from "@graphene/ecc";
 import { chain_config } from "@graphene/chain"
 import { ChainStore } from "@graphene/chain"
+import { WalletWebSocket, WalletApi } from "@graphene/wallet-client"
 
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
@@ -84,9 +85,16 @@ class WalletDb extends BaseStore {
             "keys", "deposit_keys", "data", "prop",
             "process_transaction", "decodeMemo","getPrivateKey","getDeterministicKeys",
             "logout","isLocked","onCreateWallet","login","changePassword","verifyPassword",
-            "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended",
+            "setWalletModified","setBackupDate","setBrainkeyBackupDate","binaryBackupRecommended", "api",// "tryRestoreKey",
             "loadDbData", "subscribe", "unsubscribe", 
         )
+    }
+    
+    api() {
+        let url = SettingsStore.getSetting("backup_server")
+        let ws_rpc = new WalletWebSocket(url, false)
+        let api = new WalletApi(ws_rpc)
+        return api
     }
     
     /** @arg {function} callback - called for current wallet by WalletStorage.subscribe(callback) 
@@ -165,8 +173,10 @@ class WalletDb extends BaseStore {
         if( wallet_name === this.state.current_wallet && wallet != null )
             return Promise.resolve(wallet)
         
-        if( wallet )
+        if( wallet ) {
+            // this.logout()
             wallet.unsubscribe(this.notify)
+        }
         
         if(! wallet_name) {
             wallet = undefined
@@ -341,7 +351,7 @@ class WalletDb extends BaseStore {
         return wallet.wallet_object.get("brainkey")
     }
     
-    /** Call openWallet first, unless creating the default wallet */
+    /** Call openWallet first, unless creating the default wallet. */
     onCreateWallet( auth, brainkey ) {
         
         return new Promise( (resolve, reject) => {
@@ -374,7 +384,7 @@ class WalletDb extends BaseStore {
             let chain_id = Apis.instance().chain_id
             resolve(Promise.resolve()
             
-                .then(()=> wallet.login(auth.email, auth.username, auth.password, chain_id)) //login and sync
+                .then(()=> wallet.login(auth.username, auth.password, chain_id)) //login and sync
                 
                 .then(()=> assert(wallet.wallet_object.get("created"),
                     "Wallet exists: " + this.state.current_wallet))
@@ -405,12 +415,12 @@ class WalletDb extends BaseStore {
         @return {boolean} true if password matches
         @throws {Error} "Wallet is locked"
     */
-    verifyPassword({ password, email = "", username = "" }) {
+    verifyPassword({ password, username = "" }) {
         assertLogin()
-        return wallet.verifyPassword(email, username, password)
+        return wallet.verifyPassword(username, password)
     }
     
-    login({ password, email = "", username = "" }) {
+    login({ password, username = "" }) {
         
         assert(this.isLocked(), "Wallet is already unlocked")
         
@@ -426,7 +436,7 @@ class WalletDb extends BaseStore {
             .then( legacy_backup =>{
                 wallet.wallet_object = legacyUpgrade(password, legacy_backup)
                 // create the new wallet
-                return wallet.login(email, username, password, Apis.chainId())
+                return wallet.login(username, password, Apis.chainId())
             })
         }
         
@@ -434,15 +444,15 @@ class WalletDb extends BaseStore {
         .then( ()=> 
             is_legacy() ?
                 legacy_upgrade() :
-                wallet.login(email, username, password, Apis.chainId())
+                wallet.login(username, password, Apis.chainId())
         )
         // .then( ()=> AccountRefsStore.loadDbData() )// TODO Store can use WalletDb.subscribe instead
         .then( ()=> this.setState({locked: false }) )
     }
     
     /** This will unlock the wallet (if successful). */
-    changePassword({ password, email, username }) {
-        return wallet.changePassword( password, email, username )
+    changePassword({ password, username }) {
+        return wallet.changePassword( password, username )
     }
     
     /**
@@ -481,7 +491,7 @@ class WalletDb extends BaseStore {
         
         let keys = []
         for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
-            // console.log('WalletDb\tgenerateNextKey', !!this.generateNextKey_pubcache[i],i)
+            // if( ! this.generateNextKey_pubcache[i]) console.log('WalletDb\tgenerateNextKey', i)
             var private_key = key.get_brainkey_private( brainkey, i )
             var pubkey =
                 this.generateNextKey_pubcache[i] ?
@@ -551,6 +561,12 @@ class WalletDb extends BaseStore {
     
     binaryBackupRecommended() {
         CachedPropertyActions.set("backup_recommended", true)
+    }
+    
+    tryRestoreKey(key, username, password) {
+        console.log('key', key)
+        // WalletDb.restore(
+        return Promise.reject("no")
     }
     
     decodeMemo(memo) {

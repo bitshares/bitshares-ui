@@ -1,8 +1,10 @@
 import { checkToken, expire_min } from "@graphene/time-token"
 import emailToken from "./EmailToken"
 import * as WalletServerDb from "./WalletServerDb"
-import {Wallet} from "./db/models.js"
+import {Wallet, Account} from "./db/models.js"
 import { hash } from "@graphene/ecc"
+import local_secret from "@graphene/local-secret"
+import bs58 from "bs58"
 
 export default function reducer(state, action) {
     if( /redux/.test(action.type) ) return state
@@ -12,11 +14,11 @@ export default function reducer(state, action) {
         switch( action.type ) {
             case 'requestCode':
                 var { email } = action
-                // Embed the sha1 of the email, this is required to limit 1 wallet per email
-                let p = emailToken(email, email.trim().toLowerCase())
+                var email_sha1 = hash.sha1(email.toLowerCase().trim()).toString("base64")
+                let p = emailToken(email, email + "\t" + apiKey(email_sha1))
                 p.on('close', (code, signal) =>{
                     if( code === 0 ) {
-                        reply("OK", {expire_min: expire_min()})
+                        reply("OK")//, {expire_min: expire_min()})
                         return
                     }
                     console_error("emailToken\tcode, signal, email", code, signal, email)
@@ -25,15 +27,16 @@ export default function reducer(state, action) {
                 break
             case 'createWallet':
                 var { code, encrypted_data, signature } = action
-                let result = checkToken( code )
-                if( ! result.valid ) {
-                    reply("Unauthorized", {message: result.error})
+                var email_sha1 = emailSha1(code)
+                if( ! email_sha1 ) {
+                    throw "invalid_token"
+                    // reply("Unauthorized", { message: "invalid_token" })
                     break
                 }
-                let email = result.seed
-                var email_sha1 = hash.sha1(email)
-                reply( WalletServerDb.createWallet(encrypted_data, signature, email_sha1, wallet => walletNotify(wallet)) )
+                reply( WalletServerDb.createWallet(encrypted_data, signature, email_sha1,
+                    wallet => walletNotify(wallet)) )
                 break
+            
             case 'fetchWallet':
                 var { public_key, local_hash } = action
                 var r = Wallet
@@ -52,17 +55,27 @@ export default function reducer(state, action) {
                 })
                 reply(r)
                 break
+            
             case 'saveWallet':
                 var { original_local_hash, encrypted_data, signature } = action
                 reply( WalletServerDb.saveWallet(original_local_hash, encrypted_data, signature,
                     wallet => walletNotify(wallet)) )
                 break
+            
             case 'changePassword':
                 reply( WalletServerDb.changePassword(action, wallet => walletNotify(wallet)) )
                 break
+            
             case 'deleteWallet':
+                var { code } = action
+                var email_sha1 = emailSha1(code)
+                if( ! email_sha1 )
+                    throw "invalid_token"
+                
+                action.email_sha1 = email_sha1
                 reply( WalletServerDb.deleteWallet(action, wallet => walletNotify(wallet)) )
                 break
+            
             default:
                 reply("Not Implemented")
         }
@@ -74,3 +87,20 @@ export default function reducer(state, action) {
 }
 
 var console_error = (...message) =>{ console.error("ERROR reducer", ...message) }
+
+function emailSha1(code) {
+    let result = checkToken( code, null, null )
+    if( ! result.valid )
+        return null
+    
+    let seed = result.seed
+    let [ email ] = seed.split("\t")
+    var email_sha1 = hash.sha1(email.toLowerCase().trim())
+    return email_sha1.toString("base64")
+}
+
+// When validating, there is no email we only have a email_sha1
+function apiKey(email_sha1) {
+    let key = hash.sha1(email_sha1 + local_secret() + "apiKey")
+    return bs58.encode(key).substring(0, 4)
+}

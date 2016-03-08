@@ -12,7 +12,7 @@ const api = new WalletApi(ws_rpc)
 // Run expensive calculations here so the benchmarks in the unit tests will be accurate
 const private_key = PrivateKey.fromSeed("")
 const public_key = private_key.toPublicKey().toString()
-const code = createToken(hash.sha1("alice_api@example.bitbucket", 'binary'))
+const code = createToken("alice_api@example.bitbucket")
 const encrypted_data = Aes.fromSeed("").encrypt("data")
 const local_hash = hash.sha256(encrypted_data)
 const signature = Signature.signBufferSha256(local_hash, private_key)
@@ -43,7 +43,7 @@ describe('Wallet API client', () => {
 
     /** Ignore, this is clean up from a failed run */
     before( ()=> Promise
-        .all([ deleteWallet("", "data"), deleteWallet("2", "data2") ])
+        .all([ deleteWallet(code, "", "data"), deleteWallet(code, "2", "data2") ])
         .catch(error =>{
             if(error.res.statusText !== "Not Found" && error.res.statusText !== "OK")
                 throw error
@@ -56,14 +56,27 @@ describe('Wallet API client', () => {
         return api.createWallet(code, encrypted_data, signature)
     })
 
-    it('createWallet (duplicate)', ()=> {
+    it('createWallet (duplicate code)', ()=> {
         // Ensure the same email can't be used twice.
         // Try to create a new wallet with the same code (email)
         return api.createWallet(code, encrypted_data2, signature2)
             .then( json =>{ asert(false, 'should not happen') })
             .catch( error =>{
                 assert.equal(error.statusText, "Bad Request")
-                assert.equal(error.message, "wallet already exists", error)
+                assert.equal(error.message, "email_has_wallet", error)
+                assert(! error.local_hash, "local_hash")
+                assert(! error.created, "created")
+            })
+    })
+    
+    it('createWallet (duplicate key)', ()=> {
+        // Ensure the same email can't be used twice.
+        // Try to create a new wallet with the same public key
+        return api.createWallet(code, encrypted_data, signature)
+            .then( json =>{ asert(false, 'should not happen') })
+            .catch( error =>{
+                assert.equal(error.statusText, "Bad Request")
+                assert.equal(error.message, "wallet_already_exists", error)
                 assert(error.local_hash, "local_hash")
                 assert(error.created, "created")
             })
@@ -129,18 +142,20 @@ describe('Wallet API client', () => {
     })
     
     /** End of the wallet tests, clean-up... */
-    it('deleteWallet', ()=>{
-        return deleteWallet("2", "data2")
-    })
+    it('deleteWallet', ()=> deleteWallet(code, "2", "data2"))
 
 })
 
-function deleteWallet(private_key_seed, wallet_data) {
+function deleteWallet(code, private_key_seed, wallet_data) {
     let private_key = PrivateKey.fromSeed(private_key_seed)
     let encrypted_data = Aes.fromSeed(private_key_seed).encrypt(wallet_data)
     let local_hash = hash.sha256(encrypted_data)
     let signature = Signature.signBufferSha256(local_hash, private_key)
-    return api.deleteWallet( local_hash, signature )
+    return api.deleteWallet( code, local_hash, signature )
+        // .then( res => console.log('res', res))
+        // .catch( err => console.log('err', err.res.statusText))
+        .then( res => assert(/OK/.test(res.statusText), "Expecting OK result"))
+        .catch( err => assert(/Not Found/.test(err.res.statusText), "Expecting OK result"))
 }
 
 function assertRes(res, statusText) {

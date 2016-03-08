@@ -32,7 +32,7 @@ class AuthStore {
     constructor() {
         this.init = ()=> ({
             password: "", confirm: "", password_error: null, auth_error: null,
-            email: "", email_error: null, email_verified: undefined,
+            email: "", email_error: null,// email_verified: undefined,
             username: "", username_error: "",
             valid: false,
             api_error: null,
@@ -42,7 +42,7 @@ class AuthStore {
             setup: this.setup.bind(this),
             update: this.update.bind(this),
             defaults: this.defaults.bind(this),
-            useEmailFromToken: this.useEmailFromToken.bind(this),
+            // useEmailFromToken: this.useEmailFromToken.bind(this),
             login: this.login.bind(this),
             changePassword: this.changePassword.bind(this),
             verifyPassword: this.verifyPassword.bind(this),
@@ -50,31 +50,32 @@ class AuthStore {
         })
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
-        this.config = { weak: true, hasPassword: true, hasConfirm: null, hasUsername: null, hasEmail: null }
+        // weak means the username is optional ( supports local wallets using only a password )
+        this.config = { hasPassword: true, hasUsername: true, weak: true, hasConfirm: null, hasEmail: null }
         this.config = { ...this.config, ...instanceConfig }
         this.instanceName = instanceName
     }
     
     /** Called after a wallet is opened (if one exists).  Helps with configuration default values. */ 
     setup() {
-        if(this.config.hasConfirm == null)
-            this.config.hasConfirm = WalletDb.isEmpty() 
-        
-        let { wallet } = WalletDb.getState()
-        if( wallet ) {
-            if(wallet.storage.state.has("remote_url")) {
-                if(wallet.storage.state.has("weak_password") && WalletDb.isLocked()) {
-                    let weak_password = wallet.storage.state.get("weak_password")
-                    if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
-                    if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
-                }
-            }
-        }
-        // hide extra remote backup fields (until everything is ready)
-        if(this.config.hasEmail == null) {
-            this.config.hasEmail = false
-            this.config.hasUsername = false
-        }
+        // if(this.config.hasConfirm == null)
+        //     this.config.hasConfirm = WalletDb.isEmpty() 
+        // 
+        // let { wallet } = WalletDb.getState()
+        // if( wallet ) {
+        //     if(wallet.storage.state.has("remote_url")) {
+        //         if(wallet.storage.state.has("weak_password") && ! WalletDb.isLocked()) {
+        //             let weak_password = wallet.storage.state.get("weak_password")
+        //             if(this.config.hasEmail == null) this.config.hasEmail = ! weak_password
+        //             if(this.config.hasUsername == null) this.config.hasUsername = ! weak_password
+        //         }
+        //     }
+        // }
+        // // hide extra remote backup fields (until everything is ready)
+        // if(this.config.hasEmail == null) {
+        //     this.config.hasEmail = false
+        //     this.config.hasUsername = false
+        // }
         // console.log('instanceName,config', this.instanceName,this.config)
     }
     
@@ -87,12 +88,12 @@ class AuthStore {
             this.setState({ username: wallet.storage.state.get("username") })
     }
     
-    useEmailFromToken() {
-        let email = emailFromToken()
-        if( ! email) return
-        if(this.state.email === email && this.state.email_verified) return
-        this.state.update({ email, email_verified: true })
-    }
+    // useEmailFromToken() {
+    //     let email = emailFromToken()
+    //     if( ! email) return
+    //     if(this.state.email === email && this.state.email_verified) return
+    //     this.state.update({ email, email_verified: true })
+    // }
     
     /** @return {Promise} */
     login() {
@@ -160,25 +161,9 @@ class AuthStore {
             new_state.username = new_state.username.toLowerCase().trim()
         
         if(new_state.email)
-            new_state.email = new_state.email.toLowerCase().trim()
+            new_state.email = new_state.email.trim()
         
         new_state.auth_error = null
-        
-        // If the email token is being used (via useEmailFromToken)
-        if(new_state.email_verified != null ) {
-            // Wallet password upgrade mode... AuthInput.jsx is watching `email_verified`.
-            // Let the user work with a verified email and add other fields, but still let them change the email so it becomes unverified (allowing them to send a new token to a different email).
-            new_state.email_verified = new_state.email === emailFromToken()
-            if(new_state.email_verified) {
-                this.config.hasEmail = true
-                this.config.hasUsername = true
-                this.config.hasConfirm = true
-            } else {
-                this.config.hasEmail = true
-                this.config.hasUsername = false
-                this.config.hasPassword = false
-            }
-        }
         
         const check_email = this.checkEmail(new_state)
         const check_username = this.checkUsername(new_state)
@@ -194,13 +179,12 @@ class AuthStore {
                 check_email.email_valid &&
                 check_username.username_valid
         }
-        
         // console.log('AuthStore\tnew_state', new_state, this.config)
         this.setState(new_state)
     }
     
     checkEmail({ email }) {
-        if( ! this.config.hasEmail || (email === "" && this.config.weak)) {
+        if( ! this.config.hasEmail || (email === "")) {
             return { email_valid: true, email_error: null }
         }
         let email_valid = rfc822Email(email)
@@ -248,15 +232,12 @@ class AuthStore {
     
 }
 
-function emailFromToken() {
-    let { wallet } = WalletDb.getState()
-    // `wallet` could be undefined, AuthStore is used to unlock the wallet.. 
-    if( wallet && wallet.storage.state.has("remote_token")) {
-        let remote_token = wallet.storage.state.get("remote_token")
-        let email = extractSeed(remote_token)
-        return email
-    }
-}
-
-// export default alt.createStore(AuthStore, "AuthStore")
-
+// function emailFromToken() {
+//     let { wallet } = WalletDb.getState()
+//     // `wallet` could be undefined, AuthStore is used to unlock the wallet.. 
+//     if( wallet && wallet.storage.state.has("remote_token")) {
+//         let remote_token = wallet.storage.state.get("remote_token")
+//         let [ email ] = extractSeed(remote_token).split("\t")
+//         return email
+//     }
+// }

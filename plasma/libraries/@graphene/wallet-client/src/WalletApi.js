@@ -34,7 +34,7 @@ export default class WalletApi {
         curl http://localhost:9080/requestCode?email=alice@example.com
         ```
         @arg {string} email
-        @return {Promise} object { status: 200, statusText: "OK", expire_min: 10 }
+        @return {Promise} object { status: 200, statusText: "OK" }
     */
     requestCode(email) {
         if( ! rfc822Email(email) ) throw new Error("invalid email " + email)
@@ -42,9 +42,8 @@ export default class WalletApi {
         return this.ws_rpc.call("requestCode", params) 
             .then( json => {
             assertRes(json, "OK")
-            let { status, statusText, expire_min } = json
-            assert(expire_min, 'expire_min')
-            return { status, statusText, expire_min }
+            let { status, statusText } = json
+            return { status, statusText }
         })
     }
 
@@ -90,7 +89,7 @@ export default class WalletApi {
         @return {Promise} object - { status: 200, statusText: "OK" }
     */
     fetchWallet(secret_public_key, local_hash, callback = null) {
-        secret_public_key = toString(req(secret_public_key, 'secret_public_key'))
+        secret_public_key = toStringWithoutPrefix(req(secret_public_key, 'secret_public_key'))
         local_hash = toBase64(local_hash)
         let params = { public_key: secret_public_key, local_hash }
         
@@ -102,7 +101,7 @@ export default class WalletApi {
         @arg {string|PublicKey} public_key - derived from {@link createWallet.signature}.  This is considered private (it was created by hashing: email+username+password); this is not nearly random enough for this to be public.
     */
     fetchWalletUnsubscribe(secret_public_key) {
-        secret_public_key = toString(req(secret_public_key, 'secret_public_key'))
+        secret_public_key = toStringWithoutPrefix(req(secret_public_key, 'secret_public_key'))
         return this.ws_rpc.unsubscribe("fetchWallet", null, secret_public_key)
     }
 
@@ -157,14 +156,15 @@ export default class WalletApi {
     }
 
     /** Permanently remove a wallet.
+        @arg {string} code - from {@link requestCode}
         @arg {string} deleteWallet.local_hash - base64 sha256 encrypted_data
         @arg {string} deleteWallet.signature - base64
         @return {Promise} resolve (successful) or cache (error) 
     */
-    deleteWallet(local_hash, signature) {
+    deleteWallet(code, local_hash, signature) {
         local_hash = toBase64(req(local_hash, 'local_hash'))
         signature = toBase64(req(signature, 'signature'))
-        let params = { local_hash, signature }
+        let params = { code, local_hash, signature }
         return this.ws_rpc.call("deleteWallet", params) 
             .then(res => assertRes(res, "OK" ))
             .then( json => { return {status: 200, statusText: "OK"} })
@@ -190,8 +190,8 @@ var toBase64 = data => data == null ? data :
     data["toBuffer"] ? data.toBuffer().toString('base64') :
     Buffer.isBuffer(data) ? data.toString('base64') : data
 
-var toString = data => data == null ? data :
-    data["toString"] ? data.toString() : data // PublicKey.toString()
+var toStringWithoutPrefix = data => data == null ? data :
+    data["toString"] ? data.toString("") : data // PublicKey.toString()
 
 // required
 function req(data, field_name) {

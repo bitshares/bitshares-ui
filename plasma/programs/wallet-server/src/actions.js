@@ -31,10 +31,11 @@ export function changePassword({ original_local_hash, original_signature, new_en
     return { type: "changePassword", original_local_hash, original_signature, new_encrypted_data, new_signature }
 }
 
-export function deleteWallet({ local_hash, signature }) {
+export function deleteWallet({ code, local_hash, signature }) {
+    req(code, 'code')
     req(local_hash, 'local_hash')
     req(signature, 'signature')
-    return { type: "deleteWallet", local_hash, signature }
+    return { type: "deleteWallet", code, local_hash, signature }
 }
 
 function req(data, field_name) {

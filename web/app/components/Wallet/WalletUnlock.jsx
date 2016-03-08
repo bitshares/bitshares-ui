@@ -33,7 +33,7 @@ export default class WalletUnlock extends Component {
     // }
     
     render() {
-        this.was_empty = WalletDb.isEmpty()
+        this.was_empty = WalletDb.isEmpty()// || ! WalletDb.getState().wallet
         if( this.was_empty )
         return <WalletCreate hideTitle={true}/>
         

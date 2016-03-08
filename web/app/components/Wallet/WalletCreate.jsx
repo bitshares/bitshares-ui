@@ -34,18 +34,20 @@ class WalletCreate extends Component {
     
 }
 
-let CreateAuthStore = AuthStore("Create", { hasConfirm: true })
+let CreateAuthStore = AuthStore("RecoverCreate", { hasConfirm: true })
+let AuthEmail = AuthStore("RecoverAuthEmail", { hasEmail: true, hasPassword: false, hasUsername: false })
 
 @connectToStores
 class CreateNewWallet extends Component {
     
     static getStores() {
-        return [WalletDb, CreateAuthStore]
+        return [WalletDb, CreateAuthStore, AuthEmail]
     }
     
     static getPropsFromStores() {
         var wallet = WalletDb.getState()
         wallet.auth = CreateAuthStore.getState()
+        wallet.auth_email = AuthEmail.getState()
         return wallet
     }
     
@@ -61,7 +63,8 @@ class CreateNewWallet extends Component {
             isValid: false,
             create_submitted: false,
             custom_brainkey: false,
-            brnkey: null
+            brnkey: null,
+            recover: true,
         }
     }
     
@@ -70,6 +73,9 @@ class CreateNewWallet extends Component {
     }
     
     render() {
+        
+        
+        
         let state = this.state
         let errors = state.errors
         let has_wallet = !!this.props.current_wallet

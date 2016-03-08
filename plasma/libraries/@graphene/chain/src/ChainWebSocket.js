@@ -84,7 +84,7 @@ class ChainWebSocket {
                 reject: reject
             };
             this.web_socket.onerror = (error) => {
-                console.log("!!! WebSocket Error ", error);
+                console.log("!!! ChainWebSocket Error ", error);
                 reject(error);
             };
             this.web_socket.send(JSON.stringify(request));

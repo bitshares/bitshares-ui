@@ -20,7 +20,7 @@ import Translate from "react-translate-component";
 import RefcodeInput from "../Forms/RefcodeInput";
 import {TransitionMotion, spring} from 'react-motion';
 
-let CreateAccountAuthStore = AuthStore("CreateAccount")
+let CreateAccountAuthStore = AuthStore("CreateAccount", { hasConfirm: true })
 
 @connectToStores
 class CreateAccount extends React.Component {
@@ -94,13 +94,10 @@ class CreateAccount extends React.Component {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
-                    this.props.history.pushState(null, `/account/${name}/overview`);
+                    // make a local or server backup
+                    this.props.history.pushState(null, `/wallet/backup/server`);
+                    // this.props.history.pushState(null, `/account/${name}/overview`);
                 }
-                
-                // defaults for the login 
-                // let { email, username } = this.props.auth
-                // let { wallet } = WalletDb.getState()
-                // wallet.storage.setState({ email, username })
                 
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
@@ -117,6 +114,7 @@ class CreateAccount extends React.Component {
     }
 
     createWallet() {
+        let auth = this.props.auth
         return WalletActions.setWallet(
             "default", //wallet name
             this.props.auth
@@ -233,7 +231,6 @@ class CreateAccount extends React.Component {
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true} focus={true}/>
 
-                                {/* BackupServer.jsx will verify the email before using. */}
                                 { ! WalletDb.isLocked() ?
                                     null :
                                     <AuthInput auth={this.props.auth} focus={false} />
