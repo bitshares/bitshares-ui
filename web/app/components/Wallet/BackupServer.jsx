@@ -7,7 +7,7 @@ import AltContainer from "alt-container"
 import counterpart from "counterpart"
 import cname from "classnames"
 import bs58 from "bs58"
-// import { Apis } from "@graphene/chain"
+import { Apis } from "@graphene/chain"
 
 import AuthInput from "components/Forms/AuthInput"
 import WalletUnlock from "components/Wallet/WalletUnlock"
@@ -48,7 +48,7 @@ class BackupServer extends Component {
         super()
         this.init = ()=>({ busy: false, key: null,
             forgot_restore_key: false, restore_key_entered: false,
-            server_wallet: null, new_wallet_name: null, wallet_exists_change_name: null,
+            server_wallet: null, wallet_exists_change_name: null,
             private_key: null, private_api_key: null,
             new_wallet_name: "default",
         })
@@ -205,7 +205,6 @@ class BackupServer extends Component {
                 <form onSubmit={restoreKeyOk.bind(this)}>
                     <input type="text" ref="restoreKeyInput" value={this.state.key} onChange={restoreKeyInputChange.bind(this)} tabIndex={1}></input>
                     <button className={cname("button", {disabled: restoreKeyInvalid()})} onClick={restoreKeyOk.bind(this)}><Translate content="ok"/></button>
-                    &nbsp; &nbsp;
                     <button className="button secondary" onClick={restoreKeyRecover.bind(this)}><Translate content="wallet.forgot_restore_key"/></button>
                 </form>
             </div>
@@ -218,10 +217,12 @@ class BackupServer extends Component {
         const openWalletSubmit = e=>{
             e.preventDefault()
             let { server_wallet, private_key, private_api_key, username, password } = this.state
+            
             WalletDb.openWallet(this.state.new_wallet_name)
+            .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key, Apis.chainId()))
             .then(()=> wallet().keepRemoteCopy(true))
-            .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key))
             .then(()=> wallet().login(username, password))
+            .catch(error=> notify.error(counterpart.translate("wallet.backup_status." + error)))
             .then(()=> this.setState({ busy: false }))
         }
         const openWalletChange = e =>{

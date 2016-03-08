@@ -750,6 +750,7 @@
             open: "Connected", // socket
             closed: "Disconnected",// socket
             error: "Connection Error",// socket
+            chain_id_missmatch: "Wallet backup is for a different chain",
         },
         confirm: "Password (confirm)",
         password: "Password",

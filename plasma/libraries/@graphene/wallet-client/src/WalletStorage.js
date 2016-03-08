@@ -713,7 +713,7 @@ function deleteRemoteWallet(private_key, private_api_key, local_hash = this.loca
     })
 }
 
-function saveServerWallet(server_wallet, private_key, private_api_key) {
+function saveServerWallet(server_wallet, private_key, private_api_key, chain_id) {
     
     assert(server_wallet.local_hash, "server_wallet.local_hash")
     assert(server_wallet.encrypted_data, "server_wallet.encrypted_data")
@@ -724,6 +724,10 @@ function saveServerWallet(server_wallet, private_key, private_api_key) {
     
     return Promise.resolve()
     .then(()=> decrypt(backup_buffer, private_api_key)).then( w => wallet_object = w)
+    .then(()=> {
+        if(chain_id && chain_id !== wallet_object.chain_id)
+            throw "chain_id_missmatch"
+    })
     .then(()=> encrypt(wallet_object, public_key)).then( w => encrypted_wallet = w)
     .then(()=> {
         let p = this.storage.setState({
