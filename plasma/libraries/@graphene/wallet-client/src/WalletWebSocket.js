@@ -163,7 +163,9 @@ export default class WalletWebSocket {
                 this.last_instance = this.instance
                 console.log()
             }
-            console.log("WalletWebSocket("+this.instance+") ----- call "+id+" ---- >", method, "\t", JSON.stringify(params));
+            let str = JSON.stringify(params)
+            str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+            console.log("WalletWebSocket("+this.instance+") ----- call "+id+" ---- >", method, "\t", str);
         }
         return this.connect_promise.then(()=> {
             return new Promise( (resolve, reject) => {
@@ -190,7 +192,9 @@ export default class WalletWebSocket {
                 this.last_instance = this.instance
                 console.log()
             }
-            console.log("WalletWebSocket("+this.instance+") <--- reply "+(response.id||" ")+" ---- <", JSON.stringify(response));
+            let str = JSON.stringify(response)
+            str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+            console.log("WalletWebSocket("+this.instance+") <--- reply "+(response.id||" ")+" ---- <", str);
         }
         let sub = false,
             callback = null;

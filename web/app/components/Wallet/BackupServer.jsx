@@ -145,8 +145,7 @@ class BackupServer extends Component {
 
         const show_wallet_key = ()=> <div>
             <div>
-                <Translate content={ "wallet." + (url_token ? "remember_wallet_key":"")}/>
-                <br/>
+                {url_token ? <Translate content="wallet.remember_wallet_key"/> : null}
                 <br/>
                 <pre className="no-overflow">{!WalletDb.isLocked() ? wallet().getTokenSeed() : url_token ? extractSeed(url_token): this.state.key}</pre>
                 <br/>
@@ -208,9 +207,8 @@ class BackupServer extends Component {
         }
         const restoreKeyOk = e =>{
             e.preventDefault()
+            if(wallet()) wallet().keepRemoteCopy(true)
             this.setState({ wallet_key_entered: true })
-            if(wallet())
-                wallet().keepRemoteCopy(true)
         }
         const restoreKeyInvalid = ()=> this.state.key == null || this.state.key.trim() === "" || this.state.key.length !== 4
         const restoreKeyInputChange = e =>{
