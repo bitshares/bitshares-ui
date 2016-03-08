@@ -49,7 +49,7 @@ class BackupServer extends Component {
         super()
         this.init = ()=>({ busy: false, key: null,
             email_wallet_key: false, _entered: false,
-            server_wallet: null, wallet_exists_change_name: null,
+            server_wallet: null,
             private_key: null, private_api_key: null,
             new_wallet_name: "default",
         })
@@ -247,7 +247,8 @@ class BackupServer extends Component {
             .then(()=> wallet().keepRemoteCopy(true))
             .then(()=> wallet().login(username, password))
             .catch(error=>{
-                notify.error(counterpart.translate("wallet.backup_status." + error))
+                let tr_error = counterpart.translate("wallet.backup_status." + error)
+                notify.error(tr_error ? counterpart.translate("wallet.restore_error") : tr_error)
                 if(error === "chain_id_missmatch")
                     this.setState({ server_wallet: null, private_key: null, private_api_key: null, username: null, password: null })
             })

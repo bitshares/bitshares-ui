@@ -228,14 +228,9 @@ export default class ConfidentialWallet {
         let private_key = PrivateKey.fromSeed( brain_key )
         let public_key = private_key.toPublicKey()
         
-        if( ! this.setKeyLabel( public_key, label ))
+        if( ! this.setKeyLabel( private_key, label, public_key ))
             throw new Error("label_exists")
-        
-        this.update(wallet =>
-            wallet.updateIn(["keys", toString(public_key)], Map(),
-                key => key.set("private_wif", private_key.toWif()))
-        )
-        
+
         return public_key
     }
     
