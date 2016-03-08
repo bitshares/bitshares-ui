@@ -728,6 +728,7 @@
         token_emailed: "Please check your email and click on the verification link.",
         local_backup: "Local Backup",
         server_backup: "Server Backup",
+        backups: "Backups",
         server_backup_description1: "You may verify your email and we will keep your wallet backed up.",
         server_backup_description2: "Disclaimer: Your wallet is encrypted before it leaves your device.  We can't recover a lost username, password or email.",
         // backup_download_description: "Download or enable server backups at any point.",
@@ -738,11 +739,17 @@
         },
         backup_status: {
             "No Content": "No Content",
-            "Not Modified": "Not Modified",//"In Sync",
+            "Not Modified": "Not Modified",
+            "Conflict": "Wallet Version Conflict",
+            backed_up: "Backed Up",
             email_has_wallet: "Invalid Password",
             invalid_token: "Invalid token",
             unknown: "Unknown",
             wallet_already_exists: "",
+            disabled: "Disabled",
+            open: "Connected", // socket
+            closed: "Disconnected",// socket
+            error: "Connection Error",// socket
         },
         confirm: "Password (confirm)",
         password: "Password",

@@ -92,7 +92,7 @@ class WalletDb extends BaseStore {
     
     api() {
         let url = SettingsStore.getSetting("backup_server")
-        let ws_rpc = new WalletWebSocket(url)
+        let ws_rpc = new WalletWebSocket(url, false)
         let api = new WalletApi(ws_rpc)
         return api
     }

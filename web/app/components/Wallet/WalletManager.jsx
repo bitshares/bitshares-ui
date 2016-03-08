@@ -130,7 +130,7 @@ export class WalletOptions extends WalletBaseComponent {
             {has_wallet ? <span><br/><br/></span> : null}
             
             <Link to="wallet/backup/server">
-            <div className="button outline success"><Translate content="wallet.server_backup" /></div></Link>
+            <div className="button outline success"><Translate content="wallet.backups" /></div></Link>
                 
             {has_wallet ? <Link to="wallet/backup/brainkey">
             <div className="button outline success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}

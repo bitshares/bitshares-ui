@@ -139,7 +139,7 @@ class BackupServer extends Component {
         </div>
         
         const show_api_error =this.props.backups.api_error ?
-            <Translate content={"wallet.backup_status." + this.props.backups.api_error}/> : null
+            <Translate content={"wallet." + this.props.backups.api_error}/> : null
 
         const onRequestCode = e=> {
             e.preventDefault()
@@ -185,6 +185,8 @@ class BackupServer extends Component {
         const restoreKeyOk = e =>{
             e.preventDefault()
             this.setState({ restore_key_entered: true })
+            if(wallet())
+                wallet().keepRemoteCopy(true)
         }
         const restoreKeyInvalid = ()=> this.state.key == null || this.state.key.trim() === "" || this.state.key.length !== 4
         const restoreKeyInputChange = e =>{
@@ -330,7 +332,7 @@ class BackupServer extends Component {
             checkServer
         :
             // backup_wallet
-            ! have_token ? token_request_initial :
+            ! have_token ? (this.state.forgot_restore_key ? token_request_initial : restoreKeyInput ) :
             weak_password() ? change_password :
             in_sync() ? <div>{toggle_backups_form()}<br/>{show_restore_key()}</div> :
             show_remote_status
@@ -375,5 +377,7 @@ export function readBackupToken(nextState, replaceState) {
     let path = nextState.location.pathname
     path = path.replace(token, "")
     url_token = token
+    if(WalletDb.getState().wallet)
+        WalletDb.getState().wallet.keepRemoteCopy(true)
     replaceState(null, path)
 }

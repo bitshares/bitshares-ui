@@ -9,6 +9,7 @@ class BackupServerStore {
         this.init = ()=> ({
             // UI Backup status (will check for wallet.backup_status.xxxx internationalization)
             backup_status: "unknown",
+            socket_status: null,
             api_error: null,
         })
         this.state = this.init()
@@ -36,9 +37,14 @@ class BackupServerStore {
         
         let { remote_status, local_status } = wallet // socket_status
         let { remote_url, remote_copy, remote_token } = wallet.storage.state.toJS()
+        let { socket_status } = this.state
         let weak_password  = wallet.wallet_object.get("weak_password")
         
-        let backup_status = remote_status // remote_copy === true ? remote_status : local_status
+        let backup_status = remote_copy !== true ? "disabled" :
+            socket_status !== "open" ? socket_status :
+            remote_status !== "Not Modified" ? remote_status :
+            "backed_up"
+        
         let state = { 
             remote_status, local_status,
             remote_url, remote_copy, remote_token,

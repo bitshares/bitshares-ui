@@ -8,14 +8,17 @@ export default class WalletWebSocket {
 
     /**
         @arg {string} ws_server_url - WebSocket URL
+        @arg {boolean} [sendEvents = false] - events are global, just use this on the main websocket
     */
-    constructor(ws_server_url) {
+    constructor(ws_server_url, sendEvents = false) {
         
         this.instance = ++instance
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
-        this.update_stocket_status = status =>
-            WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
+        this.update_stocket_status = status => {
+            if(sendEvents === true)
+                WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
+        }
         
         // var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("ws");
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
