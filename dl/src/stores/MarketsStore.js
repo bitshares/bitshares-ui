@@ -379,6 +379,43 @@ class MarketsStore {
                 volume = utils.get_asset_amount(this.priceHistory[i].base_volume, this.quoteAsset);
             }
 
+
+            function findMax(a, b) {
+                if (a !== Infinity && b !== Infinity) {
+                    return Math.max(a, b);
+                } else if (a === Infinity) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            function findMin(a, b) {
+                if (a !== 0 && b !== 0) {
+                    return Math.min(a, b);
+                } else if (a === 0) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            if (low === 0) {
+                low = findMin(open, close);                
+            }
+
+            if (isNaN(high) || high === Infinity) {
+                high = findMax(open, close);
+            }
+
+            if (close === Infinity || close === 0) {
+                close = open;               
+            }
+
+            if (open === Infinity || open === 0) {
+                open = close;               
+            }
+
             prices.push([date, open, high, low, close]);
             volumeData.push([date, volume]);
         }
