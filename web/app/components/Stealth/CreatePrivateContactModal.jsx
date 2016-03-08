@@ -8,6 +8,8 @@ import AccountNameInput from "../Forms/AccountNameInput";
 import AccountSelect from "../Forms/AccountSelect";
 import Translate from "react-translate-component";
 import PrivateKeyInput from "../Forms/PrivateKeyInput";
+import WalletDb from "stores/WalletDb";
+import {PublicKey} from "@graphene/ecc";
 
 class CreatePrivateContactModal extends React.Component {
 
@@ -21,7 +23,7 @@ class CreatePrivateContactModal extends React.Component {
 
     clear() {
         this.refs.label.clear();
-        this.setState({ label: "" });
+        this.setState({label: "", public_key: ""});
     }
 
     _onCreateClick() {
@@ -46,6 +48,13 @@ class CreatePrivateContactModal extends React.Component {
     }
 
     render() {
+        const pubkey = this.state.public_key;
+        const cwallet = WalletDb.getState().cwallet;
+        let error = PublicKey.fromPublicKeyString(pubkey) ? null : (pubkey ? "Not valid key" : null);
+        const existing_label = cwallet.getKeyLabel(pubkey);
+        if(!error && existing_label) error = "Key exists";
+        const submit_class = error ? "button disabled" : "button";
+
         return (<Modal id="add_private_contact_modal" overlay>
             <Trigger close="add_private_contact_modal">
                 <a href="#" className="close-button">&times;</a>
@@ -62,10 +71,10 @@ class CreatePrivateContactModal extends React.Component {
                     />
                 </div>
                 <div className="full-width-content form-group">
-                    <PrivateKeyInput ref="key" onChange={this._onKeyChange} publicKeyOnly onEnter={this._onCreateClick} />
+                    <PrivateKeyInput ref="key" onChange={this._onKeyChange} publicKeyOnly onEnter={this._onCreateClick} pubKeyError={error} />
                 </div>
                 <div className="button-group">
-                    <a className="button" href onClick={this._onCreateClick}>Create Contact</a>
+                    <a className={submit_class} href onClick={this._onCreateClick}>Create Contact</a>
                     <Trigger close="add_private_contact_modal"><a href className="secondary button">Cancel</a></Trigger>
                 </div>
             </form>

@@ -13,11 +13,13 @@ class PrivateKeyInput extends React.Component {
     static propTypes = {
         onChange: PropTypes.func,
         onEnter: PropTypes.func,
-        publicKeyOnly: PropTypes.bool
+        publicKeyOnly: PropTypes.bool,
+        pubKeyError: PropTypes.string
     };
 
     static defaultProps = {
-        publicKeyOnly: false
+        publicKeyOnly: false,
+        pubKeyError: null
     };
 
     constructor(props) {
@@ -32,6 +34,7 @@ class PrivateKeyInput extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return nextState.private_key !== this.state.private_key
             || nextState.public_key !== this.state.public_key
+            || nextProps.pubKeyError !== this.props.pubKeyError
             || nextState.error !== this.state.error;
     }
 
@@ -113,6 +116,7 @@ class PrivateKeyInput extends React.Component {
                     <label>
                         <Translate content="account.public_key"/>
                         <input type="text" onKeyDown={this._onKeyDown} value={this.state.public_key} onChange={this._onPublicKeyChange} />
+                        <div className="facolor-error">{this.props.pubKeyError}</div>
                     </label>
                 </div>
             </div>
