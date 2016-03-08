@@ -49,9 +49,9 @@ class CreatePrivateContactModal extends React.Component {
 
     render() {
         const pubkey = this.state.public_key;
-        const cwallet = WalletDb.getState().cwallet;
         let error = PublicKey.fromPublicKeyString(pubkey) ? null : (pubkey ? "Not valid key" : null);
-        const existing_label = cwallet.getKeyLabel(pubkey);
+        const cwallet = WalletDb.getState().cwallet;
+        const existing_label = !WalletDb.isLocked() && cwallet.getKeyLabel(pubkey);
         if(!error && existing_label) error = "Key exists";
         const submit_class = error ? "button disabled" : "button";
 
