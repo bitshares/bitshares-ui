@@ -8,7 +8,7 @@ npm install
 ```bash
 #  Assumes your user is the default root (with no password) or you configured .npmrc (see below)
 mysqladmin -u root create wallet_server
-npm run mysql-init
+npm run mysql
 ```
 
 # Run

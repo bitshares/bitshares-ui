@@ -68,7 +68,11 @@ export function notifyOther(ws, method, subscribe_key, params) {
         
         ids.forEach( subscription_id => {
             try {
-                if(global.DEBUG) console.log("DEBUG\tsubscriptions\tnotifyOther", subscription_id, subscribe_key, method, params)
+                if(global.DEBUG) {
+                    let str = JSON.stringify(params)
+                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+                    console.log("DEBUG\tsubscriptions\tnotifyOther", subscription_id, subscribe_key, method, str)
+                }
                 subscribe_ws.send(JSON.stringify({
                     method: "notice",
                     params: [subscription_id, params]

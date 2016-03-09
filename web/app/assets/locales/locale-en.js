@@ -716,6 +716,7 @@
         expired: "Backup token expired",
         remote_backup: "Remote Backup",
         invalid_auth: "Invalid Password",
+        invalid_token: "Invalid Wallet Key",
         remember_auth1: "You must remember this information.  This will be",
         remember_auth2: "your new login (with USERNAME).  Please write it down.",
         remember_wallet_key: "Write down your Wallet Key (it is case-sensitive)",

@@ -23,7 +23,7 @@ export NODE_PATH="$PLASMA_HOME/node_modules:$PLASMA_HOME/libraries"
 PATH="$PLASMA_HOME/node_modules/.bin:$PATH"
 ```
 
-Some tests use a witness node and may consume the CORE asset indefinatly.  Setup a [private testnet](https://github.com/cryptonomex/graphene/wiki/private-testnet).  
+Some tests use a witness node and may consume the CORE asset indefinitely.  Setup a [private testnet](https://github.com/cryptonomex/graphene/wiki/private-testnet).  
 
 
 Add the testing key to the new genesis.json:

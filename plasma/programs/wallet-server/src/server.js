@@ -125,7 +125,11 @@ export default function createServer() {
                     return
                 }
                 let action = methodFunction( params )
-                if(global.DEBUG) console.log("DEBUG\tserver\tmessage", method, action)
+                if(global.DEBUG) {
+                    let str = JSON.stringify(action)
+                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+                    console.log("DEBUG\tserver\tmessage", method, str)
+                }
                 if( ! action || ! store.dispatch ) {
                     wsResponse( wsType, id, "OK" )
                     return

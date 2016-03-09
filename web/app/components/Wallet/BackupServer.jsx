@@ -48,7 +48,7 @@ class BackupServer extends Component {
     constructor() {
         super()
         this.init = ()=>({ busy: false, key: null,
-            email_wallet_key: false, _entered: false,
+            email_wallet_key: false, wallet_key_entered: false,
             server_wallet: null,
             private_key: null, private_api_key: null,
             new_wallet_name: "default",
@@ -152,8 +152,11 @@ class BackupServer extends Component {
             </div>
         </div>
         
-        const show_api_error =this.props.backups.api_error ?
-            <Translate content={"wallet." + this.props.backups.api_error}/> : null
+        const show_api_error = this.props.backups.api_error ?
+            <div>
+                <Translate content={"wallet." + this.props.backups.api_error}/>
+                <br/> <br/>
+            </div> : null
 
         const onRequestCode = e=> {
             e.preventDefault()
@@ -287,7 +290,7 @@ class BackupServer extends Component {
             }
             return this.state.key
         }
-        const checkServerDownloadClick = e => {
+        const serverDownloadClick = e => {
             e.preventDefault()
             let username = this.props.auth_password.username.toLowerCase().trim()
             let password = this.props.auth_password.password
@@ -313,11 +316,11 @@ class BackupServer extends Component {
                 }), 600)
             })
         }
-        const checkServerDownload = <div>
+        const serverDownload = <div>
             {show_wallet_key()}
-            <form onSubmit={checkServerDownloadClick.bind(this)}>
+            <form onSubmit={serverDownloadClick.bind(this)}>
                 <AuthInput auth={this.props.auth_password}/>
-                <button onClick={checkServerDownloadClick.bind(this)}
+                <button onClick={serverDownloadClick.bind(this)}
                     className={cname("button", {disabled: this.state.busy || ! this.props.auth_password.valid})}>
                     <Translate content="wallet.check_server"/>
                 </button>
@@ -357,22 +360,27 @@ class BackupServer extends Component {
             this.state.wallet_key_entered ||
             url_token ||
             (!WalletDb.isLocked() && (
-                wallet().wallet_object.has("create_token") || 
-                wallet().storage.state.has("remote_token")
+                wallet().wallet_object.get("create_token") || 
+                wallet().storage.state.get("remote_token")
             ))
         
         let weak_password = ()=> wallet().storage.state.get("weak_password") === true
         let in_sync = ()=> wallet().storage.state.get("remote_copy") === false ||
             wallet().remote_status === "Not Modified"
         
+        const emailOrInputRestoreKey = this.state.email_wallet_key ? emailRestoreKey : restoreKeyInput
+        
         const body = WalletDb.isLocked() ?
-            ! WalletDb.isEmpty() ? <WalletUnlock/> :
-            ! have_token ? (this.state.email_wallet_key ? emailRestoreKey : restoreKeyInput ) :
+            // New users click on a validation link and arrive here (locked but existing wallet)
+            ! WalletDb.isEmpty() ? <WalletUnlock/> : // TODO unlock or restore to another wallet name
+            ! have_token ? emailOrInputRestoreKey :
             this.state.server_wallet ? openWallet :
-            checkServerDownload
+            serverDownload
         :
             // backup_wallet
             ! have_token ? token_request_initial :
+            // Invalid token can happen with different backup servers or different chains
+            this.props.backups.api_error === "invalid_token" ? emailOrInputRestoreKey :
             weak_password() ? change_password :
             in_sync() ? <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div> :
             remoteBackupStatus

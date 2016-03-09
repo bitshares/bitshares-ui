@@ -22,8 +22,8 @@ export default class WalletApi {
         if( ! ws_rpc["call"] )
             throw new Error("WalletWebSocket object required")
         
-        if( ! (ws_rpc.is_ws_local || ws_rpc.is_ws_secure) )
-            throw new Error("Please use a secure WalletWebSocket url that contains 'localhost' or starts with wss://")
+        // if( ! (ws_rpc.is_ws_local || ws_rpc.is_ws_secure) )
+        //     throw new Error("Please use a secure WalletWebSocket url that contains 'localhost' or starts with wss://")
         
         this.ws_rpc = ws_rpc
     }
