@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------
+Release 2.0.160309
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Switch to using unique ethereum addresses for OpenLedger inputs
+- Hide Footer in Exchange view
+- Add preferred market pairing field to asset description
+- Сoloring of price column headers in Orderbook
+- Add + - buttons to the pricechart to change the height of the exchange charts
+- Filter out 0 and Inf price values from pricechart data
+- Put volume and price in the same chart
+- Add zoom buttons for PriceChart, filter out bucket sizes below 5 minute
+
+BUG FIXES:
+- Prices with precision larger than asset precision causes incorrect final price #757
+- Fix exchange box header background colors
+- TransitionWrapper not reenabling after reset
+- Fix Transfer fee asset selection for users with only one non-core asset
+
+---------------------------------------------------------------------
 Release 2.0.160302
 ---------------------------------------------------------------------
 

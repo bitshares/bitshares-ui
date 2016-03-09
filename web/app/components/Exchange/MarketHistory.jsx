@@ -40,6 +40,7 @@ class MarketHistory extends React.Component {
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            nextProps.className !== this.props.className ||
             nextState.activeTab !== this.state.activeTab
         );
     }
@@ -161,7 +162,7 @@ class MarketHistory extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div className="exchange-bordered" style={{height: 274}}>
+                <div className="exchange-bordered">
                     <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
                         {isNullAccount ? null : (
                             <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
@@ -175,10 +176,10 @@ class MarketHistory extends React.Component {
                         <table className="table order-table text-right market-right-padding">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "left"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                    <th style={{textAlign: "left"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                                    <th style={{textAlign: "left"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
                                 </tr>
                             </thead>
                         </table>

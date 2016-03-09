@@ -49,17 +49,23 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     requestDepositAddress() {
-        let body = JSON.stringify({
-            inputCoinType:this.props.deposit_coin_type,
-            outputCoinType:this.props.receive_coin_type,
-            outputAddress:this.props.account.get('name')
-        })
-        // console.log( "body: ", body );
+        let body = {
+            inputCoinType: this.props.deposit_coin_type,
+            outputCoinType: this.props.receive_coin_type,
+            outputAddress: this.props.account.get('name')
+        };
 
+        if (this.props.deposit_memo_name)
+            body.inputAddressType = "shared_address_with_memo";
+        else
+            body.inputAddressType = "unique_address";
+
+        let body_string = JSON.stringify(body);
+ 
         fetch( this.props.url + '/simple-api/initiate-trade', {
             method:'post',
             headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
-            body: body
+            body: body_string
         }).then( reply => { reply.json().then( json => {
                 // console.log( "reply: ", json )
                 let addressInfo = null;

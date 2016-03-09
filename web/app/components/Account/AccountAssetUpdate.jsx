@@ -101,7 +101,8 @@ class AccountAssetUpdate extends React.Component {
             fundPoolAmount: 0,
             claimFeesAmount: 0,
             bitasset_opts: isBitAsset ? asset.bitasset.options : null,
-            original_bitasset_opts: isBitAsset ? props.asset.getIn(["bitasset", "options"]).toJS() : null
+            original_bitasset_opts: isBitAsset ? props.asset.getIn(["bitasset", "options"]).toJS() : null,
+            marketInput: ""
         };
     }
 
@@ -123,8 +124,11 @@ class AccountAssetUpdate extends React.Component {
         let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
 
+        if (this.state.marketInput !== update.description.market) {
+            update.description.market = "";
+        }
         let description = JSON.stringify(update.description);
-        console.log("permissions:", permissions);
+
         AssetActions.updateAsset(issuer, new_issuer_account, update, core_exchange_rate, this.props.asset,
             flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description).then(result => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account, this.props.asset.get("id"), update)
@@ -170,7 +174,11 @@ class AccountAssetUpdate extends React.Component {
                 }
                 update.description[value] = e.target.value;
                 break;
-            
+
+            case "market":
+                update.description[value] = e;
+                break;
+
             default:
                 update.description[value] = e.target.value;
                 break;
@@ -343,6 +351,19 @@ class AccountAssetUpdate extends React.Component {
             });
         }
     }
+
+    _onInputMarket(asset) {
+       
+        this.setState({
+            marketInput: asset
+        });
+    }
+
+    _onFoundMarketAsset(asset) {
+        if (asset) {
+            this._onUpdateDescription("market", asset.get("symbol"));
+        }
+    }    
 
     _onFlagChange(key) {
         let booleans = this.state.flagBooleans;
@@ -615,6 +636,16 @@ class AccountAssetUpdate extends React.Component {
                                             onChange={this._onUpdateDescription.bind(this, "short_name")}
                                         />
                                     </label>
+
+                                    <Translate component="h3" content="account.user_issued_assets.market" />
+                                    <AssetSelector
+                                        label="account.user_issued_assets.name"
+                                        onChange={this._onInputMarket.bind(this)}
+                                        asset={this.state.marketInput}
+                                        assetInput={this.state.marketInput}
+                                        style={{width: "100%", paddingRight: "10px"}}
+                                        onFound={this._onFoundMarketAsset.bind(this)}
+                                    />
 
                                     {isPredictionMarketAsset ? (
                                     <div>

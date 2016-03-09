@@ -108,7 +108,7 @@ class BuySell extends React.Component {
         } 
 
         return (
-            <div className={this.props.className + " middle-content"}>
+            <div className={this.props.className}>
                 <div className="exchange-bordered" style={this.props.style}>
                     <div className={"exchange-content-header " + type}>
                         <span>{`${buttonText} ${quote.get("symbol")}`}</span>

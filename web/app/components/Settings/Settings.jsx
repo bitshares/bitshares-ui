@@ -82,7 +82,7 @@ class SettingsEntry extends React.Component {
 
             case "faucet_address":
                 if (!selected) {
-                    value = "http";
+                    value = "https://";
                 } else {
                     value = selected;
                 }

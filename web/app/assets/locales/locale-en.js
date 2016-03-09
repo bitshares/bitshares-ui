@@ -15,7 +15,7 @@
         dashboard: "Dashboard",
         explorer: "Explore",
         exchange: "Trade",
-        payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
+        payments: "Send", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
         current: "Current Account",
@@ -151,7 +151,8 @@
             maximum_force_settlement_volume: "Max force settle volume (percent)",
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
-            error_invalid: "That asset may not be used"
+            error_invalid: "That asset may not be used",
+            market: "Preferred market pairing"
         },
         connections: {
             known: "Known by",
@@ -640,14 +641,18 @@
     footer: {
         title: "BitShares 2.0",
         block: "Head block",
-        loading: "Loading..."
+        loading: "Loading...",
+        backup: "Backup Required",
+        nosync: "Blockchain is out of sync, please wait until it's synchronized..",
+        connection: "No Blockchain connection",
+        brainkey: "Backup brainkey recommended"
     },
     exchange: {
         market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
-        history: "All History",
-        my_history: "My History",
+        history: "Market trades",
+        my_history: "My trades",
         balance: "Balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
@@ -690,12 +695,13 @@
         index: "Index",
         my_bids: "My bids",
         my_asks: "My asks",
-        my_orders: "My orders",
+        my_orders: "My open orders",
         settle_orders: "Settle orders",
         asks: "Sell orders",
         bids: "Buy orders",
         no_data: "No data",
-        time: "Time interval",
+        time: "Candlesticks",
+        zoom: "Zoom",
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
@@ -704,7 +710,11 @@
         show_asks: "Show all asks",
         hide: "Hide",
         short: "Short",
-        others: "Others"
+        others: "Others",
+        invert: "Invert the price",
+        to_market: "Go to market",
+        zoom_all: "All",
+        settings: "Chart options"
     },
     fees: {
      title: "Fee Schedule"

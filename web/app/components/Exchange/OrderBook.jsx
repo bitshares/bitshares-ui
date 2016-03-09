@@ -43,25 +43,45 @@ class OrderBookRowHorizontal extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.price_full !== this.props.order.price_full ||
-            nextProps.order.amount !== this.props.order.amount
+            nextProps.order.amount !== this.props.order.amount ||
+            nextProps.position !== this.props.position
         )
     }
 
     render() {
-        let {order, quote, base, type} = this.props;
+        let {order, quote, base, type, position} = this.props;
 
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
+        
+        let price = <PriceText preFormattedPrice={order.price} />;
+        let amount = type === "bid" ?
+            utils.format_number(order.amount, quote.get("precision")) :
+            utils.format_asset(order.for_sale, quote, true);
+        let value = type === "bid" ?
+            utils.format_asset(order.for_sale, base, true) :
+            utils.format_number(order.value, base.get("precision"));
+        let total = type === "bid" ? 
+            utils.format_asset(order.totalForSale, base, true) :
+            utils.format_asset(order.totalValue, base, true);
+
         return (
             <tr onClick={this.props.onClick} >
-                <td className={integerClass}>
-                    <PriceText preFormattedPrice={order.price} />
+                {position === "left" ? <td>{total}</td> :
+                <td style={{width: "25%"}} className={integerClass}>
+                    {price}
                 </td>
-                <td>{utils.format_number(order.amount, quote.get("precision"))}</td>
-                <td>{utils.format_number(order.value, base.get("precision"))}</td>
-                <td>{utils.format_number(order.totalValue, base.get("precision"))}</td>
+                }
+                <td>{position === "left" ? value : amount}</td>
+                <td>{position === "left" ? amount : value}</td>
+                {position === "right" ? <td>{total}</td> :
+                <td style={{width: "25%"}} className={integerClass}>
+                    {price}
+                </td>
+                }
 
             </tr>
-        )
+        );
+       
     }
 }
 
@@ -227,7 +247,7 @@ class OrderBook extends React.Component {
         let totalBidValue = 0;
         let totalAskAmount = 0;
 
-        let totalAsks = 0, totalBids = 0;
+        let totalAsks = 0, totalBids = 0, totalBidForSale = 0;
 
         if(base && quote) {
             let totalBidAmount = 0;
@@ -251,8 +271,11 @@ class OrderBook extends React.Component {
                 totalBidAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
 
                 totalBidValue += order.value;
+                totalBidForSale += order.for_sale;
+
                 order.totalValue = totalBidValue;
                 order.totalAmount = totalBidAmount;
+                order.totalForSale = totalBidForSale;
 
                 return (horizontal ?
                     <OrderBookRowHorizontal
@@ -262,6 +285,7 @@ class OrderBook extends React.Component {
                         base={base}
                         quote={quote}
                         type={order.type}
+                        position={!this.state.flip ? "left" : "right"}
                     /> :
                     <OrderBookRowVertical
                         key={order.price_full}
@@ -288,7 +312,7 @@ class OrderBook extends React.Component {
                 return total > a.price_full ? a.price_full : total;
             }, null) : 0;
 
-            let totalAskValue = 0;
+            let totalAskValue = 0, totalAskForSale = 0;
 
             askRows = combinedAsks.sort((a, b) => {
                 return a.price_full - b.price_full;
@@ -300,9 +324,13 @@ class OrderBook extends React.Component {
             }).map((order, index) => {
                 totalAskAmount = market_utils.limitByPrecision(totalAskAmount + order.amount, base);
                 // totalAskAmount += order.amount;
-                totalAskValue += order.value;
+                totalAskValue += (order.sell_price.quote.amount * order.for_sale / order.sell_price.base.amount);
+                totalAskForSale += order.for_sale;
+                // console.log("order:", order);
+                // console.log(order.sell_price.quote.amount * order.for_sale / order.sell_price.base.amount);
                 order.totalValue = totalAskValue;
                 order.totalAmount = totalAskAmount;
+                order.totalForSale = totalAskForSale;
 
                 return (horizontal ?
 
@@ -313,6 +341,7 @@ class OrderBook extends React.Component {
                         base={base}
                         quote={quote}
                         type={order.type}
+                        position={!this.state.flip ? "right" : "left"}
                     /> :
                     <OrderBookRowVertical
                         key={order.price_full}
@@ -344,16 +373,42 @@ class OrderBook extends React.Component {
             let totalAsksLength = askRows.length;
 
             if (!showAllBids) {
-                bidRows.splice(12, bidRows.length);
+                bidRows.splice(10, bidRows.length);
             }
 
             if (!showAllAsks) {
-                askRows.splice(12, askRows.length);
+                askRows.splice(10, askRows.length);
             }
 
+            let leftHeader = (
+                <thead ref="leftHeader">
+                    <tr key="top-header" className="top-header">
+                        <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "right"}}>
+                            <Translate className={(this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
+                        </th>
+                    </tr>
+                </thead>
+            );
+
+            let rightHeader = (
+                <thead ref="rightHeader">
+                    <tr key="top-header" className="top-header">
+                        <th style={{width: "25%", textAlign: "right"}}>
+                            <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
+                        </th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                        <th style={{width: "25%", textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
+                    </tr>
+                </thead>
+            );
+
             return (
-                    <div className="grid-block small-12 no-padding small-vertical medium-horizontal align-spaced no-overflow middle-content">
-                        <div className={classnames("small-12 medium-6", this.state.flip ? "order-1" : "order-2")}>
+                    <div className={classnames("grid-block orderbook no-padding small-vertical medium-horizontal align-spaced no-overflow small-12 large-8")}>
+                        <div className={classnames("small-12 medium-6 large-6 middle-content", this.state.flip ? "order-1" : "order-2")}>
                             <div className="exchange-bordered">
                                 <div className="exchange-content-header ask">
                                     <Translate content="exchange.asks" />
@@ -362,7 +417,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         {!this.props.smallScreen ? <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span> : null}
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "16px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalAsks, quote.get("precision"))}
@@ -370,16 +425,9 @@ class OrderBook extends React.Component {
                                     </div>
                                 </div>
                                 <table className="table order-table table-hover text-right no-overflow">
-                                    <thead>
-                                        <tr key="top-header" className="top-header">
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title"content="exchange.price" /></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
-                                        </tr>
-                                    </thead>
+                                    {!this.state.flip ? rightHeader : leftHeader}
                                 </table>
-                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 252}}>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 210}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
@@ -393,15 +441,15 @@ class OrderBook extends React.Component {
                                 </div>
                                 {totalAsksLength > 13 ? (
                                 <div className="orderbook-showall">
-                                    <div onClick={this._onToggleShowAll.bind(this, "asks")} className="button outline">
+                                    <a onClick={this._onToggleShowAll.bind(this, "asks")}>
                                         <Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} />
                                         {!showAllAsks ? <span> ({totalAsksLength})</span> : null}
-                                    </div>
+                                    </a>
                                 </div>) : null}
                             </div>
                         </div>
 
-                        <div className={classnames("small-12 medium-6", this.state.flip ? "order-2" : "order-1")}>
+                        <div className={classnames("small-12 medium-6 large-6 middle-content", this.state.flip ? "order-2" : "order-1")}>
                             <div className="exchange-bordered">
                                 <div className="exchange-content-header bid">
                                     <Translate content="exchange.bids" />
@@ -410,7 +458,7 @@ class OrderBook extends React.Component {
                                         <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span>
                                         <span onClick={this.props.moveOrderBook} style={{cursor: "pointer", fontSize: "1rem"}}> &#8645;</span>
                                     </span>) : null}
-                                    <div style={{lineHeight: "24px"}} className="float-right header-sub-title">
+                                    <div style={{lineHeight: "16px"}} className="float-right header-sub-title">
                                         <Translate content="exchange.total" />
                                         <span>: </span>
                                         {utils.format_number(totalBids, base.get("precision"))}
@@ -418,16 +466,9 @@ class OrderBook extends React.Component {
                                     </div>
                                 </div>
                                 <table className="table order-table table-hover text-right">
-                                    <thead>
-                                        <tr key="top-header" className="top-header">
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                                            <th style={{paddingRight: 18, textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> ({baseSymbol})</span></th>
-                                        </tr>
-                                    </thead>
+                                    {this.state.flip ? rightHeader : leftHeader}    
                                 </table>    
-                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 252}}>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 210}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
@@ -441,10 +482,10 @@ class OrderBook extends React.Component {
                                 </div>
                                 {totalBidsLength > 13 ? (
                                 <div className="orderbook-showall">
-                                    <div onClick={this._onToggleShowAll.bind(this, "bids")} className="button outline ">
+                                    <a onClick={this._onToggleShowAll.bind(this, "bids")}>
                                         <Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} />
                                         {!showAllBids ? <span> ({totalBidsLength})</span> : null}
-                                    </div>
+                                    </a>
                                 </div>) : null}
                             </div>
                         </div>
@@ -478,7 +519,7 @@ class OrderBook extends React.Component {
                                         <table style={{position: "relative", bottom: 0}} className="table order-table table-hover text-right">
                                             <TransitionWrapper
                                                 ref="askTransition"
-                                                className="orderbook ps-container orderbook-top"
+                                                className="ps-container orderbook-top"
                                                 component="tbody"
                                                 transitionName="newrow"                                            
                                             >
@@ -501,7 +542,7 @@ class OrderBook extends React.Component {
                                     <table className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
-                                            className="orderbook ps-container orderbook-top"
+                                            className="ps-container orderbook-top"
                                             component="tbody"
                                             transitionName="newrow"                                            
                                         >

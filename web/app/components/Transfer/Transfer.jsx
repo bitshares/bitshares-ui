@@ -120,7 +120,8 @@ class Transfer extends React.Component {
         this.setState({error: null});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
-        let amount = this.state.amount.replace( /,/g, "" )
+        let amount = this.state.amount.replace( /,/g, "" );
+
         AccountActions.transfer(
             this.state.from_account.get("id"),
             this.state.to_account.get("id"),
@@ -283,7 +284,7 @@ class Transfer extends React.Component {
                                             disabled={true}
                                             amount={fee}
                                             onChange={this.onFeeChanged.bind(this)}
-                                            asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                            asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                             assets={fee_asset_types}
                                             tabIndex={tabIndex++}                                        
                                             />
