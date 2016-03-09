@@ -46,9 +46,9 @@ class AccountsList extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
-            sortBy: props.viewSettings.get("dashboardSort") || "star",
-            dashboardFilter: props.viewSettings.get("dashboardFilter") || ""
+            inverseSort: props.viewSettings.get("dashboardSortInverse", true),
+            sortBy: props.viewSettings.get("dashboardSort", "star"),
+            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
         };
 
     }

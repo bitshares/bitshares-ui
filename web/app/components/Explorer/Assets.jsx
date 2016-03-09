@@ -191,7 +191,7 @@ class Assets extends React.Component {
                         <div className="generic-bordered-box">
                             <Tabs
                                 tabsClass="no-padding bordered-header"
-                                setting="updateAssetTab"
+                                setting="assetsTab"
                                 className="grid-block vertical no-overflow no-padding"
                                 contentClass="grid-block vertical"
                             >

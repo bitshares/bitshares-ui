@@ -35,8 +35,8 @@ class MarketGroup extends React.Component {
         let open = props.forceOpen ? true : props.viewSettings.get(`myMarketsBase_${props.index}`);
         return {
             open: open !== undefined ? open : true,
-            inverseSort: props.viewSettings.get("myMarketsInvert") || true,
-            sortBy: props.viewSettings.get("myMarketsSort") || "volume"
+            inverseSort: props.viewSettings.get("myMarketsInvert", true),
+            sortBy: props.viewSettings.get("myMarketsSort", "volume")
         };
     }
 
@@ -269,15 +269,15 @@ class MyMarkets extends React.Component {
     constructor(props) {
         super();
 
-        let inputValue = props.viewSettings.get("marketLookupInput") || null;
+        let inputValue = props.viewSettings.get("marketLookupInput", null);
         let symbols = inputValue ? inputValue.split(":") : [null];
         let quote = symbols[0];
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("myMarketsInvert") || true,
-            sortBy: props.viewSettings.get("myMarketsSort") || "volume",
-            activeTab: props.viewSettings.get("favMarketTab") || "starred",
+            inverseSort: props.viewSettings.get("myMarketsInvert", true),
+            sortBy: props.viewSettings.get("myMarketsSort", "volume"),
+            activeTab: props.viewSettings.get("favMarketTab", "starred"),
             lookupQuote: quote,
             lookupBase: base,
             inputValue: inputValue,
