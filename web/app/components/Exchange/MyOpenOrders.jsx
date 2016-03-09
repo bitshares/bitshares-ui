@@ -22,11 +22,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
-                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
-                    <th style={{minWidth: 91}}></th>
+                    <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
+                    <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th style={{width: "18%"}}></th>
                 </tr>
             </thead>
         );
@@ -61,18 +61,18 @@ class OrderRow extends React.Component {
 
             return (
                 <tr key={order.id}>
-                    <td className={tdClass}>
+                    <td style={{width: "18%"}} className={tdClass}>
                         <PriceText preFormattedPrice={price} />
                         {priceSymbol}
                     </td>
-                    <td>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
-                    <td>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
-                    <td><FormattedDate
+                    <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
+                    <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
+                    <td style={{width: "28%"}}><FormattedDate
                         value={order.expiration}
                         format="short"
                         />
                     </td>
-                    <td className="text-right" style={{padding: "2px 5px"}}>
+                    <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
                         <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
@@ -95,6 +95,7 @@ class MyOpenOrders extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
                 nextProps.currentAccount !== this.props.currentAccount ||
+                nextProps.className !== this.props.className ||
                 !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
@@ -126,7 +127,8 @@ class MyOpenOrders extends React.Component {
 
                 return b_price.full - a_price.full;
             }).map((order, index) => {
-                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -137,7 +139,8 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -169,7 +172,7 @@ class MyOpenOrders extends React.Component {
         }
 
         rows.sort((a, b) => {
-            return b.props.date - a.props.date;
+            return a.props.price - b.props.price;
         })
 
         // if (bids.length === 0 && asks.length ===0) {
@@ -177,9 +180,13 @@ class MyOpenOrders extends React.Component {
         // }
 
         return (
-            <div style={{marginBottom: "15px"}} key="open_orders" className="small-12 large-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
+            <div
+                style={{marginBottom: "15px"}}
+                key="open_orders"
+                className={this.props.className}
+                ref="orders">
 
-                <div className="exchange-bordered small-12" style={{height: 286}}>
+                <div className="exchange-bordered small-12" style={{height: 266}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.my_orders" />
                     </div>
@@ -187,7 +194,7 @@ class MyOpenOrders extends React.Component {
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
 
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 220}}>
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 200}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
                             <TransitionWrapper
                                 component="tbody"

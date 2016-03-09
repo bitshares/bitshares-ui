@@ -143,7 +143,7 @@ var Utils = {
         let baseID = base.toJS ? base.get("id") : base.id;
         let basePrecision  = base.toJS ? base.get("precision") : base.precision;
         if (quoteID === "1.3.0") {
-            priceText = this.format_number(price, quotePrecision - 1);
+            priceText = this.format_number(price, quotePrecision);
         } else if (baseID === "1.3.0") {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
         } else {

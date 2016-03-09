@@ -88,7 +88,7 @@ class MarketsStore {
 
     _getBucketSize() {
         let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 24 * 3600;
+        return bs ? parseInt(bs) : 4 * 3600;
     }
 
     _setBucketSize(size) {
@@ -377,6 +377,43 @@ class MarketsStore {
                 open = utils.get_asset_price(this.priceHistory[i].open_quote, this.baseAsset, this.priceHistory[i].open_base, this.quoteAsset);
                 close = utils.get_asset_price(this.priceHistory[i].close_quote, this.baseAsset, this.priceHistory[i].close_base, this.quoteAsset);
                 volume = utils.get_asset_amount(this.priceHistory[i].base_volume, this.quoteAsset);
+            }
+
+
+            function findMax(a, b) {
+                if (a !== Infinity && b !== Infinity) {
+                    return Math.max(a, b);
+                } else if (a === Infinity) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            function findMin(a, b) {
+                if (a !== 0 && b !== 0) {
+                    return Math.min(a, b);
+                } else if (a === 0) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            if (low === 0) {
+                low = findMin(open, close);                
+            }
+
+            if (isNaN(high) || high === Infinity) {
+                high = findMax(open, close);
+            }
+
+            if (close === Infinity || close === 0) {
+                close = open;               
+            }
+
+            if (open === Infinity || open === 0) {
+                open = close;               
             }
 
             prices.push([date, open, high, low, close]);
@@ -781,7 +818,8 @@ class MarketsStore {
                 price_int: price.int,
                 amount: amount,
                 type: "call",
-                sell_price: order.call_price
+                sell_price: order.call_price,
+                for_sale: !this.invertedCalls ? order.debt : order.collateral
             });
         });
 

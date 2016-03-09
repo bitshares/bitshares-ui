@@ -46,9 +46,9 @@
     color: $secondary-text-color;
   }
 
-  select:hover {
-    background-color: $panel-bg-color;;
-  }
+  // select:hover {
+  //   background-color: $panel-bg-color;;
+  // }
 
   .label.success {
     color: $success-color;
@@ -613,13 +613,8 @@
 
   .exchange-content-header {
     color: $light-text-color;
-    font-size: 1.1rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    padding: 0.55rem 10px;
     background-color: $header-color !important;
     border-bottom: 1px solid $button-bg-color;
-    overflow: hidden;
     &.bid {
       border-bottom: 1px solid $bid-color;
     }
@@ -637,6 +632,7 @@
   }
 
   td.orderHistoryBid {
+   
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $bid-color;
@@ -646,9 +642,20 @@
       color: $primary-text-color;
       opacity: 0.6;
     }
+
+
   }
 
-  td.orderHistoryAsk {
+  .orderbook td.orderHistoryBid {
+    > span.price-integer, > span > span.price-integer {
+      font-weight: bold;
+      color: $primary-text-color;
+    }
+  }
+
+  td.orderHistoryAsk  {
+
+    
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $ask-color;
@@ -658,6 +665,15 @@
       color: $primary-text-color;
       opacity: 0.6;
     }
+
+  }
+
+.orderbook td.orderHistoryAsk {
+   
+  > span.price-integer, > span > span.price-integer {
+    font-weight: bold;
+    color: $primary-text-color;
+  }
   }
 
   td.orderHistoryCall {
@@ -766,8 +782,8 @@
     cursor: pointer;
   }
 
-  div.bordered-header, div.left-orderbook-header {
-    //background-color: $header-color !important;
+  div.exchange-content-header {
+    background-color: $header-color !important;
   }
 
   .table > tbody > tr:nth-of-type(even) {

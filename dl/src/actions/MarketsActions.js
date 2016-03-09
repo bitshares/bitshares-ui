@@ -83,6 +83,7 @@ class MarketsActions {
 
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
+        let bucketCount = 200;
         // let lastLimitOrder = null;
 
         let subscription = (subResult) => {
@@ -137,7 +138,7 @@ class MarketsActions {
                     let startDate = new Date();
                     let endDate = new Date();
                     let startDateShort = new Date();
-                    startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
+                    startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
                     endDate.setDate(endDate.getDate() + 1);
                     startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
@@ -201,7 +202,7 @@ class MarketsActions {
             let startDate = new Date();
             let endDate = new Date();
             let startDateShort = new Date();
-            startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
+            startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
             startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
@@ -223,7 +224,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-
+                    console.log("price length:", results[4].length);
                     subs[subID] = true;
 
                     this.dispatch({

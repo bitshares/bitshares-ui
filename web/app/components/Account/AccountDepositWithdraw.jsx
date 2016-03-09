@@ -34,16 +34,16 @@ class MetaexchangeDepositRequest extends React.Component {
 		is_bts_deposit: 		React.PropTypes.string,
         receive_asset: 			ChainTypes.ChainAsset
     };
-	
-	constructor(props) 
+
+	constructor(props)
 	{
         super(props);
 
 		let parts = props.symbol_pair.split('_');
 
         this.state = {
-            deposit_address: null, 
-   			memo:null, 
+            deposit_address: null,
+   			memo:null,
 			base_symbol:parts[0],
 			quote_symbol:parts[1]
 		};
@@ -56,18 +56,18 @@ class MetaexchangeDepositRequest extends React.Component {
 	getDepositAddress()
 	{
 		Post.PostForm(this.apiRoot + '/1/submitAddress', {
-					receiving_address:this.props.account.get('name'), 
-					order_type:'buy', 
+					receiving_address:this.props.account.get('name'),
+					order_type:'buy',
 					symbol_pair:this.props.symbol_pair
 				}).then( reply=>reply.json().then(reply=>
 				{
 					//console.log(reply);
-					
+
 					this.setState( {deposit_address:reply.deposit_address, memo:reply.memo} );
-					
+
 					let wallet = WalletDb.getWallet();
 					let name = this.props.account.get('name');
-					
+
 					if( !wallet.deposit_keys ) wallet.deposit_keys = {}
 					if( !wallet.deposit_keys[this.props.gateway] )
 						wallet.deposit_keys[this.props.gateway] = {}
@@ -75,7 +75,7 @@ class MetaexchangeDepositRequest extends React.Component {
 						wallet.deposit_keys[this.props.gateway][this.state.base_symbol] = {}
 					else
 						wallet.deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
-					
+
 					WalletDb._updateWallet();
 				}));
 	}
@@ -83,11 +83,11 @@ class MetaexchangeDepositRequest extends React.Component {
     getWithdrawModalId() {
         return "withdraw" + this.getModalId();
     }
-	
+
 	getDepositModalId() {
         return "deposit" + this.getModalId();
     }
-	
+
 	getModalId() {
         return "_asset_"+this.props.issuer_account.get('name') + "_"+this.props.receive_asset.get('symbol');
     }
@@ -95,7 +95,7 @@ class MetaexchangeDepositRequest extends React.Component {
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
-	
+
 	onDeposit() {
         ZfApi.publish(this.getDepositModalId(), "open");
     }
@@ -104,23 +104,23 @@ class MetaexchangeDepositRequest extends React.Component {
 	{
 		let wallet = WalletDb.getWallet();
 		var withdrawAddr = "";
-		
+
 		try
 		{
 			withdrawAddr = wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'];
 		}
 		catch (Error) {}
-		
+
 		return this.marketPath + this.props.symbol_pair.replace('_','/')+'?receiving_address='+encodeURIComponent(this.props.account.get('name')+','+withdrawAddr);
 	}
 
     render() {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return <tr><td></td><td></td><td></td><td></td></tr>;
-			
+
         let wallet = WalletDb.getWallet();
-        
-        if( !this.state.deposit_address )  
+
+        if( !this.state.deposit_address )
 		{
 			try
 			{
@@ -131,13 +131,13 @@ class MetaexchangeDepositRequest extends React.Component {
 			catch (Error) {}
         }
         if( !this.state.deposit_address )
-		{ 
-			this.getDepositAddress(); 
+		{
+			this.getDepositAddress();
 		}
-        
+
         let withdraw_modal_id = this.getWithdrawModalId();
 		let deposit_modal_id = this.getDepositModalId();
-		
+
         return <tr>
             <td>{this.props.deposit_asset} </td>
 
@@ -162,9 +162,9 @@ class MetaexchangeDepositRequest extends React.Component {
                     </div>
                 </Modal>
             </td>
-			
+
 			<td><button className={"button outline"}><a target="__blank" href={this.getMetaLink()}>Open in metaexchange</a></button></td>
-			
+
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.state.base_symbol} /> </td>
             <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
@@ -214,7 +214,7 @@ class AccountDepositWithdraw extends React.Component {
     }
 
     render() {
-        let openledger_deprecated_message = 
+        let openledger_deprecated_message =
             "OpenLedger is replacing the original assets like OPENBTC with " +
             "namespaced-asset names like OPEN.BTC in order to protect against " +
             "look-alike asset names.  You can still withdraw the original " +
@@ -224,7 +224,7 @@ class AccountDepositWithdraw extends React.Component {
 
         return (
 		<div className="grid-content">
-            <div className="exchange-bordered">
+            <div>
 			<Tabs
                 setting="depositWithdrawSettingsTab"
                 tabsClass="bordered-header no-padding"
@@ -358,7 +358,7 @@ class AccountDepositWithdraw extends React.Component {
                                 rpc_url="https://openledger.info/api/"
                                 account={this.props.account}
                                 issuer_account="openledger-fiat" />
-                        <OpenLedgerFiatTransactionHistory 
+                        <OpenLedgerFiatTransactionHistory
                                 rpc_url="https://openledger.info/api/"
                                 account={this.props.account} />
                     </div>
@@ -397,8 +397,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset_name="Bitcoin"
                                 deposit_wallet_type="bitcoin"
                                 receive_asset="OPENBTC"
-                                receive_coin_type="openbtc" 
-                                deprecated_in_favor_of="OPEN.BTC" 
+                                receive_coin_type="openbtc"
+                                deprecated_in_favor_of="OPEN.BTC"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.btc"
@@ -423,8 +423,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset_name="Dash"
                                 deposit_wallet_type="dash"
                                 receive_asset="OPENDASH"
-                                receive_coin_type="opendash" 
-                                deprecated_in_favor_of="OPEN.DASH" 
+                                receive_coin_type="opendash"
+                                deprecated_in_favor_of="OPEN.DASH"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.dash"
@@ -449,8 +449,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_asset_name="Dogecoin"
                                 deposit_wallet_type="dogecoin"
                                 receive_asset="OPENDOGE"
-                                receive_coin_type="opendoge" 
-                                deprecated_in_favor_of="OPEN.DOGE" 
+                                receive_coin_type="opendoge"
+                                deprecated_in_favor_of="OPEN.DOGE"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.doge"
@@ -499,8 +499,7 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="eth"
                                 deposit_wallet_type="ethereum"
                                 receive_asset="OPEN.ETH"
-                                receive_coin_type="open.eth"
-                                deposit_memo_name="data" />
+                                receive_coin_type="open.eth" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-openltc"
                                 gateway="openledger"
@@ -513,7 +512,7 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="litecoin"
                                 receive_asset="OPENLTC"
                                 receive_coin_type="openltc"
-                                deprecated_in_favor_of="OPEN.LTC" 
+                                deprecated_in_favor_of="OPEN.LTC"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.ltc"
@@ -540,8 +539,9 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="muse"
                                 receive_asset="OPENMUSE"
                                 receive_coin_type="openmuse"
-                                deprecated_in_favor_of="OPEN.MUSE" 
-                                deprecated_message={openledger_deprecated_message} />
+                                deprecated_in_favor_of="OPEN.MUSE"
+                                deprecated_message={openledger_deprecated_message}
+                                deposit_memo_name="memo" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.muse"
                                 gateway="openledger"
@@ -554,7 +554,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_account="openledger-wallet"
                                 deposit_wallet_type="muse"
                                 receive_asset="OPEN.MUSE"
-                                receive_coin_type="open.muse" />
+                                receive_coin_type="open.muse"
+                                deposit_memo_name="memo" />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-opennbt"
                                 gateway="openledger"
@@ -566,8 +567,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="nbt"
                                 receive_asset="OPENNBT"
                                 deposit_wallet_type="nubits"
-                                receive_coin_type="opennbt" 
-                                deprecated_in_favor_of="OPEN.NBT" 
+                                receive_coin_type="opennbt"
+                                deprecated_in_favor_of="OPEN.NBT"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.nbt"
@@ -593,8 +594,8 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_coin_type="nsr"
                                 deposit_wallet_type="nushares"
                                 receive_asset="OPENNSR"
-                                receive_coin_type="opennsr" 
-                                deprecated_in_favor_of="OPEN.NSR" 
+                                receive_coin_type="opennsr"
+                                deprecated_in_favor_of="OPEN.NSR"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.nsr"
@@ -620,7 +621,7 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="peercoin"
                                 receive_asset="OPENPPC"
                                 receive_coin_type="openppc"
-                                deprecated_in_favor_of="OPEN.PPC" 
+                                deprecated_in_favor_of="OPEN.PPC"
                                 deprecated_message={openledger_deprecated_message} />
                             <BlockTradesGatewayDepositRequest
                                 key="ccedk-open.ppc"
@@ -728,10 +729,12 @@ class AccountDepositWithdraw extends React.Component {
                             issuerAccount="transwiser-wallet"
                             account={this.props.account.get('name')}
                             receiveAsset="CNY" />
+                        {/*
                         <TranswiserDepositWithdraw
                             issuerAccount="transwiser-wallet"
                             account={this.props.account.get('name')}
                             receiveAsset="BOTSCNY" />
+                        */}
                         </tbody>
                     </table>
                 </Tabs.Tab>
