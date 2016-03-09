@@ -234,7 +234,9 @@ class Exchange extends React.Component {
 
     componentDidMount() {
         let centerContainer = ReactDOM.findDOMNode(this.refs.center);
-        Ps.initialize(centerContainer);
+        if (centerContainer) {
+            Ps.initialize(centerContainer);
+        }
         SettingsActions.changeViewSetting({
             lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
@@ -508,7 +510,7 @@ class Exchange extends React.Component {
             bucketSize = newBucketSize;
         }
         if (quoteAsset.get("id") && baseAsset.get("id")) {
-            MarketsActions.subscribeMarket(baseAsset, quoteAsset, bucketSize);
+            MarketsActions.subscribeMarket.defer(baseAsset, quoteAsset, bucketSize);
             this.setState({sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`});
         }
     }
