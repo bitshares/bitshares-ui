@@ -35,7 +35,8 @@ Update `./.npmrc` with anything you need to change.  These properties have defau
 @graphene/wallet-server:mysql_port = 3306
 
 # Email - tokens have the time in them, expire_min is tested when verifying
-@graphene/time-token:expire_min = 10
+
+@graphene/wallet-server:mail_token_url = "http://localhost:8080/#/wallet/backup/server/{token}"
 @graphene/wallet-server:mail_from = alice@examples.com
 @graphene/wallet-server:mail_script = ./bin/email.sh
 

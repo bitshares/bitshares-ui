@@ -15,6 +15,6 @@ Subject: $subject
 Date: $(date)
 Content-Type: text/html
 
-<p>Click here to <a href="${token_url}">validate</a> your email.</p>
-<p><small>${token_url}</small></p>
+<p>Click on the link to validate your email.</p>
+<p>${token_url}</p>
 EndOfMail
