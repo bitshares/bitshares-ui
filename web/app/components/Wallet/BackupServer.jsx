@@ -97,6 +97,15 @@ class BackupServer extends Component {
         
         let wallet = ()=> WalletDb.getState().wallet
         
+        if( wallet() && url_token) {
+            // A url token may trigger an upload (it was an populated wallet) or a download (it was an empty wallet)
+            if(wallet().storage.state.get("remote_token") !== url_token) {
+                // User just followed a the Wallet Key link.  The link probably re-loaded the page and they will have to un-lock. Be aware, a pasted URL in the same window does not reload the page it simply re-renders with a url_token value.
+                wallet().keepRemoteCopy(true, url_token)
+                url_token = null
+            }
+        }
+        
         // const unlockClick = e => {
         //     e.preventDefault()
         //     WalletUnlockActions.unlock()
@@ -396,8 +405,9 @@ class BackupServer extends Component {
             // Invalid token can happen with different backup servers or different chains
             this.props.backups.api_error === "invalid_token" ? emailOrInputRestoreKey :
             weak_password() ? change_password :
-            in_sync() ? <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div> :
-            remoteBackupStatus
+            ! in_sync() ? remoteBackupStatus :
+            <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div>
+            
         
                     // <p><Translate content={"wallet.backup_download_description"}/></p>
         return (
@@ -439,7 +449,4 @@ export function readBackupToken(nextState, replaceState) {
     path = path.replace(token, "")
     url_token = token
     replaceState(null, path)
-    if(WalletDb.getState().wallet)
-        WalletDb.getState().wallet.keepRemoteCopy(true, token)
-
 }
