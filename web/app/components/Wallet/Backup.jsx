@@ -55,7 +55,6 @@ export class CreateLocalBackup extends BackupBaseComponent {
                 <CreateBackup>
                     <NameSizeModified/>
                     <Download/>
-                    <Reset/>
                     <hr/>
                     <small> <Sha1/> </small>
                 </CreateBackup>
@@ -63,6 +62,7 @@ export class CreateLocalBackup extends BackupBaseComponent {
             
         </span>
     }
+                    // <Reset/>
 }
 
 
@@ -80,6 +80,7 @@ class CreateBackup extends BackupBaseComponent {
         name = name + ".bin"
         let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
         BackupActions.incommingBuffer({name, contents})
+        return <div/>
     }
 }
 
@@ -259,6 +260,11 @@ class NewWalletName extends BackupBaseComponent {
 @connectToStores
 class Download extends BackupBaseComponent {
     
+    constructor() {
+        super()
+        this.first_load = true
+    }
+    
     componentWillMount() {
         try { this.isFileSaverSupported = !!new Blob; } catch (e) {}
     }
@@ -268,7 +274,17 @@ class Download extends BackupBaseComponent {
             notify.error("File saving is not supported")
     }
     
+    componentWillUnmount() {
+         clearTimeout(this.timeout)
+         this.first_load = true
+    }
+    
     render() {
+        if( this.first_load) {
+            this.first_load = false
+            this.onDownload()
+        }
+        
         return <span className="button success"
             onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
     }
@@ -282,7 +298,7 @@ class Download extends BackupBaseComponent {
             throw new Error("Invalid backup to download conversion")
         
         saveAs(blob, this.props.backup.name);
-        WalletActions.setBackupDate()
+        this.timeout = setTimeout(()=> WalletActions.setBackupDate(), 1000)
     }
 }
 
