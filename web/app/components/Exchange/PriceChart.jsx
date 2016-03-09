@@ -86,7 +86,8 @@ class PriceChart extends React.Component {
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             !utils.are_equal_shallow(nextProps.indicatorSettings, this.props.indicatorSettings) ||
             nextProps.verticalOrderbook !== this.props.verticalOrderbook ||
-            nextProps.height !== this.props.height
+            nextProps.height !== this.props.height ||
+            nextProps.zoom !== this.props.zoom
         );
     }
 
@@ -461,7 +462,8 @@ class PriceChart extends React.Component {
                 title: {
                     text: null
                 },
-                plotLines: []
+                plotLines: [],
+                min: this.props.zoom === "all" ? null : new Date().getTime() - 1000 * this.props.zoom
 
             }
         };

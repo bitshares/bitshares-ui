@@ -700,7 +700,8 @@
         asks: "Sell orders",
         bids: "Buy orders",
         no_data: "No data",
-        time: "Time interval",
+        time: "Candlesticks",
+        zoom: "Zoom",
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
@@ -711,7 +712,9 @@
         short: "Short",
         others: "Others",
         invert: "Invert the price",
-        to_market: "Go to market"
+        to_market: "Go to market",
+        zoom_all: "All",
+        settings: "Chart options"
     },
     fees: {
      title: "Fee Schedule"

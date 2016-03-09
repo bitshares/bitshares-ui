@@ -33,6 +33,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
 import IndicatorModal from "./IndicatorModal";
 import OpenSettleOrders from "./OpenSettleOrders";
+import counterpart from "counterpart";
 
 require("./exchange.scss");
 
@@ -174,6 +175,7 @@ class Exchange extends React.Component {
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 425),
+            currentPeriod: ws.get("currentPeriod", 3600 * 24 * 7)
         };
     }
 
@@ -503,6 +505,18 @@ class Exchange extends React.Component {
             this._subToMarket(this.props, size);
         }
     }
+
+    _changeZoomPeriod(size, e) {
+        e.preventDefault();
+        if (size !== this.state.currentPeriod) {
+            this.setState({
+                currentPeriod: size
+            });
+            SettingsActions.changeViewSetting({
+                currentPeriod: size
+            });
+        }
+    }    
 
     _subToMarket(props, newBucketSize) {
         let {quoteAsset, baseAsset, bucketSize} = props;
@@ -1106,7 +1120,9 @@ class Exchange extends React.Component {
         }
 
         let bucketText = function(size) {
-            if (size < 60) {
+            if (size === "all") {
+                return counterpart.translate("exchange.zoom_all");
+            } else if (size < 60) {
                 return size + "s";
             } else if (size < 3600) {
                 return (size / 60) + "m";
@@ -1114,16 +1130,25 @@ class Exchange extends React.Component {
                 return (size / 3600) + "h"
             } else if (size < 604800) {
                 return (size / 86400) + "d"
-            } else if (size < 2419200) {
+            } else if (size < 2592000) {
                 return (size / 604800) + "w"
             } else {
-                return (size / 2419200) + "m"
+                return (size / 2592000) + "m"
             }
         }
 
-        let bucketOptions = buckets.map(bucket => {
-            return <div key={bucket} className={cnames("label bucket-option", {" ": bucketSize !== bucket, "active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>
-        }).reverse();
+        let bucketOptions = buckets.filter(bucket => {
+            return bucket > 60 * 4;
+        }).map(bucket => {
+            return <div key={bucket} className={cnames("label bucket-option", {"active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>
+        });
+
+        let oneHour = 3600;
+        let zoomPeriods = [oneHour * 6, oneHour * 48, oneHour * 48 * 2, oneHour * 24 * 7, oneHour * 24 * 14, oneHour * 24 * 30, "all"];
+        
+        let zoomOptions = zoomPeriods.map(period => {
+            return <div key={period} className={cnames("label bucket-option", {"active-bucket": this.state.currentPeriod === period})} onClick={this._changeZoomPeriod.bind(this, period)}>{bucketText(period)}</div>
+        }) ;
 
         // Market stats
         let dayChange = marketStats.get("change");
@@ -1334,16 +1359,24 @@ class Exchange extends React.Component {
                                     <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
                                         <ul className="market-stats stats bottom-stats">
                                             {!this.state.showDepthChart ? (
-                                                    <li className="stat">
+                                                <li className="stat">
+                                                    <span>
+                                                        <span><Translate content="exchange.zoom" />:</span>
+                                                        <span>{zoomOptions}</span>
+                                                    </span>
+                                                </li>) : null}
+                                            {!this.state.showDepthChart ? (
+                                                <li className="stat">
                                                     <span>
                                                         <span><Translate content="exchange.time" />:</span>
                                                         <span>{bucketOptions}</span>
                                                     </span>
                                                 </li>) : null}
+
                                             {!this.state.showDepthChart && this.props.priceData.length ? (
                                                 <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
                                                     <div className="indicators">
-                                                        <Translate content="header.settings" />
+                                                        <Translate content="exchange.settings" />
                                                     </div>
                                                 </li>) : null}
                                          </ul>
@@ -1394,6 +1427,7 @@ class Exchange extends React.Component {
                                     latest={latestPrice}
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
+                                    zoom={this.state.currentPeriod}
                                 />                                
                                 <IndicatorModal
                                     ref="indicators"
