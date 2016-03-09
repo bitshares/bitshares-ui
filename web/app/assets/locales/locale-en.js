@@ -15,7 +15,7 @@
         dashboard: "Dashboard",
         explorer: "Explore",
         exchange: "Trade",
-        payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
+        payments: "Send", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
         current: "Current Account",
