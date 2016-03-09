@@ -5,6 +5,7 @@ import Highcharts from "react-highcharts/bundle/highstock";
 import utils from "common/utils";
 import _ from "lodash";
 import Translate from "react-translate-component";
+import colors from "assets/colors";
 
 require("./highcharts-plugins/technical-indicators.src.js");
 require("./highcharts-plugins/rsi.js");
@@ -221,13 +222,13 @@ class PriceChart extends React.Component {
 
     render() {
         let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady,
-            indicators, indicatorSettings, latest, bucketSize} = this.props;
+            indicators, indicatorSettings, latest, bucketSize, theme} = this.props;
 
         let priceSeriesData = _.cloneDeep(priceData);
         let currentIndicator = this.getIndicators(this.props);
 
-        let positiveColor = "rgba(110, 193, 5, 0.80)";
-        let negativeColor = "rgba(225, 66, 74, 0.80)";
+        let positiveColor = colors[theme].positiveColor;
+        let negativeColor = colors[theme].negativeColor;
         
         if (!priceSeriesData.length && latest) {
             let now = (new Date).getTime();
@@ -242,18 +243,27 @@ class PriceChart extends React.Component {
             negativeColor = "black";
         }
 
-        let maxVolume = 0;
+        // Find max volume
+        // let maxVolume = 0;
         let volumeColors = [], colorByPoint = false;
 
-        if (volumeData.length === priceSeriesData.length) {
-            colorByPoint = true;
-        }
-        for (var i = 0; i < volumeData.length; i++) {
-            maxVolume = Math.max(maxVolume, volumeData[i][1]);
-            if (colorByPoint) {
-                volumeColors.push(priceSeriesData[i][1] <= priceSeriesData[i][4] ? positiveColor : negativeColor);
-            }
-        }
+        // if (volumeData.length === priceSeriesData.length) {
+        //     colorByPoint = true;
+        // }
+        // for (var i = 0; i < volumeData.length; i++) {
+        //     maxVolume = Math.max(maxVolume, volumeData[i][1]);
+            // if (colorByPoint) {
+            //     volumeColors.push(priceSeriesData[i][1] <= priceSeriesData[i][4] ? positiveColor : negativeColor);
+            // }
+        // }
+
+        // Find highest price
+        // let maxPrice = 0;
+        // if (priceSeriesData.length) {
+        //     for (var i = 0; i < priceSeriesData.length; i++) {
+        //         maxPrice = Math.max(maxPrice, priceSeriesData[i][2]);
+        //     }
+        // }
 
         let config = {
             chart: {
@@ -262,7 +272,8 @@ class PriceChart extends React.Component {
                     enabled: false
                 },
                 pinchType: "x",
-                spacing: [20, 10, 5, 10]
+                spacing: [20, 10, 5, 10],
+                alignTicks: false
             },
 
             indicators: priceSeriesData.length ? currentIndicator : [],
@@ -328,11 +339,11 @@ class PriceChart extends React.Component {
                     }, "");
 
                     return ("<span style='color: white;fill: white'><b>T:&nbsp;</b>" + time +
-                            "&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.open, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.high, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.low, price_dec, ".", ",") +
-                            "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[0].point.close, price_dec, ".", ",") +
-                            "<b>&nbsp;V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[1].point.y : 0, vol_dec, ".", ",") + " " +
+                            "&nbsp;<b>O:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.open, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>H:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.high, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>L:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.low, price_dec, ".", ",") +
+                            "&nbsp;&nbsp;<b>C:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1].point.close, price_dec, ".", ",") +
+                            "<b>&nbsp;V:&nbsp;</b>" + Highcharts.Highcharts.numberFormat(this.points[1] ? this.points[0].point.y : 0, vol_dec, ".", ",") + " " +
                             quoteSymbol + "<br/>" + TA + "</span>");
 
                 },
@@ -342,19 +353,18 @@ class PriceChart extends React.Component {
             },
             series: [
                 {
+                    type: "column",
+                    name: `Volume`,
+                    data: volumeData,
+                    color: colors[theme].volumeColor,
+                    yAxis: 1
+                },
+                {
                     id: "primary",
                     type: "candlestick",
                     name: `Price`,
                     data: priceSeriesData
-                },
-                {
-                    type: "column",
-                    name: `Volume`,
-                    data: volumeData,
-                    color: "#E3745B",
-                    yAxis: 1
                 }
-
             ],
             yAxis: [{
                     labels: {
@@ -372,8 +382,6 @@ class PriceChart extends React.Component {
                             color: "#FFFFFF"
                         }
                     },
-                    top: "0%",
-                    height: "80%",
                     offset: 5,
                     lineWidth: 1,
                     lineColor: "rgba(183, 183, 183, 0.29)",
@@ -392,7 +400,7 @@ class PriceChart extends React.Component {
                         borderColor: '#000000',
                         lineColor: '#C38B8B',
                         lineDashStyle: 'Solid',
-                        lineOpacity: 0.6,
+                        lineOpacity: 0.8,
                         enabled: priceSeriesData.length > 0 && marketReady,
                         style: {
                             color: '#ffffff',
@@ -425,13 +433,13 @@ class PriceChart extends React.Component {
                             }
                         }
                     },
-                    opposite: true,
-                    top: "80%",
-                    height: "20%",
+                    opposite: false,
                     offset: 5,
                     gridLineWidth: 0,
                     lineWidth: 1,
                     lineColor: "rgba(183, 183, 183, 0.29)",
+                    endOnTick: true,
+                    showLastLabel: true,
                     title: {
                         text: null,
                         style: {
@@ -439,9 +447,7 @@ class PriceChart extends React.Component {
                         }
                     },
                     showFirstLabel: true,
-                    tickInterval: Math.floor(maxVolume / 2.5),
-                    min: 0,
-                    max: maxVolume
+                    min: 0
             }],
             xAxis: {
                 type: "datetime",
