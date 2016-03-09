@@ -335,7 +335,7 @@ class PriceChart extends React.Component {
                     if (!this.points || this.points.length === 0) {
                         return "";
                     }
-                    let TA = _(this.points[0].indicators).reduce((finalString, indicator, key) => {
+                    let TA = _(this.points[1].indicators).reduce((finalString, indicator, key) => {
                         return finalString + "<b>" + key.toUpperCase() + "</b>" + ": " + Highcharts.Highcharts.numberFormat(indicator[1], price_dec, ".", ",") + "  ";
                     }, "");
 

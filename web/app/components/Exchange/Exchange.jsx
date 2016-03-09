@@ -149,9 +149,9 @@ class Exchange extends React.Component {
             sellDiff: false,
             indicators: ws.get("indicators", {
                 rsi: false,
-                sma: false,
+                sma: true,
                 atr: false,
-                ema: false
+                ema: true
             }),
             preferCoreBuyFee: ws.get("preferCoreBuyFee", true) ,
             preferCoreSellFee: ws.get("preferCoreSellFee", true),
