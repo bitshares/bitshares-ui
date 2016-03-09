@@ -127,7 +127,7 @@ export default function createServer() {
                 let action = methodFunction( params )
                 if(global.DEBUG) {
                     let str = JSON.stringify(action)
-                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
                     console.log("DEBUG\tserver\tmessage", method, str)
                 }
                 if( ! action || ! store.dispatch ) {

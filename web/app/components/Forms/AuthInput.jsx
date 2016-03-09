@@ -55,7 +55,7 @@ export default class AuthInput extends Component {
         return (
             <div>
                 { hasUsername ? this.usernameForm(this.props.auth) : null}
-                { hasPassword ? this.passwordForm(this.props.auth) : null } <br/>
+                { hasPassword ? this.passwordForm(this.props.auth) : null} <br/>
                 { hasEmail ? this.emailForm(this.props.auth) : null}
                 <p className="has-error">
                     <Translate content={ this.props.auth.auth_error ? "wallet.invalid_auth" : null }/>
@@ -66,12 +66,12 @@ export default class AuthInput extends Component {
     
     focus() {
         let { hasPassword, hasUsername, hasEmail } = this.props.auth.config()
-        if( hasPassword  )
+        if( hasUsername )
+            ReactDOM.findDOMNode(this.refs.auth_username).focus()
+        else if( hasPassword  )
             ReactDOM.findDOMNode(this.refs.auth_password).focus()
         else if( hasEmail )
             ReactDOM.findDOMNode(this.refs.auth_email).focus()
-        else if( hasUsername )
-            ReactDOM.findDOMNode(this.refs.auth_username).focus()
     }
     
     passwordForm({password, confirm, password_valid, password_error}) {

@@ -164,7 +164,7 @@ export default class WalletWebSocket {
                 console.log()
             }
             let str = JSON.stringify(params)
-            str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+            str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
             console.log("WalletWebSocket("+this.instance+") ----- call "+id+" ---- >", method, "\t", str);
         }
         return this.connect_promise.then(()=> {
@@ -193,7 +193,7 @@ export default class WalletWebSocket {
                 console.log()
             }
             let str = JSON.stringify(response)
-            str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+            str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
             console.log("WalletWebSocket("+this.instance+") <--- reply "+(response.id||" ")+" ---- <", str);
         }
         let sub = false,

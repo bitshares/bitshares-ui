@@ -70,7 +70,7 @@ export function notifyOther(ws, method, subscribe_key, params) {
             try {
                 if(global.DEBUG) {
                     let str = JSON.stringify(params)
-                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/, "...base64...")
+                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
                     console.log("DEBUG\tsubscriptions\tnotifyOther", subscription_id, subscribe_key, method, str)
                 }
                 subscribe_ws.send(JSON.stringify({

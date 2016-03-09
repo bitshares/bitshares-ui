@@ -47,11 +47,13 @@ class BackupServer extends Component {
     
     constructor() {
         super()
-        this.init = ()=>({ busy: false, key: null,
+        this.init = ()=>({
+            busy: false, key: null,
             email_wallet_key: false, wallet_key_entered: false,
             server_wallet: null,
             private_key: null, private_api_key: null,
             new_wallet_name: "default",
+            wallet_restoring: false,
         })
         this.state = this.init()
     }
@@ -66,6 +68,15 @@ class BackupServer extends Component {
     }
     
     render() {
+        
+        const loading_indicator = <div className="center-content">
+            {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+        </div>
+        
+        if(this.state.wallet_restoring)
+            return <div className="center-content">
+                <LoadingIndicator type="circle"/>
+            </div>
         
         const download_option = ! WalletDb.isEmpty() ? <div>
             <hr/><br/>
@@ -139,10 +150,6 @@ class BackupServer extends Component {
                 })
             })
         
-        const loading_indicator = <div className="center-content">
-            {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-        </div>
-
         const show_wallet_key = ()=> <div>
             <div>
                 {url_token ? <Translate content="wallet.remember_wallet_key"/> : null}
@@ -239,21 +246,24 @@ class BackupServer extends Component {
         const openWalletErrorMessage = ()=> WalletDb.getState().wallet_names.has(this.state.new_wallet_name) ?
             counterpart.translate("wallet.exists_change_name", { wallet_name: this.state.new_wallet_name}) :
             null
-        const openWalletSubmit = e=>{
-            e.preventDefault()
+        const openWalletSubmit = e =>{
+            if(e) e.preventDefault()
             let { server_wallet, private_key, private_api_key, username, password } = this.state
-            
-            WalletDb.openWallet(this.state.new_wallet_name)
-            .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key, Apis.chainId()))
-            .then(()=> wallet().keepRemoteCopy(true))
-            .then(()=> wallet().login(username, password))
-            .catch(error=>{
-                let tr_error = counterpart.translate("wallet.backup_status." + error)
-                notify.error(tr_error ? counterpart.translate("wallet.restore_error") : tr_error)
-                if(error === "chain_id_missmatch")
-                    this.setState({ server_wallet: null, private_key: null, private_api_key: null, username: null, password: null })
+            this.setState({ wallet_restoring: true }, ()=>{
+                WalletDb.openWallet(this.state.new_wallet_name)
+                .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key, Apis.chainId()))
+                .then(()=> wallet().keepRemoteCopy(true))
+                .then(()=> wallet().login(username, password))
+                .catch(error=>{
+                    this.setState({ wallet_restoring: false })
+                    let tr_error = counterpart.translate("wallet.backup_status." + error)
+                    notify.error(tr_error ? counterpart.translate("wallet.restore_error") : tr_error)
+                    if(error === "chain_id_missmatch")
+                        this.setState({ server_wallet: null, private_key: null, private_api_key: null,
+                            username: null, password: null })
+                })
+                .then(()=> this.setState({ wallet_restoring: false }))
             })
-            .then(()=> this.setState({ busy: false }))
         }
         const openWalletChange = e =>{
             e.preventDefault()
@@ -264,9 +274,7 @@ class BackupServer extends Component {
             
             // console.log('current_wallet, wallet_names', current_wallet, wallet_names)
             // var current_wallet = WalletDb.getState().current_wallet
-            this.setState({
-                new_wallet_name: value,
-            })
+            this.setState({ new_wallet_name: value })
         }
         const openWallet = <div>
             <label><Translate content="wallet.name" /></label>
@@ -310,7 +318,12 @@ class BackupServer extends Component {
                     if(server_wallet.statusText === "No Content")
                         notify.error(counterpart.translate("wallet.not_found"))
                     else if(server_wallet.statusText === "OK") {
-                        this.setState({ server_wallet, private_key, private_api_key, username, password })
+                        this.setState({ server_wallet, private_key, private_api_key, username, password }, ()=>{
+                            // auto restore the first wallet
+                            if( ! WalletDb.getState().wallet_names.has("default")) {
+                                this.setState({ new_wallet_name: "default" }, ()=> openWalletSubmit())
+                            }
+                        })
                     } else
                         console.error("Unknown Response", server_wallet)
                 }), 600)
@@ -369,13 +382,14 @@ class BackupServer extends Component {
             wallet().remote_status === "Not Modified"
         
         const emailOrInputRestoreKey = this.state.email_wallet_key ? emailRestoreKey : restoreKeyInput
+        // const openWalletFast = WalletDb.getState().wallet_names.has("default") ? openWallet : openWalletSubmit
         
         const body = WalletDb.isLocked() ?
             // New users click on a validation link and arrive here (locked but existing wallet)
             ! WalletDb.isEmpty() ? <WalletUnlock/> : // TODO unlock or restore to another wallet name
             ! have_token ? emailOrInputRestoreKey :
-            this.state.server_wallet ? openWallet :
-            serverDownload
+            ! this.state.server_wallet ? serverDownload :
+            openWallet
         :
             // backup_wallet
             ! have_token ? token_request_initial :
