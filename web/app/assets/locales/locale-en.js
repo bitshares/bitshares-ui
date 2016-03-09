@@ -244,7 +244,7 @@
         create_account: "Create account",
         identicon: "Identicon",
         pay_from: "Pay From",
-        existing_accounts: "Existing Accounts",
+        existing_accounts: "Advanced",
         name_input: {
             name_is_taken: "Account name is already taken.",
             not_found: "Account not found.",

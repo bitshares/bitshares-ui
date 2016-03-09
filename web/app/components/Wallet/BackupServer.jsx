@@ -160,12 +160,13 @@ class BackupServer extends Component {
             })
         
         const show_wallet_key = ()=> <div>
-            <div>
-                {url_token ? <Translate content="wallet.remember_wallet_key"/> : null}
+            {getApiKey() ? <div>
+                <Translate content="wallet.remember_wallet_key"/>
                 <br/>
-                <pre className="no-overflow">{!WalletDb.isLocked() ? wallet().getTokenSeed() : url_token ? extractSeed(url_token): this.state.key}</pre>
                 <br/>
-            </div>
+                <pre className="no-overflow">{getApiKey()}</pre>
+                <br/>
+            </div> : null}
         </div>
         
         const show_api_error = this.props.backups.api_error ?
@@ -414,6 +415,7 @@ class BackupServer extends Component {
             <div className="grid-block vertical medium-horizontal">
                 <div className="grid-content full-width-content no-overflow" style={{width: "150px"}}>
                     <h4><Translate content={"wallet.server_backup"}/></h4>
+                    <br/>
                     <span className="error">{show_api_error}</span>
                     {body}
                     <br/>
