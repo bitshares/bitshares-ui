@@ -52,37 +52,26 @@ export class CreateLocalBackup extends BackupBaseComponent {
             <h3><Translate content="wallet.download_backup" /></h3>
             
             <WalletUnlock>
-                <LocalBackup>
+                <CreateBackup>
                     <NameSizeModified/>
-                    <Sha1/>
                     <Download/>
                     <Reset/>
-                </LocalBackup>
+                    <hr/>
+                    <small> <Sha1/> </small>
+                </CreateBackup>
             </WalletUnlock>
             
         </span>
     }
 }
 
+
 @connectToStores
-class LocalBackup extends BackupBaseComponent {
-    
+class CreateBackup extends BackupBaseComponent {
     render() {
-        var has_backup = !!this.props.backup.contents
-        if( has_backup ) return <div>{this.props.children}</div>
+        if( this.props.backup.contents )
+            return <div>{this.props.children}</div>
         
-        var ready = ! WalletDb.isLocked()
-        
-        return <div>
-            <div onClick={this.onCreateBackup.bind(this)}
-                className={cname("button success", {disabled: !ready})}>
-                <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
-            <LastBackupDate/>
-        </div>
-    }
-    
-    onCreateBackup(e) {
-        if(e) e.preventDefault()
         let { current_wallet, wallet } = WalletDb.getState()
         let name = current_wallet
         var address_prefix = chain_config.address_prefix.toLowerCase()
@@ -92,8 +81,39 @@ class LocalBackup extends BackupBaseComponent {
         let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
         BackupActions.incommingBuffer({name, contents})
     }
-
 }
+
+// Click to create backup...
+// @connectToStores
+// class LocalBackup extends BackupBaseComponent {
+//     
+//     render() {
+//         var has_backup = !!this.props.backup.contents
+//         if( has_backup ) return <div>{this.props.children}</div>
+//         
+//         var ready = ! WalletDb.isLocked()
+//         
+//         return <div>
+//             <div onClick={this.onCreateBackup.bind(this)}
+//                 className={cname("button success", {disabled: !ready})}>
+//                 <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
+//         </div>
+//             // <LastBackupDate/>
+//     }
+//     
+//     onCreateBackup(e) {
+//         if(e) e.preventDefault()
+//         let { current_wallet, wallet } = WalletDb.getState()
+//         let name = current_wallet
+//         var address_prefix = chain_config.address_prefix.toLowerCase()
+//         if(name.indexOf(address_prefix) !== 0)
+//             name = address_prefix + "_" + name
+//         name = name + ".bin"
+//         let contents = new Buffer(wallet.storage.state.get("encrypted_wallet"), "base64")
+//         BackupActions.incommingBuffer({name, contents})
+//     }
+// 
+// }
 
 @connectToStores
 export class UploadRestore extends BackupBaseComponent {
@@ -266,25 +286,25 @@ class Download extends BackupBaseComponent {
     }
 }
 
-class LastBackupDate extends Component {
-    render() {
-        var backup_date = WalletDb.prop("backup_date")
-        var last_modified = new Date(WalletDb.prop("last_modified"))
-        var backup_time = backup_date ?
-            <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
-            <h4><Translate content="wallet.never_backed_up" /></h4>
-        var needs_backup = null
-        if( backup_date ) {
-            needs_backup = last_modified.getTime() > new Date(backup_date).getTime() ?
-                <h4><Translate content="wallet.need_backup" /></h4>:
-                <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
-        }
-        return <span>
-            {backup_time}
-            {needs_backup}
-        </span>
-    }
-}
+// class LastBackupDate extends Component {
+//     render() {
+//         var backup_date = WalletDb.prop("backup_date")
+//         var last_modified = new Date(WalletDb.prop("last_modified"))
+//         var backup_time = backup_date ?
+//             <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
+//             <h4><Translate content="wallet.never_backed_up" /></h4>
+//         var needs_backup = null
+//         if( backup_date ) {
+//             needs_backup = last_modified.getTime() > new Date(backup_date).getTime() ?
+//                 <h4><Translate content="wallet.need_backup" /></h4>:
+//                 <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
+//         }
+//         return <span>
+//             {backup_time}
+//             {needs_backup}
+//         </span>
+//     }
+// }
 
 @connectToStores
 class Upload extends BackupBaseComponent {

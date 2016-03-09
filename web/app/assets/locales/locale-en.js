@@ -827,7 +827,7 @@
         brainkey_w3: "have access to funds within this wallet.",
         custom_brainkey: "Custom Brainkey (advanced)",
         last_backup: "Last backup",
-        never_backed_up: "This Wallet has never been backed up",
+        // never_backed_up: "This Wallet has never been backed up",
         need_backup: "This Wallet needs a backup",
         noneed_backup: "No backup is needed"
     },
