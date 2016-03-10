@@ -40,6 +40,9 @@ class PublicKey
         pub_sha = hash.sha512 pub_buf
         hash.ripemd160 pub_sha
     
+    toString: (address_prefix = config.address_prefix) ->
+        @toPublicKeyString address_prefix
+    
     ###*
     Full public key 
     {return} string
