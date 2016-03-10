@@ -263,11 +263,11 @@ Types.array = function(st_operation){
         for (var i = 0; 0 < size ? i < size : i > size; 0 < size ? i++ : i++) {
             result.push(st_operation.fromByteBuffer(b));
         }
-        return sort(result, st_operation);
+        return sortOperation(result, st_operation);
     },
     appendByteBuffer(b, object){
         v.required(object)
-        object = sort(object, st_operation)
+        object = sortOperation(object, st_operation)
         b.writeVarint32(object.length);
         for (var i = 0, o; i < object.length; i++) {
             o = object[i];
@@ -276,7 +276,7 @@ Types.array = function(st_operation){
     },
     fromObject(object){
         v.required(object)
-        object = sort(object, st_operation)
+        object = sortOperation(object, st_operation)
         var result = [];
         for (var i = 0, o; i < object.length; i++) {
             o = object[i];
@@ -289,7 +289,7 @@ Types.array = function(st_operation){
             return [ st_operation.toObject(object, debug) ];
         }
         v.required(object)
-        object = sort(object, st_operation)
+        object = sortOperation(object, st_operation)
         
         var result = [];
         for (var i = 0, o; i < object.length; i++) {
@@ -358,7 +358,7 @@ Types.set = function(st_operation){
                 dup_map[o] = true;
             }
         }
-        return sort(array, st_operation);
+        return sortOperation(array, st_operation);
     },
     fromByteBuffer(b){
         var size = b.readVarint32();
@@ -420,13 +420,13 @@ Types.fixed_array = function(count, st_operation) {
       for (i = j = 0, ref = count; j < ref; i = j += 1) {
         results.push(st_operation.fromByteBuffer(b));
       }
-      return sort(results, st_operation);
+      return sortOperation(results, st_operation);
     },
     appendByteBuffer: function(b, object) {
       var i, j, ref;
       if (count !== 0) {
         v.required(object);
-        object = sort(object, st_operation)
+        object = sortOperation(object, st_operation)
       }
       for (i = j = 0, ref = count; j < ref; i = j += 1) {
         st_operation.appendByteBuffer(b, object[i]);
@@ -506,12 +506,6 @@ var id_type = function(reserved_spaces, object_type){
         
         return `${reserved_spaces}.${object_type_id}.`+object;
     },
-    compare(a, b) {
-        if(Array.isArray(a) && Array.isArray(b) && a.length > 0 && b.length > 0)
-            return a[0] - b[0]
-        else
-            return 0
-    }
     };
 };
 
@@ -709,7 +703,7 @@ Types.map = function(key_st_operation, value_st_operation){
                 dup_map[o[0]] = true;
             }
         }
-        return sort(array, key_st_operation);
+        return sortOperation(array, key_st_operation);
     },
     
     fromByteBuffer(b){
@@ -756,7 +750,8 @@ Types.map = function(key_st_operation, value_st_operation){
             ];
         }
         v.required(object);
-        var result = [];
+        object = this.validate(object);
+        var result = []
         for (var i = 0, o; i < object.length; i++) {
             o = object[i];
             result.push([
@@ -764,7 +759,7 @@ Types.map = function(key_st_operation, value_st_operation){
                 value_st_operation.toObject(o[1], debug)
             ]);
         }
-        return this.validate(result)
+        return result
     }
     };
 };
@@ -821,6 +816,10 @@ Types.address =
     }
 }
 
-let sort = (array, st_operation) => st_operation.compare ?
-    array.sort((a,b)=>st_operation.compare(a,b)) : // custom compare operation
-    array.sort((a,b)=> typeof a === "number" && typeof b === "number" ? a - b : a > b)
+let first = el => Array.isArray(el) ? el[0] : el
+let sortOperation = (array, st_operation) => st_operation.compare ?
+    array.sort((a,b)=> st_operation.compare(first(a), first(b))) : // custom compare operation
+    array.sort((a,b)=>
+        typeof first(a) === "number" && typeof first(b) === "number" ? first(a) - first(b) : 
+        first(a).toString() > first(b).toString()
+    )

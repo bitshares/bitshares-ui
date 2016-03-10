@@ -7,6 +7,7 @@ var p = require('../src/precision');
 var th = require('./test_helper');
 
 import { is } from "immutable"
+import { PublicKey, PrivateKey } from "@graphene/ecc"
 
 describe("types", function() {
     
@@ -30,7 +31,7 @@ describe("types", function() {
         
     });
     
-    it("set", function() {
+    it("set sort", function() {
         var bool_set = type.set(type.bool);
         // Note, 1,0 sorts to 0,1
         assert.equal("020001", Convert(bool_set).toHex([1,0]));
@@ -38,17 +39,40 @@ describe("types", function() {
         
     });
     
-    it("map", function() {
+    it("string sort", function() {
+        var setType = type.set(type.string);
+        var set = setType.fromObject(["a","z","m"])
+        var setObj = setType.toObject(set)
+        assert.deepEqual(["a","m","z"], setObj, "not sorted")
+    });
+    
+    it("map sort", function() {
         var bool_map = type.map(type.bool, type.bool);
+        // 1,1 0,0   sorts to   0,0  1,1
         assert.equal("0200000101", Convert(bool_map).toHex([[1,1],[0,0]]));
         th.error("duplicate (map)", function() { return Convert(bool_map).toHex([[1,1],[1,1]]); });
-        
     })
     
-    it("deterministic", function() {
+    it("public_key sort", function() {
+        let mapType = type.map(type.public_key, type.uint16)
+        let map = mapType.fromObject([//not sorted
+            ["TEST7hC5RAxkenTAfaBncgyH4RNJKtkPJURXnuCabqCf7iu5QYL3ZW",0],
+            ["TEST7W15NjWQNx1pkmPdwWdCLukR9wMk44PU6tDYdqQ5rQtgy3dwks",0],
+        ])
+        let mapObject = mapType.toObject(map)
+        assert.deepEqual(mapObject, [ // uppercase comes first
+            ["TEST7W15NjWQNx1pkmPdwWdCLukR9wMk44PU6tDYdqQ5rQtgy3dwks",0],
+            ["TEST7hC5RAxkenTAfaBncgyH4RNJKtkPJURXnuCabqCf7iu5QYL3ZW",0],
+        ])
+    })
+    
+    
+    
+    it("type_id sort", function() {
         // map (protocol_id_type "account"), (uint16)
         let t = type.map(type.protocol_id_type("account"), type.uint16);
         assert.deepEqual( t.fromObject([[1,1],[0,0]]), [[0,0],[1,1]], 'did not sort' )
+        assert.deepEqual( t.fromObject([[0,0],[1,1]]), [[0,0],[1,1]], 'did not sort' )
     });
     
     it("precision number strings", function() {
