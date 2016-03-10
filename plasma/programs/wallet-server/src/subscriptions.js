@@ -1,6 +1,7 @@
 import { Map } from "immutable"
 
 let subscriptions = Map()
+let subscriptions_ws_id = 1
 
 /**
     @arg {WebSocket} ws
@@ -10,17 +11,21 @@ let subscriptions = Map()
     @return {boolean} success or false for duplicate subscription
 */
 export function subscribe(ws, method, subscribe_key, subscribe_id) {
+    ws.subscriptions_ws_id = subscriptions_ws_id++
+    if(global.DEBUG) {
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tsubscribe", method, subscribe_key, subscribe_id)
+    }
     let success = false
     subscribe_id = String(subscribe_id)
     
     subscriptions = subscriptions
-        .updateIn([method, subscribe_key, ws], Map(), ids =>{
+        .updateIn([method, subscribe_key, ws.subscriptions_ws_id], Map(), ids =>{
             if( ids.has(subscribe_id) ) {
-                console.log("WARN\tsubscriptions\tAlready subscribed", subscribe_id);
+                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tAlready subscribed", subscribe_id);
                 return ids
             }
             success = true
-            return ids.set(subscribe_id, subscribe_id)
+            return ids.set(subscribe_id, ws)
         })
     return success
 }
@@ -33,12 +38,15 @@ export function subscribe(ws, method, subscribe_key, subscribe_id) {
     @return {boolean} success or false when not subscription
 */
 export function unsubscribe(ws, method, subscribe_key, unsubscribe_id) {
+    if(global.DEBUG) {
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tunsubscribe", method, subscribe_key, unsubscribe_id)
+    }
     let success = false
     unsubscribe_id = String(unsubscribe_id)
     subscriptions = subscriptions
-        .updateIn([method, subscribe_key, ws], Map(), ids =>{
+        .updateIn([method, subscribe_key, ws.subscriptions_ws_id], Map(), ids =>{
             if( ! ids.has(unsubscribe_id) ) {
-                console.log("WARN\tsubscriptions\tNot subscribed", unsubscribe_id);
+                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tNot subscribed", unsubscribe_id);
                 return ids
             }
             success = true
@@ -56,24 +64,27 @@ export function unsubscribe(ws, method, subscribe_key, unsubscribe_id) {
 */
 export function notifyOther(ws, method, subscribe_key, params) {
     
-    console.log("TRACE\tsubscriptions\tnotifyOther",  method, subscribe_key, JSON.stringify(params));
+    let str
+    if(global.DEBUG) {
+        str = JSON.stringify(params)
+        str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tnotifyOther",  method, subscribe_key, str);
+    }
     
     let ws_map = subscriptions.getIn([method, subscribe_key])
     if( ! ws_map )
         return
     
-    ws_map.forEach( (ids, subscribe_ws) => {
+    ws_map.forEach( (ids, subscriptions_ws_id) => {
         
         // don't notify yourself
-        if( ws === subscribe_ws )
+        if( ws.subscriptions_ws_id === subscriptions_ws_id )
             return
         
-        ids.forEach( subscription_id => {
+        ids.forEach( (subscribe_ws, subscription_id) => {
             try {
                 if(global.DEBUG) {
-                    let str = JSON.stringify(params)
-                    str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
-                    console.log("DEBUG\tsubscriptions\tnotifyOther", subscription_id, subscribe_key, method, str)
+                    console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tnotifyOther", subscription_id, subscribe_key, method, "...")
                 }
                 subscribe_ws.send(JSON.stringify({
                     method: "notice",
@@ -116,7 +127,7 @@ export function remove(ws) {
                     // if(global.DEBUG) console.log("DEBUG ids.toJS()", ids.toJS())
                     let match = subscribe_ws === ws
                     if( match && ! ids.isEmpty()) {
-                        console.error("WARN\tsubscriptions\tWebSocket closed with active subscription(s)", ids.keySeq().toJS())
+                        console.error("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tWebSocket closed with active subscription(s)", ids.keySeq().toJS())
                     }
                     return match
                 })
