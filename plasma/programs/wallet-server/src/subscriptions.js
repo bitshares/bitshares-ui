@@ -56,6 +56,8 @@ export function unsubscribe(ws, method, subscribe_key, unsubscribe_id) {
 */
 export function notifyOther(ws, method, subscribe_key, params) {
     
+    console.log("TRACE\tsubscriptions\tnotifyOther",  method, subscribe_key, JSON.stringify(params));
+    
     let ws_map = subscriptions.getIn([method, subscribe_key])
     if( ! ws_map )
         return
