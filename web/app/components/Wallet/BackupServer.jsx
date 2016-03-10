@@ -117,29 +117,29 @@ class BackupServer extends Component {
         //     </button>
         // : <span/>
         
-        const changePassword = ()=> this.setState({ busy: true },
-            ()=> this.props.auth_change.changePassword()
-            .then(()=> this.setState({ busy: false }))
-            .catch( error =>{
-                this.setState({ busy: false })
-                notify.error("Unable to change password: " + error.toString())
-            })
-        )
-        const change_password = <div>
-            <p>
-                {/* You <b>must</b> remember... */}
-                <Translate content="wallet.remember_auth1"/><br/>
-                <Translate content="wallet.remember_auth2"/>
-            </p>
-            {/* Password, Username */}
-            <AuthInput auth={this.props.auth_change} clearOnUnmount={false} />
-            
-            <div className="center-content">
-                {this.state.busy ? <LoadingIndicator type="circle"/> : null }
-                <br/>
-            </div>
-            <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_change.valid }) }  onClick={changePassword.bind(this)}><Translate content="wallet.change_password"/></button>
-        </div>
+        // const changePassword = ()=> this.setState({ busy: true },
+        //     ()=> this.props.auth_change.changePassword()
+        //     .then(()=> this.setState({ busy: false }))
+        //     .catch( error =>{
+        //         this.setState({ busy: false })
+        //         notify.error("Unable to change password: " + error.toString())
+        //     })
+        // )
+        // const change_password = <div>
+        //     <p>
+        //         {/* You <b>must</b> remember... */}
+        //         <Translate content="wallet.remember_auth1"/><br/>
+        //         <Translate content="wallet.remember_auth2"/>
+        //     </p>
+        //     {/* Password, Username */}
+        //     <AuthInput auth={this.props.auth_change} clearOnUnmount={false} />
+        //     
+        //     <div className="center-content">
+        //         {this.state.busy ? <LoadingIndicator type="circle"/> : null }
+        //         <br/>
+        //     </div>
+        //     <button className={cname("button", {disabled: this.state.busy || ! this.props.auth_change.valid }) }  onClick={changePassword.bind(this)}><Translate content="wallet.change_password"/></button>
+        // </div>
         
         const onRemoteCopy = ()=>
             new Promise( resolve =>{
@@ -387,7 +387,7 @@ class BackupServer extends Component {
                 wallet().storage.state.get("remote_token")
             ))
         
-        let weak_password = ()=> wallet().storage.state.get("weak_password") === true
+        // let weak_password = ()=> wallet().storage.state.get("weak_password") === true
         let in_sync = ()=> wallet().storage.state.get("remote_copy") === false ||
             wallet().remote_status === "Not Modified"
         
@@ -405,7 +405,7 @@ class BackupServer extends Component {
             ! have_token ? token_request_initial :
             // Invalid token can happen with different backup servers or different chains
             this.props.backups.api_error === "invalid_token" ? emailOrInputRestoreKey :
-            weak_password() ? change_password :
+            // weak_password() ? change_password :
             ! in_sync() ? remoteBackupStatus :
             <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div>
             

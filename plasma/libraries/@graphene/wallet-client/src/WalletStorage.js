@@ -27,7 +27,7 @@ const trace = true
         last_modified: undefined,
         
         // {boolean} weak_password - truthy if an empty string was used for the email or username
-        weak_password: null,
+        // <Not Used> weak_password: null,
         
         // This is the remote_token from the server (via the email request).  The server can validate that this was not altered.  Also it contains a API salt value used for all server operations (signing and encryption). 
         create_token: null,
@@ -185,10 +185,10 @@ export default class WalletStorage {
         if( remote_copy === true && ! this.storage.state.get("remote_url"))
             throw new Error(this.instance+":configuration_error, remote_copy without remote_url")
         
-        if( remote_copy === true && ! this.private_key ) {
-            let weak_password = this.wallet_object.get("weak_password")
-            assert(! weak_password, "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
-        }
+        // if( remote_copy === true && ! this.private_key ) {
+        //     let weak_password = this.wallet_object.get("weak_password")
+        //     assert(! weak_password, "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
+        // }
         let state = {}
         if( remote_copy !== null) state.remote_copy = remote_copy
         if( remote_token !== null){
@@ -263,12 +263,12 @@ export default class WalletStorage {
         }
         
         // New wallet locally, weak && remote check.
-        let weak_password = username.trim() == ""
-        assert(! weak_password || ! this.storage.state.get("remote_copy"),
-            "Remote copies are enabled, but a username is missing from this wallet's encryption key.")
+        // let weak_password = username.trim() == ""
+        // assert(! weak_password || ! this.storage.state.get("remote_copy"),
+        //     "Remote copies are enabled, but a username is missing from this wallet's encryption key.")
         
         // Record it, don't send a weak password wallet to the server.
-        this.storage.setState({ weak_password })
+        // this.storage.setState({ weak_password })
         
         let prePopulated = ! this.wallet_object.isEmpty()
         let dt = new Date().toISOString()
@@ -462,9 +462,9 @@ export default class WalletStorage {
         if( ! this.storage.state.get("encrypted_wallet") )
             throw new Error("wallet_empty")
         
-        let weak_password = username.trim() == ""
-        assert( ! weak_password || ! this.storage.state.get("remote_copy"),
-            "Remote copies are enabled, but username is missing from this wallet's encryption key.")
+        // let weak_password = username.trim() == ""
+        // assert( ! weak_password || ! this.storage.state.get("remote_copy"),
+        //     "Remote copies are enabled, but username is missing from this wallet's encryption key.")
         
         // let original_local_hash = this.localHash()
         // let remote_copy = this.storage.state.get("remote_copy")
@@ -503,7 +503,7 @@ export default class WalletStorage {
                 
                 return this.notifyResolve(
                     this.storage.setState({
-                        weak_password,
+                        // weak_password,
                         encrypted_wallet: encrypted_wallet.toString('base64'),
                         local_hash: hash.sha256(encrypted_wallet).toString("base64"),
                         // private_encryption_pubkey: new_public_key.toString()
@@ -536,7 +536,7 @@ export default class WalletStorage {
                 this.private_api_key = new_private_api_key // unlock
                 
                 return this.storage.setState({
-                    weak_password,
+                    // weak_password,
                     encrypted_wallet: encrypted_wallet.toString('base64'),
                     local_hash: hash.sha256(encrypted_wallet).toString("base64"),
                     remote_hash: json.local_hash,

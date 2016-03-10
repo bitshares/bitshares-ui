@@ -40,7 +40,7 @@ class BackupServerStore {
         let { remote_status, local_status } = wallet // socket_status
         let { remote_url, remote_copy, remote_token } = wallet.storage.state.toJS()
         let { socket_status } = this.state
-        let weak_password  = wallet.wallet_object.get("weak_password")
+        // let weak_password  = wallet.wallet_object.get("weak_password")
         
         let backup_status = remote_copy !== true ? "disabled" :
             socket_status !== "open" ? socket_status :
@@ -50,7 +50,7 @@ class BackupServerStore {
         let state = { 
             remote_status, local_status,
             remote_url, remote_copy, remote_token,
-            weak_password, 
+            // weak_password, 
             backup_status
         }
         this.setState(state)

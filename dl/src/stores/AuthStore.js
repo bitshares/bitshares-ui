@@ -51,7 +51,7 @@ class AuthStore {
         this.clear = ()=> this.setState(this.init())
         this.state = this.init()
         // weak means the username is optional ( supports local wallets using only a password )
-        this.config = { hasPassword: true, hasUsername: true, weak: true, hasConfirm: null, hasEmail: null }
+        this.config = { hasPassword: true, hasUsername: false, weak: true, hasConfirm: null, hasEmail: null }
         this.config = { ...this.config, ...instanceConfig }
         this.instanceName = instanceName
     }

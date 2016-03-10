@@ -61,7 +61,7 @@ class CreateNewWallet extends Component {
             wallet_public_name: "default",
             errors: {},
             isValid: false,
-            create_submitted: false,
+            // create_submitted: false,
             custom_brainkey: false,
             brnkey: null,
             recover: true,
@@ -74,20 +74,18 @@ class CreateNewWallet extends Component {
     
     render() {
         
-        
-        
         let state = this.state
         let errors = state.errors
         let has_wallet = !!this.props.current_wallet
         
-        if(this.state.create_submitted &&
-            this.state.wallet_public_name === this.props.current_wallet) {
-            return <div>
-                <h4><Translate content="wallet.wallet_created" /></h4>
-                <span onClick={this.onDone.bind(this)}
-                    className="button success"><Translate content="wallet.done" /></span>
-            </div>
-        }
+        // if(this.state.create_submitted &&
+        //     this.state.wallet_public_name === this.props.current_wallet) {
+        //     return <div>
+        //         <h4><Translate content="wallet.wallet_created" /></h4>
+        //         <span onClick={this.onDone.bind(this)}
+        //             className="button success"><Translate content="wallet.done" /></span>
+        //     </div>
+        // }
         return (<span>
             {this.props.hideTitle ? null:
                 <h3><Translate content="wallet.create_wallet" /></h3>}
