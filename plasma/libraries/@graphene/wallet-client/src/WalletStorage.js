@@ -464,26 +464,27 @@ export default class WalletStorage {
         
         let weak_password = username.trim() == ""
         assert( ! weak_password || ! this.storage.state.get("remote_copy"),
-            "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
+            "Remote copies are enabled, but username is missing from this wallet's encryption key.")
         
-        let original_local_hash = this.localHash()
-        let remote_copy = this.storage.state.get("remote_copy")
+        // let original_local_hash = this.localHash()
+        // let remote_copy = this.storage.state.get("remote_copy")
         
-        if( remote_copy === true && this.storage.state.has("remote_hash")) {
-            let remote_hash = this.storage.state.get("remote_hash")
-            if( toBase64(original_local_hash) !== remote_hash ) {
-                // Check this now before changing local encrypted data, better to not find out later that the server can't be updated
-                throw new Error("wallet_modified: Can't change password, this wallet has a stable remote copy")
-            }
-        }
+        // if( remote_copy === true && this.storage.state.has("remote_hash")) {
+        //     let remote_hash = this.storage.state.get("remote_hash")
+        //     if( toBase64(original_local_hash) !== remote_hash ) {
+        //         // Check this now before changing local encrypted data, better to not find out later that the server can't be updated
+        //         throw new Error("wallet_modified: Can't change password, this wallet has a modified remote copy")
+        //     }
+        // }
         
-        let new_private_key = PrivateKey.fromSeed( username.trim().toLowerCase() + "\t" + password )
+        let old_private_api_key = this.private_api_key ? this.private_api_key : null
         let old_public_api_key = this.private_api_key ? this.private_api_key.toPublicKey() : null
+        let new_private_key = PrivateKey.fromSeed( username.trim().toLowerCase() + "\t" + password )
         let new_private_api_key = this.getPrivateApiKey(new_private_key, false/* null unless remote copy */)
         
         // If new_public_api_key is null it will avoid extra encryption below
-        let new_public_key = new_private_key.toPublicKey()
         let new_public_api_key = new_private_api_key ? new_private_api_key.toPublicKey() : null
+        let new_public_key = new_private_key.toPublicKey()
         
         this.wallet_object = this.wallet_object.merge({ last_modified: new Date().toISOString() })
         
@@ -516,11 +517,13 @@ export default class WalletStorage {
                 this.api.fetchWalletUnsubscribe(old_public_api_key).catch( error => reject(error))
                     .catch(error => console.error("WalletStorage\tunsubscribe error", error))//non fatal
             
-            let original_signature = Signature.signBufferSha256(original_local_hash, old_private_api_key)
-            let new_local_hash = this.localHash()
-            let new_signature = Signature.signBufferSha256(new_local_hash, new_private_api_key)
+            let original_remote_hash = this.storage.state.get("remote_hash")
+            let original_signature = Signature.signBufferSha256(new Buffer(original_remote_hash, "base64"), old_private_api_key)
             
-            let changePromise = this.api.changePassword( original_local_hash, original_signature, encrypted_server, new_signature )
+            let new_remote_hash = hash.sha256(encrypted_server)
+            let new_signature = Signature.signBufferSha256(new_remote_hash, new_private_api_key)
+            
+            let changePromise = this.api.changePassword( original_remote_hash, original_signature, encrypted_server, new_signature )
             .then( json => {
                 if( json.statusText !== "OK")
                     throw new Error("Change password API call failed: " + json)
@@ -534,6 +537,8 @@ export default class WalletStorage {
                 
                 return this.storage.setState({
                     weak_password,
+                    encrypted_wallet: encrypted_wallet.toString('base64'),
+                    local_hash: hash.sha256(encrypted_wallet).toString("base64"),
                     remote_hash: json.local_hash,
                     remote_updated: json.updated
                 })
