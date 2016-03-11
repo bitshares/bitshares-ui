@@ -81,7 +81,9 @@ class BackupServer extends Component {
         const download_option = ! WalletDb.isEmpty() ? <div>
             <hr/><br/>
             <Link to="wallet/backup/download">
-            <label className="secondary"><Translate content="wallet.download_backup" /></label></Link>
+                <label className="secondary"><Translate content="wallet.download_backup" /></label>
+            </Link>
+            
         </div> : null
         
         if( ! WalletDb.isLocked()) {

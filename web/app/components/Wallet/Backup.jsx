@@ -289,7 +289,7 @@ class Download extends BackupBaseComponent {
             window.history.back()
         }
         return <span className="button success"
-            onClick={backClick.bind(this)}><Translate content="back" /></span>
+            onClick={backClick.bind(this)}><Translate content="done" /></span>
     }
     
     onDownload(e) {

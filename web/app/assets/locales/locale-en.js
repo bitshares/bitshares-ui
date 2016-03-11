@@ -29,11 +29,12 @@
         unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
     
-    propose: "propose",
     ok: "Ok",
     back: "Back",
+    done: "Done",
     cancel: "Cancel",
     success: "Success",
+    propose: "Propose",
     unlock: "Unlock",
     invalid_email: "Invalid email",
     invalid_username: "Invalid username",
@@ -766,7 +767,7 @@
         password_match: "Confirmation doesn't match",
         invalid_username: "Invalid username",
         change_wallet: "Change Wallet",
-        wallet_created: "Wallet Created",
+        wallet_creating: "Wallet Creating...",
         create_wallet: "Create Wallet",
         import_bts1: "Import from BitShares 0.9.3c",
         setup_wallet: "Setup your wallet",

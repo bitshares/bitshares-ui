@@ -2,6 +2,7 @@ import React, {Component} from "react"
 
 import Translate from "react-translate-component";
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
+import LoadingIndicator from "components/LoadingIndicator"
 import AuthInput from "components/Forms/AuthInput"
 import AuthStore from "stores/AuthStore"
 import WalletDb from "stores/WalletDb"
@@ -57,19 +58,24 @@ class CreateNewWallet extends Component {
     
     constructor() {
         super()
-        this.state = { 
+        this.init =()=>({ 
             wallet_public_name: "default",
             errors: {},
             isValid: false,
-            // create_submitted: false,
+            create_submitted: false,
             custom_brainkey: false,
             brnkey: null,
             recover: true,
-        }
+        })
+        this.state = this.init()
     }
     
     componentWillMount() {
         this.validate()
+    }
+    
+    componentWillUnmount() {
+        this.setState(this.init())
     }
     
     render() {
@@ -78,14 +84,12 @@ class CreateNewWallet extends Component {
         let errors = state.errors
         let has_wallet = !!this.props.current_wallet
         
-        // if(this.state.create_submitted &&
-        //     this.state.wallet_public_name === this.props.current_wallet) {
-        //     return <div>
-        //         <h4><Translate content="wallet.wallet_created" /></h4>
-        //         <span onClick={this.onDone.bind(this)}
-        //             className="button success"><Translate content="wallet.done" /></span>
-        //     </div>
-        // }
+        if(this.state.create_submitted) {
+            return <div>
+                <h4><Translate content="wallet.wallet_creating" /></h4>
+                <div className="center-content"> <LoadingIndicator type="circle"/> </div>
+            </div>
+        }
         return (<span>
             {this.props.hideTitle ? null:
                 <h3><Translate content="wallet.create_wallet" /></h3>}
@@ -161,8 +165,11 @@ class CreateNewWallet extends Component {
         e.stopPropagation()
         var wallet_name = this.state.wallet_public_name
         WalletActions.setWallet(wallet_name, this.props.auth, this.state.brnkey)
-        // this.setState({create_submitted: true})
-        this.props.history.pushState(null, "/wallet/backup/server")
+        this.setState({create_submitted: true}, ()=>
+            // give it time to create and login (avoid unlock flashing)
+            setTimeout(()=> this.props.history.pushState(null, "/wallet/backup/server"), 250)
+        )
+        
     }
     
     formChange(event) {
