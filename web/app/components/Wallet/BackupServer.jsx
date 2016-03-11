@@ -410,9 +410,7 @@ class BackupServer extends Component {
             // weak_password() ? change_password :
             ! in_sync() ? remoteBackupStatus :
             <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div>
-            
         
-                    // <p><Translate content={"wallet.backup_download_description"}/></p>
         return (
             <div className="grid-block vertical medium-horizontal">
                 <div className="grid-content full-width-content no-overflow" style={{width: "150px"}}>

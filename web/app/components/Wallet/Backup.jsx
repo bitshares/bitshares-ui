@@ -286,6 +286,7 @@ class Download extends BackupBaseComponent {
         }
         const backClick = e =>{
             e.preventDefault()
+            BackupActions.reset()
             window.history.back()
         }
         return <span className="button success"
@@ -329,7 +330,8 @@ class Download extends BackupBaseComponent {
 class Upload extends BackupBaseComponent {
     
     componentDidMount() {
-        ReactDOM.findDOMNode(this.refs.bfile).focus()
+        let el =ReactDOM.findDOMNode(this.refs.bfile)
+        if(el) el.focus()
     }
     
     render() {

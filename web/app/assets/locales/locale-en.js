@@ -733,8 +733,7 @@
         server_backup: "Server Backup",
         backups: "Backups",
         server_backup_description1: "You may verify your email and we will keep your wallet backed up.",
-        server_backup_description2: "Disclaimer: Your wallet is encrypted before it leaves your device.  We can't recover a lost username, password or email.",
-        // backup_download_description: "Download or enable server backups at any point.",
+        server_backup_description2: "Disclaimer: Your wallet is encrypted before it leaves your device.  We can't recover a lost password or email.",
         remote_status: "Remote Status",
         restore_error: "Restore Error",
         server_toggle: {
