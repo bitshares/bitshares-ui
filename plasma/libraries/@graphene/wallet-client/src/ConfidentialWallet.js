@@ -119,7 +119,6 @@ export default class ConfidentialWallet {
                 // this label is already assigned
                 return false
         }
-        let indexables = List().asMutable()
         
         this.update(wallet =>
             wallet.updateIn(["keys", public_key], Map(),
@@ -553,6 +552,7 @@ export default class ConfidentialWallet {
                 result.from_label = this.getKeyLabel( result.from_key )
                 if( ! result.from_label ) {
                     result.from_label = opt_from
+                    this.wallet.queue_mills = 20*1000
                     this.setKeyLabel( result.from_key, result.from_label )
                 }
             } else {
@@ -575,6 +575,7 @@ export default class ConfidentialWallet {
                     result.control_authority = owner
                     result.data = memo
                     
+                    this.wallet.queue_mills = 20*1000
                     this.setKeyLabel( child_private )
                     result.date = new Date().toISOString()
                     // console.log('2 result', JSON.stringify(result, null, 4))
@@ -1130,6 +1131,7 @@ function req(data, field_name) {
     return data
 }
 
+/** @return {Promise} */
 function update(callback) {
     let wallet = callback(this.wallet.wallet_object)
     return this.wallet.setState(wallet)

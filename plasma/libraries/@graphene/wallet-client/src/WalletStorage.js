@@ -1,4 +1,4 @@
-import { fromJS, Map, is } from "immutable"
+import { fromJS, Map, Set, is } from "immutable"
 import { encrypt, decrypt } from "./Backup"
 import { PrivateKey, Signature, hash } from "@graphene/ecc"
 import { extractSeed } from "@graphene/time-token"
@@ -6,7 +6,9 @@ import WalletWebSocket from "./WalletWebSocket"
 import WalletApi from "./WalletApi"
 import assert from "assert"
 
-const trace = true
+const trace = false
+let setState_timeouts = Set()
+let setState_timeoutId
 
 /**
     A Wallet is a place where private user information can be stored. This information is kept encrypted when on disk or stored on the remote server.
@@ -85,6 +87,8 @@ export default class WalletStorage {
         {Immutable.Map|Immutable.List} this.wallet_object - When unlocked, this is the unencrypted wallet object
         
         {PrivateKey} this.private_key - Present only when unlocked
+        
+        {number} [this.queue_mills = 0] - queue the setState update (encryption and backup) for specified milliseconds.  To keep calls queued, set this value again prior to every call to setState.  The final call to setState should not set this value (that will run the update immediately before the timeout and resolve all prior queued calls).  The timeout is reset to its default 0 after all calls to setState.  When queued, the this.wallet_object will still update immediately, if that is not desired the wallet object must be held and updated externally then passed into `setState` when ready.
          
         @arg {IndexedDbPersistence} storage
     */
@@ -93,6 +97,7 @@ export default class WalletStorage {
         this.storage = storage
         this.subscribers = Map()
         this.local_status = null
+        this.queue_mills = 0
         
         // enable the backup server if one is configured (see useBackupServer)
         let remote_url = this.storage.state.get("remote_url")
@@ -102,7 +107,7 @@ export default class WalletStorage {
             this.instance = this.ws_rpc.instance // log instance number
         }
         
-        // Semi-private functions .. Having them outside of this class helps the reader see they are not part of the standard API
+        // Semi-private functions .. Non standard API, these easily could change.
         this.sync = sync.bind(this)
         this.localHash = localHash.bind(this)
         this.updateWallet = updateWallet.bind(this)
@@ -379,6 +384,8 @@ export default class WalletStorage {
     }
 
     /** 
+        Updates the server, this can be slow be cautious about calling.
+        
         This method is used to update the wallet state. If the wallet is configured to keep synchronized with the remote wallet then the server will refer to a copy of the wallets revision history to ensure that no version is overwritten. If the local wallet ever falls on a fork an attempt to upload that wallet will cause the API call to fail; a reconcilation will be needed. After successfully storing the state on the server, save the state to local memory, and optionally disk.
         
         A deep merge is used (see ImmutableJs).  This is less prone to loosing information.  If something should be removed you will need to update the wallet_object direclty then call setState to presist the change.
@@ -391,7 +398,12 @@ export default class WalletStorage {
         @throws {Error} - [wallet_locked, etc...]
         @return {Promise} - resolve or reject on completion.  One may also monitor this.local_status and this.remote_status.
     */
-    setState( wallet_object )  {
+    setState( wallet_object)  {
+        
+        try { throw new Error("trace") } catch(error) { console.log('TRACE\tWalletStorage who called?', error) }
+        
+        if( ! typeof wallet_object === "object")
+            throw new Error("wallet_object: expecting object, got " + typeof(wallet_object))
         
         if( ! this.private_key )
             throw new Error("wallet_locked")
@@ -411,12 +423,27 @@ export default class WalletStorage {
         this.wallet_object = wallet_object
         this.wallet_object = this.wallet_object.set("last_modified", new Date().toISOString())
         
-        return this.notifyResolve(
+        let upd = ()=> this.notifyResolve(
             this.updateWallet().catch( error => {
                 console.error("WalletStorage:"+this.instance+'\tsetState', error, 'stack', error.stack)
                 throw error
             })
         )
+        let timeUp = ()=> {
+            let p = upd()
+            setState_timeouts.forEach(r => r(p))
+            setState_timeouts = Set()
+            return p
+        }
+        if(this.queue_mills === 0)
+            return timeUp()
+        
+        return new Promise( resolve =>{
+            clearTimeout(setState_timeoutId)
+            setState_timeouts = setState_timeouts.add(resolve)
+            setState_timeoutId = setTimeout(()=> timeUp(), this.queue_mills)
+            this.queue_mills = 0
+        })
     }
     
     /**
@@ -751,7 +778,8 @@ function saveServerWallet(server_wallet, private_key, private_api_key, chain_id)
 }
 
 /**
-    Update the encrypted wallet in storage, then create or update a wallet on the server.  The WalletApi may detect a conflict 
+    Update the encrypted wallet in storage, then create or update a wallet on the server.  The WalletApi may detect a conflict .
+    @private call `setState` instead
 */
 function updateWallet(private_key = this.private_key, private_api_key = this.getPrivateApiKey(private_key)) {
     
