@@ -43,10 +43,10 @@ class WalletManagerStore extends BaseStore {
         WalletDb.openWallet(wallet_name).then( wallet => {
             wallet_object = wallet_object.set("public_name", wallet_name)// if different
             wallet.wallet_object = wallet_object
-            return wallet.login(username, password, Apis.chainId())
         })
         .then(()=> this.onSetWallet({ wallet_name }))
         .then(()=> this.setState({ restored_wallet_name: wallet_name }))
+        .then(()=> wallet.login(username, password, Apis.chainId()))// Could "Conflict" with server version
         .catch( error =>{
             this.setState({ restore_error: error })
             throw error

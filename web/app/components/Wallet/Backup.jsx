@@ -276,21 +276,18 @@ class Download extends BackupBaseComponent {
     
     componentWillUnmount() {
          clearTimeout(this.timeout)
-         this.first_load = true
     }
     
     render() {
-        if( this.first_load) {
-            this.first_load = false
-            this.onDownload()
-        }
         const backClick = e =>{
             e.preventDefault()
-            BackupActions.reset()
             window.history.back()
+            BackupActions.reset()
         }
-        return <span className="button success"
-            onClick={backClick.bind(this)}><Translate content="done" /></span>
+        return <div>
+            <span className="button success" onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
+            <span className="button secondary" onClick={backClick.bind(this)}><Translate content="back" /></span>
+        </div>
     }
     
     onDownload(e) {
@@ -330,7 +327,7 @@ class Download extends BackupBaseComponent {
 class Upload extends BackupBaseComponent {
     
     componentDidMount() {
-        let el =ReactDOM.findDOMNode(this.refs.bfile)
+        let el = ReactDOM.findDOMNode(this.refs.bfile)
         if(el) el.focus()
     }
     

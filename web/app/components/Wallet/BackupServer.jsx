@@ -341,6 +341,7 @@ class BackupServer extends Component {
                 }), 600)
             })
         }
+        
         const serverDownload = <div>
             {show_wallet_key()}
             <form onSubmit={serverDownloadClick.bind(this)}>
@@ -352,6 +353,10 @@ class BackupServer extends Component {
             </form>
         </div>
         
+        const toggleBackupBack = e =>{
+            e.preventDefault()
+            window.history.back()
+        }
                 // checked={wallet().storage.state.get("remote_copy")}
         // <label><Translate content="wallet().remote_backup"/></label>
         const toggle_backups_form = ()=> <div>
@@ -362,6 +367,7 @@ class BackupServer extends Component {
                 <Translate content={"wallet.server_toggle." +
                     (wallet().storage.state.get("remote_copy") === true ? "enabled" : "disabled")}/>
             </button>
+            <span className="button secondary" onClick={toggleBackupBack.bind(this)}><Translate content="back" /></span>
             <br/>
         </div>
         
@@ -409,7 +415,7 @@ class BackupServer extends Component {
             this.props.backups.api_error === "invalid_token" ? emailOrInputRestoreKey :
             // weak_password() ? change_password :
             ! in_sync() ? remoteBackupStatus :
-            <div>{toggle_backups_form()}<br/>{show_wallet_key()}</div>
+            <div>{show_wallet_key()}<br/>{toggle_backups_form()}</div>
         
         return (
             <div className="grid-block vertical medium-horizontal">
