@@ -400,7 +400,7 @@ export default class WalletStorage {
     */
     setState( wallet_object)  {
         
-        try { throw new Error("trace") } catch(error) { console.log('TRACE\tWalletStorage who called?', error) }
+        // try { throw new Error("trace") } catch(error) { console.log('TRACE\tWalletStorage who called?', error) }
         
         if( ! typeof wallet_object === "object")
             throw new Error("wallet_object: expecting object, got " + typeof(wallet_object))

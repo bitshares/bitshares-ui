@@ -284,9 +284,12 @@ class Download extends BackupBaseComponent {
             this.first_load = false
             this.onDownload()
         }
-        
+        const backClick = e =>{
+            e.preventDefault()
+            window.history.back()
+        }
         return <span className="button success"
-            onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
+            onClick={backClick.bind(this)}><Translate content="back" /></span>
     }
     
     onDownload(e) {

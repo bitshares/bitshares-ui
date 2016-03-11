@@ -19,13 +19,15 @@ class BackupServerStore {
     }
     
     onApiError(api_error) {
-        console.log('BackupServerStore\tapi_error', api_error)
+        if(api_error)
+            console.log('ERROR\tBackupServerStore api_error', api_error)
+        
         this.setState({ api_error: api_error ? api_error.message : null })
         this.onUpdate()
     }
     
     onSocketChange(socket_status) {
-        console.log('BackupServerStore\tsocket_status', socket_status)
+        // console.log('BackupServerStore\tsocket_status', socket_status)
         this.setState({ socket_status })
         this.onUpdate()
     }

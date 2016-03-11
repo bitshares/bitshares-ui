@@ -314,14 +314,17 @@ class AccountStore extends BaseStore {
 
     onAddPrivateAccount(name) {
         // Not needed, the wallet will trigger an event
+        this.walletUpdate()// The fast RAM update.. storage comes later
     }
 
     onAddPrivateContact(name) {
         // Not needed, the wallet will trigger an event
+        this.walletUpdate()// The fast RAM update.. storage comes later
     }
 
     onRemovePrivateContact(name) {
         // Not needed, the wallet will trigger an event
+        this.walletUpdate()// The fast RAM update.. storage comes later
     }
 
     getAccountType(full_name) {

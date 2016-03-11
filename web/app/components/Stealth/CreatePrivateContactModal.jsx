@@ -16,6 +16,12 @@ class CreatePrivateContactModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = { label: "", public_key: "" };
+        
+        ZfApi.subscribe("add_private_contact_modal", (name, msg) => {
+            if(name !== "add_private_contact_modal") return
+            if (msg === "open") { setTimeout(()=> this.refs.label.focus(), 100) }
+        })
+        
         this._onCreateClick = this._onCreateClick.bind(this);
         this._onLabelChange = this._onLabelChange.bind(this);
         this._onKeyChange = this._onKeyChange.bind(this);

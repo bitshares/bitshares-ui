@@ -161,7 +161,8 @@ class CreateNewWallet extends Component {
         e.stopPropagation()
         var wallet_name = this.state.wallet_public_name
         WalletActions.setWallet(wallet_name, this.props.auth, this.state.brnkey)
-        this.setState({create_submitted: true})
+        // this.setState({create_submitted: true})
+        this.props.history.pushState(null, "/wallet/backup/server")
     }
     
     formChange(event) {

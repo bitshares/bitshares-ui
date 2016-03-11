@@ -11,18 +11,25 @@ class CreatePrivateAccountModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {label: null, key: null};
+        
+        ZfApi.subscribe("add_private_account_modal", (name, msg) => {
+            if(name !== "add_private_account_modal") return
+            if (msg === "open") { setTimeout(()=> this.refs.label.focus(), 100) }
+        })
+        
         this._onCreateClick = this._onCreateClick.bind(this);
         this._onLabelChange = this._onLabelChange.bind(this);
         this._onKeyChange = this._onKeyChange.bind(this);
     }
-
+    
     clear() {
         this.refs.label.clear();
         //this.refs.key.clear();
         this.setState({label: null, key: null});
     }
 
-    _onCreateClick() {
+    _onCreateClick(e) {
+        if(e) e.preventDefault();
         ZfApi.publish("add_private_account_modal", "close");
         const label = this.state.label.slice(1);
         try {
@@ -30,7 +37,7 @@ class CreatePrivateAccountModal extends React.Component {
         }
         catch (error) {
             console.error("-- CreatePrivateAccountModal._onCreateClick -->", error);
-            alert(error);
+            notify.error(error);
         }
     }
 

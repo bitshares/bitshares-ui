@@ -70,7 +70,7 @@ import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
-
+import notify from "actions/NotificationActions";
 import { Apis } from "@graphene/chain"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -78,6 +78,7 @@ require("./assets/stylesheets/app.scss");
 require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
 let history = createBrowserHistory({queryKey: false})
+global.notify = notify
 
 class App extends React.Component {
 

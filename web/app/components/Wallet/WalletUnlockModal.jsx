@@ -66,7 +66,9 @@ class WalletUnlockModal extends React.Component {
                 WalletUnlockActions.cancel()// Warning, cancel() triggers another update from WalletUnlockStore
                 this.props.auth.clear()
                 this.open = false
-            } //else if (msg === "open") { }
+            } else if (msg === "open") {
+                this.refs.auth_input.focus()
+            }
         })
     }
     
@@ -76,7 +78,6 @@ class WalletUnlockModal extends React.Component {
             if (WalletDb.isLocked()) {
                 if( ! this.open) {
                     ZfApi.publish(this.props.modalId, "open")
-                    setTimeout(()=> this.refs.auth_input.focus(), 200)
                     this.open = true
                 }
             } else {
