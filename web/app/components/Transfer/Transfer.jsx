@@ -196,6 +196,8 @@ class Transfer extends React.Component {
                         if (to_account_type == "Private Contact") {
                             this.setState({transfer_receipt: res.confirmation_receipts[0], loading: false});
                             ZfApi.publish("transfer_receipt_modal", "open");
+                        } else {
+                            this.setState({ loading: false })
                         }
                     }).catch(error => {
                         console.error("-- transferToBlind error -->", error);
@@ -216,6 +218,8 @@ class Transfer extends React.Component {
                         if (to_account_type == "Private Contact") {
                             this.setState({transfer_receipt: res.confirmation_receipt, loading: false});
                             ZfApi.publish("transfer_receipt_modal", "open");
+                        } else {
+                            this.setState({ loading: false })
                         }
                         this.queryBlindBalance();
                     }).catch(error => {
