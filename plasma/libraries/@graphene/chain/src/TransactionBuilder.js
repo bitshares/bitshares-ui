@@ -197,10 +197,8 @@ export default class TransactionBuilder {
         ];
 
         if (asset_id !== "1.3.0") {
-            // jc: Always expect the ChainStore to return null or undefined.
-            // jc: I have commented out these un-used lines; noting that this could have cause an exception:
-            // svk: They're not ununsed, they handle the fallback to paying fees in BTS if the fee pool is empty
-            // svk: Since the asset is resolved during fee selection by the user, it is unlikely that the asset will still be unresolved in the chainstore at this point
+            // This handles the fallback to paying fees in BTS if the fee pool is empty.
+            // Since the asset is resolved during fee selection by the user, it is unlikely that the asset will still be unresolved in the chainstore at this point.
             var asset = ChainStore.getAsset(asset_id);
             fee_pool = asset ? asset.getIn(["dynamic", "fee_pool"]) : 0;
             promises.push(Apis.instance().db_api().exec( "get_required_fees", [operations, "1.3.0"]));
