@@ -37,7 +37,7 @@ export default class TransactionBuilder {
     }
 
     /**
-        This does it all: set fees, finalize, sign, and broadcase (if wanted).
+        This does it all: set fees, finalize, sign, and broadcast (if wanted).
         
         @arg {ConfidentialWallet} cwallet - must be unlocked, used to gather signing keys
         
@@ -174,6 +174,7 @@ export default class TransactionBuilder {
 
     /** optional: the fees can be obtained from the witness node */
     set_required_fees(asset_id){
+        var fee_pool;
         if (this.tr_buffer) { throw new Error("already finalized"); }
         if (!this.operations.length) { throw new Error("add operations first"); }
         var operations = []
@@ -196,9 +197,12 @@ export default class TransactionBuilder {
         ];
 
         if (asset_id !== "1.3.0") {
-            // Always expect the ChainStore to return null or undefined.  I have commented out these un-used lines; noting that this could have cause an exception:
-            // var asset = ChainStore.getAsset(asset_id);
-            // var fee_pool = asset.getIn(["dynamic", "fee_pool"]);
+            // jc: Always expect the ChainStore to return null or undefined.
+            // jc: I have commented out these un-used lines; noting that this could have cause an exception:
+            // svk: They're not ununsed, they handle the fallback to paying fees in BTS if the fee pool is empty
+            // svk: Since the asset is resolved during fee selection by the user, it is unlikely that the asset will still be unresolved in the chainstore at this point
+            var asset = ChainStore.getAsset(asset_id);
+            fee_pool = asset ? asset.getIn(["dynamic", "fee_pool"]) : 0;
             promises.push(Apis.instance().db_api().exec( "get_required_fees", [operations, "1.3.0"]));
         }
 
