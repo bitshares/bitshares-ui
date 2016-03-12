@@ -100,7 +100,7 @@ module.exports = function(options) {
             alias: {bytebuffer: rpath("../dl/node_modules/bytebuffer")},
             root: [rpath("./app"), rpath("../dl/src"), rpath("../plasma/libraries")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules"],
+            modulesDirectories: ["node_modules", rpath("../plasma/node_modules")],
             fallback: [rpath("./node_modules")]
         },
         resolveLoader: {
