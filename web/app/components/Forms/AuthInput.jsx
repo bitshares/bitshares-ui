@@ -85,7 +85,8 @@ export default class AuthInput extends Component {
         
             {/*  P A S S W O R D  */}
             <div>
-                <Translate component="label" content="wallet.password" />
+                {/* toUpperCase is for testing, FF and Chrome clipboard label as Password and PASSWORD resp.*/}
+                <label>{counterpart.translate("wallet.password").toUpperCase()}</label>
                 <input type="password" value={password} onChange={passwordChange.bind(this)} tabIndex={tabIndex++}
                     id="auth_password" ref="auth_password" autoComplete="off"/>
             </div>
@@ -93,7 +94,7 @@ export default class AuthInput extends Component {
             {/* C O N F I R M */}
             { hasConfirm ?
             <div>
-                <Translate component="label" content="wallet.confirm" />
+                <label>{counterpart.translate("wallet.confirm").toUpperCase()}</label>
                 <input type="password" value={confirm} onChange={confirmChange.bind(this)} id="auth_confirm" tabIndex={tabIndex++} />
             </div> :null}
             <p className="has-error">
