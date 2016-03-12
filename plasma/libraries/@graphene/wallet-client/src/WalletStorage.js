@@ -190,20 +190,37 @@ export default class WalletStorage {
         if( remote_copy === true && ! this.storage.state.get("remote_url"))
             throw new Error(this.instance+":configuration_error, remote_copy without remote_url")
         
+        // "weak" is not as important since we added the API or "Wallet Key"...
         // if( remote_copy === true && ! this.private_key ) {
         //     let weak_password = this.wallet_object.get("weak_password")
         //     assert(! weak_password, "Remote copies are enabled, but an email or username is missing from this wallet's encryption key.")
         // }
+        
         let state = {}
-        if( remote_copy !== null) state.remote_copy = remote_copy
+        let updWallet
+        if(remote_copy === false && this.storage.state.get("remote_copy") === true) {
+            // User wants an online wallet to go offline Wallet (no server backups).  Move the token from within the wallet back out into unencrypted non-backedup storage.  This means that if the wallet is backed up and restored it will not go back online because it does not have a create token.  Also, if the user wantes to go back-online in this device, unencrypted storage has the token so it will be one-click..
+            if( ! state.remote_token)
+                state.remote_token = this.wallet_object.get("create_token")
+            
+            this.wallet_object = this.wallet_object.remove("create_token")
+            updWallet = ()=> this.updateWallet()
+        }
+        
+        if( remote_copy !== null)
+            state.remote_copy = remote_copy
+        
         if( remote_token !== null){
             // Store in unencrypted storage until the server accepts it and creates a wallet (then moves into wallet as `create_token`)
             state.remote_token = remote_token
         }
+        
         this.notify = true
         
         return this.notifyResolve(
-            this.storage.setState(state).then(()=>{
+            this.storage.setState(state)
+            .then(()=> updWallet ? updWallet() : Promise.resolve())//depends on storage.setState
+            .then(()=>{
                 this.private_api_key = this.getPrivateApiKey(this.private_key)
                 return this.sync()
             })

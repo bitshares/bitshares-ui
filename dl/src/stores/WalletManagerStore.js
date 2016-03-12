@@ -42,6 +42,9 @@ class WalletManagerStore extends BaseStore {
         WalletDb.logout()
         WalletDb.openWallet(wallet_name).then( wallet => {
             wallet_object = wallet_object.set("public_name", wallet_name)// if different
+            if(wallet_object.has("create_token"))
+                wallet.storage.setState({ remote_copy: true })
+            
             wallet.wallet_object = wallet_object
         })
         .then(()=> this.onSetWallet({ wallet_name }))
