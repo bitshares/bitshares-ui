@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------
+Release 2.0.160314
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Updated with serializer types from stealth branch (adds better sorting in transactions)
+- Improve DepthChart construction and plotting
+- Increase websocket timeout to 5s
+
+BUG FIXES:
+- Refactor and fix error in onAmountChange function that prevents withdraw modal to pop up
+- Enforce https for faucet address when on https domain
+- Fix buy/sell collapse behaviour #779
+- Show disabled buy/sell and my orders for users with no account #774
+- Redirect to proper websocket url if user entered invalid URL #770
+
+---------------------------------------------------------------------
 Release 2.0.160309
 ---------------------------------------------------------------------
 

@@ -747,7 +747,10 @@ module.exports = {
         "short": "做空",
         others: "其他",
         invert: "反转交易对价格",
-        to_market: "前往交易市场"
+        to_market: "前往交易市场",
+        zoom: "缩放",
+        zoom_all: "显示全部",
+        settings: "图表选项"
     },
     markets: {
         title: "交易所",

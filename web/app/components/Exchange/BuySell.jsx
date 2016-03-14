@@ -113,9 +113,9 @@ class BuySell extends React.Component {
                     <div className={"exchange-content-header " + type}>
                         <span>{`${buttonText} ${quote.get("symbol")}`}</span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
-                        <div onClick={this.props.onToggleOpen} className="float-right clickable">{caret}</div>
+                        {this.props.smallScreen ? <div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-large">{caret}</div> : null}
                     </div>
-                    {!this.props.isOpen ? null : (
+                    {!this.props.isOpen && this.props.smallScreen ? null : (
                     <form className="order-form" noValidate>
                         <div className="grid-block vertical no-overflow no-padding">
 
