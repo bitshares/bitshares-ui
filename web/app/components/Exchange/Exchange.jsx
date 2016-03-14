@@ -1196,6 +1196,7 @@ class Exchange extends React.Component {
 
         let buyForm = (
             <BuySell
+                smallScreen={smallScreen}
                 style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
@@ -1229,6 +1230,7 @@ class Exchange extends React.Component {
 
         let sellForm = (
             <BuySell
+                smallScreen={smallScreen}
                 style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
