@@ -39,8 +39,10 @@ class WalletManagerStore extends BaseStore {
         if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
             throw new Error("Invalid wallet name")
         
+        let wallet
         WalletDb.logout()
-        WalletDb.openWallet(wallet_name).then( wallet => {
+        WalletDb.openWallet(wallet_name).then( w => {
+            wallet = w
             wallet_object = wallet_object.set("public_name", wallet_name)// if different
             if(wallet_object.has("create_token"))
                 wallet.storage.setState({ remote_copy: true })
@@ -49,9 +51,10 @@ class WalletManagerStore extends BaseStore {
         })
         .then(()=> this.onSetWallet({ wallet_name }))
         .then(()=> this.setState({ restored_wallet_name: wallet_name }))
-        .then(()=> wallet.login(username, password, Apis.chainId()))// Could "Conflict" with server version
+        .then(()=> WalletDb.login({ password, username }))// Could "Conflict" with server version
         .catch( error =>{
             this.setState({ restore_error: error })
+            console.error("WalletManagerStore\tonRestore", error)
             throw error
         })
         .then(()=> this.setState({ restore_error: null }))

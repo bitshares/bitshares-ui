@@ -16,7 +16,7 @@ export default class WalletWebSocket {
         this.is_ws_local = /localhost/.test(ws_server_url)
         this.is_ws_secure = /^wss:\/\//.test(ws_server_url)
         this.update_stocket_status = status => {
-            console.log("WalletWebSocket(" + this.instance + ")\t" + status)
+            // console.log("WalletWebSocket(" + this.instance + ")\t" + status)
             if(sendEvents === true)
                 WalletWebSocket.socket_status.forEach(cb=>Promise.resolve().then(()=>cb(status)))
         }
@@ -73,7 +73,7 @@ export default class WalletWebSocket {
                 let unsub = this.unsubscribe.bind(this, method, params, key)
                 unsubs.push(unsub)
             } catch( error ) {
-                console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"unsubscribe",error, "stack", error.stack)
+                console.error("WARN\tWalletWebSocket(" + this.instance + ")\tclose", "unsubscribe", error, "stack", error.stack)
             }
         }
         let unsub = Promise.all(unsubs)
@@ -81,7 +81,7 @@ export default class WalletWebSocket {
             this.web_socket.onclose = closeEvent => {
                 // if(global.INFO) console.log("INFO\tWalletWebSocket\tclose") // closeEvent.reason === connection failed
                 if( Object.keys(this.subscriptions).length !== 0 )
-                    console.error("WARN\tWalletWebSocket\tclose\t",this.instance,"active subscriptions",
+                    console.error("WARN\tWalletWebSocket(" + this.instance + ")\tclose","active subscriptions",
                         Object.keys(this.subscriptions).length)
                 
                 this.update_stocket_status("closed");

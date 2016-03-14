@@ -263,11 +263,12 @@ class BackupServer extends Component {
             let { server_wallet, private_key, private_api_key, username, password } = this.state
             this.setState({ wallet_restoring: true }, ()=>{
                 WalletDb.openWallet(this.state.new_wallet_name)
-                .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key, Apis.chainId()))
+                .then(()=> wallet().saveServerWallet(server_wallet, private_key, private_api_key, Apis.chainId(), true/*merge_wallets*/))
                 .then(()=> wallet().keepRemoteCopy(true))
                 .then(()=> wallet().login(username, password))
                 .catch(error=>{
                     this.setState({ wallet_restoring: false })
+                    console.error("ERROR\tBackupServer", error)
                     let tr_error = counterpart.translate("wallet.backup_status." + error)
                     notify.error(tr_error ? counterpart.translate("wallet.restore_error") : tr_error)
                     if(error === "chain_id_missmatch")

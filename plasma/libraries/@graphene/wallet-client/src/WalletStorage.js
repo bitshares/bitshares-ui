@@ -6,7 +6,7 @@ import WalletWebSocket from "./WalletWebSocket"
 import WalletApi from "./WalletApi"
 import assert from "assert"
 
-const trace = false
+const trace = true
 let setState_timeouts = Set()
 let setState_timeoutId
 
@@ -305,14 +305,14 @@ export default class WalletStorage {
         // Stronger server-salted key.
         let private_api_key = this.getPrivateApiKey(private_key)
         
-        // A wallet_object may be pre-populated before logging in.
-        if( prePopulated ) {
-            return this.updateWallet(private_key, private_api_key)// save or create (or conflict)
-                .then(()=> this.sync(private_key, private_api_key))// subscribe to updates
-                .then(()=> this.private_key = private_key )// unlock
-                .then(()=> this.private_api_key = private_api_key )// unlock
-                .then(()=> this.notifyResolve())
-        }
+        // // A wallet_object may be pre-populated before logging in.
+        // if( prePopulated ) {
+        //     return this.updateWallet(private_key, private_api_key)// save or create (or conflict)
+        //         .then(()=> this.sync(private_key, private_api_key))// subscribe to updates
+        //         .then(()=> this.private_key = private_key )// unlock
+        //         .then(()=> this.private_api_key = private_api_key )// unlock
+        //         .then(()=> this.notifyResolve())
+        // }
         
         // fetch and subscribe to updates.
         return this.sync(private_key, private_api_key).then( ()=>{
@@ -605,7 +605,7 @@ function sync(private_key = this.private_key, private_api_key = this.getPrivateA
     let sync_impossible = ! private_key || ! this.api || ! private_api_key
     if(trace && ! sync_impossible) console.log("WalletStorage("+this.instance+")\tsync")
     
-    if(sync_impossible ) 
+    if(sync_impossible )
         return Promise.resolve()
     
     let public_api_key = private_api_key.toPublicKey()
@@ -625,13 +625,17 @@ function sync(private_key = this.private_key, private_api_key = this.getPrivateA
         })
     }
     assert( subscription_id != null, "Subscription required")
+    
     if(this.remote_status)
-        assert( /No Content|Not Modified/.test(this.remote_status),
-            "Expecting No Content or Not Modified, got " + this.remote_status)
+        assert( /No Content|Not Modified|OK/.test(this.remote_status),
+            "Expecting No Content, Not Modified, or OK got " + this.remote_status)
     
     if( this.remote_status === "Not Modified" && this.storage.state.get("remote_copy") === false )
         return this.deleteRemoteWallet(private_key, private_api_key)
 
+    if(this.remote_status === "Not Modified")
+        return Promise.resolve()
+    
     return this.updateWallet(private_key, private_api_key)
 }
 
@@ -653,11 +657,15 @@ function fetchWalletCallback(server_wallet, private_key, private_api_key) {
 */
 function fetchWallet(server_wallet, private_key, private_api_key) {
     
-    let has_local = this.storage.state.has("encrypted_wallet")
+    // unlock may be pending (or not, subscription callback)
+    
+    // has local wallet
+    let has_local = this.storage.state.has("encrypted_wallet") || ! this.wallet_object.isEmpty()
+    
+    // Last restored server wallet hash..  This may also change if the wallet was updated offline (hash of local wallet).
     let local_hash = has_local ? this.storage.state.get("local_hash") : null
     
     let old_hash = this.storage.state.get("remote_hash")
-    // let had_remote = old_hash != null
     
     let new_hash = server_wallet.statusText === "Not Modified" ? local_hash : server_wallet.local_hash
     let has_remote = new_hash != null // deleted
@@ -701,7 +709,8 @@ function fetchWallet(server_wallet, private_key, private_api_key) {
         return this.updateWallet(private_key, private_api_key)
     
     if( ! has_local )
-        return this.saveServerWallet(server_wallet, private_key, private_api_key)
+        return this.saveServerWallet(server_wallet, private_key, private_api_key,
+            null/*chain_id*/, true/*merge_wallets*/)
 
     // Two wallets and a new wallet is arriving
     
@@ -714,22 +723,21 @@ function fetchWallet(server_wallet, private_key, private_api_key) {
         console.log("WalletStorage\tWallet fetch, nothing chanaged")
     }
     
-    let local_mod = local_hash !== old_hash
-    let server_mod = old_hash !== new_hash
+    let local_mod = old_hash === null || local_hash !== old_hash
+    let server_mod = old_hash === null || old_hash !== new_hash
     
     if( local_mod && server_mod ) {
         
         // Both wallets modified.  An internal wallet comparison is required to resolve.
-        
-        // Unit tests are checking for /Conflict/
-        this.remote_status = "Conflict"
-        throw new Error("WalletWebSocket("+this.instance+") Conflict, both server and local wallet modified")
+        return this.saveServerWallet(server_wallet, private_key, private_api_key,
+            null/*chain_id*/, true/*merge_wallets*/)
     }
     
     if( local_mod )
     {
         return this.updateWallet(private_key, private_api_key)
     }
+    
     // The server had this copy of this wallet when another device changed it (meaning that the other device must have been in sync with the wallet when the change was made).  It is safe to pull this wallet and overwrite the local version.
     if( server_mod )
         return this.saveServerWallet(server_wallet, private_key, private_api_key)
@@ -760,20 +768,39 @@ function deleteRemoteWallet(private_key, private_api_key, local_hash = this.loca
     })
 }
 
-function saveServerWallet(server_wallet, private_key, private_api_key, chain_id) {
+function saveServerWallet(server_wallet, private_key, private_api_key, chain_id, merge_wallets = false) {
     
     assert(server_wallet.local_hash, "server_wallet.local_hash")
     assert(server_wallet.encrypted_data, "server_wallet.encrypted_data")
     
-    let wallet_object, encrypted_wallet
     let backup_buffer = new Buffer(server_wallet.encrypted_data, 'base64')
     let public_key = private_key.toPublicKey()
+    let wallet_object, encrypted_wallet
     
     return Promise.resolve()
-    .then(()=> decrypt(backup_buffer, private_api_key)).then( w => wallet_object = w)
-    .then(()=> {
-        if(chain_id && chain_id !== wallet_object.chain_id)
+    .then(()=> decrypt(backup_buffer, private_api_key))
+    .then(server_wallet_object => {
+        if(chain_id && chain_id !== server_wallet_object.chain_id)
             throw "chain_id_missmatch"
+        
+        server_wallet_object = fromJS(server_wallet_object)
+        
+        if(merge_wallets) {
+            let m1 = this.wallet_object.mergeDeep(server_wallet_object)
+            let m2 = server_wallet_object.mergeDeep(this.wallet_object)
+            if( ! is(m1, m2)) {
+                this.remote_status = "Conflict"
+                this.notify = true
+                console.error("Actual Remote, Expected Local wallet.  Conflicting remote data (expected) would overwrite a local (actual) value.")
+                // Unit tests checking error string for /Conflict/.
+                // Assert prints a wallet diff.
+                assert.deepEqual(m1.toJS(), m2.toJS(), "WalletWebSocket("+this.instance+") Conflict, both server and local wallet modified")
+            }
+            wallet_object = m1
+            console.log("WalletWebSocket("+this.instance+") successfully merged server and local wallets")
+        } else {
+            wallet_object = server_wallet_object
+        }
     })
     .then(()=> encrypt(wallet_object, public_key)).then( w => encrypted_wallet = w)
     .then(()=> {
@@ -784,8 +811,8 @@ function saveServerWallet(server_wallet, private_key, private_api_key, chain_id)
             remote_token: null, // unit tests will over-populate remote_token
             remote_updated_date: server_wallet.updated,
             remote_created_date: server_wallet.created,
-        })        
-        this.wallet_object = fromJS( wallet_object )
+        })
+        this.wallet_object = wallet_object
         this.remote_status = "Not Modified"
         this.local_status = null
         this.notify = true
@@ -820,14 +847,13 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
     
     this.local_status = null
     this.notify = true
-    
     const enc_local = ()=> encrypt(wallet_object, public_key)
         .then(e =>{
             let local_hash = hash.sha256(e).toString("base64")
             return this.storage.setState({ encrypted_wallet: e.toString('base64'), local_hash })
         })
     
-    if( this.api == null || remote_copy !== true )
+    if( this.api == null || remote_copy !== true || ! public_api_key)
         return enc_local()
     
     if( code == null && this.remote_status === "No Content" )
@@ -892,7 +918,6 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
                     
                     this.notify = true
                     this.remote_status = "Not Modified"
-                    // No need to update this.wallet_object (no change)
                     
                     return this.storage.setState({
                         local_hash: local_hash,
