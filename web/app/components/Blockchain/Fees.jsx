@@ -23,7 +23,7 @@ let fee_grouping = {
 };
 
 // Operations that require LTM
-let ltm_required = [5, 20, 21, 34];
+let ltm_required = [5, 7, 20, 21, 34];
 
 @BindToChainState({keep_updating:true})
 class FeeGroup extends React.Component {
