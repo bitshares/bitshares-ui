@@ -1196,10 +1196,11 @@ class Exchange extends React.Component {
 
         let buyForm = (
             <BuySell
+                smallScreen={smallScreen}
                 style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
-                className={cnames("small-12 no-padding middle-content", leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
+                className={cnames("small-12 no-padding middle-content", {disabled: isNullAccount}, leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-2 sell-form" : "order-1 buy-form")}
                 type="bid"
                 amount={buyAmount}
                 price={displayBuyPrice}
@@ -1229,10 +1230,11 @@ class Exchange extends React.Component {
 
         let sellForm = (
             <BuySell
+                smallScreen={smallScreen}
                 style={!smallScreen && !leftOrderBook ? {minHeight: 266} : null}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
-                className={cnames("small-12 no-padding middle-content", leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
+                className={cnames("small-12 no-padding middle-content", {disabled: isNullAccount}, leftOrderBook || smallScreen ? "medium-6" : "medium-6 large-4", this.state.flipBuySell ? "order-1 buy-form" : "order-2 sell-form")}
                 type="ask"
                 amount={sellAmount}
                 price={displaySellPrice}
@@ -1470,7 +1472,7 @@ class Exchange extends React.Component {
 
                         {/* OrderBook and Market History */}
 
-                        {isNullAccount ? null : (
+                        
                             <div className="grid-block vertical shrink buy-sell">
                             {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
                             
@@ -1507,7 +1509,7 @@ class Exchange extends React.Component {
                                     diff={sellDiff}
                                 />
                             </div>
-                        </div>)}
+                        </div>
 
                         <div className="grid-block no-overflow wrap shrink no-padding">
                             {!leftOrderBook && quote && base ? buyForm : null}
@@ -1533,10 +1535,10 @@ class Exchange extends React.Component {
                                 isNullAccount={isNullAccount}
                             />
 
-                            {!isNullAccount && limit_orders.size > 0 && base && quote ? (
+                            {limit_orders.size > 0 && base && quote ? (
                             <MyOpenOrders
                                 smallScreen={this.props.smallScreen}
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 large-4" : "medium-12 large-6", "small-12 no-padding align-spaced ps-container middle-content order-4")}
+                                className={cnames({disabled: isNullAccount}, !smallScreen && !leftOrderBook ? "medium-6 large-4" : "medium-12 large-6", "small-12 no-padding align-spaced ps-container middle-content order-4")}
                                 key="open_orders"
                                 orders={limit_orders}
                                 currentAccount={currentAccount.get("id")}

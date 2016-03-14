@@ -332,10 +332,10 @@ class DepthHighChart extends React.Component {
 
         }
 
-
         // Push asks and bids
         if (flatBids.length) {
             config.series.push({
+                step: "right",
                 name: `Bid ${quoteSymbol}`,
                 data: flatBids,
                 color: colors[theme].bidColor,
@@ -345,6 +345,7 @@ class DepthHighChart extends React.Component {
 
         if (flatAsks.length) {
             config.series.push({
+                step: "left",
                 name: `Ask ${quoteSymbol}`,
                 data: flatAsks,
                 color: colors[theme].askColor,

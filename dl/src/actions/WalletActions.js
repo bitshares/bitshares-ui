@@ -82,7 +82,13 @@ class WalletActions {
             return create_account();
         } else {
             // using faucet
-            let create_account_promise = fetch(SettingsStore.getSetting("faucet_address") + "/api/v1/accounts", {
+
+            let faucetAddress = SettingsStore.getSetting("faucet_address");
+            if (window && window.location && window.location.protocol === "https:") {
+                faucetAddress = faucetAddress.replace(/http:\/\//, "https://");
+            }
+
+            let create_account_promise = fetch( faucetAddress + "/api/v1/accounts", {
                 method: 'post',
                 mode: 'cors',
                 headers: {

@@ -458,7 +458,7 @@ export default class ModalWrapper extends React.Component {
                     <BorrowModalContent
                         quote_asset={quote_asset}
                         call_orders={account.get("call_orders")}
-                        hasCallOrders={account.get("call_orders").size > 0}
+                        hasCallOrders={account.get("call_orders") && account.get("call_orders").size > 0}
                         modalId={modalId}
                         bitasset_balance={bitAssetBalance}
                         backing_balance={coreBalance}

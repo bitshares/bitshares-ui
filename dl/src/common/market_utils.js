@@ -278,7 +278,7 @@ class MarketUtils {
     static flatten_orderbookchart_highcharts(array, sumBoolean, inverse, precision) {
         inverse = inverse === undefined ? false : inverse;
         let orderBookArray = [];
-        let maxStep = 0.00000000001, arrayLength;
+        let arrayLength;
 
         if (inverse) {
 
@@ -287,8 +287,6 @@ class MarketUtils {
                 orderBookArray.unshift([array[arrayLength][0], array[arrayLength][1]]);
                 if (array.length > 1) {
                     for (let i = array.length - 2; i >= 0; i--) {
-                        // maxStep = Math.min((array[i + 1][0] - array[i][0]) / 2, 0.1 / precision);
-                        orderBookArray.unshift([array[i][0] + maxStep, array[i + 1][1]]);
                         if (sumBoolean) {
                             array[i][1] += array[i + 1][1];
                         }
@@ -303,8 +301,6 @@ class MarketUtils {
                 orderBookArray.push([array[0][0], array[0][1]]);
                 if (array.length > 1) {
                     for (var i = 1; i < array.length; i++) {
-                        // maxStep = Math.min((array[i][0] - array[i - 1][0]) / 2, 0.1 / precision);
-                        orderBookArray.push([array[i][0] - maxStep, array[i - 1][1]]);
                         if (sumBoolean) {
                             array[i][1] += array[i - 1][1];
                         }
