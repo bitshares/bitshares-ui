@@ -816,10 +816,12 @@ Types.address =
     }
 }
 
-let first = el => Array.isArray(el) ? el[0] : el
+let strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0 
 let sortOperation = (array, st_operation) => st_operation.compare ?
-    array.sort((a,b)=> st_operation.compare(first(a), first(b))) : // custom compare operation
+    array.sort((a,b)=> st_operation.compare(a, b)) : // custom compare operation
     array.sort((a,b)=>
-        typeof first(a) === "number" && typeof first(b) === "number" ? first(a) - first(b) : 
-        first(a).toString() > first(b).toString()
+        typeof a === "number" && typeof b === "number" ? a - b :
+        // A binary string compare does not work. Performanance is very good so HEX is used..  localeCompare is another option.
+        Buffer.isBuffer(a) && Buffer.isBuffer(b) ? strCmp(a.toString("hex"), b.toString("hex")) :
+        strCmp(a.toString(), b.toString())
     )
