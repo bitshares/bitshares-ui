@@ -396,7 +396,6 @@ export default class ConfidentialWallet {
                     bop.amount = { amount: total_amount.toString(), asset_id: asset.get("id") }
                     
                     let tr = new TransactionBuilder()
-                    bop.outputs = bop.outputs.sort((a, b)=> a.commitment > b.commitment)
                     tr.add_type_operation("transfer_to_blind", bop)
                     
                     return this.process_transaction(tr, broadcast, p1).then(()=> {
@@ -1158,12 +1157,7 @@ function send_blind_tr(ops, from_key_or_label, broadcast, one_time_keys, broadca
         }
         
         assert(op.inputs, "inputs are required")
-        op.inputs = op.inputs.sort((a, b)=> a.commitment > b.commitment)
-        
         let op_name = op.outputs ? "blind_transfer" : "transfer_from_blind"
-        if( op.outputs )
-            op.outputs = op.outputs.sort((a, b)=> a.commitment > b.commitment)
-
         tr.add_type_operation(op_name, op)
         {
             let signer

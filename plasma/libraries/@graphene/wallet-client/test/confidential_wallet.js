@@ -239,6 +239,40 @@ describe('Confidential wallet', () => {
         })
     })
     
+    it("sort blind inputs", function() {
+        // must wait for a blocks...
+        this.timeout(30 * 1000)
+    
+        return wallet.login(username, password, Apis.chainId())
+        .then(()=>{
+            
+            create("alice", "alice-brain-key", cw)
+            create("bob", "bob-brain-key", cw)
+            cw.setKeyLabel( PrivateKey.fromSeed("nathan"), "@nathan" )
+            
+            let tx
+            return Promise.resolve()
+                
+            // do this just to get some money
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1]], true ))
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1]], true ))
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1]], true ))
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1]], true ))
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",1]], true ))
+            .then( () => cw.queue_mills =10*1000)
+            .then( () => cw.transferToBlind( "nathan", "CORE", [["alice",15]], true ))
+            // blind to blind (without change), multiple inputs
+            .then( ()=> cw.blindTransfer("alice", "bob", 5, "CORE", true) ).then(t => tx = t)
+            .then( ()=> assert(tx.confirmation_receipt, "confirmation_receipt"))
+        })
+    })
+    
+    
     it("blind to blind (external)", function() {
         // must wait for a blocks...
         this.timeout(10 * 1000)

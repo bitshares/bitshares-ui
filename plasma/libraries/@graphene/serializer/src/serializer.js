@@ -8,14 +8,17 @@ class Serializer {
     constructor(operation_name, types) {
         this.operation_name = operation_name
         this.types = types
+        if(this.types)
+            this.keys = Object.keys(this.types)
+        
         Serializer.printDebug = true
     }
-        
+    
     fromByteBuffer(b) {
         var object = {};
         var field = null;
         try {
-            var iterable = Object.keys(this.types);
+            var iterable = this.keys;
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];
                 var type = this.types[field];
@@ -56,7 +59,7 @@ class Serializer {
     appendByteBuffer(b, object) {
         var field = null;
         try {
-            var iterable = Object.keys(this.types);
+            var iterable = this.keys;
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];
                 var type = this.types[field];
@@ -77,7 +80,7 @@ class Serializer {
         var result = {};
         var field = null;
         try {
-            var iterable = Object.keys(this.types);
+            var iterable = this.keys;
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];
                 var type = this.types[field];
@@ -106,7 +109,7 @@ class Serializer {
             if( ! this.types )
                 return result;
             
-            var iterable = Object.keys(this.types);
+            var iterable = this.keys;
             for (var i = 0, field; i < iterable.length; i++) {
                 field = iterable[i];
                 var type = this.types[field];
@@ -127,6 +130,32 @@ class Serializer {
         }
         
         return result;
+    }
+    
+    /** Sort by the first element in a operation */
+    compare(a, b) {
+
+        let first_key = this.keys[0]
+        let first_type = this.types[first_key]
+        
+        let valA = a[first_key]
+        let valB = b[first_key]
+
+        if(first_type.compare)
+            return first_type.compare(valA, valB)
+        
+        if(typeof valA === "number" && typeof valB === "number")
+            return valA - valB
+        
+        let encoding
+        if(Buffer.isBuffer(valA) && Buffer.isBuffer(valB)) {
+            // A binary string compare does not work.  If localeCompare is well supported that could replace HEX.  Performanance is very good so comparing HEX works.
+            encoding = "hex"
+        }
+        
+        let strA = valA.toString(encoding)
+        let strB = valB.toString(encoding)
+        return strA > strB ? 1 : strA < strB ? -1 : 0
     }
     
     // <helper_functions>
