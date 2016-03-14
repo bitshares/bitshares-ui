@@ -22,7 +22,9 @@ class WebsocketAddModal extends React.Component {
         if (this.state.protocol === "https:") {
             e.target.value = e.target.value.replace("ws://", "wss://")
         }
-        this.setState({ws: e.target.value});
+        if (e.target.value.indexOf("ws://") !== -1 || e.target.value.indexOf("wss://") !== -1) {
+            this.setState({ws: e.target.value});
+        }
     }
 
     show(e) {

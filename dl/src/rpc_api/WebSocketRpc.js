@@ -10,7 +10,12 @@ class WebSocketRpc {
         }
         this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
-        this.web_socket = new WebSocketClient(ws_server);
+        try {
+            this.web_socket = new WebSocketClient(ws_server);
+        } catch (error) {
+            console.error("invalid websocket URL:", error);
+            this.web_socket = new WebSocketClient("wss://127.0.0.1:8080");
+        }
         this.web_socket.timeoutInterval = 5000;
         this.current_reject = null;
         this.on_reconnect = null;
@@ -23,6 +28,7 @@ class WebSocketRpc {
             }
             this.web_socket.onerror = (error) => {
                 if(this.update_rpc_connection_status_callback) this.update_rpc_connection_status_callback("error");
+
                 if (this.current_reject) {
                     this.current_reject(error);
                 }
