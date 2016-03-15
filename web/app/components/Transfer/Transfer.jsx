@@ -475,7 +475,7 @@ class Transfer extends React.Component {
                     {/* TODO: show remaining balance */}
 
                 </div>
-                <TransferReceiptModal value={this.state.transfer_receipt}/>
+                <TransferReceiptModal id="transfer_receipt_modal" value={this.state.transfer_receipt}/>
             </form>
             <div className="grid-content medium-6 right-column">
                 {all_balances && all_balances.length > 0 && <div className="grid-content">

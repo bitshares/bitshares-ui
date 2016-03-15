@@ -6,6 +6,7 @@ import Icon from "../Icon/Icon";
 class TransferReceiptModal extends React.Component {
 
     static propTypes = {
+        id: React.PropTypes.string,
         value: React.PropTypes.string
     };
 
@@ -37,17 +38,18 @@ class TransferReceiptModal extends React.Component {
     }
 
     render() {
-        return (<Modal id="transfer_receipt_modal" overlay>
-            <Trigger close="transfer_receipt_modal">
+        const {value, id} = this.props;
+        return (<Modal id={id} overlay>
+            <Trigger close={id}>
                 <a href="#" className="close-button">&times;</a>
             </Trigger>
             <h3>Transfer Receipt</h3>
             <div style={{paddingTop: "1rem"}}>
                 <div className="form-group">
-                    <textarea ref="t_receipt" id="t_receipt" rows="5" cols="50" value={this.props.value} autoFocus readOnly onClick={this._selectAndCopy} />
+                    <textarea ref="t_receipt" id="t_receipt" rows="5" cols="50" value={value} autoFocus readOnly onClick={this._selectAndCopy} />
                 </div>
                 <div className="button-group">
-                    <Trigger close="transfer_receipt_modal"><a href className="button">Close</a></Trigger>
+                    <Trigger close={id}><a href className="button">Close</a></Trigger>
                     <button className="button outline" onClick={this._copyToClipboard}>Copy to Clipboard</button>
                 </div>
             </div>

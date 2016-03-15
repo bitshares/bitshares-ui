@@ -140,7 +140,7 @@ class RecentTransactions extends React.Component {
         if (cwallet) {
             let transferReceipt = cwallet.getEncodedReceipt(trx.conf);
             this.setState({transferReceipt});
-            ZfApi.publish("transfer_receipt_modal", "open");
+            ZfApi.publish("history_transfer_receipt_modal", "open");
         } else {
             alert('Unlock wallet to see receipt');
         }
@@ -245,7 +245,7 @@ class RecentTransactions extends React.Component {
                         }
                     </div>
                 }
-                <TransferReceiptModal value={this.state.transferReceipt}/>
+                <TransferReceiptModal id="history_transfer_receipt_modal" value={this.state.transferReceipt}/>
             </div>
         );
     }
