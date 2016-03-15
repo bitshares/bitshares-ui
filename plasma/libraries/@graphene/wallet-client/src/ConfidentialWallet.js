@@ -418,13 +418,22 @@ export default class ConfidentialWallet {
     blindHistory( pubkey_or_label ) {
         
         this.assertLogin()
-        let public_key = this.getPublicKey( pubkey_or_label )
-        assert( public_key, "missing pubkey_or_label " + pubkey_or_label)
-        
-        let pubkey = public_key.toString()
-        return this.blind_receipts()
-            .filter( receipt => receipt.get("from_key") === pubkey || receipt.get("to_key") === pubkey )
-            .reduce( (r, receipt)=> r.push( receipt ), List())
+
+        let blind_receipts = null
+
+        if (pubkey_or_label) {
+            let public_key = this.getPublicKey(pubkey_or_label)
+            assert(public_key, "missing pubkey_or_label " + pubkey_or_label)
+            let pubkey = public_key.toString()
+            blind_receipts = this.blind_receipts().filter( receipt => receipt.get("from_key") === pubkey || receipt.get("to_key") === pubkey )
+        } else {
+            blind_receipts = this.blind_receipts()
+        }
+
+        return blind_receipts
+            .reduce( (r, receipt) => {
+                console.log("-- receipt -->", receipt.toJS());
+                return r.push( receipt )}, List())
             .sort( (a, b) => a.get("date") > b.get("date") )
     }
     

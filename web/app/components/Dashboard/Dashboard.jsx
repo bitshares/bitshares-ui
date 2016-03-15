@@ -20,7 +20,9 @@ import PubKey from "../Utility/PubKey";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import {Link} from "react-router";
+import connectToStores from "alt/utils/connectToStores";
 
+@connectToStores
 class Dashboard extends React.Component {
 
     static contextTypes = {
@@ -39,6 +41,13 @@ class Dashboard extends React.Component {
         this._addPrivateContact = this._addPrivateContact.bind(this);
     }
 
+    static getStores() {
+        return [WalletUnlockStore]
+    }
+
+    static getPropsFromStores() {
+        return {wallet_locked: WalletUnlockStore.getState().locked}
+    }
 
     componentDidMount() {
         //let c = ReactDOM.findDOMNode(this.refs.container);
@@ -190,7 +199,6 @@ class Dashboard extends React.Component {
                         </table>
                     </div>}
                     {!private_contacts.isEmpty() && <div ref="container" className="content-block">
-                        {/* <button className="button outline float-right" onClick={this._addPrivateContact} data-tip="Add Private Contact" data-type="light">+</button> */}
                         <h4>Private Contacts</h4>
                         <table className="table table-hover">
                             <thead>
@@ -222,7 +230,12 @@ class Dashboard extends React.Component {
 
                 <div className="grid-block right-column no-overflow">
                     <div ref="transactions" className="grid-content" style={{paddingLeft: "0.5rem", paddingRight: "0.25rem"}}>
-                        <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
+                        {this.props.wallet_locked ?
+                            <div>
+                                {private_contacts.isEmpty() && <p className="float-right" style={{fontSize: '0.9rem'}}>Unlock to see private transactions &nbsp;</p>}
+                                <RecentTransactions accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
+                            </div>
+                            :  <RecentTransactions accountsList={this.props.linkedAccounts} blindHistory={WalletDb.getState().cwallet.blindHistory().toJS()} limit={25} compactView={true}/>}
                     </div>
                 </div>
 
