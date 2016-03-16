@@ -14,8 +14,12 @@
 }
 
 .table > tbody > tr > td {
-  border-bottom: 1px solid #ddd;
+  // border-bottom: 1px solid #ddd;
   padding: 5px;
+}
+
+.table > tbody > tr:last-of-type > td {
+  border-bottom: none;
 }
 
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {

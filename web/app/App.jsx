@@ -38,6 +38,7 @@ import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
 import LoadingIndicator from "components/LoadingIndicator";
@@ -84,16 +85,21 @@ class App extends React.Component {
 
     constructor() {
         super();
-        this.state = {loading: true, synced: false};
+        this.state = {
+            loading: true,
+            synced: false,
+            theme: SettingsStore.getState().settings.get("themes")};
     }
 
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
+        SettingsStore.unlisten(this._onSettingsChange);
     }
 
     componentDidMount() { 
         try {
             NotificationStore.listen(this._onNotificationChange.bind(this));
+            SettingsStore.listen(this._onSettingsChange.bind(this));
 
             Promise.resolve().then(() => {
                 AccountStore.tryToSetCurrentAccount();
@@ -127,6 +133,15 @@ class App extends React.Component {
         if (this.refs.notificationSystem) this.refs.notificationSystem.addNotification(notification);
     }
 
+    _onSettingsChange() {
+        let {settings} = SettingsStore.getState();
+        if (settings.get("themes") !== this.state.theme) {
+            this.setState({
+                theme: settings.get("themes")
+            });
+        }
+    }
+
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
     //     console.log("add notification:", this.refs, params);
@@ -136,7 +151,7 @@ class App extends React.Component {
     render() {
         if (this.props.location.pathname === "/init-error") { // temporary, until we implement right offline mode
             return (
-                <div className="grid-frame vertical">
+                <div className={"grid-frame vertical " + this.state.theme}>
                     <div className="grid-block vertical">
                         <InitError />
                     </div>
@@ -160,12 +175,14 @@ class App extends React.Component {
             );
         }
         return (
-            <div>
-                {content}
-                <NotificationSystem ref="notificationSystem" allowHTML={true}/>
-                <TransactionConfirm/>
-                <WalletUnlockModal/>
-                <BrowserSupportModal ref="browser_modal"/>
+            <div className={this.state.theme}>
+                <div id="content-wrapper">
+                    {content}
+                    <NotificationSystem ref="notificationSystem" allowHTML={true}/>
+                    <TransactionConfirm/>
+                    <WalletUnlockModal/>
+                    <BrowserSupportModal ref="browser_modal"/>
+                </div>
             </div>
         );
 

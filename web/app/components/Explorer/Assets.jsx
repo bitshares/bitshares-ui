@@ -7,6 +7,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Tabs, {Tab} from "../Utility/Tabs";
@@ -83,15 +84,21 @@ class Assets extends React.Component {
         let {assets} = this.props;
 
         let placeholder = counterpart.translate("markets.filter").toUpperCase();
+        let coreAsset = ChainStore.getAsset("1.3.0");
 
         let uia = assets.filter(a => {
             return !a.market_asset  && a.symbol.indexOf(this.state.filterUIA) !== -1;
         }).map((asset) => {
+            let description = assetUtils.parseDescription(asset.options.description);
+
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
+
             return (
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -107,11 +114,17 @@ class Assets extends React.Component {
         let mia = assets.filter(a => {
             return a.bitasset_data && !a.bitasset_data.is_prediction_market && a.symbol.indexOf(this.state.filterMPA) !== -1;
         }).map((asset) => {
+            let description = assetUtils.parseDescription(asset.options.description);
+            console.log(asset.symbol, description);
+            
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
+
             return (
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
         }).sort((a, b) => {
@@ -124,31 +137,36 @@ class Assets extends React.Component {
             }
         }).toArray();
 
-        let coreAsset = ChainStore.getAsset("1.3.0");
+        
 
         let pm = assets.filter(a => {
+
+            let description = assetUtils.parseDescription(a.options.description);
+
             return (
                 a.bitasset_data &&
                 a.bitasset_data.is_prediction_market &&
-                (a.symbol.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1 || a.options.description.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1)
+                (a.symbol.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1 || description.main.toLowerCase().indexOf(this.state.filterPM.toLowerCase()) !== -1)
             );
         }).map((asset) => {
+            let description = assetUtils.parseDescription(asset.options.description);
+            let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
 
-            let marketID = asset.symbol + "_" + (coreAsset ? coreAsset.get("symbol") : "BTS");
-            
             return (
                 <tr key={asset.id.split(".")[2]}>
                     <td style={{width: "80%"}}>
                         <div style={{paddingTop: 10, fontWeight: "bold"}}>
-                            {asset.symbol}
+                            <Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link>
+                            {description.condition ? <span> ({description.condition})</span> : null}
                         </div>
-                        {asset.options.description ? 
+                        {description ? 
                         <div style={{padding: "10px 20px 5px 0", lineHeight: "18px"}}>
-                            {asset.options.description}
+                            {description.main}
                         </div> : null}
                         <div style={{padding: "0 20px 5px 0", lineHeight: "18px"}}>
                             <LinkToAccountById account={asset.issuer} />
                             <span> - <FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></span>
+                            {description.expiry ? <span> - {description.expiry}</span> : null}
                         </div>
                     </td>
                     <td style={{width: "20%"}}>
@@ -170,66 +188,70 @@ class Assets extends React.Component {
             <div className="grid-block vertical">
                 <div className="grid-block page-layout">
                     <div className="grid-block small-12 medium-10 medium-offset-1 main-content vertical">
-                        <Tabs
-                            setting="updateAssetTab"
-                            style={{maxWidth: "800px"}}
-                            className="grid-block vertical no-overflow no-padding"
-                            contentClass="grid-block vertical"
-                        >
-                            <Tab title="explorer.assets.market">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                            <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                            <th><Translate component="span" content="markets.supply" /></th>
-                                        </tr>
-                                        </thead>
+                        <div className="generic-bordered-box">
+                            <Tabs
+                                tabsClass="no-padding bordered-header"
+                                setting="assetsTab"
+                                className="grid-block vertical no-overflow no-padding"
+                                contentClass="grid-block vertical"
+                            >
+                                <Tab title="explorer.assets.market">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterMPA} onChange={this._onFilter.bind(this, "filterMPA")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                                <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                                <th><Translate component="span" content="markets.supply" /></th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                                <tbody>
+                                                    {mia}
+                                                </tbody>
+                                        </table> 
+                                    </div>  
+                                </Tab>
+
+                                <Tab title="explorer.assets.user">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={this._onFilter.bind(this, "filterUIA")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                                <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                                <th><Translate component="span" content="markets.supply" /></th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+
                                             <tbody>
-                                                {mia}
+                                                {uia}
                                             </tbody>
-                                    </table> 
-                                </div>  
-                            </Tab>
+                                        </table>
+                                    </div>
+                                </Tab>
 
-                            <Tab title="explorer.assets.user">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={placeholder} type="text" value={this.state.filterUIA} onChange={this._onFilter.bind(this, "filterUIA")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                            <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                            <th><Translate component="span" content="markets.supply" /></th>
-                                        </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {uia}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Tab>
-
-                            <Tab title="explorer.assets.prediction">
-                                <div className="grid-block shrink">
-                                    <input style={{maxWidth: "500px"}} placeholder={counterpart.translate("markets.search").toUpperCase()} type="text" value={this.state.filterPM} onChange={this._onFilter.bind(this, "filterPM")}></input>
-                                </div>
-                                <div className="grid-block" style={{paddingBottom: 20}}>
-                                    <table className="table">
-                                        <tbody>
-                                            {pm}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Tab>
-                        </Tabs>                     
+                                <Tab title="explorer.assets.prediction">
+                                    <div className="grid-block shrink">
+                                        <input style={{maxWidth: "500px"}} placeholder={counterpart.translate("markets.search").toUpperCase()} type="text" value={this.state.filterPM} onChange={this._onFilter.bind(this, "filterPM")}></input>
+                                    </div>
+                                    <div className="grid-block" style={{paddingBottom: 20}}>
+                                        <table className="table">
+                                            <tbody>
+                                                {pm}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </Tab>
+                            </Tabs>       
+                        </div>              
                     </div>
                 </div>
             </div>

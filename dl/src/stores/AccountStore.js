@@ -284,7 +284,7 @@ class AccountStore extends BaseStore {
         this.state.unFollowedAccounts = this.state.unFollowedAccounts.add(name);
         this.checkAccountRefs();
         // Limit to maxEntries accounts
-        let maxEntries = 20;
+        let maxEntries = 50;
         if (this.state.unFollowedAccounts.size > maxEntries) {
             this.state.unFollowedAccounts = this.state.unFollowedAccounts.takeLast(maxEntries);
         }

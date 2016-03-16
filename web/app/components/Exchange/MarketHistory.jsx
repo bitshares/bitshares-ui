@@ -13,6 +13,7 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import connectToStores from "alt/utils/connectToStores";
 import {chain_types} from "@graphene/chain";
+import TransitionWrapper from "../Utility/TransitionWrapper";
 
 let {operations} = chain_types;
 
@@ -32,7 +33,7 @@ class MarketHistory extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.viewSettings.get("historyTab") || "history"
+            activeTab: props.viewSettings.get("historyTab", "history")
         }
     }
 
@@ -41,6 +42,7 @@ class MarketHistory extends React.Component {
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            nextProps.className !== this.props.className ||
             nextState.activeTab !== this.state.activeTab
         );
     }
@@ -161,34 +163,42 @@ class MarketHistory extends React.Component {
         let myHistoryClass = cnames(hc, {inactive: activeTab === "history"});
 
         return (
-            <div className="left-order-book no-padding no-overflow">
-                <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                    {isNullAccount ? null : (
-                        <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
-                            <Translate content="exchange.my_history" />
-                        </div>)}
-                    <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
-                        <Translate content="exchange.history" />
+            <div className={this.props.className}>
+                <div className="exchange-bordered">
+                    <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
+                            <div className={cnames(myHistoryClass, {disabled: isNullAccount})} onClick={this._changeTab.bind(this, "my_history")} >
+                                <Translate content="exchange.my_history" />
+                            </div>
+                        <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
+                            <Translate content="exchange.history" />
+                        </div>
                     </div>
-                </div>
-                <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                    <table className="table order-table text-right market-right-padding">
-                        <thead>
-                            <tr>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/><span className="header-sub-title">{baseSymbol}/{quoteSymbol}</span></th>
-                                <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/><span className="header-sub-title">({quoteSymbol})</span></th>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.value" /><br/><span className="header-sub-title">({baseSymbol})</span></th>
-                                <th style={{textAlign: "right"}}><Translate content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /><br/><span style={{visibility: "hidden"}} className="header-sub-title">({quoteSymbol})</span></th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-                <div className="table-container grid-content market-right-padding-only" ref="history">
-                    <table className="table order-table text-right market-right-padding">
-                        <tbody>
-                            {historyRows}
-                        </tbody>
-                    </table>
+                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                        <table className="table order-table text-right market-right-padding">
+                            <thead>
+                                <tr>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div
+                        className="table-container grid-block market-right-padding-only no-overflow"
+                        ref="history"
+                        style={{maxHeight: 210, overflow: "hidden"}}
+                    >
+                        <table className="table order-table text-right market-right-padding">
+                            <TransitionWrapper
+                                component="tbody"
+                                transitionName="newrow"
+                            >
+                                {historyRows}
+                            </TransitionWrapper>
+                        </table>
+                    </div>
                 </div>
             </div>
         );

@@ -79,6 +79,9 @@ class CollateralPosition extends React.Component {
         let co = this.props.object.toJS();
         let cr = this._getCollateralRatio(co.debt, co.collateral);
 
+        let quoteAssetID = co.call_price.quote.asset_id;
+        let quoteAsset = ChainStore.getAsset(quoteAssetID);
+
         return (
             <tr>
                 <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
@@ -91,11 +94,13 @@ class CollateralPosition extends React.Component {
 
                 <td>
                     <button onClick={this._onUpdatePosition.bind(this)} className="button outline"><Translate content="borrow.update" /></button>
+                    {quoteAsset ? (
                     <BorrowModal                
                         ref={"cp_modal_" + co.call_price.quote.asset_id}
                         quote_asset={co.call_price.quote.asset_id}
+                        backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                         account={this.props.account}
-                    />
+                    />) : null}
                 </td>
                 <td>
                     <button onClick={this._onClosePosition.bind(this)} className="button outline"><Translate content="borrow.close" /></button>

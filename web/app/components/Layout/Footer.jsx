@@ -19,24 +19,53 @@ class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
         synced: React.PropTypes.bool.isRequired
-    }
+    };
 
     static defaultProps = {
         dynGlobalObject: "2.1.0"
-    }
+    };
 
     static contextTypes = {
         history: React.PropTypes.object
+    };
+
+    constructor() {
+        super();
+
+        this.state = {
+            hideFooter: false
+        };
+    }
+
+    componentWillMount() {
+        this.context.history.listen((err, state) => {
+            if (state.location.pathname.indexOf("market") !== -1) {
+                this.setState({
+                    hideFooter: true
+                });
+            } else {
+            this.setState({
+                    hideFooter: false
+                })
+            }
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
-               nextProps.backup_recommended !== this.props.backup_recommended ||
-               nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
-               nextProps.synced !== this.props.synced;
+        return (
+            nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
+            nextProps.backup_recommended !== this.props.backup_recommended ||
+            nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
+            nextProps.synced !== this.props.synced ||
+            nextState.hideFooter !== nextState.hideFooter
+       );
     }
 
     render() {
+        if (this.state.hideFooter) {
+            return null;
+        }
+
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
         // console.log("block_time", block_time)
@@ -52,20 +81,20 @@ class Footer extends React.Component {
                             <Translate content="footer.title" /><span className="version">{version}</span>
                         </div>
                     </div>
-                    {this.props.synced ? null : <div className="grid-block shrink txtlabel error">Blockchain is out of sync, please wait until it's synchronized.. &nbsp; &nbsp;</div>}
-                    {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error">No Blockchain connection &nbsp; &nbsp;</div> : null}
+                    {this.props.synced ? null : <div className="grid-block shrink txtlabel error"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
+                    {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error"><Translate content="footer.connection" />&nbsp; &nbsp;</div> : null}
                     {this.props.backup_recommended ? <span>
                         <div className="grid-block">
                             <a className="shrink txtlabel facolor-alert"
                                 data-tip="Please understand that you are responsible for making your own backup&hellip;"
                                 data-type="warning"
-                                onClick={this.onBackup.bind(this)}>Backup Required</a>
+                                onClick={this.onBackup.bind(this)}><Translate content="footer.backup" /></a>
                             &nbsp;&nbsp;
                         </div>
                     </span> : null}
                     {this.props.backup_brainkey_recommended ? <span>
                         <div className="grid-block">
-                            <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}>Backup brainkey recommended</a>
+                            <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}><Translate content="footer.brainkey" /></a>
                             &nbsp;&nbsp;
                         </div>
                     </span>:null}

@@ -955,6 +955,15 @@ class ChainStore
     */
    _updateObject( object, notify_subscribers, emit = true )
    {
+
+      if (!("id" in object)) {
+        console.log("object with no id:", object);
+        if ("balance" in object && "owner" in object && "settlement_date" in object) {
+          // Settle order object
+          emitter.emit("settle-order-update", object);
+        }
+        return;
+      }
       // if (!(object.id.split(".")[0] == 2) && !(object.id.split(".")[1] == 6)) {
       //   console.log( "update: ", object )
       // }
@@ -1097,6 +1106,7 @@ class ChainStore
              let asset = this.getObject( asset_id );
              if( asset ) {
                 asset = asset.set( "bitasset", current );
+                emitter.emit('bitasset-update', asset);
                 this.objects_by_id = this.objects_by_id.set( asset_id, asset );
              }
           }

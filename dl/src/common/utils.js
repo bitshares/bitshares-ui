@@ -144,7 +144,7 @@ var Utils = {
         let baseID = base.toJS ? base.get("id") : base.id;
         let basePrecision  = base.toJS ? base.get("precision") : base.precision;
         if (quoteID === "1.3.0") {
-            priceText = this.format_number(price, quotePrecision - 1);
+            priceText = this.format_number(price, quotePrecision);
         } else if (baseID === "1.3.0") {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
         } else {
@@ -156,6 +156,10 @@ var Utils = {
     price_to_text: function(price, base, quote, forcePrecision = null) {
         if (typeof price !== "number" || !base || !quote) {
             return;
+        }
+
+        if (price === Infinity) {
+            price = 0;
         }
         let precision;
         let priceText;
@@ -171,24 +175,27 @@ var Utils = {
         let i;
 
         let zeros = 0;
-        if (price > 1) {
-            let l = dec.length;
-            for (i = l - 1; i >= 0; i--) {
-                if (dec[i] !== "0") {
-                    break;
-                }
-                zeros++;
-            };
-        } else {
-            let l = dec.length;
-            for (i = 0; i < l; i++) {
-                if (dec[i] !== "0") {
-                    i--;
-                    break;
-                }
-                zeros++;
-            };
+        if (dec) {
+            if (price > 1) {
+                let l = dec.length;
+                for (i = l - 1; i >= 0; i--) {
+                    if (dec[i] !== "0") {
+                        break;
+                    }
+                    zeros++;
+                };
+            } else {
+                let l = dec.length;
+                for (i = 0; i < l; i++) {
+                    if (dec[i] !== "0") {
+                        i--;
+                        break;
+                    }
+                    zeros++;
+                };
+            }
         }
+        
         let trailing = zeros ? dec.substr(Math.max(0, i + 1), dec.length) : null;
 
         if (trailing) {
@@ -319,6 +326,7 @@ var Utils = {
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
+
         if (!fromRate || !toRate) {
             return null;
         }
@@ -332,7 +340,6 @@ var Utils = {
             toID = toRate.get("id");
             toRate = toRate.get("bitasset") ? toRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
-
 
         let fromRateQuoteID = fromRate.quote.asset_id;
         let toRateQuoteID = toRate.quote.asset_id;
@@ -468,7 +475,6 @@ var Utils = {
 
         // return result;
     }
-
 };
 
 export default Utils;

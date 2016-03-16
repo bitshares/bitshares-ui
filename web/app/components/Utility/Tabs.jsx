@@ -72,7 +72,7 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting ? props.viewSettings.get(props.setting) || props.defaultActiveTab : props.defaultActiveTab
+            activeTab: props.setting ? props.viewSettings.get(props.setting, props.defaultActiveTab) : props.defaultActiveTab
         };
     }
 
@@ -88,15 +88,30 @@ class Tabs extends React.Component {
 
     render() {
         let {children, contentClass, tabsClass, style} = this.props;
+
         let activeContent = null;
 
+        let tabIndex = [];
         let tabs = React.Children.map(children, (child, index) => {
+            if (!child) {
+                return null;
+            }
             let isActive = index === this.state.activeTab;
             if (isActive) {
                 activeContent = child.props.children;
             }
-            return React.cloneElement(child,{isActive: isActive, changeTab: this._changeTab.bind(this), index: index} )
+
+            return React.cloneElement(child, {isActive: isActive, changeTab: this._changeTab.bind(this), index: index} )
+        }).filter(a => {
+            if (a) {
+                tabIndex.push(a.props.index);
+            }
+            return a !== null;
         });
+
+        if (!activeContent) {
+            activeContent = tabs[0].props.children;
+        }
 
         return (
             <div className={this.props.className}>

@@ -55,7 +55,7 @@ class AssetActions {
         });
     }
 
-    createAsset(account_id, createObject, flags, permissions, cer) {
+    createAsset(account_id, createObject, flags, permissions, cer, isBitAsset, is_prediction_market, bitasset_opts, description) {
         // Create asset action here...
         console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
         let tr = new TransactionBuilder();
@@ -69,7 +69,7 @@ class AssetActions {
 
         let corePrecision = utils.get_asset_precision(ChainStore.getAsset(cer.base.asset_id).get("precision"));
 
-        tr.add_type_operation("asset_create", {
+        let operationJSON = {
             "fee": {
                 amount: 0,
                 asset_id: 0
@@ -105,12 +105,20 @@ class AssetActions {
                 "blacklist_markets": [
 
                 ],
-                "description": createObject.description,
+                "description": description,
                 "extensions": null
             },
-            "is_prediction_market": false,
+            "is_prediction_market": is_prediction_market,
             "extensions": null
-        });
+        }
+
+        if (isBitAsset) {
+            operationJSON.bitasset_opts = bitasset_opts;
+        }
+
+        console.log("operationJSON:", operationJSON);
+
+        tr.add_type_operation("asset_create", operationJSON);
         return WalletDb.process_transaction(tr, null, true).then(result => {
             // console.log("asset create result:", result);
             // this.dispatch(account_id);
@@ -121,7 +129,9 @@ class AssetActions {
         });
     }
 
-    updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, flags, permissions) {
+    updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, flags, permissions,
+            isBitAsset, bitasset_opts, original_bitasset_opts, description) {
+        
         // Create asset action here...
         let tr = new TransactionBuilder();
         let quotePrecision = utils.get_asset_precision(asset.get("precision"));
@@ -151,7 +161,7 @@ class AssetActions {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
                 market_fee_percent: update.market_fee_percent * 100,
-                description: update.description,
+                description: description,
                 issuer_permissions: permissions,
                 flags: flags,
                 whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
@@ -171,10 +181,35 @@ class AssetActions {
                 }
             }
         };
+
         if (issuer === new_issuer || !new_issuer) {
             delete updateObject.new_issuer;
         }
         tr.add_type_operation("asset_update", updateObject);
+
+        console.log("bitasset_opts:", bitasset_opts, "original_bitasset_opts:", original_bitasset_opts);
+        if (isBitAsset &&
+            (   bitasset_opts.feed_lifetime_sec !== original_bitasset_opts.feed_lifetime_sec ||
+                bitasset_opts.minimum_feeds !== original_bitasset_opts.minimum_feeds ||
+                bitasset_opts.force_settlement_delay_sec !== original_bitasset_opts.force_settlement_delay_sec ||
+                bitasset_opts.force_settlement_offset_percent !== original_bitasset_opts.force_settlement_offset_percent ||
+                bitasset_opts.maximum_force_settlement_volume !== original_bitasset_opts.maximum_force_settlement_volume ||
+                bitasset_opts.short_backing_asset !== original_bitasset_opts.short_backing_asset)) {
+
+            let bitAssetUpdateObject = {
+                fee: {
+                    amount: 0,
+                    asset_id: 0
+                },
+                asset_to_update: asset.get("id"),
+                issuer: issuer,
+                new_options: bitasset_opts
+            }
+
+            tr.add_type_operation("asset_update_bitasset", bitAssetUpdateObject);
+            
+        }
+
         return WalletDb.process_transaction(tr, null, true).then(result => {
             // console.log("asset create result:", result);
             // this.dispatch(account_id);
@@ -334,7 +369,33 @@ class AssetActions {
                 }
             }, 200);
         }
+    }
 
+    reserveAsset(amount, assetId, payer) {
+        console.log("reserveAsset: ", amount, assetId);
+        
+        var tr = wallet_api.new_transaction();
+        tr.add_type_operation("asset_reserve", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            "amount_to_reserve": {
+                "amount": amount,
+                "asset_id": assetId
+            },
+            payer,
+            "extensions": [
+            ]
+        });
+        return WalletDb.process_transaction(tr, null, true).then(result => {
+            console.log("asset reserve result:", result);
+            // this.dispatch(account_id);
+            return true;
+        }).catch(error => {
+            console.log("[AssetActions.js:150] ----- reserveAsset error ----->", error);
+            return false;
+        });
     }
 }
 

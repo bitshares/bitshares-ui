@@ -40,6 +40,17 @@ class SettingsEntry extends React.Component {
 
                 break;
 
+            case "themes":
+                value = selected;
+                options = defaults.map(entry => {
+                    let translationKey = "settings." + entry;
+                    let value = counterpart.translate(translationKey);
+
+                    return <option key={entry} value={entry}>{value}</option>;
+                })
+
+                break;
+
             case "defaultMarkets":
                 options = null;
                 value = null;
@@ -67,6 +78,15 @@ class SettingsEntry extends React.Component {
             case "walletLockTimeout":
                 value = selected;
                 input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
+                break;
+
+            case "faucet_address":
+                if (!selected) {
+                    value = "https://";
+                } else {
+                    value = selected;
+                }
+                input = <input type="text" defaultValue={value} onChange={this.props.onChange.bind(this, setting)}/>
                 break;
 
             default:
@@ -97,6 +117,8 @@ class SettingsEntry extends React.Component {
                 break;
 
         }
+
+
 
         if (!value && !options) return null;
 
@@ -164,6 +186,10 @@ class Settings extends React.Component {
                     cookies.set("graphene_locale", e.target.value, { expires: Infinity });
                     SettingsActions.changeSetting({setting: "locale", value: e.target.value });
                 }
+                break;
+
+            case "themes":
+                SettingsActions.changeSetting({setting: "themes", value: e.target.value });
                 break;
 
             case "defaultMarkets":

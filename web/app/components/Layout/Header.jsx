@@ -107,7 +107,7 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        AccountActions.setCurrentAccount(account_name);
+        AccountActions.setCurrentAccount.defer(account_name);
     }
 
     render() {
@@ -185,7 +185,7 @@ class Header extends React.Component {
 
         let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
             <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate component="span" content="header.exchange" /></a>
+            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/USD_BTS`)}><Translate component="span" content="header.exchange" /></a>
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;

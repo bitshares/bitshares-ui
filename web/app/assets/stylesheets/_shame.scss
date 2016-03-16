@@ -30,7 +30,7 @@ a {
 // border is needed when centering
 // input[type="file"] did not work
 input[type="file"] {
-    border: 'solid';
+    border: solid;
 }
 
 hr {
@@ -313,4 +313,9 @@ label.inline {
 
 .pubkey {
   font-size: 0.9rem;
+}
+
+.small-caps {
+  font-variant: small-caps;
+  font-size: 85%;
 }

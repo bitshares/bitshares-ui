@@ -36,7 +36,7 @@ class BorrowModalContent extends React.Component {
         backing_balance: ChainTypes.ChainObject,
         call_orders: ChainTypes.ChainObjectsList,
         hasCallOrders: PropTypes.bool
-    }
+    };
 
     constructor(props) {
         super();
@@ -145,8 +145,6 @@ class BorrowModalContent extends React.Component {
             collateral_ratio: amount / (this.state.short_amount / feed_price)
         }
 
-        console.log("amount:", amount, "newState:", newState);
-
         this.setState(newState);
         this._validateFields(newState);
         this._setUpdatedPosition(newState);
@@ -193,8 +191,6 @@ class BorrowModalContent extends React.Component {
             isValid = false;
         }
 
-        console.log("errors:", errors, "isValid:", isValid);
-
         this.setState({errors, isValid});
     }
 
@@ -236,7 +232,7 @@ class BorrowModalContent extends React.Component {
 
         if (props && props.hasCallOrders && props.call_orders) {
             for (let key in props.call_orders) {
-                if (props.call_orders.hasOwnProperty(key)) {
+                if (props.call_orders.hasOwnProperty(key) && props.call_orders[key]) {
                     if (props.quote_asset.get("id") === props.call_orders[key].getIn(["call_price", "quote", "asset_id"])) {
                         currentPosition = props.call_orders[key].toJS();
                     }
@@ -322,7 +318,7 @@ class BorrowModalContent extends React.Component {
                     </form>
                     <div className="grid-content button-group text-center no-overflow">
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button warning"><Translate content="account.perm.cancel" /></a>
+                            <div href className="secondary button warning"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </div>)
@@ -399,8 +395,8 @@ class BorrowModalContent extends React.Component {
                             <div>{utils.format_number(collateral_ratio, 2)}</div>
                         </div>) : null}
                     <div className="grid-content button-group no-overflow">
-                        <a onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></a>
-                        <a onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></a>
+                        <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
+                        <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></div>
                         {/*<Trigger close={this.props.modalId}>
                             <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>*/}
@@ -433,19 +429,19 @@ export default class ModalWrapper extends React.Component {
     }
 
     render() {
-
-        let modalId = "borrow_modal_" + this.props.quote_asset;
-        let accountBalance = this.props.account.get("balances").toJS();
+        let {quote_asset, backing_asset, account} = this.props;
+        let modalId = "borrow_modal_" + quote_asset;
+        let accountBalance = account.get("balances").toJS();
         let coreBalance, bitAssetBalance;
 
         if (accountBalance) {
             for (var id in accountBalance) {
 
-                if (id === "1.3.0") {
+                if (id === backing_asset) {
                     coreBalance = accountBalance[id];
                 }
 
-                if (id === this.props.quote_asset) {
+                if (id === quote_asset) {
                     bitAssetBalance = accountBalance[id];
                 }
             }
@@ -458,15 +454,15 @@ export default class ModalWrapper extends React.Component {
                 </Trigger>
                 <div className="grid-block vertical">
                     <BorrowModalContent
-                        {...this.props}
-                        quote_asset={this.props.quote_asset}
-                        call_orders={this.props.account.get("call_orders")}
-                        hasCallOrders={this.props.account.get("call_orders").size > 0}
+                        quote_asset={quote_asset}
+                        call_orders={account.get("call_orders")}
+                        hasCallOrders={account.get("call_orders") && account.get("call_orders").size > 0}
                         modalId={modalId}
                         bitasset_balance={bitAssetBalance}
                         backing_balance={coreBalance}
-                        backing_asset={"1.3.0"}
+                        backing_asset={backing_asset}
                         hide_help={this.state.smallScreen}
+                        account={account}
                     />
                 </div>
             </Modal>
