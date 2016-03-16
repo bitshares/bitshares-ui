@@ -21,6 +21,14 @@ module.exports = (key) => {
             if (ls) {
                 ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
             }
+        },
+
+        remove(key) {
+            if (ls) {
+                ls.removeItem(STORAGE_KEY + key);
+            }
         }
+
+
     };
 }

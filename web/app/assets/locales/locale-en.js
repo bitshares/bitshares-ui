@@ -636,7 +636,8 @@
         themes: "Theme",
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
-        "olDarkTheme": "Openledger dark"
+        "olDarkTheme": "Openledger dark",
+        reset: "Reset settings"
     },
     footer: {
         title: "Graphene",

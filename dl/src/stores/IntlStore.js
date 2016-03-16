@@ -1,9 +1,12 @@
 var alt = require("../alt-instance");
 var IntlActions = require("../actions/IntlActions");
+var SettingsActions = require("../actions/SettingsActions");
 var BaseStore = require("./BaseStore");
 var counterpart = require("counterpart-instance");
 var locale_en = require("assets/locales/locale-en");
-var cookies = require("cookies-js");
+var ls = require("common/localStorage");
+let ss = new ls("__graphene__");
+
 counterpart.registerTranslations("en", locale_en);
 counterpart.setFallbackLocale("en");
 
@@ -28,20 +31,20 @@ addLocaleData(tr);
 class IntlStore extends BaseStore {
     constructor() {
         super();
-        this.currentLocale = cookies.get("graphene_locale") || "en";
+        this.currentLocale = ss.get("settings_v3") ? ss.get("settings_v3").locale : "en";
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
 
         this.bindListeners({
             onSwitchLocale: IntlActions.switchLocale,
-            onGetLocale: IntlActions.getLocale
+            onGetLocale: IntlActions.getLocale,
+            onClearSettings: SettingsActions.clearSettings
         });
 
         this._export("getCurrentLocale", "hasLocale");
     }
 
     hasLocale(locale) {
-        console.log("hasLocale:", this.locales.indexOf(locale));
         return this.locales.indexOf(locale) !== -1;
     }
 
@@ -73,6 +76,10 @@ class IntlStore extends BaseStore {
         if (this.locales.indexOf(locale) === -1) {
             this.locales.push(locale);
         }
+    }
+
+    onClearSettings() {
+        this.onSwitchLocale("en");
     }
 }
 
