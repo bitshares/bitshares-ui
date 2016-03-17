@@ -166,6 +166,10 @@ class Asset extends React.Component {
         desc = desc && desc.length > 0 ? desc + " " : desc;
         let urls = desc.match(urlTest);
 
+        // Add market link
+        const core_asset = ChainStore.getAsset("1.3.0");
+        let preferredMarket = description.market ? description.market : core_asset ? core_asset.get("symbol") : "BTS";
+
         if (urls && urls.length) {
             urls.forEach(url => {
                 let markdownUrl = `<a target="_blank" href="${url}">${url}</a>`;
@@ -183,6 +187,7 @@ class Asset extends React.Component {
                         description={desc}
                         issuer= {issuerName}
                     />
+                    <a style={{textTransform: "uppercase"}} href={`#/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
                 </div>
         );
     }

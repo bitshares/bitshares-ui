@@ -80,18 +80,12 @@ class Transfer extends React.Component {
         this.setState({to_account, error: null})
     }
 
-    onAmountChanged(fee_asset_types, {amount, asset}) {
-        if (!asset || !amount) {
+    onAmountChanged({amount, asset}) {
+        console.log("onAmountChanged:", amount, asset);
+        if (!asset) {
             return;
         }
         this.setState({amount, asset, asset_id: asset.get("id"), error: null});
-
-        // if (this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
-            // this.setState({feeAsset: asset});
-            // if (this.nestedRef) {
-            //     this.nestedRef.onChange({target: {value: asset.get("id")}});
-            // }
-        // }
     }
 
     onFeeChanged({amount, asset}) {
@@ -127,7 +121,8 @@ class Transfer extends React.Component {
         this.setState({error: null});
         let asset = this.state.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
-        let amount = this.state.amount.replace( /,/g, "" )
+        let amount = this.state.amount.replace( /,/g, "" );
+
         AccountActions.transfer(
             this.state.from_account.get("id"),
             this.state.to_account.get("id"),
@@ -204,10 +199,14 @@ class Transfer extends React.Component {
 
             // Finish fee estimation
             let core = ChainStore.getObject("1.3.0");
-
             if (feeAsset && feeAsset.get("id") !== "1.3.0" && core) {
-                let price = utils.convertPrice(core, feeAsset);
+
+                let price = utils.convertPrice(core, feeAsset.getIn(["options", "core_exchange_rate"]).toJS(), null, feeAsset.get("id"));
                 fee = utils.convertValue(price, fee, core, feeAsset);
+
+                if (parseInt(fee, 10) !== fee) {
+                    fee += 1; // Add 1 to round up;
+                }
             }
             if (core) {
                 fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
@@ -239,105 +238,108 @@ class Transfer extends React.Component {
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
-            <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                <div className="grid-content no-overflow">
-                    {/*  F R O M  */}
-                    <div className="content-block">
-                        <AccountSelector label="transfer.from" ref="from"
-                                         accountName={from_name}
-                                         onChange={this.fromChanged.bind(this)}
-                                         onAccountChanged={this.onFromAccountChanged.bind(this)}
-                                         account={from_name}
-                                         error={from_error}
-                                         tabIndex={tabIndex++}/>
-                    </div>
-                    {/*  T O  */}
-                    <div className="content-block">
-                        <AccountSelector label="transfer.to"
-                                         accountName={to_name}
-                                         onChange={this.toChanged.bind(this)}
-                                         onAccountChanged={this.onToAccountChanged.bind(this)}
-                                         account={to_name}
-                                         tabIndex={tabIndex++}/>
-                    </div>
-                    {/*  A M O U N T   */}
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <AmountSelector label="transfer.amount"
-                                        amount={amount}
-                                        onChange={this.onAmountChanged.bind(this, fee_asset_types)}
-                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                        assets={asset_types}
-                                        display_balance={balance}
-                                        tabIndex={tabIndex++}/>
-                    </div>
-                    {/*  M E M O  */}
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <label><Translate component="span" content="transfer.memo"/></label>
-                        <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                        {/* warning */}
-                        { this.state.propose ?
-                        <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
-                        :null}
 
-                    </div>
+                <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                        <div>
+                        <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
+                        {/*  F R O M  */}
+                        <div className="content-block">
+                            <AccountSelector label="transfer.from" ref="from"
+                                             accountName={from_name}
+                                             onChange={this.fromChanged.bind(this)}
+                                             onAccountChanged={this.onFromAccountChanged.bind(this)}
+                                             account={from_name}
+                                             error={from_error}
+                                             tabIndex={tabIndex++}/>
+                        </div>
+                        {/*  T O  */}
+                        <div className="content-block">
+                            <AccountSelector label="transfer.to"
+                                             accountName={to_name}
+                                             onChange={this.toChanged.bind(this)}
+                                             onAccountChanged={this.onToAccountChanged.bind(this)}
+                                             account={to_name}
+                                             tabIndex={tabIndex++}/>
+                        </div>
+                        {/*  A M O U N T   */}
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <AmountSelector label="transfer.amount"
+                                            amount={amount}
+                                            onChange={this.onAmountChanged.bind(this)}
+                                            asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                            assets={asset_types}
+                                            display_balance={balance}
+                                            tabIndex={tabIndex++}/>
+                        </div>
+                        {/*  M E M O  */}
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <label><Translate component="span" content="transfer.memo"/></label>
+                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                            {/* warning */}
+                            { this.state.propose ?
+                            <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
+                            :null}
 
-                    {/*  F E E   */}
-                    <div className="content-block" style={{paddingLeft: "96px"}}>
-                        <AmountSelector refCallback={this.setNestedRef.bind(this)}
-                                        label="transfer.fee"
-                                        disabled={true}
-                                        amount={fee}
-                                        onChange={this.onFeeChanged.bind(this)}
-                                        asset={fee_asset_types.length > 0 && feeAsset ? feeAsset.get("id") : ( fee_asset_id ? fee_asset_id : fee_asset_types[0])}
-                                        assets={fee_asset_types}
-                                        tabIndex={tabIndex++}                                        
-                                        />
-                    </div>
-                    
-                    {/* P R O P O S E   F R O M 
-                        Having some proposed transaction logic here (prior to the transaction confirmation)
-                        allows adjusting of the memo to / from parameters. 
-                    */}
-                    {propose ?
-                    <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
-                        <label><Translate content="account.propose_from" /></label>
-                        <AccountSelect account_names={AccountStore.getMyAccounts()}
-                            onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
-                    </div>:null}
+                        </div>
 
-                    {/*  S E N D  B U T T O N  */}
-                    {error ? <div className="content-block has-error">{error}</div> : null}
-                    <div style={{paddingLeft: "96px"}}>
+                        {/*  F E E   */}
+                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                            <AmountSelector refCallback={this.setNestedRef.bind(this)}
+                                            label="transfer.fee"
+                                            disabled={true}
+                                            amount={fee}
+                                            onChange={this.onFeeChanged.bind(this)}
+                                            asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                            assets={fee_asset_types}
+                                            tabIndex={tabIndex++}                                        
+                                            />
+                        </div>
+                        
+                        {/* P R O P O S E   F R O M 
+                            Having some proposed transaction logic here (prior to the transaction confirmation)
+                            allows adjusting of the memo to / from parameters. 
+                        */}
                         {propose ?
-                        <span>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                <Translate component="span" content="propose" />
-                            </button>
-                            <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
-                                <Translate component="span" content="cancel" />
-                            </button>
-                        </span>:<span>
-                            <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                <Translate component="span" content="transfer.send" />
-                            </button>
-                        </span>}
+                        <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
+                            <label><Translate content="account.propose_from" /></label>
+                            <AccountSelect account_names={AccountStore.getMyAccounts()}
+                                onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
+                        </div>:null}
+
+
+                        {/*  S E N D  B U T T O N  */}
+                        {error ? <div className="content-block has-error">{error}</div> : null}
+                        <div style={{paddingLeft: "96px"}}>
+                            {propose ?
+                            <span>
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="propose" />
+                                </button>
+                                <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
+                                    <Translate component="span" content="cancel" />
+                                </button>
+                            </span>:<span>
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="transfer.send" />
+                                </button>
+                            </span>}
+                        </div>
+                        </div>
+                        {/* TODO: show remaining balance */}
+
+                        </div>
+
+                </form>
+                <div className="grid-content medium-6 right-column">
+                    <div className="grid-content no-padding">
+                        <RecentTransactions
+                            accountsList={accountsList}
+                            limit={25}
+                            compactView={true}
+                            filter="transfer"
+                        />
                     </div>
-
-                    {/* TODO: show remaining balance */}
-
                 </div>
-
-            </form>
-            <div className="grid-content medium-6 right-column">
-                <div className="grid-content">
-                    <RecentTransactions
-                        accountsList={accountsList}
-                        limit={25}
-                        compactView={true}
-                        filter="transfer"
-                    />
-                </div>
-            </div>
             </div>
         );
     }

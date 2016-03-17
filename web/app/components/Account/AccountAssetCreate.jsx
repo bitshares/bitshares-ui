@@ -180,7 +180,8 @@ class AccountAssetCreate extends React.Component {
                 "force_settlement_offset_percent" : 1 * assetConstants.GRAPHENE_1_PERCENT,
                 "maximum_force_settlement_volume" : 20 * assetConstants.GRAPHENE_1_PERCENT,
                 "short_backing_asset" : "1.3.0"
-            }
+            },
+            marketInput: ""
         };
     }
 
@@ -200,14 +201,17 @@ class AccountAssetCreate extends React.Component {
             isBitAsset, is_prediction_market, bitasset_opts} = this.state;
         
         let {account} = this.props;
-        console.log("_createAsset:", permissionBooleans);
+
         let flags = assetUtils.getFlags(flagBooleans, isBitAsset);
         let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
-        console.log("flags:", flags);
+
+        if (this.state.marketInput !== update.description.market) {
+            update.description.market = "";
+        }
         let description = JSON.stringify(update.description);
 
         AssetActions.createAsset(account.get("id"), update, flags, permissions, core_exchange_rate, isBitAsset, is_prediction_market, bitasset_opts, description).then(result => {
-            console.log("... AssetActions.updateAsset(account_id, update)", account.get("id"),  update, flags, permissions)
+            console.log("... AssetActions.createAsset(account_id, update)", account.get("id"),  update, flags, permissions)
         });
     }
 
@@ -246,6 +250,10 @@ class AccountAssetCreate extends React.Component {
                     return;
                 }
                 update.description[value] = e.target.value;
+                break;
+
+            case "market":
+                update.description[value] = e;
                 break;
             
             default:
@@ -404,6 +412,19 @@ class AccountAssetCreate extends React.Component {
             });
         }
     }
+
+    _onInputMarket(asset) {
+       
+        this.setState({
+            marketInput: asset
+        });
+    }
+
+    _onFoundMarketAsset(asset) {
+        if (asset) {
+            this._onUpdateDescription("market", asset.get("symbol"));
+        }
+    }  
 
     _onCoreRateChange(type, e) {
 
@@ -600,7 +621,7 @@ class AccountAssetCreate extends React.Component {
                                     <div>
                                         <h5>
                                             <Translate content="exchange.price" />
-                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount, {precision: update.precision}, core_exchange_rate.base.amount, core)}</span>
+                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision), {precision: update.precision}, core_exchange_rate.base.amount * utils.get_asset_precision(core), core)}</span>
                                             <span> {update.symbol}/{core.get("symbol")}</span>
                                         </h5> 
                                     </div>
@@ -629,6 +650,16 @@ class AccountAssetCreate extends React.Component {
                                         onChange={this._onUpdateDescription.bind(this, "short_name")}
                                     />
                                 </label>
+
+                                <Translate component="h3" content="account.user_issued_assets.market" />
+                                    <AssetSelector
+                                        label="account.user_issued_assets.name"
+                                        onChange={this._onInputMarket.bind(this)}
+                                        asset={this.state.marketInput}
+                                        assetInput={this.state.marketInput}
+                                        style={{width: "100%", paddingRight: "10px"}}
+                                        onFound={this._onFoundMarketAsset.bind(this)}
+                                    />
 
                                 {is_prediction_market ? (
                                 <div>

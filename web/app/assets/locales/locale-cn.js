@@ -68,7 +68,9 @@ module.exports = {
             required: "要求的币天",
             remaining: "剩余解冻天数",
             claim: "立即领取",
-            available: "可领取数量"
+            available: "可领取数量",
+            referral_link: "你的推荐链接",
+            referral_text: "分享此链接给你的朋友参与引荐计划"
         },
         connections: {
             known: "识别为",
@@ -112,7 +114,23 @@ module.exports = {
             advanced: "高级设定",
             need_asset: "这两个资产中至少有一个必须为 %(name)s",
             perm_warning: "警告：有些设定的禁用操作不可逆，生效后将无法重新启用。",
-            issued_assets: "我发行的资产"
+            issued_assets: "我发行的资产",
+            "short": "短名 (最多32个字符)",
+            condition: "条件 (最多60个字符)",
+            expiry: "市场裁决日期",
+            decimals: "小数点后位数",
+            mpa: "智能币 SmartCoin",
+            pm: "二元预测市场",
+            bitasset_opts: "智能币 SmartCoin 选项",
+            feed_lifetime_sec: "喂价有效时间（分钟）",
+            minimum_feeds: "最少喂价数量",
+            force_settlement_delay_sec: "强制清算发生前延迟时间（分钟）",
+            force_settlement_offset_percent: "强制清算价格偏离百分比",
+            maximum_force_settlement_volume: "强制清算最大数量（百分比）",
+            backing: "做空时可抵押的资产类型",
+            error_precision: "该资产的精度不同于 %(asset)s",
+            error_invalid: "该资产不能使用",
+            market: "关注的市场交易对"
         },
         perm: {
             active: "活跃权限",
@@ -645,7 +663,11 @@ module.exports = {
         showSettles: "在深度图中显示清算订单",
         yes: "是",
         no: "否",
-        walletLockTimeout: "钱包自动锁定时间（秒）"
+        walletLockTimeout: "钱包自动锁定时间（秒）",
+        themes: "主题",
+        darkTheme: "黑色主题",
+        lightTheme: "白色主题",
+        olDarkTheme: "Openledger黑"
     },
     pagination: {
         newer: "更近",
@@ -654,7 +676,11 @@ module.exports = {
     footer: {
         title: "Graphene (石墨烯)",
         block: "最新区块",
-        loading: "载入中..."
+        loading: "载入中...",
+        backup: "需要备份",
+        nosync: "区块链数据陈旧，请等待数据完成同步..",
+        connection: "无连接",
+        brainkey: "建议备份脑钱包密钥"
     },
     exchange: {
         price_history: "价格历史",
@@ -713,7 +739,18 @@ module.exports = {
         borrow: "借入",
         no_balance: "余额不足",
         invalid_amount: "数量错误",
-        invalid_price: "价格错误"
+        invalid_price: "价格错误",
+        my_orders: "我的订单",
+        show_bids: "显示所有买单",
+        show_asks: "显示所有卖单",
+        hide: "隐藏",
+        "short": "做空",
+        others: "其他",
+        invert: "反转交易对价格",
+        to_market: "前往交易市场",
+        zoom: "缩放",
+        zoom_all: "显示全部",
+        settings: "图表选项"
     },
     markets: {
         title: "交易所",
@@ -830,6 +867,12 @@ module.exports = {
         deposit: {
             amount: "充值数量",
             submit: "充值"
+        },
+        reserve: {
+            title: "储备（销毁）资产",
+            amount: "数量",
+            from: "账户",
+            submit: "储备"
         }
     },
     init_error: {

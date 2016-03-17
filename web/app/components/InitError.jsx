@@ -18,7 +18,8 @@ class InitError extends React.Component {
         return {
             rpc_connection_status: BlockchainStore.getState().rpc_connection_status,
             apis: SettingsStore.getState().defaults.connection,
-            connection: SettingsStore.getState().settings.get("connection")
+            connection: SettingsStore.getState().settings.get("connection"),
+            defaultConnection: SettingsStore.getState().defaultSettings.get("connection"),
         }
     }
 
@@ -28,16 +29,23 @@ class InitError extends React.Component {
     }
 
     onChangeWS(e) {
-        SettingsActions.changeSetting({setting: "connection", value: e.target.value });
+        SettingsActions.changeSetting({setting: "connection", value: e.target.value });        
     }
 
     onReloadClick(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         if (window.electron) {
             window.location.hash = "";
             window.remote.getCurrentWindow().reload();
         }
         else window.location.href = "/";
+    }
+
+    onReset() {
+        SettingsActions.changeSetting({setting: "connection", value: this.props.defaultConnection });
+        SettingsActions.clearSettings();
     }
 
     render() {
@@ -75,7 +83,11 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <a className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></a>
+                        <div className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
+                        <br />
+                        <div onClick={this.onReset.bind(this)} className="button" style={{marginTop: 15}}>
+                            <Translate content="settings.reset" />
+                        </div>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
                 </div>

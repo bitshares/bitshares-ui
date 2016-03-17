@@ -49,17 +49,23 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     requestDepositAddress() {
-        let body = JSON.stringify({
-            inputCoinType:this.props.deposit_coin_type,
-            outputCoinType:this.props.receive_coin_type,
-            outputAddress:this.props.account.get('name')
-        })
-        // console.log( "body: ", body );
+        let body = {
+            inputCoinType: this.props.deposit_coin_type,
+            outputCoinType: this.props.receive_coin_type,
+            outputAddress: this.props.account.get('name')
+        };
 
+        if (this.props.deposit_memo_name)
+            body.inputAddressType = "shared_address_with_memo";
+        else
+            body.inputAddressType = "unique_address";
+
+        let body_string = JSON.stringify(body);
+ 
         fetch( this.props.url + '/simple-api/initiate-trade', {
             method:'post',
             headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
-            body: body
+            body: body_string
         }).then( reply => { reply.json().then( json => {
                 // console.log( "reply: ", json )
                 let addressInfo = null;
@@ -193,7 +199,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                     // This is a client that uses unique deposit addresses to select the output
                     deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
                 }
-                else
+                else if (receive_address) 
                 {
                     // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
                     deposit_address_fragment = (<span><code>{receive_address.inputAddress}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.inputMemo}</code><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);

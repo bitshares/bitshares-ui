@@ -31,7 +31,7 @@ class MarketHistory extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.viewSettings.get("historyTab") || "history"
+            activeTab: props.viewSettings.get("historyTab", "history")
         }
     }
 
@@ -40,6 +40,7 @@ class MarketHistory extends React.Component {
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            nextProps.className !== this.props.className ||
             nextState.activeTab !== this.state.activeTab
         );
     }
@@ -160,13 +161,12 @@ class MarketHistory extends React.Component {
         let myHistoryClass = cnames(hc, {inactive: activeTab === "history"});
 
         return (
-            <div className="small-12 medium-5 no-padding no-overflow order-1">
-                <div className="exchange-bordered" style={{height: 400}}>
+            <div className={this.props.className}>
+                <div className="exchange-bordered">
                     <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
-                        {isNullAccount ? null : (
-                            <div className={myHistoryClass} onClick={this._changeTab.bind(this, "my_history")} >
+                            <div className={cnames(myHistoryClass, {disabled: isNullAccount})} onClick={this._changeTab.bind(this, "my_history")} >
                                 <Translate content="exchange.my_history" />
-                            </div>)}
+                            </div>
                         <div className={historyClass} onClick={this._changeTab.bind(this, "history")}>
                             <Translate content="exchange.history" />
                         </div>
@@ -175,10 +175,10 @@ class MarketHistory extends React.Component {
                         <table className="table order-table text-right market-right-padding">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                    <th style={{textAlign: "right"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                                    <th style={{textAlign: "right"}}><span className="header-sub-title">{baseSymbol}</span></th>
-                                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
                                 </tr>
                             </thead>
                         </table>
@@ -186,7 +186,7 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{maxHeight: 326, overflow: "hidden"}}
+                        style={{maxHeight: 210, overflow: "hidden"}}
                     >
                         <table className="table order-table text-right market-right-padding">
                             <TransitionWrapper

@@ -30,24 +30,6 @@ $negative-color: #E1424A;
   }
 }
 
-div.exchange-content-header {
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 0.55rem 10px;
-  background-color: #484848 !important;
-  border-bottom: 1px solid #8c88ff;
-  
-  &.bid {
-    border-bottom: 1px solid $bid-color;
-  }
-
-  &.ask {
-    border-bottom: 1px solid $ask-color;
-  }
-}
-
 .market-content {
   padding-left: 5px !important;
   padding-right: 5px !important;
@@ -60,57 +42,16 @@ div.exchange-content-header {
     padding: 0 0.625em 1.25em;
 }
 
-td.orderHistoryBid {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $bid-color;
-  }
-
-  > span.price-decimal, > span > span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
-td.orderHistoryAsk {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $ask-color;
-  }
-
-  > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
-td.orderHistoryCall {
-  > span.price-integer, > span > span.price-integer {
-    font-weight: bold;
-    color: $call-color;
-  }
-
-  > span.price-decimal, > span >span.price-decimal {
-    color: #e0e0e0;
-    opacity: 0.6;
-  }
-}
-
 .order-table {
 	width: 100%;
-	> caption {
-		padding-bottom: 1.25rem;
-	}
     > thead > tr > th {
-        font-size: 0.9rem;
+        font-size: 14px;
+        padding: 5px 5px;
     }
 
     > tbody > tr > td {
-        font-size: 0.75rem;
-    }
-
-    > tbody > tr:nth-of-type(even) {
-      background-color: #3C3C3C;
+        font-size: 12px;
+        padding-bottom: 4px;
     }
 }
 
@@ -155,13 +96,7 @@ form.order-form {
   padding: 10px;
 }
 
-.bid {
-  background-color: $bid-color !important;
-}
 
-.ask {
-  background-color: $ask-color !important;
-}
 
 #market-charts {
   > div > div.tabs {
@@ -183,8 +118,8 @@ form.order-form {
   table {
     width: 100%;
     th {
-      padding-top: 4px !important;
-      padding-bottom: 4px !important;
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
     }
   }
   > .table-container {
@@ -211,15 +146,7 @@ form.order-form {
   border-bottom: none !important;
 }
 
-.orderbook-latest-price {
-    td {
-      background-color: #4C4C4C !important;
-      border-bottom: 1px solid grey !important;
-      border-top: 1px solid grey !important;
-      padding: 10px 0 !important;
-      font-weight: bold;
-    }
-}
+
 
 .left-orderbook-header {
   width: 100%;
@@ -241,12 +168,11 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 }
 
 .bid-total {
-  font-size: 1.1rem;
-  color: $bid-color;  
+  color: $bid-color !important;  
 }
 
 .ask-total { 
-  color: $ask-color;
+  color: $ask-color !important;
 }
 
 .chart-label {
@@ -316,24 +242,24 @@ li.stat.clickable:hover {
 }
 
 .stats .stat {
-  padding: 3px 5px;
-  height: 100%;
+  padding: 3px 5px 0 5px;
+  vertical-align: top;
+  min-height: 27px;
 
   > span {
     > span:first-of-type {
-      color: grey;
       padding-right: 5px;
     }
 
     > span:last-of-type {
-      color: #468EDE;
       padding-left: 5px;
     }
   }
 }
 
 .stats .indicators {
-  padding: 5px 0;
+  padding: 2px 0;
+  line-height: 1rem;
   text-transform: uppercase;
 }
 
@@ -362,19 +288,21 @@ li.stat.clickable:hover {
     font-size: 1.1rem;
     padding-left: 0.3rem;
     padding-right: 0.5rem;
-    padding-top: 1.3rem;
+    padding-top: 18px;
 }
 
 .active-bucket {
-  font-size: 0.75rem !important;
-  background-color: lighten($light-panel-bg-color, 12%);
+  background-color: lighten($light-panel-bg-color, 12%) !important;
   text-transform: uppercase;
 }
 
-.bucket-option {
+div.bucket-option {
   cursor: pointer;
   text-transform: none !important;
-  padding-right: 0.5rem;
+  margin-right: 3px;
+  border-radius: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .bucket-option:hover {
@@ -486,61 +414,51 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .middle-content {
-  margin-bottom: 1rem;
-}
-
-.header-sub-title {
-  font-size: 80%;
-  color: white;
+  margin-bottom: 10px;
 }
 
 .market-right-padding-only {
   padding: 0 0.6rem 0 0 !important;
 }
 
-.change-up {
-  color: $positive-color !important;
-}
-
-.change-down {
-  color: $negative-color !important;
-}
-
-.exchange-bordered {
-  border: 1px solid rgba(183, 183, 183, 0.29);
-}
-
-.order-1 {
-  .exchange-bordered {
-    margin: 0 10px 0 10px;
-  }
-}
-
-.order-2 {
-  .exchange-bordered {
-    margin: 0 10px 0 10px;
-  }
-}
-
 .mymarkets-header {
   text-transform: uppercase;
   width: 50%;
-  max-width: 300px;
-  font-size: 1.10rem;
-  padding-left: 10px;
-  padding-bottom: 0.55rem;
-  padding-top: 0.55rem;
+  font-size: 1rem;
+  padding: 6px 10px;
   font-weight: 500;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   transition: border-color 0.3s ease 0s;
-  background-color: #484848;
+  overflow:hidden;
+}
+
+.exchange-content-header {
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  overflow: hidden;
+}
+
+.mymarkets-base-select {
+  margin: 0;
+  padding: 0;
+  height: inherit;
+  font-size: inherit;
 }
 
 .mymarkets-list {
-  padding-top: 0.55rem;
-  padding-left: 0;
+  padding: 0;
   font-size: 0.75rem;
+  .table > thead tr th {
+    font-size: 0.75rem;
+  }
+
+  .table > tbody tr td {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 }
 
 table thead tr th.mymarkets-header {
@@ -561,11 +479,6 @@ table thead tr th.mymarkets-header {
   fill: #878787;
 }
 
-tr.activeMarket {
-  color: #4C85D8;
-  background-color: #404040
-}
-
 .no-data {
   position: relative;
   left: 45%;
@@ -583,6 +496,7 @@ tr.activeMarket {
   text-align: center;
   padding: 5px 0;
   border-top: 1px solid #444;
+  font-size: 12px;
 }
 
 .newrow-enter.newrow-enter-active {
@@ -594,3 +508,4 @@ tr.activeMarket {
   0%   { background-color: #6B6B6B;}
   100% { background-color: transparent;}
 }
+

@@ -96,7 +96,7 @@ class TransactionConfirm extends React.Component {
             );
             button_group = (
                 <div className="button-group">
-                    <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
+                    <div href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></div>
                 </div>
             );
         } else if (this.props.broadcast) {
@@ -108,7 +108,7 @@ class TransactionConfirm extends React.Component {
             );
             button_group = (
                 <div className="button-group">
-                    <a href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></a>
+                    <div href className="button" onClick={this.onCloseClick.bind(this)}><Translate content="transfer.close" /></div>
                 </div>
             );
         } else if (this.props.broadcasting) {
@@ -119,7 +119,7 @@ class TransactionConfirm extends React.Component {
             );
             button_group = (
                 <div className="button-group">
-                    <a href className="button disabled"><Translate content="transfer.close" /></a>
+                    <div href className="button disabled"><Translate content="transfer.close" /></div>
                 </div>
             );
         } else {
@@ -131,13 +131,13 @@ class TransactionConfirm extends React.Component {
             button_group = (
                 <div className="button-group">
                     <div className="grid-block full-width-content">
-                        <a className={confirmButtonClass} href onClick={this.onConfirmClick.bind(this)}>
+                        <div className={confirmButtonClass} href onClick={this.onConfirmClick.bind(this)}>
                             {this.props.propose ? 
                                 <Translate content="propose" />:
                                 <Translate content="transfer.confirm" />
                             }
-                        </a>
-                        <a href className="secondary button" onClick={this.onCloseClick.bind(this)}><Translate content="account.perm.cancel" /></a>
+                        </div>
+                        <div href className="secondary button" onClick={this.onCloseClick.bind(this)}><Translate content="account.perm.cancel" /></div>
                     </div>
                 </div>
             );
@@ -146,7 +146,7 @@ class TransactionConfirm extends React.Component {
         return (
             <div ref="transactionConfirm">
                 <Modal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!this.props.broadcasting}>
-                    {!this.props.broadcasting ? <a href className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</a> : null}
+                    {!this.props.broadcasting ? <div className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</div> : null}
                     {header}
                     <div style={{maxHeight: "60vh", overflowY:'auto', overflowX: "hidden"}}>
                         <Transaction

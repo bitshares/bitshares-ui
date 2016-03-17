@@ -22,8 +22,13 @@ module.exports = function (name, defaults) {
     try { state_file_data = fs.readFileSync(state_file_name); }
     catch(error) {}
 
-    var state = state_file_data ? JSON.parse(state_file_data) : {width: defaults.width, height: defaults.height};
+    var state = {width: defaults.width, height: defaults.height};
+    if (state_file_data) {
+        try { state = JSON.parse(state_file_data); }
+        catch(error) {}
+    }
     if (!state.guid) state.guid = guid();
+    if (!state.width || !state.height) state.width = defaults.width; state.height = defaults.height;
 
     var saveState = function (win) {
         if (!win.isMaximized() && !win.isMinimized()) {

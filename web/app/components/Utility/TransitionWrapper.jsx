@@ -19,11 +19,23 @@ export default class TransitionWrapper extends React.Component {
     }
 
     componentDidMount() {
+        this.enableAnimation();
+    }
+
+    resetAnimation() {
+        this.setState({
+            animateEnter: false
+        });
+
+        this.enableAnimation();
+    }
+
+    enableAnimation() {
         this.timer = setTimeout(() => {
             this.setState({
                 animateEnter: true
-            })
-        }, 2000)
+            });
+        }, 2000);
     }
 
     componentWillUnmount() {

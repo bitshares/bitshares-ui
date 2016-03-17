@@ -1,4 +1,99 @@
 ---------------------------------------------------------------------
+Release 2.0.160314
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Updated with serializer types from stealth branch (adds better sorting in transactions)
+- Improve DepthChart construction and plotting
+- Increase websocket timeout to 5s
+
+BUG FIXES:
+- Refactor and fix error in onAmountChange function that prevents withdraw modal to pop up
+- Enforce https for faucet address when on https domain
+- Fix buy/sell collapse behaviour #779
+- Show disabled buy/sell and my orders for users with no account #774
+- Redirect to proper websocket url if user entered invalid URL #770
+
+---------------------------------------------------------------------
+Release 2.0.160309
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Switch to using unique ethereum addresses for OpenLedger inputs
+- Hide Footer in Exchange view
+- Add preferred market pairing field to asset description
+- Сoloring of price column headers in Orderbook
+- Add + - buttons to the pricechart to change the height of the exchange charts
+- Filter out 0 and Inf price values from pricechart data
+- Put volume and price in the same chart
+- Add zoom buttons for PriceChart, filter out bucket sizes below 5 minute
+
+BUG FIXES:
+- Prices with precision larger than asset precision causes incorrect final price #757
+- Fix exchange box header background colors
+- TransitionWrapper not reenabling after reset
+- Fix Transfer fee asset selection for users with only one non-core asset
+
+---------------------------------------------------------------------
+Release 2.0.160302
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Various exchange layout improvements
+- Add rgba fill colors for depth charts
+- Use full precision for Orderbook and MarketHistory asset amounts
+
+BUG FIXES:
+- Check for price equal to infinity when parsing fill history
+- Fix membership button text being invisible #752
+- Fix asset creation CER precision issues #753
+- Fix disappearing faucet address in Settings #751
+- Fix AccountMembership spelling errors, also remove reference to annual membership #749
+- Fix AccountMembership margin issues and add referral link for lifetime members
+
+---------------------------------------------------------------------
+Release 2.0.160225
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Add theming support and theme switch in Settings #576
+- Add scrolling to RecentTransactions
+- Add base groups to MyMarkets: BTS, BTC, USD or CNY + others
+
+BUG FIXES:
+- Fix BlockTrades select background color
+- Ensure vertical orderbook layout is correct on mount
+- Fix Fee schedule decimals issue
+- Allow user to delete last number in Transfer amount entry
+- Fix some styling issues after move to themes
+- Fix matching of orders when clicking on order in orderbook #586
+- Sum for_sale values when adding orders at same price
+
+---------------------------------------------------------------------
+Release 2.0.160217
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Big trade page make over
+
+BUG FIXES:
+- Exchange buy fee selection
+- Remove link to BTS:BTS market in asset popover, fix asset description #709
+- Disable annual membership upgrade #730
+- Fix My Orders not updating when flipping the market
+- Fix Orderbook totals calculation
+- Fix current price indicator not repositioning after window resize
+- Fix fee subtraction when clicking on current balance
+- Fix margin call mechanics, add dynamic update support for settle orders and feed price changes, improve market data fetching logic
+- Fix number parsing for call orders and homogenize presentation with asks/bids/calls
+- Fix vertical orderbook positioning and scrolling
+- Link to /overview from Dashboard, change Orders to Open orders, #707 and #736
+- Fix transfer fee mismatch #738
+- Fix a bug in BlockTradesGatewayDepositRequest and change BridgeDepositRequest input types to 'number' #733
+- Fix Blocktrades input and select colors #733
+
+
+---------------------------------------------------------------------
 Release 2.0.160208
 ---------------------------------------------------------------------
 
