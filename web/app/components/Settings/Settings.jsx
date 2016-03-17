@@ -183,7 +183,6 @@ class Settings extends React.Component {
                 let myLocale = counterpart.getLocale();
                 if (e.target.value !== myLocale) {
                     IntlActions.switchLocale(e.target.value);
-                    cookies.set("graphene_locale", e.target.value, { expires: Infinity });
                     SettingsActions.changeSetting({setting: "locale", value: e.target.value });
                 }
                 break;

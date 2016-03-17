@@ -264,7 +264,7 @@ class AccountVoting extends React.Component {
         let workerArray = [];
         // let botchedWorkers = ["1.14.1", "1.14.2", "1.14.3", "1.14.5"];
 
-        for (var i = 0; i < 100; i++) {
+        for (let i = 0; i < 100; i++) {
             let id = "1.14." + i;
             let worker = ChainStore.getObject(id);
             if (worker === null) {
@@ -281,10 +281,10 @@ class AccountVoting extends React.Component {
                 return false;
             }
             
-            // if (this._getTotalVotes(a) < 0) {
-            //     return false;
-            // }
-            return new Date(a.get("work_end_date")) > now;
+            return (
+                new Date(a.get("work_end_date")) > now &&
+                new Date(a.get("work_begin_date")) <= now
+            );
             
         })
         .sort((a, b) => {
@@ -309,6 +309,37 @@ class AccountVoting extends React.Component {
         });
 
         unusedBudget = Math.max(0, workerBudget);
+
+        let newWorkers = workerArray
+        .filter(a => {
+            if (!a) {
+                return false;
+            }
+            
+            return (
+                new Date(a.get("work_begin_date")) >= now
+            );
+            
+        })
+        .sort((a, b) => {
+            return this._getTotalVotes(b) - this._getTotalVotes(a);            
+        })
+        .map((worker, index) => {
+            let dailyPay = parseInt(worker.get("daily_pay"), 10);
+            workerBudget = workerBudget - dailyPay;
+
+            return (
+                <WorkerApproval
+                    rest={workerBudget + dailyPay}
+                    rank={index + 1}
+                    key={worker.get("id")}
+                    worker={worker.get("id")}
+                    vote_ids={this.state.vote_ids}
+                    onAddVote={this.onAddVoteID.bind(this)}
+                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                />
+            );
+        });
 
         return (
             <div className="grid-content">
@@ -402,6 +433,13 @@ class AccountVoting extends React.Component {
                                         <th></th>
                                     </tr>
                                 </thead>
+                                {newWorkers.length ? (
+                                <tbody>
+                                    <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
+                                    {newWorkers}
+                                    <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
+                                </tbody>
+                                ) : null}
                                 <tbody>
                                     {workers}
                                 </tbody>
