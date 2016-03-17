@@ -1,6 +1,7 @@
 import alt from "alt-instance"
 import { fromJS } from "immutable"
 import { rfc822Email, WalletWebSocket } from "@graphene/wallet-client"
+import CachedPropertyActions from "actions/CachedPropertyActions"
 import WalletDb from "stores/WalletDb"
 
 class BackupServerStore {
@@ -37,6 +38,18 @@ class BackupServerStore {
         if(!wallet) {
             this.setState(this.init())
             return
+        }
+        
+        let empty_wallet = wallet.wallet_object.isEmpty()
+        // console.log("BackupServerStore\tonUpdate empty_wallet", empty_wallet)
+        
+        if( ! this.prev_wallet_object && ! empty_wallet)
+            this.prev_wallet_object = wallet.wallet_object
+        
+        else if(this.prev_wallet_object && this.prev_wallet_object !== wallet.wallet_object) {
+            this.prev_wallet_object = wallet.wallet_object
+            CachedPropertyActions.set("backup_recommended", true)
+            console.log("BackupServerStore\tonUpdate backup_recommended");
         }
         
         let { remote_status, local_status } = wallet // socket_status
