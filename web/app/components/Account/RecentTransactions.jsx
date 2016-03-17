@@ -158,6 +158,7 @@ class RecentTransactions extends React.Component {
         const globalObject = ChainStore.getObject("2.0.0");
         const dynGlobalObject = ChainStore.getObject("2.1.0");
         const blindHistory = this.props.blindHistory ? this.props.blindHistory.map(t => {
+            // TODO t.date is a ConfidentialWallet date (not a blockchain date).. The trx confirm has the block num
             t.block_num = utils.calc_block_num(new Date(t.date), globalObject, dynGlobalObject);
             t.trx_in_block = t.date;
             return t;
