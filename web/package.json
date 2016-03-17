@@ -45,7 +45,7 @@
     "react": "^0.14.4",
     "react-addons-css-transition-group": "^0.14.7",
     "react-dom": "^0.14.4",
-    "react-foundation-apps": "git+http://github.com/valzav/react-foundation-apps.git",
+    "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
     "react-highcharts": "^6.0.0",
     "react-interpolate-component": "^0.8.0",
     "react-intl": "2.0.0-beta-2",
