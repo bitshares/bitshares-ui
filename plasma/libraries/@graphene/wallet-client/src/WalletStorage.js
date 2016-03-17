@@ -6,6 +6,7 @@ import WalletWebSocket from "./WalletWebSocket"
 import WalletApi from "./WalletApi"
 import assert from "assert"
 
+const info = true
 const trace = true
 let setState_timeouts = Set()
 let setState_timeoutId
@@ -317,7 +318,7 @@ export default class WalletStorage {
         // fetch and subscribe to updates.
         return this.sync(private_key, private_api_key).then( ()=>{
             
-            if(trace) console.log("WalletStorage("+this.instance+")\tlogin wallet " + (dt === this.wallet_object.get("created") ? "initilized" : "downloaded")) // debug
+            if(info) console.log("WalletStorage("+this.instance+")\tlogin wallet " + (dt === this.wallet_object.get("created") ? "initilized" : "downloaded")) // debug
 
             // Need a chain_id from somewhere
             if( ! this.wallet_object.has("chain_id"))
@@ -603,7 +604,7 @@ function sync(private_key = this.private_key, private_api_key = this.getPrivateA
     // let remote_copy === false pass-through (into the delete the wallet below)
     // Wallet is locked OR it is an offline wallet.
     let sync_impossible = ! private_key || ! this.api || ! private_api_key
-    if(trace && ! sync_impossible) console.log("WalletStorage("+this.instance+")\tsync")
+    if(info && ! sync_impossible) console.log("WalletStorage("+this.instance+")\tsync")
     
     if(sync_impossible )
         return Promise.resolve()
@@ -686,7 +687,7 @@ function fetchWallet(server_wallet, private_key, private_api_key) {
     
     assert(/OK|No Content|Not Modified/.test(server_wallet.statusText), this.instance + " Invalid status: " + server_wallet.statusText)
     
-    if(trace) console.log(`WalletStorage(${this.instance})\tServer ${server_wallet.statusText}, local_hash, old_hash, new_hash -> `, local_hash, old_hash, new_hash)
+    if(info) console.log(`WalletStorage(${this.instance})\tServer ${server_wallet.statusText}, local_hash, old_hash, new_hash -> `, local_hash, old_hash, new_hash)
     
     if( this.remote_status != server_wallet.statusText ) {
         this.remote_status = server_wallet.statusText
@@ -816,7 +817,7 @@ function saveServerWallet(server_wallet, private_key, private_api_key, chain_id,
         this.remote_status = "Not Modified"
         this.local_status = null
         this.notify = true
-        if(trace) console.log("WalletStorage("+this.instance + ")\tsaveServerWallet local wallet updated", this.storage.state.get("remote_hash"))
+        if(info) console.log("WalletStorage("+this.instance + ")\tsaveServerWallet local wallet updated", this.storage.state.get("remote_hash"))
         return p
     })
 }

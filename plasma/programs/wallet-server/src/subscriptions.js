@@ -76,12 +76,15 @@ export function notifyOther(ws, method, subscribe_key, params) {
         return
     
     ws_map.forEach( (ids, subscriptions_ws_id) => {
+        // console.log('ids,subscriptions_ws_id', ids,subscriptions_ws_id)
         
+        // console.log('ws.subscriptions_ws_id, subscriptions_ws_id', ws.subscriptions_ws_id, subscriptions_ws_id)
         // don't notify yourself
         if( ws.subscriptions_ws_id === subscriptions_ws_id )
             return
         
         ids.forEach( (subscribe_ws, subscription_id) => {
+            // console.log('typeof subscribe_ws,subscription_id', typeof subscribe_ws,subscription_id)
             try {
                 if(global.DEBUG) {
                     console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tnotifyOther", subscription_id, subscribe_key, method, "...")
@@ -100,8 +103,6 @@ export function notifyOther(ws, method, subscribe_key, params) {
                 
                 // remove only when socket close error?
                 remove(ws)
-                
-                return false // stop forEach
             }
         })
         
