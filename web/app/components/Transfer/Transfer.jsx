@@ -94,9 +94,12 @@ class Transfer extends React.Component {
             const from = from_name.slice(1);
             const cwallet = WalletDb.getState().cwallet;
             try {
+                let h1 = cwallet.blindHistory(from)
+                let h2 = cwallet.blindHistory(this.state.to_name)
+                let blind_history = h1.merge(h2).toJS()
                 cwallet.getBlindBalances(from).then(res => {
                     console.log("-- getBlindBalances -->", from_name, res.toJS(), cwallet.blindHistory(from).toJS());
-                    this.setState({blind_balances: res.toJS(), blind_history: cwallet.blindHistory(from).toJS()});
+                    this.setState({blind_balances: res.toJS(), blind_history});
                 });
             } catch (error) {
                 console.log("-- getBlindBalances error -->", from_name, error);
@@ -479,7 +482,7 @@ class Transfer extends React.Component {
             </form>
             <div className="grid-content medium-6 right-column">
                 {all_balances && all_balances.length > 0 && <div className="grid-content">
-                    <h3>{from_name}'s balance</h3>
+                    <h3>{from_name}&apos;s balance</h3>
                     <ul>{all_balances}</ul>
                     <br/>
                 </div>}
