@@ -33,12 +33,14 @@ class ReceiveFundsModal extends React.Component {
     _onReceiveClick() {
         console.log("-- ReceiveFundsModal._onReceiveClick -->", this.state.value);
         const cwallet = WalletDb.getState().cwallet;
-        cwallet.receiveBlindTransfer(this.state.value).then(res => {
+        cwallet.receiveBlindTransfer(this.state.value.trim()).then(res => {
             console.log("-- receiveBlindTransfer res -->", res);
             this.setState({loading: false, value: "success"});
         }).catch(error => {
             console.log("-- receiveBlindTransfer error -->", error);
             this.setState({loading: false, error: error});
+            if(/missing key/.test(error.toString()))
+                console.log("This wallet does not have a private key for this receipt");
         });
         this.setState({loading: true});
     }

@@ -179,7 +179,9 @@ export default class ConfidentialWallet {
     getPrivateKey( pubkey_or_label ) {
         
         this.assertLogin()
-        req(pubkey_or_label, "pubkey_or_label")
+
+        if(! pubkey_or_label)
+            return null
         
         let keys = this.keys()
         let priv = pubkey => {
@@ -614,7 +616,7 @@ export default class ConfidentialWallet {
                         throw error
                     
                     // external_receipt means: save if the account happens to be in this wallet, don't error if not.
-                    if( ! r.confirmation.external_receipt ) throw error
+                    if( ! r.confirmation || ! r.confirmation.external_receipt ) throw error
                     
                     console.log( "ConfidentialWallet\tINFO importing external receipt")
                     
