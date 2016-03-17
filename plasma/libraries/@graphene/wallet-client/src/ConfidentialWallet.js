@@ -425,7 +425,7 @@ export default class ConfidentialWallet {
 
         if (pubkey_or_label) {
             let public_key = this.getPublicKey(pubkey_or_label)
-            assert(public_key, "missing pubkey_or_label " + pubkey_or_label)
+            assert(public_key, "missing pubkey_or_label " + flipPrefix(pubkey_or_label))
             let pubkey = public_key.toString()
             blind_receipts = this.blind_receipts().filter( receipt => receipt.get("from_key") === pubkey || receipt.get("to_key") === pubkey )
         } else {
@@ -434,6 +434,8 @@ export default class ConfidentialWallet {
 
         return blind_receipts
             .reduce( (r, receipt) => {
+                receipt = receipt.update("from_label", label => flipPrefix(label))
+                receipt = receipt.update("to_label", label => flipPrefix(label))
                 console.log("-- receipt -->", receipt.toJS());
                 return r.push( receipt )}, List())
             .sort( (a, b) => a.get("date") > b.get("date") )
@@ -732,7 +734,7 @@ export default class ConfidentialWallet {
                         encrypted_memo: change_out.confirmation.encrypted_memo
                     }
                     // make sure the change is stored before broadcasting (durable)
-                    p1 = ()=> this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to @" + to_account.get("name"))
+                    p1 = ()=> this.receiveBlindTransfer(cr, from_blind_account_key_or_label, "to " + to_account.get("name"))
                 }
                     
                 // console.log("conf.trx", JSON.stringify(conf.trx))
@@ -1231,6 +1233,11 @@ function assertLogin() {
     if( ! this.wallet.private_key )
         throw new Error("Wallet is locked")
 }
+
+var flipPrefix = label =>
+    ! label ? label :
+    /^@/.test(label) ? label.substring(1) :
+    "~" + label
 
 var toString = data => data == null ? data :
     data["toWif"] ? data.toWif() : // Case for PrivateKey.toWif()
