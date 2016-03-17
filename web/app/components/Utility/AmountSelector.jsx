@@ -137,7 +137,7 @@ class AmountSelector extends React.Component {
                    <span className="form-label select">
                        <AssetSelector
                            ref={this.props.refCallback}                  
-                           value={this.props.asset.get("id")}
+                           value={this.props.asset && this.props.asset.get("id")}
                            assets={this.props.assets}
                            onChange={this.onAssetChange.bind(this)}                           
                        />

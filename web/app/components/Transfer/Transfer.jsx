@@ -124,7 +124,7 @@ class Transfer extends React.Component {
     onAmountChanged(fee_asset_types, {amount, asset}) {
         this.setState({amount, asset, error: null});
 
-        if (this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
+        if (asset && this.state.asset !== asset && fee_asset_types.indexOf(asset.get("id")) !== -1) {
             this.setState({feeAsset: asset});
             this.nestedRef.onChange({target: {value: asset.get("id")}});
         }
