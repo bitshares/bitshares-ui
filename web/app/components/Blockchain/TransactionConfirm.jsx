@@ -101,7 +101,7 @@ class TransactionConfirm extends React.Component {
             );
         }
 
-        const trx = this.state.transaction;
+        const trx = this.props.transaction;
         const transaction = trx.type && trx.type === "blind" ?
             <table style={{marginBottom: "1em"}} className="table op-table">
                 <tbody>
