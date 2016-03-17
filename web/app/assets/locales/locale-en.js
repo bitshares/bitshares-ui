@@ -793,7 +793,7 @@
             closed: "Disconnected",// socket
             error: "Connection Error",// socket
             chain_id_missmatch: "Wallet backup is for a different chain",
-            undefined: "Pending...",
+            pending: "Pending...",
         },
         confirm: "Password (confirm)",
         password: "Password",
@@ -820,7 +820,7 @@
         console: "Wallet Management Console",
         create_backup: "Create Backup",
         download_backup: "Save Backup File",
-        backup_brainkey: "Backup Brainkey",
+        backup_brainkey: "Brainkey",
         create_backup_of: "Backup (%(name)s Wallet)",
         import_backup: "Import Backup",
         restore_backup: "Restore Backup",
@@ -860,7 +860,7 @@
         reenter_brainkey: "Re-Enter Brainkey",
         pwd4brainkey: "Enter password to show your brainkey",
         show_brainkey: "Show Brainkey",
-        brainkey_w1: "WARNING: Print this out, or write it down.",
+        brainkey_w1: "WARNING: This is not a complete backup.",
         brainkey_w2: "Anyone with access to your recovery key will",
         brainkey_w3: "have full access to public accounts within this wallet.",
         custom_brainkey: "Custom Brainkey (advanced)",

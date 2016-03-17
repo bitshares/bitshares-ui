@@ -378,7 +378,7 @@ class BackupServer extends Component {
         }
         const remoteBackupStatus = <div>
             <label><Translate content="wallet.remote_status"/></label>
-            <Translate content={"wallet.backup_status." + this.props.backups.backup_status}/>
+            <Translate content={"wallet.backup_status." + (this.props.backups.backup_status ? this.props.backups.backup_status : "pending")}/>
             <br/>
             <br/>
             {this.props.backups.backup_status === "disabled" ? 

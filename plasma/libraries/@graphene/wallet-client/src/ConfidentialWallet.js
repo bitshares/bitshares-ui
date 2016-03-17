@@ -436,7 +436,7 @@ export default class ConfidentialWallet {
             .reduce( (r, receipt) => {
                 receipt = receipt.update("from_label", label => flipPrefix(label))
                 receipt = receipt.update("to_label", label => flipPrefix(label))
-                console.log("-- receipt -->", receipt.toJS());
+                // console.log("-- receipt -->", receipt.toJS());
                 return r.push( receipt )}, List())
             .sort( (a, b) => a.get("date") > b.get("date") )
     }

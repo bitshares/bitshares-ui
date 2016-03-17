@@ -836,7 +836,8 @@ function updateWallet(private_key = this.private_key, private_api_key = this.get
     let remote_copy = this.storage.state.get("remote_copy")
     let code = this.wallet_object.get("create_token") || this.storage.state.get("remote_token")
     
-    if((remote_hash == null) !== (this.remote_status == null || this.remote_status === "No Content"))
+    // "No Content" 
+    if((remote_hash == null) !== (this.remote_status == null || /No Content|Not Found/.test(this.remote_status)))
         console.log("WalletStorage\tDEBUG remote_hash / remote_status mismatch",
             remote_hash, this.remote_status)
     
