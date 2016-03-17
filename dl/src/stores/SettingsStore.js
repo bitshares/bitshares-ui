@@ -22,8 +22,8 @@ class SettingsStore {
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10,
-            multiAccountMode: false
-            themes: "darkTheme"
+            multiAccountMode: false,
+            themes: "darkTheme",
         });
 
         this.viewSettings =  Immutable.Map({

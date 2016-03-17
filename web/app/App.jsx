@@ -38,7 +38,6 @@ import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
-import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
 import LoadingIndicator from "components/LoadingIndicator";

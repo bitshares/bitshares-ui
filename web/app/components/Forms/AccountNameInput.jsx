@@ -9,7 +9,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";
 
-class AccountNameInput extends React.Component {
+export default class AccountNameInput extends React.Component {
 
     static propTypes = {
         id: PropTypes.string,
@@ -25,7 +25,7 @@ class AccountNameInput extends React.Component {
         prefixSymbol: PropTypes.string
     };
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             value: null,
@@ -152,23 +152,24 @@ class AccountNameInput extends React.Component {
     }
 }
 
-export default class StoreWrapper extends React.Component {
-
-    render() {
-
-        return (
-            <AltContainer stores={[AccountStore]}
-                inject={{
-                        searchAccounts: () => {
-                            return AccountStore.getState().searchAccounts;
-                        }
-                    }}
-            >
-                <AccountNameInput
-                    ref="nameInput"
-                    {...this.props}
-                />
-            </AltContainer>
-        )
-    }
-}
+// Wrapping breaks direct method calls (ex: this.ref.label.clear())
+// export default class StoreWrapper extends React.Component {
+// 
+//     render() {
+// 
+//         return (
+//             <AltContainer stores={[AccountStore]}
+//                 inject={{
+//                         searchAccounts: () => {
+//                             return AccountStore.getState().searchAccounts;
+//                         }
+//                     }}
+//             >
+//                 <AccountNameInput
+//                     ref="nameInput"
+//                     {...this.props}
+//                 />
+//             </AltContainer>
+//         )
+//     }
+// }

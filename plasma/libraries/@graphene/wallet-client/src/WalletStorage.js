@@ -791,7 +791,7 @@ function saveServerWallet(server_wallet, private_key, private_api_key, chain_id,
             if( ! is(m1, m2)) {
                 this.remote_status = "Conflict"
                 this.notify = true
-                console.error("Actual Remote, Expected Local wallet.  Conflicting remote data (expected) would overwrite a local (actual) value.")
+                console.error("Actual Remote, Expected Local wallet.  Conflicting remote data (expected) would overwrite a local (actual) value.", m1.toJS(), m2.toJS())
                 // Unit tests checking error string for /Conflict/.
                 // Assert prints a wallet diff.
                 assert.deepEqual(m1.toJS(), m2.toJS(), "WalletWebSocket("+this.instance+") Conflict, both server and local wallet modified")

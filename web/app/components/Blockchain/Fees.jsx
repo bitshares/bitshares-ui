@@ -8,9 +8,8 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import EquivalentValueComponent from "../Utility/EquivalentValueComponent";
-import {chain_types} from "@graphene/chain";
+import {chain_types, ChainStore} from "@graphene/chain";
 let {operations} = chain_types;
-import ChainStore from "api/ChainStore";
 
 let ops = Object.keys(operations);
 
