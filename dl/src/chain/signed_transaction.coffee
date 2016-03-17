@@ -51,7 +51,7 @@ _my.signed_transaction = ->
         unless operation.fee
             operation.fee = {amount: 0, asset_id: 0}
         if name is 'proposal_create'
-            operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal) * 1000
+            operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal)
         operation_instance = _type.fromObject operation
         [operation_id, operation_instance]
 
