@@ -63,11 +63,52 @@ class AccountStore extends BaseStore {
             this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
         }
     }
+
+    loadDbData() {
+        var linkedAccounts = Immutable.Set().asMutable();
+
+        iDB.load_data("linked_accounts")
+            .then(data => {
+                for (let a of data) {
+                    linkedAccounts.add(a.name);
+                    this._addIgnoredAccount(a.name);
+                }
+                this.setState({
+                    linkedAccounts: linkedAccounts.asImmutable()
+                });
+            });
+
+        var myAccounts = Immutable.Set().asMutable();
+        iDB.load_data("my_accounts").then(data => {
+            for (let a of data) { myAccounts.add(a.name); }
+            this.setState({ myAccounts: myAccounts.asImmutable() });
+        })
+
+        var privateAccounts = Immutable.Set().asMutable();
+        iDB.load_data("private_accounts").then(data => {
+            for (let a of data) { privateAccounts.add(a.name); }
+            this.setState({ privateAccounts: privateAccounts.asImmutable() });
+        })
+
+        var privateContacts = Immutable.Set().asMutable();
+        iDB.load_data("private_contacts").then(data => {
+            for (let a of data) { privateContacts.add(a.name); }
+            this.setState({ privateContacts: privateContacts.asImmutable() });
+        })
+    }
+
+    saveNames(iDB, store_name, list) {
+        list.forEach(name => {
+            iDB.add_to_store(store_name, {name});
+        });
+    }
     
     walletUpdate() {
+        console.log("-- AccountStore.walletUpdate -->");
         if( WalletDb.isLocked() ) {
-            this.setState(this._getInitialState())
-            return
+            //this.setState(this._getInitialState())
+            this.loadDbData();
+            return;
         }
         let keys = WalletDb.keys()
         if( this.wallet_keys === keys ) return
@@ -77,14 +118,29 @@ class AccountStore extends BaseStore {
             privateAccounts: cwallet.labels(key => key.has("private_wif")),
             privateContacts: cwallet.labels(key => ! key.has("private_wif")),
         })
-        this.updateLinkedAccounts()
+        this.updateLinkedAccounts();
+
+        const clear_promises = [
+            iDB.clear_store("linked_accounts"),
+            iDB.clear_store("my_accounts"),
+            iDB.clear_store("private_accounts"),
+            iDB.clear_store("private_contacts")
+        ];
+
+        Promise.all(clear_promises).then(() => {
+            console.log("-- AccountStore cleared -->");
+            this.saveNames(iDB, "linked_accounts", this.state.linkedAccounts);
+            this.saveNames(iDB, "my_accounts", this.state.myAccounts);
+            this.saveNames(iDB, "private_accounts", this.state.privateAccounts);
+            this.saveNames(iDB, "private_contacts", this.state.privateContacts);
+        });
     }
     
     chainStoreUpdate() {
         // If either ID references (via public key) to an account or if the acccounts become available, update this store...
-        if( this.account_refs === AccountRefsStore.getState().account_refs &&
-            this.account_ids_by_key === ChainStore.account_ids_by_key &&
-            this.objects_by_id === ChainStore.objects_by_id
+        if( this.account_refs === AccountRefsStore.getState().account_refs
+            //&& this.account_ids_by_key === ChainStore.account_ids_by_key
+            //&& this.objects_by_id === ChainStore.objects_by_id
         ) return
         
         if( ! this.updateLinkedAccounts()) { // FIXME checking pending should not be necessary

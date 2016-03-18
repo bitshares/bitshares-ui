@@ -3,7 +3,7 @@ import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 import Immuable from "immutable"
 
-const DB_VERSION = 2 // Initial value was 1
+const DB_VERSION = 3 // Initial value was 1
 const DB_PREFIX = "graphene_v5"
 
 const WALLET_BACKUP_STORES = [
@@ -23,6 +23,12 @@ var upgrade = function(db, oldVersion) {
     if (oldVersion < 2) {
         // Cache only, do not backup...
         db.createObjectStore("cached_properties", { keyPath: "name" })
+    }
+    if (oldVersion < 3) {
+        // Cache only, do not backup...
+        db.createObjectStore("my_accounts", { keyPath: "name" })
+        db.createObjectStore("private_accounts", { keyPath: "name" })
+        db.createObjectStore("private_contacts", { keyPath: "name" })
     }
 }
 
@@ -172,6 +178,22 @@ var iDB = (function () {
                     console.log("ERROR!!! remove_from_store - can't remove value from db. ", e.target.error.message, value);
                     reject(e.target.error.message);
                 };
+            });
+        },
+        clear_store:  function (store_name) {
+            return new Promise((resolve, reject) => {
+                try {
+                    let transaction = this.instance().db().transaction([store_name], "readwrite");
+                    let store = transaction.objectStore(store_name);
+                    let request = store.clear();
+                    request.onsuccess = () => { resolve(); };
+                    request.onerror = (e) => {
+                        console.log("ERROR!!! clear_store - can't clear store. ", e.target.error.message);
+                        reject(e.target.error.message);
+                    };
+                } catch (error) {
+                    resolve();
+                }
             });
         },
         load_data: function (store_name) {
