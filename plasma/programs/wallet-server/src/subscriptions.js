@@ -1,4 +1,4 @@
-import { Map } from "immutable"
+import { Map, Set } from "immutable"
 
 let subscriptions = Map()
 let subscriptions_ws_id = 1
@@ -12,20 +12,21 @@ let subscriptions_ws_id = 1
 */
 export function subscribe(ws, method, subscribe_key, subscribe_id) {
     ws.subscriptions_ws_id = subscriptions_ws_id++
+    
     if(global.DEBUG) {
-        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tsubscribe", method, subscribe_key, subscribe_id)
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ") subscribe", method, subscribe_key, subscribe_id)
     }
     let success = false
     subscribe_id = String(subscribe_id)
     
     subscriptions = subscriptions
-        .updateIn([method, subscribe_key, ws.subscriptions_ws_id], Map(), ids =>{
+        .updateIn([method, subscribe_key, ws], Set(), ids =>{
             if( ids.has(subscribe_id) ) {
-                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tAlready subscribed", subscribe_id);
+                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ") Already subscribed", subscribe_id);
                 return ids
             }
             success = true
-            return ids.set(subscribe_id, ws)
+            return ids.add(subscribe_id)
         })
     return success
 }
@@ -39,14 +40,14 @@ export function subscribe(ws, method, subscribe_key, subscribe_id) {
 */
 export function unsubscribe(ws, method, subscribe_key, unsubscribe_id) {
     if(global.DEBUG) {
-        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tunsubscribe", method, subscribe_key, unsubscribe_id)
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ") unsubscribe", method, subscribe_key, unsubscribe_id)
     }
     let success = false
     unsubscribe_id = String(unsubscribe_id)
     subscriptions = subscriptions
-        .updateIn([method, subscribe_key, ws.subscriptions_ws_id], Map(), ids =>{
+        .updateIn([method, subscribe_key, ws], Set(), ids =>{
             if( ! ids.has(unsubscribe_id) ) {
-                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tNot subscribed", unsubscribe_id);
+                console.log("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ") Not subscribed", unsubscribe_id);
                 return ids
             }
             success = true
@@ -68,26 +69,25 @@ export function notifyOther(ws, method, subscribe_key, params) {
     if(global.DEBUG) {
         str = JSON.stringify(params)
         str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
-        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tnotifyOther",  method, subscribe_key, str);
+        console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ") notifyOther",  method, subscribe_key, str);
     }
     
     let ws_map = subscriptions.getIn([method, subscribe_key])
     if( ! ws_map )
         return
     
-    ws_map.forEach( (ids, subscriptions_ws_id) => {
-        // console.log('ids,subscriptions_ws_id', ids,subscriptions_ws_id)
+    ws_map.forEach( (ids, subscribe_ws) => {
+        let ws_id = subscribe_ws.subscriptions_ws_id
         
-        // console.log('ws.subscriptions_ws_id, subscriptions_ws_id', ws.subscriptions_ws_id, subscriptions_ws_id)
         // don't notify yourself
-        if( ws.subscriptions_ws_id === subscriptions_ws_id )
+        if( subscribe_ws === ws )
             return
         
-        ids.forEach( (subscribe_ws, subscription_id) => {
+        ids.forEach( subscription_id => {
             // console.log('typeof subscribe_ws,subscription_id', typeof subscribe_ws,subscription_id)
             try {
                 if(global.DEBUG) {
-                    console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ")\tnotifyOther", subscription_id, subscribe_key, method, "...")
+                    console.log("DEBUG\tsubscriptions(" + ws.subscriptions_ws_id + ") notifyOther", subscription_id, subscribe_key, method, "...")
                 }
                 subscribe_ws.send(JSON.stringify({
                     method: "notice",
@@ -97,7 +97,7 @@ export function notifyOther(ws, method, subscribe_key, params) {
                 
                 // need a better way to know when socket is closed
                 let socketClosed = error.toString() === "Error: not opened"
-                console.log("ERROR\tsubscriptions\tnotifyOther",
+                console.log("ERROR\tsubscriptions notifyOther",
                     socketClosed ? "<socket closed>" : "<other error>",
                     error, "stack", error.stack)
                 
@@ -112,27 +112,25 @@ export function notifyOther(ws, method, subscribe_key, params) {
 export var count = ()=> {
     let cnt = 0
     subscriptions
-        .forEach( subscribe_key => subscribe_key
-        .forEach( subscribe_ws => subscribe_ws
-        .forEach( ids => cnt += ids.count()
+        .forEach( (subscribe_keys, method) => subscribe_keys
+        .forEach( (wss, subscribe_key) => wss
+        .forEach( (ids, ws2) => cnt += ids.count()
     )))
     return cnt
 }
 
 export function remove(ws) {
-    // if(global.DEBUG) console.log("DEBUG remove,ws st",count())
-    subscriptions = subscriptions
-        .filterNot( subscribe_key => subscribe_key
-            .filterNot( subscribe_ws => subscribe_ws
-                .filterNot( ids => {
-                    // if(global.DEBUG) console.log("DEBUG ids.toJS()", ids.toJS())
-                    let match = subscribe_ws === ws
-                    if( match && ! ids.isEmpty()) {
-                        console.error("WARN\tsubscriptions(" + ws.subscriptions_ws_id + ")\tWebSocket closed with active subscription(s)", ids.keySeq().toJS())
-                    }
-                    return match
-                })
-            )
-        )
-    // if(global.DEBUG) console.log("DEBUG remove,ws en",count())
+    if(global.DEBUG) console.log("DEBUG remove ws start",count())
+    subscriptions
+        .forEach( (subscribe_keys, method) => subscribe_keys
+        .forEach( (wss, subscribe_key) => wss
+        .forEach( (ids, ws2) =>{
+            console.log('ws.subscriptions_ws_id, ws2.subscriptions_ws_id', ws.subscriptions_ws_id, ws2.subscriptions_ws_id)
+            console.log(method, subscribe_key);
+            if(ws2 === ws) {
+                subscriptions = subscriptions.deleteIn([method, subscribe_key, ws])
+            }
+        }
+    )))
+    if(global.DEBUG) console.log("DEBUG remove ws end", count())
 }

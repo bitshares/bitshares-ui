@@ -35,9 +35,9 @@ export default function createServer() {
     const store = createStore( reducer )
 
     let wss = new WebSocketServer({port: npm_package_config_network_port})
-    wss.on('listening', ()=>{ if(global.INFO) console.log('INFO\tserver\tlistening port %d', npm_package_config_network_port) })
-    wss.on('close', ()=>{ if(global.INFO) console.log('INFO\tserver\tclosed port %d', npm_package_config_network_port) })
-    wss.on('error', error =>{ console.error('ERROR\tserver\tonerror', error, 'stack', error.stack) })
+    wss.on('listening', ()=>{ if(global.INFO) console.log('INFO\tserver listening port %d', npm_package_config_network_port) })
+    wss.on('close', ()=>{ if(global.INFO) console.log('INFO\tserver closed port %d', npm_package_config_network_port) })
+    wss.on('error', error =>{ console.error('ERROR\tserver onerror', error, 'stack', error.stack) })
      
     // Limit number of requests per hour by IP
     if(global.INFO) console.log("INFO\tserver\tLimit by IP address", {
@@ -48,14 +48,14 @@ export default function createServer() {
     wss.on("connection", ws => { try {
     
         sockets = sockets.add(ws)
-        if(global.INFO) console.log('INFO\tserver\tNEW SOCKET',"\tIP", ipAddress(ws), "\tTotal sockets", sockets.count())
+        if(global.INFO) console.log('INFO\tserver NEW SOCKET',"IP", ipAddress(ws), "Total sockets", sockets.count())
         
         ws.on('close', ()=> { try {
             subscriptions.remove(ws)
             sockets = sockets.remove(ws)
-            if(global.INFO) console.log("INFO\tserver\tclose", "remaining sockets", sockets.count(),
+            if(global.INFO) console.log("INFO\tserver close", "remaining sockets", sockets.count(),
                 "remaining subscriptions", subscriptions.count())
-        } catch(error) { console.error("ERROR\tserver\tclose", error, 'stack', error.stack) } })
+        } catch(error) { console.error("ERROR\tserver close", error, 'stack', error.stack) } })
         
         ws.on('message', msg => {
             
@@ -128,7 +128,7 @@ export default function createServer() {
                 if(global.DEBUG) {
                     let str = JSON.stringify(action)
                     str = str.replace(/[A-Za-z0-9+/]{60,}=*/g, "...base64...")
-                    console.log("DEBUG\tserver\tmessage", method, str)
+                    console.log("DEBUG\tserver message", method, str)
                 }
                 if( ! action || ! store.dispatch ) {
                     wsResponse( wsType, id, "OK" )
@@ -138,14 +138,14 @@ export default function createServer() {
                 wsReplySugar( wsType, id, action ) // Add a reply function to "action"
                 store.dispatch( action )
             } catch( error ) { try {
-                console.error("ERROR\tserver\t", error, 'stack', error.stack)
+                console.error("ERROR\tserver", error, 'stack', error.stack)
                 wsResponse(wsType, id, "Bad Request", typeof error === "string" ? {error} : undefined)
             } catch( error ) {
-                console.error("ERROR\tserver\t", error, 'stack', error.stack)
+                console.error("ERROR\tserver", error, 'stack', error.stack)
             }} 
         })
     
-    } catch(error) { console.error("ERROR\tserver\t", error, 'stack', error.stack) } })
+    } catch(error) { console.error("ERROR\tserver", error, 'stack', error.stack) } })
     
     return { server: wss }
 }
