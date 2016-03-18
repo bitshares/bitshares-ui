@@ -4,6 +4,8 @@ import Modal from "react-foundation-apps/src/modal";
 import WalletDb from "stores/WalletDb";
 import LoadingIndicator from "../LoadingIndicator";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import counterpart from "counterpart"
+import notify from "actions/NotificationActions"
 
 let ControlButtons = ({loading, value, onReceiveClick}) => {
     if (value === "success") {
@@ -40,7 +42,7 @@ class ReceiveFundsModal extends React.Component {
             console.log("-- receiveBlindTransfer error -->", error);
             this.setState({loading: false, error: error});
             if(/missing key/.test(error.toString()))
-                console.log("This wallet does not have a private key for this receipt");
+                notify.error(counterpart.translate("wallet.missing_private_for_receipt"));
         });
         this.setState({loading: true});
     }

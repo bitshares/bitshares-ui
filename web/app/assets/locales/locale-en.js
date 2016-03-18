@@ -795,6 +795,7 @@
             chain_id_missmatch: "Wallet backup is for a different chain",
             pending: "Pending...",
         },
+        missing_private_for_receipt: "This wallet does not have a private key for this receipt",
         confirm: "Password (confirm)",
         password: "Password",
         existing_password: "Existing Password",
