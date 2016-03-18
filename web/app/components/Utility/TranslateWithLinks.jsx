@@ -70,7 +70,7 @@ export default class TranslateWithLinks extends React.Component {
                 let value;
                 switch (key.type) {
                     case "account":
-                        value = this.linkToAccount(key.value);
+                        value = key.value && key.value[0] === "~" ? key.value : this.linkToAccount(key.value);
                         break;
 
                     case "amount":
