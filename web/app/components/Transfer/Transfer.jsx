@@ -90,8 +90,8 @@ class Transfer extends React.Component {
     }
 
     queryBlindBalance(from_name) {
-        if (from_name && from_name.length > 2 && from_name[0] === "~") {
-            const from = from_name.slice(1);
+        if (from_name && from_name.length > 1) {
+            const from = from_name[0] === "~" ? from_name.slice(1) : `@${from_name}`;
             const cwallet = WalletDb.getState().cwallet;
             try {
                 let h1 = cwallet.blindHistory(from)
@@ -102,7 +102,7 @@ class Transfer extends React.Component {
                     this.setState({blind_balances: res.toJS(), blind_history});
                 });
             } catch (error) {
-                console.log("-- getBlindBalances error -->", from_name, error);
+                //console.log("-- getBlindBalances error -->", from_name, error);
             }
         }
     }
@@ -324,7 +324,7 @@ class Transfer extends React.Component {
         // Estimate fee
         let globalObject = ChainStore.getObject("2.0.0");
         let fee = utils.estimateFee("transfer", null, globalObject);
-        
+
         if ((from_account || (this.state.from_name && this.state.from_name[0] === "~" && this.state.blind_balances)) && !from_error) {
             let account_balances = from_account ? from_account.get("balances").toJS() : this.state.blind_balances;
             asset_types = Object.keys(account_balances).sort(utils.sortID);
@@ -369,6 +369,9 @@ class Transfer extends React.Component {
                 return <li key={current_asset_id}><SimpleAssetBalance balance={account_balances[current_asset_id]} asset_id={current_asset_id} /></li>;
             });
         }
+
+        let current_asset = asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0]);
+        if (!current_asset) fee = "";
 
         let propose_incomplete = propose && ! propose_account
         let submitButtonClass = "button";
@@ -423,7 +426,7 @@ class Transfer extends React.Component {
                         <AmountSelector label="transfer.amount"
                                         amount={amount}
                                         onChange={this.onAmountChanged.bind(this, fee_asset_types)}
-                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                        asset={current_asset}
                                         assets={asset_types}
                                         display_balance={balance}
                                         tabIndex={tabIndex++}/>
