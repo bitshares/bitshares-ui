@@ -220,7 +220,7 @@ class AccountOverview extends React.Component {
                 {account.get("proposals").size ? 
                 <div className="content-block">
                     <h3><Translate content="explorer.proposals.title" account={account.get("id")} /></h3>
-                    <Proposals accountList={Immutable.fromJS([account.get("id")])}/>
+                    <Proposals account={account.get("id")}/>
                 </div> : null}
                 
                 <div className="content-block">

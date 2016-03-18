@@ -5,67 +5,35 @@ import ProposedOperation from "components/Blockchain/ProposedOperation"
 import BindToChainState from "components/Utility/BindToChainState"
 import ChainTypes from "components/Utility/ChainTypes"
 import utils from "common/utils"
-import WalletDb from "stores/WalletDb";
-import WalletApi from "rpc_api/WalletApi";
-let wallet_api = new WalletApi()
+import ProposalApproveModal from "../Modal/ProposalApproveModal";
+import NestedApprovalState from "../Account/NestedApprovalState";
 
 @BindToChainState({keep_updating: true})
 export default class Proposals extends Component {
 
     static propTypes = {
-        accountList: ChainTypes.ChainAccountsList.isRequired,
-    }
+        account: ChainTypes.ChainAccount.isRequired
+    };
 
-    shouldComponentUpdate(nextProps, nextState) {
-        // console.log("should render")
-        var len1 = this.props.accountList.length
-        var len2 = nextProps.accountList.length
-        if( len1 !== len2 ) return true
-        for(let i = 0; i < len1; i++) {
-            var a1 = this.props.accountList[i]
-            var a2 = nextProps.accountList[i]
-            if( a1 !== a2 ) return true
-            if( ! a1 ) continue // undefined or null
-            if( a1.get("proposals") !== a2.get("proposals") ) return true
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     // console.log("should render")
+    //     var len1 = this.props.accountList.length
+    //     var len2 = nextProps.accountList.length
+    //     if( len1 !== len2 ) return true
+    //     for(let i = 0; i < len1; i++) {
+    //         var a1 = this.props.accountList[i]
+    //         var a2 = nextProps.accountList[i]
+    //         if( a1 !== a2 ) return true
+    //         if( ! a1 ) continue // undefined or null
+    //         if( a1.get("proposals") !== a2.get("proposals") ) return true
+    //     }
+    //     return false
+    // }
+
+    _onApproveModal(id) {
+        if (this.refs[id]) {
+            this.refs[id].show();
         }
-        return false
-    }
-
-    _onProposalAction(type, oldProposal) {
-        let proposalObject = oldProposal.proposal.toJS();
-        let id = oldProposal.account.get("id");
-        console.log("_onApprove:", proposalObject, id);
-
-        let proposal = {
-            fee_paying_account: id,
-            proposal: proposalObject.id,
-            active_approvals_to_add: [],
-            active_approvals_to_remove: [],
-            owner_approvals_to_add: [],
-            owner_approvals_to_remove: [],
-            key_approvals_to_add: [],
-            key_approvals_to_remove: []
-        };
-
-        if (proposalObject.required_active_approvals.indexOf(id) !== -1 && proposalObject.available_active_approvals.indexOf(id) === -1) {
-            if (type === "approve") {
-                proposal.active_approvals_to_add = [id];
-            } else if (type === "reject") {
-                proposal.active_approvals_to_remove = [id];
-            }
-        }
-
-        if (proposalObject.required_owner_approvals.indexOf(id) !== -1 && proposalObject.available_owner_approvals.indexOf(id) === -1) {
-             if (type === "approve") {
-                proposal.owner_approvals_to_add = [id];
-            } else if (type === "reject") {
-                proposal.owner_approvals_to_remove = [id];
-            }
-        }
-
-        var tr = wallet_api.new_transaction();
-        tr.add_type_operation("proposal_update", proposal);
-        WalletDb.process_transaction(tr, null, true);
     }
 
     _canApprove(proposal, id) {
@@ -91,11 +59,13 @@ export default class Proposals extends Component {
     }
 
     render() {
+        let {account} = this.props;
+        if( ! account ) return null;
 
         let proposals = [];
-        for(let account of this.props.accountList) {
-            if( ! account ) continue
-            if( ! account.get("proposals").size ) continue
+            
+        if( account.get("proposals").size ) {
+            console.log("account:", account.toJS());
             account.get("proposals").forEach( proposal_id => {
                 var proposal = ChainStore.getObject( proposal_id )
                 if( proposal ) {
@@ -129,19 +99,42 @@ export default class Proposals extends Component {
             let canApprove = this._canApprove(proposal.proposal.toJS(), proposal.account.get("id"));
             let canReject = this._canReject(proposal.proposal.toJS(), proposal.account.get("id"));
 
+            let proposalId = proposal.proposal.get("id");
+
+            console.log("full proposal:", proposal);
             return (
-                <tr key={proposal.proposal.get("id")}>
-                    <td>#{proposal.proposal.get("id")}</td>
+                <tr key={proposalId}>
+                    <td>#{proposalId}</td>
                     <td>
                         {text}
                     </td>
+                    <td>
+                        <NestedApprovalState
+                            proposal={proposal.proposal}
+                            available={proposal.proposal.get("available_active_approvals")}
+                            required={proposal.proposal.get("required_active_approvals")}
+                        />
+                    </td>
                     {canApprove ? (
                             <td>
-                            <button onClick={this._onProposalAction.bind(this, "approve", proposal)} className="button success">Approve</button>
-                        </td>) : null}
+                                <button
+                                    onClick={this._onApproveModal.bind(this, proposalId)}
+                                    className="button success"
+                                >
+                                    <span>Approve</span>
+                                </button>
+                                <ProposalApproveModal
+                                    ref={proposalId}
+                                    modalId={proposalId}
+                                    account={proposal.account.get("id")}
+                                    proposal={proposalId}
+
+                                />
+                            </td>) : null}
                     {canReject ? (
                             <td>
                             <button onClick={this._onProposalAction.bind(this, "reject", proposal)} className="button">Reject</button>
+
                         </td>) : null}
                 </tr>
             );
@@ -153,6 +146,7 @@ export default class Proposals extends Component {
                 <tr>
                     <th></th>
                     <th><Translate content="account.votes.info" /></th>
+                    <th>Status</th>
                     <th colSpan="2"><Translate content="proposal.action" /></th>
                 </tr>
                 </thead>
