@@ -55,6 +55,11 @@ export default class WalletWebSocket {
                 return this.listener(JSON.parse(message.data));
             }
             this.web_socket.onclose = () => {
+                { // web socket may re-connect
+                    this.callbacks = {};
+                    this.subscriptions = {};
+                    this.unsub = {};
+                }
                 this.status = "closed";
                 this.update_stocket_status("closed");
             };
