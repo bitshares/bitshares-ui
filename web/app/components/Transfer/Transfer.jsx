@@ -95,8 +95,8 @@ class Transfer extends React.Component {
             const cwallet = WalletDb.getState().cwallet;
             try {
                 let h1 = cwallet.blindHistory(from)
-                // let h2 = cwallet.blindHistory(this.state.to_name)
-                let blind_history = h1//.merge(h2).toJS()
+                let h2 = cwallet.blindHistory(this.state.to_name)
+                let blind_history = h1.merge(h2).toJS()
                 cwallet.getBlindBalances(from.replace(/^~/,"")).then(res => {
                     console.log("-- getBlindBalances -->", from_name, res.toJS(), cwallet.blindHistory(from.replace(/^~/,"")).toJS());
                     this.setState({blind_balances: res.toJS(), blind_history});
