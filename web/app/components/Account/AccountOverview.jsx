@@ -217,7 +217,7 @@ class AccountOverview extends React.Component {
                     </div>
                 </div>) : null}
 
-                {account.get("proposals").size ? 
+                {account.get("proposals") && account.get("proposals").size ? 
                 <div className="content-block">
                     <h3><Translate content="explorer.proposals.title" account={account.get("id")} /></h3>
                     <Proposals account={account.get("id")}/>

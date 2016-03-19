@@ -115,7 +115,7 @@ class AccountVesting extends React.Component {
 
     render() {
 
-        if (!this.props.account) {
+        if (!this.props.account || !this.props.account.get("vesting_balances")) {
             return null;
         }
 
