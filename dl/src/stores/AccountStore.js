@@ -154,14 +154,15 @@ class AccountStore extends BaseStore {
             owner_account_threshold = this._accountThreshold(owner_authority, recursion_count)
             if ( owner_account_threshold === undefined ) return undefined
             if(owner_account_threshold == "full") return "full"
+            
             active_account_threshold = this._accountThreshold(active_authority, recursion_count)
             if ( active_account_threshold === undefined ) return undefined
             if(active_account_threshold == "full") return "full"
         }
         if(
             owner_pubkey_threshold === "partial" || active_pubkey_threshold === "partial" ||
-            owner_address_threshold === "partial" || owner_address_threshold === "partial" ||
-            owner_account_threshold === "parital" || active_account_threshold === "partial"
+            owner_address_threshold === "partial" || active_address_threshold === "partial" ||
+            owner_account_threshold === "partial" || active_account_threshold === "partial"
         ) return "partial"
         return "none"
     }
@@ -169,12 +170,12 @@ class AccountStore extends BaseStore {
     _accountThreshold(authority, recursion_count) {
         var account_auths = authority.get("account_auths")
         if( ! account_auths.size ) return "none"
-        for (let a of account_auths)
+        // for (let a of account_auths)
             // get all accounts in the queue for fetching
-            ChainStore.getAccount(a)
-        
+            // ChainStore.getAccount(a.get(0))
+
         for (let a of account_auths) {
-            var account = ChainStore.getAccount(a)
+            var account = ChainStore.getAccount(a.get(0))
             if(account === undefined) return undefined
             return this.getMyAuthorityForAccount(account, ++recursion_count)
         }
