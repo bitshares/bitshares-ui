@@ -971,11 +971,14 @@ class ChainStore
       if( !current )
          current = Immutable.Map();
       let prior   = current
+
       if( current === undefined || current === true )
-         this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
+      {
+        this.objects_by_id = this.objects_by_id.set( object.id, current = Immutable.fromJS(object) )
+      }
       else
       {
-         this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
+        this.objects_by_id = this.objects_by_id.set( object.id, current = current.mergeDeep( Immutable.fromJS(object) ) )
       }
 
 
@@ -1129,23 +1132,10 @@ class ChainStore
             this.objects_by_id = this.objects_by_id.set( account.get("id"), account );
           }
         }
+      // POROPOSAL OBJECT
       } else if ( object.id.substring(0,proposal_prefix.length ) == proposal_prefix ) {
-        object.required_active_approvals.forEach(id => {
-          let impactedAccount = this.objects_by_id.get(id);
-          if (impactedAccount) {
-            let proposals = impactedAccount.get("proposals");
-
-            if (!proposals.has(object.id)) {              
-              proposals = proposals.add(object.id)
-              impactedAccount = impactedAccount.set("proposals", proposals);
-              this._updateObject( impactedAccount.toJS(), false )
-
-            }
-
-
-          }
-
-        })
+        this.addProposalData(object.required_active_approvals, object.id);
+        this.addProposalData(object.required_owner_approvals, object.id);
       }
 
 
@@ -1209,6 +1199,21 @@ class ChainStore
             .sort().get(Math.floor( (this.chain_time_offset.length - 1) / 2 ))
         // console.log("median_offset", median_offset)
         return median_offset
+    }
+
+    addProposalData(approvals, objectId) {
+        approvals.forEach(id => {
+          let impactedAccount = this.objects_by_id.get(id);
+          if (impactedAccount) {
+            let proposals = impactedAccount.get("proposals");
+
+            if (!proposals.includes(objectId)) {
+              proposals = proposals.add(objectId);
+              impactedAccount = impactedAccount.set("proposals", proposals);
+              this._updateObject( impactedAccount.toJS(), false );
+            }
+          }
+        })
     }
 
 }
