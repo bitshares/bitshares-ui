@@ -76,8 +76,6 @@ class ProposalApproveModal extends React.Component {
             }
         })
 
-        console.log("final proposal:", proposal);
-
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("proposal_update", proposal);
         WalletDb.process_transaction(tr, null, true);
@@ -227,15 +225,14 @@ class SecondLevel extends React.Component {
         return existing;
     }
 
-    resolveAddresses(addresses, existing = Immutable.List()) {
-        let myAccounts = AccountStore.getMyAccounts();
-        console.log("myAccounts:", myAccounts);
-        addresses.forEach(address => {
-            console.log("address:", address);
-        })
+    // resolveAddresses(addresses, existing = Immutable.List()) {
+    //     let myAccounts = AccountStore.getMyAccounts();
+    //     addresses.forEach(address => {
+    //         console.log("address:", address);
+    //     })
 
-        return existing;
-    }
+    //     return existing;
+    // }
 
 
     render() {

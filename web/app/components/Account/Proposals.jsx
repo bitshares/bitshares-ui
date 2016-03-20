@@ -99,8 +99,6 @@ export default class Proposals extends Component {
 
             let proposalId = proposal.proposal.get("id");
 
-            console.log("full proposal:", proposal.proposal.toJS());
-
             let type = proposal.proposal.get("required_active_approvals").size ? "active" : "owner";
 
             return (

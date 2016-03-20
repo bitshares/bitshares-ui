@@ -146,7 +146,7 @@ class AccountOverview extends React.Component {
                 </tr>
             );
         }
-        console.log("account:", account.toJS());
+        
         let totalBalance = includedBalancesList.size ? <TotalBalanceValue balances={includedBalancesList}/> : null;
 
         return (
