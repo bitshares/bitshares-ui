@@ -180,18 +180,15 @@ class AccountStore extends BaseStore {
     }
 
     _accountThreshold(authority, recursion_count) {
-        let account_auths = authority.get("account_auths");
-
-        if( ! account_auths.size ) return "none";
-
-        // account_auths.forEach(a => {
+        var account_auths = authority.get("account_auths")
+        if( ! account_auths.size ) return "none"
+        // for (let a of account_auths)
             // get all accounts in the queue for fetching
-        //     ChainStore.getAccount(a.get(0));
-        // });
+            // ChainStore.getAccount(a.get(0))
 
-        account_auths.forEach(a => {
-            let account = ChainStore.getAccount(a.get(0));
-            if(account === undefined) return undefined;
+        for (let a of account_auths) {
+            let account = ChainStore.getAccount(a.get(0))
+            if(account === undefined) return undefined
             return this.getMyAuthorityForAccount(account, ++recursion_count)
         });
     }

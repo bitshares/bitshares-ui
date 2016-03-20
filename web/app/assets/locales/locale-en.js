@@ -222,6 +222,8 @@
             funding: "Funding",
             total_budget: "Total available worker budget",
             unused_budget: "Unused worker budget",
+            new: "Proposed workers",
+            active: "Active workers"
         },
         options: {
             num_witnesses: "Desired Witnesses",

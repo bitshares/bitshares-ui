@@ -448,7 +448,10 @@ class PriceChart extends React.Component {
                         }
                     },
                     showFirstLabel: true,
-                    min: 0
+                    min: 0,
+                    crosshair: {
+                        snap: false
+                    }
             }],
             xAxis: {
                 type: "datetime",
