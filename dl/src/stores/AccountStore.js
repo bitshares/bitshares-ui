@@ -190,7 +190,7 @@ class AccountStore extends BaseStore {
             let account = ChainStore.getAccount(a.get(0))
             if(account === undefined) return undefined
             return this.getMyAuthorityForAccount(account, ++recursion_count)
-        });
+        };
     }
 
     isMyAccount(account) {
