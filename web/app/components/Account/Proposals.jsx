@@ -118,7 +118,7 @@ export default class Proposals extends Component {
                     <td>
                         <button
                             onClick={this._onApproveModal.bind(this, proposalId, "reject")}
-                            className="button"
+                            className="button outline"
                         >
                             Reject
                         </button>
@@ -132,7 +132,7 @@ export default class Proposals extends Component {
 
                         <button
                             onClick={this._onApproveModal.bind(this, proposalId, "approve")}
-                            className="button success"
+                            className="button outline"
                         >
                             <span>Approve</span>
                         </button>
