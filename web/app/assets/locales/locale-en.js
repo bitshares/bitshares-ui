@@ -347,6 +347,7 @@
         action: "Actions",
         expires: "Expires",
         update_account: "Update account data for {account}",
+        status: "Status",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",

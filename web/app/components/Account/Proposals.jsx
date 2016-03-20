@@ -155,7 +155,7 @@ export default class Proposals extends Component {
                 <thead>
                 <tr>
                     <th><Translate content="account.votes.info" /></th>
-                    <th>Status</th>
+                    <th><Translate content="proposal.status" /></th>
                     <th><Translate content="proposal.action" /></th>
                 </tr>
                 </thead>

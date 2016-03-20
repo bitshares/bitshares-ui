@@ -219,7 +219,9 @@ class AccountOverview extends React.Component {
 
                 {account.get("proposals") && account.get("proposals").size ? 
                 <div className="content-block">
-                    <h3><Translate content="explorer.proposals.title" account={account.get("id")} /></h3>
+                    <div className="block-content-header">
+                        <Translate content="explorer.proposals.title" account={account.get("id")} />
+                    </div>
                     <Proposals account={account.get("id")}/>
                 </div> : null}
                 
