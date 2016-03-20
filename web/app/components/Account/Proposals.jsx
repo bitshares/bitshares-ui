@@ -30,9 +30,9 @@ export default class Proposals extends Component {
     //     return false
     // }
 
-    _onApproveModal(id) {
-        if (this.refs[id]) {
-            this.refs[id].show();
+    _onApproveModal(id, action) {
+        if (this.refs[id + "_" + action]) {
+            this.refs[id + "_" + action].show();
         }
     }
 
@@ -48,7 +48,6 @@ export default class Proposals extends Component {
     }
 
     _canReject(proposal, id) {
-        console.log(proposal, id);
         if (proposal.available_active_approvals.indexOf(id) !== -1) {
             return true;
         } else if (proposal.available_owner_approvals.indexOf(id) !== -1) {
@@ -65,7 +64,6 @@ export default class Proposals extends Component {
         let proposals = [];
             
         if( account.get("proposals").size ) {
-            console.log("account:", account.toJS());
             account.get("proposals").forEach( proposal_id => {
                 var proposal = ChainStore.getObject( proposal_id )
                 if( proposal ) {
@@ -101,41 +99,53 @@ export default class Proposals extends Component {
 
             let proposalId = proposal.proposal.get("id");
 
-            console.log("full proposal:", proposal);
+            console.log("full proposal:", proposal.proposal.toJS());
+
+            let type = proposal.proposal.get("required_active_approvals").size ? "active" : "owner";
+
             return (
                 <tr key={proposalId}>
-                    <td>#{proposalId}</td>
                     <td>
                         {text}
                     </td>
                     <td>
                         <NestedApprovalState
-                            proposal={proposal.proposal}
-                            available={proposal.proposal.get("available_active_approvals")}
-                            required={proposal.proposal.get("required_active_approvals")}
+                            proposal={proposal.proposal.get("id")}
+                            type={type}
                         />
                     </td>
-                    {canApprove ? (
-                            <td>
-                                <button
-                                    onClick={this._onApproveModal.bind(this, proposalId)}
-                                    className="button success"
-                                >
-                                    <span>Approve</span>
-                                </button>
-                                <ProposalApproveModal
-                                    ref={proposalId}
-                                    modalId={proposalId}
-                                    account={proposal.account.get("id")}
-                                    proposal={proposalId}
 
-                                />
-                            </td>) : null}
-                    {canReject ? (
-                            <td>
-                            <button onClick={this._onProposalAction.bind(this, "reject", proposal)} className="button">Reject</button>
+                    <td>
+                        <button
+                            onClick={this._onApproveModal.bind(this, proposalId, "reject")}
+                            className="button"
+                        >
+                            Reject
+                        </button>
+                        <ProposalApproveModal
+                            ref={proposalId + "_" + "reject"}
+                            modalId={proposalId + "_" + "reject"}
+                            account={proposal.account.get("id")}
+                            proposal={proposalId}
+                            action="reject"
+                        />
 
-                        </td>) : null}
+                        <button
+                            onClick={this._onApproveModal.bind(this, proposalId, "approve")}
+                            className="button success"
+                        >
+                            <span>Approve</span>
+                        </button>
+                        <ProposalApproveModal
+                            ref={proposalId + "_" + "approve"}
+                            modalId={proposalId + "_" + "approve"}
+                            account={proposal.account.get("id")}
+                            proposal={proposalId}
+                            action="approve"
+                        />
+                    </td>
+                    
+
                 </tr>
             );
         })
@@ -144,10 +154,9 @@ export default class Proposals extends Component {
             <table className={"table compact"}>
                 <thead>
                 <tr>
-                    <th></th>
                     <th><Translate content="account.votes.info" /></th>
                     <th>Status</th>
-                    <th colSpan="2"><Translate content="proposal.action" /></th>
+                    <th><Translate content="proposal.action" /></th>
                 </tr>
                 </thead>
                 <tbody>

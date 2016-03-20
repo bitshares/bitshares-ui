@@ -1,4 +1,6 @@
 var numeral = require("numeral");
+var Immutable = require("immutable");
+
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {object_type, operations} from "chain/chain_types";
@@ -463,6 +465,20 @@ var Utils = {
         // }
 
         // return result;
+    },
+
+    flatten_auths(auths, existingAuths = Immutable.List()) {
+        if (!auths.size) {
+            return existingAuths;
+        }
+
+        auths.forEach(owner => {
+            if (!existingAuths.includes(owner.get(0))) {
+                existingAuths = existingAuths.push(owner.get(0)); 
+            }
+        });
+        return existingAuths;
+
     }
 };
 

@@ -238,24 +238,18 @@ class ProposedOperation extends React.Component {
                 break;
 
             case "account_update":
-                let account = ChainStore.getAccount(op[1].account);
-                let currentProxy = account ? account.getIn(["options", "voting_account"]) : null;
-                if (account && op[1].new_options.voting_account !== currentProxy) {
-                    let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].account)}&nbsp;
-                            <Translate component="span" content="transaction.set_proxy" proxy={proxyAccount ? proxyAccount.get("name") : ""} />
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].account)}&nbsp;
-                            <Translate component="span" content="transaction.update_account" />
-                        </span>
-                    );
-                }
+
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="proposal.update_account"
+                            keys={[
+                                {type: "account", value: op[1].account, arg: "account"},
+                            ]}                                    
+                        />
+                    </span>
+                );
+
                 break;
 
             case "account_whitelist":

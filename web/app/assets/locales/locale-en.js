@@ -342,8 +342,9 @@
         limit_order_sell: "Place an order to sell {amount} at {price} for {account}",
         limit_order_buy: "Place an order to buy {amount} at {price} for {account}",
         committee_member_update_global_parameters: "Update committee global parameters by {account}",
-        action: "Action",
+        action: "Actions",
         expires: "Expires",
+        update_account: "Update account data for {account}",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",

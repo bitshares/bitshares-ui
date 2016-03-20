@@ -959,8 +959,6 @@ class Transaction extends React.Component {
                         "key_approvals_to_add", "key_approvals_to_remove"
                     ];
 
-                    let key = 1;
-
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
@@ -973,7 +971,10 @@ class Transaction extends React.Component {
                             rows.push(
                                 <tr key={key++}>
                                     <td><Translate content={`proposal.update.${field}`} /></td>
-                                    <td>{op[1][field].map(value => {return <div>{this.linkToAccount(value)}</div>})}</td>
+                                    <td>{op[1][field].map(value => {
+                                        return <div key={value}>{this.linkToAccount(value)}</div>}
+                                        )}
+                                    </td>
                                 </tr>
                             )
                         }
