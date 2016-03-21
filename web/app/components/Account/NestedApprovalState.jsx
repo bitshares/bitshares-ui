@@ -73,7 +73,7 @@ class SecondLevel extends React.Component {
                                         paddingLeft: "10%",
                                         paddingTop: 2
                                     }}>
-                                        <LinkToAccountById subpage="permissions" account={fullAccount.get("id")} /> : {levelTwo[1]}
+                                        <LinkToAccountById subpage="permissions" account={fullAccount.get("id")} /> ({levelTwo[1]})
                                     </div>
                                     <div
                                         className="float-right"

@@ -138,7 +138,7 @@ class ProposalApproveModal extends React.Component {
                     <div className="content-block">
                         <h4>{isAdd ? "Add approval" : "Remove approval"}</h4>
                     </div>
-                    <div className="content-block">
+                    <div className="content-block" style={{paddingRight: "20%"}}>
                         
                         <NestedApprovalState
                             proposal={proposal.get("id")}
