@@ -785,6 +785,10 @@ Types.public_key = {
         }
         v.required(object);
         return object.toString()
+    },
+    compare(a, b) {
+        // sort decending
+        return -1 * strCmp(a.toString(), b.toString())
     }
 };
 
@@ -809,13 +813,20 @@ Types.address =
             return chain_config.address_prefix + "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
         }
         return Types.address._to_address(object).toString();
+    },
+    compare(a, b) {
+        // sort decending
+        return -1 * strCmp(a.toString(), b.toString())
     }
 }
 
-let first = el => Array.isArray(el) ? el[0] : el
+let strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0
+let firstEl = el => Array.isArray(el) ? el[0] : el
 let sortOperation = (array, st_operation) => st_operation.compare ?
-    array.sort((a,b)=> st_operation.compare(first(a), first(b))) : // custom compare operation
+    array.sort((a,b)=> st_operation.compare(firstEl(a), firstEl(b))) : // custom compare operation
     array.sort((a,b)=>
-        typeof first(a) === "number" && typeof first(b) === "number" ? first(a) - first(b) : 
-        first(a).toString() > first(b).toString()
+        typeof firstEl(a) === "number" && typeof firstEl(b) === "number" ? firstEl(a) - firstEl(b) :
+        // A binary string compare does not work. Performanance is very good so HEX is used..  localeCompare is another option.
+        Buffer.isBuffer(firstEl(a)) && Buffer.isBuffer(firstEl(b)) ? strCmp(firstEl(a).toString("hex"), firstEl(b).toString("hex")) :
+        strCmp(firstEl(a).toString(), firstEl(b).toString())
     )
