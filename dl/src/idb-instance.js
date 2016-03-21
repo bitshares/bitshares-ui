@@ -163,8 +163,10 @@ var iDB = (function () {
                 let request = store.add(value);
                 request.onsuccess = () => { resolve(value); };
                 request.onerror = (e) => {
-                    console.log("ERROR!!! add_to_store - can't store value in db. ", e.target.error.message, value);
-                    reject(e.target.error.message);
+                    if (e.target.error.name !== "ConstraintError") {
+                        console.log("ERROR!!! add_to_store - can't store value in db. ", e.target.error);
+                        reject(e.target.error.message);
+                    }
                 };
             });
         },

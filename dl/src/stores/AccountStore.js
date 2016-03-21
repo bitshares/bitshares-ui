@@ -80,7 +80,7 @@ class AccountStore extends BaseStore {
 
         var myAccounts = Immutable.Set().asMutable();
         iDB.load_data("my_accounts").then(data => {
-            for (let a of data) { console.log("-- my_accounts add -->", a.name); myAccounts.add(a.name); }
+            for (let a of data) { myAccounts.add(a.name); }
             this.setState({ myAccounts: myAccounts.asImmutable() });
         })
 
