@@ -179,7 +179,13 @@
             warning3: "Account is already in the list",
             warning4: "Key is already in the list",
             action: "Action",
-            acct_or_key:" Account / Key / Address"
+            acct_or_key:" Account / Key / Address",
+            key_viewer: "Private key viewer",
+            public: "Public key",
+            private: "Private key (WIF - Wallet Import Format)",
+            show: "show",
+            brain: "Branikey position",
+            from: "Imported from account"
         },
         votes: {
             proxy_short: "Proxy",
