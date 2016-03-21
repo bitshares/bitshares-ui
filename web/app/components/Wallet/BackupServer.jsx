@@ -197,6 +197,7 @@ class BackupServer extends Component {
         const emailRestoreKeyBack = e => {
             e.preventDefault()
             this.setState({ email_wallet_key: false })
+            window.history.back()
         }
         const emailRestoreKey = <div>
             {/* E M A I L */}
