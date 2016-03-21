@@ -667,7 +667,8 @@ module.exports = {
         themes: "主题",
         darkTheme: "黑色主题",
         lightTheme: "白色主题",
-        olDarkTheme: "Openledger黑"
+        olDarkTheme: "Openledger黑",
+        reset: "恢复默认值"
     },
     pagination: {
         newer: "更近",
