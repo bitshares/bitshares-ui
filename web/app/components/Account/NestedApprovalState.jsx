@@ -4,6 +4,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import Immutable from "immutable";
 import utils from "common/utils";
 import Icon from "../Icon/Icon";
+import LinkToAccountById from "../Blockchain/LinkToAccountById";
 
 @BindToChainState()
 class SecondLevel extends React.Component {
@@ -49,46 +50,49 @@ class SecondLevel extends React.Component {
             if (fullAccount) {
                 let accountName = fullAccount.get("name")
                 requiredWeight = fullAccount.getIn([type, "weight_threshold"]);
-                requiredLevelTwo[accountName].accounts.forEach(levelTwo => {
-                    let fullAccount = requiredAccounts[levelTwo[0]];
-                    if (fullAccount) {
 
-                        if (availableLevelOne.indexOf(levelTwo[0]) !== -1) {
-                            currentWeight += levelTwo[1];
-                        }
+                if (requiredLevelTwo[accountName] && "accounts" in requiredLevelTwo[accountName]) {
+                    requiredLevelTwo[accountName].accounts.forEach(levelTwo => {
+                        let fullAccount = requiredAccounts[levelTwo[0]];
+                        if (fullAccount) {
 
-                        let isOK = availableLevelOne.indexOf(levelTwo[0]) !== -1;
-                        status.push(
-                            <div
-                                key={levelTwo[0]}
-                                style={{
-                                    width: "100%",
-                                    overflow: "hidden"
-                                }}>
-                                <div style={{
-                                    display: "inline-block",
-                                    paddingLeft: "10%",
-                                    paddingTop: 2
-                                }}>
-                                    {fullAccount.get("name")} : {levelTwo[1]}
-                                </div>
+                            if (availableLevelOne.indexOf(levelTwo[0]) !== -1) {
+                                currentWeight += levelTwo[1];
+                            }
+
+                            let isOK = availableLevelOne.indexOf(levelTwo[0]) !== -1;
+                            status.push(
                                 <div
-                                    className="float-right"
+                                    key={levelTwo[0]}
                                     style={{
-                                        display: "inline-block",
-                                        paddingLeft: 20
+                                        width: "100%",
+                                        overflow: "hidden"
                                     }}>
-                                    <span>{isOK ? <Icon name="checkmark-circle" size="1x" className="success"/> : <Icon name="cross-circle" size="1x" className="error"/>}</span>
+                                    <div style={{
+                                        display: "inline-block",
+                                        paddingLeft: "10%",
+                                        paddingTop: 2
+                                    }}>
+                                        <LinkToAccountById subpage="permissions" account={fullAccount.get("id")} /> : {levelTwo[1]}
+                                    </div>
+                                    <div
+                                        className="float-right"
+                                        style={{
+                                            display: "inline-block",
+                                            paddingLeft: 20
+                                        }}>
+                                        <span>{isOK ? <Icon name="checkmark-circle" size="1x" className="success"/> : <Icon name="cross-circle" size="1x" className="error"/>}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    }    
-                });
+                            );
+                        }    
+                    });
+                }
 
                 let isOK = currentWeight >= requiredWeight;
                 status.unshift(
                     <div key={accountName} style={{width: "100%", paddingBottom: 5}}>
-                        <div style={{display: "inline-block"}}>{accountName}</div>
+                        <div style={{display: "inline-block"}}><LinkToAccountById subpage="permissions" account={account} /></div>
                         <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
                             <span className={isOK ? "txtlabel success" : "txtlabel warning"}>{currentWeight} / {requiredWeight}</span>
                         </div>

@@ -6,8 +6,13 @@ import BindToChainState from "../Utility/BindToChainState";
 @BindToChainState()
 class LinkToAccountById extends React.Component {
     static propTypes = {
-        account: ChainTypes.ChainObject.isRequired
-    }
+        account: ChainTypes.ChainObject.isRequired,
+        subpage: React.PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        subpage: "overview"
+    };
 
     shouldComponentUpdate(nextProps) {
         // console.log("linkToAccountById:", nextProps.account.toJS());
@@ -25,7 +30,7 @@ class LinkToAccountById extends React.Component {
         } else {
             // console.log( "account_name exists: ", this.props.account.get("id"), this.props.account.get("name") );
         }
-        return <Link to={`/account/${account_name}/overview/`}>{account_name}</Link>
+        return <Link to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>
     }
 }
 
