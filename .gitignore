@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+node_modules
 */node_modules
 */npm-debug.log
 cli/bundle
@@ -11,5 +12,6 @@ dist
 web/app/components/Exchange/exchange.css
 cli/bundle.js
 web/dist-prod
-plasma
+plasma/.babelrc
 
+>>>>>>> master

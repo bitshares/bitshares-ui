@@ -3,10 +3,11 @@ import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import BackupServerStore from "stores/BackupServerStore"
 import CachedPropertyStore from "stores/CachedPropertyStore"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import BlockchainStore from "stores/BlockchainStore";
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
@@ -110,7 +111,7 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.history.pushState(null, "/wallet/backup/create");
+        this.context.history.pushState(null, "/wallet/backup/server");
     }
 
     onBackupBrainkey() {
@@ -121,18 +122,17 @@ class Footer extends React.Component {
 class AltFooter extends Component {
 
     render() {
-        var wallet = WalletDb.getWallet()
+        
         return <AltContainer
-            stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
+            stores={[CachedPropertyStore, BlockchainStore, WalletDb, BackupServerStore]}
             inject ={{
                 backup_recommended: ()=> 
-                    (wallet && ( ! wallet.backup_date || CachedPropertyStore.get("backup_recommended"))),
+                    ( ! WalletDb.isLocked() && BackupServerStore.getState().backup_status !== "backed_up" && ( ! WalletDb.prop("backup_date") || CachedPropertyStore.get("backup_recommended"))),
                 rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
                 // Disable notice for separate brainkey backup for now to keep things simple.  The binary wallet backup includes the brainkey...
                 // backup_brainkey_recommended: ()=> {
-                //     var wallet = WalletDb.getWallet()
-                //     if( ! wallet ) return undefined
-                //     return wallet.brainkey_sequence !== 0 && wallet.brainkey_backup_date == null
+                //     if( WalletDb.isLocked() ) return undefined
+                //     return WalletDb.prop("brainkey_sequence") !== 0 && WalletDb.prop("brainkey_backup_date") == null
                 // }
             }}
             ><Footer {...this.props}/>

@@ -3,6 +3,7 @@ import {PropTypes} from "react";
 import {Link} from "react-router";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
@@ -12,6 +13,7 @@ import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
 import WalletDb from "stores/WalletDb";
+import ReceiveFundsModal from "../Stealth/ReceiveFundsModal";
 
 class AccountLeftPanel extends React.Component {
 
@@ -50,6 +52,11 @@ class AccountLeftPanel extends React.Component {
         ReactTooltip.hide();
         this.context.history.pushState(null, "/create-account");
     }
+
+    //onReceiveClick(e) {
+    //    e.preventDefault();
+    //    ZfApi.publish("receive_funds_modal", "open");
+    //}
 
     render() {
         let {account, linkedAccounts, isMyAccount} = this.props;
@@ -99,6 +106,7 @@ class AccountLeftPanel extends React.Component {
                         <a href data-tip="Create New Account" data-place="top" onClick={this.onCreateAccountClick.bind(this)}><Icon name="plus-circle"/></a>
                     </div>
                 </div> : null}
+                {/*<ReceiveFundsModal />*/}
             </div>
         );
     }

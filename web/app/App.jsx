@@ -1,8 +1,12 @@
+import SettingsStore from "stores/SettingsStore";
+{ // Setup connection
+    let connection_string = SettingsStore.getSetting("connection");
+    Apis.instance(connection_string)
+}
 import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, Redirect} from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
-import Apis from "rpc_api/ApiInstances";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
@@ -34,10 +38,9 @@ import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
-import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
-import LoadingIndicator from "./components/LoadingIndicator";
+import LoadingIndicator from "components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal"
 import NotificationSystem from "react-notification-system";
@@ -47,14 +50,14 @@ import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/Exist
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
-import PrivateKeyActions from "actions/PrivateKeyActions";
 import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
-import ChainStore from "api/ChainStore";
-import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
+import { ChainStore } from "@graphene/chain";
+import { AddressIndex } from "@graphene/wallet-client";
+import {CreateLocalBackup, UploadRestore} from "./components/Wallet/Backup";
+import BackupServer, { readBackupToken } from "./components/Wallet/BackupServer";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
-import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
@@ -67,12 +70,15 @@ import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
+import notify from "actions/NotificationActions";
+import { Apis } from "@graphene/chain"
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
 require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
 let history = createBrowserHistory({queryKey: false})
+global.notify = notify
 
 class App extends React.Component {
 
@@ -94,9 +100,7 @@ class App extends React.Component {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
 
-            Promise.all([
-                AccountStore.loadDbData()            
-            ]).then(() => {
+            Promise.resolve().then(() => {
                 AccountStore.tryToSetCurrentAccount();
                 this.setState({loading: false});
             }).catch(error => {
@@ -226,29 +230,28 @@ let willTransitionTo = (nextState, replaceState, callback) => {
         });
         return;
     }
+    
     Apis.instance().init_promise.then(() => {
-        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
-        return Promise.all([db]).then(() => {
-            console.log("db init done");
-            return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
-                WalletDb.loadDbData().then(() => {
-                    if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
-                        replaceState(null, "/create-account");
-                    }
-                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                        replaceState(null, "/dashboard");
-                    }
-                }).catch((error) => {
-                    console.error("----- WalletDb.willTransitionTo error ----->", error);
-                }),
-                WalletManagerStore.init()
-            ]).then(()=> {
-                callback();
+        
+        let idb = window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB;
+        
+        return iDB.init_instance( idb ).init_promise.then(() => {
+            
+            // console.log("db init done");
+            
+            return Promise.resolve()
+            .then(()=> WalletDb.loadDbData())
+            // .then(()=> AccountRefsStore.loadDbData())
+            .then(()=> AddressIndex.init())
+            .catch((error) => {
+                console.error("----- WalletDb.willTransitionTo app error ----->", error, "stack", error.stack);
             })
+            .then(()=> callback());
+            
         });
+        
     }).catch( error => {
-        console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
+        console.error("----- App.willTransitionTo database error ----->", error, "stack", error.stack);
         if(error.name === "InvalidStateError") {
             alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
         } else {
@@ -256,6 +259,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             callback();
         }
     })
+    
 };
 
 let routes = (
@@ -283,8 +287,9 @@ let routes = (
             <Route name="wmc-brainkey" path="brainkey" component={Brainkey}/>
             <Route name="wmc-wallet-create" path="create" component={WalletCreate}/>
             <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
-            <Route name="wmc-backup-verify-restore" path="backup/restore" component={BackupRestore}/>
-            <Route name="wmc-backup-create" path="backup/create" component={BackupCreate}/>
+            <Route name="wmc-backup-verify-restore" path="backup/restore" component={UploadRestore}/>
+            <Route name="wmc-backup-create" path="backup/download" component={CreateLocalBackup}/>
+            <Route name="wmc-backup-create" path="backup/server(/:token)" component={BackupServer} onEnter={readBackupToken}/>
             <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
         </Route>
@@ -301,7 +306,7 @@ let routes = (
         <Route name="create-account" path="create-account" component={CreateAccount}/>
         <Route name="existing-account" path="existing-account" component={ExistingAccount}>
             <IndexRoute component={ExistingAccountOptions}/>
-            <Route name="welcome-import-backup" path="import-backup" component={BackupRestore}/>
+            <Route name="welcome-import-backup" path="import-backup" component={UploadRestore}/>
             <Route name="welcome-import-keys" path="import-keys" component={ImportKeys}/>
             <Route name="welcome-brainkey" path="brainkey" component={Brainkey}/>
             <Route name="welcome-balance-claim" path="balance-claim" component={BalanceClaimActive}/>

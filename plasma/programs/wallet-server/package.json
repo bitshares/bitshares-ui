@@ -1,0 +1,51 @@
+{
+  "name": "@graphene/wallet-server",
+  "version": "1.0.0",
+  "description": "Provides the wallet sync service",
+  "config": {
+    "network_port": 9080,
+    "network_ip_requests_per_hour": 100,
+    "mail_from": "alice@example.com",
+    "mail_subject": "Verify your wallet backup token",
+    "mail_script": "./bin/email.sh",
+    "mail_token_url": "http://localhost:8080/#/wallet/backup/server/{token}",
+    "mysql_database": "wallet_server",
+    "mysql_user": "root",
+    "mysql_password": "",
+    "mysql_host": "localhost",
+    "mysql_port": "3306",
+    "log_info": true,
+    "sql_debug": false,
+    "log_debug": false
+  },
+  "main": "index.js",
+  "dependencies": {
+    "immutable": "^3.7.6",
+    "ws": "^1.0.1",
+    "mysql": "^2.9.0",
+    "redux": "^3.0.4",
+    "sequelize": "^3.14.2",
+    "bs58": "^3.0.0"
+  },
+  "scripts": {
+    "start": "babel-node ./index.js",
+    "cli": "babel-node ./src/Repl.js",
+    "dev": "mocha --compilers js:babel-core/register ./index_dev.js --watch",
+    "mysql": "babel-node ./src/db/models.js",
+    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test:watch": "npm test -- --watch"
+  },
+  "author": "cryptonomex",
+  "license": "BSD-2-Clause-FreeBSD",
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "repl": "^0.1.3",
+    "repl-promised": "^0.1.0",
+    "repl.history": "^0.1.3"
+  },
+  "_babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}

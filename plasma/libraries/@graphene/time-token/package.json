@@ -1,0 +1,32 @@
+{
+  "name": "@graphene/time-token",
+  "version": "1.0.0",
+  "description": "Generate server-side token (with optional payload) which may be emailed or QR encoded then verified on the server.  Tokens can be expired.",
+  "keywords": "verify email",
+  "main": "index.js",
+  "config": {
+    "expire_min": 10
+  },
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test:watch": "npm test -- --watch"
+  },
+  "author": "cryptonomex",
+  "license": "BSD-2-Clause-FreeBSD",
+  "dependencies": {
+    "@graphene/local-secret": "^1.0.0",
+    "bs58": "^3.0.0"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "babel-cli": "^6.2.0",
+    "babel-core": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "mocha": "^2.3.4"
+  },
+  "_babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}

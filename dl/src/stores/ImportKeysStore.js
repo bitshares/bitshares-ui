@@ -13,8 +13,8 @@ class ImportKeysStore extends BaseStore {
         return { importing: false }
     }
     
-    importing(importing) {
-        this.setState({ importing })
+    importing(importing, callback) {
+        this.setState({ importing }, callback)
     }
     
 }

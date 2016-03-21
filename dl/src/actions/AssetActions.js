@@ -1,20 +1,17 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
+import { Apis } from "@graphene/chain";
 import utils from "common/utils";
-import WalletApi from "../rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import big from "bignumber.js";
-import assetConstants from "chain/asset_constants";
-
-let wallet_api = new WalletApi();
+import { TransactionBuilder } from "@graphene/chain";
 
 let inProgress = {};
 
 class AssetActions {
 
     fundPool(account_id, core, asset, amount) {
-        let tr = wallet_api.new_transaction();
+        let tr = new TransactionBuilder();
         let precision = utils.get_asset_precision(core.get("precision"));
         tr.add_type_operation("asset_fund_fee_pool", {
             "fee": {
@@ -35,7 +32,7 @@ class AssetActions {
     }
 
     claimPoolFees(account_id, asset, amount) {
-        let tr = wallet_api.new_transaction();
+        let tr = new TransactionBuilder();
         let precision = utils.get_asset_precision(asset.get("precision"));
 
         tr.add_type_operation("asset_claim_fees", {
@@ -60,8 +57,8 @@ class AssetActions {
 
     createAsset(account_id, createObject, flags, permissions, cer, isBitAsset, is_prediction_market, bitasset_opts, description) {
         // Create asset action here...
-        console.log("create asset:", createObject, "flags:", flags, "isBitAsset:", isBitAsset, "bitasset_opts:", bitasset_opts);
-        let tr = wallet_api.new_transaction();
+        console.log("create asset:", createObject, "flags:", flags, "permissions:", permissions);
+        let tr = new TransactionBuilder();
         let precision = utils.get_asset_precision(createObject.precision);
 
         big.config({DECIMAL_PLACES: createObject.precision});
@@ -136,7 +133,7 @@ class AssetActions {
             isBitAsset, bitasset_opts, original_bitasset_opts, description) {
         
         // Create asset action here...
-        let tr = wallet_api.new_transaction();
+        let tr = new TransactionBuilder();
         let quotePrecision = utils.get_asset_precision(asset.get("precision"));
 
         big.config({DECIMAL_PLACES: asset.get("precision")});
@@ -226,7 +223,7 @@ class AssetActions {
     issueAsset(account_id, issueObject) {
         console.log("account_id: ", account_id, issueObject);
         // Create asset action here...
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("asset_issue", {
             fee: {
                 amount: 0,

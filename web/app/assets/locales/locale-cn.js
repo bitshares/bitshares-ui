@@ -292,7 +292,8 @@ module.exports = {
         broadcasting: "交易广播中...",
         close: "关闭",
         pay_from: "支付自",
-        memo_unlock: "解锁钱包以查看交易备注"
+        memo_unlock: "解锁钱包以查看交易备注",
+        pubkey_unlock: "Unlock your wallet in order to see this key"
     },
     operation: {
         pending: " %(blocks)s 个区块待定",

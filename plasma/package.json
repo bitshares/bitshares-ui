@@ -1,0 +1,57 @@
+{
+  "name": "plasma",
+  "version": "1.0.0",
+  "description": "Root development and deployment environment Cryptonomex JavaScript libraries and programs.  Contains a larger base set of dependencies.  ",
+  "scripts": {
+    "doc": "esdoc -c esdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcalfee/plasma.git"
+  },
+  "author": "cryptonomex",
+  "license": "BSD-2-Clause-FreeBSD",
+  "bugs": {
+    "url": "https://github.com/jcalfee/plasma/issues"
+  },
+  "homepage": "https://cryptonomex.com",
+  "dependencies": {
+    "ReconnectingWebSocket": "git+https://github.com/joewalnes/reconnecting-websocket.git",
+    "bigi": "^1.4.1",
+    "bs58": "^3.0.0",
+    "bytebuffer": "^5.0.0",
+    "crypto-js": "^3.1.5",
+    "ecurve": "^1.0.2",
+    "event-emitter": "^0.3.4",
+    "fs": "0.0.2",
+    "immutable": "^3.7.6",
+    "localStorage": "^1.0.3",
+    "lzma": "2.1.6",
+    "secp256k1": "^2.0.7",
+    "secure-random": "^1.1.1",
+    "tls": "0.0.1",
+    "websocket": "^1.0.18",
+    "ws": "^1.0.1"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "babel-cli": "^6.3.15",
+    "babel-core": "^6.3.15",
+    "babel-helper-function-name": "^6.3.15",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-runtime": "^6.3.13",
+    "babel-types": "^6.3.14",
+    "core-js": "^1.2.6",
+    "esdoc": "^0.4.3",
+    "json-loader": "^0.5.4",
+    "mocha": "^2.3.4",
+    "repl": "^0.1.3",
+    "repl-promised": "^0.1.0",
+    "repl.history": "^0.1.3",
+    "sequelize": "^3.14.2",
+    "mysql": "^2.9.0",
+    "redux": "^3.0.4",
+    "webpack": "^1.12.11"
+  }
+}

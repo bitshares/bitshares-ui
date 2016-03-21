@@ -7,12 +7,13 @@ import cname from "classnames"
 import notify from "actions/NotificationActions"
 
 import LoadingIndicator from "components/LoadingIndicator";
-import PrivateKeyStore from "stores/PrivateKeyStore";
+import WalletDb from "stores/WalletDb";
 import AccountRefsStore from "stores/AccountRefsStore"
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
 import WalletActions from "actions/WalletActions"
+import WalletUnlock from "components/Wallet/WalletUnlock"
 import MyAccounts from "components/Forms/MyAccounts"
 import Translate from "react-translate-component";
 
@@ -20,7 +21,7 @@ import Translate from "react-translate-component";
 export default class BalanceClaimActive extends Component {
     
     static getStores() {
-        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore]
+        return [BalanceClaimActiveStore, AccountRefsStore, WalletDb]
     }
     
     static getPropsFromStores() {
@@ -30,15 +31,13 @@ export default class BalanceClaimActive extends Component {
     }
     
     componentWillMount() {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         BalanceClaimActiveActions.setPubkeys( keySeq )
         this.existing_keys = keySeq
     }
     
     componentWillReceiveProps(nextProps) {
-        var keys = PrivateKeyStore.getState().keys
-        var keySeq = keys.keySeq()
+        var keySeq = WalletDb.keys().keySeq()
         if( ! keySeq.equals(this.existing_keys)) {
             this.existing_keys = keySeq
             BalanceClaimActiveActions.setPubkeys( keySeq )
@@ -46,10 +45,11 @@ export default class BalanceClaimActive extends Component {
     }    
    
     render() {
+        
         if( !this.props.account_refs.size) {
             return (
                 <div>
-                    <h5><Translate content="wallet.no_balance" /></h5>
+                    <h5><WalletUnlock><Translate content="wallet.no_balance" /></WalletUnlock></h5>
                 </div>
             );
         }
@@ -68,7 +68,7 @@ export default class BalanceClaimActive extends Component {
         if( !this.props.balances || !this.props.balances.size) {
             return (
                 <div>
-                    <h5><Translate content="wallet.no_balance" /></h5>
+                    <h5><WalletUnlock><Translate content="wallet.no_balance" /></WalletUnlock></h5>
                 </div>
             );
         }
@@ -115,10 +115,11 @@ export default class BalanceClaimActive extends Component {
     }
     
     onClaimBalance() {
-        WalletActions.importBalance( this.props.claim_account_name,
+        WalletActions.importBalance(
+            this.props.claim_account_name,
             this.props.selected_balances, true //broadcast
         ).catch((error)=> {
-            console.error("claimBalance", error)
+            console.error("claimBalance", error, "stack", error.stack)
             var message = error
             try { message = error.data.message } catch(e) {}
             notify.error("Error claiming balance: " + message)

@@ -1,14 +1,17 @@
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
+import Immuable from "immutable"
 
-const DB_VERSION = 2 // Initial value was 1
-const DB_PREFIX = "graphene_v2"
+const DB_VERSION = 3 // Initial value was 1
+const DB_PREFIX = "graphene_v5"
+
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ]
 
 var current_wallet_name = "default"
+var init_subscribers = Immuable.Set()
 
 var upgrade = function(db, oldVersion) {
     // DEBUG console.log('... upgrade oldVersion',oldVersion)
@@ -20,6 +23,12 @@ var upgrade = function(db, oldVersion) {
     if (oldVersion < 2) {
         // Cache only, do not backup...
         db.createObjectStore("cached_properties", { keyPath: "name" })
+    }
+    if (oldVersion < 3) {
+        // Cache only, do not backup...
+        db.createObjectStore("my_accounts", { keyPath: "name" })
+        db.createObjectStore("private_accounts", { keyPath: "name" })
+        db.createObjectStore("private_contacts", { keyPath: "name" })
     }
 }
 
@@ -85,6 +94,7 @@ var iDB = (function () {
         let promise = openIndexedDB(chain_id);
         promise.then(db => {
             idb = db;
+            init_subscribers.forEach(cb =>{ try{cb()} catch(e){console.error(e)} })
         });
         return {
             init_promise: promise,
@@ -131,6 +141,8 @@ var iDB = (function () {
             return _instance;
         },
         
+        subscribeToReset: cb => init_subscribers = init_subscribers.add(cb),
+        
         instance: function () {
             if (!_instance) {
                 throw new Error("Internal Database instance is not initialized");
@@ -151,8 +163,10 @@ var iDB = (function () {
                 let request = store.add(value);
                 request.onsuccess = () => { resolve(value); };
                 request.onerror = (e) => {
-                    console.log("ERROR!!! add_to_store - can't store value in db. ", e.target.error.message, value);
-                    reject(e.target.error.message);
+                    if (e.target.error.name !== "ConstraintError") {
+                        console.log("ERROR!!! add_to_store - can't store value in db. ", e.target.error);
+                        reject(e.target.error.message);
+                    }
                 };
             });
         },
@@ -166,6 +180,22 @@ var iDB = (function () {
                     console.log("ERROR!!! remove_from_store - can't remove value from db. ", e.target.error.message, value);
                     reject(e.target.error.message);
                 };
+            });
+        },
+        clear_store:  function (store_name) {
+            return new Promise((resolve, reject) => {
+                try {
+                    let transaction = this.instance().db().transaction([store_name], "readwrite");
+                    let store = transaction.objectStore(store_name);
+                    let request = store.clear();
+                    request.onsuccess = () => { resolve(); };
+                    request.onerror = (e) => {
+                        console.log("ERROR!!! clear_store - can't clear store. ", e.target.error.message);
+                        reject(e.target.error.message);
+                    };
+                } catch (error) {
+                    resolve();
+                }
             });
         },
         load_data: function (store_name) {
@@ -214,7 +244,7 @@ var iDB = (function () {
                 .catch( error => { console.error(error); throw error })
         },
         
-        backup: function (store_names = WALLET_BACKUP_STORES) {
+        legacyBackup: function (store_names = WALLET_BACKUP_STORES) {
             var promises = []
             for (var store_name of store_names) {
                 promises.push(this.load_data(store_name))
@@ -226,7 +256,7 @@ var iDB = (function () {
                     var store_name = store_names[i]
                     if( store_name === "wallet" ) {
                         var wallet_array = results[i]
-                        // their should be only 1 wallet per database
+                        // there should be only 1 wallet per database
                         for(let wallet of wallet_array)
                             wallet.backup_date = new Date().toISOString()
                     }
@@ -235,21 +265,7 @@ var iDB = (function () {
                 return obj
             })
         },
-        restore: function(wallet_name, object) {
-            var database_name = getDatabaseName(wallet_name)
-            return openDatabase(database_name).then( db => {
-                var store_names = Object.keys(object)
-                var trx = db.transaction(store_names, "readwrite")
-                for(let store_name of store_names) {
-                    var store = trx.objectStore(store_name)
-                    var records = object[store_name]
-                    for(let record of records) {
-                        store.put(record)
-                    }
-                }
-                return idb_helper.on_transaction_end(trx)
-            })
-        }
+        
     };
 
 })();

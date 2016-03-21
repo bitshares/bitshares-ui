@@ -10,14 +10,12 @@ import utils from "common/utils";
 import classNames from "classnames";
 import AmountSelector from "../Utility/AmountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
-
-let wallet_api = new WalletApi();
+import { TransactionBuilder } from "@graphene/chain";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -203,7 +201,7 @@ class BorrowModalContent extends React.Component {
         let backingPrecision = utils.get_asset_precision(this.props.backing_asset.get("precision"));
         let currentPosition = this._getCurrentPosition(this.props);
 
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("call_order_update", {
             "fee": {
                 amount: 0,

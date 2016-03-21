@@ -290,7 +290,7 @@ NEW FEATURES:
 - Warn users placing below the price market orders (e.g. 20% off market price) #445
 - Feedback while adjusting collateral slider #451
 - Account orders history on Exchange
-- Markets overview page redisign, improved market search functionality
+- Markets overview page redesign, improved market search functionality
 - Add 24h change and volume to markets list
 - Improved favorite/unvoriete markets functionality
 - Added support for deposits/withdrawals on blocktrades.us in bridge mode

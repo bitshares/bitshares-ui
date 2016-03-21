@@ -3,7 +3,7 @@ import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";

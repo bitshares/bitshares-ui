@@ -1,17 +1,45 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import {IntlProvider} from "react-intl";
+import {Link} from "react-router";
 import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
 import {saveAs} from "common/filesaver.js";
 import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import utils from "common/utils";
-import {operations} from "chain/chain_types";
-import TransitionWrapper from "../Utility/TransitionWrapper";
-import ReactDOM from "react-dom";
-import ps from "perfect-scrollbar";
+import counterpart from "counterpart";
+import {chain_types, ChainStore} from "@graphene/chain";
+import TimeAgo from "../Utility/TimeAgo";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import TransferReceiptModal from "../Stealth/TransferReceiptModal";
+
+let {operations} = chain_types;
+
+const BlindTransferRow = ({t, onShowReceipt}) => {
+    const date = new Date(t.date);
+    return (
+        <tr>
+            <td className="right-td" style={{padding: "8px 5px"}}>
+                <div>
+                    <TranslateWithLinks
+                        string="operation.transfer"
+                        keys={[
+                            {type: "account", value: t.from_label, arg: "from"},
+                            {type: "amount", value: t.amount, arg: "amount", decimalOffset: t.amount.asset_id === "1.3.0" ? 5 : null},
+                            {type: "account", value: t.to_label, arg: "to"}
+                        ]}
+                    />
+                </div>
+                <div style={{fontSize: 14, paddingTop: 5}}>
+                    <span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${t.block_num}`}>{utils.format_number(t.block_num, 0)}</Link></span>
+                    &nbsp;- <span className="time"><TimeAgo time={date}/></span> - <a href onClick={e => {e.preventDefault(); onShowReceipt(t);}}>show receipt</a></div>
+            </td>
+        </tr>
+    );
+};
 
 function compareOps(b, a) {
     if (a.block_num < b.block_num) return -1;
@@ -36,14 +64,7 @@ class RecentTransactions extends React.Component {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
         compactView: React.PropTypes.bool,
         limit: React.PropTypes.number,
-        maxHeight: React.PropTypes.number,
-        fullHeight: React.PropTypes.bool,
-    };
-
-    static defaultProps = {
-        limit: 25,
-        maxHeight: 500,
-        fullHeight: false
+        blindHistory: React.PropTypes.array
     };
 
     constructor(props) {
@@ -51,41 +72,21 @@ class RecentTransactions extends React.Component {
         this.state = {
             limit: props.limit ? Math.max(20, props.limit) : 20,
             csvExport: false,
-            headerHeight: 85
+            transferReceipt: ""
         };
-    }
-
-    componentDidMount() {
-        if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
-            ps.initialize(t);
-
-            this._setHeaderHeight();
-
-        }
-
-    }
-
-    _setHeaderHeight() {
-        let height = this.refs.header.offsetHeight;
-
-        if (height !== this.state.headerHeight) {
-            this.setState({
-                headerHeight: height
-            });
-        }
+        this._onShowReceiptClick = this._onShowReceiptClick.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
-        if(this.props.maxHeight !== nextProps.maxHeight) return true;
-        if(this.state.headerHeight !== nextState.headerHeight) return true;
+        if (!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
+        if (this.props.blindHistory != nextProps.blindHistory) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
-        for(let key = 0; key < nextProps.accountsList.length; ++key) {
+        for (let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
-            if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
+            if (npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
         }
+        if (this.state.transferReceipt !== nextState.transferReceipt) return true;
         return false;
     }
 
@@ -101,19 +102,10 @@ class RecentTransactions extends React.Component {
                 if (csv !== "") csv += "\n";
                 csv += [textContent(cn[0]), textContent(cn[1]), textContent(cn[2]), textContent(cn[3])].join(",");
             }
-            var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+            var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
             var today = new Date();
             saveAs(blob, "btshist-" + today.getFullYear() + "-" + today.getMonth() + "-" + today.getDate() + ".csv");
         }
-
-        if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
-            ps.update(t);
-
-            this._setHeaderHeight();
-
-        }
-
     }
 
     _onIncreaseLimit() {
@@ -126,7 +118,7 @@ class RecentTransactions extends React.Component {
         let history = [];
         let seen_ops = new Set();
         for (let account of accountsList) {
-            if(account) {
+            if (account) {
                 let h = account.get("history");
                 if (h) history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
             }
@@ -143,78 +135,92 @@ class RecentTransactions extends React.Component {
         this.setState({csvExport: true});
     }
 
-    render() {
-        let {accountsList, compactView, filter, style, maxHeight} = this.props;
-        let {limit, headerHeight} = this.state;
-        let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
-        let history = this._getHistory(accountsList, filter).sort(compareOps);
-        let historyCount = history.length;
+    _onShowReceiptClick(trx) {
+        const cwallet = WalletDb.getState().cwallet;
+        if (cwallet) {
+            let transferReceipt = cwallet.getEncodedReceipt(trx.conf);
+            this.setState({transferReceipt});
+            ZfApi.publish("history_transfer_receipt_modal", "open");
+        } else {
+            alert('Unlock wallet to see receipt');
+        }
 
-        style = style ? style : {};
-        style.width = "100%";
-        style.height = "100%";
+    }
+
+    render() {
+        let {accountsList, compactView, filter} = this.props;
+        let {limit} = this.state;
+        let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
+
+        let history = this._getHistory(accountsList, filter);
+        //if (this.props.blindHistory) history = [...this.props.blindHistory, ...history];
+
+        const globalObject = ChainStore.getObject("2.0.0");
+        const dynGlobalObject = ChainStore.getObject("2.1.0");
+        const blindHistory = this.props.blindHistory ? this.props.blindHistory.map(t => {
+            // TODO t.date is a ConfidentialWallet date (not a blockchain date).. The trx confirm has the block num
+            t.block_num = utils.calc_block_num(new Date(t.date), globalObject, dynGlobalObject);
+            t.trx_in_block = t.date;
+            return t;
+        }) : [];
+        history = [...blindHistory, ...history].sort(compareOps);
+
+
+
+        //console.log("-- RecentTransactions.render -->", history);
+        let historyCount = history.length;
 
         const display_history = history.length ?
             history.slice(0, limit)
-            .map(o => {
-                return (
-                    <Operation
-                        key={o.id}
-                        op={o.op}
-                        result={o.result}
-                        block={o.block_num}
-                        current={current_account_id}
-                        hideFee
-                        inverted={false}
-                        hideOpLabel={compactView}
-                    />
-                );
-            }) : <tr><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>;
+                .map(o => {
+                    return (
+                        o.op ? <Operation
+                            key={o.id}
+                            op={o.op}
+                            result={o.result}
+                            block={o.block_num}
+                            current={current_account_id}
+                            hideFee
+                            inverted={false}
+                            hideOpLabel={compactView}
+                        /> : <BlindTransferRow key={`tr-${o.date}-${o.from_label}-${o.to_label}`} t={o} onShowReceipt={this._onShowReceiptClick} />
+                    );
+                }) : <tr>
+            <td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent"/></td>
+        </tr>;
 
         return (
-            <div className="recent-transactions no-overflow" style={style}>
-                <div className="generic-bordered-box">
-                    <div ref="header">
-
-                        <div className="block-content-header">
-                        {historyCount > 0 ?
-                            <div className="float-right small">
-                                <a
-                                    onClick={this._downloadCSV.bind(this)}
-                                    data-tip="Download as CSV"
-                                    data-place="left"
-                                    data-type="light"
-                                >
-                                    <span className="small-caps">CSV</span>
-                                </a>
-                            </div> : null}
-                            <Translate content="account.recent" />
-                        </div>
-                        <table className={"table" + (compactView ? " compact" : "")}>
-                            <thead>
-                            <tr>
-                                {compactView ? null : <th style={{width: 200}}><Translate content="explorer.block.op" /></th>}
-                                <th><Translate content="account.votes.info" /></th>
-                            </tr>
-                            </thead>
-                        </table>
+            <div className="recent-transactions" style={this.props.style}>
+                {historyCount > 0 &&
+                <button
+                    className="button outline float-right"
+                    onClick={this._downloadCSV.bind(this)}
+                    style={{marginTop: "0.5rem"}}
+                    data-tip="Download as CSV"
+                    data-place="left"
+                    data-type="light"
+                >
+                    <span>CSV</span>
+                </button>}
+                <h3><Translate content="account.recent"/></h3>
+                <table className={"table" + (compactView ? " compact" : "")}>
+                    <thead>
+                    <tr>
+                        {compactView ? null : <th><Translate content="explorer.block.op"/></th>}
+                        <th><Translate content="account.votes.info"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {display_history}
+                    </tbody>
+                </table>
+                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
+                    <div className="account-info more-button">
+                        <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
+                            <Translate content="account.more"/>
+                        </button>
                     </div>
-
-                    <div
-                        className="box-content grid-block no-margin"
-                        style={!this.props.fullHeight ? {
-                            maxHeight: maxHeight - headerHeight 
-                        } : null}
-                        ref="transactions">
-                        <table className={"table" + (compactView ? " compact" : "")}>
-                            <TransitionWrapper
-                                component="tbody"
-                                transitionName="newrow"
-                            >
-                                {display_history}
-                            </TransitionWrapper>
-                        </table>
-                    </div>
+                ) : null}
                 {
                     historyCount > 0 && this.state.csvExport &&
                     <div id="csv_export_container" style={{display: "none"}}>
@@ -240,14 +246,7 @@ class RecentTransactions extends React.Component {
                         }
                     </div>
                 }
-                </div>
-                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
-                    <div className="account-info more-button">
-                        <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
-                            <Translate content="account.more" />
-                        </button>
-                    </div>
-                    ) : null}
+                <TransferReceiptModal id="history_transfer_receipt_modal" value={this.state.transferReceipt}/>
             </div>
         );
     }

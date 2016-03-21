@@ -14,10 +14,9 @@ import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
-import counterpart from "counterpart";
 
 let lastLookup = new Date();
 
@@ -25,7 +24,10 @@ let lastLookup = new Date();
 class AccountsList extends React.Component {
 
     static propTypes = {
-        accounts: ChainTypes.ChainAccountsList.isRequired
+        accounts: ChainTypes.ChainAccountsList.isRequired,
+        dashboardFilter: React.PropTypes.string,
+        myAccountsOnly: React.PropTypes.bool,
+        notMyAccountsOnly: React.PropTypes.bool
     };
 
     static contextTypes = {
@@ -34,7 +36,10 @@ class AccountsList extends React.Component {
 
     static defaultProps = {
         width: 2000,
-        compact: false
+        compact: false,
+        dashboardFilter: "",
+        myAccountsOnly: false,
+        notMyAccountsOnly: false
     };
 
     constructor(props) {
@@ -46,9 +51,8 @@ class AccountsList extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("dashboardSortInverse", true),
-            sortBy: props.viewSettings.get("dashboardSort", "star"),
-            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
+            inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
+            sortBy: props.viewSettings.get("dashboardSort") || "star"
         };
 
     }
@@ -56,6 +60,7 @@ class AccountsList extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+            !nextProps.dashboardFilter !== this.props.dashboardFilter ||
             nextProps.width !== this.props.width ||
             !utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
             !utils.are_equal_shallow(nextState, this.state)
@@ -75,14 +80,6 @@ class AccountsList extends React.Component {
         this.context.history.pushState(null, `/account/${name}`);
     }
 
-    _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
-
-        SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
-        });
-    }
-
     _setSort(field) {
         let inverse = field === this.state.sortBy ? !this.state.inverseSort : this.state.inverseSort;
         this.setState({
@@ -98,7 +95,7 @@ class AccountsList extends React.Component {
 
     render() {
         let {width, starredAccounts} = this.props;
-        let {dashboardFilter, sortBy, inverseSort} = this.state;
+        let {sortBy, inverseSort} = this.state;
         let balanceList = Immutable.List();
 
         let starSort = function(a, b, inverse) {
@@ -120,12 +117,14 @@ class AccountsList extends React.Component {
                     return utils.sortText(aName, bName, !inverse);
                 }
             }
-        }
-        
+        };
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            if (this.props.myAccountsOnly && !AccountStore.isMyAccount(a)) return false;
+            if (this.props.notMyAccountsOnly && AccountStore.isMyAccount(a)) return false;
+            return a.get("name").indexOf(this.props.dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -141,55 +140,48 @@ class AccountsList extends React.Component {
                     break;
             }
         }).map(account => {
-
             if (account) {
                 let collateral = 0, debt = {}, openOrders = {};
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
 
-                if (account.get("orders")) {
-                    account.get("orders").forEach( (orderID, key) => {
-                        let order = ChainStore.getObject(orderID);
-                        if (order) {
-                            let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
-                            if (!openOrders[orderAsset]) {
-                                openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
-                            } else {
-                                openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
-                            }
+                account.get("orders") && account.get("orders").forEach( (orderID, key) => {
+                    let order = ChainStore.getObject(orderID);
+                    if (order) {
+                        let orderAsset = order.getIn(["sell_price", "base", "asset_id"]);
+                        if (!openOrders[orderAsset]) {
+                            openOrders[orderAsset] = parseInt(order.get("for_sale"), 10);
+                        } else {
+                            openOrders[orderAsset] += parseInt(order.get("for_sale"), 10);
                         }
-                    });
-                }
+                    }
+                });
 
                 // console.log("openOrders:", openOrders);
 
-                if (account.get("call_orders")) {
-                    account.get("call_orders").forEach( (callID, key) => {
-                        let position = ChainStore.getObject(callID);
-                        if (position) {
-                            collateral += parseInt(position.get("collateral"), 10);
+                account.get("call_orders") && account.get("call_orders").forEach( (callID, key) => {
+                    let position = ChainStore.getObject(callID);
+                    if (position) {
+                        collateral += parseInt(position.get("collateral"), 10);
 
-                            let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
-                            if (!debt[debtAsset]) {
-                                debt[debtAsset] = parseInt(position.get("debt"), 10);
-                            } else {
-                                debt[debtAsset] += parseInt(position.get("debt"), 10);
-                            }
+                        let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
+                        if (!debt[debtAsset]) {
+                            debt[debtAsset] = parseInt(position.get("debt"), 10);
+                        } else {
+                            debt[debtAsset] += parseInt(position.get("debt"), 10);
                         }
-                    });
-                }
+                    }
+                });
 
                 let account_balances = account.get("balances");
-                if (account.get("balances")) {
-                    account_balances.forEach( balance => {
-                        let balanceAmount = ChainStore.getObject(balance);
-                        if (!balanceAmount || !balanceAmount.get("balance")) {
-                            return null;
-                        }
-                        balanceList = balanceList.push(balance);
-                    });
-                }
+                account_balances && account_balances.forEach( balance => {
+                    let balanceAmount = ChainStore.getObject(balance);
+                    if (!balanceAmount || !balanceAmount.get("balance")) {
+                        return null;
+                    }
+                    balanceList = balanceList.push(balance);
+                });
 
                 let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -198,50 +190,45 @@ class AccountsList extends React.Component {
 
                 return (
                     <tr key={accountName}>
-                        <td onClick={this._onStar.bind(this, accountName, isStarred)}>
+                        {/*<td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
-                        </td>
-                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        </td>*/}
+                        <td onClick={this._goAccount.bind(this, accountName)} className={isMyAccount ? "my-account" : ""}>
                             {accountName}
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
                         </td>
-                        {width >= 750 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
+                        {width >= 750 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} collateral={collateral}/>
                         </td> : null}
-                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
+                        {width >= 1200 ? <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} debt={debt}/>
                         </td> : null}
-                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
+                        <td onClick={this._goAccount.bind(this, accountName)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
                         </td>
                     </tr>
-
                 )
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        if (accounts.length === 0) return null;
 
         return (
-            <div>
-                {!this.props.compact ? (
-                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
-                        <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                    </div>) : null}
-                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                    {!this.props.compact ? (
+            <div className="accounts-list">
+                <h4>{this.props.title}</h4>
+                <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+                            {/*<th onClick={this._setSort.bind(this, 'star')} className="clickable"><Icon className="grey-star" name="fi-star"/></th>*/}
                             <th onClick={this._setSort.bind(this, 'name')} className="clickable"><Translate content="header.account" /></th>
                             <th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
                             {width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
                             {width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
                             <th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
                         </tr>
-                    </thead>) : null}
+                    </thead>
                     <tbody>
                         {accounts}
                     </tbody>

@@ -2,17 +2,11 @@ import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import ApplicationApi from "../rpc_api/ApplicationApi"
-import PrivateKey from "../ecc/key_private"
-import Apis from "../rpc_api/ApiInstances"
-import ops from "../chain/signed_transaction"
-import chain_types from "../chain/chain_types"
-import lookup from "chain/lookup"
-import PublicKey from "ecc/key_public"
-import Address from "ecc/address"
+import { PrivateKey, PublicKey, Address } from "@graphene/ecc"
+import { TransactionBuilder, Apis, ops, chain_types, fetchChain } from "@graphene/chain"
 import alt from "alt-instance"
 import iDB from "idb-instance"
 import Immutable from "immutable"
-import config from "chain/config"
 import SettingsStore from "stores/SettingsStore"
 
 var application_api = new ApplicationApi()
@@ -21,19 +15,19 @@ var application_api = new ApplicationApi()
 class WalletActions {
 
     /** Restore and make active a new wallet_object. */
-    restore(wallet_name = "default", wallet_object) {
+    restore(wallet_name = "default", wallet_object, password) {
         wallet_name = wallet_name.toLowerCase()
-        this.dispatch({wallet_name, wallet_object})
+        this.dispatch({wallet_name, wallet_object, password})
     }
     
     /** Make an existing wallet active or create a wallet (and make it active).
-        If <b>wallet_name</b> does not exist, provide a <b>create_wallet_password</b>.
+        If <b>wallet_name</b> does not exist, provide a <b>create_wallet_auth</b>.
     */
-    setWallet(wallet_name, create_wallet_password, brnkey) {
+    setWallet(wallet_name, create_wallet_auth, brnkey) {
         WalletUnlockActions.lock()
         if( ! wallet_name) wallet_name = "default"
         return new Promise( resolve => {
-            this.dispatch({wallet_name, create_wallet_password, brnkey, resolve})
+            this.dispatch({wallet_name, create_wallet_auth, brnkey, resolve})
         })
     }
     
@@ -52,29 +46,21 @@ class WalletActions {
             //this.actions.brainKeyAccountCreateError( error )
             return Promise.reject( error )
         }
-        var owner_private = WalletDb.generateNextKey()
-        var active_private = WalletDb.generateNextKey()
-        //var memo_private = WalletDb.generateNextKey()
-        var updateWallet = ()=> {
-            var transaction = WalletDb.transaction_update_keys()
-            var p = WalletDb.saveKeys(
-                [ owner_private, active_private],
-                //[ owner_private, active_private, memo_private ],
-                transaction
-            )
-            return p.catch( error => transaction.abort() )
-        };
+        
+        let [ owner, active ] = WalletDb.getDeterministicKeys(2)
+        let updateWallet = ()=> WalletDb.importKeys([ owner, active ])
 
         let create_account = () => {
             return application_api.create_account(
-                owner_private.private_key.toPublicKey().toPublicKeyString(),
-                active_private.private_key.toPublicKey().toPublicKeyString(),
+                owner.private_key.toPublicKey().toString(),
+                active.private_key.toPublicKey().toString(),
                 account_name,
                 registrar, //registrar_id,
                 referrer, //referrer_id,
                 referrer_percent, //referrer_percent,
                 true //broadcast
-            ).then( () => updateWallet() )
+            )
+            .then( () => updateWallet() )
         };
 
         if(registrar) {
@@ -98,10 +84,10 @@ class WalletActions {
                 body: JSON.stringify({
                     "account": {
                         "name": account_name,
-                        "owner_key": owner_private.private_key.toPublicKey().toPublicKeyString(),
-                        "active_key": active_private.private_key.toPublicKey().toPublicKeyString(),
-                        "memo_key": active_private.private_key.toPublicKey().toPublicKeyString(),
-                        //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
+                        "owner_key": owner.private_key.toPublicKey().toString(),
+                        "active_key": active.private_key.toPublicKey().toString(),
+                        "memo_key": active.private_key.toPublicKey().toString(),
+                        //"memo_key": memo.private_key.toPublicKey().toString(),
                         "refcode": refcode,
                         "referrer": window && window.BTSW ? BTSW.referrer : ""
                     }
@@ -127,7 +113,7 @@ class WalletActions {
     }
 
     claimVestingBalance(account, cvb) {
-        var tr = new ops.signed_transaction();
+        var tr = new TransactionBuilder();
 
         let balance = cvb.getIn(["balance", "amount"]),
             earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]),
@@ -146,9 +132,6 @@ class WalletActions {
         });
 
         return WalletDb.process_transaction(tr, null, true)
-        .then(result => {
-            
-        })
         .catch(err => {
             console.log("vesting_balance_withdraw err:", err);
         })
@@ -162,15 +145,11 @@ class WalletActions {
             
             var db = Apis.instance().db_api()
             var address_publickey_map = {}
-            
-            var account_lookup = lookup.account_id(account_name_or_id)
-            var unlock = WalletUnlockActions.unlock()
-            var plookup = lookup.resolve()
-            
-            var p = Promise.all([ unlock, plookup ]).then( ()=> {
-                var account = account_lookup.resolve
+            var account_lookup = fetchChain("getAccount", account_name_or_id)
+
+            var p = account_lookup.then( account => {
                 //DEBUG console.log('... account',account)
-                if(account == void 0)
+                if(account == null)
                     return Promise.reject("Unknown account " + account_name_or_id)
                 
                 var balance_claims = []
@@ -199,7 +178,7 @@ class WalletActions {
                     signer_pubkeys[public_key_string] = true
                     balance_claims.push({
                         fee: { amount: "0", asset_id: "1.3.0"},
-                        deposit_to_account: account,
+                        deposit_to_account: account.get("id"),
                         balance_to_claim: balance.id,
                         balance_owner_key: public_key_string,
                         total_claimed: {
@@ -213,7 +192,7 @@ class WalletActions {
                 }
                 
                 //DEBUG console.log('... balance_claims',balance_claims)
-                var tr = new ops.signed_transaction()
+                var tr = new TransactionBuilder();
                 
                 for(let balance_claim of balance_claims) {
                     tr.add_type_operation("balance_claim", balance_claim)
@@ -222,9 +201,8 @@ class WalletActions {
                 // the transaction will expire.  This will increase the timeout...
                 tr.set_expire_seconds( (15 * 60) + balance_claims.length)
                 
-                return WalletDb.process_transaction(
-                    tr, Object.keys(signer_pubkeys), broadcast ).then(
-                        result=> { this.dispatch(); return result })
+                return WalletDb.process_transaction(tr, Object.keys(signer_pubkeys), broadcast )
+                .then( result=> { this.dispatch(); return result })
             })
             resolve(p)
         })

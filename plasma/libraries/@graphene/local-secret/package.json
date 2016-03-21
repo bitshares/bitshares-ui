@@ -1,0 +1,22 @@
+{
+  "name": "@graphene/local-secret",
+  "version": "1.0.0",
+  "description": "Create or access a saved local secret token",
+  "keywords": "secret, token",
+  "main": "index.js",
+  "author": "cryptonomex",
+  "license": "BSD-2-Clause-FreeBSD",
+  "dependencies": {
+      "secure-random": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.2.0",
+    "babel-core": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18"
+  },
+  "_babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}

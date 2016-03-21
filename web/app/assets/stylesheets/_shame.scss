@@ -30,7 +30,7 @@ a {
 // border is needed when centering
 // input[type="file"] did not work
 input[type="file"] {
-    border: 'solid';
+    border: solid;
 }
 
 hr {
@@ -305,6 +305,14 @@ label.inline {
   top: 20px;
   right: 20px;
   z-index: 90;
+}
+
+#t_receipt {
+  cursor: default;
+}
+
+.pubkey {
+  font-size: 0.9rem;
 }
 
 .small-caps {

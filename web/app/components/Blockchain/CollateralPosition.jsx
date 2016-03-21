@@ -4,12 +4,11 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import BorrowModal from "../Modal/BorrowModal";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
+import { TransactionBuilder } from "@graphene/chain";
 
-let wallet_api = new WalletApi();
 /**
  *  Given a collateral position object (call order), displays it in a pretty way
  *
@@ -36,7 +35,7 @@ class CollateralPosition extends React.Component {
 
     _onClosePosition(e) {
         e.preventDefault();
-        let tr = wallet_api.new_transaction();
+        let tr = new TransactionBuilder();
 
         tr.add_type_operation("call_order_update", {
             "fee": {

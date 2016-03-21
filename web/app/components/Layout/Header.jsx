@@ -9,10 +9,9 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import WalletManagerStore from "stores/WalletManagerStore";
+import WalletDb from "stores/WalletDb";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import Immutable from "immutable";
@@ -21,18 +20,21 @@ import Immutable from "immutable";
 class Header extends React.Component {
 
     static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
+        return [AccountStore, WalletUnlockStore, WalletDb, SettingsStore]
     }
 
     static getPropsFromStores() {
+        const account_store = AccountStore.getState();
+        const settings_store = SettingsStore.getState();
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            currentAccount: AccountStore.getState().currentAccount,
-            locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
-            starredAccounts: SettingsStore.getState().starredAccounts
-        }
+            linkedAccounts: account_store.linkedAccounts,
+            currentAccount: account_store.currentAccount,
+            locked: WalletDb.isLocked(),
+            current_wallet: WalletDb.getState().current_wallet,
+            lastMarket: settings_store.viewSettings.get("lastMarket"),
+            starredAccounts: settings_store.starredAccounts,
+            multiAccountMode: settings_store.settings.get("multiAccountMode")
+        };
     }
 
     static contextTypes = {
@@ -67,6 +69,7 @@ class Header extends React.Component {
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
+            nextProps.multiAccountMode !== this.props.multiAccountMode ||
             nextState.active !== this.state.active
         );
     }
@@ -140,25 +143,38 @@ class Header extends React.Component {
                                 <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
-        if (linkedAccounts.size > 1) {
-            linkToAccountOrDashboard = (
-                <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
-                    <Translate component="span" content="header.dashboard" />
-                </a>
-            );
-        } else if (linkedAccounts.size === 1) {
-                linkToAccountOrDashboard = (
-                    <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
-                        <Translate component="span" content="header.account" />
-                    </a>
-                );
-        } else {
+        if(WalletDb.isEmpty())
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active.indexOf("create-account") !== -1})} onClick={this._onNavigate.bind(this, "/create-account")}>
                     <Translate content="header.create_account" />
                 </a>
             );
-        }
+        else
+            linkToAccountOrDashboard = (
+                <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
+                    <Translate component="span" content="header.dashboard" />
+                </a>
+            );
+        
+        // if (this.props.multiAccountMode || linkedAccounts.size > 1) {
+        //     linkToAccountOrDashboard = (
+        //         <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
+        //             <Translate component="span" content="header.dashboard" />
+        //         </a>
+        //     );
+        // } else if (linkedAccounts.size === 1) {
+        //         linkToAccountOrDashboard = (
+        //             <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
+        //                 <Translate component="span" content="header.account" />
+        //             </a>
+        //         );
+        // } else {
+        //     linkToAccountOrDashboard = (
+        //         <a className={cnames({active: active.indexOf("create-account") !== -1})} onClick={this._onNavigate.bind(this, "/create-account")}>
+        //             <Translate content="header.create_account" />
+        //         </a>
+        //     );
+        // }
         let lock_unlock = null;
         if (this.props.current_wallet) lock_unlock = (
             <div className="grp-menu-item" >

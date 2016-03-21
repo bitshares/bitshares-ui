@@ -16,11 +16,13 @@ class SettingsStore {
         this.settings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
-            faucet_address: "https://bitshares.openledger.info",
+            faucet_address: "http://bitshares.openledger.info",
+            backup_server: "ws://cnx.rocks:9080",
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10,
-            themes: "darkTheme"
+            multiAccountMode: false,
+            themes: "darkTheme",
         });
 
         this.viewSettings =  Immutable.Map({
@@ -94,6 +96,7 @@ class SettingsStore {
                 "tr"
             ],
             connection: [
+                "ws://testnet.bitshares.eu/ws",
                 "wss://bitshares.openledger.info/ws",
                 "wss://bitshares.dacplay.org:8089/ws",
                 "wss://dele-puppy.com/ws"
@@ -107,8 +110,12 @@ class SettingsStore {
                 "GBP"
             ],
             showSettles: [
-                {translate: "yes"},
-                {translate: "no"}
+                {translate: "no"},
+                {translate: "yes"}
+            ],
+            multiAccountMode: [
+                {translate: "no"},
+                {translate: "yes"}
             ],
             themes: [
                 "darkTheme",
@@ -135,8 +142,8 @@ class SettingsStore {
             // onChangeBase: SettingsActions.changeBase
         });
 
-        if (this._lsGet("settings_v3")) {
-            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
+        if (this._lsGet("settings_v4")) {
+            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v4"))));
         }
 
         if (this._lsGet("starredMarkets")) {
@@ -180,7 +187,7 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v3", this.settings.toJS());
+        this._lsSet("settings_v4", this.settings.toJS());
         if (payload.setting === "walletLockTimeout") {
             this._lsSet("lockTimeout", payload.value);
         }

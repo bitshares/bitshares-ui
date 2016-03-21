@@ -1,8 +1,7 @@
 import utils from "./utils";
-import {
-    object_type
-}
-from "chain/chain_types";
+import { chain_types } from "@graphene/chain"
+
+let { object_type } = chain_types
 var opTypes = Object.keys(object_type);
 
 class MarketUtils {

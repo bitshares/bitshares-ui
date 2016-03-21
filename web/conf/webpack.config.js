@@ -7,6 +7,7 @@ require('es6-promise').polyfill();
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname, "..");
+function rpath(p) { return path.resolve(root_dir, p); }
 
 // FUNCTION TO EXTRACT CSS FOR PRODUCTION
 function extractForProduction(loaders) {
@@ -54,11 +55,11 @@ module.exports = function(options) {
     var config = {
         entry: {
             app: options.prod ?
-                path.resolve(root_dir, "app/Main.js") :
+                rpath("app/Main.js") :
                 [
                     "webpack-dev-server/client?http://localhost:8080",
                     "webpack/hot/only-dev-server",
-                    path.resolve(root_dir, "app/Main-dev.js")
+                    rpath("app/Main-dev.js")
                 ]
         },
         output: {
@@ -78,9 +79,9 @@ module.exports = function(options) {
                 },
                 { 
                     test: /\.js$/,
-                    exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
+                    exclude: [/node_modules/, rpath("../dl/node_modules"), rpath("../plasma/node_modules")],
                     loader: "babel-loader",
-                    query: {compact: false, cacheDirectory: true}
+                    query: {compact: false, cacheDirectory: true }, //, presets: ['es2015', 'stage-0']
                 },
                 { test: /\.json/, loader: "json" },
                 { test: /\.coffee$/, loader: "coffee-loader" },
@@ -96,15 +97,15 @@ module.exports = function(options) {
             ]
         },
         resolve: {
-            alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
-            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
+            alias: {bytebuffer: rpath("../dl/node_modules/bytebuffer")},
+            root: [rpath("./app"), rpath("../dl/src"), rpath("../plasma/libraries")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules"],
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            modulesDirectories: ["node_modules", rpath("../plasma/node_modules")],
+            fallback: [rpath("./node_modules")]
         },
         resolveLoader: {
             root: path.join(root_dir, "node_modules"),
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            fallback: [rpath("./node_modules")]
         },
         plugins: plugins,
         root: outputPath,

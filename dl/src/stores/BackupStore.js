@@ -1,7 +1,7 @@
 import alt from "alt-instance"
 import BackupActions from "actions/BackupActions"
 import BaseStore from "stores/BaseStore"
-import hash from "common/hash"
+import { hash } from "@graphene/ecc"
 
 class BackupStore extends BaseStore {
     
@@ -13,7 +13,7 @@ class BackupStore extends BaseStore {
             onIncommingBuffer: BackupActions.incommingBuffer,
             onReset: BackupActions.reset
         })
-        this._export("setWalletObjct")
+        this._export("setWalletObject")
     }
     
     _getInitialState() {
@@ -28,7 +28,7 @@ class BackupStore extends BaseStore {
         }
     }
     
-    setWalletObjct(wallet_object) {
+    setWalletObject(wallet_object) {
         this.setState({wallet_object})
     }
     

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import WalletActions from "actions/WalletActions"
+import WalletDb from "stores/WalletDb"
 import WalletManagerStore from "stores/WalletManagerStore"
 import BalanceClaimByAsset from "components/Wallet/BalanceClaimByAsset"
 import Translate from "react-translate-component"
@@ -10,12 +11,15 @@ import cname from "classnames"
 class WalletBaseComponent extends Component {
 
     static getStores() {
-        return [WalletManagerStore]
+        return [WalletManagerStore, WalletDb]
     }
 
     static getPropsFromStores() {
-        var props = WalletManagerStore.getState()
-        return props
+        var wallet = WalletManagerStore.getState()
+        var ww = WalletDb.getState()
+        wallet.current_wallet = ww.current_wallet
+        wallet.wallet_names = ww.wallet_names
+        return wallet
     }
 
 }
@@ -48,12 +52,13 @@ export class WalletOptions extends WalletBaseComponent {
         var has_wallet = !!this.props.current_wallet
         var has_wallets = this.props.wallet_names.size > 1
         var current_wallet = this.props.current_wallet ? this.props.current_wallet.toUpperCase() : ""
+        let box_style = {width: "120px", height: "90px"}
         return <span>
             <div className="grid-block">
                 
-                <div className="grid-content">
+                {has_wallet ? <div className="grid-content">
                     <div className="card">
-                        <div className="card-content">
+                        <div className="card-content" style={box_style}>
                                 <label><Translate content="wallet.active_wallet" />:</label>
                                 <div>{current_wallet}</div>
                                 <br/>
@@ -67,11 +72,11 @@ export class WalletOptions extends WalletBaseComponent {
                                 :null}
                         </div>
                     </div>
-                </div>
+                </div>:null}
 
-                <div className="grid-content">
+                {has_wallet ? <div className="grid-content">
                     <div className="card">
-                        <div className="card-content">
+                        <div className="card-content" style={box_style}>
                                 <label><Translate content="wallet.import_keys_tool" /></label>
                                 <div style={{visibility: "hidden"}}>Dummy</div>
                                 <br/>
@@ -85,11 +90,11 @@ export class WalletOptions extends WalletBaseComponent {
                                 :null}
                         </div>
                     </div>
-                </div>
+                </div>:null}
                 
                 {has_wallet ? <div className="grid-content">
                     <div className="card">
-                        <div className="card-content">
+                        <div className="card-content" style={box_style}>
                             <label><Translate content="wallet.balance_claims" /></label>
                             <div style={{visibility: "hidden"}}>Dummy</div>
                             <br/>
@@ -110,19 +115,7 @@ export class WalletOptions extends WalletBaseComponent {
             
             </div>
             
-            {has_wallet ? <Link to="wallet/backup/create">
-            <div className="button outline success"><Translate content="wallet.create_backup" /></div></Link>:null}
-                
-            {has_wallet ? <Link to="wallet/backup/brainkey">
-            <div className="button outline success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}
-
-
-            <Link to="wallet/backup/restore">
-            <div className="button outline success"><Translate content="wallet.restore_backup" /></div></Link>
-
-            <br/>
-
-            {has_wallet ? <br/> : null}
+            {has_wallet ? <div></div> : null}
             
             <Link to="wallet/create">
             <div className="button outline success"><Translate content="wallet.new_wallet" /></div></Link>
@@ -132,6 +125,18 @@ export class WalletOptions extends WalletBaseComponent {
 
             {has_wallet ? <Link to="wallet/change-password">
             <div className="button outline success"><Translate content="wallet.change_password" /></div></Link>:null}
+            
+            
+            {has_wallet ? <span><br/><br/></span> : null}
+            
+            <Link to="wallet/backup/server">
+            <div className="button outline success"><Translate content="wallet.backups" /></div></Link>
+                
+            {has_wallet ? <Link to="wallet/backup/brainkey">
+            <div className="button outline success"><Translate content="wallet.backup_brainkey" /></div></Link>:null}
+
+            <Link to="wallet/backup/restore">
+            <div className="button outline success"><Translate content="wallet.import_backup" /></div></Link>
             
         </span>
     }
@@ -152,12 +157,11 @@ export class ChangeActiveWallet extends WalletBaseComponent {
     }
 
     render() {
-        var state = WalletManagerStore.getState()
-        if(state.wallet_names.count() === 1)
+        if(this.props.wallet_names.count() === 1)
             return <label>{this.state.current_wallet}</label>
 
         var options = []
-        state.wallet_names.forEach( wallet_name => {
+        this.props.wallet_names.forEach( wallet_name => {
             options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toUpperCase()}</option>)
         })
 

@@ -35,11 +35,11 @@ export default class PrivateKeyView extends Component {
     
     render() {
         var modalId = "key_view_modal" + this.props.pubkey
-        var keys = PrivateKeyStore.getState().keys
+        var keys = WalletDb.keys()
 
-        var has_private = keys.has(this.props.pubkey)
-        if( ! has_private) return <span>{this.props.children}</span>
         var key = keys.get(this.props.pubkey)
+        var has_private = key ? key.has("private_wif") : false
+        if( ! has_private) return <span>{this.props.children}</span>
         return <span>
             <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
             <Modal ref={modalId} id={modalId} overlay={true} overlayClose={false}>
@@ -69,14 +69,14 @@ export default class PrivateKeyView extends Component {
 
                         <div className="grid-block grid-content">
                             <label>Brainkey Position</label>
-                            {key.brainkey_sequence == null ? "Non-deterministic" : key.brainkey_sequence}
+                            {key.get("brainkey_sequence") == null ? "Non-deterministic" : key.get("brainkey_sequence")}
                         </div>
                         <br/>
 
-                        {key.import_account_names && key.import_account_names.length ?
+                        {key.has("import_account_names") ?
                         <div className="grid-block grid-content">
                             <label>Imported From Account</label>
-                            {key.import_account_names.join(", ")}
+                            {key.get("import_account_names")}
                             <br/>
                         </div>
                         :null}

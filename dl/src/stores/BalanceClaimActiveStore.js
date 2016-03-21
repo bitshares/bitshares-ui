@@ -1,18 +1,15 @@
 import alt from "alt-instance"
 import Immutable from "immutable"
 
-import Address from "ecc/address"
-import PublicKey from "ecc/key_public"
-import key from "common/key_utils"
+import { Address, PublicKey } from "@graphene/ecc"
+import { key } from "@graphene/ecc"
 import BaseStore from "stores/BaseStore"
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 import iDB from "idb-instance"
-import config from "chain/config"
-import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletActions from "actions/WalletActions"
-import ChainStore from "api/ChainStore"
+import { ChainStore } from "@graphene/chain"
 
 class BalanceClaimActiveStore extends BaseStore {
     
@@ -20,8 +17,8 @@ class BalanceClaimActiveStore extends BaseStore {
         super()
         this.state = this._getInitialState()
         this.no_balance_address = new Set() // per chain
-        this._export("reset")
-        // ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+        iDB.subscribeToReset(this.reset.bind(this))
+
         this.bindListeners({
             onSetPubkeys: BalanceClaimActiveActions.setPubkeys,
             onSetSelectedBalanceClaims: BalanceClaimActiveActions.setSelectedBalanceClaims,
@@ -62,12 +59,12 @@ class BalanceClaimActiveStore extends BaseStore {
     
     onTransactionBroadcasted() {
         // Balance claims are included in a block...
-        // chainStoreUpdate did not include removal of balance claim objects
-        // This is a hack to refresh balance claims after a transaction.
+        // Refresh balance claims after a transaction.
         this.refreshBalances()
     }
     
     // chainStoreUpdate did not include removal of balance claim objects
+    // This is better done on request anyways.. Balance claims are not viewed very often.
     // chainStoreUpdate() {
     //     if(this.balance_objects_by_address !== ChainStore.balance_objects_by_address) {
     //         console.log("ChainStore.balance_objects_by_address")
@@ -77,7 +74,6 @@ class BalanceClaimActiveStore extends BaseStore {
     
     // param: Immutable Seq or array
     onSetPubkeys(pubkeys) {
-
         if( Array.isArray( pubkeys )) pubkeys = Immutable.Seq( pubkeys )
         if(this.pubkeys && this.pubkeys.equals( pubkeys )) return
         this.reset()
@@ -153,7 +149,6 @@ class BalanceClaimActiveStore extends BaseStore {
     
     /** @return Promise.resolve(balances) */
     lookupBalanceObjects() {
-        console.log("BalanceClaimActiveStore.lookupBalanceObjects")
         var db = Apis.instance().db_api()
         var no_balance_address = new Set(this.no_balance_address)
         var no_bal_size = no_balance_address.size

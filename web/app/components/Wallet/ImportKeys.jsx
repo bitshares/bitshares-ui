@@ -1,27 +1,28 @@
 import React, {Component, PropTypes} from "react";
 import ReactDOM from "react-dom";
-import PrivateKey from "ecc/key_private";
-import Address from "ecc/address"
-import Aes from "ecc/aes";
+import { PrivateKey } from "@graphene/ecc";
+import { Address } from "@graphene/ecc"
+import { Aes } from "@graphene/ecc";
 import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
 import cname from "classnames"
-import config from "chain/config";
+import { chain_config } from "@graphene/chain";
 import notify from "actions/NotificationActions";
-import hash from "common/hash";
+import { hash } from "@graphene/ecc";
 
-import Apis from "rpc_api/ApiInstances"
-import PrivateKeyStore from "stores/PrivateKeyStore"
+import { Apis } from "@graphene/chain"
+import WalletDb from "stores/WalletDb"
+import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletCreate from "components/Wallet/WalletCreate"
+import WalletUnlock from "components/Wallet/WalletUnlock"
+
 import LoadingIndicator from "components/LoadingIndicator"
 import Translate from "react-translate-component";
 
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
-import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore"
-import PublicKey from "ecc/key_public";
+import { PublicKey } from "@graphene/ecc";
 
 import GenesisFilter from "chain/GenesisFilter"
 
@@ -38,7 +39,7 @@ export default class ImportKeys extends Component {
     }
     
     static getStores() {
-        return [ImportKeysStore]
+        return [ImportKeysStore, WalletUnlockStore]
     }
     
     static getPropsFromStores() {
@@ -74,24 +75,18 @@ export default class ImportKeys extends Component {
     }
     
     render() {
+        return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
+    }
+    
+    render_unlocked() {
         var keys_to_account = this.state.keys_to_account
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
         
-        // Create wallet prior to the import keys (keeps layout clean)
-        if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
-        if( this.props.importing ) {
-            return <div>
-                <h3><Translate content="wallet.import_keys" /></h3>
-                <div className="center-content">
-                    <LoadingIndicator type="circle"/>
-                </div>
-            </div>
-        }
-        
         var filtering = this.state.genesis_filtering
         var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
         var account_rows = null
+        
         if(this.state.genesis_filter_status.length) {
             account_rows = []
             for(let status of this.state.genesis_filter_status) {
@@ -121,6 +116,45 @@ export default class ImportKeys extends Component {
                     </tr>);
             }
         }
+        
+        // 2 column generic table for account_rows 
+        account_rows = <div>
+            { account_rows ? 
+            <div>
+                { ! account_rows.length ? "No Accounts" :
+                <div>
+                    <table className="table center-content">
+                        <thead>
+                            <tr>
+                                <th style={{textAlign: "center"}}>Account</th>
+                                <th style={{textAlign: "center"}}># of keys</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {account_rows}
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>}
+            </div> : null}
+            <br/>
+        </div>
+            
+        if( this.state.genesis_filtering ) {
+            
+            // This is being called every 40 keys or so when the filter triggers a state update.  React was not rendering this however (probably because the worker thread keeps things too busy).
+            let last = this.state.genesis_filter_status.length - 1
+            console.log("ImportKeys\tGenesis filter", JSON.stringify(this.state.genesis_filter_status[last]))
+            
+            return <div>
+                <h3><Translate content="wallet.import_keys" /></h3>
+                <div className="center-content">
+                    <LoadingIndicator type="circle"/>
+                </div>
+                { account_rows }
+            </div>
+        }
+        
         return (
             <div>
                 <h3><Translate content="wallet.import_keys" /></h3>
@@ -136,25 +170,7 @@ export default class ImportKeys extends Component {
                     }
                 </div>
                 
-                { account_rows ? 
-                <div>
-                    { ! account_rows.length ? "No Accounts" :
-                    <div>
-                        <table className="table center-content">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "center"}}>Account</th>
-                                    <th style={{textAlign: "center"}}># of keys</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {account_rows}
-                            </tbody>
-                        </table>
-                        <br/>
-                    </div>}
-                </div> : null}
-                <br/>
+                { account_rows }
                     
                 { ! import_ready && ! this.state.genesis_filter_initalizing ?
                 <div>
@@ -270,13 +286,14 @@ export default class ImportKeys extends Component {
                     // This is the only chance to encounter a large file, 
                     // try this format first.
                     this._parseImportKeyUpload(json_contents, file.name, update_state => {
-                        // console.log("update_state", update_state)
+                        
                         this.setState(update_state, ()=> {
                             if( update_state.genesis_filter_finished ) {
                                 // try empty password, also display "Enter import file password"
                                 this._passwordCheck()
                             }
                         })
+                        
                     })
                 } catch(e) {
                     //DEBUG console.log("... _parseImportKeyUpload",e)
@@ -322,7 +339,7 @@ export default class ImportKeys extends Component {
                 genesis_filter_finished: true, genesis_filtering: false })
             return
         }
-        this.setState({ genesis_filter_initalizing: true }, ()=>// setTimeout(()=>
+        this.setState({ genesis_filter_initalizing: true }, ()=>
             genesis_filter.init(()=> {
                 var filter_status = this.state.genesis_filter_status
                 
@@ -400,7 +417,7 @@ export default class ImportKeys extends Component {
         
         var savePubkeyAccount = function (pubkey, account_name) {
             //replace BTS with GPH
-            pubkey = config.address_prefix + pubkey.substring(3)
+            pubkey = chain_config.address_prefix + pubkey.substring(3)
             var address = PublicKey.fromPublicKeyString(pubkey).toAddressString()
             var addresses = account_addresses[account_name] || []
             address = "BTS" + address.substring(3)
@@ -524,7 +541,7 @@ export default class ImportKeys extends Component {
                 continue
             }
             var account_name = account.account_name.trim()
-            var same_prefix_regex = new RegExp("^" + config.address_prefix)
+            var same_prefix_regex = new RegExp("^" + chain_config.address_prefix)
             for(let i = 0; i < account.encrypted_private_keys.length; i++) {
                 let encrypted_private = account.encrypted_private_keys[i]
                 let public_key_string = account.public_keys ?
@@ -561,7 +578,7 @@ export default class ImportKeys extends Component {
                             // This was creating a unresponsive chrome browser 
                             // but after the results were shown.  It was probably  
                             // caused by garbage collection.
-                            public_key_string = config.address_prefix +
+                            public_key_string = chain_config.address_prefix +
                                 public_key_string.substring(3)
                     }
                     this.state.imported_keys_public[public_key_string] = true
@@ -571,7 +588,10 @@ export default class ImportKeys extends Component {
                     for(let _name of account_names)
                         if(_name == account_name)
                             dup = true
-                    if(dup) continue
+                    
+                    if(dup)
+                        continue
+                    
                     account_names.push(account_name)
                     this.state.keys_to_account[private_plainhex] = {account_names, public_key_string}
                 } catch(e) {
@@ -596,7 +616,7 @@ export default class ImportKeys extends Component {
 
     _saveImport(e) {
         e.preventDefault()
-        var keys = PrivateKeyStore.getState().keys
+        var keys = WalletDb.keys()
         var dups = {}
         for(let public_key_string in this.state.imported_keys_public) {
             if( ! keys.has(public_key_string) ) continue
@@ -610,7 +630,8 @@ export default class ImportKeys extends Component {
         var keys_to_account = this.state.keys_to_account
         for(let private_plainhex of Object.keys(keys_to_account)) {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
-            if( dups[public_key_string] ) delete keys_to_account[private_plainhex]
+            if( dups[public_key_string] )
+                delete keys_to_account[private_plainhex]
         }
         WalletUnlockActions.unlock().then(()=> {
             ImportKeysStore.importing(true)
@@ -625,13 +646,16 @@ export default class ImportKeys extends Component {
         for(let private_plainhex of Object.keys(keys_to_account)) {
             var {account_names, public_key_string} = keys_to_account[private_plainhex]
             private_key_objs.push({
-                private_plainhex,
-                import_account_names: account_names,
-                public_key_string
+                private_wif: PrivateKey.fromHex(private_plainhex).toWif(),
+                import_account_names: account_names.length ? account_names.join(", ") : undefined,
+                public_key: public_key_string,
+                index_address: true
             })
         }
+        
         this.reset()
-        WalletDb.importKeysWorker( private_key_objs ).then( result => {
+        
+        WalletDb.importKeys( private_key_objs ).then( result => {
             ImportKeysStore.importing(false)
             var import_count = private_key_objs.length
             notify.success(`Successfully imported ${import_count} keys.`)

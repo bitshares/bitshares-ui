@@ -26,6 +26,7 @@ cd graphene-ui
 Before launching the GUI you will need to install the npm packages for each subdirectory:
 ```
 cd dl; npm install
+cd ../plasma; npm install
 cd ../web; npm install
 ```
 

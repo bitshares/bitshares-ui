@@ -30,13 +30,12 @@ class WalletUnlockStore {
     onUnlock({resolve, reject}) {
         //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
         //
-    
         this._setLockTimeout();
         if( ! WalletDb.isLocked()) {
             resolve()
             return
         }
-
+        
         this.setState({resolve, reject, locked: WalletDb.isLocked()});
     }
     
@@ -46,7 +45,11 @@ class WalletUnlockStore {
             resolve()
             return
         }
-        WalletDb.onLock()
+        try {
+            WalletDb.logout()
+        } catch(error) {
+            console.error(error);
+        }
         this.setState({resolve:null, reject:null, locked: WalletDb.isLocked()})
         resolve()
     }
@@ -69,13 +72,12 @@ class WalletUnlockStore {
         }
     }
 
-
     _setLockTimeout() {
         this._clearLockTimeout();
         this.timeout = setTimeout(() => {
             if (!WalletDb.isLocked()) {
                 console.log("auto locking after", this.walletLockTimeout, "s");
-                WalletDb.onLock()
+                WalletDb.logout()
                 this.setState({locked: true})
             };
         }, this.walletLockTimeout * 1000);
@@ -98,6 +100,12 @@ class WalletUnlockStore {
             }
         }
     }
-}
 
-export default alt.createStore(WalletUnlockStore, 'WalletUnlockStore')
+    onUnlocked() {
+    }
+
+    onLocked() {
+    }
+}
+let WalletUnlockStoreWrapped = alt.createStore(WalletUnlockStore, 'WalletUnlockStore')
+export default WalletUnlockStoreWrapped

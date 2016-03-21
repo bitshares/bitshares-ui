@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from "react-dom";
-import Apis from "rpc_api/ApiInstances"
+import { Apis } from "@graphene/chain"
 import ApplicationApi from "rpc_api/ApplicationApi"
-import WalletApi from "rpc_api/WalletApi"
 import DebugApi from "rpc_api/DebugApi"
 
 function evalInContext(js) {
@@ -10,11 +9,10 @@ function evalInContext(js) {
     var db = Apis.instance().db_api(),
         net = Apis.instance().network_api(),
         app = new ApplicationApi(),
-        wallet = new WalletApi(),
         debug = new DebugApi()
     
     var $g = {
-        db, net, app, wallet, debug
+        db, net, app, debug
     }
     return eval(js)
 }

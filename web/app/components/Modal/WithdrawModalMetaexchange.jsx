@@ -60,6 +60,8 @@ class WithdrawModalMetaexchange extends React.Component {
 		}
    }
    
+    // FIXME this method does not update...
+	// Search for an example using: WalletDb.deposit_keys() with WalletDb.update(...)
 	updateWithdrawalAddress()
 	{
 		var withdrawAddress = null
@@ -94,7 +96,7 @@ class WithdrawModalMetaexchange extends React.Component {
 	{
 		let wallet = WalletDb.getWallet();
 		wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'] = e.target.value;
-		WalletDb._updateWallet();
+		WalletDb.update(wallet);
 		
 		// shoot off to metaexchange to request a memo/deposit address
 		Post.PostForm(	this.props.api_root+'/1/submitAddress',

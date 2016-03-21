@@ -3,32 +3,71 @@ import Translate from "react-translate-component"
 import notify from "actions/NotificationActions"
 import cname from "classnames"
 import WalletDb from "stores/WalletDb"
-import PasswordConfirm from "./PasswordConfirm"
+import AuthStore from "stores/AuthStore"
+import AuthInput from "components/Forms/AuthInput"
+import WalletUnlock from "components/Wallet/WalletUnlock"
+import LoadingIndicator from "components/LoadingIndicator"
+import VerifyPassword from "components/Wallet/VerifyPassword"
+import counterpart from "counterpart"
 
-export default class WalletChangePassword extends Component {
+import AltContainer from "alt-container"
+
+let ChangePasswordAuthStore = AuthStore("ChangePassword", { hasConfirm: true })
+
+export default class Alt extends Component {
+    render() {
+        return (
+            <AltContainer stores={{ auth: ChangePasswordAuthStore }}>
+                <WalletChangePassword {...this.props}/>
+            </AltContainer>
+        )
+    }
+}
+
+class WalletChangePassword extends Component {
+    
     constructor() {
         super()
-        this.state = {}
+        this.init = ()=> ({
+            loading: false
+        })
+        this.state = this.init()
+    }
+    
+    componentWillUnmount() {
+        this.setState(this.init())
+        this.props.auth.clear()
     }
     
     render() {
-        var ready = !!this.state.new_password
+        return <WalletUnlock>{ this.render_unlocked() }</WalletUnlock>
+    }
+    
+    render_unlocked() {
+        var ready = !!this.state.new_password && ! this.state.loading
         return <span>
             <h3><Translate content="wallet.change_password"/></h3>
-            <WalletPassword onValid={this.onOldPassword.bind(this)}>
-                <PasswordConfirm onValid={this.onNewPassword.bind(this)}/>
-                <div className={cname("button success", {disabled: ! ready})}
+            <VerifyPassword>
+                <form onSubmit={this.onAccept.bind(this)}>
+                    <AuthInput auth={this.props.auth}/>
+                </form>
+                {this.state.loading ? <div className="center-content"><LoadingIndicator type="circle"/><br/></div>:null}
+                <div className={cname("button success", {disabled: ! this.props.auth.valid || this.state.loading })}
                     onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
-            </WalletPassword>
-            <Reset/>
+            </VerifyPassword>
+            
+            {this.state.loading ? null : <Reset/> }
+            
         </span>
     }
     
-    onAccept() {
-        var {old_password, new_password} = this.state
-        WalletDb.changePassword(old_password, new_password, true/*unlock*/)
+    onAccept(e) {
+        if(e) e.preventDefault()
+        this.setState({ loading: true }, ()=>{
+            WalletDb.changePassword(this.props.auth)
             .then(()=> {
-                notify.success("Password changed")
+                this.setState(this.init())
+                notify.success(counterpart.translate("wallet.password_changed"))
                 window.history.back()
             })
             .catch( error => {
@@ -36,52 +75,10 @@ export default class WalletChangePassword extends Component {
                 // .. translation may be unnecessary
                 console.error(error)
                 notify.error("Unable to change password: " + error)
+                this.setState(this.init())
             })
+        })
     }
-    onOldPassword(old_password) { this.setState({ old_password }) }
-    onNewPassword(new_password) { this.setState({ new_password }) }
-}
-
-class WalletPassword extends Component {
-    
-    static propTypes = {
-        onValid: React.PropTypes.func.isRequired
-    }
-    
-    constructor() {
-        super()
-        this.state = {
-            password: null,
-            verified: false
-        }
-    }
-    
-    render() {
-        if(this.state.verified) return <span>{this.props.children}</span>
-        return <span>
-            <label><Translate content="wallet.existing_password"/></label>
-            <input type="password" id="password"
-                onChange={this.formChange.bind(this)}
-                value={this.state.password}/>
-            <span className="button success"
-                onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
-        </span>
-    }
-    
-    onPassword() {
-        if( WalletDb.validatePassword(this.state.password) ) {
-            this.setState({ verified: true })
-            this.props.onValid(this.state.password)
-        } else
-            notify.error("Invalid Password")
-    }
-    
-    formChange(event) {
-        var state = {}
-        state[event.target.id] = event.target.value
-        this.setState(state)
-    }
-    
 }
 
 class Reset extends Component {

@@ -3,14 +3,14 @@ import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
 import PrivateKeyView from "components/PrivateKeyView"
 import counterpart from "counterpart";
 import utils from "common/utils";
-import AddressIndex from "stores/AddressIndex"
+import { AddressIndex } from "@graphene/wallet-client"
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -26,8 +26,7 @@ class AccountPermissionRow extends React.Component {
     }
 
     _lookUpPubKeyForAddress(address) {
-        var addresses = AddressIndex.getState().addresses;
-        var pubkey = addresses.get(address);
+        var pubkey = AddressIndex.getPubkey(address);
         console.log("pubkey:", pubkey);
         return pubkey;
     }

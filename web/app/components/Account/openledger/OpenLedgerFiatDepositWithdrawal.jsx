@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../../Utility/FormattedAsset";
 import LoadingIndicator from "../../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../../Utility/ChainTypes";
 import BindToChainState from "../../Utility/BindToChainState";
 import Statistics from "../Statistics";
@@ -11,7 +11,7 @@ import AccountActions from "actions/AccountActions";
 import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
-import WalletDb from "stores/WalletDb";
+// import WalletDb from "stores/WalletDb";
 import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -65,7 +65,6 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return <tr style={{display:"none"}}><td></td><td></td><td></td><td></td></tr>;
 
-        let wallet = WalletDb.getWallet();
         let account_balances_object = this.props.account.get("balances");
 
         let balance = "0 " + this.props.receive_asset.get('symbol');

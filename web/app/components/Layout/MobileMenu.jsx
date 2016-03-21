@@ -7,7 +7,7 @@ import Translate from "react-translate-component";
 import AccountStore from "stores/AccountStore";
 import connectToStores from "alt/utils/connectToStores";
 import WalletUnlockStore from "stores/WalletUnlockStore";
-import WalletManagerStore from "stores/WalletManagerStore";
+import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import cnames from "classnames";
 
@@ -23,7 +23,7 @@ class MobileMenu extends React.Component {
     };
 
     static getStores() {
-      return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
+      return [AccountStore, WalletUnlockStore, WalletDb, SettingsStore]
     }
 
     static getPropsFromStores() {
@@ -31,7 +31,7 @@ class MobileMenu extends React.Component {
         linkedAccounts: AccountStore.getState().linkedAccounts,
         currentAccount: AccountStore.getState().currentAccount,
         locked: WalletUnlockStore.getState().locked,
-        current_wallet: WalletManagerStore.getState().current_wallet,
+        current_wallet: WalletDb.getState().current_wallet,
         lastMarket: SettingsStore.getState().viewSettings.get("lastMarket")
       }
     }

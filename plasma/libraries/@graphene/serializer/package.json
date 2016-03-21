@@ -1,0 +1,32 @@
+{
+    "name": "@graphene/serializer",
+    "version": "1.0.0",
+    "description": "Binary serialization and deserialization library",
+    "main": "index.js",
+    "config": {
+        "hex_dump": false
+    },
+    "scripts": {
+        "test": "mocha --compilers js:babel-core/register --recursive",
+        "test:watch": "npm test -- --watch"
+    },
+    "author": "",
+    "license": "BSD-2-Clause-FreeBSD",
+    "dependencies": {
+        "bigi": "^1.4.1",
+        "bytebuffer": "^5.0.0",
+        "@graphene/ecc": "^1.0.0"
+    },
+    "devDependencies": {
+        "assert": "^1.3.0",
+        "babel-cli": "^6.2.0",
+        "babel-core": "^6.2.0",
+        "babel-preset-es2015": "^6.1.18",
+        "mocha": "^2.3.4"
+    },
+    "_babel": {
+      "presets": [
+        "es2015"
+      ]
+    }
+}

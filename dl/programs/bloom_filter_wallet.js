@@ -17,9 +17,9 @@ var fs = require('fs')
 
 require('coffee-script/register') // npm install coffee-script
 
-var h = require('../src/common/hash')
-var key_utils = require('../src/common/key_utils')
-var chain_config = require('../src/chain/config')
+var h = require('@graphene/ecc').hash
+var key_utils = require('@graphene/ecc').key
+var chain_config = require('@graphene/chain').chain_config
 
 chain_config.address_prefix = "BTS"
 

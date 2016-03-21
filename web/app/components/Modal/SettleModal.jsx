@@ -9,12 +9,10 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
 import classNames from "classnames";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
-
-let wallet_api = new WalletApi();
+import { TransactionBuilder } from "@graphene/chain";
 
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
@@ -45,7 +43,7 @@ class ModalContent extends React.Component {
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
 
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("asset_settle", {
             fee: {
                 amount: 0,

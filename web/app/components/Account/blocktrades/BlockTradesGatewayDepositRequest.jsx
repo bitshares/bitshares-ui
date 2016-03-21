@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../../Utility/FormattedAsset";
 import LoadingIndicator from "../../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../../Utility/ChainTypes";
 import BindToChainState from "../../Utility/BindToChainState";
 import Statistics from "../Statistics";
@@ -111,7 +111,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         else
             wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name].push( receive_address );
 
-        WalletDb._updateWallet();
+        WalletDb.update(wallet);
 
         this.setState( {receive_address} );
     }

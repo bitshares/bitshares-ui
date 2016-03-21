@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
@@ -70,7 +70,7 @@ class AmountSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string, // a translation key for the label
-        asset: ChainTypes.ChainAsset.isRequired, // selected asset by default
+        asset: ChainTypes.ChainAsset, // selected asset by default
         assets: React.PropTypes.array,
         amount: React.PropTypes.any,
         placeholder: React.PropTypes.string,
@@ -137,7 +137,7 @@ class AmountSelector extends React.Component {
                    <span className="form-label select">
                        <AssetSelector
                            ref={this.props.refCallback}                  
-                           value={this.props.asset.get("id")}
+                           value={this.props.asset && this.props.asset.get("id")}
                            assets={this.props.assets}
                            onChange={this.onAssetChange.bind(this)}                           
                        />

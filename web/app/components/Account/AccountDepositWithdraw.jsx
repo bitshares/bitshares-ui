@@ -1,8 +1,8 @@
-import config from "chain/config";
+import { chain_config } from "@graphene/chain";
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import { ChainStore } from "@graphene/chain";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import WalletDb from "stores/WalletDb";
@@ -65,18 +65,21 @@ class MetaexchangeDepositRequest extends React.Component {
 
 					this.setState( {deposit_address:reply.deposit_address, memo:reply.memo} );
 
-					let wallet = WalletDb.getWallet();
 					let name = this.props.account.get('name');
+                    
+					let deposit_keys = WalletDb.deposit_keys()
+                        .updateIn([this.props.gateway, this.state.base_symbol, name], ()=> reply);
+					
+					// if( !deposit_keys[this.props.gateway] )
+					// 	deposit_keys[this.props.gateway] = {}
+					// if( !deposit_keys[this.props.gateway][this.state.base_symbol] )
+					// 	deposit_keys[this.props.gateway][this.state.base_symbol] = {}
+					// else
+					// 	deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
+                    
+					let data = WalletDb.data().set("deposit_keys", deposit_keys);
+					WalletDb.update(data);
 
-					if( !wallet.deposit_keys ) wallet.deposit_keys = {}
-					if( !wallet.deposit_keys[this.props.gateway] )
-						wallet.deposit_keys[this.props.gateway] = {}
-					if( !wallet.deposit_keys[this.props.gateway][this.state.base_symbol] )
-						wallet.deposit_keys[this.props.gateway][this.state.base_symbol] = {}
-					else
-						wallet.deposit_keys[this.props.gateway][this.state.base_symbol][name] = reply
-
-					WalletDb._updateWallet();
 				}));
 	}
 
@@ -102,15 +105,9 @@ class MetaexchangeDepositRequest extends React.Component {
 
 	getMetaLink()
 	{
-		let wallet = WalletDb.getWallet();
-		var withdrawAddr = "";
-
-		try
-		{
-			withdrawAddr = wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'];
-		}
-		catch (Error) {}
-
+		var withdrawAddr = WalletDb.deposit_keys()
+            .getIn([this.props.gateway, this.state.base_symbol, 'withdraw_address'], "");
+		
 		return this.marketPath + this.props.symbol_pair.replace('_','/')+'?receiving_address='+encodeURIComponent(this.props.account.get('name')+','+withdrawAddr);
 	}
 
@@ -118,17 +115,16 @@ class MetaexchangeDepositRequest extends React.Component {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return <tr><td></td><td></td><td></td><td></td></tr>;
 
-        let wallet = WalletDb.getWallet();
-
         if( !this.state.deposit_address )
 		{
-			try
-			{
-				let reply = wallet.deposit_keys[this.props.gateway][this.state.base_symbol][this.props.account.get('name')];
+			let reply = WalletDb.deposit_keys()
+                .getIn([this.props.gateway, this.state.base_symbol, this.props.account.get('name')]);
+            
+            //  wallet.deposit_keys[this.props.gateway][this.state.base_symbol][this.props.account.get('name')];
+            if( reply ) {
 				this.state.deposit_address = reply.deposit_address;
 				this.state.memo = reply.memo;
-			}
-			catch (Error) {}
+            }
         }
         if( !this.state.deposit_address )
 		{
@@ -231,7 +227,6 @@ class AccountDepositWithdraw extends React.Component {
                 defaultActiveTab={config.depositWithdrawDefaultActiveTab}
                 contentClass="grid-content"
             >
-
                 <Tabs.Tab title="BlockTrades">
                     <div className="content-block">
                         <div className="float-right"><a href="https://blocktrades.us" target="__blank">VISIT WEBSITE</a></div>

@@ -96,9 +96,9 @@ class SettingsEntry extends React.Component {
                 }
                 else if(typeof selected === "boolean") {
                     if (selected) {
-                        value = defaults[0];
-                    } else {
                         value = defaults[1];
+                    } else {
+                        value = defaults[0];
                     }
                 }
                 else if(typeof selected === "string") {

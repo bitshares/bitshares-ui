@@ -6,7 +6,8 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
 import {FormattedDate} from "react-intl";
-import {operations} from "chain/chain_types";
+import {chain_types} from "@graphene/chain";
+let {operations} = chain_types;
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
@@ -14,8 +15,8 @@ import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
-import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import WalletDb from "stores/WalletDb";
 import MemoText from "./MemoText";
 
 require("./operations.scss");
@@ -129,18 +130,18 @@ class Transaction extends React.Component {
 
                     let lockedWallet = false;
                     if(op[1].memo) {
-                        let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
-
-                        memo = text ? (
-                            <td>{text}</td>
-                        ) : !text && isMine ? (
-                            <td>
+                        
+                        if( WalletDb.isLocked() )
+                            memo = <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
                                     <Icon name="locked"/>
                                 </a>
                             </td>
-                        ) : null;
+                        else {
+                            let text = WalletDb.decodeMemo(op[1].memo);
+                            memo = <td>{text}</td>
+                        }
                     }
 
                     rows.push(

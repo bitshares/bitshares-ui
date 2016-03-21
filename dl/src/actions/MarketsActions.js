@@ -1,17 +1,17 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
-import WalletApi from "rpc_api/WalletApi";
+import { Apis } from "@graphene/chain";
 import WalletDb from "../stores/WalletDb";
-import {operations} from "chain/chain_types";
-import ChainStore from "api/ChainStore";
+import { chain_types } from "@graphene/chain";
+import { ChainStore } from "@graphene/chain";
+import { TransactionBuilder } from "@graphene/chain";
 import marketUtils from "common/market_utils";
 import Immutable from "immutable";
 
+let operations = chain_types.operations
 let ops = Object.keys(operations);
 
 let subs = {};
 let currentBucketSize;
-let wallet_api = new WalletApi();
 let marketStats = {};
 let statTTL = 60 * 2 * 1000; // 2 minutes
 
@@ -275,7 +275,7 @@ class MarketsActions {
 
     createLimitOrder(account, sellAmount, sellAsset, buyAmount, buyAsset, expiration, isFillOrKill, fee_asset_id) {
 
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
 
         let feeAsset = ChainStore.getAsset(fee_asset_id);
         if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
@@ -361,7 +361,7 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
-        var tr = wallet_api.new_transaction();
+        var tr = new TransactionBuilder();
         tr.add_type_operation("limit_order_cancel", {
             fee: {
                 amount: 0,
