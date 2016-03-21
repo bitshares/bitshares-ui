@@ -47,14 +47,8 @@ export default class Proposals extends Component {
         }
     }
 
-    _canReject(proposal, id) {
-        if (proposal.available_active_approvals.indexOf(id) !== -1) {
-            return true;
-        } else if (proposal.available_owner_approvals.indexOf(id) !== -1) {
-            return true;
-        } else {
-            return false;
-        }
+    _canReject(proposal) {
+        return (proposal.available_active_approvals.length || proposal.available_owner_approvals.length);            
     }
 
     render() {
@@ -95,7 +89,7 @@ export default class Proposals extends Component {
                 }).toArray();
 
             let canApprove = this._canApprove(proposal.proposal.toJS(), proposal.account.get("id"));
-            let canReject = this._canReject(proposal.proposal.toJS(), proposal.account.get("id"));
+            let canReject = this._canReject(proposal.proposal.toJS());
 
             let proposalId = proposal.proposal.get("id");
 
@@ -114,20 +108,23 @@ export default class Proposals extends Component {
                     </td>
 
                     <td>
-                        <button
-                            onClick={this._onApproveModal.bind(this, proposalId, "reject")}
-                            className="button outline"
-                        >
-                            Reject
-                        </button>
-                        <ProposalApproveModal
-                            ref={proposalId + "_" + "reject"}
-                            modalId={proposalId + "_" + "reject"}
-                            account={proposal.account.get("id")}
-                            proposal={proposalId}
-                            action="reject"
-                        />
-
+                        {canReject ? 
+                            (
+                                <button
+                                onClick={this._onApproveModal.bind(this, proposalId, "reject")}
+                                className="button outline"
+                            >
+                                Reject
+                            </button>
+                            
+                            ) : null}
+                            <ProposalApproveModal
+                                ref={proposalId + "_" + "reject"}
+                                modalId={proposalId + "_" + "reject"}
+                                account={proposal.account.get("id")}
+                                proposal={proposalId}
+                                action="reject"
+                            />
                         <button
                             onClick={this._onApproveModal.bind(this, proposalId, "approve")}
                             className="button outline"
