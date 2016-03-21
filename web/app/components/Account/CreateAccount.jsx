@@ -135,7 +135,7 @@ class CreateAccount extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         if (!this.isValid()) return;
-        let account_name = this.refs.account_name.value();
+        let account_name = this.refs.account_name.getValue();
         if ( !WalletDb.isLocked()) {
             this.createAccount(account_name);
         } else {
@@ -229,7 +229,7 @@ class CreateAccount extends React.Component {
                     <div className="content-block center-content">
                         <div style={{width: '21em'}}>
                             <form onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <AccountNameInput ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}} cheapNameOnly={first_account}
+                                <AccountNameInput ref="account_name" cheapNameOnly={first_account}
                                                   onChange={this.onAccountNameChange.bind(this)}
                                                   accountShouldNotExist={true} focus={true}/>
 
