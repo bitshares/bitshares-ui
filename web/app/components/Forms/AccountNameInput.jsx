@@ -4,12 +4,12 @@ import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
+import BaseComponent from "../BaseComponent";
 import { validation } from "@graphene/chain";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import AltContainer from "alt-container";
 
-export default class AccountNameInput extends React.Component {
+export default class AccountNameInput extends BaseComponent {
 
     static propTypes = {
         id: PropTypes.string,
@@ -26,7 +26,7 @@ export default class AccountNameInput extends React.Component {
     };
 
     constructor(props) {
-        super();
+        super(props, AccountStore);
         this.state = {
             value: null,
             error: null,
@@ -44,7 +44,7 @@ export default class AccountNameInput extends React.Component {
             || nextState.error !== this.state.error
             || nextState.account_name !== this.state.account_name
             || nextState.existing_account !== this.state.existing_account
-            || nextProps.searchAccounts !== this.props.searchAccounts
+            || nextState.searchAccounts !== this.state.searchAccounts
     }
     
     componentDidMount() {
@@ -82,7 +82,7 @@ export default class AccountNameInput extends React.Component {
         if (this.state.error) {
             error = this.state.error;
         } else if (this.props.accountShouldExist || this.props.accountShouldNotExist) {
-            let account = this.props.searchAccounts.find(a => a === this.state.value);
+            let account = this.state.searchAccounts && this.state.searchAccounts.find(a => a === this.state.value);
             if (this.props.accountShouldNotExist && account) {
                 error = counterpart.translate("account.name_input.name_is_taken");
             }
@@ -151,25 +151,3 @@ export default class AccountNameInput extends React.Component {
         );
     }
 }
-
-// Wrapping breaks direct method calls (ex: this.ref.label.clear())
-// export default class StoreWrapper extends React.Component {
-// 
-//     render() {
-// 
-//         return (
-//             <AltContainer stores={[AccountStore]}
-//                 inject={{
-//                         searchAccounts: () => {
-//                             return AccountStore.getState().searchAccounts;
-//                         }
-//                     }}
-//             >
-//                 <AccountNameInput
-//                     ref="nameInput"
-//                     {...this.props}
-//                 />
-//             </AltContainer>
-//         )
-//     }
-// }
