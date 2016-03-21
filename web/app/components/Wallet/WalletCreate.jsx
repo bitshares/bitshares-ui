@@ -56,6 +56,10 @@ class CreateNewWallet extends Component {
         hideTitle: React.PropTypes.bool
     }
     
+    static contextTypes = {
+        history: React.PropTypes.object
+    }
+    
     constructor() {
         super()
         this.init =()=>({ 
@@ -167,7 +171,7 @@ class CreateNewWallet extends Component {
         WalletActions.setWallet(wallet_name, this.props.auth, this.state.brnkey)
         this.setState({create_submitted: true}, ()=>
             // give it time to create and login (avoid unlock flashing)
-            setTimeout(()=> this.props.history.pushState(null, "/wallet/backup/server"), 250)
+            setTimeout(()=> this.context.history.pushState(null, "/wallet/backup/server"), 250)
         )
         
     }
