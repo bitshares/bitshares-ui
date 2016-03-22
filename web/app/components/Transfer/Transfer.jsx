@@ -176,7 +176,7 @@ class Transfer extends React.Component {
         let globalObject = ChainStore.getObject("2.0.0");
         let fee = utils.estimateFee(propose ? "proposal_create" : "transfer", null, globalObject);
 
-        if (from_account && !from_error) {
+        if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances).sort(utils.sortID);
             fee_asset_types = Object.keys(account_balances).sort(utils.sortID);

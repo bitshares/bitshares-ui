@@ -12,6 +12,7 @@ import WalletDb from "stores/WalletDb";
 import WalletApi from "rpc_api/WalletApi";
 import Immutable from "immutable";
 import NestedApprovalState from "../Account/NestedApprovalState";
+import pu from "common/permission_utils";
 
 let wallet_api = new WalletApi();
 
@@ -98,7 +99,7 @@ class ProposalApproveModal extends React.Component {
     }
 
     render() {
-        let {account, proposal, type} = this.props;
+        let {proposal, type} = this.props;
 
         let accountNames = [];
         let accountMap = {};
@@ -194,99 +195,91 @@ class ProposalApproveModal extends React.Component {
 };
 
 @BindToChainState()
-class SecondLevel extends React.Component {
-    static propTypes = {
-       accounts: ChainTypes.ChainAccountsList
-    };
-
-    shouldComponentUpdate(nextProps) {
-
-        return (
-            !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
-            !utils.are_equal_shallow(nextProps.keys, this.props.keys) ||
-            !utils.are_equal_shallow(nextProps.addresses, this.props.addresses)
-        );
-    }
-
-    getNestedAccountAuths(auths, type, auth_type, existing = Immutable.List()) {
-        
-        auths.forEach(auth => {
-            if (auth) {
-                if (auth_type === "account_auths" && !existing.includes(auth.get("id"))) {
-                    existing = existing.push(auth.get("id"));
-                }
-
-                if (auth.getIn([type, auth_type]).size) {
-                    existing = utils.flatten_auths(auth.getIn([type, auth_type]), existing);
-                }
-            }
-        });
-
-        return existing;
-    }
-
-    // resolveAddresses(addresses, existing = Immutable.List()) {
-    //     let myAccounts = AccountStore.getMyAccounts();
-    //     addresses.forEach(address => {
-    //         console.log("address:", address);
-    //     })
-
-    //     return existing;
-    // }
-
-
-    render() {
-        let {type} = this.props;
-
-        let nestedAccounts = this.getNestedAccountAuths(this.props.accounts, type, "account_auths");
-        // let nestedAddresses = this.getNestedAccountAuths(this.props.accounts, type, "address_auths", this.props.addresses);
-        let nestedKeys = this.getNestedAccountAuths(this.props.accounts, type, "key_auths", this.props.keys);
-
-        return (
-            <ProposalApproveModal
-                action={this.props.action}
-                modalId={this.props.modalId}
-                account={this.props.account}
-                proposal={this.props.proposal}
-                accounts={nestedAccounts}
-                keys={nestedKeys}                
-                type={type}
-                onClose={this.props.onClose}
-            />
-        );
-    }
-}
-
-@BindToChainState()
 class FirstLevel extends React.Component {
+
     static propTypes = {
        account: ChainTypes.ChainAccount.isRequired,
        proposal: ChainTypes.ChainObject.isRequired
-   };
+    };
+
+    constructor() {
+        super();
+
+        this._updateState = this._updateState.bind(this);
+    }
+
+    componentWillMount() {
+        this._updateState();
+
+        ChainStore.subscribe(this._updateState);
+    }
+
+    componentWillUnmount() {
+        ChainStore.unsubscribe(this._updateState);
+    }
+
+    _updateState() {
+        let {proposal, account} = this.props;
+        let type = proposal.get("required_active_approvals").size ? "active" : "owner";
+
+        let required = pu.listToIDs(proposal.get(`required_${type}_approvals`));
+        let available = pu.listToIDs(proposal.get(`available_${type}_approvals`));
+
+        this.setState({
+            requiredPermissions: pu.unnest(required, type),
+            available,
+            type
+        }); 
+    }
 
     render() {
-        let {account} = this.props;
+        let {account, action} = this.props;
 
-        let type = this.props.proposal.get("required_active_approvals").size ? "active" : "owner";
+        let {requiredPermissions, available, type} = this.state;
 
-        let accounts = utils.flatten_auths(account.getIn([type, "account_auths"]));
+        // console.log("requiredPermissions:", requiredPermissions[0].getMissingSigs(available), "required:", required, "available", available);
 
-        let keys = utils.flatten_auths(account.getIn([type, "key_auths"]));
-        let addresses = utils.flatten_auths(account.getIn([type, "address_auths"]));
+        let finalRequired = [];
+
+        requiredPermissions.forEach(account => {
+            finalRequired = finalRequired.concat(account.getMissingSigs(available));
+        });
+
+        // console.log("finalRequired:", finalRequired);
+        // let type = this.props.proposal.get("required_active_approvals").size ? "active" : "owner";
+        // let accounts = pu.flatten_auths(account.getIn([type, "account_auths"]));
+
+        let keys = pu.flatten_auths(account.getIn([type, "key_auths"]));
+        // let addresses = pu.flatten_auths(account.getIn([type, "address_auths"]));
 
         return (
-            <SecondLevel
+            <ProposalApproveModal
                 {...this.props}
                 type={type}
-                accounts={accounts}
+                accounts={action === "approve" ? finalRequired : available}
                 keys={keys}
-                addresses={addresses}
             />
         );
     }
 }
 
 export default class ModalWrapper extends React.Component {
+
+    constructor() {
+        super();
+
+        this.state = {
+            open: false
+        }
+    }
+
+    componentDidMount() {
+        ZfApi.subscribe(this.props.modalId, (msg, data) => {
+            this.setState({
+                open: data === "open"
+            })
+        });
+    }
 
     show() {
         ZfApi.publish(this.props.modalId, "open");
@@ -300,12 +293,13 @@ export default class ModalWrapper extends React.Component {
                 <Trigger close={modalId}>
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
+                {this.state.open ? (
                 <div className="grid-block vertical">
                     <FirstLevel
                         {...this.props}
                     />
-                </div>
+                </div>) : null}
             </Modal>
-            );
+        );
     }
 }

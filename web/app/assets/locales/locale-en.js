@@ -184,7 +184,7 @@
             public: "Public key",
             private: "Private key (WIF - Wallet Import Format)",
             show: "show",
-            brain: "Branikey position",
+            brain: "Brainkey position",
             from: "Imported from account"
         },
         votes: {
@@ -361,7 +361,9 @@
             owner_approvals_to_remove: "Owner approvals to remove",
             key_approvals_to_add: "Key approvals to add",
             key_approvals_to_remove: "Key approvals to remove",
-        }
+        },
+        approve: "Approve",
+        reject: "Reject"
     },
     transaction: {
         confirm: "Please confirm the transaction",

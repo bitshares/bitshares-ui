@@ -56,7 +56,7 @@ class ApplicationApi {
                 },
                 "options": {
                     "memo_key": active_pubkey,
-                    "voting_account": "1.2.0",
+                    "voting_account": "1.2.5",
                     "num_witness": 0,
                     "num_committee": 0,
                     "votes": [ ]

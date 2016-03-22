@@ -15,21 +15,6 @@ export default class Proposals extends Component {
         account: ChainTypes.ChainAccount.isRequired
     };
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     // console.log("should render")
-    //     var len1 = this.props.accountList.length
-    //     var len2 = nextProps.accountList.length
-    //     if( len1 !== len2 ) return true
-    //     for(let i = 0; i < len1; i++) {
-    //         var a1 = this.props.accountList[i]
-    //         var a2 = nextProps.accountList[i]
-    //         if( a1 !== a2 ) return true
-    //         if( ! a1 ) continue // undefined or null
-    //         if( a1.get("proposals") !== a2.get("proposals") ) return true
-    //     }
-    //     return false
-    // }
-
     _onApproveModal(id, action) {
         if (this.refs[id + "_" + action]) {
             this.refs[id + "_" + action].show();
@@ -114,7 +99,7 @@ export default class Proposals extends Component {
                                 onClick={this._onApproveModal.bind(this, proposalId, "reject")}
                                 className="button outline"
                             >
-                                Reject
+                                <Translate content="proposal.reject" />
                             </button>
                             
                             ) : null}
@@ -129,7 +114,7 @@ export default class Proposals extends Component {
                             onClick={this._onApproveModal.bind(this, proposalId, "approve")}
                             className="button outline"
                         >
-                            <span>Approve</span>
+                            <span><Translate content="proposal.approve" /></span>
                         </button>
                         <ProposalApproveModal
                             ref={proposalId + "_" + "approve"}

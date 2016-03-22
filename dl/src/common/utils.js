@@ -1,5 +1,4 @@
 var numeral = require("numeral");
-var Immutable = require("immutable");
 
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
@@ -467,18 +466,8 @@ var Utils = {
         // return result;
     },
 
-    flatten_auths(auths, existingAuths = Immutable.List()) {
-        if (!auths.size) {
-            return existingAuths;
-        }
-
-        auths.forEach(owner => {
-            if (!existingAuths.includes(owner.get(0))) {
-                existingAuths = existingAuths.push(owner.get(0)); 
-            }
-        });
-        return existingAuths;
-
+    get_percentage(a, b) {
+        return Math.round((a/b) * 100) + "%";
     }
 };
 
