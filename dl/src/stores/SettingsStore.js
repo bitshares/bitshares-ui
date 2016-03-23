@@ -16,7 +16,7 @@ class SettingsStore {
         this.settings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
-            faucet_address: "http://bitshares.openledger.info",
+            faucet_address: "https://bitshares.openledger.info",
             backup_server: "ws://cnx.rocks:9080",
             unit: CORE_ASSET,
             showSettles: false,
