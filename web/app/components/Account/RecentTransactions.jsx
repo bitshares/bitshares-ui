@@ -14,15 +14,11 @@ import ReactDOM from "react-dom";
 import ps from "perfect-scrollbar";
 
 function compareOps(b, a) {
-    if (a.block_num < b.block_num) return -1;
     if (a.block_num === b.block_num) {
-        if (a.trx_in_block < b.trx_in_block) return -1;
-        if (a.trx_in_block === b.trx_in_block) {
-            if (a.op_in_trx < b.op_in_trx) return -1;
-            if (a.op_in_trx === b.op_in_trx) return 0;
-        }
+        return a.virtual_op - b.virtual_op;
+    } else {
+        return a.block_num - b.block_num;
     }
-    return 1;
 }
 
 function textContent(n) {
