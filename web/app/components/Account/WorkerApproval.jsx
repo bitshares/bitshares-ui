@@ -122,16 +122,11 @@ class WorkerApproval extends React.Component{
                      {approvalState !== true ? 
                         <button className="button success" onClick={this.onApprove.bind(this)}>
                            <Translate content="account.votes.approve_worker"/>
-                        </button> : null}
-                  </td>
-
-                  <td>
-                     {approvalState !== false ? 
-                        <button className="button info" onClick={this.onReject.bind(this)}>
+                        </button> : <button className="button info" onClick={this.onReject.bind(this)}>
                            <Translate content="account.votes.reject_worker"/>
-                        </button> : null}
-
+                        </button>}
                   </td>
+                 
                {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
                   
 

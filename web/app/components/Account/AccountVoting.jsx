@@ -125,13 +125,14 @@ class AccountVoting extends React.Component {
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
         // console.log( "vote_ids: ", this.state.vote_ids.toJS() );
+
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
             return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
         }).then( res => {
             updated_account.new_options.votes = res[0]
                 .concat(res[1].map(o => o.get("vote_id")))
-                .concat(this.state.vote_ids.filter( id => id.split(":")[0] === "2" ).toArray() )
+                .concat(this.state.vote_ids.filter( id => {return id.split(":")[0] === "2" && parseInt(id.split(":")[1], 10) % 2 === 0 }  ).toArray() )
                 .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
             // console.log("updated_account: ", updated_account);
             var tr = wallet_api.new_transaction();
