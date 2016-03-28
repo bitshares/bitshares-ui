@@ -38,18 +38,23 @@ class WorkerApproval extends React.Component{
    }
 
    onApprove() {
-      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) )
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
          this.props.onRemoveVote( this.props.worker.get("vote_against") );
-      else
+      }
+
+      if( !this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) { 
          this.props.onAddVote( this.props.worker.get("vote_for") );
+      }
    }
 
    onReject() {
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
+         this.props.onRemoveVote( this.props.worker.get("vote_against") );
+      }
+
       if( this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) {
          this.props.onRemoveVote( this.props.worker.get("vote_for") );
       }
-      else
-         this.props.onAddVote( this.props.worker.get("vote_against") );
    }
 
    render() {
@@ -122,16 +127,11 @@ class WorkerApproval extends React.Component{
                      {approvalState !== true ? 
                         <button className="button success" onClick={this.onApprove.bind(this)}>
                            <Translate content="account.votes.approve_worker"/>
-                        </button> : null}
-                  </td>
-
-                  <td>
-                     {approvalState !== false ? 
-                        <button className="button info" onClick={this.onReject.bind(this)}>
+                        </button> : <button className="button info" onClick={this.onReject.bind(this)}>
                            <Translate content="account.votes.reject_worker"/>
-                        </button> : null}
-
+                        </button>}
                   </td>
+                 
                {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
                   
 

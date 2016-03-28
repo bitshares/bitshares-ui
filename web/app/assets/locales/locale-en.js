@@ -193,6 +193,7 @@
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
+            go_proxy: "Go to",
             name: "Name",
             info: "Info",
             votes: "Votes",
@@ -229,7 +230,13 @@
             total_budget: "Total available worker budget",
             unused_budget: "Unused worker budget",
             new: "Proposed workers",
-            active: "Active workers"
+            active: "Active workers",
+            w_approved_by: "Witnesses approved by %(account)s",
+            w_not_approved_by: "Witnesses not approved by %(account)s",
+            cm_approved_by: "Committee members approved by %(account)s",
+            cm_not_approved_by: "Committee members not approved by %(account)s",
+            already: "Account is already in the list",
+            proxy_known: "Known proxies"
         },
         options: {
             num_witnesses: "Desired Witnesses",
