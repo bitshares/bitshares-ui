@@ -132,7 +132,6 @@ class AccountVoting extends React.Component {
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
-        // console.log( "vote_ids: ", this.state.vote_ids.toJS() );
 
         FetchChainObjects(ChainStore.getWitnessById, this.state.witnesses.toArray(), 4000).then( res => {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
@@ -140,9 +139,15 @@ class AccountVoting extends React.Component {
         }).then( res => {
             updated_account.new_options.votes = res[0]
                 .concat(res[1].map(o => o.get("vote_id")))
-                .concat(this.state.vote_ids.filter( id => {return id.split(":")[0] === "2" && parseInt(id.split(":")[1], 10) % 2 === 0 }  ).toArray() )
-                .sort((a, b)=> { return parseInt(a.split(':')[1]) - parseInt(b.split(':')[1]) });
-            // console.log("updated_account: ", updated_account);
+                .concat(this.state.vote_ids.filter( id => {
+                    return id.split(":")[0] === "2";
+                }).toArray())
+                .sort((a, b) => {
+                    let a_split = a.split(':');
+                    let b_split = b.split(':');
+
+                    return parseInt(a_split[1], 10) - parseInt(b_split[1], 10);
+                });
             var tr = wallet_api.new_transaction();
             tr.add_type_operation("account_update", updated_account);
             WalletDb.process_transaction(tr, null, true);
@@ -304,7 +309,6 @@ class AccountVoting extends React.Component {
             return this._getTotalVotes(b) - this._getTotalVotes(a);            
         })
         .map((worker, index) => {
-            // console.log("worker:", worker.toJS());
             let dailyPay = parseInt(worker.get("daily_pay"), 10);
             workerBudget = workerBudget - dailyPay;
 

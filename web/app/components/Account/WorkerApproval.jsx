@@ -38,18 +38,23 @@ class WorkerApproval extends React.Component{
    }
 
    onApprove() {
-      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) )
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
          this.props.onRemoveVote( this.props.worker.get("vote_against") );
-      else
+      }
+
+      if( !this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) { 
          this.props.onAddVote( this.props.worker.get("vote_for") );
+      }
    }
 
    onReject() {
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
+         this.props.onRemoveVote( this.props.worker.get("vote_against") );
+      }
+
       if( this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) {
          this.props.onRemoveVote( this.props.worker.get("vote_for") );
       }
-      else
-         this.props.onAddVote( this.props.worker.get("vote_against") );
    }
 
    render() {
