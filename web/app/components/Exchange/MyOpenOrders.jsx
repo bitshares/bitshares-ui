@@ -13,6 +13,7 @@ import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import AssetName from "../Utility/AssetName";
 
 class TableHeader extends React.Component {
 
@@ -23,8 +24,8 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={quoteSymbol} /></span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={baseSymbol} /></span> : null}</th>
                     <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
                     <th style={{width: "18%"}}></th>
                 </tr>

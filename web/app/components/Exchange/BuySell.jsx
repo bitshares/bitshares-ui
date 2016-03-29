@@ -8,6 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
 import FormattedFee from "../Utility/FormattedFee";
+import AssetName from "../Utility/AssetName";
 
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
@@ -111,7 +112,7 @@ class BuySell extends React.Component {
             <div className={this.props.className}>
                 <div className="exchange-bordered" style={this.props.style}>
                     <div className={"exchange-content-header " + type}>
-                        <span>{`${buttonText} ${quote.get("symbol")}`}</span>
+                        <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                         {this.props.smallScreen ? <div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-large">{caret}</div> : null}
                     </div>
@@ -127,7 +128,7 @@ class BuySell extends React.Component {
                                         <input type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                        {base.get("symbol")}
+                                        <AssetName name={base.get("symbol")} />
                                     </div>
                                 </div>
 
@@ -139,7 +140,7 @@ class BuySell extends React.Component {
                                         <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                        {quote.get("symbol")}
+                                        <AssetName name={quote.get("symbol")} />
                                     </div>
                                 </div>
 
@@ -151,7 +152,7 @@ class BuySell extends React.Component {
                                         <input type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
-                                        {base.get("symbol")}
+                                        <AssetName name={base.get("symbol")} />
                                     </div>
                                 </div>
 
@@ -179,7 +180,9 @@ class BuySell extends React.Component {
                                           <tr className="buy-sell-info">
                                                 <td><Translate content="exchange.balance" />:</td>
                                                 <td style={{paddingLeft: 5, textAlign: "right"}}>
-                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>{utils.format_number(balanceAmount, balancePrecision)} {balanceSymbol}</span>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>
+                                                        {utils.format_number(balanceAmount, balancePrecision)} <AssetName name={balanceSymbol} />
+                                                    </span>
                                                 </td>
                                           </tr>
                                           
@@ -188,8 +191,7 @@ class BuySell extends React.Component {
                                                 {currentPrice ? (
                                                 <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
                                                     <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
-                                                    <PriceText price={currentPrice} quote={quote} base={base} />
-                                                    <span> {base.get("symbol")}</span>
+                                                    <PriceText price={currentPrice} quote={quote} base={base} /> <AssetName name={base.get("symbol")} />
                                                     </span>
                                                 </td>) : null}
                                         </tr>

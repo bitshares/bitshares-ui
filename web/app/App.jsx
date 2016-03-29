@@ -117,6 +117,18 @@ class App extends React.Component {
         if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
             this.refs.browser_modal.show();
         }
+
+        this.props.history.listen(() => {
+            this._rebuildTooltips();
+        });
+
+        this._rebuildTooltips();
+    }
+
+    _rebuildTooltips() {
+        if (this.refs.tooltip) {
+            this.refs.tooltip.globalRebuild();
+        }
     }
 
     /** Usage: NotificationActions.[success,error,warning,info] */
@@ -136,6 +148,8 @@ class App extends React.Component {
             });
         }
     }
+
+
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
@@ -165,7 +179,7 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
-                    <ReactTooltip place="top" type="dark" effect="solid"/>
+                    <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );
         }
