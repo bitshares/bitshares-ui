@@ -9,7 +9,7 @@ import pu from "common/permission_utils";
 import {cloneDeep} from "lodash";
 
 @BindToChainState()
-class PermissionTree extends React.Component {
+class AccountPermissionTree extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
@@ -22,7 +22,7 @@ class PermissionTree extends React.Component {
     };
 
     render() {
-        let {account, accounts, available, permission} = this.props;
+        let {account, accounts, available, availableKeys, permission} = this.props;
 
         let isOK = permission.isAvailable(available);
         let isNested = permission.isNested();
@@ -46,7 +46,7 @@ class PermissionTree extends React.Component {
                                 <Icon name="cross-circle" size="1x" className="error"/>}
                     </span>) : (
                     <span className={isOK ? "success-text" : ""}>
-                        {permission.getStatus(available)} / {permission.threshold}
+                        {permission.getStatus(available, availableKeys)} / {permission.threshold}
                     </span>
                     )}
                 </div>
@@ -55,9 +55,71 @@ class PermissionTree extends React.Component {
 
         if (permission.isNested) {
             permission.accounts.forEach(subAccount => {
-                status.push(<PermissionTree key={subAccount.id} indent={this.props.indent + 1} account={subAccount.id} accounts={subAccount.accounts} permission={subAccount} available={available} />)
+                status.push(
+                    <AccountPermissionTree
+                        key={subAccount.id}
+                        indent={this.props.indent + 1}
+                        account={subAccount.id}
+                        accounts={subAccount.accounts}
+                        permission={subAccount}
+                        available={available}
+                        availableKeys={availableKeys}
+                    />
+                );
             })
+
+            if (permission.keys.length && permission.isNested()) {
+                permission.keys.forEach(key => {
+                    status.push(
+                        <KeyPermissionBranch
+                            key={key.id}
+                            permission={key}
+                            available={availableKeys}
+                            indent={this.props.indent + 1}
+                        />
+                    );
+                })
+            }
         }
+
+        return <div>{status}</div>;
+    }
+}
+
+class KeyPermissionBranch extends React.Component {
+
+    static propTypes = {
+        indent: React.PropTypes.number.isRequired
+    };
+
+    static defaultProps = {
+        indent: 0
+    };
+
+    render() {
+        let {available, permission} = this.props;
+
+        let isOK = permission.isAvailable(available);
+
+        let status = [];
+        status.push(
+            <div key={permission.id} style={{width: "100%", paddingBottom: 5}}>
+                <div
+                    style={{
+                        display: "inline-block",
+                        paddingLeft: `${5 * this.props.indent}%`
+                    }}
+                >
+                    <span>{permission.id.substr(0, 20 - 4 * this.props.indent)}... ({permission.weight})</span>
+                </div>
+                <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
+                    <span>
+                        {isOK ? <Icon name="checkmark-circle" size="1x" className="success"/> :
+                                <Icon name="cross-circle" size="1x" className="error"/>}
+                    </span>
+                </div>
+            </div>
+        );
 
         return <div>{status}</div>;
     }
@@ -66,12 +128,21 @@ class PermissionTree extends React.Component {
 class SecondLevel extends React.Component {
 
     render() {
-        let {requiredPermissions, available, type} = this.props;
+        let {requiredPermissions, available, availableKeys, type} = this.props;
 
         let status = [];
 
         requiredPermissions.forEach(account => {
-            status.push(<PermissionTree key={account.id} account={account.id} accounts={account.accounts} permission={account} available={available} />)
+            status.push(
+                <AccountPermissionTree
+                    key={account.id}
+                    account={account.id}
+                    accounts={account.accounts}
+                    permission={account}
+                    available={available}
+                    availableKeys={availableKeys}
+                />
+            );
         });
 
         return (
@@ -128,17 +199,24 @@ class FirstLevel extends React.Component {
     }
 
     render() {
-        let {type, proposal, added, removed} = this.props;
+        let {type, proposal, added, removed, availableKeys} = this.props;
         let {requiredPermissions, required, available} = this.state;
-        
+
         available = cloneDeep(available);
+        availableKeys = availableKeys.toJS();
 
         if (added) {
             available.push(added);
+            availableKeys.push(added);
         }
 
         if (removed) {
-            available.splice(available.indexOf(removed), 1);
+            if (available.indexOf(removed) !== -1) {
+                available.splice(available.indexOf(removed), 1);
+            }
+            if (availableKeys.indexOf(removed) !== -1) {
+                availableKeys.splice(availableKeys.indexOf(removed), 1);
+            }
         }
 
         return (
@@ -148,6 +226,7 @@ class FirstLevel extends React.Component {
                 removed={removed}
                 required={required}
                 available={available}
+                availableKeys={availableKeys}
                 requiredPermissions={requiredPermissions}
             />
         );
@@ -171,6 +250,7 @@ export default class ProposalWrapper extends React.Component {
         let {proposal, type} = this.props;
 
         let available = proposal.get(`available_${type}_approvals`);
+        let availableKeys = proposal.get(`available_key_approvals`);
         let required = proposal.get(`required_${type}_approvals`);
 
         return (
@@ -178,6 +258,7 @@ export default class ProposalWrapper extends React.Component {
                 {...this.props}
                 required={required}
                 available={available}
+                availableKeys={availableKeys}
             />
         );
     }

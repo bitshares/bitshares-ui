@@ -33,13 +33,18 @@ class ProposalApproveModal extends React.Component {
         }
    }
 
-   onActiveAccount(activeMap, type, account) {
+   onActiveAccount(accountMap, keyMap, type, account) {
         let newState = {};
 
-        if (account) {
-            newState[type] = activeMap[account];
+        if (keyMap[account]) {
+            newState["key"] = account;
+            newState[type] = null;
+        } else if (account) {
+            newState[type] = accountMap[account];
+            newState["key"] = null;
         } else {
             newState[type] = null;
+            newState["key"] = null;
         }
         this.setState(newState);
 
@@ -119,19 +124,19 @@ class ProposalApproveModal extends React.Component {
         let keyNames = [];
         let keyMap = {};
       
-        if (this.props.keys.size) {
+        if (this.props.keys.length) {
             this.props.keys.forEach(key => {
                 let isMine = AccountStore.isMyKey(key);
+                debugger;
                
                 if (isMine && !proposal.get("available_key_approvals").includes(key)) {
-                    keyMap[key] = key;
+                    keyMap[key] = true;
                     keyNames.push(key);
                 }
             });
         }
 
         let myAccounts = AccountStore.getMyAccounts();
-
 
         return (
             <form className="grid-block vertical full-width-content">
@@ -144,8 +149,8 @@ class ProposalApproveModal extends React.Component {
                         <NestedApprovalState
                             proposal={proposal.get("id")}
                             type={type}
-                            added={isAdd ? this.state[type] || null : null}
-                            removed={!isAdd ? this.state[type] || null : null}
+                            added={isAdd ? this.state.key ? this.state.key : this.state[type] || null : null}
+                            removed={!isAdd ? this.state.key ? this.state.key : this.state[type] || null : null}
                         />
                     </div>
                     
@@ -158,12 +163,12 @@ class ProposalApproveModal extends React.Component {
                             />
                         </div>
 
-                        {accountNames.length ? (
+                        {accountNames.length || keyNames.length ? (
                         <div className="full-width-content form-group">
-                            <label>Account approval to {isAdd ? "add" : "remove"}</label>
+                            <label>Approval to {isAdd ? "add" : "remove"}</label>
                             <AccountSelect
-                                account_names={accountNames}
-                                onChange={this.onActiveAccount.bind(this, accountMap, type)}
+                                account_names={accountNames.concat(keyNames)}
+                                onChange={this.onActiveAccount.bind(this, accountMap, keyMap, type)}
                             />
                         </div>) : null}
 
@@ -224,10 +229,12 @@ class FirstLevel extends React.Component {
 
         let required = pu.listToIDs(proposal.get(`required_${type}_approvals`));
         let available = pu.listToIDs(proposal.get(`available_${type}_approvals`));
-
+        let availableKeys = pu.listToIDs(proposal.get(`available_key_approvals`));
+        
         this.setState({
             requiredPermissions: pu.unnest(required, type),
             available,
+            availableKeys,
             type
         }); 
     }
@@ -235,9 +242,7 @@ class FirstLevel extends React.Component {
     render() {
         let {account, action} = this.props;
 
-        let {requiredPermissions, available, type} = this.state;
-
-        // console.log("requiredPermissions:", requiredPermissions[0].getMissingSigs(available), "required:", required, "available", available);
+        let {requiredPermissions, available, availableKeys, type} = this.state;
 
         let finalRequired = [];
 
@@ -245,19 +250,18 @@ class FirstLevel extends React.Component {
             finalRequired = finalRequired.concat(account.getMissingSigs(available));
         });
 
-        // console.log("finalRequired:", finalRequired);
-        // let type = this.props.proposal.get("required_active_approvals").size ? "active" : "owner";
-        // let accounts = pu.flatten_auths(account.getIn([type, "account_auths"]));
+        let finalRequiredKeys = [];
 
-        let keys = pu.flatten_auths(account.getIn([type, "key_auths"]));
-        // let addresses = pu.flatten_auths(account.getIn([type, "address_auths"]));
+        requiredPermissions.forEach(account => {
+            finalRequiredKeys = finalRequiredKeys.concat(account.getMissingKeys(availableKeys));
+        });
 
         return (
             <ProposalApproveModal
                 {...this.props}
                 type={type}
                 accounts={action === "approve" ? finalRequired : available}
-                keys={keys}
+                keys={action === "approve" ? finalRequiredKeys : availableKeys}
             />
         );
     }
