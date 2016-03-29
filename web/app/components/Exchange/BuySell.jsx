@@ -96,7 +96,7 @@ class BuySell extends React.Component {
             feeAssets.splice(1, 1);
         }
         let options = feeAssets.map(asset => {
-            return <option key={asset.get("id")} value={asset.get("id")}>{asset.get("symbol")}</option>;
+            return <option key={asset.get("id")} value={asset.get("id")}>{utils.replaceName(asset.get("symbol"))}</option>;
         });
 
         // Subtract fee from amount to sell
