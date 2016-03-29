@@ -232,7 +232,7 @@ class MarketGroup extends React.Component {
                         </select>
                          ({marketRows.length})
                     </span>) :
-                    base !== "others" ? <span>{base} ({marketRows.length})</span> : <span><Translate content="exchange.others" /> ({marketRows.length})</span>}
+                    base !== "others" ? <span><AssetName name={base} replace /> ({marketRows.length})</span> : <span><Translate content="exchange.others" /> ({marketRows.length})</span>}
                     {!this.props.forceOpen ? <div className="float-right">{caret}</div> : null}
                 </div>
             </div>
