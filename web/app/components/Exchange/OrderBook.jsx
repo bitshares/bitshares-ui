@@ -17,7 +17,8 @@ class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.price_full !== this.props.order.price_full ||
-            nextProps.order.amount !== this.props.order.amount
+            nextProps.order.amount !== this.props.order.amount ||
+            nextProps.index !== this.props.index
         )
     }
 
@@ -45,7 +46,8 @@ class OrderBookRowHorizontal extends React.Component {
         return (
             nextProps.order.price_full !== this.props.order.price_full ||
             nextProps.order.amount !== this.props.order.amount ||
-            nextProps.position !== this.props.position
+            nextProps.position !== this.props.position ||
+            nextProps.index !== this.props.index
         )
     }
 
@@ -279,6 +281,7 @@ class OrderBook extends React.Component {
 
                 return (horizontal ?
                     <OrderBookRowHorizontal
+                        index={index}
                         key={order.price_full}
                         order={order}
                         onClick={this.props.onClick.bind(this, "bid", order)}
@@ -288,6 +291,7 @@ class OrderBook extends React.Component {
                         position={!this.state.flip ? "left" : "right"}
                     /> :
                     <OrderBookRowVertical
+                        index={index}
                         key={order.price_full}
                         order={order}
                         onClick={this.props.onClick.bind(this, "bid", order)}
@@ -335,6 +339,7 @@ class OrderBook extends React.Component {
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
+                        index={index}
                         key={order.price_full}
                         order={order}
                         onClick={this.props.onClick.bind(this, "ask", order)}
@@ -344,6 +349,7 @@ class OrderBook extends React.Component {
                         position={!this.state.flip ? "right" : "left"}
                     /> :
                     <OrderBookRowVertical
+                        index={index}
                         key={order.price_full}
                         order={order}
                         onClick={this.props.onClick.bind(this, "ask", order)}
