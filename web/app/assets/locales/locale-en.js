@@ -64,7 +64,8 @@
         vesting: {
             title: "Vesting balances",
             balance_number: "Balance #%(id)s",
-            no_balances: "This account has no vesting balances"
+            no_balances: "This account has no vesting balances",
+            explain: "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
         },
         member: {
             stats: "Membership",

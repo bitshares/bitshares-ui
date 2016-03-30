@@ -42,32 +42,15 @@ class VestingBalance extends React.Component {
         }
 
         if (!balance) {
-            return (
-                <div style={{paddingBottom: "1rem"}}>
-                    <div className="exchange-bordered">
-                        <div className="block-content-header" style={{marginBottom: 15}}>
-                            <Translate content="account.vesting.balance_number" id={vb.get("id")} />
-                        </div>
-                        <table className="table key-value-table">
-                            <tbody>
-                                <tr>
-                                    <td><Translate content="account.member.cashback"/> </td>
-                                    <td><FormattedAsset amount={vb.getIn(["balance", "amount"])} asset={vb.getIn(["balance", "asset_id"])} /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )
+            return null;
         }
 
         return (
             <div style={{paddingBottom: "1rem"}}>
-                <div className="exchange-bordered">
-                    <div className="block-content-header" style={{marginBottom: 15}}>
-                        <Translate content="account.vesting.balance_number" id={vb.get("id")} />
-                    </div>
-                    <div className="grid-content">
+                <div className="">
+                    <div className="grid-content no-padding">
+                        <Translate component="h5" content="account.vesting.balance_number" id={vb.get("id")} />
+
                         <table className="table key-value-table">
                             <tbody>
                                 <tr>
@@ -128,15 +111,12 @@ class AccountVesting extends React.Component {
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
 
-                <div className="grid-container">
-
+                <div className="grid-content">
+                    <Translate content="account.vesting.explain" component="p" />
                     {!balances.length ? (
                     <h4 style={{paddingTop: "1rem"}}>
                         <Translate content={"account.vesting.no_balances"}/>
-                    </h4>) : null}
-
-                    {balances}
-
+                    </h4>) : balances}
                 </div>
             </div>
 );
