@@ -236,7 +236,8 @@
             cm_approved_by: "Committee members approved by %(account)s",
             cm_not_approved_by: "Committee members not approved by %(account)s",
             already: "Account is already in the list",
-            proxy_known: "Known proxies"
+            proxy_known: "Known proxies",
+            expired: "Expired workers"
         },
         options: {
             num_witnesses: "Desired Witnesses",
