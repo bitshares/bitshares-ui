@@ -148,7 +148,7 @@
             minimum_feeds: "Minimum number of feeds",
             force_settlement_delay_sec: "Delay for forced settlements (minutes)",
             force_settlement_offset_percent: "Percent offset of forced settlements",
-            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            maximum_force_settlement_volume: "Max force settle volume (percent of total supply per hour)",
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
             error_invalid: "That asset may not be used",
