@@ -202,19 +202,23 @@ class AccountVoting extends React.Component {
         state[collection] = this.state[collection].filter(i => i !== item_id);
         this.setState(state);
     }
-    onAddVoteID( vote_id ) {
-      let state={};
-      if (!this.state.vote_ids.has(vote_id)) {
-          state.vote_ids = this.state.vote_ids.add(vote_id);
-          this.setState(state);
-      }
-    }
 
-    onRemoveVoteID( vote_id ) {
-        // console.log("onRemoveVoteID:", this.state.vote_ids.toJS(), vote_id);
-      let state={}
-      state.vote_ids = this.state.vote_ids.delete(vote_id);
-      this.setState(state);
+    onChangeVotes( addVotes, removeVotes) {
+        let state = {}
+        state.vote_ids = this.state.vote_ids;
+        if (addVotes.length) {
+            addVotes.forEach(vote => {
+                state.vote_ids = state.vote_ids.add(vote);
+            });
+
+        }
+        if (removeVotes) {
+            removeVotes.forEach(vote => {
+                state.vote_ids = state.vote_ids.delete(vote);
+            });
+        }
+
+        this.setState(state);
     }
 
     onProxyAccountChange(proxy_account, current_proxy_input) {
@@ -354,8 +358,7 @@ class AccountVoting extends React.Component {
                     key={worker.get("id")}
                     worker={worker.get("id")}
                     vote_ids={this.state.vote_ids}
-                    onAddVote={this.onAddVoteID.bind(this)}
-                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                    onChangeVotes={this.onChangeVotes.bind(this)}
                 />
             );
         });
@@ -387,8 +390,7 @@ class AccountVoting extends React.Component {
                     key={worker.get("id")}
                     worker={worker.get("id")}
                     vote_ids={this.state.vote_ids}
-                    onAddVote={this.onAddVoteID.bind(this)}
-                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                    onChangeVotes={this.onChangeVotes.bind(this)}
                 />
             );
         });
@@ -418,8 +420,7 @@ class AccountVoting extends React.Component {
                     key={worker.get("id")}
                     worker={worker.get("id")}
                     vote_ids={this.state.vote_ids}
-                    onAddVote={this.onAddVoteID.bind(this)}
-                    onRemoveVote={this.onRemoveVoteID.bind(this)}
+                    onChangeVotes={this.onChangeVotes.bind(this)}
                 />
             );
         });
