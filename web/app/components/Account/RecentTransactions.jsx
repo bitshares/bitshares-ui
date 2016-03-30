@@ -12,6 +12,7 @@ import {operations} from "chain/chain_types";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ReactDOM from "react-dom";
 import ps from "perfect-scrollbar";
+import counterpart from "counterpart";
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -173,19 +174,19 @@ class RecentTransactions extends React.Component {
                     <div ref="header">
 
                         <div className="block-content-header">
-                        {historyCount > 0 ?
-                            <div className="float-right small">
-                                <a
-                                    onClick={this._downloadCSV.bind(this)}
-                                    data-tip="Download as CSV"
-                                    data-place="left"
-                                    data-type="light"
-                                >
-                                    <span className="small-caps">CSV</span>
-                                </a>
-                            </div> : null}
-                            <Translate content="account.recent" />
+                            <span><Translate content="account.recent" />  </span>
+                            {historyCount > 0 ?
+                            <a
+                                onClick={this._downloadCSV.bind(this)}
+                                data-tip={counterpart.translate("transaction.csv_tip")}
+                                data-place="left"
+                                data-type="light"
+                                style={{fontSize: "60%", textTransform: "lowercase"}}
+                            >
+                                (<Translate content="transaction.csv" />)
+                            </a> : null}
                         </div>
+
                         <table className={"table" + (compactView ? " compact" : "")}>
                             <thead>
                             <tr>

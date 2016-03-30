@@ -507,7 +507,9 @@
             white_listed: "Whitelisted",
             black_listed: "Blacklisted",
             white_and_black_listed: "Whitelisted and blacklisted"
-        }
+        },
+        csv: "Export to .csv",
+        csv_tip: "Download history as comma separated .csv file"
     },
     explorer: {
         accounts: {
