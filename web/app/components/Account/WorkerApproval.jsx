@@ -135,7 +135,7 @@ class WorkerApproval extends React.Component{
                   <td style={{backgroundColor: approvalState === true ? "green" : approvalState === false ? "red" : "transparent"}}>
                      {approval}
                   </td>
-                  <td>
+                  <td style={{textAlign: "right"}}>
                      {approvalState !== true ? 
                         <button className="button outline success" onClick={this.onApprove.bind(this)}>
                            <Translate content="account.votes.approve_worker"/>
