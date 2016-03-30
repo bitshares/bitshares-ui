@@ -24,7 +24,7 @@ class SettingsStore {
             unit: CORE_ASSET,
             showSettles: false,
             walletLockTimeout: 60 * 10,
-            themes: "darkTheme"
+            themes: "olDarkTheme"
         });
 
         this.viewSettings =  Immutable.Map({

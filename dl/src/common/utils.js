@@ -471,7 +471,7 @@ var Utils = {
     },
 
     replaceName(name) {
-        let toReplace = ["TRADE.", "OPEN.", "METAEX."];
+        let toReplace = ["OPEN."];
         let suffix = "*";
 
         for (let i = 0; i < toReplace.length; i++) {

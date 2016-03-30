@@ -65,7 +65,6 @@ class CreateAccount extends React.Component {
 
     onAccountNameChange(e) {
         const state = {};
-        console.log("-- CreateAccount.onAccountNameChange -->", e.value);
         if(e.valid !== undefined) state.validAccountName = e.valid;
         if(e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
@@ -73,7 +72,6 @@ class CreateAccount extends React.Component {
     }
 
     onPasswordChange(e) {
-        console.log("-- CreateAccount.onPasswordChange -->", e);
         this.setState({validPassword: e.valid});
     }
 
@@ -177,8 +175,7 @@ class CreateAccount extends React.Component {
     }
 
     render() {
-        console.log("-- CreateAccount.render -->", this.state);
-        let my_accounts = AccountStore.getMyAccounts();
+        let my_accounts = AccountStore.getMyAccounts()
         let first_account = my_accounts.length === 0;
         let valid = this.isValid();
         let buttonClass = classNames("button no-margin", {disabled: !valid});
@@ -189,17 +186,17 @@ class CreateAccount extends React.Component {
                 <AccountImage account={this.state.validAccountName ? this.state.accountName : null}/>
             </div>,
             title: first_account ?
-                    (<div>
-                        <h1><Translate content="account.welcome"/></h1>
-                        <h3><Translate content="account.please_create_account"/></h3>
+                (<div>
+                    <h1><Translate content="account.welcome"/></h1>
+                    <h3><Translate content="account.please_create_account"/></h3>
+                    <hr/>
+                </div>) :
+                (
+                    <div>
+                        <h1><Translate content="account.create_account"/></h1>
                         <hr/>
-                    </div>) :
-                    (
-                        <div>
-                            <h1><Translate content="account.create_account"/></h1>
-                            <hr/>
-                        </div>
-                    )
+                    </div>
+                )
         };
 
         const header = <TransitionMotion
@@ -209,12 +206,12 @@ class CreateAccount extends React.Component {
             {config =>
                 <div>
                     {Object.keys(config).map(key =>
-                        {
-                            let style = config[key];
-                            return <div key={key} style={{position: "absolute", left: 0, right: 0, ...style}}>
-                                <div className="center-content">{header_items[key]}</div>
-                            </div>;
-                        })
+                    {
+                        let style = config[key];
+                        return <div key={key} style={{position: "absolute", left: 0, right: 0, ...style}}>
+                            <div className="center-content">{header_items[key]}</div>
+                        </div>;
+                    })
                     }
                 </div>
             }
@@ -242,7 +239,7 @@ class CreateAccount extends React.Component {
                                         <div className="full-width-content form-group">
                                             <label><Translate content="account.pay_from" /></label>
                                             <AccountSelect account_names={my_accounts}
-                                                onChange={this.onRegistrarAccountChange.bind(this)}/>
+                                                           onChange={this.onRegistrarAccountChange.bind(this)}/>
                                         </div>)
                                 }
                                 {this.state.hide_refcode ? null :
