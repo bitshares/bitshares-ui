@@ -152,12 +152,11 @@ class Operation extends React.Component {
     render() {
         let {op, current, block, hideFee} = this.props;
         let line = null, column = null, color = "info";
+        let memoComponent = null;
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
-
-                let memoComponent = null;
 
                 if(op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />
@@ -364,6 +363,11 @@ class Operation extends React.Component {
 
             case "asset_issue":
                 color = "warning";
+                
+                if(op[1].memo) {
+                    memoComponent = <MemoText memo={op[1].memo} />
+                }
+
                 op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
                 column = (
                     <span>
@@ -375,6 +379,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].issue_to_account, arg: "to"},
                             ]}                                    
                         />
+                        {memoComponent}
                     </span>
                 );
                 break;

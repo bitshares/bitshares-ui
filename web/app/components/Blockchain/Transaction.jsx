@@ -113,7 +113,8 @@ class Transaction extends React.Component {
         info = [];
 
         let opCount = trx.operations.length;
-
+        let memo = null;
+        
         trx.operations.forEach((op, opIndex) => {
 
             let rows = [];
@@ -126,9 +127,6 @@ class Transaction extends React.Component {
 
                     color = "success";
 
-                    let memo = null;
-
-                    let lockedWallet = false;
                     if(op[1].memo) {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
@@ -575,6 +573,21 @@ class Transaction extends React.Component {
                 case "asset_issue":
                     color = "warning";
 
+                    if(op[1].memo) {
+                        let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
+
+                        memo = text ? (
+                            <td>{text}</td>
+                        ) : !text && isMine ? (
+                            <td>
+                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <a href onClick={this._toggleLock.bind(this)}>
+                                    <Icon name="locked"/>
+                                </a>
+                            </td>
+                        ) : null;
+                    }
+
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="explorer.assets.issuer" /></td>
@@ -595,6 +608,14 @@ class Transaction extends React.Component {
                             <td>{this.linkToAccount(op[1].issue_to_account)}</td>
                         </tr>
                     );
+
+                    {memo ?
+                        rows.push(
+                            <tr key={key++}>
+                                <td><Translate content="transfer.memo" /></td>
+                                {memo}
+                            </tr>
+                    ) : null}
 
                     break;
 
