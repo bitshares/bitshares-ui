@@ -34,6 +34,7 @@ import ConfirmOrderModal from "./ConfirmOrderModal";
 import IndicatorModal from "./IndicatorModal";
 import OpenSettleOrders from "./OpenSettleOrders";
 import counterpart from "counterpart";
+import AssetName from "../Utility/AssetName";
 
 require("./exchange.scss");
 
@@ -90,7 +91,7 @@ class PriceStat extends React.Component {
                         {!ready ? 0 : value}
                         {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
                     </b>
-                    <span>{base.get("symbol")}{quote ? <span>/{quote.get("symbol")}</span> : null}</span>
+                    <span><AssetName name={base.get("symbol")} />{quote ? <span>/<AssetName name={quote.get("symbol")} /></span> : null}</span>
                 </span>
             </li>
         );
@@ -1307,7 +1308,7 @@ class Exchange extends React.Component {
                                     </span>
                                     {!hasPrediction ? (
                                         <Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}>
-                                            <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                            <span><AssetName name={quoteSymbol} replace={true} /> : <AssetName name={baseSymbol} replace={true} /></span>
                                         </Link>) : (
                                         <a className="market-symbol">
                                             <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
@@ -1332,7 +1333,7 @@ class Exchange extends React.Component {
                                                     <span>
                                                         <Translate component="span" content="exchange.squeeze" />
                                                         <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(squeezePrice, quote, base)}</b>
-                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                        <span><AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span>
                                                     </span>
                                                 </li>) : null}
                                             {latestPrice ?
@@ -1340,7 +1341,7 @@ class Exchange extends React.Component {
                                                     <span>
                                                         <Translate component="span" content="exchange.latest" />
                                                         <b className={"value"}>{utils.price_text(!marketReady ? 0 : latestPrice.full, quote, base)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
-                                                        <span>{baseSymbol}/{quoteSymbol}</span>
+                                                        <span><AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span>
                                                     </span>
                                                 </li> : null}
 

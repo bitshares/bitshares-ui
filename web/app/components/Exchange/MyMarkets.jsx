@@ -12,6 +12,7 @@ import MarketsStore from "stores/MarketsStore";
 import AssetStore from "stores/AssetStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AssetName from "../Utility/AssetName";
 import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
@@ -142,7 +143,7 @@ class MarketGroup extends React.Component {
                 return (
                     <MarketRow
                         key={market.id}
-                        name={base === "others" ? market.quote + ":" + market.base : market.quote}
+                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName name={market.quote} />}
                         quote={market.quote}
                         base={market.base}
                         columns={columns}
@@ -207,7 +208,7 @@ class MarketGroup extends React.Component {
             });
 
         let options = baseOptions.map((option, index) => {
-            return <option key={index} value={option}>{option}</option>;
+            return <option key={index} value={option}>{utils.replaceName(option)}</option>;
         });
 
         let caret = open ? <span>&#9660;</span> : <span>&#9650;</span>;
@@ -231,7 +232,7 @@ class MarketGroup extends React.Component {
                         </select>
                          ({marketRows.length})
                     </span>) :
-                    base !== "others" ? <span>{base} ({marketRows.length})</span> : <span><Translate content="exchange.others" /> ({marketRows.length})</span>}
+                    base !== "others" ? <span><AssetName name={base} replace /> ({marketRows.length})</span> : <span><Translate content="exchange.others" /> ({marketRows.length})</span>}
                     {!this.props.forceOpen ? <div className="float-right">{caret}</div> : null}
                 </div>
             </div>

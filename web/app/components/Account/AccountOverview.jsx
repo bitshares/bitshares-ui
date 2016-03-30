@@ -9,6 +9,7 @@ import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
+import Proposals from "components/Account/Proposals";
 import ChainStore from "api/ChainStore";
 import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
@@ -145,7 +146,7 @@ class AccountOverview extends React.Component {
                 </tr>
             );
         }
-
+        
         let totalBalance = includedBalancesList.size ? <TotalBalanceValue balances={includedBalancesList}/> : null;
 
         return (
@@ -190,6 +191,7 @@ class AccountOverview extends React.Component {
                         <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
                     </div>
                 </div>
+
                 {call_orders.length > 0 ? (
 
                 <div className="content-block">
@@ -214,6 +216,14 @@ class AccountOverview extends React.Component {
                         </table>
                     </div>
                 </div>) : null}
+
+                {account.get("proposals") && account.get("proposals").size ? 
+                <div className="content-block">
+                    <div className="block-content-header">
+                        <Translate content="explorer.proposals.title" account={account.get("id")} />
+                    </div>
+                    <Proposals account={account.get("id")}/>
+                </div> : null}
                 
                 <div className="content-block">
                     <RecentTransactions

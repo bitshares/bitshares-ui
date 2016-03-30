@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
-import AccountsList from "./AccountsList";
+import DashboardList from "./DashboardList";
 import RecentTransactions from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
-import Proposals from "components/Account/Proposals";
 import ps from "perfect-scrollbar";
 
 class Dashboard extends React.Component {
+
 
     constructor() {
         super();
@@ -82,7 +82,7 @@ class Dashboard extends React.Component {
                                 <Translate content="account.overview" />
                             </div>
                             <div className="box-content">
-                                <AccountsList accounts={Immutable.List(names)} width={width} />
+                                <DashboardList accounts={Immutable.List(names)} width={width} />
                                 {myIgnoredAccounts.size ? 
                                     <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                                         <tbody>
@@ -95,7 +95,7 @@ class Dashboard extends React.Component {
                                             </tr>
                                         </tbody>                                
                                     </table> : null}
-                                {showIgnored ? <AccountsList compact accounts={Immutable.List(ignored)} width={width} /> : null}
+                                {showIgnored ? <DashboardList compact accounts={Immutable.List(ignored)} width={width} /> : null}
                             </div>
                         </div>
                     </div>

@@ -195,7 +195,9 @@ module.exports = {
             recycled: "循环",
             funding: "注资",
             total_budget: "预算总额",
-            unused_budget: "未使用预算"
+            unused_budget: "未使用预算",
+            "new": "新增预算项目",
+            active: "活跃预算项目"
         },
         options: {
             num_witnesses: "信任见证人",
@@ -667,7 +669,8 @@ module.exports = {
         themes: "主题",
         darkTheme: "黑色主题",
         lightTheme: "白色主题",
-        olDarkTheme: "Openledger黑"
+        olDarkTheme: "Openledger黑",
+        reset: "恢复默认值"
     },
     pagination: {
         newer: "更近",

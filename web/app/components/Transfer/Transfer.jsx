@@ -81,6 +81,7 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
+        console.log("onAmountChanged:", amount, asset);
         if (!asset) {
             return;
         }
@@ -158,10 +159,14 @@ class Transfer extends React.Component {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
-        let from_my_account = AccountStore.isMyAccount(from_account)
 
+        let from_my_account = AccountStore.isMyAccount(from_account);
+            
         if(from_account && ! from_my_account && ! propose ) {
-            from_error = counterpart.translate("account.errors.not_yours");
+            from_error = <span>
+                {counterpart.translate("account.errors.not_yours")}
+                &nbsp;(<a onClick={this.onPropose.bind(this, true)}>{counterpart.translate("propose")}</a>)
+            </span>;
         }
 
         let asset_types = [], fee_asset_types = [];
@@ -169,9 +174,9 @@ class Transfer extends React.Component {
 
         // Estimate fee
         let globalObject = ChainStore.getObject("2.0.0");
-        let fee = utils.estimateFee("transfer", null, globalObject);
-        
-        if (from_account && !from_error) {
+        let fee = utils.estimateFee(propose ? "proposal_create" : "transfer", null, globalObject);
+
+        if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             asset_types = Object.keys(account_balances).sort(utils.sortID);
             fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
@@ -229,16 +234,14 @@ class Transfer extends React.Component {
 
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account)
-        let tabIndex = 1
+        let tabIndex = 1;
 
         return (
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
+
                 <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                    <div>
-
-                    <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
-                        
-
+                        <div>
+                        <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
                         {/*  F R O M  */}
                         <div className="content-block">
                             <AccountSelector label="transfer.from" ref="from"
@@ -259,7 +262,6 @@ class Transfer extends React.Component {
                                              tabIndex={tabIndex++}/>
                         </div>
                         {/*  A M O U N T   */}
-                        {from_error ? null : (
                         <div className="content-block" style={{paddingLeft: "96px"}}>
                             <AmountSelector label="transfer.amount"
                                             amount={amount}
@@ -268,14 +270,17 @@ class Transfer extends React.Component {
                                             assets={asset_types}
                                             display_balance={balance}
                                             tabIndex={tabIndex++}/>
-                        </div>)}
+                        </div>
                         {/*  M E M O  */}
-                        {from_error ? null : (
                         <div className="content-block" style={{paddingLeft: "96px"}}>
                             <label><Translate component="span" content="transfer.memo"/></label>
-                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)}/>
-                            {/*<div>{memo_error}</div>*/}
-                        </div>)}
+                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                            {/* warning */}
+                            { this.state.propose ?
+                            <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
+                            :null}
+
+                        </div>
 
                         {/*  F E E   */}
                         <div className="content-block" style={{paddingLeft: "96px"}}>
@@ -290,13 +295,17 @@ class Transfer extends React.Component {
                                             />
                         </div>
                         
-                        {/* P R O P O S E   F R O M */}
+                        {/* P R O P O S E   F R O M 
+                            Having some proposed transaction logic here (prior to the transaction confirmation)
+                            allows adjusting of the memo to / from parameters. 
+                        */}
                         {propose ?
                         <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
                             <label><Translate content="account.propose_from" /></label>
                             <AccountSelect account_names={AccountStore.getMyAccounts()}
                                 onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
                         </div>:null}
+
 
                         {/*  S E N D  B U T T O N  */}
                         {error ? <div className="content-block has-error">{error}</div> : null}
@@ -318,7 +327,7 @@ class Transfer extends React.Component {
                         </div>
                         {/* TODO: show remaining balance */}
 
-                    </div>
+                        </div>
 
                 </form>
                 <div className="grid-content medium-6 right-column">

@@ -8,6 +8,7 @@ import counterpart from "counterpart";
 import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
+import AssetName from "../Utility/AssetName";
 
 class DepthHighChart extends React.Component {
 
@@ -383,8 +384,8 @@ class DepthHighChart extends React.Component {
                 <div className="grid-content no-overflow no-padding middle-content">
                     <div className="exchange-bordered" style={{margin: 10}}>
                         <div className="exchange-content-header">
-                            {this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</span>}
-                            {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</span>}                        
+                            {this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} <AssetName name={baseSymbol} /></span>}
+                            {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} <AssetName name={quoteSymbol} /></span>}                        
                         </div>
                         {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                         {flatBids || flatAsks || flatCalls ? <Highstock ref="depthChart" config={config}/> : null}
