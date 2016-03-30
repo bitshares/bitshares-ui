@@ -158,18 +158,13 @@ class App extends React.Component {
     // }
 
     render() {
-        if (this.props.location.pathname === "/init-error") { // temporary, until we implement right offline mode
-            return (
-                <div className={"grid-frame vertical " + this.state.theme}>
-                    <div className="grid-block vertical">
-                        <InitError />
-                    </div>
-                </div>
-            );
-        }
+       
         let content = null;
+
         if (this.state.loading) {
-            content = <LoadingIndicator />;
+            content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
+        } else if (this.props.location.pathname === "/init-error") {
+            content = <div className="grid-frame vertical">{this.props.children}</div>
         } else {
             content = (
                 <div className="grid-frame vertical">
@@ -184,7 +179,7 @@ class App extends React.Component {
             );
         }
         return (
-            <div className={this.state.theme}>
+            <div style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}} className={this.state.theme}>
                 <div id="content-wrapper">
                     {content}
                     <NotificationSystem ref="notificationSystem" allowHTML={true}/>
