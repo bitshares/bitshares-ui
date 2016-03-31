@@ -2,6 +2,8 @@ import React from "react";
 import {Link} from "react-router";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import utils from "common/utils";
+import AssetName from "./AssetName";
 
 /**
  *  Given a base and quote asset, render a link to that market
@@ -30,7 +32,7 @@ class MarketLink extends React.Component {
             return null;
         }
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
-        let marketName = quote.get("symbol") + " : " + base.get("symbol");
+        let marketName = <span><AssetName name={quote.get("symbol")} /> : <AssetName name={base.get("symbol")} /></span>;
         return (
             <Link to={`/market/${marketID}`}>{marketName}</Link>
         );

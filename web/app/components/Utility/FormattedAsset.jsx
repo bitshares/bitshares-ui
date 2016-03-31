@@ -9,6 +9,7 @@ import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import MarketLink from "./MarketLink";
 import HelpContent from "./HelpContent";
+import AssetName from "./AssetName";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -120,9 +121,9 @@ class FormattedAsset extends React.Component {
                         onOuterAction={this.closePopover}
                         body={currency_popover_body}
                     >
-                        <span className="currency click-for-help" onClick={this.togglePopover}> {asset.symbol}</span>
+                        <span className="currency click-for-help" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>
                     </Popover>) :
-                    <span className="currency" onClick={this.togglePopover}> {asset.symbol}</span>)}
+                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)}
                 </span>
         );
     }
