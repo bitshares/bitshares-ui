@@ -182,15 +182,22 @@ class AccountStore extends BaseStore {
     _accountThreshold(authority, recursion_count) {
         var account_auths = authority.get("account_auths")
         if( ! account_auths.size ) return "none"
-        // for (let a of account_auths)
-            // get all accounts in the queue for fetching
-            // ChainStore.getAccount(a.get(0))
 
-        for (let a of account_auths) {
-            let account = ChainStore.getAccount(a.get(0))
+        let auths = account_auths.map(auth => {
+            let account = ChainStore.getAccount(auth.get(0))
             if(account === undefined) return undefined
             return this.getMyAuthorityForAccount(account, ++recursion_count)
-        };
+        });
+
+        let final = auths.reduce((map, auth) => {
+            return map.set(auth, true);
+        }, Immutable.Map());
+
+        return final.get("full") && final.size === 1 ? "full" :
+               final.get("partial") && final.size === 1 ? "partial" :
+               final.get("none") && final.size === 1 ? "none" :
+               final.get("full") || final.get("partial") ? "partial" :
+               undefined;
     }
 
     isMyAccount(account) {
