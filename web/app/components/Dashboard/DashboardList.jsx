@@ -22,7 +22,7 @@ import counterpart from "counterpart";
 let lastLookup = new Date();
 
 @BindToChainState()
-class AccountsList extends React.Component {
+class DashboardList extends React.Component {
 
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
@@ -270,7 +270,7 @@ class AccountsListWrapper extends React.Component {
 
     render () {
         return (
-            <AccountsList
+            <DashboardList
                 {...this.props}
             />
         );

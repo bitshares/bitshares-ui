@@ -2,20 +2,32 @@ var Immutable = require("immutable");
 
 var NODE_DEBUG = process.env.NODE_DEBUG
 
+function makeSecureWS(ws_url) {
+    if (!ws_url) {
+            ws_url = "ws://localhost:8080";
+    }
+    if (window && window.location && window.location.protocol === "https:") {
+        ws_url = ws_url.replace("ws://", "wss://");
+    }
+
+    return ws_url;
+}
+
 class WebSocketRpc {
 
     constructor(ws_server, update_rpc_connection_status_callback) {
-        if (window && window.location && window.location.protocol === "https:") {
-            ws_server = ws_server.replace("ws://", "wss://");
-        }
+        
+        ws_server = makeSecureWS(ws_server);
+
         this.update_rpc_connection_status_callback = update_rpc_connection_status_callback;
         var WebSocketClient = typeof(WebSocket) !== "undefined" ? require("ReconnectingWebSocket") : require("websocket").w3cwebsocket;
         try {
             this.web_socket = new WebSocketClient(ws_server);
         } catch (error) {
             console.error("invalid websocket URL:", error);
-            this.web_socket = new WebSocketClient("wss://127.0.0.1:8080");
+            this.web_socket = new WebSocketClient(makeSecureWS(null));
         }
+        
         this.web_socket.timeoutInterval = 5000;
         this.current_reject = null;
         this.on_reconnect = null;

@@ -311,3 +311,8 @@ label.inline {
   font-variant: small-caps;
   font-size: 85%;
 }
+
+.tooltip:hover {
+  font-weight: bold;
+  cursor: help;
+}

@@ -1,4 +1,5 @@
 var numeral = require("numeral");
+
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {object_type, operations} from "chain/chain_types";
@@ -463,6 +464,24 @@ var Utils = {
         // }
 
         // return result;
+    },
+
+    get_percentage(a, b) {
+        return Math.round((a/b) * 100) + "%";
+    },
+
+    replaceName(name) {
+        let toReplace = ["TRADE.", "OPEN.", "METAEX."];
+        let suffix = "*";
+
+        for (let i = 0; i < toReplace.length; i++) {
+            if (name.indexOf(toReplace[i]) !== -1) {
+                name = name.replace(toReplace[i], "") + suffix;
+                break;
+            }
+        }
+
+        return name;
     }
 };
 

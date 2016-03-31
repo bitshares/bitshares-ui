@@ -11,7 +11,7 @@ export default class AccountSelect extends React.Component {
         center: React.PropTypes.bool,
         tabIndex: React.PropTypes.number
         //defaultAccount: React.PropTypes.string
-    }
+    };
     
     constructor(props) {
         super(props);

@@ -2,12 +2,14 @@ var alt = require("../alt-instance");
 import Apis from "rpc_api/ApiInstances";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
+import ApplicationApi from "../rpc_api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
 import ChainStore from "api/ChainStore";
 import big from "bignumber.js";
 import assetConstants from "chain/asset_constants";
 
 let wallet_api = new WalletApi();
+let application_api = new ApplicationApi();
 
 let inProgress = {};
 
@@ -119,8 +121,6 @@ class AssetActions {
             operationJSON.bitasset_opts = bitasset_opts;
         }
 
-        console.log("operationJSON:", operationJSON);
-
         tr.add_type_operation("asset_create", operationJSON);
         return WalletDb.process_transaction(tr, null, true).then(result => {
             // console.log("asset create result:", result);
@@ -223,35 +223,40 @@ class AssetActions {
         });
     }
 
-    issueAsset(account_id, issueObject) {
-        console.log("account_id: ", account_id, issueObject);
-        // Create asset action here...
-        var tr = wallet_api.new_transaction();
-        tr.add_type_operation("asset_issue", {
-            fee: {
-                amount: 0,
-                asset_id: 0
-            },
-            "issuer": account_id,
-            "asset_to_issue": {
-                "amount": issueObject.amount,
-                "asset_id": issueObject.asset_id
-            },
-            "issue_to_account": issueObject.to_id,
+    issueAsset(to_account, from_account, asset_id, amount, memo) {
 
-            "extensions": [
-
-            ]
-        });
-        return WalletDb.process_transaction(tr, null, true).then(result => {
-            console.log("asset issue result:", result);
-            // this.dispatch(account_id);
-            return true;
-        }).catch(error => {
-            console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
-            return false;
-        });
+        application_api.issue_asset(to_account, from_account, asset_id, amount, memo);
     }
+
+    // issueAsset(account_id, issueObject) {
+    //     console.log("account_id: ", account_id, issueObject);
+    //     // Create asset action here...
+    //     var tr = wallet_api.new_transaction();
+    //     tr.add_type_operation("asset_issue", {
+    //         fee: {
+    //             amount: 0,
+    //             asset_id: 0
+    //         },
+    //         "issuer": account_id,
+    //         "asset_to_issue": {
+    //             "amount": issueObject.amount,
+    //             "asset_id": issueObject.asset_id
+    //         },
+    //         "issue_to_account": issueObject.to_id,
+
+    //         "extensions": [
+
+    //         ]
+    //     });
+    //     return WalletDb.process_transaction(tr, null, true).then(result => {
+    //         console.log("asset issue result:", result);
+    //         // this.dispatch(account_id);
+    //         return true;
+    //     }).catch(error => {
+    //         console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
+    //         return false;
+    //     });
+    // }
 
     getAssetList(start, count) {
 

@@ -28,8 +28,8 @@
         locked_tip: "Wallet is locked.<br/>Click to unlock.",
         unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
-    propose: "propose",
-    cancel: "cancel",
+    propose: "Propose",
+    cancel: "Cancel",
     account: {
         welcome: "Welcome to BitShares 2.0",
         asset: "Asset",
@@ -64,7 +64,8 @@
         vesting: {
             title: "Vesting balances",
             balance_number: "Balance #%(id)s",
-            no_balances: "This account has no vesting balances"
+            no_balances: "This account has no vesting balances",
+            explain: "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
         },
         member: {
             stats: "Membership",
@@ -148,7 +149,7 @@
             minimum_feeds: "Minimum number of feeds",
             force_settlement_delay_sec: "Delay for forced settlements (minutes)",
             force_settlement_offset_percent: "Percent offset of forced settlements",
-            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            maximum_force_settlement_volume: "Max force settle volume (percent of total supply per hour)",
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
             error_invalid: "That asset may not be used",
@@ -179,7 +180,13 @@
             warning3: "Account is already in the list",
             warning4: "Key is already in the list",
             action: "Action",
-            acct_or_key:" Account / Key / Address"
+            acct_or_key:" Account / Key / Address",
+            key_viewer: "Private key viewer",
+            public: "Public key",
+            private: "Private key (WIF - Wallet Import Format)",
+            show: "show",
+            brain: "Brainkey position",
+            from: "Imported from account"
         },
         votes: {
             proxy_short: "Proxy",
@@ -187,6 +194,7 @@
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
+            go_proxy: "Go to",
             name: "Name",
             info: "Info",
             votes: "Votes",
@@ -222,6 +230,15 @@
             funding: "Funding",
             total_budget: "Total available worker budget",
             unused_budget: "Unused worker budget",
+            new: "Proposed workers",
+            active: "Active workers",
+            w_approved_by: "Witnesses approved by %(account)s",
+            w_not_approved_by: "Witnesses not approved by %(account)s",
+            cm_approved_by: "Committee members approved by %(account)s",
+            cm_not_approved_by: "Committee members not approved by %(account)s",
+            already: "Account is already in the list",
+            proxy_known: "Known proxies",
+            expired: "Expired workers"
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -275,6 +292,7 @@
         amount: "Amount",
         to: "To",
         memo: "Memo",
+        warn_name_unable_read_memo: "Warning: %(name)s will be unable to read this memo",
         fee: "Fee",
         send: "Send",
         final: "Final balance",
@@ -294,7 +312,8 @@
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS",
         close: "Close",
-        memo_unlock: "Unlock your wallet in order to see this memo"
+        memo_unlock: "Unlock your wallet in order to see this memo",
+        optional: "Optional"
     },
     operation: {
         pending: "pending %(blocks)s blocks",
@@ -332,7 +351,29 @@
         witness_update: "{account} update its witness info",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
+        committee_member_update_global_parameters: "{account} updated the global committee parameters",
         worker_create: "{account} created a worker proposal with daily pay of {pay}"
+    },
+    proposal: {
+        transfer: "Transfer {amount} from {from} to {to}",
+        limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+        limit_order_sell: "Place an order to sell {amount} at {price} for {account}",
+        limit_order_buy: "Place an order to buy {amount} at {price} for {account}",
+        committee_member_update_global_parameters: "Update committee global parameters by {account}",
+        action: "Actions",
+        expires: "Expires",
+        update_account: "Update account data for {account}",
+        status: "Status",
+        update: {
+            active_approvals_to_add: "Active approvals to add",
+            active_approvals_to_remove: "Active approvals to remove",
+            owner_approvals_to_add: "Owner approvals to add",
+            owner_approvals_to_remove: "Owner approvals to remove",
+            key_approvals_to_add: "Key approvals to add",
+            key_approvals_to_remove: "Key approvals to remove",
+        },
+        approve: "Approve",
+        reject: "Reject"
     },
     transaction: {
         confirm: "Please confirm the transaction",
@@ -362,7 +403,6 @@
         burn_asset: "Burnt",
         fund_pool: "funded %(asset)s fee pool with",
         committee_member_create: "Created the committee member",
-
         withdraw_permission_create: "Gave withdrawal permission for account",
         withdraw_permission_update: "Updated withdrawal permission for account",
         withdraw_permission_claim: "Claimed withdrawal permission for account",
@@ -468,7 +508,9 @@
             white_listed: "Whitelisted",
             black_listed: "Blacklisted",
             white_and_black_listed: "Whitelisted and blacklisted"
-        }
+        },
+        csv: "Export to .csv",
+        csv_tip: "Download history as comma separated .csv file"
     },
     explorer: {
         accounts: {
@@ -603,7 +645,7 @@
             title: "Budget Items"
         },
         proposals: {
-            title: "Proposals"
+            title: "Proposed transactions"
         },
         account: {
             title: "Account"
@@ -636,7 +678,8 @@
         themes: "Theme",
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
-        "olDarkTheme": "Openledger dark"
+        "olDarkTheme": "Openledger dark",
+        reset: "Reset settings"
     },
     footer: {
         title: "BitShares 2.0",
@@ -857,6 +900,12 @@
         claim_refcode: "Claim Referral Code",
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
+    },
+    proposal_create : {
+        review_period: "Review period begin",
+        expiration_time: "Expiration time",
+        proposed_operations: "Proposed operations",
+        fee_paying_account: "Fee paying account"
     },
     gateway: {
         bridge: "Bridge",

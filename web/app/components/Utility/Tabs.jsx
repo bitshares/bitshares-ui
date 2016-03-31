@@ -76,6 +76,15 @@ class Tabs extends React.Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        let nextSetting = nextProps.viewSettings.get(nextProps.setting);
+        if (nextSetting !== this.props.viewSettings.get(this.props.setting)) {
+            this.setState({
+                activeTab: nextSetting
+            });
+        }
+    }
+
     _changeTab(value) {
         // Persist current tab if desired
         if (this.props.setting) {
