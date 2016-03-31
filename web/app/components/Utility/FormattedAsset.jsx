@@ -116,14 +116,15 @@ class FormattedAsset extends React.Component {
                     />
                 : null}
                 {!hide_asset && (this.props.assetInfo ? (
+                    <span>&nbsp;
                     <Popover
                         isOpen={this.state.isPopoverOpen}
                         onOuterAction={this.closePopover}
                         body={currency_popover_body}
                     >
-                        <span className="currency click-for-help" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>
-                    </Popover>) :
-                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)}
+                        <span className="currency click-for-help" onClick={this.togglePopover}><AssetName name={asset.symbol} /></span>
+                    </Popover></span>) :
+                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)} 
                 </span>
         );
     }
