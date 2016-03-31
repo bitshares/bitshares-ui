@@ -390,7 +390,7 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         <TranslateWithLinks
-                            string="operation.asset_issue"
+                            string="operation.asset_fund_fee_pool"
                             keys={[
                                 {type: "account", value: op[1].from_account, arg: "account"},
                                 {type: "asset", value: op[1].asset_id, arg: "asset"},
