@@ -814,8 +814,7 @@ Types.address =
         return Types.address._to_address(object).toString();
     },
     compare(a, b) {
-        // sort decending
-        return -1 * strCmp(a.toString(), b.toString())
+        return strCmp(a.toString(), b.toString())
     }
 }
 
