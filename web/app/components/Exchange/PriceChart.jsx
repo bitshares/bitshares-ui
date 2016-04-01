@@ -239,7 +239,7 @@ class PriceChart extends React.Component {
                 priceSeriesData.unshift([now - (bucketSize * 1000) * i, latest.full, latest.full, latest.full, latest.full]);
                 volumeData.unshift([now - (bucketSize * 1000) * i, 0]);
             };
-
+            // is this required?
             positiveColor = "black";
             negativeColor = "black";
         }
@@ -371,7 +371,7 @@ class PriceChart extends React.Component {
             yAxis: [{
                     labels: {
                         style: {
-                            color: "#FFFFFF"
+                            color: colors[theme].axisLabelsColor
                         },
                         align: "left",
                         x: 10,
@@ -381,7 +381,7 @@ class PriceChart extends React.Component {
                     title: {
                         text: null,
                         style: {
-                            color: "#FFFFFF"
+                            color: colors[theme].axisLabelsColor
                         }
                     },
                     offset: 5,
@@ -417,7 +417,7 @@ class PriceChart extends React.Component {
                 {
                     labels: {
                         style: {
-                            color: "#FFFFFF"
+                            color: colors[theme].axisLabelsColor
                         },
                         align: "left",
                         x: 10,
@@ -457,10 +457,10 @@ class PriceChart extends React.Component {
             xAxis: {
                 type: "datetime",
                 lineWidth: 1,
-                lineColor: "grey",
+                lineColor: colors[theme].axisLineColor,
                 labels: {
                     style: {
-                        color: "#FFFFFF"
+                        color: colors[theme].axisLabelsColor
                     }
                 },
                 title: {
