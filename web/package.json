@@ -18,7 +18,8 @@
     "profile-dev": "webpack --config conf/webpack-dev.js --profile --json > stats-dev.json",
     "profile-build": "NODE_ENV=production webpack --config conf/webpack-prod.js --profile --json > stats-prod.json",
     "start": "node server.js",
-    "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --colors; echo 'copying to electron/build..'; cp -r dist/* ../electron/build/; echo 'done.'"
+    "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --colors; echo 'copying to electron/build..'; cp -r dist/* ../electron/build/; echo 'done.'",
+    "build-win32": "set NODE_ENV=production && webpack --config conf/webpack-prod.js --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'"
   },
   "dependencies": {
     "alt": "^0.17.8",
