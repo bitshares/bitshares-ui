@@ -113,7 +113,7 @@ class FormattedPrice extends React.Component {
             );
         }
         let symbols = hide_symbols ? '' :
-                      (<a> <AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></a>);
+                      (<a><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></a>);
 
         const currency_popover_body = !hide_symbols ? (
           <div>
@@ -133,10 +133,7 @@ class FormattedPrice extends React.Component {
         );
 
         return (
-            <span>
-                {formatted_value}
-                {popOver ? popOver : symbols}
-            </span>
+            <span>{formatted_value} {popOver ? popOver : symbols}</span>
          )
     }
 }
