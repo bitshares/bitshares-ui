@@ -91,7 +91,7 @@ class BuySell extends React.Component {
                            null;
 
         // Fee asset selection
-        if( feeAssets[1].getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" && feeAssets[1].getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" ) {
+        if( feeAssets[1] && feeAssets[1].getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" && feeAssets[1].getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" ) {
             feeAsset = feeAssets[0];
             feeAssets.splice(1, 1);
         }
