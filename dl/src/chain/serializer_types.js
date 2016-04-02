@@ -632,7 +632,9 @@ Types.optional = function(st_operation){
 };
 
 Types.static_variant = function(_st_operations){
-    return {st_operations: _st_operations,
+    return {
+        nosort: true,
+        st_operations: _st_operations,
     fromByteBuffer(b){
         var type_id = b.readVarint32();
         var st_operation = this.st_operations[type_id];
@@ -820,11 +822,14 @@ Types.address =
 
 let strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0
 let firstEl = el => Array.isArray(el) ? el[0] : el
-let sortOperation = (array, st_operation) => st_operation.compare ?
-    array.sort((a,b)=> st_operation.compare(firstEl(a), firstEl(b))) : // custom compare operation
+let sortOperation = (array, st_operation) => {
+    // console.log('operation.nosort', st_operation.nosort)
+    return st_operation.nosort ? array :
+    st_operation.compare ? array.sort((a,b)=> st_operation.compare(firstEl(a), firstEl(b))) : // custom compare operation
     array.sort((a,b)=>
         typeof firstEl(a) === "number" && typeof firstEl(b) === "number" ? firstEl(a) - firstEl(b) :
         // A binary string compare does not work. Performanance is very good so HEX is used..  localeCompare is another option.
         Buffer.isBuffer(firstEl(a)) && Buffer.isBuffer(firstEl(b)) ? strCmp(firstEl(a).toString("hex"), firstEl(b).toString("hex")) :
         strCmp(firstEl(a).toString(), firstEl(b).toString())
     )
+}
