@@ -208,7 +208,8 @@ class MarketGroup extends React.Component {
             });
 
         let options = baseOptions.map((option, index) => {
-            return <option key={index} value={option}>{utils.replaceName(option)}</option>;
+            let {name} = utils.replaceName(option);
+            return <option key={index} value={option}>{name}</option>;
         });
 
         let caret = open ? <span>&#9660;</span> : <span>&#9650;</span>;

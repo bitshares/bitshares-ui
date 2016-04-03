@@ -472,16 +472,19 @@ var Utils = {
 
     replaceName(name) {
         let toReplace = ["TRADE.", "OPEN.", "METAEX."];
-        let suffix = "*";
-
-        for (let i = 0; i < toReplace.length; i++) {
+        let suffix = "";
+        let i;
+        for (i = 0; i < toReplace.length; i++) {
             if (name.indexOf(toReplace[i]) !== -1) {
                 name = name.replace(toReplace[i], "") + suffix;
                 break;
             }
         }
 
-        return name;
+        return {
+            name,
+            prefix: toReplace[i] ? toReplace[i].toLowerCase() : null
+        };
     }
 };
 
