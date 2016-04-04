@@ -470,7 +470,7 @@ var Utils = {
         return Math.round((a/b) * 100) + "%";
     },
 
-    replaceName(name) {
+    replaceName(name, isBitAsset = false) {
         let toReplace = ["TRADE.", "OPEN.", "METAEX."];
         let suffix = "";
         let i;
@@ -483,7 +483,7 @@ var Utils = {
 
         return {
             name,
-            prefix: toReplace[i] ? toReplace[i].toLowerCase() : null
+            prefix: isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null
         };
     }
 };

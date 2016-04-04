@@ -96,7 +96,7 @@ class BuySell extends React.Component {
             feeAssets.splice(1, 1);
         }
         let options = feeAssets.map(asset => {
-            let {name, prefix} = utils.replaceName(asset.get("symbol"));
+            let {name, prefix} = utils.replaceName(asset.get("symbol"), asset.get("bitasset") && !asset.getIn(["bitasset", "is_prediction_market"]));
             return <option key={asset.get("id")} value={asset.get("id")}>{prefix}{name}</option>;
         });
 
