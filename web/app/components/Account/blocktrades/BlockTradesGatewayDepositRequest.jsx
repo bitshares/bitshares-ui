@@ -49,6 +49,14 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         this.state = { receive_address: null };
     }
 
+    componentWillMount() {
+        let account_name = this.props.account.get('name');
+        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+        if (!receive_address) {
+            this.requestDepositAddress();
+        }
+    }
+
     requestDepositAddress() {
         let body = {
             inputCoinType: this.props.deposit_coin_type,
@@ -140,8 +148,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
         }
         
-        if( !receive_address ) 
+        if( !receive_address ) {
             this.requestDepositAddress();
+            return null;
+        }
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
