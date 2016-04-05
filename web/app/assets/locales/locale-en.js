@@ -153,7 +153,8 @@
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
             error_invalid: "That asset may not be used",
-            market: "Preferred market pairing"
+            market: "Preferred market pairing",
+            precision_warning: "Warning: The number of decimals may not be changed after creation"
         },
         connections: {
             known: "Known by",
