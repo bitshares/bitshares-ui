@@ -427,12 +427,14 @@ class AccountAssetCreate extends React.Component {
     }  
 
     _onCoreRateChange(type, e) {
-
         let amount, asset;
         if (type === "quote") {
             amount = utils.limitByPrecision(e.target.value, this.state.update.precision);
             asset = null;
         } else {
+            if (!e || "amount" in e) {
+                return;
+            }
             amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.replace(/,/g, ""), this.props.core.get("precision"));
             asset = e.asset.get("id")
         }
@@ -551,9 +553,11 @@ class AccountAssetCreate extends React.Component {
                                 </label>
                                 { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
 
-                                <label><Translate content="account.user_issued_assets.decimals" />
+                                <label>
+                                    <Translate content="account.user_issued_assets.decimals" />
                                     <input type="number" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
                                 </label>
+                                <div style={{marginBottom: 10}} className="txtlabel cancel"><Translate content="account.user_issued_assets.precision_warning" /></div>
 
                                 <table className="table" style={{width: "inherit"}}>
                                     <tbody>

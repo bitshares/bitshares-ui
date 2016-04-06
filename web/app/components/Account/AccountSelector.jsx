@@ -115,8 +115,7 @@ class AccountSelector extends React.Component {
                     <div className="input-area">
                       <span className="inline-label">
                       <input type="text"
-                             value={this.props.accountName}
-                             defaultValue={this.props.accountName}
+                             value={this.props.accountName || ""}
                              placeholder={this.props.placeholder || counterpart.translate("account.name")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}

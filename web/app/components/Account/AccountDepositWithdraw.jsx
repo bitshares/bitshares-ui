@@ -1,6 +1,7 @@
 import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
+import accountUtils from "common/account_utils";
 import Translate from "react-translate-component";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
@@ -211,6 +212,10 @@ class AccountDepositWithdraw extends React.Component {
             nextProps.qprops !== this.props.qprops ||
             nextProps.dprops !== this.props.dprops
         );
+    }
+
+    componentWillMount() {
+        accountUtils.getFinalFeeAsset(this.props.account, "transfer");
     }
 
     render() {

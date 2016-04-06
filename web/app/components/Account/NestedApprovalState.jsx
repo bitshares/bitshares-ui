@@ -22,22 +22,31 @@ class AccountPermissionTree extends React.Component {
     };
 
     render() {
-        let {account, accounts, available, availableKeys, permission} = this.props;
+        let {account, accounts, available, availableKeys, permission, threshold} = this.props;
 
         let isOK = permission.isAvailable(available);
         let isNested = permission.isNested();
 
         let status = [];
+
+        let notNestedWeight = (threshold && threshold > 10) ?
+            utils.get_percentage(permission.weight, this.props.threshold) :
+            permission.weight;
+
+        let nestedWeight = (permission && permission.threshold > 10) ?
+            `${utils.get_percentage(permission.getStatus(available, availableKeys), permission.threshold)} / 100%` :
+            `${permission.getStatus(available, availableKeys)} / ${permission.threshold}`;
+
         status.push(
-            <div key={account.get("id")} style={{width: "100%", paddingBottom: 5}}>
+            <div key={account.get("id")} style={{width: "100%", clear: "both", paddingBottom: 5}}>
                 <div
                     style={{
                         display: "inline-block",
                         paddingLeft: `${5 * this.props.indent}%`
                     }}
                 >
+                    {!isNested ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
                     <LinkToAccountById subpage="permissions" account={account.get("id")} />
-                    {!isNested ? ` (${permission.weight})` : null}
                 </div>
                 <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
                     {!isNested ? (
@@ -46,7 +55,7 @@ class AccountPermissionTree extends React.Component {
                                 <Icon name="cross-circle" size="1x" className="error"/>}
                     </span>) : (
                     <span className={isOK ? "success-text" : ""}>
-                        {permission.getStatus(available, availableKeys)} / {permission.threshold}
+                        {nestedWeight}
                     </span>
                     )}
                 </div>
@@ -64,6 +73,7 @@ class AccountPermissionTree extends React.Component {
                         permission={subAccount}
                         available={available}
                         availableKeys={availableKeys}
+                        threshold={permission.threshold}
                     />
                 );
             })

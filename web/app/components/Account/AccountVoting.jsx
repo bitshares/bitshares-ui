@@ -6,6 +6,7 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
+import accountUtils from "common/account_utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
 import ChainStore from "api/ChainStore";
@@ -111,6 +112,7 @@ class AccountVoting extends React.Component {
 
     componentWillMount() {
         this.updateAccountData(this.props.account);
+        accountUtils.getFinalFeeAsset(this.props.account, "account_update");
         this.getBudgetObject();
     }
 
@@ -133,6 +135,12 @@ class AccountVoting extends React.Component {
         updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         updated_account.new_options.num_witness = this.state.witnesses.size;
         updated_account.new_options.num_committee = this.state.committee.size;
+
+        // Set fee asset        
+        updated_account.fee = {
+            amount: 0,
+            asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
+        }
 
         // Remove votes for expired workers
         let {vote_ids} = this.state;

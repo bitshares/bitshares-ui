@@ -153,7 +153,8 @@
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
             error_invalid: "That asset may not be used",
-            market: "Preferred market pairing"
+            market: "Preferred market pairing",
+            precision_warning: "Warning: The number of decimals may not be changed after creation"
         },
         connections: {
             known: "Known by",
@@ -335,6 +336,7 @@
         call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         asset_reserve: "{account} reserved {amount}",
         asset_issue: "{account} issued {amount} to {to}",
+        asset_fund_fee_pool: "{account} funded {asset} fee pool with {amount}",
         asset_create: "{account} created the asset {asset}",
         asset_update: "{account} updated the asset {asset}",
         lifetime_upgrade_account: "{account} was upgraded to lifetime member",

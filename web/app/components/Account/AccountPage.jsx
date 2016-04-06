@@ -8,6 +8,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import connectToStores from "alt/utils/connectToStores";
+import accountUtils from "common/account_utils";
 
 @BindToChainState({keep_updating: true, show_loader: true})
 class AccountPage extends React.Component {
@@ -24,6 +25,9 @@ class AccountPage extends React.Component {
         if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
             AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
+
+        // Fetch possible fee assets here to avoid async issues later (will resolve assets)
+        accountUtils.getPossibleFees(this.props.account, "transfer");
     }
 
     render() {
