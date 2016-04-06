@@ -292,7 +292,7 @@ li.stat.clickable:hover {
 }
 
 .active-bucket {
-  background-color: lighten($light-panel-bg-color, 12%) !important;
+  background-color: lighten($light-panel-bg-color, 12%) ;
   text-transform: uppercase;
 }
 
