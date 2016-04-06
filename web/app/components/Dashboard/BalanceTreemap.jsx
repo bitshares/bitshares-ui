@@ -1,6 +1,6 @@
 import React from "react";
 import Immutable from "immutable";
-import Highcharts from "react-highcharts/highstock";
+import Highcharts from "react-highcharts/dist/ReactHighstock";
 import {PropTypes} from "react";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";

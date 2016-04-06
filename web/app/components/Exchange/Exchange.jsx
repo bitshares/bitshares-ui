@@ -35,6 +35,7 @@ import IndicatorModal from "./IndicatorModal";
 import OpenSettleOrders from "./OpenSettleOrders";
 import counterpart from "counterpart";
 import AssetName from "../Utility/AssetName";
+import Highcharts from "highcharts/highstock";
 
 require("./exchange.scss");
 

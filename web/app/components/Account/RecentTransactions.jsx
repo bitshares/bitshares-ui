@@ -175,16 +175,17 @@ class RecentTransactions extends React.Component {
 
                         <div className="block-content-header">
                             <span><Translate content="account.recent" />  </span>
-                            {historyCount > 0 ?
+                            
+                            <span style={{fontSize: "60%", textTransform: "lowercase"}}>({historyCount > 0 ?
                             <a
                                 onClick={this._downloadCSV.bind(this)}
                                 data-tip={counterpart.translate("transaction.csv_tip")}
-                                data-place="left"
-                                data-type="light"
-                                style={{fontSize: "60%", textTransform: "lowercase"}}
+                                data-place="bottom"
+                                data-type="light"                                
                             >
-                                (<Translate content="transaction.csv" />)
-                            </a> : null}
+                                <Translate content="transaction.csv" />
+                            </a> : null})
+                            </span>
                         </div>
 
                         <table className={"table" + (compactView ? " compact" : "")}>

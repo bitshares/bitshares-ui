@@ -13,6 +13,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
+import accountUtils from "common/account_utils";
 
 @BindToChainState({keep_updating:true})
 class AccountMembership extends React.Component {
@@ -30,6 +31,10 @@ class AccountMembership extends React.Component {
     upgradeAccount(id, lifetime, e) {
         e.preventDefault();
         AccountActions.upgradeAccount(id, lifetime);
+    }
+
+    componentWillMount() {
+        accountUtils.getFinalFeeAsset(this.props.account, "account_upgrade");
     }
 
     render() {

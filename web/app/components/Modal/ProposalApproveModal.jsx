@@ -127,7 +127,6 @@ class ProposalApproveModal extends React.Component {
         if (this.props.keys.length) {
             this.props.keys.forEach(key => {
                 let isMine = AccountStore.isMyKey(key);
-                debugger;
                
                 if (isMine && !proposal.get("available_key_approvals").includes(key)) {
                     keyMap[key] = true;

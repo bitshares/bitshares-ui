@@ -75,7 +75,7 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
+        let {block, fee, color, type, hideDate, hideFee, hideOpLabel} = this.props;
 
         let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
         let pending = null;
@@ -86,7 +86,7 @@ class Row extends React.Component {
         fee.amount = parseInt(fee.amount, 10);
 
         return (
-                <tr key={key}>
+                <tr>
                     {hideOpLabel ? null : (
                         <td className="left-td">
                             <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
@@ -166,7 +166,7 @@ class Operation extends React.Component {
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
                 column = (
-                    <span key={"transfer_" + this.props.key} className="right-td">
+                    <span className="right-td">
                         <TranslateWithLinks
                             string="operation.transfer"
                             keys={[
@@ -390,7 +390,7 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         <TranslateWithLinks
-                            string="operation.asset_issue"
+                            string="operation.asset_fund_fee_pool"
                             keys={[
                                 {type: "account", value: op[1].from_account, arg: "account"},
                                 {type: "asset", value: op[1].asset_id, arg: "asset"},
@@ -763,7 +763,7 @@ class Operation extends React.Component {
             const dynGlobalObject = ChainStore.getObject("2.1.0");
             const block_time = utils.calc_block_time(block, globalObject, dynGlobalObject)
             return (
-                <div key={this.props.key}>
+                <div>
                     <div>{block_time ? block_time.toLocaleString() : ""}</div>
                     <div>{ops[op[0]]}</div>
                     <div>{column}</div>
@@ -774,7 +774,6 @@ class Operation extends React.Component {
 
         line = column ? (
             <Row
-                key={this.props.key}
                 block={block}
                 type={op[0]}
                 color={color}
