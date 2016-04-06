@@ -386,6 +386,7 @@ var Utils = {
     },
 
     convertValue: function(priceObject, amount, fromAsset, toAsset) {
+        priceObject = priceObject.toJS ?  priceObject.toJS() : priceObject;
         let quotePrecision = this.get_asset_precision(fromAsset.get("precision"));
         let basePrecision = this.get_asset_precision(toAsset.get("precision"));
 

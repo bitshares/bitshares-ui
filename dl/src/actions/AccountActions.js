@@ -1,5 +1,6 @@
 import alt from "../alt-instance";
 import utils from "../common/utils";
+import accountUtils from "../common/account_utils";
 import AccountApi from "../api/accountApi";
 
 import WalletApi from "../rpc_api/WalletApi";
@@ -48,7 +49,11 @@ class AccountActions {
     /**
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
      */
-    transfer(from_account, to_account, amount, asset, memo, propose_account, fee_asset_id = "1.3.0") {
+    transfer(from_account, to_account, amount, asset, memo, propose_account = null, fee_asset_id = "1.3.0") {
+
+        // Set the fee asset to use
+        fee_asset_id = accountUtils.getFinalFeeAsset(propose_account || from_account, "transfer", fee_asset_id);
+
         try {
             return application_api.transfer({
                 from_account, to_account, amount, asset, memo, propose_account, fee_asset_id
@@ -92,11 +97,14 @@ class AccountActions {
      *  be linked.  
      */
     upgradeAccount(account_id, lifetime) {
+        // Set the fee asset to use
+        let fee_asset_id = accountUtils.getFinalFeeAsset(account_id, "account_upgrade");
+
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_upgrade", {
             "fee": {
                 amount: 0,
-                asset_id: 0
+                asset_id: fee_asset_id
             },
             "account_to_upgrade": account_id,
             "upgrade_to_lifetime_member": lifetime
