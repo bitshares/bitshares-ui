@@ -316,3 +316,7 @@ label.inline {
   font-weight: bold;
   cursor: help;
 }
+
+.__react_component_tooltip {
+  z-index: 2000 !important;
+}

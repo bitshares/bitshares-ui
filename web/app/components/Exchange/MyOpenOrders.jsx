@@ -74,7 +74,7 @@ class OrderRow extends React.Component {
                         />
                     </td>
                     <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
-                        <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
+                        <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
                     </td>
