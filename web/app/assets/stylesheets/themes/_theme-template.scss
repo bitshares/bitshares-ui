@@ -796,4 +796,16 @@
   .table > tbody > tr:nth-of-type(even) {
     background-color: lighten($bg-color, 4%);
   }
+    
+    .bucket-option {
+    background-color: $panel-bg-color;
+    color: $primary-text-color;
+    &:hover{
+      background-color: lighten($panel-bg-color, 12%);      
+    }
+  }
+
+  .active-bucket {
+    background-color: lighten($panel-bg-color, 12%);
+  }   
 }
