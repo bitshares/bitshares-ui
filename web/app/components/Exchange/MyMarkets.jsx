@@ -48,6 +48,8 @@ class MarketGroup extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+
+
         if (!nextProps.markets || !this.props.markets) {
             return true;
         }

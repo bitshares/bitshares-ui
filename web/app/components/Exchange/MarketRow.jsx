@@ -46,8 +46,28 @@ class MarketRow extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        if (!nextProps.stats) {
+            return false;
+        }
+        let statsChanged = false;
+        if (nextProps.stats) {
+            if (!this.props.stats) {
+                statsChanged = true;
+            } else {
+                statsChanged = (
+                    nextProps.stats.close.base.amount !== this.props.stats.close.base.amount ||
+                    nextProps.stats.close.quote.amount !== this.props.stats.close.quote.amount ||
+                    nextProps.stats.close.volumeBase !== this.props.stats.close.volumeBase
+                );
+            }
+        }
+
         return (
-            !utils.are_equal_shallow(nextProps, this.props)
+            nextProps.base !== this.props.base ||
+            nextProps.quote !== this.props.quote ||
+            nextProps.current !== this.props.current ||
+            nextProps.starred !== this.props.starred ||
+            statsChanged
         )
     }
 
@@ -127,11 +147,10 @@ class MarketRow extends React.Component {
                         </td>);
 
                 case "price":
-                    let finalPrice = stats && stats.latestPrice ?
-                        stats.latestPrice :
-                        stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
+                    let finalPrice = stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
                         utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
-                        utils.get_asset_price(price.base.amount, base, price.quote.amount, quote)
+                        utils.get_asset_price(price.base.amount, base, price.quote.amount, quote);
+
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
