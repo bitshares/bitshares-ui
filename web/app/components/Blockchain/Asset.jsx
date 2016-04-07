@@ -8,10 +8,12 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
+import utils from "common/utils";
 
 class AssetFlag extends React.Component {
     render()
@@ -177,13 +179,15 @@ class Asset extends React.Component {
             })
         }
 
+        let {name, prefix} = utils.replaceName(asset.symbol, "bitasset" in asset && !asset.bitasset.is_prediction_market && asset.issuer === "1.2.0");
+
         return (
                 <div style={{overflow:"visible"}}>
                     <HelpContent
                         path = {"assets/" + asset.symbol}
                         alt_path = "assets/Asset"
                         section="summary"
-                        symbol= {asset.symbol}
+                        symbol={(prefix || "") + name}
                         description={desc}
                         issuer= {issuerName}
                     />
@@ -234,7 +238,7 @@ class Asset extends React.Component {
 
         return (
             <div className="asset-card">
-              <div className="card-divider">{asset.symbol}</div>
+              <div className="card-divider"><AssetName name={asset.symbol} /></div>
                 <table className="table key-value-table table-hover">
                     <tbody>
                         <tr>
