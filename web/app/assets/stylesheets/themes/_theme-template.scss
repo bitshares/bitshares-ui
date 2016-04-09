@@ -265,6 +265,7 @@
   }
 
   .header-right-menu {
+    a:hover {background-color: lighten($panel-bg-color, 4%);}
     a > span { color: $secondary-text-color; }
     svg > path { fill: $secondary-text-color; }
     a:hover > span { color: $primary-text-color; }
@@ -796,16 +797,27 @@
   .table > tbody > tr:nth-of-type(even) {
     background-color: lighten($bg-color, 4%);
   }
-    
-    .bucket-option {
-    background-color: $panel-bg-color;
-    color: $primary-text-color;
-    &:hover{
-      background-color: lighten($panel-bg-color, 12%);      
+  //bottom stats
+  .bucket-option {
+    @include button-focus($secondary-text-color, $panel-bg-color, 0);
+    &:hover {
+      @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
   }
 
   .active-bucket {
-    background-color: lighten($panel-bg-color, 12%);
-  }   
+    @include button-focus($primary-text-color, $panel-bg-color, 10);
+  }
+   
+   
+  .indicators, li.stat.clickable{
+    color: $secondary-text-color;
+    &:hover{
+      @include button-focus($primary-text-color, $panel-bg-color, 10);
+    }
+  }
+
 }
+
+
+
