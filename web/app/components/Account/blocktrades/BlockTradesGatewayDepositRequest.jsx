@@ -11,7 +11,6 @@ import AccountActions from "actions/AccountActions";
 import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
-import WalletDb from "stores/WalletDb";
 import AmountSelector from "../../Utility/AmountSelector";
 import WithdrawModalBlocktrades from "../../Modal/WithdrawModalBlocktrades";
 import Modal from "react-foundation-apps/src/modal";
@@ -21,6 +20,7 @@ import AccountBalance from "../../Account/AccountBalance";
 import BalanceComponent from "../../Utility/BalanceComponent";
 import RefcodeInput from "../../Forms/RefcodeInput";
 import ReactTooltip from "react-tooltip"
+import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 
 var Post = require("../../Utility/FormPost.js");
 
@@ -45,7 +45,16 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { receive_address: null, receive_memo: null };
+        this.deposit_address_cache = new BlockTradesDepositAddressCache();
+        this.state = { receive_address: null };
+    }
+
+    componentWillMount() {
+        let account_name = this.props.account.get('name');
+        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+        if (!receive_address) {
+            this.requestDepositAddress();
+        }
     }
 
     requestDepositAddress() {
@@ -68,51 +77,23 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             body: body_string
         }).then( reply => { reply.json().then( json => {
                 // console.log( "reply: ", json )
-                let addressInfo = null;
-                if (json.inputMemo)
-                {
-                    addressInfo = {
-                        inputAddress: json.inputAddress,
-                        inputMemo: json.inputMemo
-                    };
-                    this.addDepositAddress(addressInfo);
-                }
-                else if ( json.inputAddress )
-                    this.addDepositAddress(json.inputAddress);
-                else
-                    this.addDepositAddress("unknown");
+                let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo};
+                this.addDepositAddress(address);
             }, error => {
                 // console.log( "error: ",error  );
-                this.addDepositAddress( "unknown" );
+                this.addDepositAddress({"address": "unknown", "memo": null});
             }
         )
         }, error => {
             // console.log( "error: ",error  );
-            this.addDepositAddress( "unknown" );
+            this.addDepositAddress({"address": "unknown", "memo": null});
         });
 
     }
 
     addDepositAddress( receive_address ) {
-        // console.log("add deposit address:", receive_address);
-        let wallet = WalletDb.getWallet();
-        let name = this.props.account.get('name');
-        // console.log( "this.props.gateway: ", this.props.gateway );
-        // console.log( "this.props.deposit_asset: ", this.props.deposit_asset );
-		
-        if( !wallet.deposit_keys ) 
-            wallet.deposit_keys = {}
-        if( !wallet.deposit_keys[this.props.gateway] )
-            wallet.deposit_keys[this.props.gateway] = {}
-        if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] )
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] = {}
-        if( !wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] )
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name] = [receive_address]
-        else
-            wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][name].push( receive_address );
-
-        WalletDb._updateWallet();
-
+        let account_name = this.props.account.get('name');
+        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
         this.setState( {receive_address} );
     }
 
@@ -130,7 +111,6 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return <tr style={{display:"none"}}><td></td><td></td><td></td><td></td></tr>;
 
-        let wallet = WalletDb.getWallet();
         let account_balances_object = this.props.account.get("balances");
 
         let balance = "0 " + this.props.receive_asset.get('symbol');
@@ -164,19 +144,14 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         let receive_address = this.state.receive_address;
         if( !receive_address )  {
-            if( wallet.deposit_keys &&
-                wallet.deposit_keys[this.props.gateway] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset] &&
-                wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')]
-            )
-            {
-                let addresses = wallet.deposit_keys[this.props.gateway][this.props.deposit_asset][this.props.account.get('name')];
-                receive_address = addresses[addresses.length-1]
-            }
+            let account_name = this.props.account.get('name');
+            receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
         }
         
-        if( !receive_address ) 
+        if( !receive_address ) {
             this.requestDepositAddress();
+            return null;
+        }
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
@@ -193,16 +168,15 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             }
             else
             {
-                // console.log("receive_address:", receive_address, "type is", typeof receive_address);
-                if (typeof receive_address == "string")
-                {
-                    // This is a client that uses unique deposit addresses to select the output
-                    deposit_address_fragment = (<span><code>{receive_address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
-                }
-                else if (receive_address) 
+                if (receive_address.memo)
                 {
                     // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
-                    deposit_address_fragment = (<span><code>{receive_address.inputAddress}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.inputMemo}</code><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
+                    deposit_address_fragment = (<span><code>{receive_address.address}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.memo}</code><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
+                }
+                else
+                {
+                    // This is a client that uses unique deposit addresses to select the output
+                    deposit_address_fragment = (<span><code>{receive_address.address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
                 }
                 var withdraw_memo_prefix = '';
             }

@@ -51,14 +51,35 @@ _my.signed_transaction = ->
         unless operation.fee
             operation.fee = {amount: 0, asset_id: 0}
         if name is 'proposal_create'
-            operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal) * 1000
+            operation.expiration_time ||= (base_expiration_sec() + chain_config.expire_in_secs_proposal)
         operation_instance = _type.fromObject operation
         [operation_id, operation_instance]
 
     set_expire_seconds:(sec)->
         throw new Error "already finalized" if @tr_buffer
         @expiration = base_expiration_sec() + sec
-
+    
+    # Wraps this transaction in a proposal_create transaction
+    propose:(proposal_create_options)->
+        throw new Error "already finalized" if @tr_buffer
+        throw new Error "add operation first" if not @operations.length
+        v.required proposal_create_options, "proposal_create_options"
+        v.required proposal_create_options.fee_paying_account, "proposal_create_options.fee_paying_account"
+        proposed_ops = for op in @operations
+            op: op # op_wrapper
+        @operations = []
+        @signatures = []
+        @signer_private_keys = []
+        proposal_create_options.proposed_ops = proposed_ops
+        @add_type_operation "proposal_create", proposal_create_options
+        @
+    
+    has_proposed_operation:->
+        for op in @operations
+            if op[1].proposed_ops
+                return yes
+        return no
+    
     set_required_fees:(asset_id)->
         throw new Error "already finalized" if @tr_buffer
         throw new Error "add operations first" unless @operations.length

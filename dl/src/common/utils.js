@@ -1,4 +1,5 @@
 var numeral = require("numeral");
+
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {object_type, operations} from "chain/chain_types";
@@ -385,6 +386,7 @@ var Utils = {
     },
 
     convertValue: function(priceObject, amount, fromAsset, toAsset) {
+        priceObject = priceObject.toJS ?  priceObject.toJS() : priceObject;
         let quotePrecision = this.get_asset_precision(fromAsset.get("precision"));
         let basePrecision = this.get_asset_precision(toAsset.get("precision"));
 
@@ -463,6 +465,27 @@ var Utils = {
         // }
 
         // return result;
+    },
+
+    get_percentage(a, b) {
+        return Math.round((a/b) * 100) + "%";
+    },
+
+    replaceName(name, isBitAsset = false) {
+        let toReplace = ["TRADE.", "OPEN.", "METAEX."];
+        let suffix = "";
+        let i;
+        for (i = 0; i < toReplace.length; i++) {
+            if (name.indexOf(toReplace[i]) !== -1) {
+                name = name.replace(toReplace[i], "") + suffix;
+                break;
+            }
+        }
+
+        return {
+            name,
+            prefix: isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null
+        };
     }
 };
 

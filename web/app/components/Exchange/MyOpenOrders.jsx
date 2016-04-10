@@ -13,6 +13,7 @@ import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import AssetName from "../Utility/AssetName";
 
 class TableHeader extends React.Component {
 
@@ -23,8 +24,8 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={quoteSymbol} /></span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={baseSymbol} /></span> : null}</th>
                     <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
                     <th style={{width: "18%"}}></th>
                 </tr>
@@ -59,27 +60,26 @@ class OrderRow extends React.Component {
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
-            return (
-                <tr key={order.id}>
-                    <td style={{width: "18%"}} className={tdClass}>
-                        <PriceText preFormattedPrice={price} />
-                        {priceSymbol}
-                    </td>
-                    <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
-                    <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
-                    <td style={{width: "28%"}}><FormattedDate
-                        value={order.expiration}
-                        format="short"
-                        />
-                    </td>
-                    <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
-                        <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
-                        <span>{cancel_text}</span>
-                        </a>
-                    </td>
-                </tr>
-            );
-        // }
+        return (
+            <tr key={order.id}>
+                <td style={{width: "18%"}} className={tdClass}>
+                    <PriceText preFormattedPrice={price} />
+                    {priceSymbol}
+                </td>
+                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
+                <td style={{width: "28%"}}><FormattedDate
+                    value={order.expiration}
+                    format="short"
+                    />
+                </td>
+                <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
+                    <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
+                    <span>{cancel_text}</span>
+                    </a>
+                </td>
+            </tr>
+        );
     }
 }
 

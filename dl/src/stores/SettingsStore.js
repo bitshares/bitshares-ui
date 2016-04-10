@@ -63,6 +63,7 @@ class SettingsStore {
             ["TRADE.BTC_BTC", {"quote":"TRADE.BTC","base": "BTC"} ],
             ["METAEX.BTC_BTC", {"quote":"METAEX.BTC","base": "BTC"} ],
             ["OPEN.BTC_BTC", {"quote":"OPEN.BTC","base": "BTC"} ],
+            ["OPEN.STEEM_BTC", {"quote":"OPEN.STEEM","base": "BTC"} ],
             ["OPEN.ETH_BTC", {"quote":"OPEN.ETH","base": "BTC"} ],
             ["USD_BTC", {"quote":"USD","base": "BTC"} ],
             [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
@@ -100,7 +101,8 @@ class SettingsStore {
             connection: [
                 "wss://bitshares.openledger.info/ws",
                 "wss://bitshares.dacplay.org:8089/ws",
-                "wss://dele-puppy.com/ws"
+                "wss://dele-puppy.com/ws",
+                "wss://valen-tin.fr:8090/ws"
             ],
             unit: [
                 CORE_ASSET,

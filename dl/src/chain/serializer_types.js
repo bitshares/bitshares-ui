@@ -14,7 +14,7 @@ var Types = {}
 module.exports = Types
 
 Types.uint8 = {
-    
+
     fromByteBuffer(b){
         return b.readUint8();
     },
@@ -188,7 +188,7 @@ Types.bytes = function(size){
         v.required(object);
         if(typeof object === "string")
             object = new Buffer(object, "hex")
-        
+
         if (size === undefined) {
             b.writeVarint32(object.length);
         }
@@ -199,7 +199,7 @@ Types.bytes = function(size){
         v.required(object);
         if( Buffer.isBuffer(object) )
             return object
-        
+
         return new Buffer(object, 'hex');
     },
     toObject(object, debug = {}){
@@ -286,7 +286,7 @@ Types.array = function(st_operation){
         }
         v.required(object)
         object = sortOperation(object, st_operation)
-        
+
         var result = [];
         for (var i = 0, o; i < object.length; i++) {
             o = object[i];
@@ -302,39 +302,39 @@ Types.time_point_sec = {
     appendByteBuffer(b, object){
         if(typeof object !== "number")
             object = Types.time_point_sec.fromObject(object)
-        
+
         b.writeUint32(object);
         return;
     },
     fromObject(object){
         v.required(object)
-        
+
         if(typeof object === "number")
             return object
-            
+
         if(object.getTime)
             return Math.floor( object.getTime() / 1000 );
-        
+
         if(typeof object !== "string")
             throw new Error("Unknown date type: " + object)
-        
+
         // if(typeof object === "string" && !/Z$/.test(object))
         //     object = object + "Z"
-        
+
         return Math.floor( new Date(object).getTime() / 1000 );
     },
     toObject(object, debug = {}){
         if (debug.use_default && object === undefined)
             return (new Date(0)).toISOString().split('.')[0];
-        
+
         v.required(object)
-        
+
         if(typeof object === "string")
             return object
-        
+
         if(object.getTime)
             return object.toISOString().split('.')[0]
-        
+
         var int = parseInt(object);
         v.require_range(0,0xFFFFFFFF,int, `uint32 ${object}`);
         return (new Date( int * 1000 )).toISOString().split('.')[0];
@@ -499,7 +499,7 @@ var id_type = function(reserved_spaces, object_type){
         if (/^[0-9]+\.[0-9]+\.[0-9]+$/.test(object)) {
             object = v.get_instance(reserved_spaces, object_type, object);
         }
-        
+
         return `${reserved_spaces}.${object_type_id}.`+object;
     },
     };
@@ -510,7 +510,7 @@ Types.protocol_id_type = function(name){
     return id_type(chain_types.reserved_spaces.protocol_ids, name);
 };
 
-Types.object_id_type = 
+Types.object_id_type =
     {fromByteBuffer(b){
         return ObjectId.fromByteBuffer(b);
     },
@@ -553,7 +553,7 @@ Types.vote_id =
         v.required(object);
         if(object === "string")
             object = Types.vote_id.fromObject(object)
-        
+
         var value = object.id << 8 | object.type
         b.writeUint32(value);
         return;
@@ -565,7 +565,7 @@ Types.vote_id =
             v.required(object.id, "id")
             return object
         }
-        v.require_test(/^[0-9]+:[0-9]+$/, object, `vote_id format ${object}`); 
+        v.require_test(/^[0-9]+:[0-9]+$/, object, `vote_id format ${object}`);
         var [type, id] = object.split(':');
         v.require_range(0,0xff,type,`vote type ${object}`);
         v.require_range(0,0xffffff,id,`vote id ${object}`);
@@ -578,7 +578,7 @@ Types.vote_id =
         v.required(object);
         if(typeof object === "string")
             object = Types.vote_id.fromObject(object)
-        
+
         return object.type + ":" + object.id;
     },
     compare(a, b) {
@@ -618,7 +618,7 @@ Types.optional = function(st_operation){
                 return st_operation.toObject(object, debug);
             }
         })();
-        
+
         if (debug.annotate) {
             if (typeof result_object === "object") {
                 result_object.__optional = "parent is optional";
@@ -632,7 +632,9 @@ Types.optional = function(st_operation){
 };
 
 Types.static_variant = function(_st_operations){
-    return {st_operations: _st_operations,
+    return {
+        nosort: true,
+        st_operations: _st_operations,
     fromByteBuffer(b){
         var type_id = b.readVarint32();
         var st_operation = this.st_operations[type_id];
@@ -701,7 +703,7 @@ Types.map = function(key_st_operation, value_st_operation){
         }
         return sortOperation(array, key_st_operation);
     },
-    
+
     fromByteBuffer(b){
         var result = [];
         var end = b.readVarint32();
@@ -713,7 +715,7 @@ Types.map = function(key_st_operation, value_st_operation){
         }
         return this.validate(result);
     },
-        
+
     appendByteBuffer(b, object){
         this.validate(object);
         b.writeVarint32(object.length);
@@ -785,6 +787,9 @@ Types.public_key = {
         }
         v.required(object);
         return object.toString()
+    },
+    compare(a, b) {
+        return strCmp(a.toAddressString(), b.toAddressString())
     }
 };
 
@@ -809,13 +814,22 @@ Types.address =
             return chain_config.address_prefix + "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
         }
         return Types.address._to_address(object).toString();
+    },
+    compare(a, b) {
+        return strCmp(a.toString(), b.toString())
     }
 }
 
-let first = el => Array.isArray(el) ? el[0] : el
-let sortOperation = (array, st_operation) => st_operation.compare ?
-    array.sort((a,b)=> st_operation.compare(first(a), first(b))) : // custom compare operation
+let strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0
+let firstEl = el => Array.isArray(el) ? el[0] : el
+let sortOperation = (array, st_operation) => {
+    // console.log('operation.nosort', st_operation.nosort)
+    return st_operation.nosort ? array :
+    st_operation.compare ? array.sort((a,b)=> st_operation.compare(firstEl(a), firstEl(b))) : // custom compare operation
     array.sort((a,b)=>
-        typeof first(a) === "number" && typeof first(b) === "number" ? first(a) - first(b) : 
-        first(a).toString() > first(b).toString()
+        typeof firstEl(a) === "number" && typeof firstEl(b) === "number" ? firstEl(a) - firstEl(b) :
+        // A binary string compare does not work. Performanance is very good so HEX is used..  localeCompare is another option.
+        Buffer.isBuffer(firstEl(a)) && Buffer.isBuffer(firstEl(b)) ? strCmp(firstEl(a).toString("hex"), firstEl(b).toString("hex")) :
+        strCmp(firstEl(a).toString(), firstEl(b).toString())
     )
+}

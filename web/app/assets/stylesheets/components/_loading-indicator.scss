@@ -2,7 +2,7 @@
   height: 100%;
   width: 100%;
   position: absolute;
-  top: 0; left: 95px; bottom: 0; right: 0;
+  top: 0; left: 0; bottom: 0; right: 0;
   z-index: 1 !important;
   -webkit-transition: opacity linear 0.5s;
   transition: opacity linear 0.5s;
@@ -18,9 +18,13 @@
   background-color: #999;
   opacity: 0.4;
   border-radius: 5px;
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
   position: absolute;
-  top: 15%; left: -190px; bottom: 0; right: 0;
+  top: 40%;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .splash .loading-panel {

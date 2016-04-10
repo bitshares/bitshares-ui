@@ -14,6 +14,7 @@ import SettingsStore from "stores/SettingsStore";
 import connectToStores from "alt/utils/connectToStores";
 import {operations} from "chain/chain_types";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import AssetName from "../Utility/AssetName";
 
 @connectToStores
 class MarketHistory extends React.Component {
@@ -176,8 +177,8 @@ class MarketHistory extends React.Component {
                             <thead>
                                 <tr>
                                     <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{quoteSymbol}</span></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title">{baseSymbol}</span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={quoteSymbol} /></span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={baseSymbol} /></span></th>
                                     <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
                                 </tr>
                             </thead>

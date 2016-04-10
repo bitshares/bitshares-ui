@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highstock from "react-highcharts/bundle/highstock";
+import Highcharts from "highcharts/highstock";
+var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
+import AssetName from "../Utility/AssetName";
 
 class DepthHighChart extends React.Component {
 
@@ -375,7 +377,7 @@ class DepthHighChart extends React.Component {
                         {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
                         {this.props.noText ? null : <p className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</p>}
                         {this.props.noText ? null : <p className="ask-total">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</p>}
-                        {flatBids || flatAsks || flatCalls ? <Highstock config={config}/> : null}
+                        {flatBids || flatAsks || flatCalls ? <ReactHighstock config={config}/> : null}
                 </div>
             );
         } else {
@@ -383,11 +385,11 @@ class DepthHighChart extends React.Component {
                 <div className="grid-content no-overflow no-padding middle-content">
                     <div className="exchange-bordered" style={{margin: 10}}>
                         <div className="exchange-content-header">
-                            {this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} {baseSymbol}</span>}
-                            {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} {quoteSymbol}</span>}                        
+                            {this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} <AssetName name={baseSymbol} /></span>}
+                            {this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} <AssetName name={quoteSymbol} /></span>}                        
                         </div>
                         {!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
-                        {flatBids || flatAsks || flatCalls ? <Highstock ref="depthChart" config={config}/> : null}
+                        {flatBids || flatAsks || flatCalls ? <ReactHighstock ref="depthChart" config={config}/> : null}
                     </div>
                 </div>
             );

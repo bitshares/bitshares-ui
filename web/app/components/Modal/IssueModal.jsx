@@ -10,9 +10,7 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
-
-let wallet_api = new WalletApi();
-
+import AssetActions from "actions/AssetActions";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 
@@ -28,7 +26,8 @@ export default class IssueModal extends React.Component {
         this.state = {
             amount: props.amount,
             to: props.to,
-            to_id: null
+            to_id: null,
+            memo: null
         };
     }
 
@@ -46,38 +45,37 @@ export default class IssueModal extends React.Component {
     }
 
     onSubmit() {
-        let precision = utils.get_asset_precision(this.props.asset_to_issue.get("precision"));
+        let {asset_to_issue} = this.props;
+        let precision = utils.get_asset_precision(asset_to_issue.get("precision"));
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
 
-        var tr = wallet_api.new_transaction();
-        tr.add_type_operation("asset_issue", {
-            fee: {
-                amount: 0,
-                asset_id: 0
-            },
-            "issuer": this.props.asset_to_issue.get("issuer"),
-            "asset_to_issue": {
-                "amount": amount,
-                "asset_id": this.props.asset_to_issue.get("id")
-            },
-            "issue_to_account": this.state.to_id
+        AssetActions.issueAsset(
+            this.state.to_id,
+            asset_to_issue.get("issuer"),
+            asset_to_issue.get("id"),
+            amount,
+            this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo
+        );
+
+        this.setState({
+            amount: null,
+            to_id: null,
+            memo: null
         });
-        return WalletDb.process_transaction(tr, null, true).then(result => {
-            console.log("asset issue result:", result);
-            // this.dispatch(account_id);
-            return true;
-        }).catch(error => {
-            console.error("asset issue error: ", error);
-            return false;
-        });
+    }
+
+    onMemoChanged(e) {
+        this.setState({memo: e.target.value});
     }
 
     render() {
         let asset_to_issue = this.props.asset_to_issue.get('id');
+        let tabIndex = 1;
 
         return ( <form className="grid-block vertical full-width-content">
             <div className="grid-container " style={{paddingTop: "2rem"}}>
+                {/* T O */}
                 <div className="content-block">
                     <AccountSelector
                         label={"modal.issue.to"}
@@ -85,30 +83,42 @@ export default class IssueModal extends React.Component {
                         onAccountChanged={this.onToAccountChanged.bind(this)}
                         onChange={this.onToChanged.bind(this)}
                         account={this.state.to}
-                        tabIndex={1}
+                        tabIndex={tabIndex++}
                     />
                 </div>
+
+                {/* A M O U N T */}
                 <div className="content-block">
-                    <AmountSelector label="modal.issue.amount"
-                                    amount={this.state.amount}
-                                    onChange={this.onAmountChanged.bind(this)}
-                                    asset={ asset_to_issue  }
-                                    assets={[asset_to_issue]}
-                                    tabIndex={2}/>
+                    <AmountSelector 
+                        label="modal.issue.amount"
+                        amount={this.state.amount}
+                        onChange={this.onAmountChanged.bind(this)}
+                        asset={ asset_to_issue  }
+                        assets={[asset_to_issue]}
+                        tabIndex={tabIndex++}
+                    />
                 </div>
+
+                {/*  M E M O  */}
+                <div className="content-block">
+                    <label><Translate component="span" content="transfer.memo"/> (<Translate content="transfer.optional" />)</label>
+                    <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+
+                </div>
+
                 <div className="content-block button-group">
                     <input
                         type="submit"
                         className="button success"
                         onClick={this.onSubmit.bind(this, this.state.to, this.state.amount )}
                         value={counterpart.translate("modal.issue.submit")}
-                        tabIndex={3}
+                        tabIndex={tabIndex++}
                     />
 
                     <div
                         className="button"
                         onClick={this.props.onClose}
-                        tabIndex={4}
+                        tabIndex={tabIndex++}
                     >
                         {counterpart.translate("cancel")}
                     </div>
