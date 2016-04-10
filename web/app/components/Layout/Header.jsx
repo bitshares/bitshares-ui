@@ -40,23 +40,32 @@ class Header extends React.Component {
         history: PropTypes.history
     };
 
-    constructor(props) {
+    constructor(props, context) {
         super();
         this.state = {
-            active: null
+            active: context.location.pathname
         };
+
+        this.unlisten = null;
     }
 
     componentWillMount() {
-        this.context.history.listen((err, newState) => {
+        this.unlisten = this.context.history.listen((err, newState) => {
             if (!err) {
-                if (this.state.active !== newState.location.pathname) {
+                if (this.unlisten && this.state.active !== newState.location.pathname) {
                     this.setState({
                         active: newState.location.pathname
                     });
                 }
             }
         });
+    }
+
+    componentWillUnmount() {
+        if (this.unlisten) {
+            this.unlisten();
+            this.unlisten = null;
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -221,9 +230,9 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
-                        <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
-                        <li>{tradeLink}</li>
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
+                        <li>{tradeLink}</li>
+                        <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">

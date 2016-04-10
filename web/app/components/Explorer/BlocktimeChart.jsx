@@ -1,6 +1,7 @@
 
 import React from "react";
-import Highcharts from "react-highcharts/bundle/highstock";
+var Highcharts = require("highcharts/highstock");
+var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import _ from "lodash";
 import counterpart from "counterpart";
 
@@ -147,7 +148,7 @@ class BlocktimeChart extends React.Component {
         };
 
         return (
-            blockTimes.length ? <Highcharts ref="chart" config={config}/> : null
+            blockTimes.length ? <ReactHighstock ref="chart" config={config}/> : null
         );
     }
 };

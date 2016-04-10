@@ -311,3 +311,16 @@ label.inline {
   font-variant: small-caps;
   font-size: 85%;
 }
+
+.tooltip:hover {
+  font-weight: bold;
+  cursor: help;
+}
+
+.__react_component_tooltip {
+  z-index: 2000 !important;
+}
+
+.asset-prefix-replaced {
+  font-variant: small-caps;
+}

@@ -13,6 +13,7 @@ import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
+import AssetName from "../Utility/AssetName";
 
 class TableHeader extends React.Component {
 
@@ -22,8 +23,8 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">({baseSymbol}/{quoteSymbol})</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{baseSymbol ? <span className="header-sub-title">({quoteSymbol})</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">(<AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} />)</span> : null}</th>
+                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{quoteSymbol ? <span className="header-sub-title">(<AssetName name={quoteSymbol} />)</span> : null}</th>
                     <th style={{textAlign: "right"}}><Translate content="transaction.settlement_date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
                 </tr>
             </thead>

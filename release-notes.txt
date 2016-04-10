@@ -1,4 +1,52 @@
 ---------------------------------------------------------------------
+Release 2.0.160406
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Display required approvals as percent for multi-sig with threshold higher than 10
+- Add asset description to AssetName tooltip
+- Add 'bit' prefix to bit assets, remove *, use smaller prefix for OPEN, TRADE and METAEX assets
+
+BUG FIXES:
+- Sorting public keys by their converted address (per witness_node logic). #795
+- Bug in BuySell fee asset selection
+- Show account names as links in account permissions list #790
+- Fix account selector issue
+- Add warning about precision on asset creation #756
+- Fix tooltips not appearing over modals
+- Allow account upgrade, voting, permission changes and withdrawals to be paid in assets other than BTS if necessary #786
+
+
+---------------------------------------------------------------------
+Release 2.0.160330
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Proposed transactions
+- Add a 'Reset settings' button to Settings and InitError page
+- Split workers table into proposed and active workers
+- Remove negative votes
+- Add set of known proxies, add lists of active witnesses and cm's to voting pages
+- Add name replace for asset symbols in fee selection dropdown
+- Improve worker approve/reject logic and add status coloring
+- Add explanation of vesting balances
+- Add memo support to asset issue modal and display memos in Operation/Transaction
+
+BUG FIXES:
+- Language settings not persisting in light client
+- Fix some bugs and typos in AccountStore authority check
+- In serializer for transactions, sort addresses and public keys in descending order
+- Handle nested authorities for hierarchical multi-sig
+- Set new accounts voting proxy to 'proxy-to-self' account #700
+- Improve RecentTransactions sorting function #793
+- Add Settings link to mobile menu #759
+- Make sure negative votes are removed when updating votes #798
+- Fix vesting balance styling #722
+- Fix init loader white background
+- Fix orderbook onClick not syncing after order has filled #768
+- Translate csv and tooltip and move closer to title #780
+
+---------------------------------------------------------------------
 Release 2.0.160314
 ---------------------------------------------------------------------
 

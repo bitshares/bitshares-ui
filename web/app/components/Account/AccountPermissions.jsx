@@ -6,6 +6,7 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
+import accountUtils from "common/account_utils";
 import PublicKey from "ecc/key_public";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
@@ -33,6 +34,7 @@ class AccountPermissions extends React.Component {
 
     componentWillMount() {
         this.updateAccountData(this.props.account);
+        accountUtils.getFinalFeeAsset(this.props.account, "account_update");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -111,6 +113,13 @@ class AccountPermissions extends React.Component {
     onPublish() {
         let s = this.state;
         let updated_account = this.props.account.toJS();
+        
+        // Set fee asset        
+        updated_account.fee = {
+            amount: 0,
+            asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
+        }
+
         updated_account.new_options = updated_account.options;
         delete updated_account.options;
         updated_account.account = updated_account.id;

@@ -1,6 +1,7 @@
 import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
+import accountUtils from "common/account_utils";
 import Translate from "react-translate-component";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
@@ -211,6 +212,10 @@ class AccountDepositWithdraw extends React.Component {
             nextProps.qprops !== this.props.qprops ||
             nextProps.dprops !== this.props.dprops
         );
+    }
+
+    componentWillMount() {
+        accountUtils.getFinalFeeAsset(this.props.account, "transfer");
     }
 
     render() {
@@ -635,6 +640,20 @@ class AccountDepositWithdraw extends React.Component {
                                 deposit_wallet_type="peercoin"
                                 receive_asset="OPEN.PPC"
                                 receive_coin_type="open.ppc" />
+                            <BlockTradesGatewayDepositRequest
+                                key="ccedk-open.steem"
+                                gateway="openledger"
+                                url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                issuer_account="openledger-wallet"
+                                account={this.props.account}
+                                deposit_asset="STEEM"
+                                deposit_asset_name="Steem"
+                                deposit_coin_type="steem"
+                                deposit_account="openledger-wallet"
+                                deposit_wallet_type="steem"
+                                receive_asset="OPEN.STEEM"
+                                receive_coin_type="open.steem"
+                                deposit_memo_name="memo" />
                             </tbody>
                         </table>
                     </div>

@@ -16,6 +16,7 @@ import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import ProposedOperation from "./ProposedOperation";
 import MemoText from "./MemoText";
 
 require("./operations.scss");
@@ -112,7 +113,8 @@ class Transaction extends React.Component {
         info = [];
 
         let opCount = trx.operations.length;
-
+        let memo = null;
+        
         trx.operations.forEach((op, opIndex) => {
 
             let rows = [];
@@ -125,9 +127,6 @@ class Transaction extends React.Component {
 
                     color = "success";
 
-                    let memo = null;
-
-                    let lockedWallet = false;
                     if(op[1].memo) {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
@@ -574,6 +573,21 @@ class Transaction extends React.Component {
                 case "asset_issue":
                     color = "warning";
 
+                    if(op[1].memo) {
+                        let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
+
+                        memo = text ? (
+                            <td>{text}</td>
+                        ) : !text && isMine ? (
+                            <td>
+                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <a href onClick={this._toggleLock.bind(this)}>
+                                    <Icon name="locked"/>
+                                </a>
+                            </td>
+                        ) : null;
+                    }
+
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="explorer.assets.issuer" /></td>
@@ -594,6 +608,14 @@ class Transaction extends React.Component {
                             <td>{this.linkToAccount(op[1].issue_to_account)}</td>
                         </tr>
                     );
+
+                    {memo ?
+                        rows.push(
+                            <tr key={key++}>
+                                <td><Translate content="transfer.memo" /></td>
+                                {memo}
+                            </tr>
+                    ) : null}
 
                     break;
 
@@ -889,6 +911,99 @@ class Transaction extends React.Component {
                         </tr>
                     );
                     break;
+
+                case "proposal_create":
+                    console.log("op:", op);
+                    var expiration_date = new Date(op[1].expiration_time+'Z')
+                    var has_review_period = op[1].review_period_seconds !== undefined
+                    var review_begin_time = ! has_review_period ? null :
+                        expiration_date.getTime() - op[1].review_period_seconds * 1000
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.review_period" /></td>
+                            <td>
+                                { has_review_period ?
+                                <FormattedDate
+                                    value={new Date( review_begin_time )}
+                                    format="full"
+                                />
+                                :<span>&mdash;</span>}
+                            </td>
+                        </tr>
+                    )
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.expiration_time" /></td>
+                            <td><FormattedDate
+                                    value={expiration_date}
+                                    format="full"
+                                />
+                            </td>
+                        </tr>
+                    )
+                    var operations = [];
+                    for(let pop of op[1].proposed_ops) operations.push( pop.op )
+
+                    let proposalsText = op[1].proposed_ops.map( (o, index) => {
+                        return (
+                            <ProposedOperation
+                                key={index}
+                                index={index}
+                                op={o.op}
+                                inverted={false}
+                                hideFee={true}
+                                hideOpLabel={true}
+                                hideDate={true}
+                                proposal={true}
+                            />
+                        );
+                    });
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.proposed_operations" /></td>
+                            <td>{proposalsText}</td>
+                        </tr>
+                    )
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
+                            <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
+                        </tr>
+                    )
+                    break
+                
+                case "proposal_update":
+                    let fields = [
+                        "active_approvals_to_add", "active_approvals_to_remove",
+                        "owner_approvals_to_add", "owner_approvals_to_remove",
+                        "key_approvals_to_add", "key_approvals_to_remove"
+                    ];
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
+                            <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
+                        </tr>
+                    )
+
+                    fields.forEach((field) => {
+                        if (op[1][field].length) {
+                            rows.push(
+                                <tr key={key++}>
+                                    <td><Translate content={`proposal.update.${field}`} /></td>
+                                    <td>{op[1][field].map(value => {
+                                        return <div key={value}>{this.linkToAccount(value)}</div>}
+                                        )}
+                                    </td>
+                                </tr>
+                            )
+                        }
+                    })
+
+                    break;
+
+                // proposal_delete
 
                 case "asset_claim_fees":
                     color = "success";

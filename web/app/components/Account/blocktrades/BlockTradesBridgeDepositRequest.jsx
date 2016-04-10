@@ -11,7 +11,6 @@ import AccountActions from "actions/AccountActions";
 import Icon from "../../Icon/Icon";
 import TimeAgo from "../../Utility/TimeAgo";
 import HelpContent from "../../Utility/HelpContent";
-import WalletDb from "stores/WalletDb";
 import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -20,6 +19,7 @@ import AccountBalance from "../../Account/AccountBalance";
 import BalanceComponent from "../../Utility/BalanceComponent";
 import RefcodeInput from "../../Forms/RefcodeInput";
 import WithdrawModalBlocktrades from "../../Modal/WithdrawModalBlocktrades";
+import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 var Post = require("../../Utility/FormPost.js");
 
 @BindToChainState({keep_updating:true})
@@ -41,6 +41,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         super(props);
         this.refresh_interval = 2 * 60 * 1000; // update deposit limit/estimates every two minutes
 
+        this.deposit_address_cache = new BlockTradesDepositAddressCache();
+
         this.coin_info_request_states =
         {
             request_in_progress: 0,
@@ -59,10 +61,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // things that get displayed for deposits
             deposit_input_coin_type: null,
             deposit_output_coin_type: null,
-            input_address: null,
+            input_address_and_memo: null,
             deposit_estimated_input_amount: this.props.initial_deposit_estimated_input_amount || "1.0",
             deposit_estimated_output_amount: null,
             deposit_limit: null,
+            deposit_error: null,
 
             // things that get displayed for deposits
             withdraw_input_coin_type: null,
@@ -70,6 +73,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             withdraw_estimated_input_amount: this.props.initial_withdraw_estimated_input_amount || "1.0",
             withdraw_estimated_output_amount: null,
             withdraw_limit: null,
+            withdraw_error: null,
 
             // input address-related
             coin_info_request_state: this.coin_info_request_states.request_in_progress,
@@ -191,7 +195,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     withdraw_output_coin_type = output_coin_types_for_this_input[0];
             }
             
-            let input_address = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);
+            let input_address_and_memo = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);
             let deposit_limit = this.getCachedOrFreshDepositLimit("deposit", deposit_input_coin_type, deposit_output_coin_type);
             let deposit_estimated_output_amount = this.getAndUpdateOutputEstimate("deposit", deposit_input_coin_type, deposit_output_coin_type, this.state.deposit_estimated_input_amount);
 
@@ -205,7 +209,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 allowed_mappings_for_withdraw: allowed_mappings_for_withdraw,
                 deposit_input_coin_type: deposit_input_coin_type,
                 deposit_output_coin_type: deposit_output_coin_type,
-                input_address: input_address,
+                input_address_and_memo: input_address_and_memo,
                 deposit_limit: deposit_limit,
                 deposit_estimated_output_amount: deposit_estimated_output_amount,
                 deposit_estimate_direction: this.estimation_directions.output_from_input,
@@ -235,7 +239,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
             // input address won't usually need refreshing unless there was an error
             // generating it last time around
-            let new_input_address = this.getCachedOrGeneratedInputAddress(this.state.deposit_input_coin_type, this.state.deposit_output_coin_type);
+            let new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state.deposit_input_coin_type, this.state.deposit_output_coin_type);
 
 
             let new_deposit_limit = this.getCachedOrFreshDepositLimit("deposit", this.state.deposit_input_coin_type, this.state.deposit_output_coin_type);
@@ -260,7 +264,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             this.setState(
             {
-                input_address: new_input_address,
+                input_address_and_memo: new_input_address_and_memo,
                 deposit_limit: new_deposit_limit,
                 deposit_estimated_input_amount: new_deposit_estimated_input_amount,
                 deposit_estimated_output_amount: new_deposit_estimated_output_amount,
@@ -282,42 +286,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
     
     // functions for managing input addresses
-    constructSlotInWalletDb(wallet, name, input_coin_type, output_coin_type)
+    getCachedInputAddress(input_coin_type, output_coin_type, memo)
     {
-        wallet.deposit_keys = wallet.deposit_keys || {};
-        wallet.deposit_keys[name] = wallet.deposit_keys[name] || {};
-        wallet.deposit_keys[name][this.props.gateway] = wallet.deposit_keys[name][this.props.gateway] || {};
-        wallet.deposit_keys[name][this.props.gateway][input_coin_type] = 
-            wallet.deposit_keys[name][this.props.gateway][input_coin_type] || {};
-        wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type] = 
-            wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type] || [];
+        let account_name = this.props.account.get('name');
+        return this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type);
     }
 
-    getCachedInputAddress(input_coin_type, output_coin_type)  
+    cacheInputAddress(input_coin_type, output_coin_type, address, memo)
     {
-        let wallet = WalletDb.getWallet();
-        let name = this.props.account.get('name');
-        this.constructSlotInWalletDb(wallet, name, input_coin_type, output_coin_type);
-        if (wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type].length)
-            return wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type][0];
-        return null;
-    }
-
-    cacheInputAddress(input_coin_type, output_coin_type, address)
-    {
-        let wallet = WalletDb.getWallet();
-        let name = this.props.account.get('name');
-        this.constructSlotInWalletDb(wallet, name, input_coin_type, output_coin_type);
-        wallet.deposit_keys[name][this.props.gateway][input_coin_type][output_coin_type].push(address);
-        WalletDb._updateWallet();
+        let account_name = this.props.account.get('name');
+        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type, address);
     }
 
     getCachedOrGeneratedInputAddress(input_coin_type, output_coin_type)
     {
         // if we already have an address, just return it
-        let cached_input_address = this.getCachedInputAddress(input_coin_type, output_coin_type);
-        if (cached_input_address)
-            return cached_input_address;
+        let cached_input_address_and_memo = this.getCachedInputAddress(input_coin_type, output_coin_type);
+        if (cached_input_address_and_memo)
+            return cached_input_address_and_memo;
 
         // if we've already asked for this address, return null, it will trigger a refresh when it completes
         this.state.input_address_requests_in_progress[input_coin_type] = this.state.input_address_requests_in_progress[input_coin_type] || {};
@@ -343,23 +329,23 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 if (json.inputCoinType != input_coin_type ||
                     json.outputCoinType != output_coin_type)
                     throw Error("unexpected reply from initiate-trade");
-                this.cacheInputAddress(json.inputCoinType, json.outputCoinType, json.inputAddress);
+                this.cacheInputAddress(json.inputCoinType, json.outputCoinType, json.inputAddress, json.inputMemo);
                 delete this.state.input_address_requests_in_progress[input_coin_type][output_coin_type];
                 if (this.state.deposit_input_coin_type == json.inputCoinType &&
                     this.state.deposit_output_coin_type == json.outputCoinType)
-                    this.setState({input_address: json.inputAddress});
+                    this.setState({input_address_and_memo: {"address": json.inputAddress, "memo": json.inputMemo}});
             }, error => {
                 delete this.state.input_address_requests_in_progress[input_coin_type][output_coin_type];
                 if (this.state.deposit_input_coin_type == input_coin_type &&
                     this.state.deposit_output_coin_type == output_coin_type)
-                    this.setState({input_address: "error generating address"});
+                    this.setState({input_address_and_memo: {"address": "error generating address", "memo": null}});
             }
         )
         }, error => {
             delete this.state.input_address_requests_in_progress[input_coin_type][output_coin_type];
             if (this.state.deposit_input_coin_type == input_coin_type &&
                 this.state.deposit_output_coin_type == output_coin_type)
-                this.setState({input_address: "error generating address"});
+                this.setState({input_address_and_memo: {"address": "error generating address", "memo": null}});
         });
         return null;
     }
@@ -434,19 +420,38 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                             {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                       .then(response => response.json());
         estimate_output_promise.then(reply => {
-            console.assert(reply.inputCoinType == input_coin_type &&
-                           reply.outputCoinType == output_coin_type &&
-                           reply.inputAmount == input_amount, 
-                           "unexpected reply from estimate-output-amount");
-            if (reply.inputCoinType != input_coin_type || 
-                reply.outputCoinType != output_coin_type || 
-                reply.inputAmount != input_amount)
-                throw Error("unexpected reply from estimate-output-amount");
-            if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
-                this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
-                this.setState({[deposit_or_withdraw + "_estimated_output_amount"]: reply.outputAmount});
+            // console.log("Reply: ", reply);
+            if (reply.error)
+            {
+                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
+                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                {
+                    let user_message = reply.error.message;
+                    let expected_prefix = "Internal Server Error: ";
+                    if (user_message.startsWith(expected_prefix))
+                        user_message = user_message.substr(expected_prefix.length);
+
+                    this.setState({[deposit_or_withdraw + "_error"]: user_message});
+                }
+            }
+            else
+            {
+                console.assert(reply.inputCoinType == input_coin_type &&
+                               reply.outputCoinType == output_coin_type &&
+                               reply.inputAmount == input_amount, 
+                               "unexpected reply from estimate-output-amount");
+                if (reply.inputCoinType != input_coin_type || 
+                    reply.outputCoinType != output_coin_type || 
+                    reply.inputAmount != input_amount)
+                    throw Error("unexpected reply from estimate-output-amount");
+                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
+                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                    this.setState({[deposit_or_withdraw + "_estimated_output_amount"]: reply.outputAmount, [deposit_or_withdraw + "_error"]: null});
+            }
         }, error => {
         });
 
@@ -531,9 +536,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (possible_output_coin_types.indexOf(this.state[deposit_or_withdraw + "_output_coin_type"]) != -1)
             new_output_coin_type = this.state[deposit_or_withdraw + "_output_coin_type"];
 
-        let new_input_address = this.state.input_address;
+        let new_input_address_and_memo = this.state.input_address_and_memo;
         if (deposit_or_withdraw == "deposit")
-            new_input_address = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
+            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
         let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
         
@@ -541,7 +546,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
             [deposit_or_withdraw + "_input_coin_type"]: new_input_coin_type,
             [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
-            input_address: new_input_address,
+            input_address_and_memo: new_input_address_and_memo,
             [deposit_or_withdraw + "_limit"]: new_deposit_limit,
             [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
             [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
@@ -551,16 +556,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onOutputCoinTypeChanged(deposit_or_withdraw, event)
     {
         let new_output_coin_type = event.target.value;
-        let new_input_address = this.state.input_address;
+        let new_input_address_and_memo = this.state.input_address_and_memo;
         if (deposit_or_withdraw == "deposit")
-            new_input_address = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
+            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
         let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type, this.state[deposit_or_withdraw + "_estimated_input_amount"]);
         
         this.setState(
         {
             [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
-            input_address: new_input_address,
+            input_address_and_memo: new_input_address_and_memo,
             [deposit_or_withdraw + "_limit"]: new_deposit_limit,
             [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
             [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
@@ -612,7 +617,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                       {deposit_output_coin_type_options}
                     </select>
 
-                let input_address = this.state.input_address ? this.state.input_address : "unknown";
+                let input_address_and_memo = this.state.input_address_and_memo ? this.state.input_address_and_memo: {"address": "unknown", "memo": null};
 
                     
                 let estimated_input_amount_text = this.state.deposit_estimated_input_amount || "calculating";
@@ -639,6 +644,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     //    deposit_limit_element = <span>no limit</span>;
                 }
                 
+                let deposit_error_element = null;
+                if (this.state.deposit_error)
+                    deposit_error_element = <div>{this.state.deposit_error}</div>;
+
                 deposit_table = 
                     <table className="table">
                         <thead>
@@ -654,12 +663,13 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     {deposit_input_amount_edit_box}{deposit_input_coin_type_select}
                                     &rarr;
                                     {deposit_output_amount_edit_box}{deposit_output_coin_type_select}
+                                    {deposit_error_element}
                                 </td>
                                 <td>
                                     <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].symbol} /> 
                                 </td>
                                 <td>
-                                    {input_address}<br/>
+                                    {input_address_and_memo.address}<br/>
                                     {deposit_limit_element}                                 
                                 </td>
                             </tr>
@@ -727,6 +737,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             </div>
                         </Modal>
                     </span>;
+                let withdraw_error_element = null;
+                if (this.state.withdraw_error)
+                    withdraw_error_element = <div>{this.state.withdraw_error}</div>;
 
                 let withdraw_limit_element = <span>...</span>;
                 if (this.state.withdraw_limit)
@@ -752,6 +765,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     {withdraw_input_amount_edit_box}{withdraw_input_coin_type_select}
                                     &rarr;
                                     {withdraw_output_amount_edit_box}{withdraw_output_coin_type_select}
+                                    {withdraw_error_element}
                                 </td>
                                 <td>
                                     <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol} /> 

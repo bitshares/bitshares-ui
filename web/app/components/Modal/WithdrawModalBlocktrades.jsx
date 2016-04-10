@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
+import accountUtils from "common/account_utils";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelector";
@@ -21,7 +22,7 @@ class WithdrawModalBlocktrades extends React.Component {
        output_coin_type: React.PropTypes.string.isRequired,
        url: React.PropTypes.string,
        output_wallet_type: React.PropTypes.string
-   }
+   };
 
    constructor( props ) {
       super(props);

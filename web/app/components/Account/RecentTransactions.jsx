@@ -12,17 +12,14 @@ import {operations} from "chain/chain_types";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ReactDOM from "react-dom";
 import ps from "perfect-scrollbar";
+import counterpart from "counterpart";
 
 function compareOps(b, a) {
-    if (a.block_num < b.block_num) return -1;
     if (a.block_num === b.block_num) {
-        if (a.trx_in_block < b.trx_in_block) return -1;
-        if (a.trx_in_block === b.trx_in_block) {
-            if (a.op_in_trx < b.op_in_trx) return -1;
-            if (a.op_in_trx === b.op_in_trx) return 0;
-        }
+        return a.virtual_op - b.virtual_op;
+    } else {
+        return a.block_num - b.block_num;
     }
-    return 1;
 }
 
 function textContent(n) {
@@ -177,19 +174,20 @@ class RecentTransactions extends React.Component {
                     <div ref="header">
 
                         <div className="block-content-header">
-                        {historyCount > 0 ?
-                            <div className="float-right small">
-                                <a
-                                    onClick={this._downloadCSV.bind(this)}
-                                    data-tip="Download as CSV"
-                                    data-place="left"
-                                    data-type="light"
-                                >
-                                    <span className="small-caps">CSV</span>
-                                </a>
-                            </div> : null}
-                            <Translate content="account.recent" />
+                            <span><Translate content="account.recent" />  </span>
+                            
+                            <span style={{fontSize: "60%", textTransform: "lowercase"}}>({historyCount > 0 ?
+                            <a
+                                onClick={this._downloadCSV.bind(this)}
+                                data-tip={counterpart.translate("transaction.csv_tip")}
+                                data-place="bottom"
+                                data-type="light"                                
+                            >
+                                <Translate content="transaction.csv" />
+                            </a> : null})
+                            </span>
                         </div>
+
                         <table className={"table" + (compactView ? " compact" : "")}>
                             <thead>
                             <tr>
