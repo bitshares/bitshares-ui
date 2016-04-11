@@ -161,7 +161,7 @@ class MarketUtils {
             time = order.time.split("T")[1];
             let now = new Date();
             let offset = now.getTimezoneOffset() / 60;
-            let date = utils.format_date(order.time + "Z").split("/");
+            let date = utils.format_date(order.time + "Z").split(/\W/);
             let hour = time.substr(0, 2);
             let hourNumber = parseInt(hour, 10);
             let localHour = hourNumber - offset;

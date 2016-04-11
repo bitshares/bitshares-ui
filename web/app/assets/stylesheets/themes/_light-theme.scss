@@ -2,10 +2,11 @@
 
 // variables
 
-$light-text-color: #3F2E55;
-$dark-text-color: #3F2E55;
-$primary-text-color: #3F2E55;
-$secondary-text-color: darken($primary-text-color, 20%);
+
+$primary-text-color: darken(#3d3d3d, 10%);
+$secondary-text-color: lighten($primary-text-color, 22%);
+$light-text-color: #3d3d3d;
+$dark-text-color: lighten($light-text-color, 12%);
 $link-text-color: #aeabff;
 $error-text-color: #E3745B;
 
