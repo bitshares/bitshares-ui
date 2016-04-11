@@ -366,6 +366,7 @@
         expires: "Expires",
         update_account: "Update account data for {account}",
         status: "Status",
+        asset_create: "Create the asset %(asset)s using the account {account}",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",
