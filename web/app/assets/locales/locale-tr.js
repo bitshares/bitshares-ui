@@ -366,6 +366,7 @@
         expires: "Bitiş süresi",
         update_account: "{account} için hesap verilerini güncelle",
         status: "Durum",
+        asset_create: " %(asset)s adlı aktifi {account} hesabını kullanarak  oluştur",
         update: {
             active_approvals_to_add: "Eklenecek etkin onaylar",
             active_approvals_to_remove: "Kaldırılacak etkin onaylar",
