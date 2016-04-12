@@ -2,12 +2,14 @@
 Release 2.0.160406
 ---------------------------------------------------------------------
 
-NEW FEATURES:
+New features
+--------
 - Display required approvals as percent for multi-sig with threshold higher than 10
 - Add asset description to AssetName tooltip
 - Add 'bit' prefix to bit assets, remove *, use smaller prefix for OPEN, TRADE and METAEX assets
 
-BUG FIXES:
+Bug fixes
+--------
 - Sorting public keys by their converted address (per witness_node logic). #795
 - Bug in BuySell fee asset selection
 - Show account names as links in account permissions list #790
