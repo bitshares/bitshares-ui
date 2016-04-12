@@ -47,12 +47,15 @@ class MarketUtils {
         return value;
     }
 
-    static getFeedPrice(settlement_price, backing_asset, quote_asset, invert = false) {
+    static getFeedPrice(settlement_price, invert = false) {
+        let quoteAsset = ChainStore.getAsset(settlement_price.getIn(["quote", "asset_id"]));
+        let baseAsset = ChainStore.getAsset(settlement_price.getIn(["base", "asset_id"]));
+
         let price = utils.get_asset_price(
             settlement_price.getIn(["quote", "amount"]),
-            backing_asset,
+            quoteAsset,
             settlement_price.getIn(["base", "amount"]),
-            quote_asset
+            baseAsset
         )
 
         if (invert) {
@@ -338,10 +341,10 @@ class MarketUtils {
     static isMarketAsset(quote, base) {
         let isMarketAsset = false, marketAsset, inverted = false;
 
-        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
+        if (quote.get("bitasset") && base.get("id") === quote.getIn(["bitasset", "options", "short_backing_asset"])) {
             isMarketAsset = true;
             marketAsset = {id: quote.get("id")}
-        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
+        } else if (base.get("bitasset") && quote.get("id") === base.getIn(["bitasset", "options", "short_backing_asset"])) {
             inverted = true;
             isMarketAsset = true;
             marketAsset = {id: base.get("id")};

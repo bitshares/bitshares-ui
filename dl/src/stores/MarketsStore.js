@@ -683,8 +683,6 @@ class MarketsStore {
                 maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.quoteAsset,
-                    this.baseAsset,
                     true
                 )
                  this.lowestCallPrice = settlementPrice / 5;
@@ -693,8 +691,7 @@ class MarketsStore {
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.baseAsset,
-                    this.quoteAsset
+                    false
                 )
                 this.lowestCallPrice = settlementPrice * 5;
             }
