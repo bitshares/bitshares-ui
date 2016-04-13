@@ -576,6 +576,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
 
+        let deposit_body, deposit_header, withdraw_body, withdraw_header;
+
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
             return  <div>
@@ -594,6 +596,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // depending on what wallets are online, we might support deposits, withdrawals, both, or neither at any given time.
             let deposit_table = null;
             let withdraw_table = null;
+
+            let calcText = <Translate content="gateway.calc" />;
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_deposit).length > 0)
             {
@@ -620,24 +624,23 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let input_address_and_memo = this.state.input_address_and_memo ? this.state.input_address_and_memo: {"address": "unknown", "memo": null};
 
                     
-                let estimated_input_amount_text = this.state.deposit_estimated_input_amount || "calculating";
-                let estimated_output_amount_text = this.state.deposit_estimated_output_amount || "calculating";
+                let estimated_input_amount_text = this.state.deposit_estimated_input_amount;
+                let estimated_output_amount_text = this.state.deposit_estimated_output_amount;
 
-                let deposit_input_amount_edit_box = 
+                let deposit_input_amount_edit_box = estimated_input_amount_text ? 
                         <input type="number"
                                value={estimated_input_amount_text}
-                               onChange={this.onInputAmountChanged.bind(this, "deposit") } />;
-                let deposit_output_amount_edit_box = 
+                               onChange={this.onInputAmountChanged.bind(this, "deposit") } /> : calcText;
+                let deposit_output_amount_edit_box = estimated_output_amount_text ?
                         <input type="number"
                                value={estimated_output_amount_text}
-                               onChange={this.onOutputAmountChanged.bind(this, "deposit") } />;
+                               onChange={this.onOutputAmountChanged.bind(this, "deposit") } /> : calcText;
                 
                 let deposit_limit_element = <span>updating</span>;
                 if (this.state.deposit_limit)
                 {
                     if (this.state.deposit_limit.limit)
-                        deposit_limit_element = <span className="deposit-limit">Limit: {this.state.deposit_limit.limit} {this.state.coins_by_type[this.state.deposit_input_coin_type].symbol}
-</span>;
+                        deposit_limit_element = <span className="deposit-limit">Limit: {this.state.deposit_limit.limit} {this.state.coins_by_type[this.state.deposit_input_coin_type].symbol}</span>;                    
                     else
                         deposit_limit_element = null;
                     //else
@@ -648,33 +651,34 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 if (this.state.deposit_error)
                     deposit_error_element = <div>{this.state.deposit_error}</div>;
 
-                deposit_table = 
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th style={{width: "41.5em"}}>Deposit</th>
-                                <th style={{width: "12em"}}>Balance</th>
-                                <th>Deposit To</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    {deposit_input_amount_edit_box}{deposit_input_coin_type_select}
-                                    &rarr;
-                                    {deposit_output_amount_edit_box}{deposit_output_coin_type_select}
-                                    {deposit_error_element}
-                                </td>
-                                <td>
-                                    <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} /> 
-                                </td>
-                                <td>
-                                    {input_address_and_memo.address}<br/>
-                                    {deposit_limit_element}                                 
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>;
+
+                deposit_header = 
+                <thead>
+                    <tr>
+                        <th style={{minWidth: "60%"}}><Translate content="gateway.deposit" /></th>
+                        <th ><Translate content="gateway.balance" /></th>
+                        <th ><Translate content="gateway.deposit_to" /></th>
+                    </tr>
+                </thead>;
+
+                deposit_body =                         
+                    <tbody>
+                        <tr>
+                            <td>
+                                {deposit_input_amount_edit_box}{deposit_input_coin_type_select}
+                                &rarr;
+                                {deposit_output_amount_edit_box}{deposit_output_coin_type_select}
+                                {deposit_error_element}
+                            </td>
+                            <td>
+                                <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} /> 
+                            </td>
+                            <td>
+                                {input_address_and_memo.address}<br/>
+                                {deposit_limit_element}                                 
+                            </td>
+                        </tr>
+                    </tbody>;
             }
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_withdraw).length > 0)
@@ -702,18 +706,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                       {withdraw_output_coin_type_options}
                     </select>;
 
-                let estimated_input_amount_text = this.state.withdraw_estimated_input_amount || "calculating";
+                let estimated_input_amount_text = this.state.withdraw_estimated_input_amount;
 
-                let withdraw_input_amount_edit_box = 
+                let withdraw_input_amount_edit_box = estimated_input_amount_text ? 
                     <input type="number"
                            value={estimated_input_amount_text}
-                           onChange={this.onInputAmountChanged.bind(this, "withdraw") } />;
+                           onChange={this.onInputAmountChanged.bind(this, "withdraw") } /> : calcText;
 
-                let estimated_output_amount_text = this.state.withdraw_estimated_output_amount || "calculating";
-                let withdraw_output_amount_edit_box = 
+                let estimated_output_amount_text = this.state.withdraw_estimated_output_amount;
+                let withdraw_output_amount_edit_box = estimated_output_amount_text ?
                     <input type="number"
                            value={estimated_output_amount_text}
-                           onChange={this.onOutputAmountChanged.bind(this, "withdraw") } />;
+                           onChange={this.onOutputAmountChanged.bind(this, "withdraw") } /> : calcText;
 
                 let withdraw_button = 
                     <span>
@@ -750,45 +754,45 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         withdraw_limit_element = <span>no limit</span>;
                 }
 
+                withdraw_header =
+                <thead>
+                    <tr>
+                        <th style={{minWidth: "60%"}}><Translate content="gateway.withdraw" /></th>
+                        <th ><Translate content="gateway.balance" /></th>
+                        <th ></th>
+                    </tr>
+                </thead>;
 
-               withdraw_table = <table className="table">
-                        <thead>
-                            <tr>
-                                <th style={{width: "38em"}}>Withdraw</th>
-                                <th style={{width: "12em"}}>Balance</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    {withdraw_input_amount_edit_box}{withdraw_input_coin_type_select}
-                                    &rarr;
-                                    {withdraw_output_amount_edit_box}{withdraw_output_coin_type_select}
-                                    {withdraw_error_element}
-                                </td>
-                                <td>
-                                    <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol} /> 
-                                </td>
-                                <td>
-                                    {withdraw_button}<br/>
-                                    {withdraw_limit_element}
-                                </td>
-                            </tr>
-                        </tbody>
+               withdraw_body =                         
+                <tbody>
+                    <tr>
+                        <td>
+                            {withdraw_input_amount_edit_box}{withdraw_input_coin_type_select}
+                            &rarr;
+                            {withdraw_output_amount_edit_box}{withdraw_output_coin_type_select}
+                            {withdraw_error_element}
+                        </td>
+                        <td>
+                            <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol} /> 
+                        </td>
+                        <td>
+                            {withdraw_button}<br/>
+                            {withdraw_limit_element}
+                        </td>
+                    </tr>
+                </tbody>
+                }   
+
+            return (
+                <div className="blocktrades-bridge">
+                    <table className="table">
+                        {deposit_header}
+                        {deposit_body}
+                        {withdraw_header}
+                        {withdraw_body}
                     </table>
-        }
-
-            return <div className="blocktrades-bridge">{deposit_table}{withdraw_table}</div>;
-
-
-            //                        <th style={{width: "25%"}}>Deposit</th>
-            //                        <th style={{width: "30%"}}>Deposit To</th>
-            //                        <th style={{width: "30%"}}>Rate</th>
-            //                        <th style={{width: "15%"}}>Limit</th>
-            return  <div>
-                    </div>;
-
+                </div>
+            );
         }
     }
 }; // BlockTradesBridgeDepositRequest

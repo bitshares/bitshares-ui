@@ -48,7 +48,6 @@ import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import PrivateKeyActions from "actions/PrivateKeyActions";
-import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
@@ -298,7 +297,6 @@ let routes = (
             <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
         </Route>
         <Route name="create-wallet" path="create-wallet" component={WalletCreate}/>
-        <Route name="console" path="console" component={Console}/>
         <Route name="transfer" path="transfer" component={Transfer}/>
         <Route name="invoice" path="invoice/:data" component={Invoice}/>
         <Route name="markets" path="explorer/markets" component={Markets}/>
@@ -306,7 +304,6 @@ let routes = (
         <Route name="settings" path="settings" component={Settings}/>
         <Route name="block" path="block/:height" component={BlockContainer}/>
         <Route name="asset" path="asset/:symbol" component={AssetContainer}/>
-        <Route name="tx" path="tx" component={Transaction}/>
         <Route name="create-account" path="create-account" component={CreateAccount}/>
         <Route name="existing-account" path="existing-account" component={ExistingAccount}>
             <IndexRoute component={ExistingAccountOptions}/>
@@ -325,10 +322,10 @@ let routes = (
             <Route path="vesting" component={AccountVesting}/>
             <Route name="account-permissions" path="permissions" component={AccountPermissions}/>
             <Route name="account-voting" path="voting" component={AccountVoting}/>
-            <Route name="account-deposit-withdraw" path="deposit-withdraw" component={AccountDepositWithdraw}/>
             <Route name="account-orders" path="orders" component={AccountOrders}/>
             <Route path="whitelist" component={AccountWhitelist}/>
         </Route>
+        <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
         <Route name="init-error" path="/init-error" component={InitError}/>
         <Route name="help" path="/help" component={Help}>
             <Route name="path1" path=":path1" component={Help}>

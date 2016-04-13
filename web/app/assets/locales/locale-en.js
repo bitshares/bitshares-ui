@@ -917,10 +917,12 @@
         deposit_to: "Deposit To",
         balance: "Balance",
         generate: "Generate",
+        generate_new: "New address",
         deposit: "Deposit",
         withdraw: "Withdraw",
         inventory: "Inventory",
         scan_qr: "Scan QR",
+        calc: "Calculating",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Visit to deposit",
