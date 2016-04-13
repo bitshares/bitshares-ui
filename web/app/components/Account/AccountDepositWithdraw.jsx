@@ -560,7 +560,7 @@ class AccountDepositWithdraw extends React.Component {
                                     deposit_wallet_type="peercoin"
                                     receive_asset="OPEN.PPC"
                                     receive_coin_type="open.ppc" />
-                                <BlockTradesGatewayDepositRequest
+                                {/*<BlockTradesGatewayDepositRequest
                                     key="ccedk-open.steem"
                                     gateway="openledger"
                                     url="https://bitshares.openledger.info/depositwithdraw/api/v2"
@@ -573,7 +573,7 @@ class AccountDepositWithdraw extends React.Component {
                                     deposit_wallet_type="steem"
                                     receive_asset="OPEN.STEEM"
                                     receive_coin_type="open.steem"
-                                    deposit_memo_name="memo" />
+                                    deposit_memo_name="memo" />*/}
                                 </tbody>
                             </table>
                         </div>
