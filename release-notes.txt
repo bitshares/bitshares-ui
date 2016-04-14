@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------
+Release 2.0.160413
+---------------------------------------------------------------------
+
+New features
+--------
+- Rename Trade to Exchange
+- Change order of header entries
+- Move Deposit/Withdraw to header
+- Add support for bitassets with backing asset other than CORE in the exchange
+
+Bug fixes
+--------
+- Fix some deposit page bugs and update the layouts
+- Some external lib updates
+- Hide empty parentheses in RecentTransactions header
+- Increase depth chart range
+- Update the Blocktrades bridge code to use the correct wallet symbols for MKR on the BitShares blockchain
+- Fix ProposedOperation text for asset_create operation
+- Chinese, Turkish and English translation updates
+- Market trade date format fix + light theme hovering fixes and cosmetics
+- Added OPEN.STEEM deposit option to CCEDK tab
+- Only use 'bit' prefix for SmartCoins issued by the committee-account
+
+---------------------------------------------------------------------
 Release 2.0.160406
 ---------------------------------------------------------------------
 
