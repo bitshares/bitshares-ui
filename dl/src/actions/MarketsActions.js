@@ -61,13 +61,18 @@ class MarketsActions {
         }
 
         if (!marketStats[market] || refresh) {
-            Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+            Promise.all([
+                Apis.instance().history_api().exec("get_market_history", [
+                    base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                ]),
+                Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 1])
+            ])            
             .then(result => {
                 marketStats[market] = {
                     lastFetched: new Date()
                 };
 
-                this.dispatch({market: marketName, quote: base, base: quote, ticker: result});
+                this.dispatch({history: result[0], last: result[1], market: marketName, base, quote});
             });
         }
     }
@@ -149,7 +154,9 @@ class MarketsActions {
                                 base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                             ]),
                             !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                            !hasFill ? null : Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                                base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                            ])
                         ])
                         .then(results => {
                             this.dispatch({
@@ -158,7 +165,7 @@ class MarketsActions {
                                 settles: results[2],
                                 price: results[3],
                                 history: results[4],
-                                ticker: results[5],
+                                recent: results[5],
                                 market: subID,
                                 base: base,
                                 quote: quote,
@@ -212,9 +219,12 @@ class MarketsActions {
                     ]),
                     Apis.instance().history_api().exec("get_market_history_buckets", []),
                     Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                    Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+                    Apis.instance().history_api().exec("get_market_history", [
+                        base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                    ])
                 ])
                 .then((results) => {
+                    console.log("price length:", results[4].length);
                     subs[subID] = true;
 
                     this.dispatch({
@@ -224,7 +234,7 @@ class MarketsActions {
                         price: results[4],
                         buckets: results[5],
                         history: results[6],
-                        ticker: results[7],
+                        recent: results[7],
                         market: subID,
                         base: base,
                         quote: quote,
