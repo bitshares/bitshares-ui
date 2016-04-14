@@ -759,7 +759,7 @@
         others: "Diğerleri",
         invert: "Fiyatı ters çevir",
         to_market: "Piyasaya git",
-        zoom_all: "All",
+        zoom_all: "Tümü",
         settings: "Grafik tercihleri"
     },
     fees: {
@@ -917,10 +917,12 @@
         deposit_to: "Yatırılacak Yer",
         balance: "Bakiye",
         generate: "Yeni Üret",
+        generate_new: "Yeni adres",
         deposit: "Yatır",
         withdraw: "Çek",
         inventory: "Envanter",
         scan_qr: "QR Tara",
+        calc: "Hesaplanıyor",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Yatırmak için ziyaret edin",
