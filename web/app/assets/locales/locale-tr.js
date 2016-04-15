@@ -275,7 +275,7 @@
         name_input: {
             name_is_taken: "Hesap adı zaten alınmış.",
             not_found: "Hesap bulunamadı.",
-            premium_name_faucet: "Bu paralı bir addır. Ücretli adlar hem daha pahalıdır hem de musluk tarafından ücretsiz kayıt yapılmazlar. En azından bir tire , rakam içeren yada sesli harfin bulunmadığı bir ad seçiniz.",
+            premium_name_faucet: "Hesap adlarında en azından bir tire yada rakam bulunmalıdır.",
             premium_name_warning: "Bu kayıt yapılması daha pahalı ücretli bir addır. Normal adların içerinde en azından bir tire, rakam bulunur yada hiç sesli harf yoktur."
         },
         propose_from: "Teklifi sunan",
