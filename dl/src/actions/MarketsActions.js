@@ -224,7 +224,7 @@ class MarketsActions {
                     ])
                 ])
                 .then((results) => {
-                    console.log("price length:", results[4].length);
+
                     subs[subID] = true;
 
                     this.dispatch({
