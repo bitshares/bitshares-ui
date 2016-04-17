@@ -5,6 +5,7 @@ import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 import ChainStore from "api/ChainStore";
 import marketUtils from "common/market_utils";
+import accountUtils from "common/account_utils";
 import Immutable from "immutable";
 
 let ops = Object.keys(operations);
