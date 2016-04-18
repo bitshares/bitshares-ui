@@ -1,31 +1,28 @@
 .blocktrades-bridge select.native-coin-types {
-  width: 7em;
+  width: 11em;
+  margin: 0 5px !important;
   display: inline;
   color: inherit;
-  background-color: transparent !important;
+  background-color: transparent;
   font-size: 0.9em;
   border: 1px solid #555;
   background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpath%20style%3D%22fill%3A%20%23555%22%20d%3D%22M0%200h32L16%2024%22/%3E%3C/svg%3E');
-  &:hover, &:focus {
-    background-color: transparent !important;
-  }
 }
 
 .blocktrades-bridge select.external-coin-types {
   width: 11em;
+  margin: 0 5px !important;
   display: inline;
   color: inherit;
-  background-color: transparent !important;
+  background-color: transparent;
   font-size: 0.9em;
   border: 1px solid #555;
   background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpath%20style%3D%22fill%3A%20%23555%22%20d%3D%22M0%200h32L16%2024%22/%3E%3C/svg%3E');
-  &:hover, &:focus {
-    background-color: transparent !important;
-  }
 }
 
 .blocktrades-bridge select option {
-  color: #000;
+  //color: #000;
+  padding-bottom: 5px;
 }
 
 .blocktrades-bridge input {
@@ -37,14 +34,15 @@
   border: 1px solid #555;
   height: 2.4rem;
   padding: .5rem;
-  vertical-align: middle;
+  vertical-align: top;
+  margin: 0 5px !important;
 
   &:hover {
-    color: white !important;
+    color: white;
   }
 }
 
 .blocktrades-bridge .deposit-limit {
-  color: #555;
+  color: #ababab;
   line-height: 150%;
 }
