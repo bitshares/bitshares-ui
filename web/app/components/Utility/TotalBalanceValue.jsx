@@ -200,13 +200,24 @@ class TotalValue extends React.Component {
             }
         });
 
+        // Determine if higher precision should be displayed
+        let hiPrec = false;
+        for (let asset in assetValues) {
+            if (assets[asset] && assetValues[asset]) {
+                if (Math.abs(utils.get_asset_amount(assetValues[asset], toAsset)) < 100) {
+                    hiPrec = true;
+                    break;
+                }
+            }
+        }
+
         let totalsTip = "<table><tbody>";
         for (let asset in assetValues) {
             if (assets[asset] && assetValues[asset]) {
                 let symbol = assets[asset].get("symbol");
                 let amount = utils.get_asset_amount(assetValues[asset], toAsset);
-                amount = utils.format_number(amount, Math.abs(amount) > 100 ? 0 : 2);
-                totalsTip = totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount} ${toAsset.get("symbol")}</td></tr>`;
+                amount = utils.format_number(amount, hiPrec ? 2 : 0);
+                totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount} ${toAsset.get("symbol")}</td></tr>`;
             }
         }
 
