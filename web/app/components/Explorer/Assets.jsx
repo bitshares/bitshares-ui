@@ -10,6 +10,7 @@ import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
+import AssetName from "../Utility/AssetName";
 import Tabs, {Tab} from "../Utility/Tabs";
 import MarketLink from "../Utility/MarketLink";
 
@@ -95,7 +96,7 @@ class Assets extends React.Component {
 
             return (
                 <tr key={asset.symbol}>
-                    <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
+                    <td><Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
                     <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
@@ -115,13 +116,12 @@ class Assets extends React.Component {
             return a.bitasset_data && !a.bitasset_data.is_prediction_market && a.symbol.indexOf(this.state.filterMPA) !== -1;
         }).map((asset) => {
             let description = assetUtils.parseDescription(asset.options.description);
-            console.log(asset.symbol, description);
             
             let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
 
             return (
                 <tr key={asset.symbol}>
-                    <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
+                    <td><Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
                     <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
                     <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
@@ -156,7 +156,7 @@ class Assets extends React.Component {
                 <tr key={asset.id.split(".")[2]}>
                     <td style={{width: "80%"}}>
                         <div style={{paddingTop: 10, fontWeight: "bold"}}>
-                            <Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link>
+                            <Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link>
                             {description.condition ? <span> ({description.condition})</span> : null}
                         </div>
                         {description ? 

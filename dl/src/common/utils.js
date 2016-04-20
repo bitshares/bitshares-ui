@@ -59,6 +59,9 @@ var Utils = {
     },
 
     get_asset_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, inverted = false) {
+        if (!quoteAsset || !baseAsset) {
+            return 1;
+        }
         var price = this.get_asset_amount(quoteAmount, quoteAsset) / this.get_asset_amount(baseAmount, baseAsset);
         return inverted ? 1 / price : price;
     },

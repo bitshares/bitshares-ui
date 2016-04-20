@@ -14,7 +14,7 @@
         account: "Account",
         dashboard: "Dashboard",
         explorer: "Explore",
-        exchange: "Trade",
+        exchange: "Exchange",
         payments: "Send", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
@@ -275,7 +275,7 @@
         name_input: {
             name_is_taken: "Account name is already taken.",
             not_found: "Account not found.",
-            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
+            premium_name_faucet: "Account names must containing at least one dash or digit.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
         propose_from: "Propose From",
@@ -366,6 +366,7 @@
         expires: "Expires",
         update_account: "Update account data for {account}",
         status: "Status",
+        asset_create: "Create the asset %(asset)s using the account {account}",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",
@@ -916,10 +917,12 @@
         deposit_to: "Deposit To",
         balance: "Balance",
         generate: "Generate",
+        generate_new: "New address",
         deposit: "Deposit",
         withdraw: "Withdraw",
         inventory: "Inventory",
         scan_qr: "Scan QR",
+        calc: "Calculating",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Visit to deposit",

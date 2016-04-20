@@ -1,7 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import FormattedAsset from "../../Utility/FormattedAsset";
 import LoadingIndicator from "../../LoadingIndicator";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "../../Utility/ChainTypes";
@@ -17,7 +16,6 @@ import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
-import BalanceComponent from "../../Utility/BalanceComponent";
 import RefcodeInput from "../../Forms/RefcodeInput";
 import ReactTooltip from "react-tooltip"
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
@@ -108,8 +106,9 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
     
     render() {
+        let emptyRow = <tr style={{display:"none"}}><td colSpan="4"></td></tr>;
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
-            return <tr style={{display:"none"}}><td></td><td></td><td></td><td></td></tr>;
+            return emptyRow;
 
         let account_balances_object = this.props.account.get("balances");
 
@@ -129,18 +128,18 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                 }
             }
             if (!has_nonzero_balance)
-                return <tr style={{display:"none"}}><td></td><td></td><td></td><td></td></tr>;
+                return emptyRow;
         }
         
-        let account_balances = account_balances_object.toJS();
-        let asset_types = Object.keys(account_balances);
-        if (asset_types.length > 0) {
-            let current_asset_id = this.props.receive_asset.get('id');
-            if( current_asset_id )
-            {
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
-            }
-        }
+        // let account_balances = account_balances_object.toJS();
+        // let asset_types = Object.keys(account_balances);
+        // if (asset_types.length > 0) {
+        //     let current_asset_id = this.props.receive_asset.get('id');
+        //     if( current_asset_id )
+        //     {
+        //         balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
+        //     }
+        // }
 
         let receive_address = this.state.receive_address;
         if( !receive_address )  {
@@ -150,41 +149,42 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         
         if( !receive_address ) {
             this.requestDepositAddress();
-            return null;
+            return emptyRow;
         }
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
-        if (this.props.deprecated_in_favor_of)
+        // if (this.props.deprecated_in_favor_of)
+        // {
+        //     deposit_address_fragment = <span>please use {this.props.deprecated_in_favor_of.get('symbol')} instead. <span data-tip={this.props.deprecated_message} data-place="right" data-html={true}><Icon name="question-circle" /></span><ReactTooltip /></span>;
+        // }
+        // else
+        // {
+        if (this.props.deposit_account)
         {
-            deposit_address_fragment = <span>please use {this.props.deprecated_in_favor_of.get('symbol')} instead. <span data-tip={this.props.deprecated_message} data-place="right" data-html={true}><Icon name="question-circle" /></span><ReactTooltip /></span>;
+            deposit_address_fragment = (<span><code>{this.props.deposit_account}</code> with memo <code>{this.props.receive_coin_type + ':' + this.props.account.get('name')}</code></span>);
+            var withdraw_memo_prefix = this.props.deposit_coin_type + ':';
         }
         else
         {
-            if (this.props.deposit_account)
+            if (receive_address.memo)
             {
-                deposit_address_fragment = (<span><code>{this.props.deposit_account}</code> with memo <code>{this.props.receive_coin_type + ':' + this.props.account.get('name')}</code></span>);
-                var withdraw_memo_prefix = this.props.deposit_coin_type + ':';
+                // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
+                deposit_address_fragment = (<span><code>{receive_address.address}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.memo}</code></span>);
             }
             else
             {
-                if (receive_address.memo)
-                {
-                    // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
-                    deposit_address_fragment = (<span><code>{receive_address.address}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.memo}</code><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
-                }
-                else
-                {
-                    // This is a client that uses unique deposit addresses to select the output
-                    deposit_address_fragment = (<span><code>{receive_address.address}</code> &nbsp; <button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate" /></button></span>);
-                }
-                var withdraw_memo_prefix = '';
+                // This is a client that uses unique deposit addresses to select the output
+                deposit_address_fragment = (<span><code>{receive_address.address}</code></span>);
             }
+            var withdraw_memo_prefix = '';
         }
+        // }
 
         return <tr>
             <td>{this.props.deposit_asset} </td>
             <td>{deposit_address_fragment}</td>
+            <td><button className={"button outline"} onClick={this.requestDepositAddress.bind(this)}><Translate content="gateway.generate_new" /></button></td>
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receive_asset.get('symbol')} /> </td>
             <td> <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                 <Modal id={withdraw_modal_id} overlay={true}>
