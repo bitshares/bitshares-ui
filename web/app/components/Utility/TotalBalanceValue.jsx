@@ -211,15 +211,41 @@ class TotalValue extends React.Component {
             }
         }
 
+        // Render each asset's balance, noting if there are any values missing
+        const noDataSymbol = "**";
+        const minValue = 1e-12;
+        let missingData = false;
         let totalsTip = "<table><tbody>";
         for (let asset in assetValues) {
             if (assets[asset] && assetValues[asset]) {
                 let symbol = assets[asset].get("symbol");
                 let amount = utils.get_asset_amount(assetValues[asset], toAsset);
-                amount = utils.format_number(amount, hiPrec ? 2 : 0);
+                if (amount) {
+                    if (amount < minValue) { // really close to zero, but not zero, probably a result of incomplete data
+                        amount = noDataSymbol;
+                        missingData=true;
+                    } else if (hiPrec) {
+                        if (amount < 0.01)
+                            amount = "<0.01";
+                        else
+                            amount = utils.format_number(amount, 2);
+                    } else {
+                        if (amount < 1)
+                            amount = "<1";
+                        else
+                            amount = utils.format_number(amount, 0);
+                    }
+                } else {
+                    amount = noDataSymbol;
+                    missingData = true;
+                }
                 totalsTip += `<tr><td>${symbol}:&nbsp;</td><td style="text-align: right;">${amount} ${toAsset.get("symbol")}</td></tr>`;
             }
         }
+
+        // If any values are missing, let the user know.
+        if (missingData)
+            totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
         totalsTip += "</tbody></table>"
         
