@@ -564,7 +564,7 @@ class AccountDepositWithdraw extends React.Component {
                                     key="ccedk-open.steem"
                                     gateway="openledger"
                                     url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger"
+                                    issuer_account="openledger-wallet"
                                     account={this.props.account}
                                     deposit_asset="STEEM"
                                     deposit_asset_name="Steem"
