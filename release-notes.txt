@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------
+Release 2.0.160420
+---------------------------------------------------------------------
+
+New features
+--------
+- Allow fees for order cancellation and shorting to be paid in assets other than BTS
+- Enable OPEN.STEEM deposits and withdrawals
+
+Bug fixes
+--------
+- Turkish translation updates
+- Improve localStorage wrapper methods
+- Blocktrades display fix
+
+Notes
+--------
+Two new developers had commits accepted into this release: destenson and rulatir, and nmywn also continues to make useful contributions. Their efforts are much appreciated!
+
+---------------------------------------------------------------------
 Release 2.0.160413
 ---------------------------------------------------------------------
 
