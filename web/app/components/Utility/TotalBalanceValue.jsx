@@ -221,19 +221,17 @@ class TotalValue extends React.Component {
                 let symbol = assets[asset].get("symbol");
                 let amount = utils.get_asset_amount(assetValues[asset], toAsset);
                 if (amount) {
-                    if (amount >= 0 && amount < minValue ) { // really close to zero, but not zero, probably a result of incomplete data
+                    if (amount < minValue && amount > -minValue) { // really close to zero, but not zero, probably a result of incomplete data
                         amount = noDataSymbol;
                         missingData = true;
                     } else if (hiPrec) {
-                        if (amount >= 0 && amount < 0.01)
-                            amount = "<0.01";
-                        else
-                            amount = utils.format_number(amount, 2);
+                        if (amount >= 0 && amount < 0.01)      amount = "<0.01";
+                        else if (amount < 0 && amount > -0.01) amount = "-0.01<";
+                        else                                   amount = utils.format_number(amount, 2);
                     } else {
-                        if (amount >= 0 && amount < 1)
-                            amount = "<1";
-                        else
-                            amount = utils.format_number(amount, 0);
+                        if (amount >= 0 && amount < 1)         amount = "<1";
+                        else if (amount < 0 && amount > -0.01) amount = "-1<";
+                        else                                   amount = utils.format_number(amount, 0);
                     }
                 } else {
                     amount = noDataSymbol;
