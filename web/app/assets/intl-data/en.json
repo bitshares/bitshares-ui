@@ -9,6 +9,7 @@
         "hourNo0": true,
         "hour12": true,
         "formats": {
+            "short": "{1}, {0}",
             "medium": "{1}, {0}",
             "availableFormats": {
                 "E": "ccc",

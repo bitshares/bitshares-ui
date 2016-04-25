@@ -45,7 +45,7 @@ class AccountPermissionTree extends React.Component {
                         paddingLeft: `${5 * this.props.indent}%`
                     }}
                 >
-                    {!isNested ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
+                    {!isNested && notNestedWeight ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
                     <LinkToAccountById subpage="permissions" account={account.get("id")} />
                 </div>
                 <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>

@@ -1,34 +1,35 @@
 // Localstorage
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+import ls, {ls_key_exists} from './localStorageImpl';
 
-var STORAGE_KEY = null;
+if (null===ls) throw "localStorage is required but isn't available on this platform";
 
 module.exports = (key) => {
-    
-    STORAGE_KEY = key;
+
+    var STORAGE_KEY = key;
 
     return {
-        get(key) {
-            if (ls) {
-                return JSON.parse(ls.getItem(STORAGE_KEY + key));
+        get(key, dv = {}) {
+
+            let rv;
+            if ( ls_key_exists(STORAGE_KEY + key, ls) ) {
+                rv = JSON.parse(ls.getItem(STORAGE_KEY + key));
             }
+            return rv ? rv : dv;
         },
 
         set(key, object) {
             if (object.toJS) {
                 object = object.toJS();
             }
-            if (ls) {
-                ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
-            }
+            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
         },
 
         remove(key) {
-            if (ls) {
-                ls.removeItem(STORAGE_KEY + key);
-            }
+            ls.removeItem(STORAGE_KEY + key);
+        },
+
+        has(key) {
+            return ls_key_exists(STORAGE_KEY + key, ls);
         }
-
-
     };
 }
