@@ -51,7 +51,7 @@ class AccountStore extends BaseStore {
             currentAccount: null,
             linkedAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
-            unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts") || []),
+            unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts", [])),
             searchAccounts: Immutable.Map(),
             searchTerm: ""
         }
@@ -217,8 +217,8 @@ class AccountStore extends BaseStore {
     }
 
     tryToSetCurrentAccount() {
-        if (localStorage.currentAccount) {
-            return this.setCurrentAccount(localStorage.currentAccount);
+        if (accountStorage.has("currentAccount")) {
+            return this.setCurrentAccount(accountStorage.get("currentAccount"));
         }
 
         let {starredAccounts} = SettingsStore.getState();
@@ -237,7 +237,7 @@ class AccountStore extends BaseStore {
             this.state.currentAccount = name
         }
 
-        localStorage.currentAccount = this.state.currentAccount;
+        accountStorage.set("currentAccount", this.state.currentAccount);
     }
 
     onSetCurrentAccount(name) {

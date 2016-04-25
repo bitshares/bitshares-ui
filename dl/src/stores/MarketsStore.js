@@ -3,6 +3,7 @@ var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
+import ls from "common/localStorage";
 import ChainStore from "api/ChainStore";
 import utils from "common/utils";
 
@@ -14,7 +15,7 @@ import {
 }
 from "./tcomb_structs";
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+let marketStorage = new ls("__graphene__");
 
 class MarketsStore {
     constructor() {
@@ -87,15 +88,12 @@ class MarketsStore {
     }
 
     _getBucketSize() {
-        let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 4 * 3600;
+        return parseInt(marketStorage.get("bucketSize", 4 * 3600));
     }
 
     _setBucketSize(size) {
         this.bucketSize = size;
-        if (ls) {
-            ls.setItem("__graphene___bucketSize", size);
-        }
+        marketStorage.set("bucketSize", size);
     }
 
     onChangeBase(market) {
@@ -238,14 +236,13 @@ class MarketsStore {
             });
         }
 
-        if (result.ticker) {
+        if (result.recent && result.recent.length) {
             
-            let stats = this.calcMarketStats(result.ticker, this.baseAsset, this.quoteAsset);
-            if (stats) {
-                this.marketStats = this.marketStats.set("change", stats.change);
-                this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
-                this.marketStats = this.marketStats.set("volumeQuote", stats.volumeQuote);
-            }
+            let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset);
+
+            this.marketStats = this.marketStats.set("change", stats.change);
+            this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
+            this.marketStats = this.marketStats.set("volumeQuote", stats.volumeQuote);
         }
 
         // Update orderbook
@@ -638,35 +635,92 @@ class MarketsStore {
         this.flat_calls = flat_calls;
     }
 
-    calcMarketStats(ticker, base, quote) {
+    _calcMarketStats(history, baseAsset, quoteAsset, recent) {
+        let yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday = yesterday.getTime();
+        let volumeBase = 0,
+            volumeQuote = 0,
+            change = 0,
+            last = {close_quote: null, close_base: null},
+            invert,
+            latestPrice,
+            noTrades = true;
 
-        let ratio = market_utils.priceToObject(ticker.latest, "bid");
-
-        // Due to a difference in convention, the base/quote gets all messed up here
-        // TODO: Clean that up everywhere to use correct conventions BASE / QUOTE
-        let latestPrice = {
-            base: {
-                amount: ratio.quote * utils.get_asset_precision(quote),
-                asset_id: quote.get("id")
-            },
-            quote: {
-                amount: ratio.base * utils.get_asset_precision(base),
-                asset_id: base.get("id")
+        if (history.length) {
+            let first;
+            history.forEach((bucket, i) => {
+                let date = new Date(bucket.key.open + "+00:00").getTime();
+                if (date > yesterday) {
+                    noTrades = false;
+                    if (!first) {
+                        first = history[i > 0 ? i - 1 : i];
+                        invert = first.key.base === baseAsset.get("id");
+                    }
+                    if (invert) {
+                        volumeBase += parseInt(bucket.base_volume, 10);
+                        volumeQuote += parseInt(bucket.quote_volume, 10);
+                    } else {
+                        volumeQuote += parseInt(bucket.base_volume, 10);
+                        volumeBase += parseInt(bucket.quote_volume, 10);
+                    }
+                }
+            });
+            if (!first) {
+                first = history[0];
             }
-        };
+            last = history[history.length -1];
+            let open, close;
+            if (invert) {
+                open = utils.get_asset_price(first.open_quote, quoteAsset, first.open_base, baseAsset, invert);
+                close = utils.get_asset_price(last.close_quote, quoteAsset, last.close_base, baseAsset, invert);
+            } else {
+                open = utils.get_asset_price(first.open_quote, baseAsset, first.open_base, quoteAsset, invert);
+                close = utils.get_asset_price(last.close_quote, baseAsset, last.close_base, quoteAsset, invert);
+            }
+
+            change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
+        }
+
+        if (recent && recent.length && recent.length > 1) {
+            let order = recent[1].op;
+            let paysAsset, receivesAsset, isAsk = false;
+
+            if (order.pays.asset_id === baseAsset.get("id")) {
+                paysAsset = baseAsset;
+                receivesAsset = quoteAsset;
+                isAsk = true;
+            } else {
+                paysAsset = quoteAsset;
+                receivesAsset = baseAsset;
+            }
+            let flipped = baseAsset.get("id").split(".")[2] > quoteAsset.get("id").split(".")[2];
+            latestPrice = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped).full;
+        }
+
+        let close = last.close_base && last.close_quote ? {
+            quote: {
+                amount: invert ? last.close_quote : last.close_base,
+                asset_id: invert ? last.key.quote : last.key.base
+            },
+            base: {
+                amount: invert ? last.close_base : last.close_quote,
+                asset_id: invert ? last.key.base : last.key.quote
+            }
+        } : null;
 
         return {
-            change: parseFloat(ticker.percent_change).toFixed(2),
-            volumeBase: parseFloat(ticker.base_volume),
-            volumeQuote: parseFloat(ticker.quote_volume),
-            close: latestPrice
+            change: change.toFixed(2),
+            volumeBase: utils.get_asset_amount(volumeBase, baseAsset),
+            volumeQuote: utils.get_asset_amount(volumeQuote, quoteAsset),
+            close: close,
+            latestPrice
         };
-
     }
 
     onGetMarketStats(payload) {
-        if (payload && payload.ticker) {
-            let stats = this.calcMarketStats(payload.ticker, payload.base, payload.quote);
+        if (payload) {
+            let stats = this._calcMarketStats(payload.history, payload.base, payload.quote, payload.last);
             this.allMarketStats = this.allMarketStats.set(payload.market, stats);
         }
     }
@@ -683,8 +737,6 @@ class MarketsStore {
                 maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.quoteAsset,
-                    this.baseAsset,
                     true
                 )
                  this.lowestCallPrice = settlementPrice / 5;
@@ -693,8 +745,7 @@ class MarketsStore {
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.baseAsset,
-                    this.quoteAsset
+                    false
                 )
                 this.lowestCallPrice = settlementPrice * 5;
             }

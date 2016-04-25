@@ -5,6 +5,7 @@ import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 import ChainStore from "api/ChainStore";
 import marketUtils from "common/market_utils";
+import accountUtils from "common/account_utils";
 import Immutable from "immutable";
 
 let ops = Object.keys(operations);
@@ -61,13 +62,18 @@ class MarketsActions {
         }
 
         if (!marketStats[market] || refresh) {
-            Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+            Promise.all([
+                Apis.instance().history_api().exec("get_market_history", [
+                    base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                ]),
+                Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 1])
+            ])            
             .then(result => {
                 marketStats[market] = {
                     lastFetched: new Date()
                 };
 
-                this.dispatch({market: marketName, quote: base, base: quote, ticker: result});
+                this.dispatch({history: result[0], last: result[1], market: marketName, base, quote});
             });
         }
     }
@@ -149,7 +155,9 @@ class MarketsActions {
                                 base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                             ]),
                             !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                            !hasFill ? null : Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                                base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                            ])
                         ])
                         .then(results => {
                             this.dispatch({
@@ -158,7 +166,7 @@ class MarketsActions {
                                 settles: results[2],
                                 price: results[3],
                                 history: results[4],
-                                ticker: results[5],
+                                recent: results[5],
                                 market: subID,
                                 base: base,
                                 quote: quote,
@@ -212,9 +220,12 @@ class MarketsActions {
                     ]),
                     Apis.instance().history_api().exec("get_market_history_buckets", []),
                     Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                    Apis.instance().db_api().exec("get_ticker", [base.get("symbol"), quote.get("symbol")])
+                    Apis.instance().history_api().exec("get_market_history", [
+                        base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                    ])
                 ])
                 .then((results) => {
+
                     subs[subID] = true;
 
                     this.dispatch({
@@ -224,7 +235,7 @@ class MarketsActions {
                         price: results[4],
                         buckets: results[5],
                         history: results[6],
-                        ticker: results[7],
+                        recent: results[7],
                         market: subID,
                         base: base,
                         quote: quote,
@@ -298,14 +309,17 @@ class MarketsActions {
             });
     }
 
-    createPredictionShort(account, sellAmount, sellAsset, buyAmount, collateralAmount, buyAsset, expiration, isFillOrKill, fee_asset_id) {
+    createPredictionShort(account, sellAmount, sellAsset, buyAmount, collateralAmount, buyAsset, expiration, isFillOrKill, fee_asset_id = "1.3.0") {
 
         var tr = wallet_api.new_transaction();
 
         // let fee_asset_id = sellAsset.get("id");
-        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
-           fee_asset_id = "1.3.0";
-        }
+        // if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
+        //    fee_asset_id = "1.3.0";
+        // }
+
+        // Set the fee asset to use
+        fee_asset_id = accountUtils.getFinalFeeAsset(account, "call_order_update", fee_asset_id);
 
         tr.add_type_operation("call_order_update", {
             "fee": {
@@ -351,11 +365,14 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
+        // Set the fee asset to use
+        let fee_asset_id = accountUtils.getFinalFeeAsset(accountID, "limit_order_cancel");
+
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             fee: {
                 amount: 0,
-                asset_id: 0
+                asset_id: fee_asset_id
             },
             "fee_paying_account": accountID,
             "order": orderID

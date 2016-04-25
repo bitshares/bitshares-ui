@@ -19,7 +19,7 @@ class DepositModalMetaexchange extends React.Component {
 		deposit_address: React.PropTypes.string,
 		memo: React.PropTypes.string,
 		is_bts_deposit: React.PropTypes.string
-	}
+	};
 
    constructor( props ) {
       super(props);
@@ -32,33 +32,36 @@ class DepositModalMetaexchange extends React.Component {
 		{
 			this.state = {limit:"fetching...", receive_asset_name:this.props.receive_asset_name, receive_asset_symbol:this.props.receive_asset_symbol };
 		}
-	  
-	  
-		Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
-		{
-			// console.log(reply);
-			this.setState( {limit:reply.ask_max} );
-			
-			if (props.is_bts_deposit)
-			{
-				Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'buy',deposit_amount:1}).then( reply=>reply.json().then(reply=>
-				{
-					// console.log(reply);
-					this.setState( {quote:reply.result} );
-				}));
-			}
-		}));
+   }
+
+   componentDidMount() {
+        Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair})
+        .then( reply=> reply.json()
+            .then(reply => {
+                // console.log(reply);
+                this.setState( {limit:reply.ask_max} );
+                
+                if (this.props.is_bts_deposit)
+                {
+                    Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'buy',deposit_amount:1}).then( reply=>reply.json().then(reply=>
+                    {
+                        // console.log(reply);
+                        this.setState( {quote:reply.result} );
+                    }));
+                }
+            })
+        ).catch(err => {
+            console.log("PostForm error:", err);
+        });
    }
 
    render() 
    {
 		let memoName = null;
-		if (this.props.receive_asset_symbol == "ETH")
-		{
+		if (this.props.receive_asset_symbol == "ETH") {
 			memoName = "Data";
-		}
-		else if (this.props.receive_asset_symbol == "NXT")
-		{
+        }
+		else if (this.props.receive_asset_symbol == "NXT") {
 			memoName = "Message"
 		}
 		

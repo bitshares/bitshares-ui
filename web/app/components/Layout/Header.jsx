@@ -140,9 +140,8 @@ class Header extends React.Component {
             });
         }
 
-        let myAccounts = AccountStore.getMyAccounts();
 
-        let myAccountsList = Immutable.List(myAccounts);
+        let myAccounts = AccountStore.getMyAccounts();
 
         let walletBalance = myAccounts.length ? (
                             <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
@@ -232,6 +231,7 @@ class Header extends React.Component {
                         <li>{linkToAccountOrDashboard}</li>
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
                         <li>{tradeLink}</li>
+                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={`/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                         <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
                     </ul>
                 </div>

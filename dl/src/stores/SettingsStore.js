@@ -14,9 +14,6 @@ class SettingsStore {
     constructor() {
         this.exportPublicMethods({getSetting: this.getSetting.bind(this)});
 
-        this.settings = Immutable.Map({
-        });
-
         this.defaultSettings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
@@ -27,21 +24,9 @@ class SettingsStore {
             themes: "darkTheme"
         });
 
-        this.viewSettings =  Immutable.Map({
-            cardView: true
-        });
-
-        this.marketDirections = Immutable.Map({
-
-        });
-
-        this.hiddenAssets = Immutable.List([]);
-
-        this.preferredBases = Immutable.List([CORE_ASSET, "BTC", "USD", "CNY"]);
         this.baseOptions = [CORE_ASSET, "BTC", "USD", "CNY", "OPEN.BTC", "OPEN.USD"];
 
-        this.starredMarkets = Immutable.Map([
-
+        let defaultMarkets = [
             // BTS BASE
             ["OPEN.MUSE_"+ CORE_ASSET, {"quote": "OPEN.MUSE","base": CORE_ASSET}],
             ["OPEN.EMC_"+ CORE_ASSET, {"quote": "OPEN.EMC","base": CORE_ASSET}],
@@ -58,6 +43,7 @@ class SettingsStore {
             ["METAFEES_"+ CORE_ASSET, {"quote": "METAFEES","base": CORE_ASSET}],
             ["OBITS_"+ CORE_ASSET, {"quote": "OBITS","base": CORE_ASSET}],
             ["OPEN.ETH_"+ CORE_ASSET, {"quote": "OPEN.ETH","base": CORE_ASSET}],
+            ["MKR_"+ CORE_ASSET, {"quote": "MKR","base": CORE_ASSET}],
 
             // BTC BASE
             ["TRADE.BTC_BTC", {"quote":"TRADE.BTC","base": "BTC"} ],
@@ -81,10 +67,9 @@ class SettingsStore {
             // OTHERS
             ["OPEN.EUR_EUR", {"quote": "OPEN.EUR","base": "EUR"}],
             ["METAEX.ETH_OPEN.ETH", {"quote": "METAEX.ETH","base": "OPEN.ETH"}]
+            ["MKR_OPEN.BTC", {"quote": "MKR","base": "OPEN.BTC"}]
 
-        ]);
-
-        this.starredAccounts = Immutable.Map();
+        ];
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
@@ -142,38 +127,21 @@ class SettingsStore {
             onSwitchLocale: IntlActions.switchLocale
         });
 
-        if (ss.get("settings_v3")) {
-            this.settings = Immutable.Map(_.merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
-        }
+        this.settings = Immutable.Map(_.merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
-        if (ss.get("starredMarkets")) {
-            this.starredMarkets = Immutable.Map(ss.get("starredMarkets"));
-        }
+        this.starredMarkets = Immutable.Map(ss.get("starredMarkets", defaultMarkets));
 
-        if (ss.get("starredAccounts")) {
-            this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
-        }
+        this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        if (ss.get("defaults_v1")) {
-            this.defaults = _.merge(this.defaults, ss.get("defaults_v1"));
-        }
+        this.defaults = _.merge(this.defaults, ss.get("defaults_v1"));
 
-        if (ss.get("viewSettings_v1")) {
-            this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
-        }
+        this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
-        if (ss.get("marketDirections")) {
-            this.marketDirections = Immutable.Map(ss.get("marketDirections"));
-        }
+        this.marketDirections = Immutable.Map(ss.get("marketDirections"));
 
-        if (ss.get("hiddenAssets")) {
-            this.hiddenAssets = Immutable.List(ss.get("hiddenAssets"));
-        }
+        this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
-        if (ss.get("preferredBases")) {
-            this.preferredBases = Immutable.List(ss.get("preferredBases"));
-        }
-
+        this.preferredBases = Immutable.List(ss.get("preferredBases", [CORE_ASSET, "BTC", "USD", "CNY", "OPEN.BTC"]));
 
     }
 

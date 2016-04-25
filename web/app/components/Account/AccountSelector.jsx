@@ -57,6 +57,11 @@ class AccountSelector extends React.Component {
 
     onInputChanged(event) {
         let value = event.target.value.trim(); //.toLowerCase();
+
+        // If regex matches ^.*#/account/account-name/.*$, parse out account-name
+        let newValue = value.match(/(?:#\/account\/)(.*)(?:\/overview)/);
+        if (newValue) value = newValue[1];
+
         if (this.props.onChange && value !== this.props.accountName) this.props.onChange(value);
     }
 

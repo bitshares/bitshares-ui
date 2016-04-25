@@ -2,7 +2,6 @@ import React from "react";
 import counterpart from "counterpart";
 import IntlActions from "actions/IntlActions";
 import Translate from "react-translate-component";
-import cookies from "cookies-js";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
 import WebsocketAddModal from "./WebsocketAddModal";

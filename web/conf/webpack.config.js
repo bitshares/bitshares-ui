@@ -118,7 +118,7 @@ module.exports = function(options) {
     };
 
     if(options.prod) config.entry.vendors = [
-        "react", "react-dom", "classnames", "react-router", "react-highcharts/bundle/highstock", "counterpart", "react-translate-component",
+        "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
         "immutable", "lzma", "bytebuffer", "lodash"

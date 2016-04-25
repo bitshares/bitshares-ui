@@ -52,9 +52,7 @@ export default class AccountUtils {
                 }
                 if (balance >= eqFee && this.checkFeePool(asset, eqFee)) {
                     hasBalance = true;
-                } else {
-                    console.log("unable to pay fees with", asset.get("symbol"), "due to", balance < eqFee ? "insufficient balance" : "empty fee pool");
-                }   
+                }
             }
             if (hasBalance) {
                 assets.push(assetID);

@@ -2,10 +2,11 @@
 
 // variables
 
-$light-text-color: #3F2E55;
-$dark-text-color: #3F2E55;
-$primary-text-color: #3F2E55;
-$secondary-text-color: darken($primary-text-color, 20%);
+
+$primary-text-color: darken(#3d3d3d, 10%);
+$secondary-text-color: lighten($primary-text-color, 22%);
+$light-text-color: #3d3d3d;
+$dark-text-color: lighten($light-text-color, 12%);
 $link-text-color: #aeabff;
 $error-text-color: #E3745B;
 
@@ -57,5 +58,17 @@ $header-color: #DCDCDC;
     $row-accent-color,
     $header-color
   );
+  
+  .blocktrades-bridge input, .blocktrades-bridge select{
+    color: $secondary-text-color;
+    background-color: $bg-color !important;
+    border: 1px solid $secondary-text-color;
+      &:hover, &:focus {
+        color: $primary-text-color;
+	      //box-shadow: 1px 2px 3px #000;
+        border: 2px solid #000;
+      }
+  }
+
 }
 
