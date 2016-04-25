@@ -101,7 +101,7 @@ class FormattedAsset extends React.Component {
                 alt_path="assets/Asset"
                 section="summary"
                 symbol={asset.symbol}
-                description={description.main}
+                description={description.short_name ? description.short_name : description.main}
                 issuer={issuerName}/>
             {this.props.assetInfo}
         </div>;
