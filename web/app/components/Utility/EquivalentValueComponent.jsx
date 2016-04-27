@@ -7,6 +7,7 @@ import MarketsActions from "actions/MarketsActions";
 import ChainStore from "api/ChainStore";
 import connectToStores from "alt/utils/connectToStores";
 import MarketsStore from "stores/MarketsStore";
+import Translate from "react-translate-component";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -112,7 +113,7 @@ class ValueComponent extends React.Component {
 
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
         if (!eqValue) {
-            return <span>n/a</span>
+            return <span style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>
         }
 
         return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={this.props.noDecimals ? toAsset.get("precision") : 0}/>;
