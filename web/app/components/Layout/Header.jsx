@@ -182,7 +182,7 @@ class Header extends React.Component {
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
-        if (currentAccount && active.indexOf("market/") !== -1) {
+        if (currentAccount && (active.indexOf("market/") !== -1 || active.indexOf("deposit") !== -1)) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0) {
