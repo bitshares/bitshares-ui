@@ -231,6 +231,7 @@ class AccountOverview extends React.Component {
                         compactView={false}
                         showMore={true}
                         fullHeight={true}
+                        limit={10}
                     />
                 </div>
             </div>
