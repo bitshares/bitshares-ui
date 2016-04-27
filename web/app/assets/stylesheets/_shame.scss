@@ -284,6 +284,10 @@ label.inline {
   background: hsl(0, 0%, 32%);
   color: white;
   border-radius: 0.05rem;
+
+  .help-content h3 {
+    color: white;
+  }
 }
 
 .Popover-tipShape {

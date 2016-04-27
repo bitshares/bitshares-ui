@@ -97,12 +97,12 @@ class FormattedAsset extends React.Component {
 
         const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
             <HelpContent
-                path={"assets/" + asset.symbol}
-                alt_path="assets/Asset"
+                path={"assets/Asset"}
                 section="summary"
                 symbol={asset.symbol}
                 description={description.short_name ? description.short_name : description.main}
-                issuer={issuerName}/>
+                issuer={issuerName}
+            />
             {this.props.assetInfo}
         </div>;
 
