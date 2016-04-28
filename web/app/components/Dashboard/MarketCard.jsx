@@ -60,7 +60,6 @@ class MarketCard extends React.Component {
         let imgName = base.get("symbol").split(".");
         imgName = imgName.length === 2 ? imgName[1] : imgName[0];
 
-        console.log("stats:", marketStats.toJS());
         let marketID = base.get("symbol") + "_" + quote.get("symbol");
         let stats = marketStats.get(marketID);
         let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";

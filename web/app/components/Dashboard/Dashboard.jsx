@@ -96,6 +96,7 @@ class Dashboard extends React.Component {
             
             return (
                 <MarketCard
+                    key={pair[0] + "_" + pair[1]}
                     new={index <= 3}
                     className={className}
                     quote={pair[0]}
