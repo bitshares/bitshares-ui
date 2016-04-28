@@ -451,6 +451,18 @@ class AccountDepositWithdraw extends React.Component {
                                     receive_asset="OPEN.DASH"
                                     receive_coin_type="open.dash" />
                                 <BlockTradesGatewayDepositRequest
+                                    key="ccedk-open.dgd"
+                                    gateway="openledger"
+                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                    issuer_account="openledger-wallet"
+                                    account={this.props.account}
+                                    deposit_asset="DGD"
+                                    deposit_coin_type="dgd"
+                                    deposit_asset_name="Digix DGD"
+                                    deposit_wallet_type="ethereum"
+                                    receive_asset="OPEN.DGD"
+                                    receive_coin_type="open.dgd" />
+                                <BlockTradesGatewayDepositRequest
                                     key="ccedk-open.doge"
                                     gateway="openledger"
                                     url="https://bitshares.openledger.info/depositwithdraw/api/v2"
