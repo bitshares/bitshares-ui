@@ -203,12 +203,14 @@ class AccountDepositWithdraw extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
 		gprops: ChainTypes.ChainObject.isRequired,
-        dprops: ChainTypes.ChainObject.isRequired
+        dprops: ChainTypes.ChainObject.isRequired,
+        contained: React.PropTypes.bool
     };
 
     static defaultProps = {
         gprops: "2.0.0",
-        dprops: "2.1.0"
+        dprops: "2.1.0",
+        contained: false
     };
 
     constructor() {
@@ -259,8 +261,8 @@ class AccountDepositWithdraw extends React.Component {
             //                     receive_coin_type="open.bks" />
             // })
         return (
-		<div className="grid-content">
-            <div>
+		<div className={this.props.contained ? "grid-content" : "grid-container"}>
+            <div className={this.props.contained ? "" : "grid-content"}>
                 <HelpContent path="components/DepositWithdraw" section="receive" account={this.props.account.get("name")}/>
                 <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
     			<Tabs
