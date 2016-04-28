@@ -155,7 +155,7 @@ class Header extends React.Component {
                                 <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
-        if (linkedAccounts.size > 1) {
+        if (linkedAccounts.size > 0) {
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
                     <Translate component="span" content="account.home" />
