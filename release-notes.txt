@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------
+Release 2.0.160428
+---------------------------------------------------------------------
+
+New features
+--------
+- Enable OPEN.DGD deposits and withdrawals
+- Add 'Featured Markets' to Home page, change page layout
+- Add timestamp to backup names
+- Enable the account selector on the Deposit/Withdraw page
+- Restore Deposit/Withdraw to AccountLeftPanel, add 'Advanced' subheader
+- Always show header account selector
+- Account selector icon is now clickable and takes you to the account
+- Always show 'Home' button in header
+
+Bug fixes
+--------
+- Fix Safari load issues
+- Chinese translation updates
+- Fix InitError dropdown not displaying correct entry
+- Chinese translation updates
+- Fix TotalBalance tooltip when borrowing small amounts
+- Replace n/a with 'No price available'
+- Fix Asset popover title color, adjust some text
+- Tweak some light-theme font colors
+
+---------------------------------------------------------------------
 Release 2.0.160420
 ---------------------------------------------------------------------
 
