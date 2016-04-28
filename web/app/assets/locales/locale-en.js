@@ -49,6 +49,7 @@
         unignore: "Unignore",
         show_ignored: "Show ignored accounts",
         hide_ignored: "Hide ignored accounts",
+        accounts: "Accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
@@ -764,7 +765,9 @@
         invert: "Invert the price",
         to_market: "Go to market",
         zoom_all: "All",
-        settings: "Chart options"
+        settings: "Chart options",
+        featured: "Featured Markets",
+        new: "New"
     },
     fees: {
      title: "Fee Schedule"
