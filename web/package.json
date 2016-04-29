@@ -36,7 +36,7 @@
     "html-loader": "^0.3.0",
     "immutable": "^3.7.6",
     "indexeddbshim": "^2.0.4",
-    "intl": "^1.0.0",
+    "intl": "^1.1.0",
     "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
     "js-sha256": "^0.2.3",
     "lodash": "^3.10.1",

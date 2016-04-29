@@ -24,6 +24,7 @@
     > a {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
+      font-size: 0.9rem;
       @include breakpoint(large) {
         padding-left: 1.75rem;
         padding-right: 1.75rem;

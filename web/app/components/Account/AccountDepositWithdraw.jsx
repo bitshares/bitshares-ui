@@ -203,12 +203,14 @@ class AccountDepositWithdraw extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
 		gprops: ChainTypes.ChainObject.isRequired,
-        dprops: ChainTypes.ChainObject.isRequired
+        dprops: ChainTypes.ChainObject.isRequired,
+        contained: React.PropTypes.bool
     };
 
     static defaultProps = {
         gprops: "2.0.0",
-        dprops: "2.1.0"
+        dprops: "2.1.0",
+        contained: false
     };
 
     constructor() {
@@ -259,8 +261,8 @@ class AccountDepositWithdraw extends React.Component {
             //                     receive_coin_type="open.bks" />
             // })
         return (
-		<div className="grid-content">
-            <div>
+		<div className={this.props.contained ? "grid-content" : "grid-container"}>
+            <div className={this.props.contained ? "" : "grid-content"}>
                 <HelpContent path="components/DepositWithdraw" section="receive" account={this.props.account.get("name")}/>
                 <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
     			<Tabs
@@ -450,6 +452,18 @@ class AccountDepositWithdraw extends React.Component {
                                     deposit_wallet_type="dash"
                                     receive_asset="OPEN.DASH"
                                     receive_coin_type="open.dash" />
+                                <BlockTradesGatewayDepositRequest
+                                    key="ccedk-open.dgd"
+                                    gateway="openledger"
+                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
+                                    issuer_account="openledger-wallet"
+                                    account={this.props.account}
+                                    deposit_asset="DGD"
+                                    deposit_coin_type="dgd"
+                                    deposit_asset_name="Digix DGD"
+                                    deposit_wallet_type="ethereum"
+                                    receive_asset="OPEN.DGD"
+                                    receive_coin_type="open.dgd" />
                                 <BlockTradesGatewayDepositRequest
                                     key="ccedk-open.doge"
                                     gateway="openledger"

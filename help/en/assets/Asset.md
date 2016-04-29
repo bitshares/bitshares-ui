@@ -1,9 +1,9 @@
 [# summary]
 ### Asset {symbol}
 
-{description}  
-Issued by {issuer}
+{description}
 
+Issued by: {issuer}
 
 [# annual]
 
