@@ -78,11 +78,22 @@ class Dashboard extends React.Component {
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
             ["OPEN.BTC", "OPEN.ETH"],
+            ["OPEN.BTC", "OPEN.STEEM"],
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
-            ["BTC", "BTS"]
-        ]
+            ["BTC", "BTS"],
+            ["BTS", "GOLD"],
+            ["BTS", "SILVER"],
+            ["BTS", "EUR"]
+        ];
+
+        let newAssets = [
+            "OPEN.STEEM",
+            "MKR",
+            "OPEN.DGD",
+            "OPEN.ETH"
+        ];
 
         let markets = featuredMarkets.map((pair, index) => {
 
@@ -90,14 +101,14 @@ class Dashboard extends React.Component {
             if (index > 3) {
                 className += "show-for-medium";
             }
-            if (index > 5) {
+            if (index > 8) {
                 className += " show-for-large";
             }
             
             return (
                 <MarketCard
                     key={pair[0] + "_" + pair[1]}
-                    new={index <= 3}
+                    new={newAssets.indexOf(pair[1]) !== -1}
                     className={className}
                     quote={pair[0]}
                     base={pair[1]}
