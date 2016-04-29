@@ -7,6 +7,9 @@ import BindToChainState from "./BindToChainState";
 import AltContainer from "alt-container";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
+import Popover from "react-popover";
+import Translate from "react-translate-component";
+import AssetName from "./AssetName";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -30,24 +33,52 @@ class FormattedPrice extends React.Component {
         decimals: React.PropTypes.number
     };
 
+    static contextTypes = {
+        history: React.PropTypes.object
+    };
+
+    constructor(props) {
+      super(props);
+      this.state = {isPopoverOpen: false};
+      this.togglePopover = this.togglePopover.bind(this);
+      this.closePopover = this.closePopover.bind(this);
+    }
+
+    togglePopover(e) {
+        e.preventDefault();
+        this.setState({isPopoverOpen: !this.state.isPopoverOpen});
+    }
+
+    closePopover() {
+        this.setState({isPopoverOpen: false});
+    }
+
     onFlip() {
       let setting = {};
       setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
       SettingsActions.changeMarketDirection(setting);
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
       return (
         nextProps.marketDirections !== this.props.marketDirections ||
         nextProps.base_amount !== this.props.base_amount ||
         nextProps.quote_amount !== this.props.quote_amount ||
-        nextProps.decimals !== this.props.decimals
+        nextProps.decimals !== this.props.decimals ||
+        !utils.are_equal_shallow(nextState, this.state)
       );
+    }
+
+    goToMarket(e) {
+      e.preventDefault();
+      this.context.history.pushState(null, `/market/${this.props.base_asset.get("symbol")}_${this.props.quote_asset.get("symbol")}`);
+      
     }
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount, marketDirections, marketId} = this.props;
+        let {base_asset, quote_asset, base_amount, quote_amount,
+          marketDirections, marketId, hide_symbols} = this.props;
 
         let invertPrice = marketDirections.get(marketId);
 
@@ -71,7 +102,7 @@ class FormattedPrice extends React.Component {
             let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
             decimals = Math.min(8, decimals);
             if (base_asset.get("id") === "1.3.0") {
-              decimals = 4;
+              base_asset.get("precision");
             }
             formatted_value = (
                 <FormattedNumber
@@ -81,13 +112,28 @@ class FormattedPrice extends React.Component {
                 />
             );
         }
-        let symbols = this.props.hide_symbols ? '' :
-                      (<a onClick={this.onFlip.bind(this)}> {base_asset.get("symbol") + "/" + quote_asset.get("symbol")}</a>);
+        let symbols = hide_symbols ? '' :
+                      (<span><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+
+        const currency_popover_body = !hide_symbols ? (
+          <div>
+            <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div>
+            <div className="button" onClick={this.goToMarket.bind(this)}><Translate content="exchange.to_market" /></div>
+          </div>
+        ) : null;
+
+        let popOver = (
+          <Popover
+              isOpen={this.state.isPopoverOpen}
+              onOuterAction={this.closePopover}
+              body={currency_popover_body}
+          >
+            <span className="currency click-for-help" onClick={this.togglePopover}>{symbols}</span>
+          </Popover>
+        );
+
         return (
-            <span>
-                {formatted_value}
-                {symbols}
-            </span>
+            <span>{formatted_value} {popOver ? popOver : symbols}</span>
          )
     }
 }

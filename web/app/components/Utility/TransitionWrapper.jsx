@@ -26,6 +26,8 @@ export default class TransitionWrapper extends React.Component {
         this.setState({
             animateEnter: false
         });
+
+        this.enableAnimation();
     }
 
     enableAnimation() {

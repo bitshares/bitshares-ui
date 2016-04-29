@@ -1,4 +1,218 @@
 ---------------------------------------------------------------------
+Release 2.0.160428
+---------------------------------------------------------------------
+
+New features
+--------
+- Enable OPEN.DGD deposits and withdrawals
+- Add 'Featured Markets' to Home page, change page layout
+- Add timestamp to backup names
+- Enable the account selector on the Deposit/Withdraw page
+- Restore Deposit/Withdraw to AccountLeftPanel, add 'Advanced' subheader
+- Always show header account selector
+- Account selector icon is now clickable and takes you to the account
+- Always show 'Home' button in header
+
+Bug fixes
+--------
+- Fix Safari load issues
+- Chinese translation updates
+- Fix InitError dropdown not displaying correct entry
+- Chinese translation updates
+- Fix TotalBalance tooltip when borrowing small amounts
+- Replace n/a with 'No price available'
+- Fix Asset popover title color, adjust some text
+- Tweak some light-theme font colors
+
+---------------------------------------------------------------------
+Release 2.0.160420
+---------------------------------------------------------------------
+
+New features
+--------
+- Allow fees for order cancellation and shorting to be paid in assets other than BTS
+- Enable OPEN.STEEM deposits and withdrawals
+
+Bug fixes
+--------
+- Turkish translation updates
+- Improve localStorage wrapper methods
+- Blocktrades display fix
+
+Notes
+--------
+Two new developers had commits accepted into this release: destenson and rulatir, and nmywn also continues to make useful contributions. Their efforts are much appreciated!
+
+---------------------------------------------------------------------
+Release 2.0.160413
+---------------------------------------------------------------------
+
+New features
+--------
+- Rename Trade to Exchange
+- Change order of header entries
+- Move Deposit/Withdraw to header
+- Add support for bitassets with backing asset other than CORE in the exchange
+
+Bug fixes
+--------
+- Fix some deposit page bugs and update the layouts
+- Some external lib updates
+- Hide empty parentheses in RecentTransactions header
+- Increase depth chart range
+- Update the Blocktrades bridge code to use the correct wallet symbols for MKR on the BitShares blockchain
+- Fix ProposedOperation text for asset_create operation
+- Chinese, Turkish and English translation updates
+- Market trade date format fix + light theme hovering fixes and cosmetics
+- Added OPEN.STEEM deposit option to CCEDK tab
+- Only use 'bit' prefix for SmartCoins issued by the committee-account
+
+---------------------------------------------------------------------
+Release 2.0.160406
+---------------------------------------------------------------------
+
+New features
+--------
+- Display required approvals as percent for multi-sig with threshold higher than 10
+- Add asset description to AssetName tooltip
+- Add 'bit' prefix to bit assets, remove *, use smaller prefix for OPEN, TRADE and METAEX assets
+
+Bug fixes
+--------
+- Sorting public keys by their converted address (per witness_node logic). #795
+- Bug in BuySell fee asset selection
+- Show account names as links in account permissions list #790
+- Fix account selector issue
+- Add warning about precision on asset creation #756
+- Fix tooltips not appearing over modals
+- Allow account upgrade, voting, permission changes and withdrawals to be paid in assets other than BTS if necessary #786
+
+
+---------------------------------------------------------------------
+Release 2.0.160330
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Proposed transactions
+- Add a 'Reset settings' button to Settings and InitError page
+- Split workers table into proposed and active workers
+- Remove negative votes
+- Add set of known proxies, add lists of active witnesses and cm's to voting pages
+- Add name replace for asset symbols in fee selection dropdown
+- Improve worker approve/reject logic and add status coloring
+- Add explanation of vesting balances
+- Add memo support to asset issue modal and display memos in Operation/Transaction
+
+BUG FIXES:
+- Language settings not persisting in light client
+- Fix some bugs and typos in AccountStore authority check
+- In serializer for transactions, sort addresses and public keys in descending order
+- Handle nested authorities for hierarchical multi-sig
+- Set new accounts voting proxy to 'proxy-to-self' account #700
+- Improve RecentTransactions sorting function #793
+- Add Settings link to mobile menu #759
+- Make sure negative votes are removed when updating votes #798
+- Fix vesting balance styling #722
+- Fix init loader white background
+- Fix orderbook onClick not syncing after order has filled #768
+- Translate csv and tooltip and move closer to title #780
+
+---------------------------------------------------------------------
+Release 2.0.160314
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Updated with serializer types from stealth branch (adds better sorting in transactions)
+- Improve DepthChart construction and plotting
+- Increase websocket timeout to 5s
+
+BUG FIXES:
+- Refactor and fix error in onAmountChange function that prevents withdraw modal to pop up
+- Enforce https for faucet address when on https domain
+- Fix buy/sell collapse behaviour #779
+- Show disabled buy/sell and my orders for users with no account #774
+- Redirect to proper websocket url if user entered invalid URL #770
+
+---------------------------------------------------------------------
+Release 2.0.160309
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Switch to using unique ethereum addresses for OpenLedger inputs
+- Hide Footer in Exchange view
+- Add preferred market pairing field to asset description
+- Сoloring of price column headers in Orderbook
+- Add + - buttons to the pricechart to change the height of the exchange charts
+- Filter out 0 and Inf price values from pricechart data
+- Put volume and price in the same chart
+- Add zoom buttons for PriceChart, filter out bucket sizes below 5 minute
+
+BUG FIXES:
+- Prices with precision larger than asset precision causes incorrect final price #757
+- Fix exchange box header background colors
+- TransitionWrapper not reenabling after reset
+- Fix Transfer fee asset selection for users with only one non-core asset
+
+---------------------------------------------------------------------
+Release 2.0.160302
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Various exchange layout improvements
+- Add rgba fill colors for depth charts
+- Use full precision for Orderbook and MarketHistory asset amounts
+
+BUG FIXES:
+- Check for price equal to infinity when parsing fill history
+- Fix membership button text being invisible #752
+- Fix asset creation CER precision issues #753
+- Fix disappearing faucet address in Settings #751
+- Fix AccountMembership spelling errors, also remove reference to annual membership #749
+- Fix AccountMembership margin issues and add referral link for lifetime members
+
+---------------------------------------------------------------------
+Release 2.0.160225
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Add theming support and theme switch in Settings #576
+- Add scrolling to RecentTransactions
+- Add base groups to MyMarkets: BTS, BTC, USD or CNY + others
+
+BUG FIXES:
+- Fix BlockTrades select background color
+- Ensure vertical orderbook layout is correct on mount
+- Fix Fee schedule decimals issue
+- Allow user to delete last number in Transfer amount entry
+- Fix some styling issues after move to themes
+- Fix matching of orders when clicking on order in orderbook #586
+- Sum for_sale values when adding orders at same price
+
+---------------------------------------------------------------------
+Release 2.0.160217
+---------------------------------------------------------------------
+
+NEW FEATURES:
+- Big trade page make over
+
+BUG FIXES:
+- Exchange buy fee selection
+- Remove link to BTS:BTS market in asset popover, fix asset description #709
+- Disable annual membership upgrade #730
+- Fix My Orders not updating when flipping the market
+- Fix Orderbook totals calculation
+- Fix current price indicator not repositioning after window resize
+- Fix fee subtraction when clicking on current balance
+- Fix margin call mechanics, add dynamic update support for settle orders and feed price changes, improve market data fetching logic
+- Fix number parsing for call orders and homogenize presentation with asks/bids/calls
+- Fix vertical orderbook positioning and scrolling
+- Link to /overview from Dashboard, change Orders to Open orders, #707 and #736
+- Fix transfer fee mismatch #738
+- Fix a bug in BlockTradesGatewayDepositRequest and change BridgeDepositRequest input types to 'number' #733
+- Fix Blocktrades input and select colors #733
+
+
+---------------------------------------------------------------------
 Release 2.0.160208
 ---------------------------------------------------------------------
 

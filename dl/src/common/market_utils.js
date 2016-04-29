@@ -47,12 +47,15 @@ class MarketUtils {
         return value;
     }
 
-    static getFeedPrice(settlement_price, backing_asset, quote_asset, invert = false) {
+    static getFeedPrice(settlement_price, invert = false) {
+        let quoteAsset = ChainStore.getAsset(settlement_price.getIn(["quote", "asset_id"]));
+        let baseAsset = ChainStore.getAsset(settlement_price.getIn(["base", "asset_id"]));
+
         let price = utils.get_asset_price(
             settlement_price.getIn(["quote", "amount"]),
-            backing_asset,
+            quoteAsset,
             settlement_price.getIn(["base", "amount"]),
-            quote_asset
+            baseAsset
         )
 
         if (invert) {
@@ -146,9 +149,9 @@ class MarketUtils {
         let payPrecision = utils.get_asset_precision(paysAsset.get("precision"));
 
         let receives = order.receives.amount / receivePrecision;
-        receives = utils.format_number(receives, receivesAsset.get("precision") - 1);
+        receives = utils.format_number(receives, receivesAsset.get("precision"));
         let pays = order.pays.amount / payPrecision;
-        pays = utils.format_number(pays, paysAsset.get("precision") - 1);
+        pays = utils.format_number(pays, paysAsset.get("precision"));
         let price_full = utils.get_asset_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, isAsk);
         // price_full = !flipped ? (1 / price_full) : price_full;
         // let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
@@ -161,7 +164,7 @@ class MarketUtils {
             time = order.time.split("T")[1];
             let now = new Date();
             let offset = now.getTimezoneOffset() / 60;
-            let date = utils.format_date(order.time + "Z").split("/");
+            let date = utils.format_date(order.time + "Z").split(/\W/);
             let hour = time.substr(0, 2);
             let hourNumber = parseInt(hour, 10);
             let localHour = hourNumber - offset;
@@ -196,89 +199,89 @@ class MarketUtils {
         return {int: int, dec: dec};
     }
 
-    static flatten_orderbookchart(array, sumBoolean, inverse, precision) {
-        inverse = inverse === undefined ? false : inverse;
-        let orderBookArray = [];
-        let maxStep, arrayLength = array.length;
+    // static flatten_orderbookchart(array, sumBoolean, inverse, precision) {
+    //     inverse = inverse === undefined ? false : inverse;
+    //     let orderBookArray = [];
+    //     let maxStep, arrayLength = array.length;
 
-        // Sum orders at same price
-        // if (arrayLength > 1) {
-        //     for (var i = arrayLength - 2; i >= 0; i--) {
-        //         if (array[i].x === array[i + 1].x) {
-        //             console.log("found order to sum");
-        //             array[i].y += array[i + 1].y;
-        //             array.splice(i + 1, 1);
-        //         }
-        //     }
-        // }
-        // arrayLength = array.length;
+    //     // Sum orders at same price
+    //     // if (arrayLength > 1) {
+    //     //     for (var i = arrayLength - 2; i >= 0; i--) {
+    //     //         if (array[i].x === array[i + 1].x) {
+    //     //             console.log("found order to sum");
+    //     //             array[i].y += array[i + 1].y;
+    //     //             array.splice(i + 1, 1);
+    //     //         }
+    //     //     }
+    //     // }
+    //     // arrayLength = array.length;
 
-        if (inverse) {
+    //     if (inverse) {
 
-            if (array && arrayLength) {
-                arrayLength = arrayLength - 1;
-                orderBookArray.unshift({
-                    x: array[arrayLength].x,
-                    y: array[arrayLength].y
-                });
-                if (array.length > 1) {
-                    for (let i = array.length - 2; i >= 0; i--) {
-                        maxStep = Math.min((array[i + 1].x - array[i].x) / 2, 0.1 / precision);
-                        orderBookArray.unshift({
-                            x: array[i].x + maxStep,
-                            y: array[i + 1].y
-                        });
-                        if (sumBoolean) {
-                            array[i].y += array[i + 1].y;
-                        }
-                        orderBookArray.unshift({
-                            x: array[i].x,
-                            y: array[i].y
-                        });
-                    }
-                } else {
-                    orderBookArray.unshift({
-                        x: 0,
-                        y: array[arrayLength].y
-                    });
-                }
-            }
-        } else {
-            if (array && arrayLength) {
-                orderBookArray.push({
-                    x: array[0].x,
-                    y: array[0].y
-                });
-                if (array.length > 1) {
-                    for (let i = 1; i < array.length; i++) {
-                        maxStep = Math.min((array[i].x - array[i - 1].x) / 2, 0.1 / precision);
-                        orderBookArray.push({
-                            x: array[i].x - maxStep,
-                            y: array[i - 1].y
-                        });
-                        if (sumBoolean) {
-                            array[i].y += array[i - 1].y;
-                        }
-                        orderBookArray.push({
-                            x: array[i].x,
-                            y: array[i].y
-                        });
-                    }
-                } else {
-                    orderBookArray.push({
-                        x: array[0].x * 1.5,
-                        y: array[0].y
-                    });
-                }
-            }
-        }
-        return orderBookArray;
-    }
+    //         if (array && arrayLength) {
+    //             arrayLength = arrayLength - 1;
+    //             orderBookArray.unshift({
+    //                 x: array[arrayLength].x,
+    //                 y: array[arrayLength].y
+    //             });
+    //             if (array.length > 1) {
+    //                 for (let i = array.length - 2; i >= 0; i--) {
+    //                     // maxStep = Math.min((array[i + 1].x - array[i].x) / 2, 0.1 / precision);
+    //                     orderBookArray.unshift({
+    //                         x: array[i].x + maxStep,
+    //                         y: array[i + 1].y
+    //                     });
+    //                     if (sumBoolean) {
+    //                         array[i].y += array[i + 1].y;
+    //                     }
+    //                     orderBookArray.unshift({
+    //                         x: array[i].x,
+    //                         y: array[i].y
+    //                     });
+    //                 }
+    //             } else {
+    //                 orderBookArray.unshift({
+    //                     x: 0,
+    //                     y: array[arrayLength].y
+    //                 });
+    //             }
+    //         }
+    //     } else {
+    //         if (array && arrayLength) {
+    //             orderBookArray.push({
+    //                 x: array[0].x,
+    //                 y: array[0].y
+    //             });
+    //             if (array.length > 1) {
+    //                 for (let i = 1; i < array.length; i++) {
+    //                     // maxStep = Math.min((array[i].x - array[i - 1].x) / 2, 0.1 / precision);
+    //                     orderBookArray.push({
+    //                         x: array[i].x - maxStep,
+    //                         y: array[i - 1].y
+    //                     });
+    //                     if (sumBoolean) {
+    //                         array[i].y += array[i - 1].y;
+    //                     }
+    //                     orderBookArray.push({
+    //                         x: array[i].x,
+    //                         y: array[i].y
+    //                     });
+    //                 }
+    //             } else {
+    //                 orderBookArray.push({
+    //                     x: array[0].x * 1.5,
+    //                     y: array[0].y
+    //                 });
+    //             }
+    //         }
+    //     }
+    //     return orderBookArray;
+    // }
 
     static flatten_orderbookchart_highcharts(array, sumBoolean, inverse, precision) {
         inverse = inverse === undefined ? false : inverse;
         let orderBookArray = [];
-        let maxStep, arrayLength;
+        let arrayLength;
 
         if (inverse) {
 
@@ -287,8 +290,6 @@ class MarketUtils {
                 orderBookArray.unshift([array[arrayLength][0], array[arrayLength][1]]);
                 if (array.length > 1) {
                     for (let i = array.length - 2; i >= 0; i--) {
-                        maxStep = Math.min((array[i + 1][0] - array[i][0]) / 2, 0.1 / precision);
-                        orderBookArray.unshift([array[i][0] + maxStep, array[i + 1][1]]);
                         if (sumBoolean) {
                             array[i][1] += array[i + 1][1];
                         }
@@ -303,8 +304,6 @@ class MarketUtils {
                 orderBookArray.push([array[0][0], array[0][1]]);
                 if (array.length > 1) {
                     for (var i = 1; i < array.length; i++) {
-                        maxStep = Math.min((array[i][0] - array[i - 1][0]) / 2, 0.1 / precision);
-                        orderBookArray.push([array[i][0] - maxStep, array[i - 1][1]]);
                         if (sumBoolean) {
                             array[i][1] += array[i - 1][1];
                         }
@@ -342,10 +341,10 @@ class MarketUtils {
     static isMarketAsset(quote, base) {
         let isMarketAsset = false, marketAsset, inverted = false;
 
-        if (quote.get("bitasset") && base.get("id") === "1.3.0") {
+        if (quote.get("bitasset") && base.get("id") === quote.getIn(["bitasset", "options", "short_backing_asset"])) {
             isMarketAsset = true;
             marketAsset = {id: quote.get("id")}
-        } else if (base.get("bitasset") && quote.get("id") === "1.3.0") {
+        } else if (base.get("bitasset") && quote.get("id") === base.getIn(["bitasset", "options", "short_backing_asset"])) {
             inverted = true;
             isMarketAsset = true;
             marketAsset = {id: base.get("id")};

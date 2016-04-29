@@ -24,7 +24,7 @@ class AccountSelector extends React.Component {
 
     static propTypes = {
         label: React.PropTypes.string.isRequired, // a translation key for the label
-        error: React.PropTypes.string, // the error message override
+        error: React.PropTypes.element, // the error message override
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         onChange: React.PropTypes.func, // a method to be called any time user input changes
         onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
@@ -57,6 +57,11 @@ class AccountSelector extends React.Component {
 
     onInputChanged(event) {
         let value = event.target.value.trim(); //.toLowerCase();
+
+        // If regex matches ^.*#/account/account-name/.*$, parse out account-name
+        let newValue = value.match(/(?:#\/account\/)(.*)(?:\/overview)/);
+        if (newValue) value = newValue[1];
+
         if (this.props.onChange && value !== this.props.accountName) this.props.onChange(value);
     }
 
@@ -115,8 +120,7 @@ class AccountSelector extends React.Component {
                     <div className="input-area">
                       <span className="inline-label">
                       <input type="text"
-                             value={this.props.accountName}
-                             defaultValue={this.props.accountName}
+                             value={this.props.accountName || ""}
                              placeholder={this.props.placeholder || counterpart.translate("account.name")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}

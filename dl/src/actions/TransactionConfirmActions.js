@@ -43,6 +43,14 @@ class TransactionConfirmActions {
     error(msg) {
         this.dispatch({error: msg});
     }
+    
+    togglePropose() {
+        this.dispatch();
+    }
+    
+    proposeFeePayingAccount(fee_paying_account) {
+        this.dispatch(fee_paying_account);
+    }
 
 }
 

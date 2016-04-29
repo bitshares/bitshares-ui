@@ -4,6 +4,7 @@ import Modal from "react-foundation-apps/src/modal"
 import ZfApi from "react-foundation-apps/src/utils/foundation-api"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
+import Translate from "react-translate-component";
 
 export default class PrivateKeyView extends Component {
     
@@ -44,38 +45,38 @@ export default class PrivateKeyView extends Component {
             <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
             <Modal ref={modalId} id={modalId} overlay={true} overlayClose={false}>
                 <a onClick={this.onClose.bind(this)} className="close-button">&times;</a>
-                <h3>Private Key View</h3>
+                <h3><Translate content="account.perm.key_viewer" /></h3>
                 <div className="grid-block vertical">
                     <div className="content-block">
                     
                         <div className="grid-content">
-                            <label>Public Key</label>
+                            <label><Translate content="account.perm.public" /></label>
                             {this.props.pubkey}
                         </div>
                         <br/>
                         
                         <div className="grid-block grid-content">
-                            <label>Private Key (WIF - Wallet Import Format)</label>
+                            <label><Translate content="account.perm.private" /></label>
                             <div>
                                 {this.state.wif ? <span>
                                     {this.state.wif}
                                     &nbsp;(<a onClick={this.onHide.bind(this)}>hide</a>)
                                 </span>:<span>
-                                    (<a onClick={this.onShow.bind(this)}>show</a>)
+                                    (<a onClick={this.onShow.bind(this)}><Translate content="account.perm.show" /></a>)
                                 </span>}
                             </div>
                         </div>
                         <br/>
 
                         <div className="grid-block grid-content">
-                            <label>Brainkey Position</label>
+                            <label><Translate content="account.perm.brain" /></label>
                             {key.brainkey_sequence == null ? "Non-deterministic" : key.brainkey_sequence}
                         </div>
                         <br/>
 
                         {key.import_account_names && key.import_account_names.length ?
                         <div className="grid-block grid-content">
-                            <label>Imported From Account</label>
+                            <label><Translate content="account.perm.from" /></label>
                             {key.import_account_names.join(", ")}
                             <br/>
                         </div>
@@ -84,7 +85,7 @@ export default class PrivateKeyView extends Component {
                     </div>
                 </div>
                 <div className="button-group">
-                    <a onClick={this.onClose.bind(this)} className="secondary button">close</a>
+                    <div onClick={this.onClose.bind(this)} className="secondary button"><Translate content="transfer.close" /></div>
                 </div>
             </Modal>
         </span>

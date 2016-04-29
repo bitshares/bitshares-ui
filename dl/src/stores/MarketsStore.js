@@ -3,6 +3,7 @@ var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
+import ls from "common/localStorage";
 import ChainStore from "api/ChainStore";
 import utils from "common/utils";
 
@@ -14,7 +15,7 @@ import {
 }
 from "./tcomb_structs";
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+let marketStorage = new ls("__graphene__");
 
 class MarketsStore {
     constructor() {
@@ -87,15 +88,12 @@ class MarketsStore {
     }
 
     _getBucketSize() {
-        let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 24 * 3600;
+        return parseInt(marketStorage.get("bucketSize", 4 * 3600));
     }
 
     _setBucketSize(size) {
         this.bucketSize = size;
-        if (ls) {
-            ls.setItem("__graphene___bucketSize", size);
-        }
+        marketStorage.set("bucketSize", size);
     }
 
     onChangeBase(market) {
@@ -379,6 +377,43 @@ class MarketsStore {
                 volume = utils.get_asset_amount(this.priceHistory[i].base_volume, this.quoteAsset);
             }
 
+
+            function findMax(a, b) {
+                if (a !== Infinity && b !== Infinity) {
+                    return Math.max(a, b);
+                } else if (a === Infinity) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            function findMin(a, b) {
+                if (a !== 0 && b !== 0) {
+                    return Math.min(a, b);
+                } else if (a === 0) {
+                    return b;
+                } else {
+                    return a;
+                }
+            }
+
+            if (low === 0) {
+                low = findMin(open, close);                
+            }
+
+            if (isNaN(high) || high === Infinity) {
+                high = findMax(open, close);
+            }
+
+            if (close === Infinity || close === 0) {
+                close = open;               
+            }
+
+            if (open === Infinity || open === 0) {
+                open = close;               
+            }
+
             prices.push([date, open, high, low, close]);
             volumeData.push([date, volume]);
         }
@@ -450,7 +485,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "bid",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 
@@ -460,6 +496,7 @@ class MarketsStore {
                     if (bids[i].price_full === bids[i + 1].price_full) {
                         bids[i].amount += bids[i + 1].amount;
                         bids[i].value += bids[i + 1].value;
+                        bids[i].for_sale += bids[i + 1].for_sale;
                         bids.splice(i + 1, 1);
                     }
                 }
@@ -489,7 +526,8 @@ class MarketsStore {
                     price_int: price.int,
                     amount: amount,
                     type: "ask",
-                    sell_price: order.sell_price
+                    sell_price: order.sell_price,
+                    for_sale: order.for_sale
                 });
             });
 
@@ -499,6 +537,7 @@ class MarketsStore {
                     if (asks[i].price_full === asks[i + 1].price_full) {
                         asks[i].amount += asks[i + 1].amount;
                         asks[i].value += asks[i + 1].value;
+                        asks[i].for_sale += asks[i + 1].for_sale;
                         asks.splice(i + 1, 1);
                     }
                 }
@@ -698,8 +737,6 @@ class MarketsStore {
                 maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.quoteAsset,
-                    this.baseAsset,
                     true
                 )
                  this.lowestCallPrice = settlementPrice / 5;
@@ -708,8 +745,7 @@ class MarketsStore {
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.baseAsset,
-                    this.quoteAsset
+                    false
                 )
                 this.lowestCallPrice = settlementPrice * 5;
             }
@@ -777,7 +813,8 @@ class MarketsStore {
                 price_int: price.int,
                 amount: amount,
                 type: "call",
-                sell_price: order.call_price
+                sell_price: order.call_price,
+                for_sale: !this.invertedCalls ? order.debt : order.collateral
             });
         });
 

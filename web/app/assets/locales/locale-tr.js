@@ -14,12 +14,12 @@
         account: "Hesap",
         dashboard: "Hesaplar",
         explorer: "Araştır",
-        exchange: "Al / Sat",
-        payments: "Transfer", 
+        exchange: "Kambiyo",
+        payments: "Gönder",
         logout: "Çıkış",
         settings: "Ayarlar",
         current: "Kullanılan Hesap",
-        create_account: "Oluştur",
+        create_account: "Hesap Oluştur",
         create_asset: "Aktif Oluştur",
         update_asset: "Aktif Güncelle",
         lock: "Kiliti Kapat",
@@ -28,8 +28,8 @@
         locked_tip: "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
         unlocked_tip: "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
     },
-    propose: "teklif et",
-    cancel: "iptal et",
+    propose: "Teklif Et",
+    cancel: "İptal",
     account: {
         welcome: "Blokzinciri'ne Hoşgeldiniz",
         asset: "Aktif",
@@ -41,7 +41,7 @@
         more: "fazlası",
         deposit_withdraw: "Yatır / Çek",
         as_collateral: "Teminat",
-        open_orders: "Açık emirler",
+        open_orders: "Açık Emirler",
         total_value: "Toplam değeri",
         show_hidden: "Göster",
         hide_hidden: "Gizle",
@@ -64,7 +64,8 @@
         vesting: {
             title: "Tutulan Bakiyeler",
             balance_number: "Bakiye #%(id)s",
-            no_balances: "Bu hesaba ait tutulan bir bakiye yok"
+            no_balances: "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
+            explain: "Bekletilen bakiyeler tavsiye programlarından yada emekçi ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı salıverilirler"
         },
         member: {
             stats: "Üyelik",
@@ -96,7 +97,9 @@
             required: "Gerekli coin günü",
             remaining: "Bekletilecek günler",
             claim: "Şimdi iste",
-            available: "İstemek için mevcut"
+            available: "Sahip olunabilecek",
+            referral_link: "Davet bağlantınız",
+            referral_text: "Bu bağlantıyı BitShares'e davet etmek istediğiniz kişilere gönderin"
         },
         user_issued_assets: {
             symbol: "Sembol",
@@ -134,7 +137,7 @@
             advanced: "Gelişmiş",
             need_asset: " İki aktiften biri an azından %(name)s olmalıdır",
             perm_warning: "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!!",
-            issued_assets: "Piyasa Sürülen Aktifler",
+            issued_assets: "Piyasa Sürülmüş Aktifler",
             short: "Kısa ad (max 32 harf)",
             condition: "Durum (max 60 harf)",
             expiry: "Piyasa çözülüm tarihi",
@@ -146,10 +149,12 @@
             minimum_feeds: "En az yayın sayısı",
             force_settlement_delay_sec: "Zorunlu hesaplaşma gecikmesi (dakika)",
             force_settlement_offset_percent: "Zorunlu hesaplaşmanın yüzdelik sapması",
-            maximum_force_settlement_volume: "Max zorunlu mahsup hacmi (yüzde)",
+            maximum_force_settlement_volume: "Max ödeşme hacmi (saatlik toplam arzın yüzdesi olarak)",
             backing: "Kısanın dayandığı aktif",
             error_precision: "Aktif %(asset)s ile aynı hassasiyete sahip değil",
-            error_invalid: "O aktif kullanılamaz"
+            error_invalid: "Bu aktif kullanılmayabilir",
+            market: "Tercih edilen piyasa çifti",
+            precision_warning: "Uyarı: Oluşturduktan sonra ondalık hane sayısı değiştirilemeyebilir"
         },
         connections: {
             known: "Tarafından Tanınıyor",
@@ -175,8 +180,14 @@
             warning2: "Sahip izinleri ağırlık toplamı %(weights_total)s,   alt sınır olarak belirlenen %(threshold)s a eşit yada üzerinde olması gerklidir",
             warning3: "Hesap zaten listenin içinde",
             warning4: "Anahtar zaten listenin içinde",
-            action: "Hareket",
-            acct_or_key:"Hesap / Anahtar / Adres"
+            action: "İşlem",
+            acct_or_key:" Hesap / Anahtar / Adres",
+            key_viewer: "Özel anahtar görüntüleyicisi",
+            public: "Açık anahtar",
+            private: "Private key (WIF - Cüzdan İçine Aktarma Formatı)",
+            show: "göster",
+            brain: "Beyin anahtarı konumu",
+            from: "Hesaptan içeri aktarıldı"
         },
         votes: {
             proxy_short: "Vekil",
@@ -184,6 +195,7 @@
             proxy: "Vekil Oy Hesabı",
             no_proxy: "Vekil Yok",
             clear_proxy: "Vekili kaldır",
+            go_proxy: "Git",
             name: "Ad",
             info: "Bilgi",
             votes: "Oylar",
@@ -219,6 +231,15 @@
             funding: "Fonlama",
             total_budget: "Toplam mevcut emekçi bütçesi",
             unused_budget: "Kullanılmamış emekçi bütçesi",
+            new: "Teklif edilen emekler",
+            active: "Etkin emekler",
+            w_approved_by: "Tanık %(account)s tarafından onaylandı",
+            w_not_approved_by: "Tanık %(account)s tarafından onaylanmadı",
+            cm_approved_by: "Kurul üyeleri %(account)s tarafından onaylandı",
+            cm_not_approved_by: "Kurul üyeleri %(account)s tarafından onaylanmadı",
+            already: "Hesap zaten listede",
+            proxy_known: "Bilinen proksiler",
+            expired: "Süresi bitmiş emekler"
         },
         options: {
             num_witnesses: "Gerekli Tanıklar",
@@ -254,7 +275,7 @@
         name_input: {
             name_is_taken: "Hesap adı zaten alınmış.",
             not_found: "Hesap bulunamadı.",
-            premium_name_faucet: "Bu paralı bir addır. Ücretli adlar hem daha pahalıdır hem de musluk tarafından ücretsiz kayıt yapılmazlar. En azından bir tire , rakam içeren yada sesli harfin bulunmadığı bir ad seçiniz.",
+            premium_name_faucet: "Hesap adlarında en azından bir tire yada rakam bulunmalıdır.",
             premium_name_warning: "Bu kayıt yapılması daha pahalı ücretli bir addır. Normal adların içerinde en azından bir tire, rakam bulunur yada hiç sesli harf yoktur."
         },
         propose_from: "Teklifi sunan",
@@ -272,6 +293,7 @@
         amount: "Miktar",
         to: "Alıcı",
         memo: "Açıklama",
+        warn_name_unable_read_memo: "Uyarı: %(name)s bu memoyu okuyamayacaktır",
         fee: "Ücret",
         send: "Gönder",
         final: "Son bakiye",
@@ -287,11 +309,12 @@
         back: "GERİ",
         confirm: "ONAYLA",
         broadcasting: "Yayınlanıyor...",
-        broadcast: "Transfer işleminiz yayınlanmıştır",
+        broadcast: "Transfer işleminiz yayınlandı",
         again: "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
         see: "TRANSFER İŞLEMLERİMİ GÖR",
         close: "Kapalı",
-        memo_unlock: "Bu memoyu görebilmek için cüzdanın kilidini açın"
+        memo_unlock: "Bu memoyu görebilmek için cüzdan kilidini açın",
+        optional: "Tercihe bağlı"
     },
     operation: {
         pending: "bekleyen %(blocks)s blok",
@@ -301,7 +324,7 @@
         proposal_create: "{account} bir işlem teklifi oluşturdu",
         proposal_update: "{account} bir teklif işlemi güncelledi",
         proposal_delete: "{account}  bir işlem teklifi sildi",
-        fill_order: "{account} {received} satın aldı - Fiyat: {price} ",
+        fill_order: "{account} {received} satın aldı - fiyat: {price} ",
         vesting_balance_withdraw: "{account} bekleyen bakiyeyi çekti - miktar:  {amount}",
         balance_claim: "{account} bakiye sahiplendi - miktar: {amount}",
         publish_feed: "{account} fiyat duyurdu: {price}",
@@ -313,6 +336,7 @@
         call_order_update: "{account} {debtSymbol} borcunu {debt} kadar ve teminatı {collateral} kadar değiştirdi",
         asset_reserve: "{account} {amount} kadar miktarı rezerve ayırdı",
         asset_issue: "{account} tarafından {amount} {to} adlı hesaba düzenlendi",
+        asset_fund_fee_pool: "{account} tarafından {asset} ücret havuzuna {amount} eklendi",
         asset_create: "{account} şu aktifi oluşturdu: {asset}",
         asset_update: "{account} şu aktifi güncelledi: {asset}",
         lifetime_upgrade_account: "{account} ömür-boyu üyeliğe yükseltildi",
@@ -329,11 +353,34 @@
         witness_update: "{account} tanık bilgilerini güncelledi",
         witness_pay: "Hesaba tanık ödemesi çekildi",
         witness_receive: "Tanık tarafından tanık geldi",
+        committee_member_update_global_parameters: "{account} evrensel kurul parametrelerini güncelledi",
         worker_create: "{account} günlük {pay} ödemeli bir emek teklifi sundu"
+    },
+    proposal: {
+        transfer: "Transfer miktarı: {amount}, nereden: {from}, nereye: {to}",
+        limit_order_create: "  %(account)s adlı  hesap adına %(sell_amount)s fiyatı üzerinden  %(buy_amount)s almak için emir ver",
+        limit_order_sell: " {account} adına {price} fiyatı üzerinden {amount} satmak için bir emir ver",
+        limit_order_buy: "{account} adına {price} fiyatı üzerinden {amount} almak için bir emir ver",
+        committee_member_update_global_parameters: "{account} tarafından kurul genel parametreleri güncellemesi",
+        action: "Hareketler",
+        expires: "Bitiş süresi",
+        update_account: "{account} için hesap verilerini güncelle",
+        status: "Durum",
+        asset_create: " %(asset)s adlı aktifi {account} hesabını kullanarak  oluştur",
+        update: {
+            active_approvals_to_add: "Eklenecek etkin onaylar",
+            active_approvals_to_remove: "Kaldırılacak etkin onaylar",
+            owner_approvals_to_add: "Eklenecek sahip onayları",
+            owner_approvals_to_remove: "Kaldırılacak sahip onayları",
+            key_approvals_to_add: "Eklenecek anahtar onayları",
+            key_approvals_to_remove: "Kaldırılacak anahtar onayları",
+        },
+        approve: "Onayla",
+        reject: "Reddet"
     },
     transaction: {
         confirm: "Lütfen işlemi teyit et",
-        broadcast_success: "İşlem yayınlanmıştır",
+        broadcast_success: "İşlem yayınlandı",
         transaction_confirmed: "İşlem teyit edildi",
         broadcast_fail: "İşlemin yayınlanması başarısız: %(message)s",
         broadcasting: "İşlem yayınlanıyor..",
@@ -359,7 +406,6 @@
         burn_asset: "Yakıldı",
         fund_pool: "%(asset)s ücret havuzunu şununla finanse etti:",
         committee_member_create: "Kurul üyesi oluşturuldu",
-
         withdraw_permission_create: "Hesaptan çekme izni verildi",
         withdraw_permission_update: "Hesaptan çekme iznini güncelledi",
         withdraw_permission_claim: "Çekme iznini sahiplendi",
@@ -405,12 +451,12 @@
             account_whitelist: "Beyaz Listeye Alma",
             account_upgrade: "Hesap yükseltme",
             account_transfer: "Hesap transferi",
-            asset_create: "Aktif oluştur",
-            asset_update: "Aktif güncelle",
+            asset_create: "Yeni Oluştur",
+            asset_update: "Güncelle",
             asset_update_bitasset: "Akıllıpara güncelleme",
             asset_update_feed_producers: "Aktif feed üreticileri güncelleme",
-            asset_issue: "Aktif düzenle",
-            asset_reserve: "Rezerv aktif",
+            asset_issue: "Düzenle",
+            asset_reserve: "Rezerve et",
             asset_fund_fee_pool: "Aktif ücret havuzu finansı",
             asset_settle: "Aktif ödemesi",
             asset_global_settle: "Genel Aktif Ödemesi",
@@ -465,7 +511,9 @@
             white_listed: "Beyaz listeye alınmış",
             black_listed: "Kara listeye alınmış",
             white_and_black_listed: "Beyaz ve kara listeye alınmış"
-        }
+        },
+        csv: ".csv olarak dışarı aktar",
+        csv_tip: "Geçmiş işlemleri virgülle ayrılmış .csv dosyası olarak indir"
     },
     explorer: {
         accounts: {
@@ -600,7 +648,7 @@
             title: "Bütçe Öğeleri"
         },
         proposals: {
-            title: "Teklifler"
+            title: "Teklif edilmiş işlemler"
         },
         account: {
             title: "Hesap"
@@ -629,20 +677,29 @@
         showSettles: "Ödeme emirlerini derinlik tablosunda gösterin ",
         yes: "Evet",
         no: "Hayır",
-        walletLockTimeout: "Cüzdan oto-kilit süresi (saniye)"
+        walletLockTimeout: "Cüzdan otomatik kitenme süresi (saniye)",
+        themes: "Tema",
+        "darkTheme": "Koyu tema",
+        "lightTheme": "Hafif tema",
+        "olDarkTheme": "Openledger koyu",
+        reset: "Ayarları sıfırla"
     },
     footer: {
         title: "Graphene",
         block: "Baş blok",
-        loading: "Yüklüyor..."
+        loading: "Yüklüyor...",
+        backup: "Yedekleme Gerekiyor",
+        nosync: "Blokzinciri ile eşzamanlı değil, lütfen senkronize olana kadar bekleyin..",
+        connection: "Blokzinciri bağlantısı yok",
+        brainkey: "Beyin anahtarının yedeklenmesi tavsiye edilir "
     },
     exchange: {
         market: "Piyasa",
         price_history: "Fiyat Tablosu",
         order_depth: "Piyasa Derinliği",
-        history: "Tüm Geçmiş",
-        my_history: "Geçmişim",
-        balance: "Bakiyeniz",
+        history: "Piyasa alım-satımları",
+        my_history: "Alım-satımlarım",
+        balance: "Bakiye",
         lowest_ask: "En düşük",
         highest_bid: "En yüksek",
         total: "Toplam",
@@ -669,7 +726,7 @@
         market_name: "Piyasalarım",
         quote_supply: "Karşıt arzı",
         base_supply: "Taban arzı",
-        more: "Piyasalar bul",
+        more: "Piyasa bul",
         volume_24: "24 Saat",
         change: "Değişim",
         confirm: "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
@@ -684,12 +741,13 @@
         index: "Indeks",
         my_bids: "Alış Fiyatlarım",
         my_asks: "Satış Fiyatlarım",
-        my_orders: "Emirlerim",
+        my_orders: "Açık emirlerim",
         settle_orders: "Emirleri öde",
-        asks: "Satış Fiyatları",
-        bids: "Alış Fiyatları",
+        asks: "Satış emirleri",
+        bids: "Alım emirleri",
         no_data: "Veri yok",
-        time: "Zaman aralığı",
+        time: "Mum Biçimi",
+        zoom: "Yakınlaştır",
         borrow: "Ödünç Al",
         no_balance: "Yetersiz bakiye",
         invalid_amount: "Geçersiz miktar",
@@ -697,7 +755,12 @@
         show_bids: "Tüm alış fiyat göster",
         show_asks: "Tümünü göster",
         hide: "Gizle",
-        short: "Kısa"
+        short: "Kısa",
+        others: "Diğerleri",
+        invert: "Fiyatı ters çevir",
+        to_market: "Piyasaya git",
+        zoom_all: "Tümü",
+        settings: "Grafik tercihleri"
     },
     fees: {
      title: "Ücret Tarifesi"
@@ -841,17 +904,25 @@
         refcode_optional: "Referral Kodu (opsiyonel)",
         enter_refcode: "Referral Kodunu Gir"
     },
+    proposal_create : {
+        review_period: "İnceleme süresi başlangıcı",
+        expiration_time: "Bitiş süresi",
+        proposed_operations: "Teklif edilen işlemler",
+        fee_paying_account: "Ücreti ödeyen hesap"
+    },
     gateway: {
         bridge: "Köprü",
         gateway: "Kapı",
         symbol: "Sembol",
         deposit_to: "Yatırılacak Yer",
         balance: "Bakiye",
-        generate: "Oluştur",
+        generate: "Yeni Üret",
+        generate_new: "Yeni adres",
         deposit: "Yatır",
         withdraw: "Çek",
         inventory: "Envanter",
         scan_qr: "QR Tara",
+        calc: "Hesaplanıyor",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Yatırmak için ziyaret edin",

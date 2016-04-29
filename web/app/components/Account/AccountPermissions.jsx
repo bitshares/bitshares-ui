@@ -6,6 +6,7 @@ import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
+import accountUtils from "common/account_utils";
 import PublicKey from "ecc/key_public";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
@@ -33,6 +34,7 @@ class AccountPermissions extends React.Component {
 
     componentWillMount() {
         this.updateAccountData(this.props.account);
+        accountUtils.getFinalFeeAsset(this.props.account, "account_update");
     }
 
     componentWillReceiveProps(nextProps) {
@@ -111,6 +113,13 @@ class AccountPermissions extends React.Component {
     onPublish() {
         let s = this.state;
         let updated_account = this.props.account.toJS();
+        
+        // Set fee asset        
+        updated_account.fee = {
+            amount: 0,
+            asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
+        }
+
         updated_account.new_options = updated_account.options;
         delete updated_account.options;
         updated_account.account = updated_account.id;
@@ -206,9 +215,9 @@ class AccountPermissions extends React.Component {
         accountsList = accountsList.add(this.props.account.get("id"));
         return (
             <div className="grid-content">
-
-                <Tabs setting="permissionsTabs" style={{maxWidth: "800px"}} contentClass="grid-content no-overflow large-8">
-                
+                <div className="generic-bordered-box">
+                    <Tabs setting="permissionsTabs" tabsClass="no-padding bordered-header" contentClass="grid-content no-overflow">
+                    
                     <Tab title="account.perm.active">
                             <HelpContent style={{maxWidth: "800px"}} path="components/AccountPermActive" />
                             <form className="threshold">
@@ -276,20 +285,23 @@ class AccountPermissions extends React.Component {
 
                     </Tab>
                 </Tabs>
-
-                <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
-                    <Translate content="account.perm.publish"/>
-                </button>
-                <button className={reset_buttons_class} onClick={this.onReset} tabIndex={9}>
-                    <Translate content="account.perm.reset"/>
-                </button>
+                
+                    <div style={{padding: 15}}>
+                    <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
+                        <Translate content="account.perm.publish"/>
+                    </button>
+                    <button className={reset_buttons_class} onClick={this.onReset} tabIndex={9}>
+                        <Translate content="account.perm.reset"/>
+                    </button>
+                    </div>
+                </div>
 
                 <RecentTransactions
                     accountsList={accountsList}
                     limit={25}
                     compactView={false}
                     filter="account_update"
-                    style={{paddingTop: "2rem", maxWidth: "1000px"}}
+                    style={{paddingTop: "2rem"}}
                 />
 
             </div>

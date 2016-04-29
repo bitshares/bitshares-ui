@@ -34,8 +34,7 @@ class TranswiserWithdrawModal extends React.Component {
    }
 
    onWithdrawAmountChange( {amount, asset} ) {
-      // console.log("balanceAmount: " + this.balanceAmount);
-      if (!this.balanceAmount || this.balanceAmount == 0) {
+      if (!this.balanceAmount || this.balanceAmount == 0 || !amount || !asset) {
           this.setState( {
               withdraw_amount: 0,
               withdraw_amount_after_fee: 0,
@@ -137,7 +136,6 @@ class TranswiserWithdrawModal extends React.Component {
                  </div>
                </form>)
    }
-
 };
 
 export default TranswiserWithdrawModal

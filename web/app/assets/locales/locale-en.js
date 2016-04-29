@@ -14,8 +14,8 @@
         account: "Account",
         dashboard: "Dashboard",
         explorer: "Explore",
-        exchange: "Trade",
-        payments: "Transfer", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
+        exchange: "Exchange",
+        payments: "Send", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
         current: "Current Account",
@@ -28,8 +28,8 @@
         locked_tip: "Wallet is locked.<br/>Click to unlock.",
         unlocked_tip: "Wallet is unlocked.<br/>Click to lock."
     },
-    propose: "propose",
-    cancel: "cancel",
+    propose: "Propose",
+    cancel: "Cancel",
     account: {
         welcome: "Welcome to Graphene",
         asset: "Asset",
@@ -49,6 +49,7 @@
         unignore: "Unignore",
         show_ignored: "Show ignored accounts",
         hide_ignored: "Hide ignored accounts",
+        accounts: "Accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
@@ -64,7 +65,8 @@
         vesting: {
             title: "Vesting balances",
             balance_number: "Balance #%(id)s",
-            no_balances: "This account has no vesting balances"
+            no_balances: "This account has no vesting balances",
+            explain: "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
         },
         member: {
             stats: "Membership",
@@ -96,7 +98,9 @@
             required: "Coin days required",
             remaining: "Days left of vesting period",
             claim: "Claim now",
-            available: "Available to claim"
+            available: "Available to claim",
+            referral_link: "Your referral link",
+            referral_text: "Give this to link to people you want to refer to Bitshares"
         },
         user_issued_assets: {
             symbol: "Symbol",
@@ -146,10 +150,12 @@
             minimum_feeds: "Minimum number of feeds",
             force_settlement_delay_sec: "Delay for forced settlements (minutes)",
             force_settlement_offset_percent: "Percent offset of forced settlements",
-            maximum_force_settlement_volume: "Max force settle volume (percent)",
+            maximum_force_settlement_volume: "Max force settle volume (percent of total supply per hour)",
             backing: "Short backing asset",
             error_precision: "That asset does not have the same precision as %(asset)s",
-            error_invalid: "That asset may not be used"
+            error_invalid: "That asset may not be used",
+            market: "Preferred market pairing",
+            precision_warning: "Warning: The number of decimals may not be changed after creation"
         },
         connections: {
             known: "Known by",
@@ -176,7 +182,13 @@
             warning3: "Account is already in the list",
             warning4: "Key is already in the list",
             action: "Action",
-            acct_or_key:" Account / Key / Address"
+            acct_or_key:" Account / Key / Address",
+            key_viewer: "Private key viewer",
+            public: "Public key",
+            private: "Private key (WIF - Wallet Import Format)",
+            show: "show",
+            brain: "Brainkey position",
+            from: "Imported from account"
         },
         votes: {
             proxy_short: "Proxy",
@@ -184,6 +196,7 @@
             proxy: "Proxy Voting Account",
             no_proxy: "No Proxy",
             clear_proxy: "Remove proxy",
+            go_proxy: "Go to",
             name: "Name",
             info: "Info",
             votes: "Votes",
@@ -219,6 +232,15 @@
             funding: "Funding",
             total_budget: "Total available worker budget",
             unused_budget: "Unused worker budget",
+            new: "Proposed workers",
+            active: "Active workers",
+            w_approved_by: "Witnesses approved by %(account)s",
+            w_not_approved_by: "Witnesses not approved by %(account)s",
+            cm_approved_by: "Committee members approved by %(account)s",
+            cm_not_approved_by: "Committee members not approved by %(account)s",
+            already: "Account is already in the list",
+            proxy_known: "Known proxies",
+            expired: "Expired workers"
         },
         options: {
             num_witnesses: "Desired Witnesses",
@@ -230,6 +252,8 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
+        home: "Home",
+        welcome: "Welcome to Bitshares",
         bts_market: "Market",
         history: "History",
         payees: "Payees",
@@ -245,16 +269,18 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        no_price: "No price available",
         percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
+        create_new: "Create New Account",
         identicon: "Identicon",
         pay_from: "Pay From",
         existing_accounts: "Existing Accounts",
         name_input: {
             name_is_taken: "Account name is already taken.",
             not_found: "Account not found.",
-            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
+            premium_name_faucet: "Account names must containing at least one dash or digit.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
         propose_from: "Propose From",
@@ -272,6 +298,7 @@
         amount: "Amount",
         to: "To",
         memo: "Memo",
+        warn_name_unable_read_memo: "Warning: %(name)s will be unable to read this memo",
         fee: "Fee",
         send: "Send",
         final: "Final balance",
@@ -291,7 +318,8 @@
         again: "MAKE ANOTHER TRANSFER",
         see: "SEE MY TRANSFERS",
         close: "Close",
-        memo_unlock: "Unlock your wallet in order to see this memo"
+        memo_unlock: "Unlock your wallet in order to see this memo",
+        optional: "Optional"
     },
     operation: {
         pending: "pending %(blocks)s blocks",
@@ -313,6 +341,7 @@
         call_order_update: "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         asset_reserve: "{account} reserved {amount}",
         asset_issue: "{account} issued {amount} to {to}",
+        asset_fund_fee_pool: "{account} funded {asset} fee pool with {amount}",
         asset_create: "{account} created the asset {asset}",
         asset_update: "{account} updated the asset {asset}",
         lifetime_upgrade_account: "{account} was upgraded to lifetime member",
@@ -329,7 +358,30 @@
         witness_update: "{account} update its witness info",
         witness_pay: "Withdrew witness pay to account",
         witness_receive: "Received witness from witness",
+        committee_member_update_global_parameters: "{account} updated the global committee parameters",
         worker_create: "{account} created a worker proposal with daily pay of {pay}"
+    },
+    proposal: {
+        transfer: "Transfer {amount} from {from} to {to}",
+        limit_order_create: "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+        limit_order_sell: "Place an order to sell {amount} at {price} for {account}",
+        limit_order_buy: "Place an order to buy {amount} at {price} for {account}",
+        committee_member_update_global_parameters: "Update committee global parameters by {account}",
+        action: "Actions",
+        expires: "Expires",
+        update_account: "Update account data for {account}",
+        status: "Status",
+        asset_create: "Create the asset %(asset)s using the account {account}",
+        update: {
+            active_approvals_to_add: "Active approvals to add",
+            active_approvals_to_remove: "Active approvals to remove",
+            owner_approvals_to_add: "Owner approvals to add",
+            owner_approvals_to_remove: "Owner approvals to remove",
+            key_approvals_to_add: "Key approvals to add",
+            key_approvals_to_remove: "Key approvals to remove",
+        },
+        approve: "Approve",
+        reject: "Reject"
     },
     transaction: {
         confirm: "Please confirm the transaction",
@@ -359,7 +411,6 @@
         burn_asset: "Burnt",
         fund_pool: "funded %(asset)s fee pool with",
         committee_member_create: "Created the committee member",
-
         withdraw_permission_create: "Gave withdrawal permission for account",
         withdraw_permission_update: "Updated withdrawal permission for account",
         withdraw_permission_claim: "Claimed withdrawal permission for account",
@@ -465,7 +516,9 @@
             white_listed: "Whitelisted",
             black_listed: "Blacklisted",
             white_and_black_listed: "Whitelisted and blacklisted"
-        }
+        },
+        csv: "Export to .csv",
+        csv_tip: "Download history as comma separated .csv file"
     },
     explorer: {
         accounts: {
@@ -600,7 +653,7 @@
             title: "Budget Items"
         },
         proposals: {
-            title: "Proposals"
+            title: "Proposed transactions"
         },
         account: {
             title: "Account"
@@ -629,19 +682,28 @@
         showSettles: "Show settle orders in depth chart",
         yes: "Yes",
         no: "No",
-        walletLockTimeout: "Wallet auto-lock time (seconds)"
+        walletLockTimeout: "Wallet auto-lock time (seconds)",
+        themes: "Theme",
+        "darkTheme": "Dark theme",
+        "lightTheme": "Light theme",
+        "olDarkTheme": "Openledger dark",
+        reset: "Reset settings"
     },
     footer: {
         title: "Graphene",
         block: "Head block",
-        loading: "Loading..."
+        loading: "Loading...",
+        backup: "Backup Required",
+        nosync: "Blockchain is out of sync, please wait until it's synchronized..",
+        connection: "No Blockchain connection",
+        brainkey: "Backup brainkey recommended"
     },
     exchange: {
         market: "Market",
         price_history: "Price Chart",
         order_depth: "Market Depth",
-        history: "All History",
-        my_history: "My History",
+        history: "Market trades",
+        my_history: "My trades",
         balance: "Balance",
         lowest_ask: "Lowest ask",
         highest_bid: "Highest bid",
@@ -684,12 +746,13 @@
         index: "Index",
         my_bids: "My bids",
         my_asks: "My asks",
-        my_orders: "My orders",
+        my_orders: "My open orders",
         settle_orders: "Settle orders",
-        asks: "Asks",
-        bids: "Bids",
+        asks: "Sell orders",
+        bids: "Buy orders",
         no_data: "No data",
-        time: "Time interval",
+        time: "Candlesticks",
+        zoom: "Zoom",
         borrow: "Borrow",
         no_balance: "Insufficient balance",
         invalid_amount: "Invalid amount",
@@ -697,7 +760,14 @@
         show_bids: "Show all bids",
         show_asks: "Show all asks",
         hide: "Hide",
-        short: "Short"
+        short: "Short",
+        others: "Others",
+        invert: "Invert the price",
+        to_market: "Go to market",
+        zoom_all: "All",
+        settings: "Chart options",
+        featured: "Featured Markets",
+        new: "New"
     },
     fees: {
      title: "Fee Schedule"
@@ -841,6 +911,12 @@
         refcode_optional: "Referral Code (optional)",
         enter_refcode: "Enter referral code"
     },
+    proposal_create : {
+        review_period: "Review period begin",
+        expiration_time: "Expiration time",
+        proposed_operations: "Proposed operations",
+        fee_paying_account: "Fee paying account"
+    },
     gateway: {
         bridge: "Bridge",
         gateway: "Gateway",
@@ -848,10 +924,12 @@
         deposit_to: "Deposit To",
         balance: "Balance",
         generate: "Generate",
+        generate_new: "New address",
         deposit: "Deposit",
         withdraw: "Withdraw",
         inventory: "Inventory",
         scan_qr: "Scan QR",
+        calc: "Calculating",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Visit to deposit",

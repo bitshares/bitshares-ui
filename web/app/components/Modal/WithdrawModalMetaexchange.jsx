@@ -27,7 +27,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		receive_asset_name: React.PropTypes.string,
 		receive_asset_symbol: React.PropTypes.string,
 		is_bts_withdraw: React.PropTypes.string,
-	}
+	};
 
    constructor( props ) {
       super(props);
@@ -47,17 +47,22 @@ class WithdrawModalMetaexchange extends React.Component {
 		 quote:"fetching...",
 		 limit:"fetching..."
       }
-	  
-		if (this.props.is_bts_withdraw)
-		{
-			Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
-			{
-				// console.log(reply);
-				this.setState( {limit:reply.bid_max} );
+   }
 
-				this.updateQuote(1);
-			}));
-		}
+   componentDidMount() {
+        if (this.props.is_bts_withdraw) {
+            Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair})
+            .then( reply => reply.json()
+                .then(reply=> {
+                    // console.log(reply);
+                    this.setState( {limit:reply.bid_max} );
+
+                    this.updateQuote(1);
+                })
+            ).catch(err => {
+            console.log("PostForm error:", err);
+            });
+        }
    }
    
 	updateWithdrawalAddress()
@@ -77,11 +82,15 @@ class WithdrawModalMetaexchange extends React.Component {
    {
 		this.setState( {quote:"fetching...", quote_amount:amount});
 		
-		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount}).then( reply=>reply.json().then(reply=>
-				{
-					// console.log(reply);
-					this.setState( {quote:reply.result} );
-				}));
+		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount})
+        .then( reply=> reply.json()
+            .then(reply=> {
+				// console.log(reply);
+				this.setState( {quote:reply.result} );
+			})
+        ).catch(err => {
+            console.log("PostForm getQuote error:", err);
+        });
    }
 
 	onWithdrawAmountChange( {amount, asset} ) 

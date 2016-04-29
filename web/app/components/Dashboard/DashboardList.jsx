@@ -22,7 +22,7 @@ import counterpart from "counterpart";
 let lastLookup = new Date();
 
 @BindToChainState()
-class AccountsList extends React.Component {
+class DashboardList extends React.Component {
 
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
@@ -46,9 +46,9 @@ class AccountsList extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
-            inverseSort: props.viewSettings.get("dashboardSortInverse") || true,
-            sortBy: props.viewSettings.get("dashboardSort") || "star",
-            dashboardFilter: props.viewSettings.get("dashboardFilter") || ""
+            inverseSort: props.viewSettings.get("dashboardSortInverse", true),
+            sortBy: props.viewSettings.get("dashboardSort", "star"),
+            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
         };
 
     }
@@ -225,7 +225,7 @@ class AccountsList extends React.Component {
         let filterText = counterpart.translate("markets.filter").toUpperCase();
 
         return (
-            <div>
+            <div style={this.props.style}>
                 {!this.props.compact ? (
                     <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
                         <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
@@ -270,7 +270,7 @@ class AccountsListWrapper extends React.Component {
 
     render () {
         return (
-            <AccountsList
+            <DashboardList
                 {...this.props}
             />
         );

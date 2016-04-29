@@ -1,58 +1,75 @@
 var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
-
+var IntlActions = require("../actions/IntlActions");
 var Immutable = require("immutable");
 var _ =require("lodash");
 
-const STORAGE_KEY = "__graphene__";
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+import ls from "common/localStorage";
+const STORAGE_KEY = "__graphene__";
+let ss = new ls(STORAGE_KEY);
 
 class SettingsStore {
     constructor() {
         this.exportPublicMethods({getSetting: this.getSetting.bind(this)});
 
-        this.settings = Immutable.Map({
+        this.defaultSettings = Immutable.Map({
             locale: "en",
             connection: "wss://bitshares.openledger.info/ws",
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
             showSettles: false,
-            walletLockTimeout: 60 * 10
+            walletLockTimeout: 60 * 10,
+            themes: "darkTheme"
         });
 
-        this.viewSettings =  Immutable.Map({
-            cardView: true
-        });
+        this.baseOptions = [CORE_ASSET, "BTC", "USD", "CNY", "OPEN.BTC", "OPEN.USD"];
 
-        this.marketDirections = Immutable.Map({
+        let defaultMarkets = [
+            // BTS BASE
+            ["OPEN.MUSE_"+ CORE_ASSET, {"quote": "OPEN.MUSE","base": CORE_ASSET}],
+            ["OPEN.EMC_"+ CORE_ASSET, {"quote": "OPEN.EMC","base": CORE_ASSET}],
+            ["TRADE.MUSE_"+ CORE_ASSET, {"quote": "TRADE.MUSE","base": CORE_ASSET}],
+            ["OPEN.BTC_"+ CORE_ASSET, {"quote": "OPEN.BTC","base": CORE_ASSET}],
+            ["USD_"+ CORE_ASSET, {"quote": "USD","base": CORE_ASSET}],
+            ["BTC_"+ CORE_ASSET, {"quote": "BTC","base": CORE_ASSET}],
+            ["CNY_"+ CORE_ASSET, {"quote": "CNY","base": CORE_ASSET}],
+            ["EUR_"+ CORE_ASSET, {"quote": "EUR","base": CORE_ASSET}],
+            ["GOLD_"+ CORE_ASSET, {"quote": "GOLD","base": CORE_ASSET}],
+            ["SILVER_"+ CORE_ASSET, {"quote": "SILVER","base": CORE_ASSET}],
+            ["METAEX.BTC_"+ CORE_ASSET, {"quote": "METAEX.BTC","base": CORE_ASSET}],
+            ["METAEX.ETH_"+ CORE_ASSET, {"quote": "METAEX.ETH","base": CORE_ASSET}],
+            ["METAFEES_"+ CORE_ASSET, {"quote": "METAFEES","base": CORE_ASSET}],
+            ["OBITS_"+ CORE_ASSET, {"quote": "OBITS","base": CORE_ASSET}],
+            ["OPEN.ETH_"+ CORE_ASSET, {"quote": "OPEN.ETH","base": CORE_ASSET}],
+            ["MKR_"+ CORE_ASSET, {"quote": "MKR","base": CORE_ASSET}],
 
-        });
-
-        this.hiddenAssets = Immutable.List([]);
-
-        this.starredMarkets = Immutable.Map([
-            [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
-            [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
-            [CORE_ASSET + "_EUR", {"quote": CORE_ASSET,"base": "EUR"}],
-            [CORE_ASSET + "_GOLD", {"quote": CORE_ASSET,"base": "GOLD"}],
-            [CORE_ASSET + "_SILVER", {"quote": CORE_ASSET,"base": "SILVER"}],
-            [CORE_ASSET + "_USD", {"quote": CORE_ASSET,"base": "USD"}],
-            ["BTC_USD", {"quote":"BTC","base":"USD"}],
-            ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
-            [CORE_ASSET + "_OPENBTC", {"quote": CORE_ASSET,"base": "OPENBTC"} ],
-            [CORE_ASSET + "_OPENMUSE", {"quote": CORE_ASSET,"base": "OPENMUSE"} ],
-            [CORE_ASSET + "_TRADE.BTC", {"quote": CORE_ASSET,"base": "TRADE.BTC"} ],
+            // BTC BASE
             ["TRADE.BTC_BTC", {"quote":"TRADE.BTC","base": "BTC"} ],
-            [CORE_ASSET + "_METAFEES", {"quote": CORE_ASSET,"base": "METAFEES"} ],
-            [CORE_ASSET + "_OBITS", {"quote": CORE_ASSET,"base": "OBITS"} ],
-            [CORE_ASSET + "_TRADE.MUSE", {"quote": CORE_ASSET,"base": "TRADE.MUSE"} ],
             ["METAEX.BTC_BTC", {"quote":"METAEX.BTC","base": "BTC"} ],
-            [CORE_ASSET + "_METAEX.BTC", {"quote": CORE_ASSET,"base": "METAEX.BTC" } ]
-        ]);
+            ["OPEN.BTC_BTC", {"quote":"OPEN.BTC","base": "BTC"} ],
+            ["OPEN.STEEM_BTC", {"quote":"OPEN.STEEM","base": "BTC"} ],
+            ["OPEN.ETH_BTC", {"quote":"OPEN.ETH","base": "BTC"} ],
+            ["USD_BTC", {"quote":"USD","base": "BTC"} ],
+            [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
 
-        this.starredAccounts = Immutable.Map();
+            // USD BASE
+            ["OPEN.USD_USD", {"quote": "OPEN.USD","base": "USD"}],
+            [CORE_ASSET + "_USD", {"quote": CORE_ASSET,"base": "USD"}],
+
+            // CNY BASE
+            ["TCNY_CNY", {"quote": "TCNY","base": "CNY"}],
+            ["BOTSCNY_CNY", {"quote": "BOTSCNY","base": "CNY"}],
+            ["OPEN.CNY_CNY", {"quote": "OPEN.CNY","base": "CNY"}],
+            [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
+
+            // OTHERS
+            ["OPEN.EUR_EUR", {"quote": "OPEN.EUR","base": "EUR"}],
+            ["METAEX.ETH_OPEN.ETH", {"quote": "METAEX.ETH","base": "OPEN.ETH"}]
+            ["MKR_OPEN.BTC", {"quote": "MKR","base": "OPEN.BTC"}]
+
+        ];
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
@@ -69,7 +86,8 @@ class SettingsStore {
             connection: [
                 "wss://bitshares.openledger.info/ws",
                 "wss://bitshares.dacplay.org:8089/ws",
-                "wss://dele-puppy.com/ws"
+                "wss://dele-puppy.com/ws",
+                "wss://valen-tin.fr:8090/ws"
             ],
             unit: [
                 CORE_ASSET,
@@ -82,6 +100,11 @@ class SettingsStore {
             showSettles: [
                 {translate: "yes"},
                 {translate: "no"}
+            ],
+            themes: [
+                "darkTheme",
+                "lightTheme",
+                "olDarkTheme"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -99,37 +122,26 @@ class SettingsStore {
             onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
-            onHideAsset: SettingsActions.hideAsset
+            onHideAsset: SettingsActions.hideAsset,
+            onClearSettings: SettingsActions.clearSettings,
+            onSwitchLocale: IntlActions.switchLocale
         });
 
-        if (this._lsGet("settings_v3")) {
-            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
-        }
+        this.settings = Immutable.Map(_.merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
-        if (this._lsGet("starredMarkets")) {
-            this.starredMarkets = Immutable.Map(JSON.parse(this._lsGet("starredMarkets")));
-        }
+        this.starredMarkets = Immutable.Map(ss.get("starredMarkets", defaultMarkets));
 
-        if (this._lsGet("starredAccounts")) {
-            this.starredAccounts = Immutable.Map(JSON.parse(this._lsGet("starredAccounts")));
-        }
+        this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        if (this._lsGet("defaults_v1")) {
-            this.defaults = _.merge(this.defaults, JSON.parse(this._lsGet("defaults_v1")));
-        }
+        this.defaults = _.merge(this.defaults, ss.get("defaults_v1"));
 
-        if (this._lsGet("viewSettings_v1")) {
-            this.viewSettings = Immutable.Map(JSON.parse(this._lsGet("viewSettings_v1")));
-        }
+        this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
-        if (this._lsGet("marketDirections")) {
-            this.marketDirections = Immutable.Map(JSON.parse(this._lsGet("marketDirections")));
-        }
+        this.marketDirections = Immutable.Map(ss.get("marketDirections"));
 
-        if (this._lsGet("hiddenAssets")) {
-            this.hiddenAssets = Immutable.List(JSON.parse(this._lsGet("hiddenAssets")));
-        }
+        this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
+        this.preferredBases = Immutable.List(ss.get("preferredBases", [CORE_ASSET, "BTC", "USD", "CNY", "OPEN.BTC"]));
 
     }
 
@@ -143,9 +155,9 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v3", this.settings.toJS());
+        ss.set("settings_v3", this.settings.toJS());
         if (payload.setting === "walletLockTimeout") {
-            this._lsSet("lockTimeout", payload.value);
+            ss.set("lockTimeout", payload.value);
         }
     }
 
@@ -154,7 +166,7 @@ class SettingsStore {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
 
-        this._lsSet("viewSettings_v1", this.viewSettings.toJS());
+        ss.set("viewSettings_v1", this.viewSettings.toJS());
     }
 
     onChangeMarketDirection(payload) {
@@ -162,7 +174,7 @@ class SettingsStore {
             this.marketDirections = this.marketDirections.set(key, payload[key]);
         }
 
-        this._lsSet("marketDirections", this.marketDirections.toJS());
+        ss.set("marketDirections", this.marketDirections.toJS());
     }
 
     onHideAsset(payload) {
@@ -174,19 +186,7 @@ class SettingsStore {
             }
         }
 
-        this._lsSet("hiddenAssets", this.hiddenAssets.toJS());
-    }
-
-    _lsGet(key) {
-        if (ls) {
-            return ls.getItem(STORAGE_KEY + key);
-        }
-    }
-
-    _lsSet(key, object) {
-        if (ls) {
-            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
-        }
+        ss.set("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     onAddStarMarket(market) {
@@ -195,7 +195,7 @@ class SettingsStore {
         if (!this.starredMarkets.has(marketID)) {
             this.starredMarkets = this.starredMarkets.set(marketID, {quote: market.quote, base: market.base});
 
-            this._lsSet("starredMarkets", this.starredMarkets.toJS());
+            ss.set("starredMarkets", this.starredMarkets.toJS());
         } else {
             return false;
         }
@@ -206,14 +206,14 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
-        this._lsSet("starredMarkets", this.starredMarkets.toJS());
+        ss.set("starredMarkets", this.starredMarkets.toJS());
     }
 
     onAddStarAccount(account) {
         if (!this.starredAccounts.has(account)) {
             this.starredAccounts = this.starredAccounts.set(account, {name: account});
 
-            this._lsSet("starredAccounts", this.starredAccounts.toJS());
+            ss.set("starredAccounts", this.starredAccounts.toJS());
         } else {
             return false;
         }
@@ -223,20 +223,44 @@ class SettingsStore {
 
         this.starredAccounts = this.starredAccounts.delete(account);
 
-        this._lsSet("starredAccounts", this.starredAccounts.toJS());
+        ss.set("starredAccounts", this.starredAccounts.toJS());
     }
 
     onAddWS(ws) {
         this.defaults.connection.push(ws);
-        this._lsSet("defaults_v1", this.defaults);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
         if (index !== 0) { // Prevent removing the default connection
             this.defaults.connection.splice(index, 1);
-            this._lsSet("defaults_v1", this.defaults);
+            ss.set("defaults_v1", this.defaults);
         }
     }
+
+    onClearSettings() {
+        ss.remove("settings_v3");
+        this.settings = this.defaultSettings;
+
+        ss.set("settings_v3", this.settings.toJS());
+
+        if (window && window.location) {
+            // window.location.reload();
+        }
+    }
+
+    onSwitchLocale(locale) {
+        console.log("onSwitchLocale:", locale);
+
+        this.onChangeSetting({setting: "locale", value: locale});
+    }
+
+    // onChangeBase(payload) {
+    //     if (payload.index && payload.value) {
+    //         this.preferredBases = this.preferredBases.set(payload.index, payload.value);
+    //         ss.set("preferredBases", this.preferredBases.toArray);                    
+    //     }
+    // }
 }
 
 module.exports = alt.createStore(SettingsStore, "SettingsStore");

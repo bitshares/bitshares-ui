@@ -8,10 +8,12 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
+import utils from "common/utils";
 
 class AssetFlag extends React.Component {
     render()
@@ -159,12 +161,18 @@ class Asset extends React.Component {
         // Add <a to any links included in the description
         
         let description = assetUtils.parseDescription(asset.options.description);
-        let desc = description.short_name ? description.short_name : description.main;
+        let desc = description.main;
+        let short_name = description.short_name ? description.short_name : null;
+
         let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
 
         // Regexp needs a whitespace after a url, so add one to make sure
         desc = desc && desc.length > 0 ? desc + " " : desc;
         let urls = desc.match(urlTest);
+
+        // Add market link
+        const core_asset = ChainStore.getAsset("1.3.0");
+        let preferredMarket = description.market ? description.market : core_asset ? core_asset.get("symbol") : "BTS";
 
         if (urls && urls.length) {
             urls.forEach(url => {
@@ -173,16 +181,20 @@ class Asset extends React.Component {
             })
         }
 
+        let {name, prefix} = utils.replaceName(asset.symbol, "bitasset" in asset && !asset.bitasset.is_prediction_market && asset.issuer === "1.2.0");
+
         return (
                 <div style={{overflow:"visible"}}>
                     <HelpContent
                         path = {"assets/" + asset.symbol}
                         alt_path = "assets/Asset"
                         section="summary"
-                        symbol= {asset.symbol}
+                        symbol={(prefix || "") + name}
                         description={desc}
                         issuer= {issuerName}
                     />
+                    {short_name ? <p>{short_name}</p> : null}
+                    <a style={{textTransform: "uppercase"}} href={`#/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
                 </div>
         );
     }
@@ -229,7 +241,7 @@ class Asset extends React.Component {
 
         return (
             <div className="asset-card">
-              <div className="card-divider">{asset.symbol}</div>
+              <div className="card-divider"><AssetName name={asset.symbol} /></div>
                 <table className="table key-value-table table-hover">
                     <tbody>
                         <tr>

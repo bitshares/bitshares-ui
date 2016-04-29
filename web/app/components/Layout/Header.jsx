@@ -40,23 +40,32 @@ class Header extends React.Component {
         history: PropTypes.history
     };
 
-    constructor(props) {
+    constructor(props, context) {
         super();
         this.state = {
-            active: null
+            active: context.location.pathname
         };
+
+        this.unlisten = null;
     }
 
     componentWillMount() {
-        this.context.history.listen((err, newState) => {
+        this.unlisten = this.context.history.listen((err, newState) => {
             if (!err) {
-                if (this.state.active !== newState.location.pathname) {
+                if (this.unlisten && this.state.active !== newState.location.pathname) {
                     this.setState({
                         active: newState.location.pathname
                     });
                 }
             }
         });
+    }
+
+    componentWillUnmount() {
+        if (this.unlisten) {
+            this.unlisten();
+            this.unlisten = null;
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -107,6 +116,13 @@ class Header extends React.Component {
         AccountActions.setCurrentAccount.defer(account_name);
     }
 
+    onClickUser(account, e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        this.context.history.pushState(null, `/account/${account}/overview`);
+    }
+
     render() {
         let {active} = this.state;
         let {linkedAccounts, currentAccount, starredAccounts} = this.props;
@@ -131,19 +147,18 @@ class Header extends React.Component {
             });
         }
 
+
         let myAccounts = AccountStore.getMyAccounts();
 
-        let myAccountsList = Immutable.List(myAccounts);
-
         let walletBalance = myAccounts.length ? (
-                            <div className="grp-menu-item" style={{paddingRight: "0.5rem"}} >
+                            <div className="grp-menu-item" style={{paddingRight: "0.5rem", fontSize: "0.9rem"}} >
                                 <TotalBalanceValue.AccountWrapper accounts={myAccounts} inHeader={true}/>
                             </div>) : null;
 
-        if (linkedAccounts.size > 1) {
+        if (linkedAccounts.size > 0) {
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})} onClick={this._onNavigate.bind(this, "/dashboard")}>
-                    <Translate component="span" content="header.dashboard" />
+                    <Translate component="span" content="account.home" />
                 </a>
             );
         } else if (linkedAccounts.size === 1) {
@@ -169,19 +184,19 @@ class Header extends React.Component {
 
         let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
             <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate component="span" content="header.exchange" /></a>
+            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/USD_BTS`)}><Translate component="span" content="header.exchange" /></a>
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;
 
-        if (currentAccount && active.indexOf("market/") !== -1) {
+        if (currentAccount) {
 
             let account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0) {
                 tradingAccounts.push(currentAccount);
             }
 
-            if (tradingAccounts.length > 1) {
+            if (tradingAccounts.length >= 1) {
 
                 let accountsList = tradingAccounts
                     .sort()
@@ -193,7 +208,7 @@ class Header extends React.Component {
                     <ActionSheet>
                         <ActionSheet.Button title="">
                             <a className="button">
-                                <Icon name="user"/>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
+                                <span onClick={this.onClickUser.bind(this, currentAccount)}><Icon name="user"/></span>&nbsp;{account_display_name} &nbsp;<Icon name="chevron-down"/>
                             </a>
                         </ActionSheet.Button>
                         <ActionSheet.Content >
@@ -221,9 +236,10 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{linkToAccountOrDashboard}</li>
-                        <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
-                        <li>{tradeLink}</li>
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
+                        <li>{tradeLink}</li>
+                        <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
+                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={`/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">

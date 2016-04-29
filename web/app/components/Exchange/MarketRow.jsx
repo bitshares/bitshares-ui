@@ -97,7 +97,7 @@ class MarketRow extends React.Component {
                     );
 
                 case "vol":
-                    let amount = stats ? stats.volumeQuote : 0;
+                    let amount = stats ? stats.volumeBase : 0;
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
                             {utils.format_volume(amount)}
@@ -123,7 +123,7 @@ class MarketRow extends React.Component {
 
                 case "market":
                     return (<td onClick={this._onClick.bind(this, marketID)} key={column.index}>
-                            {marketName}
+                            {this.props.name}
                         </td>);
 
                 case "price":
@@ -135,7 +135,7 @@ class MarketRow extends React.Component {
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
-                            {utils.format_number(finalPrice, 6)}
+                            {utils.format_number(finalPrice, finalPrice > 1000 ? 0 : finalPrice > 10 ? 2 : 6)}
                         </td>
                     )
 

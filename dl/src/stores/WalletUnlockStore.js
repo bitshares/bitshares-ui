@@ -2,9 +2,10 @@ import alt from "alt-instance"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import SettingsActions from "actions/SettingsActions"
 import WalletDb from "stores/WalletDb"
+import ls from "common/localStorage";
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
 const STORAGE_KEY = "__graphene__";
+let ss = new ls(STORAGE_KEY);
 
 class WalletUnlockStore {
     
@@ -12,18 +13,18 @@ class WalletUnlockStore {
         this.bindActions(WalletUnlockActions)
         this.state = {locked: true}
 
-        this.walletLockTimeout = 60 * 10; // seconds (10 minutes)
+        this.walletLockTimeout = this._getTimeout(); // seconds (10 minutes)
         this.timeout = null;
 
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting
         });
 
-        let timeoutSetting = this._getTimeout();
+        // let timeoutSetting = this._getTimeout();
 
-        if (timeoutSetting) {
-            this.walletLockTimeout = timeoutSetting;
-        }
+        // if (timeoutSetting) {
+        //     this.walletLockTimeout = timeoutSetting;
+        // }
 
     }
     
@@ -89,14 +90,7 @@ class WalletUnlockStore {
     }
 
     _getTimeout() {
-        if (ls) {
-            let value = parseInt(JSON.parse(ls.getItem(STORAGE_KEY + "lockTimeout")), 10);
-            if (value && !isNaN(value) && typeof value === "number") {
-                return value;
-            } else {
-                return null;
-            }
-        }
+        return parseInt(ss.get("lockTimeout", 600), 10);
     }
 }
 

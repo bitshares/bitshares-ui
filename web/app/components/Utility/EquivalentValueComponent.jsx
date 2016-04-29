@@ -7,6 +7,7 @@ import MarketsActions from "actions/MarketsActions";
 import ChainStore from "api/ChainStore";
 import connectToStores from "alt/utils/connectToStores";
 import MarketsStore from "stores/MarketsStore";
+import Translate from "react-translate-component";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -28,7 +29,8 @@ class ValueComponent extends React.Component {
 
     static defaultProps = {
         toAsset: "1.3.0",
-        fullPrecision: true
+        fullPrecision: true,
+        noDecimals: false
     };
 
     constructor() {
@@ -111,10 +113,10 @@ class ValueComponent extends React.Component {
 
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
         if (!eqValue) {
-            return <span>n/a</span>
+            return <span style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>
         }
 
-        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toAsset.get("precision")}/>;
+        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={this.props.noDecimals ? toAsset.get("precision") : 0}/>;
     }
 }
 
@@ -147,7 +149,7 @@ class BalanceValueComponent extends React.Component {
         let amount = Number(this.props.balance.get("balance"));
         let fromAsset = this.props.balance.get("asset_type");
             
-        return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} toAsset={this.props.toAsset}/>;
+        return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
 

@@ -13,6 +13,7 @@ import SettingsActions from "actions/SettingsActions";
 import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import AssetName from "../Utility/AssetName";
 
 class TableHeader extends React.Component {
 
@@ -22,11 +23,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{quoteSymbol}</span> : null}</th>
-                    <th style={{textAlign: "right"}}>{baseSymbol ? <span className="header-sub-title">{baseSymbol}</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
-                    <th style={{minWidth: 91}}></th>
+                    <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={quoteSymbol} /></span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={baseSymbol} /></span> : null}</th>
+                    <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th style={{width: "18%"}}></th>
                 </tr>
             </thead>
         );
@@ -61,19 +62,19 @@ class OrderRow extends React.Component {
 
             return (
                 <tr key={order.id}>
-                    <td className={tdClass}>
+                    <td style={{width: "18%"}} className={tdClass}>
                         <PriceText preFormattedPrice={price} />
                         {priceSymbol}
                     </td>
-                    <td>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
-                    <td>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
-                    <td><FormattedDate
+                    <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
+                    <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
+                    <td style={{width: "28%"}}><FormattedDate
                         value={order.expiration}
                         format="short"
                         />
                     </td>
-                    <td className="text-right" style={{padding: "2px 5px"}}>
-                        <a style={{marginRight: "0"}} className="order-cancel" onClick={this.props.onCancel}>
+                    <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
+                        <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
                         <span>{cancel_text}</span>
                         </a>
                     </td>
@@ -90,32 +91,19 @@ OrderRow.defaultProps = {
 
 
 class MyOpenOrders extends React.Component {
-    constructor(props) {
-        super();
-        this.state = {
-            flip: props.flipMyOrders
-        };
-    }
+
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
                 nextProps.currentAccount !== this.props.currentAccount ||
-                !Immutable.is(nextProps.orders, this.props.orders) ||
-                nextState.flip !== this.state.flip
+                nextProps.className !== this.props.className ||
+                !Immutable.is(nextProps.orders, this.props.orders)
             );
     }
 
     componentDidMount() {
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
         Ps.initialize(asksContainer);
-    }
-
-    _flipBuySell() {
-        SettingsActions.changeViewSetting({
-            flipMyOrders: !this.state.flip
-        });
-
-        this.setState({flip: !this.state.flip});
     }
 
     componentDidUpdate(prevProps) {
@@ -140,7 +128,8 @@ class MyOpenOrders extends React.Component {
 
                 return b_price.full - a_price.full;
             }).map((order, index) => {
-                return <OrderRow date={new Date(order.expiration).getTime()} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -151,7 +140,8 @@ class MyOpenOrders extends React.Component {
 
                 return a_price.full - b_price.full;
             }).map(order => {
-                return <OrderRow date={new Date(order.expiration).getTime()} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                let {price} = market_utils.parseOrder(order, base, quote);
+                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -183,7 +173,7 @@ class MyOpenOrders extends React.Component {
         }
 
         rows.sort((a, b) => {
-            return b.props.date - a.props.date;
+            return a.props.price - b.props.price;
         })
 
         // if (bids.length === 0 && asks.length ===0) {
@@ -191,18 +181,21 @@ class MyOpenOrders extends React.Component {
         // }
 
         return (
-            <div style={{marginBottom: "2rem"}} key="open_orders" className="small-12 medium-7 no-padding small-vertical medium-horizontal align-spaced ps-container middle-content order-2" ref="orders">
+            <div
+                style={{marginBottom: "15px"}}
+                key="open_orders"
+                className={this.props.className}
+                ref="orders">
 
-                <div className="exchange-bordered small-12" style={{height: 400}}>
+                <div className="exchange-bordered small-12" style={{height: 266}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.my_orders" />
-                        {!this.state.flip ? <span onClick={this._flipBuySell.bind(this)} style={{cursor: "pointer", fontSize: "1rem"}}> &#8646;</span> : null}
                     </div>
                     <table className="table order-table text-right table-hover">
                         <TableHeader type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
                     </table>
 
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 324}}>
+                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 200}}>
                         <table style={{paddingBottom: 5}}  className="table order-table text-right table-hover">
                             <TransitionWrapper
                                 component="tbody"

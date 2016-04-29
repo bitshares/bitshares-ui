@@ -1,0 +1,60 @@
+@import "theme-template";
+
+// variables
+
+$light-text-color: #fff;
+$dark-text-color: #444;
+$primary-text-color: #e0e0e0;
+$secondary-text-color: darken($primary-text-color, 20%);
+$link-text-color: #4A90E2;
+$error-text-color: #E3745B;
+
+$bg-color: #191A1F;
+$panel-bg-color: #2C2E37;
+$light-panel-bg-color: #353742;
+$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$button-bg-color: #4A90E2;
+$secondary-button-bg-color: #546979;
+
+$alert-color: $error-text-color;
+$info-color: #4A90E2;
+$success-color: #18BC9C;
+$warning-color: #FCAB53;
+$fee-color: $secondary-text-color;
+
+// Exchange colors
+$bid-color: #50D2C2;
+$ask-color: #E3745B;
+$call-color: #BBBF2B;
+$positive-color: #6EC105;
+$negative-color: #E1424A;
+$row-accent-color: #3C3C3C;
+$header-color: #484848;
+
+.olDarkTheme {
+  @include theme(
+    $primary-text-color,
+    $bg-color,
+    $dark-text-color,
+    $link-text-color,
+    $light-text-color,
+    $secondary-text-color,
+    $success-color,
+    $info-color,
+    $warning-color,
+    $alert-color,
+    $super-light-panel-bg-color,
+    $panel-bg-color,
+    $button-bg-color,
+    $secondary-button-bg-color,
+    $fee-color,
+    $bid-color,
+    $ask-color,
+    $call-color,
+    $light-panel-bg-color,
+    $positive-color,
+    $negative-color,
+    $row-accent-color,
+    $header-color
+  );
+}

@@ -34,6 +34,7 @@ import AssetContainer from "./components/Blockchain/AssetContainer";
 import Transaction from "./components/Blockchain/Transaction";
 import CreateAccount from "./components/Account/CreateAccount";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
@@ -47,7 +48,6 @@ import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
 import PrivateKeyActions from "actions/PrivateKeyActions";
-import Console from "./components/Console/Console";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
@@ -78,16 +78,21 @@ class App extends React.Component {
 
     constructor() {
         super();
-        this.state = {loading: true, synced: false};
+        this.state = {
+            loading: true,
+            synced: false,
+            theme: SettingsStore.getState().settings.get("themes")};
     }
 
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
+        SettingsStore.unlisten(this._onSettingsChange);
     }
 
     componentDidMount() { 
         try {
             NotificationStore.listen(this._onNotificationChange.bind(this));
+            SettingsStore.listen(this._onSettingsChange.bind(this));
 
             Promise.all([
                 AccountStore.loadDbData()            
@@ -112,6 +117,18 @@ class App extends React.Component {
         if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
             this.refs.browser_modal.show();
         }
+
+        this.props.history.listen(() => {
+            this._rebuildTooltips();
+        });
+
+        this._rebuildTooltips();
+    }
+
+    _rebuildTooltips() {
+        if (this.refs.tooltip) {
+            this.refs.tooltip.globalRebuild();
+        }
     }
 
     /** Usage: NotificationActions.[success,error,warning,info] */
@@ -123,6 +140,17 @@ class App extends React.Component {
         if (this.refs.notificationSystem) this.refs.notificationSystem.addNotification(notification);
     }
 
+    _onSettingsChange() {
+        let {settings} = SettingsStore.getState();
+        if (settings.get("themes") !== this.state.theme) {
+            this.setState({
+                theme: settings.get("themes")
+            });
+        }
+    }
+
+
+
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
     //     console.log("add notification:", this.refs, params);
@@ -130,18 +158,13 @@ class App extends React.Component {
     // }
 
     render() {
-        if (this.props.location.pathname === "/init-error") { // temporary, until we implement right offline mode
-            return (
-                <div className="grid-frame vertical">
-                    <div className="grid-block vertical">
-                        <InitError />
-                    </div>
-                </div>
-            );
-        }
+       
         let content = null;
+
         if (this.state.loading) {
-            content = <LoadingIndicator />;
+            content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
+        } else if (this.props.location.pathname === "/init-error") {
+            content = <div className="grid-frame vertical">{this.props.children}</div>
         } else {
             content = (
                 <div className="grid-frame vertical">
@@ -151,18 +174,20 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
-                    <ReactTooltip place="top" type="dark" effect="solid"/>
                     <Chat />
+                    <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );
         }
         return (
-            <div>
-                {content}
-                <NotificationSystem ref="notificationSystem" allowHTML={true}/>
-                <TransactionConfirm/>
-                <WalletUnlockModal/>
-                <BrowserSupportModal ref="browser_modal"/>
+            <div style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}} className={this.state.theme}>
+                <div id="content-wrapper">
+                    {content}
+                    <NotificationSystem ref="notificationSystem" allowHTML={true}/>
+                    <TransactionConfirm/>
+                    <WalletUnlockModal/>
+                    <BrowserSupportModal ref="browser_modal"/>
+                </div>
             </div>
         );
 
@@ -246,70 +271,69 @@ let willTransitionTo = (nextState, replaceState, callback) => {
 let routes = (
     <Route path="/" component={RootIntl} onEnter={willTransitionTo}>
         <IndexRoute component={DashboardContainer}/>
-        <Route name="auth" path="/auth/:data" component={Auth}/>
-        <Route name="dashboard" path="/dashboard" component={DashboardContainer}/>
-        <Route name="explorer" path="explorer" component={Explorer}/>
-        <Route name="fees" path="/explorer/fees" component={FeesContainer}/>
-        <Route name="blocks" path="/explorer/blocks" component={Blocks}/>
-        <Route name="assets" path="/explorer/assets" component={Assets}/>
-        <Route name="accounts" path="/explorer/accounts" component={AccountsContainer}/>
-        <Route name="witnesses" path="/explorer/witnesses" component={Witnesses}>
+        <Route path="/auth/:data" component={Auth}/>
+        <Route path="/dashboard" component={DashboardContainer}/>
+        <Route path="explorer" component={Explorer}/>
+        <Route path="/explorer/fees" component={FeesContainer}/>
+        <Route path="/explorer/blocks" component={Blocks}/>
+        <Route path="/explorer/assets" component={Assets}/>
+        <Route path="/explorer/accounts" component={AccountsContainer}/>
+        <Route path="/explorer/witnesses" component={Witnesses}>
             <IndexRoute component={Witnesses}/>
         </Route>
-        <Route name="committee-members" path="/explorer/committee-members" component={CommitteeMembers}>
+        <Route path="/explorer/committee-members" component={CommitteeMembers}>
             <IndexRoute component={CommitteeMembers}/>
         </Route>
-        <Route name="wallet" path="wallet" component={WalletManager}>
+        <Route path="wallet" component={WalletManager}>
             {/* wallet management console */}
             <IndexRoute component={WalletOptions}/>
-            <Route name="wmc-change-wallet" path="change" component={ChangeActiveWallet}/>
-            <Route name="wmc-change-password" path="change-password" component={WalletChangePassword}/>
-            <Route name="wmc-import-keys" path="import-keys" component={ImportKeys}/>
-            <Route name="wmc-brainkey" path="brainkey" component={Brainkey}/>
-            <Route name="wmc-wallet-create" path="create" component={WalletCreate}/>
-            <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
-            <Route name="wmc-backup-verify-restore" path="backup/restore" component={BackupRestore}/>
-            <Route name="wmc-backup-create" path="backup/create" component={BackupCreate}/>
-            <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
-            <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
+            <Route path="change" component={ChangeActiveWallet}/>
+            <Route path="change-password" component={WalletChangePassword}/>
+            <Route path="import-keys" component={ImportKeys}/>
+            <Route path="brainkey" component={Brainkey}/>
+            <Route path="create" component={WalletCreate}/>
+            <Route path="delete" component={WalletDelete}/>
+            <Route path="backup/restore" component={BackupRestore}/>
+            <Route path="backup/create" component={BackupCreate}/>
+            <Route path="backup/brainkey" component={BackupBrainkey}/>
+            <Route path="balance-claims" component={BalanceClaimActive}/>
         </Route>
-        <Route name="create-wallet" path="create-wallet" component={WalletCreate}/>
-        <Route name="console" path="console" component={Console}/>
-        <Route name="transfer" path="transfer" component={Transfer}/>
-        <Route name="invoice" path="invoice/:data" component={Invoice}/>
-        <Route name="markets" path="explorer/markets" component={Markets}/>
-        <Route name="exchange" path="market/:marketID" component={Exchange}/>
-        <Route name="settings" path="settings" component={Settings}/>
-        <Route name="block" path="block/:height" component={BlockContainer}/>
-        <Route name="asset" path="asset/:symbol" component={AssetContainer}/>
-        <Route name="tx" path="tx" component={Transaction}/>
-        <Route name="create-account" path="create-account" component={CreateAccount}/>
-        <Route name="existing-account" path="existing-account" component={ExistingAccount}>
+        <Route path="create-wallet" component={WalletCreate}/>
+        <Route path="transfer" component={Transfer}/>
+        <Route path="invoice/:data" component={Invoice}/>
+        <Route path="explorer/markets" component={Markets}/>
+        <Route path="market/:marketID" component={Exchange}/>
+        <Route path="settings" component={Settings}/>
+        <Route path="block/:height" component={BlockContainer}/>
+        <Route path="asset/:symbol" component={AssetContainer}/>
+        <Route path="create-account" component={CreateAccount}/>
+        <Route path="existing-account" component={ExistingAccount}>
             <IndexRoute component={ExistingAccountOptions}/>
-            <Route name="welcome-import-backup" path="import-backup" component={BackupRestore}/>
-            <Route name="welcome-import-keys" path="import-keys" component={ImportKeys}/>
-            <Route name="welcome-brainkey" path="brainkey" component={Brainkey}/>
-            <Route name="welcome-balance-claim" path="balance-claim" component={BalanceClaimActive}/>
+            <Route path="import-backup" component={BackupRestore}/>
+            <Route path="import-keys" component={ImportKeys}/>
+            <Route path="brainkey" component={Brainkey}/>
+            <Route path="balance-claim" component={BalanceClaimActive}/>
         </Route>
-        <Route name="account" path="/account/:account_name" component={AccountPage}>
+        <Route path="/account/:account_name" component={AccountPage}>
             <IndexRoute component={AccountOverview}/>
-            <Route name="account-overview" path="overview" component={AccountOverview}/>
-            <Route name="account-assets" path="assets" component={AccountAssets}/>
-            <Route name="account-create-asset" path="create-asset" component={AccountAssetCreate}/>
-            <Route name="account-update-asset" path="update-asset/:asset" component={AccountAssetUpdate}/>
-            <Route name="account-member-stats" path="member-stats" component={AccountMembership}/>
+            <Route path="overview" component={AccountOverview}/>
+            <Route path="assets" component={AccountAssets}/>
+            <Route path="create-asset" component={AccountAssetCreate}/>
+            <Route path="update-asset/:asset" component={AccountAssetUpdate}/>
+            <Route path="member-stats" component={AccountMembership}/>
             <Route path="vesting" component={AccountVesting}/>
-            <Route name="account-permissions" path="permissions" component={AccountPermissions}/>
-            <Route name="account-voting" path="voting" component={AccountVoting}/>
-            <Route name="account-deposit-withdraw" path="deposit-withdraw" component={AccountDepositWithdraw}/>
-            <Route name="account-orders" path="orders" component={AccountOrders}/>
+            <Route path="permissions" component={AccountPermissions}/>
+            <Route path="voting" component={AccountVoting}/>
+            <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
+            <Route path="orders" component={AccountOrders}/>
             <Route path="whitelist" component={AccountWhitelist}/>
         </Route>
-        <Route name="init-error" path="/init-error" component={InitError}/>
-        <Route name="help" path="/help" component={Help}>
-            <Route name="path1" path=":path1" component={Help}>
-                <Route name="path2" path=":path2" component={Help}>
-                    <Route name="path3" path=":path3" component={Help}/>
+        <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
+        <Route path="/init-error" component={InitError}/>
+        <Route path="/help" component={Help}>
+            <Route path=":path1" component={Help}>
+                <Route path=":path2" component={Help}>
+                    <Route path=":path3" component={Help}/>
                 </Route>
             </Route>
         </Route>

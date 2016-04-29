@@ -16,8 +16,8 @@ function extractForProduction(loaders) {
 module.exports = function(options) {
     // console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
-    var cssLoaders = "style-loader!css-loader",
-      scssLoaders = "style!css!autoprefixer!sass?outputStyle=expanded";
+    var cssLoaders = "style-loader!css-loader!postcss-loader",
+      scssLoaders = "style!css!postcss-loader!sass?outputStyle=expanded";
 
     // DIRECTORY CLEANER
     var cleanDirectories = ["dist"];
@@ -93,7 +93,10 @@ module.exports = function(options) {
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
                 { test: /\.md/, loader: 'html?removeAttributeQuotes=false!remarkable' }
-            ]
+            ],
+            postcss: function () {
+                return [precss, autoprefixer];
+            }
         },
         resolve: {
             alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
@@ -115,7 +118,7 @@ module.exports = function(options) {
     };
 
     if(options.prod) config.entry.vendors = [
-        "react", "react-dom", "classnames", "react-router", "react-highcharts/bundle/highstock", "counterpart", "react-translate-component",
+        "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
         "immutable", "lzma", "bytebuffer", "lodash"

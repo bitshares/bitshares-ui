@@ -20,7 +20,9 @@ class TransactionConfirmStore {
             trx_id: null,
             trx_block_num: null,
             closed: true,
-            broadcasted_transaction: null
+            broadcasted_transaction: null,
+            propose: false,
+            fee_paying_account: null // proposal fee_paying_account
         };
     }
 
@@ -65,6 +67,14 @@ class TransactionConfirmStore {
     onError({ error }) {
         let state = this.state;
         this.setState({broadcast: false, broadcasting: false, error});
+    }
+    
+    onTogglePropose() {
+        this.setState({ propose: ! this.state.propose })
+    }
+    
+    onProposeFeePayingAccount(fee_paying_account) {
+        this.setState({ fee_paying_account })
     }
 
     reset() {

@@ -213,6 +213,7 @@ class AccountAssets extends React.Component {
         .map(asset => {
             let description = assetUtils.parseDescription(asset.options.description);
             let desc = description.short_name ? description.short_name : description.main;
+            
             if (desc.length > 100) {
                 desc = desc.substr(0, 100) + "...";
             }
@@ -251,10 +252,12 @@ class AccountAssets extends React.Component {
 
         return (    
             <div className="grid-content">
-                    <div className="content-block">
-                        <h3><Translate content="account.user_issued_assets.issued_assets" /></h3>
-
-                        <div>
+                                
+                    <div className="content-block generic-bordered-box">
+                        <div className="block-content-header">
+                            <Translate content="account.user_issued_assets.issued_assets" />
+                        </div>
+                        <div className="box-content">
                             <table className="table">
                                 <thead>
                                 <tr>

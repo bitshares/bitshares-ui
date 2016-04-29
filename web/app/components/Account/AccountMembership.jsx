@@ -13,7 +13,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
-import {VestingBalance} from "./AccountVesting";
+import accountUtils from "common/account_utils";
 
 @BindToChainState({keep_updating:true})
 class AccountMembership extends React.Component {
@@ -33,14 +33,13 @@ class AccountMembership extends React.Component {
         AccountActions.upgradeAccount(id, lifetime);
     }
 
-    _onClaim(e) {
-        e.preventDefault();
-        let cvb = ChainStore.getObject( this.props.account.get("cashback_vb") );
-        
-        WalletActions.claimVestingBalance(this.props.account.get("id"), cvb);
+    componentWillMount() {
+        accountUtils.getFinalFeeAsset(this.props.account, "account_upgrade");
     }
 
     render() {
+
+        console.log("location", window.location.origin);
         let gprops = this.props.gprops;
         let dprops = this.props.dprops;
 
@@ -81,7 +80,7 @@ class AccountMembership extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
-                <div className="content-block">
+                <div className="content-block no-margin">
                     <h3><Translate content={membership}/> {expiration}</h3>
                     { member_status=== "lifetime" ? null : (
                        <div>
@@ -90,22 +89,29 @@ class AccountMembership extends React.Component {
                                { member_status === "annual" ? null : (
                                   <HelpContent path="components/AccountMembership" section="annual" feesCashback={100 - network_fee - lifetime_fee} price={{amount: annual_cost, asset: core_asset}}/>
                                )}
-                               <a href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
+                               <div href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
-                               </a> &nbsp; &nbsp;
+                               </div> &nbsp; &nbsp;
                                {true || member_status === "annual" ? null :
-                               <a href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
+                               <div href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
                                    <Translate content="account.member.subscribe"/>
-                               </a>}
+                               </div>}
                             </div>
                        <br/><hr/>
                        </div>
                     )}
                 </div>
 
-                <div className="grid-block vertical large-horizontal">
-                    <div className="grid-block large-4">
-                        <div className="grid-content regular-padding">
+                <div className="content-block no-margin">
+                <div className="no-margin grid-block vertical large-horizontal">
+                    <div className="no-margin grid-block large-5">
+                        <div className="grid-content">
+                            {member_status=== "lifetime" ? (
+                            <div>
+                                <h4><Translate content="account.member.referral_link"/></h4>
+                                <Translate content="account.member.referral_text"/>:
+                                <h5>{`https://bitshares.openledger.info?r=${account.name}`}</h5>
+                            </div>) : null}
                             <h4><Translate content="account.member.fee_allocation"/></h4>
                             <table className="table key-value-table">
                                 <tbody>
@@ -142,13 +148,10 @@ class AccountMembership extends React.Component {
                             <table className="table key-value-table">
                                 <Statistics stat_object={account.statistics}/>
                             </table>
-                            <br/>
-                            <VestingBalance vb={account.cashback_vb} account={account}/>                            
                         </div>
                     </div>
-                    <div className="grid-block large-1">&nbsp;</div>
                     <div className="grid-block large-7">
-                        <div className="grid-content regular-padding">
+                        <div className="grid-content">
                             <HelpContent path="components/AccountMembership"
                                          section="fee-division"
                                          account={account_name}
@@ -163,6 +166,7 @@ class AccountMembership extends React.Component {
                                          vestingPeriod={gprops.parameters.cashback_vesting_period_seconds/60/60/24}/>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         );

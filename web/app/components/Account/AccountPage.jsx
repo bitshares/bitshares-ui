@@ -8,6 +8,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import connectToStores from "alt/utils/connectToStores";
+import accountUtils from "common/account_utils";
 
 @BindToChainState({keep_updating: true, show_loader: true})
 class AccountPage extends React.Component {
@@ -24,6 +25,9 @@ class AccountPage extends React.Component {
         if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
             AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
+
+        // Fetch possible fee assets here to avoid async issues later (will resolve assets)
+        accountUtils.getPossibleFees(this.props.account, "transfer");
     }
 
     render() {
@@ -42,6 +46,7 @@ class AccountPage extends React.Component {
                     />
                 </div>
                 <div className="grid-block small-12 medium-10 main-content">
+                    <div className="grid-container" style={{paddingTop: 15}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
@@ -52,9 +57,11 @@ class AccountPage extends React.Component {
                             wallet_locked,
                             account,
                             isMyAccount,
-                            hiddenAssets
+                            hiddenAssets,
+                            contained: true
                         }
                     )}
+                    </div>
                 </div>
             </div>
         );

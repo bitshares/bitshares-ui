@@ -75,7 +75,7 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, key, hideDate, hideFee, hideOpLabel} = this.props;
+        let {block, fee, color, type, hideDate, hideFee, hideOpLabel} = this.props;
 
         let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
         let pending = null;
@@ -86,7 +86,7 @@ class Row extends React.Component {
         fee.amount = parseInt(fee.amount, 10);
 
         return (
-                <tr key={key}>
+                <tr>
                     {hideOpLabel ? null : (
                         <td className="left-td">
                             <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
@@ -112,7 +112,7 @@ class Operation extends React.Component {
     static defaultProps = {
         op: [],
         current: "",
-        block: false,
+        block: null,
         hideDate: false,
         hideFee: false,
         hideOpLabel: false,
@@ -152,12 +152,11 @@ class Operation extends React.Component {
     render() {
         let {op, current, block, hideFee} = this.props;
         let line = null, column = null, color = "info";
+        let memoComponent = null;
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
-
-                let memoComponent = null;
 
                 if(op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />
@@ -167,7 +166,7 @@ class Operation extends React.Component {
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
                 column = (
-                    <span key={"transfer_" + this.props.key} className="right-td">
+                    <span className="right-td">
                         <TranslateWithLinks
                             string="operation.transfer"
                             keys={[
@@ -257,20 +256,6 @@ class Operation extends React.Component {
                 break;
 
             case "account_update":
-                // if (op[1].new_options.voting_account) {
-                //     let proxyAccount = ChainStore.getAccount(op[1].new_options.voting_account);
-                //     column = (
-                //         <span>
-                //             <TranslateWithLinks
-                //                 string="operation.set_proxy"
-                //                 keys={[
-                //                     {type: "account", value: op[1].account, arg: "account"},
-                //                     {type: "account", value: op[1].new_options.voting_account, arg: "proxy"}
-                //                 ]}                                    
-                //             />
-                //         </span>
-                //     );
-                // } else {
                 column = (
                     <span>
                         <TranslateWithLinks
@@ -281,7 +266,7 @@ class Operation extends React.Component {
                         />
                     </span>
                 );
-                // }
+
                 break;
 
             case "account_whitelist":
@@ -378,6 +363,11 @@ class Operation extends React.Component {
 
             case "asset_issue":
                 color = "warning";
+                
+                if(op[1].memo) {
+                    memoComponent = <MemoText memo={op[1].memo} />
+                }
+
                 op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
                 column = (
                     <span>
@@ -389,6 +379,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].issue_to_account, arg: "to"},
                             ]}                                    
                         />
+                        {memoComponent}
                     </span>
                 );
                 break;
@@ -399,7 +390,7 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         <TranslateWithLinks
-                            string="operation.asset_issue"
+                            string="operation.asset_fund_fee_pool"
                             keys={[
                                 {type: "account", value: op[1].from_account, arg: "account"},
                                 {type: "asset", value: op[1].asset_id, arg: "asset"},
@@ -721,7 +712,6 @@ class Operation extends React.Component {
                 );
                 break;
 
-
             case "custom":
                 column = (
                     <span>
@@ -744,6 +734,20 @@ class Operation extends React.Component {
                 )
                 break;
 
+            case "committee_member_update_global_parameters":
+                console.log("committee_member_update_global_parameters op:", op);
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="operation.committee_member_update_global_parameters"
+                            keys={[
+                                {type: "account", value: "1.2.0", arg: "account"}
+                            ]}                                                    
+                        />
+                    </span>
+                );
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (
@@ -759,7 +763,7 @@ class Operation extends React.Component {
             const dynGlobalObject = ChainStore.getObject("2.1.0");
             const block_time = utils.calc_block_time(block, globalObject, dynGlobalObject)
             return (
-                <div key={this.props.key}>
+                <div>
                     <div>{block_time ? block_time.toLocaleString() : ""}</div>
                     <div>{ops[op[0]]}</div>
                     <div>{column}</div>
@@ -770,7 +774,6 @@ class Operation extends React.Component {
 
         line = column ? (
             <Row
-                key={this.props.key}
                 block={block}
                 type={op[0]}
                 color={color}

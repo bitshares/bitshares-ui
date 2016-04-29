@@ -106,7 +106,8 @@ class WalletUnlockModal extends React.Component {
                     <PasswordInput ref="password_input"
                         onEnter={this.onPasswordEnter}
                         key={this.state.password_input_reset}
-                        wrongPassword={this.state.password_error}/>
+                        wrongPassword={this.state.password_error}
+                        noValidation />
                     <div className="button-group">
                         <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>

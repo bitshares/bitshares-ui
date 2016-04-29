@@ -5,6 +5,7 @@ import WalletDb from "../stores/WalletDb";
 import {operations} from "chain/chain_types";
 import ChainStore from "api/ChainStore";
 import marketUtils from "common/market_utils";
+import accountUtils from "common/account_utils";
 import Immutable from "immutable";
 
 let ops = Object.keys(operations);
@@ -83,6 +84,7 @@ class MarketsActions {
 
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
+        let bucketCount = 200;
         // let lastLimitOrder = null;
 
         let subscription = (subResult) => {
@@ -137,7 +139,7 @@ class MarketsActions {
                     let startDate = new Date();
                     let endDate = new Date();
                     let startDateShort = new Date();
-                    startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
+                    startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
                     endDate.setDate(endDate.getDate() + 1);
                     startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
@@ -201,7 +203,7 @@ class MarketsActions {
             let startDate = new Date();
             let endDate = new Date();
             let startDateShort = new Date();
-            startDate = new Date(startDate.getTime() - bucketSize * 100 * 1000);
+            startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
             startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
@@ -307,14 +309,17 @@ class MarketsActions {
             });
     }
 
-    createPredictionShort(account, sellAmount, sellAsset, buyAmount, collateralAmount, buyAsset, expiration, isFillOrKill, fee_asset_id) {
+    createPredictionShort(account, sellAmount, sellAsset, buyAmount, collateralAmount, buyAsset, expiration, isFillOrKill, fee_asset_id = "1.3.0") {
 
         var tr = wallet_api.new_transaction();
 
         // let fee_asset_id = sellAsset.get("id");
-        if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
-           fee_asset_id = "1.3.0";
-        }
+        // if( sellAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) == "1.3.0" && sellAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) == "1.3.0" ) {
+        //    fee_asset_id = "1.3.0";
+        // }
+
+        // Set the fee asset to use
+        fee_asset_id = accountUtils.getFinalFeeAsset(account, "call_order_update", fee_asset_id);
 
         tr.add_type_operation("call_order_update", {
             "fee": {
@@ -360,11 +365,14 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
+        // Set the fee asset to use
+        let fee_asset_id = accountUtils.getFinalFeeAsset(accountID, "limit_order_cancel");
+
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("limit_order_cancel", {
             fee: {
                 amount: 0,
-                asset_id: 0
+                asset_id: fee_asset_id
             },
             "fee_paying_account": accountID,
             "order": orderID

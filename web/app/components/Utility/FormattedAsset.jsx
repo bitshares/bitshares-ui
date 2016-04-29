@@ -9,6 +9,7 @@ import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import MarketLink from "./MarketLink";
 import HelpContent from "./HelpContent";
+import AssetName from "./AssetName";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -96,12 +97,12 @@ class FormattedAsset extends React.Component {
 
         const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
             <HelpContent
-                path={"assets/" + asset.symbol}
-                alt_path="assets/Asset"
+                path={"assets/Asset"}
                 section="summary"
                 symbol={asset.symbol}
-                description={description.main}
-                issuer={issuerName}/>
+                description={description.short_name ? description.short_name : description.main}
+                issuer={issuerName}
+            />
             {this.props.assetInfo}
         </div>;
 
@@ -115,14 +116,15 @@ class FormattedAsset extends React.Component {
                     />
                 : null}
                 {!hide_asset && (this.props.assetInfo ? (
+                    <span>&nbsp;
                     <Popover
                         isOpen={this.state.isPopoverOpen}
                         onOuterAction={this.closePopover}
                         body={currency_popover_body}
                     >
-                        <span className="currency click-for-help" onClick={this.togglePopover}> {asset.symbol}</span>
-                    </Popover>) :
-                    <span className="currency" onClick={this.togglePopover}> {asset.symbol}</span>)}
+                        <span className="currency click-for-help" onClick={this.togglePopover}><AssetName name={asset.symbol} /></span>
+                    </Popover></span>) :
+                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)} 
                 </span>
         );
     }
