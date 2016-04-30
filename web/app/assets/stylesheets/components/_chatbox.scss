@@ -5,11 +5,15 @@
     font-size: 12px;
     height: 35px;
     position: fixed;
-    left: 0;
     right: 10px;
     width: auto;
     z-index: 30;
     transition: all 1s ease;
+
+    select, input {
+        height: 2rem;
+        font-size: 12px;
+    }
 
     a {
         text-decoration: none;
@@ -84,5 +88,9 @@
 
     .settings-title {
         padding-bottom: 8px;
+    }
+
+    .chat-text {
+        overflow-wrap: break-word;
     }
 }

@@ -10,6 +10,7 @@ import SettingsStore from "stores/SettingsStore";
 import Peer from "peerjs";
 import Immutable from "immutable";
 import utils from "common/utils";
+import counterpart from "counterpart";
 
 class Comment extends React.Component {
     
@@ -56,9 +57,9 @@ export default class Chat extends React.Component {
         super(props);
 
         this.state = {
-            messages: [],
+            messages: [{user: counterpart.translate("chat.welcome_user"), message: counterpart.translate("chat.welcome")}],
             connected: false,
-            showChat: props.viewSettings.get("chatShow", false),
+            showChat: props.viewSettings.get("showChat", false),
             myColor: props.viewSettings.get("chatColor", "#ffffff"),
             userName: props.viewSettings.get("chatUsername", null),
             shouldScroll: true
@@ -72,6 +73,8 @@ export default class Chat extends React.Component {
         this.onChangeColor = debounce(this.onChangeColor, 150);
 
         this._handleMessage = this._handleMessage.bind(this);
+
+        this.lastMessage = null;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -88,8 +91,9 @@ export default class Chat extends React.Component {
     _connectToServer() {
         this._peer = new Peer({
             host: 'bitshares.openledger.info',
-            port: 9000,
-            path: '/trollbox'
+            path: '/trollbox',
+            secure: true,
+            port: 443
         });
 
         this._peer.on('open', id => {
@@ -105,8 +109,13 @@ export default class Chat extends React.Component {
         this._peer.on('connection', this.onConnection.bind(this));
         // this._peer.on('disconnect', this.onDisconnect.bind(this));
 
-        this._peer.on('error', function(err) {
+        this._peer.on('error', err => {
             console.log(err);
+            this.setState({
+                connected: false
+            });
+
+            this._peer.reconnect();
         });
     }
 
@@ -129,8 +138,10 @@ export default class Chat extends React.Component {
     }
 
     _handleMessage(data) {
-        console.log("data:", data);
         this.state.messages.push(data);
+        if (this.state.messages.length >= 100) {
+            this.state.messages.shift();
+        }
         this.forceUpdate(this._scrollToBottom.bind(this));
     }
 
@@ -148,7 +159,6 @@ export default class Chat extends React.Component {
                 shouldScroll: shouldScroll
             });
         }
-
     }
 
     onConnection(c) {
@@ -167,8 +177,19 @@ export default class Chat extends React.Component {
 
     submitMessage(e) {
         e.preventDefault();
+        let now = new Date().getTime();
+
         if (!this.refs.input.value.length) {
             return;
+        }
+
+        if (now - this.lastMessage <= 2000) {
+            console.log("time delta:", now - this.lastMessage, "ms");
+            return this._handleMessage({
+                user: "SYSTEM",
+                message: counterpart.translate("chat.rate"),
+                color: "#B71A00"
+            });
         }
 
         let message = {
@@ -185,12 +206,19 @@ export default class Chat extends React.Component {
         }
         this.refs.input.value = "";
         this._handleMessage(message);
+
+        this.lastMessage = new Date().getTime();
     }
 
     onToggleChat(e) {
         e.preventDefault();
+        let showChat = !this.state.showChat;
         this.setState({
-            showChat: !this.state.showChat
+            showChat: showChat
+        });
+
+        SettingsActions.changeViewSetting({
+            showChat: showChat
         });
     }
 
@@ -199,17 +227,13 @@ export default class Chat extends React.Component {
         this.setState({
             showSettings: newValue
         });
-
-        SettingsActions.changeViewSetting({
-            chatShow: newValue
-        });
     }
 
     onPickAccount(e) {
         console.log("onPickAccount:", e);
         this.setState({
             userName: e.target.value
-        }, this._resetServer.bind(this));
+        });
 
         SettingsActions.changeViewSetting({
             chatUsername: e.target.value
@@ -309,7 +333,7 @@ export default class Chat extends React.Component {
                 />
                 
                 {/* Done button */}
-                <div style={{paddingTop: 20 }}>
+                <div style={{position: "absolute", bottom: 5, right: 0}}>
                     <div onClick={this.onToggleSettings.bind(this)} className="button">
                         <Translate content="chat.done" />
                     </div>
@@ -335,17 +359,27 @@ export default class Chat extends React.Component {
                             <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
                         </div>
 
-                        {!connected ? <div style={{fontSize: "1.2rem", padding: 20}}><Translate content="chat.disconnected" /></div> : (
+                        {!connected ? (
+                        <div className="grid-block vertical chatbox">
+                            <div style={{padding: 20}}>
+                                <Translate content="chat.disconnected" />
+                                <div style={{paddingTop: 30}}>
+                                    <div onClick={this._resetServer.bind(this)} className="button">Reconnect</div>
+                                </div>
+                            </div>
+                        </div>) : (
                         <div className="grid-block vertical chatbox-content" ref="chatbox" onScroll={this._onScroll.bind(this)}>
                             {!showSettings ? <div>{messages}</div> : settings}
                         </div>)}
-                         {!showSettings && connected ? <div className="grid-block shrink">
+
+                        {!showSettings && connected ? (
+                        <div className="grid-block shrink">
                             <div >
                                 <form onSubmit={this.submitMessage.bind(this)}  className="button-group" style={{marginBottom: 0}}>
-                                <input style={{marginBottom: 0, width: 300, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
+                                    <input style={{marginBottom: 0, width: 300, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
                                 </form>
                             </div>
-                        </div> : null}
+                        </div>) : null}
 
                     </div>
                 </div>
