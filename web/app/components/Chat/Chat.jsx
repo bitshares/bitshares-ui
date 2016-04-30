@@ -61,8 +61,8 @@ export default class Chat extends React.Component {
             messages: [{user: counterpart.translate("chat.welcome_user"), message: counterpart.translate("chat.welcome")}],
             connected: false,
             showChat: props.viewSettings.get("showChat", false),
-            myColor: props.viewSettings.get("chatColor", "#ffffff"),
-            userName: props.viewSettings.get("chatUsername", null),
+            myColor: props.viewSettings.get("chatColor", "#904E4E"),
+            userName: props.viewSettings.get("chatUsername", "anonymous"),
             shouldScroll: true,
             loading: true
         }
@@ -202,7 +202,7 @@ export default class Chat extends React.Component {
         }
 
         let message = {
-            user: this.state.userName || this._myID,
+            user: this.state.userName,
             message: this.refs.input.value,
             color: this.state.myColor || "#ffffff"
         };
