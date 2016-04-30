@@ -391,7 +391,7 @@ class AccountDepositWithdraw extends React.Component {
                         </div>
                     </Tabs.Tab>
 
-                    <Tabs.Tab title="CCEDK">
+                    <Tabs.Tab title="Openledger">
                         <div className="content-block">
                             <h3>Fiat</h3>
                             <div className="float-right"><a href="https://www.ccedk.com/" target="__blank">VISIT WEBSITE</a></div>
