@@ -87,7 +87,7 @@ export default class Chat extends React.Component {
 
     _connectToServer() {
         this._peer = new Peer({
-            host: 'localhost',
+            host: 'bitshares.openledger.info',
             port: 9000,
             path: '/trollbox'
         });

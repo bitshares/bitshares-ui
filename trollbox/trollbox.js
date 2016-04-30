@@ -1,3 +1,4 @@
+var fs = require("fs");
 var config = require("./config");
 var PeerServer = require('peer').PeerServer;
 
