@@ -1,16 +1,15 @@
 #chatbox {
-    bottom: 0;
     color: #818479;
     direction: ltr;
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     height: 35px;
     position: fixed;
     left: 0;
     right: 10px;
-    bottom: 36px;
     width: auto;
     z-index: 30;
+    transition: all 1s ease;
 
     a {
         text-decoration: none;
@@ -19,18 +18,21 @@
     }
 
     .toggle-controlbox {
-        background-color: #81A6FF;
+        background-color: #2196F3;
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
-        color: #0a0a0a;
+        color: white;
         float: right;
         height: 100%;
         margin: 0 .5em;
-        padding: 10px 8px 0
+        padding: 10px 16px 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: bold;
     }
 
     .chatbox {
-        width: 250px;
+        width: 300px;
         float: right;
     }
 
@@ -40,7 +42,7 @@
         box-shadow: 1px 3px 5px 3px rgba(0,0,0,.4);
         min-height: 225px;
         min-width: 200px;
-        width: 250px;
+        width: 300px;
         z-index: 1;
         border-radius: 4px;
         bottom: 6px;
@@ -49,8 +51,8 @@
 
     .chatbox-title {
         background-color: black;
-        padding: 5px 3px;
-        font-size: 1rem;
+        padding: 8px 5px;
+        font-size: 14px;
         font-weight: bold;
         border-bottom: 1px solid grey;
         color: white;
@@ -68,8 +70,8 @@
     }
 
     .chatbox-content {
-        background-color: #6A6A6A;
-        padding: 4px 2px;
+        background-color: #ccc;
+        padding: 3px 13px 3px 10px;
         color: white;
     }
 

@@ -1,5 +1,4 @@
 import React from "react";
-import SocketIO from 'socket.io-client';
 import connectToStores from "alt/utils/connectToStores";
 import AccountStore from "stores/AccountStore";
 import Translate from "react-translate-component";
@@ -8,26 +7,31 @@ import ChainStore from "api/ChainStore";
 import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-
-let local = false;
-let server = local ? "localhost" : "http://api.bitsharesblocks.com";
-let port = local ? 8081 : 80;
+import Peer from "peerjs";
+import Immutable from "immutable";
+import utils from "common/utils";
 
 class Comment extends React.Component {
     
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.user !== this.props.user ||
-            nextProps.comment !== this.props.comment ||
-            nextProps.color !== this.props.color
-        )
+            !utils.are_equal_shallow(nextProps, this.props)
+        );
     }
 
     render() {
         return (
-            <div style={{padding: "2px 1px"}}>
-                <span style={{fontWeight: "bold", color: this.props.color}}>{this.props.user}:</span>
-                <span> {this.props.comment}</span>
+            <div style={{padding: "3px 1px"}}>
+                <span
+                    className="clickable"
+                    onClick={this.props.onSelectUser.bind(this, this.props.user)}
+                    style={{
+                        fontWeight: "bold",
+                        color: this.props.color
+                    }}>
+                        {this.props.user}:&nbsp;
+                </span>
+                <span className="chat-text">{this.props.comment}</span>
             </div>
         );
     }
@@ -54,60 +58,133 @@ export default class Chat extends React.Component {
         this.state = {
             messages: [],
             connected: false,
-            showChat: false,
-            myColor: props.viewSettings.get("chatColor") || "#FFF",
-            userName: props.viewSettings.get("chatUsername") || "anonymous"
+            showChat: props.viewSettings.get("chatShow", false),
+            myColor: props.viewSettings.get("chatColor", "#ffffff"),
+            userName: props.viewSettings.get("chatUsername", null),
+            shouldScroll: true
         }
 
-        this._socket = null;
+        this._peer = null;
+
+        this.connections = Immutable.Map();
+        this._myID = null;
 
         this.onChangeColor = debounce(this.onChangeColor, 150);
+
+        this._handleMessage = this._handleMessage.bind(this);
     }
 
-    componentDidMount() {
-        console.log("props:", this.props);
-        this._socket = SocketIO.connect(`${server}:${port}`, {secure: false});
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !utils.are_equal_shallow(nextProps, this.props) ||
+            !utils.are_equal_shallow(nextState, this.state)
+        );
+    }
 
-        this._socket.on('connect', () => {
+    componentWillMount() {
+        this._connectToServer();
+    }
+
+    _connectToServer() {
+        this._peer = new Peer({
+            host: 'localhost',
+            port: 9000,
+            path: '/trollbox'
+        });
+
+        this._peer.on('open', id => {
+            console.log("open, my ID is:", id);
+            this._myID = id;
             this.setState({
                 connected: true
             });
-            this._socket.emit('add user',  this.state.userName);
-            this._socket.emit('change color',  this.state.myColor);
+
+            this._peer.listAllPeers(this._connectToPeers.bind(this));
         });
 
-        this._socket.on('disconnect', () => {
+        this._peer.on('connection', this.onConnection.bind(this));
+        // this._peer.on('disconnect', this.onDisconnect.bind(this));
+
+        this._peer.on('error', function(err) {
+            console.log(err);
+        });
+    }
+
+    _connectToPeers(peers) {
+        if (!Array.isArray(peers)) {
+            peers = [peers];
+        }
+        console.log("peers:", peers);
+        // this._peers = Immutable.List(peers);
+        peers.forEach(peer => {
+
+            if (peer !== this._myID) {
+                let conn = this._peer.connect(peer);
+                conn.on('data', this._handleMessage);
+                conn.on('close', this.onDisconnect.bind(this, peer));
+                this.connections = this.connections.set(peer, conn);
+            }
+        });
+        this.forceUpdate();
+    }
+
+    _handleMessage(data) {
+        console.log("data:", data);
+        this.state.messages.push(data);
+        this.forceUpdate(this._scrollToBottom.bind(this));
+    }
+
+    _scrollToBottom() {
+        if (this.refs.chatbox && this.state.shouldScroll) {
+            this.refs.chatbox.scrollTop = this.refs.chatbox.scrollHeight;
+        }
+    }
+
+    _onScroll(e) {
+        let {scrollTop, scrollHeight, clientHeight} = this.refs.chatbox;
+        let shouldScroll = scrollHeight - scrollTop <= clientHeight;
+        if (shouldScroll !== this.state.shouldScroll) {
             this.setState({
-                connected: false
+                shouldScroll: shouldScroll
             });
-            console.log('disconnected');
-        });
+        }
 
-        this._socket.on('new message', (msg) => {
-            console.log("new message:", msg);
-            this.state.messages.unshift(msg);
-            this.forceUpdate();
-        });
+    }
 
-        this._socket.on('user join', (msg) => {
-            console.log("add user:", msg);
-            this.state.messages.unshift(msg);
-            this.forceUpdate();
-        });
+    onConnection(c) {
+        console.log("connection:", c);
+        this.connections = this.connections.set(c.id, c);
+        c.on('data', this._handleMessage);
+        c.on('close', this.onDisconnect.bind(this, c.id));
+        this.forceUpdate();
+    }
 
-        this._socket.on('user left', (msg) => {
-            console.log("add user:", msg);
-            this.state.messages.unshift(msg);
-            this.forceUpdate();
-        });        
+    onDisconnect(id) {
+        console.log("disconnected:", id);
+        this.connections = this.connections.delete(id);
+        this.forceUpdate();
     }
 
     submitMessage(e) {
         e.preventDefault();
-        if (this._socket && this.refs.input.value.length) {
-            this._socket.emit('new message', this.refs.input.value);
-            this.refs.input.value = "";
+        if (!this.refs.input.value.length) {
+            return;
         }
+
+        let message = {
+            user: this.state.userName || this._myID,
+            message: this.refs.input.value,
+            color: this.state.myColor || "#ffffff"
+        };
+
+        if (this.connections.size) {
+            this.connections.forEach(c => {
+                c.send(message);
+            })
+            
+        }
+        this.refs.input.value = "";
+        this._handleMessage(message);
     }
 
     onToggleChat(e) {
@@ -118,8 +195,13 @@ export default class Chat extends React.Component {
     }
 
     onToggleSettings(e) {
+        let newValue = !this.state.showSettings;
         this.setState({
-            showSettings: !this.state.showSettings
+            showSettings: newValue
+        });
+
+        SettingsActions.changeViewSetting({
+            chatShow: newValue
         });
     }
 
@@ -127,33 +209,54 @@ export default class Chat extends React.Component {
         console.log("onPickAccount:", e);
         this.setState({
             userName: e.target.value
-        });
-
-        this._socket.emit('change username',  e.target.value);
+        }, this._resetServer.bind(this));
 
         SettingsActions.changeViewSetting({
             chatUsername: e.target.value
         });
     }
 
+    _resetServer() {
+        console.log("_resetServer", this.state.userName);
+        this._peer.destroy();
+        this._connectToServer();
+    }
+
     onChangeColor(e) {
-        console.log("change color:", e.target.value);
-        if (this._socket) {
-            this._socket.emit('change color', e.target.value);
+
+        if (this.refs.colorInput) {
+            console.log("change color:", this.refs.colorInput.value);
+            this.setState({
+                myColor: this.refs.colorInput.value
+            });
+
+            SettingsActions.changeViewSetting({
+                chatColor: this.refs.colorInput.value
+            });
         }
+    }
 
-        this.setState({
-            myColor: e.target.value
-        });
-
-        SettingsActions.changeViewSetting({
-            chatColor: e.target.value
-        });
+    _onSelectUser(userName) {
+        this.refs.input.value += userName + ", ";
     }
 
     render() {
+
+        let {userName} = this.state;
+
         let messages = this.state.messages.map((msg, index) => {
-            return <Comment key={index} user={msg.userName} comment={msg.message} color={msg.color} />;
+            let isMine = msg.user === userName || msg.user === this._myID;
+
+            return (
+                <Comment
+                    onSelectUser={this._onSelectUser.bind(this)}
+                    key={index}
+                    user={msg.user}
+                    comment={msg.message}
+                    color={msg.color}
+                    isMine={isMine}
+                />
+            );
         });
 
         let {showChat, showSettings, connected} = this.state;
@@ -163,7 +266,7 @@ export default class Chat extends React.Component {
             float: "right",
             height: "35px",
             margin: "0 .5em",
-            width: "250px",
+            width: "300px",
             marginRight: "1em"
         };
 
@@ -187,25 +290,35 @@ export default class Chat extends React.Component {
                 {/* Username */}
                 <div className="settings-title"><Translate content="chat.user" />: </div>
                 <select
-                    value={this.state.userName}
+                    value={userName}
                     className="form-control"
                     onChange={this.onPickAccount.bind(this)}
                 >
                     {accountOptions}
                 </select>
                 {/* Color */}
-                <div className="settings-title"><Translate content="chat.color" />:</div>
-                <input defaultValue={this.state.myColor} onChange={this.onChangeColor.bind(this)} type="color" />
+                <div className="settings-title">
+                    <Translate content="chat.color" />:
+                </div>
+                <input
+                    style={{maxWidth: 50, padding: 0}}
+                    ref="colorInput"
+                    defaultValue={this.state.myColor}
+                    onChange={this.onChangeColor.bind(this)}
+                    type="color"
+                />
                 
                 {/* Done button */}
                 <div style={{paddingTop: 20 }}>
-                    <div onClick={this.onToggleSettings.bind(this)} className="button"><Translate content="chat.done" /></div>
+                    <div onClick={this.onToggleSettings.bind(this)} className="button">
+                        <Translate content="chat.done" />
+                    </div>
                 </div>
             </div>
         );
 
         return (
-            <div id="chatbox">
+            <div id="chatbox" style={{bottom: this.props.footerVisible ? 36 : 0}}>
                 {!showChat ? 
                 <a className="toggle-controlbox" onClick={this.onToggleChat.bind(this)}>
                     <span className="chat-toggle"><Translate content="chat.button" /></span>
@@ -215,7 +328,7 @@ export default class Chat extends React.Component {
                     <div className="flyout grid-block main-content vertical">
                         <div className="chatbox-title grid-block shrink">
                             <Translate content="chat.title" />
-
+                            <span>&nbsp;- {this.connections.size + 1} users online</span>
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
                                 <Icon name="cog"/>
                             </div>
@@ -223,19 +336,13 @@ export default class Chat extends React.Component {
                         </div>
 
                         {!connected ? <div style={{fontSize: "1.2rem", padding: 20}}><Translate content="chat.disconnected" /></div> : (
-                        <div className="grid-block vertical chatbox-content">
+                        <div className="grid-block vertical chatbox-content" ref="chatbox" onScroll={this._onScroll.bind(this)}>
                             {!showSettings ? <div>{messages}</div> : settings}
                         </div>)}
                          {!showSettings && connected ? <div className="grid-block shrink">
                             <div >
                                 <form onSubmit={this.submitMessage.bind(this)}  className="button-group" style={{marginBottom: 0}}>
-                                <input style={{marginBottom: 0}} ref="input" type="text" />
-                                <div
-                                    style={{marginRight: 0, marginBottom: 0}}
-                                    className="button"
-                                    onClick={this.submitMessage.bind(this)}
-                                >
-                                    <Translate content="chat.send" /></div>
+                                <input style={{marginBottom: 0, width: 300, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
                                 </form>
                             </div>
                         </div> : null}
