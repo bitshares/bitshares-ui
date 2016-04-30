@@ -11,6 +11,7 @@ import Peer from "peerjs";
 import Immutable from "immutable";
 import utils from "common/utils";
 import counterpart from "counterpart";
+import LoadingIndicator from "../LoadingIndicator";
 
 class Comment extends React.Component {
     
@@ -62,7 +63,8 @@ export default class Chat extends React.Component {
             showChat: props.viewSettings.get("showChat", false),
             myColor: props.viewSettings.get("chatColor", "#ffffff"),
             userName: props.viewSettings.get("chatUsername", null),
-            shouldScroll: true
+            shouldScroll: true,
+            loading: true
         }
 
         this._peer = null;
@@ -88,6 +90,12 @@ export default class Chat extends React.Component {
         this._connectToServer();
     }
 
+    componentWillUnmount() {
+        if (this._peer) {
+            this._peer.destroy();
+        }
+    }
+
     _connectToServer() {
         this._peer = new Peer({
             host: 'bitshares.openledger.info',
@@ -100,7 +108,8 @@ export default class Chat extends React.Component {
             console.log("open, my ID is:", id);
             this._myID = id;
             this.setState({
-                connected: true
+                connected: true,
+                loading: false
             });
 
             this._peer.listAllPeers(this._connectToPeers.bind(this));
@@ -266,7 +275,8 @@ export default class Chat extends React.Component {
 
     render() {
 
-        let {userName} = this.state;
+        let {userName, loading} = this.state;
+
 
         let messages = this.state.messages.map((msg, index) => {
             let isMine = msg.user === userName || msg.user === this._myID;
@@ -359,7 +369,7 @@ export default class Chat extends React.Component {
                             <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
                         </div>
 
-                        {!connected ? (
+                        {loading ? <div><LoadingIndicator /></div> : !connected ? (
                         <div className="grid-block vertical chatbox">
                             <div style={{padding: 20}}>
                                 <Translate content="chat.disconnected" />
@@ -372,7 +382,7 @@ export default class Chat extends React.Component {
                             {!showSettings ? <div>{messages}</div> : settings}
                         </div>)}
 
-                        {!showSettings && connected ? (
+                        {!showSettings && connected && !loading ? (
                         <div className="grid-block shrink">
                             <div >
                                 <form onSubmit={this.submitMessage.bind(this)}  className="button-group" style={{marginBottom: 0}}>

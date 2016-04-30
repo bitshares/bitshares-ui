@@ -81,7 +81,9 @@ class App extends React.Component {
         this.state = {
             loading: true,
             synced: false,
-            theme: SettingsStore.getState().settings.get("themes")};
+            theme: SettingsStore.getState().settings.get("themes"),
+            disableChat: SettingsStore.getState().settings.get("disableChat", false)
+        };
     }
 
     componentWillUnmount() {
@@ -147,6 +149,11 @@ class App extends React.Component {
                 theme: settings.get("themes")
             });
         }
+        if (settings.get("disableChat") !== this.state.disableChat) {
+            this.setState({
+                disableChat: settings.get("disableChat")
+            });
+        }
     }
 
 
@@ -174,7 +181,7 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
-                    <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>
+                    {this.state.disableChat === 1 ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );

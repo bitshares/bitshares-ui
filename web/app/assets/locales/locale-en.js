@@ -687,7 +687,8 @@
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
         "olDarkTheme": "Openledger dark",
-        reset: "Reset settings"
+        reset: "Reset settings",
+        disableChat: "Disable chat"
     },
     footer: {
         title: "Graphene",
