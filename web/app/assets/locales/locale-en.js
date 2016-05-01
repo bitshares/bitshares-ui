@@ -952,7 +952,7 @@
         user: "Username",
         done: "Done",
         welcome_user: "Welcome to Bitshares",
-        welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds.",
+        welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds. For a list of available commands, type /help.",
         disconnected: "You are currently disconnected from the chat, please click below to reconnect.",
         rate: "Please wait at least 2s before posting a new message"
     }

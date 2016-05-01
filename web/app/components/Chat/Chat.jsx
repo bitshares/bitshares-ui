@@ -12,6 +12,9 @@ import Immutable from "immutable";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
+import AccountActions from "actions/AccountActions";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import {FetchChainObjects} from "api/ChainStore";
 
 class Comment extends React.Component {
     
@@ -75,6 +78,7 @@ export default class Chat extends React.Component {
         this.onChangeColor = debounce(this.onChangeColor, 150);
 
         this._handleMessage = this._handleMessage.bind(this);
+        this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
         this.lastMessage = null;
     }
@@ -184,8 +188,118 @@ export default class Chat extends React.Component {
         this.forceUpdate();
     }
 
+    onTip(input) {
+        console.log("input:", input);
+        Promise.all([
+            FetchChainObjects(ChainStore.getAsset, [input.asset]),
+            FetchChainObjects(ChainStore.getAccount, [this.props.currentAccount]),
+            FetchChainObjects(ChainStore.getAccount, [input.to])
+        ])
+        .then(objects => {
+            console.log("objects:", objects);
+            let asset = objects[0][0];
+            let fromAccount = objects[1][0];
+            let toAccount = objects[2][0];
+            let precision = utils.get_asset_precision(asset.get("precision"));
+
+            AccountActions.transfer(
+                fromAccount.get("id"),
+                toAccount.get("id"),
+                parseInt(input.amount * precision, 10),
+                asset.get("id"),
+                input.memo ? new Buffer(input.memo, "utf-8") : input.memo,
+                null,
+                asset.get("id")
+            ).then( () => {
+                console.log("transfer.then", this);
+                TransactionConfirmStore.unlisten(this.onTrxIncluded);
+                TransactionConfirmStore.listen(this.onTrxIncluded);
+            }).catch( e => {
+                let msg = e.message ? e.message.split( '\n' )[1] : null;
+                console.log( "error: ", e, msg)
+                this.setState({error: msg})
+            });
+        })
+    }
+
+    onTrxIncluded(confirm_store_state) {
+        console.log("confirm_store_state:", confirm_store_state);
+        if(confirm_store_state.included && confirm_store_state.broadcast) {
+            // this.setState(Transfer.getInitialState());
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+            console.log("included");
+            this._onTipSuccess();
+        } else if (confirm_store_state.closed) {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+            console.log("closed");
+        }
+    }
+
+    _onTipSuccess() {
+        let tip = this._parseTip();
+        let message = {
+            user: "SYSTEM",
+            message: this.props.currentAccount + " tipped " + tip.to + " " + tip.amount + " " + tip.asset,
+            color: "#B71A00"
+        };
+
+        if (this.connections.size) {
+            this.connections.forEach(c => {
+                c.send(message);
+            });            
+        }
+
+        this._handleMessage(message);
+        this.refs.input.value = "";
+    }
+
+    _parseTip() {
+        let parsed = this.refs.input.value.split(" ");
+
+        let memo;
+        if (parsed.length > 4) {
+            memo = "";
+            for (let i = 4; i < parsed.length; i++) {
+                memo += parsed[i] + " ";
+            }
+        }
+        
+        return {
+            to: parsed[1].toLowerCase(),
+            amount: parseFloat(parsed[2]),
+            asset: parsed[3].toUpperCase(),
+            memo: memo ? memo.trim() : null
+        };
+    }
+
     submitMessage(e) {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
+
+        if (this.refs.input.value.indexOf("/tip") === 0) {
+            let tip = this._parseTip();
+            return this.onTip(tip);
+        } else if (this.refs.input.value.indexOf("/help") === 0) {
+            let commands = [
+                "Some useful commands:",
+                "Tipping: /tip username 100 BTS Memo goes here",
+                "This help: /help"
+            ];
+
+            commands.forEach(command => {
+                this._handleMessage({
+                    user: "SYSTEM",
+                    message: command,
+                    color: "#B71A00"
+                });
+            });
+
+            return this.refs.input.value = "";
+        }
+
         let now = new Date().getTime();
 
         if (!this.refs.input.value.length) {
@@ -210,9 +324,9 @@ export default class Chat extends React.Component {
         if (this.connections.size) {
             this.connections.forEach(c => {
                 c.send(message);
-            })
-            
+            });            
         }
+
         this.refs.input.value = "";
         this._handleMessage(message);
 
@@ -300,7 +414,7 @@ export default class Chat extends React.Component {
             float: "right",
             height: "35px",
             margin: "0 .5em",
-            width: "300px",
+            width: "350px",
             marginRight: "1em"
         };
 
