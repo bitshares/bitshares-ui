@@ -138,7 +138,7 @@ class SettingsStore {
 
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        this.defaults = _.merge(this.defaults, ss.get("defaults_v1"));
+        this.defaults = ss.get("defaults_v1", this.defaults);
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 

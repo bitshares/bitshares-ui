@@ -56,7 +56,7 @@ class SettingsEntry extends React.Component {
                 break;
 
             case "connection":
-                value = connection;
+                value = defaults.indexOf(connection) !== -1 ? connection : defaults[0];
                 options = defaults.map(entry => {
                     let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                     let key = entry.translate ? entry.translate : entry;
@@ -64,6 +64,7 @@ class SettingsEntry extends React.Component {
                 });
 
                 let defaultConnection = defaults[0];
+
                 let confirmButton = <div style={{padding: "10px"}}><button onClick={this._onConfirm.bind(this)} className="button outline"><Translate content="transfer.confirm" /></button></div>
 
                 optional = (
@@ -267,6 +268,7 @@ class Settings extends React.Component {
                     ref="ws_modal"
                     apis={defaults["connection"]}
                     api={defaults["connection"].filter(a => {return a === this.state.connection})}
+                    changeConnection={(connection) => {this.setState({connection})}}
                 />
             </div>
         );
