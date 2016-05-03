@@ -5,6 +5,9 @@ import DashboardList from "./DashboardList";
 import RecentTransactions from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 import ps from "perfect-scrollbar";
+import AssetName from "../Utility/AssetName";
+import assetUtils from "common/asset_utils";
+import MarketCard from "./MarketCard";
 
 class Dashboard extends React.Component {
 
@@ -21,8 +24,8 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        let c = ReactDOM.findDOMNode(this.refs.container);
-        ps.initialize(c);
+        // let c = ReactDOM.findDOMNode(this.refs.container);
+        // ps.initialize(c);
 
         this._setDimensions();
 
@@ -39,10 +42,10 @@ class Dashboard extends React.Component {
         );
     }
 
-    componentDidUpdate() {
-        let c = ReactDOM.findDOMNode(this.refs.container);
-        ps.update(c);
-    }
+    // componentDidUpdate() {
+    //     let c = ReactDOM.findDOMNode(this.refs.container);
+    //     ps.update(c);
+    // }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this._setDimensions, false);
@@ -69,41 +72,88 @@ class Dashboard extends React.Component {
 
         let names = this.props.linkedAccounts.toArray().sort();
         let ignored = this.props.myIgnoredAccounts.toArray().sort();
+        
+        let featuredMarkets = [
+            ["BTS", "OPEN.STEEM"],
+            ["OPEN.BTC", "MKR"],
+            ["OPEN.BTC", "OPEN.DGD"],
+            ["OPEN.BTC", "OPEN.ETH"],
+            ["OPEN.BTC", "OPEN.STEEM"],
+            ["BTS", "OBITS"],
+            ["BTS", "USD"],
+            ["BTS", "CNY"],
+            ["BTC", "BTS"],
+            ["BTS", "GOLD"],
+            ["BTS", "SILVER"],
+            ["BTS", "EUR"]
+        ];
 
-        let outerClass = "grid-block page-layout no-overflow " + (width < 750 ? "vertical" : "horizontal");
-        let firstDiv = "grid-block no-overflow " + (width < 750 ? "" : "shrink");
+        let newAssets = [
+            "OPEN.STEEM",
+            "MKR",
+            "OPEN.DGD",
+            "OPEN.ETH"
+        ];
+
+        let markets = featuredMarkets.map((pair, index) => {
+
+            let className = "";
+            if (index > 3) {
+                className += "show-for-medium";
+            }
+            if (index > 8) {
+                className += " show-for-large";
+            }
+            
+            return (
+                <MarketCard
+                    key={pair[0] + "_" + pair[1]}
+                    new={newAssets.indexOf(pair[1]) !== -1}
+                    className={className}
+                    quote={pair[0]}
+                    base={pair[1]}
+                />
+            );
+        })
 
         return (
-            <div ref="wrapper" className={outerClass}>
-                <div className={firstDiv} style={{minWidth: "50%"}}>
-                    <div ref="container" className="grid-content">
-                        <div className="generic-bordered-box">
-                            <div className="block-content-header" style={{marginBottom: 15}}>
-                                <Translate content="account.overview" />
-                            </div>
-                            <div className="box-content">
-                                <DashboardList accounts={Immutable.List(names)} width={width} />
-                                {myIgnoredAccounts.size ? 
-                                    <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                                        <tbody>
-                                            <tr>
-                                                <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
-                                                    <div onClick={this._onToggleIgnored.bind(this)}className="button outline">
-                                                        <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>                                
-                                    </table> : null}
-                                {showIgnored ? <DashboardList compact accounts={Immutable.List(ignored)} width={width} /> : null}
-                            </div>
+            <div ref="wrapper" className="grid-block page-layout vertical">
+                <div ref="container" className="grid-container" style={{paddingTop: 25}}>
+                    <Translate content="exchange.featured" component="h4" />
+                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow">
+                        {markets}
+                    </div>
+
+                    <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                        <div className="block-content-header" style={{marginBottom: 15}}>
+                            <Translate content="account.accounts" />
+                        </div>
+                        <div className="box-content">
+                            <DashboardList accounts={Immutable.List(names)} width={width} />
+                            {myIgnoredAccounts.size ? 
+                                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
+                                    <tbody>
+                                        <tr>
+                                            <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
+                                                <div onClick={this._onToggleIgnored.bind(this)}className="button outline">
+                                                    <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>                                
+                                </table> : null}
+                            {showIgnored ? <DashboardList compact accounts={Immutable.List(ignored)} width={width} /> : null}
                         </div>
                     </div>
-                </div>
-                <div className="grid-block right-column no-overflow">
-                    <div className="grid-content no-overflow" style={{paddingBottom: 0}}>
-                        <RecentTransactions maxHeight={height ? height - 20 - 5 : null} accountsList={this.props.linkedAccounts} limit={25} compactView={true}/>
-                    </div>
+
+                    <RecentTransactions
+                        style={{marginBottom: 20}}
+                        accountsList={this.props.linkedAccounts}
+                        limit={10}
+                        compactView={true}
+                        fullHeight={true}
+                    />
+
                 </div>
             </div>);
     }

@@ -213,6 +213,7 @@ class AccountAssets extends React.Component {
         .map(asset => {
             let description = assetUtils.parseDescription(asset.options.description);
             let desc = description.short_name ? description.short_name : description.main;
+            
             if (desc.length > 100) {
                 desc = desc.substr(0, 100) + "...";
             }

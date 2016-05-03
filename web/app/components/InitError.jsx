@@ -52,7 +52,7 @@ class InitError extends React.Component {
         console.log("-- InitError.render -->", this.props);
 
         let options = this.props.apis.map(entry => {
-            return <option key={entry}>{entry}</option>;
+            return <option key={entry} value={entry}>{entry}</option>;
         });
 
         return (

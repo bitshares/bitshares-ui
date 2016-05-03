@@ -23,7 +23,8 @@
   $positive-color,
   $negative-color,
   $row-accent-color,
-  $header-color
+  $header-color,
+  $chat-text-color
   ) {
 
   #content-wrapper {
@@ -706,7 +707,7 @@
 
   .orderbook-latest-price {
       div {
-        background-color: #4C4C4C !important;
+        background-color: $panel-bg-color !important;
         border-bottom: 1px solid grey !important;
         border-top: 1px solid grey !important;
         padding: 10px 0 !important;
@@ -749,7 +750,7 @@
   }
 
   .buy-sell-box {
-      background-color: lighten($panel-bg-color, 12%);
+      background-color: $header-color;
 
       > select {
           padding: 0;
@@ -757,9 +758,9 @@
           height: 1.75rem;
           line-height: 1.75rem;
           border: none;
-          color: white;
+          color: $primary-text-color;
           background-size: 8px 8px;
-          background-color: lighten($panel-bg-color, 12%);
+          background-color: $header-color;
           font-size: 12px;
       }
   }
@@ -815,6 +816,24 @@
     &:hover{
       @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
+  }
+
+  div.fm-container:hover {
+    background-color: darken($light-panel-bg-color, 5%);
+    cursor: pointer;
+  }
+
+  #chatbox {
+    .chat-text {
+      color: $chat-text-color;
+    }
+
+    .chatbox-content {
+        background-color: #ccc;
+        padding: 3px 13px 3px 10px;
+        color: $chat-text-color;
+    }
+
   }
 
 }

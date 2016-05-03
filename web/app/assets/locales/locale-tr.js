@@ -49,6 +49,7 @@
         unignore: "Var say",
         show_ignored: "Göster",
         hide_ignored: "Gizle",
+        accounts: "Hesaplar",
         whitelist: {
             title: "Beyaz Liste",
             black: "Kara Liste",
@@ -251,6 +252,8 @@
         follow: "Takib et",
         pay: "Öde",
         overview: "Genel Bakış",
+        home: "Başa dön",
+        welcome: "Bitshares'e Hoşgeldiniz",
         bts_market: "Piyasa",
         history: "Geçmiş",
         payees: "Alıcılar",
@@ -266,9 +269,11 @@
         },
         collaterals: "Teminat Pozisyonları",
         eq_value: "Eş Değeri",
+        no_price: "Fiyat mevcut değil",
         percent: "Toplam arzın yüzdesi",
         please_create_account: "Lütfen bir hesap oluşturun",
         create_account: "Hesap oluştur",
+        create_new: "Yeni Hesap Oluştur",
         identicon: "Identicon",
         pay_from: "Buradan öde",
         existing_accounts: "Mevcut hesaplar",
@@ -682,7 +687,8 @@
         "darkTheme": "Koyu tema",
         "lightTheme": "Hafif tema",
         "olDarkTheme": "Openledger koyu",
-        reset: "Ayarları sıfırla"
+        reset: "Ayarları sıfırla",
+        disableChat: "Sohbeti etkinsizleştir"
     },
     footer: {
         title: "Graphene",
@@ -760,7 +766,9 @@
         invert: "Fiyatı ters çevir",
         to_market: "Piyasaya git",
         zoom_all: "Tümü",
-        settings: "Grafik tercihleri"
+        settings: "Çizelge tercihleri",
+        featured: "Öne Çıkan Piyasalar",
+        new: "Yeni"
     },
     fees: {
      title: "Ücret Tarifesi"
@@ -935,5 +943,17 @@
         meta: {
             open_website: "Websitesini Aç"
         }
+    },
+    chat: {
+        title: "Troll kutusu",
+        button: "Sohbet",
+        send: "Gönder",
+        color: "Kullanıcı rengi",
+        user: "Kullanıcı adı",
+        done: "Tamam",
+        welcome_user: "Bitshares'e Hoşgeldiniz",
+        welcome: "Bu eşten eşe bir sohbet kanalıdır, yöneticisi veya gerçek kullanıcı adları garantisi yoktur. Ayarlar kısmından etkinsizleştirilebilir.Mesaj hızı 2 saniyede bir olarak sınırlıdır",
+        disconnected: "Şu an sohbetle bağlantınız bulunmamaktadır, bağlanmak için lütfen aşağıya tıklayınız.",
+        rate: "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin"
     }
 };

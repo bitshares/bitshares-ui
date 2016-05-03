@@ -1,0 +1,24 @@
+div.fm-container {
+    padding: 0.5rem;
+    min-width: 13rem;
+   &:hover {
+    background-color: #D8D8D8;
+    cursor: pointer;
+   }
+
+   .fm-title, .fm-volume, .fm-change {
+    font-size: 0.85rem;
+   }
+
+   .fm-name {
+    font-weight: bold;
+   }
+
+   .fm-volume {
+    padding-top: 8px;
+   }
+
+   .fm-change {
+    padding-top: 4px;
+   }
+}
