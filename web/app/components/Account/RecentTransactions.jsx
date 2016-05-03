@@ -46,7 +46,7 @@ class RecentTransactions extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            limit: props.limit ? Math.max(20, props.limit) : 20,
+            limit: props.limit || 20,
             csvExport: false,
             headerHeight: 85
         };
@@ -242,7 +242,7 @@ class RecentTransactions extends React.Component {
                     </div>
                 }
                 </div>
-                {this.props.showMore && historyCount > 20 && limit < historyCount ? (
+                {this.props.showMore && historyCount > this.props.limit || 20 && limit < historyCount ? (
                     <div className="account-info more-button">
                         <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
                             <Translate content="account.more" />

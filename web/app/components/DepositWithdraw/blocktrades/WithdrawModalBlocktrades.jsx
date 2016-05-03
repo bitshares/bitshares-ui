@@ -1,38 +1,35 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import classNames from "classnames";
-import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
+import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
 @BindToChainState({keep_updating:true})
-class WithdrawModal extends React.Component {
+class WithdrawModalBlocktrades extends React.Component {
 
    static propTypes = {
        account: ChainTypes.ChainAccount.isRequired,
        issuer: ChainTypes.ChainAccount.isRequired,
        asset: ChainTypes.ChainAsset.isRequired,
-       receive_asset_name: React.PropTypes.string,
-       receive_asset_symbol: React.PropTypes.string,
-       memo_prefix: React.PropTypes.string
-   }
+       output_coin_name: React.PropTypes.string.isRequired,
+       output_coin_symbol: React.PropTypes.string.isRequired,
+       output_coin_type: React.PropTypes.string.isRequired,
+       url: React.PropTypes.string,
+       output_wallet_type: React.PropTypes.string
+   };
 
    constructor( props ) {
       super(props);
       this.state = {
-         withdraw_amount:null,
-         withdraw_address:null
+         withdraw_amount: null,
+         withdraw_address: null,
+         withdraw_address_check_in_progress: false,
+         withdraw_address_is_valid: false
       }
    }
 
@@ -41,7 +38,32 @@ class WithdrawModal extends React.Component {
    }
 
    onWithdrawAddressChanged( e ) {
-      this.setState( {withdraw_address:e.target.value} );
+      let new_withdraw_address = e.target.value;
+
+      fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
+            {
+               method: 'get',
+               headers: new Headers({"Accept": "application/json"})
+            }).then(reply => { reply.json().then( json =>
+            {
+               // only process it if the user hasn't changed the address
+               // since we initiated the request
+               if (this.state.withdraw_address === new_withdraw_address)
+               {
+                  this.setState(
+                  {
+                     withdraw_address_check_in_progress: false,
+                     withdraw_address_is_valid: json.isValid
+                  });
+               }
+            })});
+
+      this.setState( 
+         {
+            withdraw_address: new_withdraw_address,
+            withdraw_address_check_in_progress: true,
+            withdraw_address_is_valid: null
+         });
    }
 
    onSubmit() {
@@ -54,7 +76,7 @@ class WithdrawModal extends React.Component {
          this.props.issuer.get("id"),
          parseInt(amount * precision, 10),
          asset.get("id"),
-         (this.props.memo_prefix || "") + this.state.withdraw_address
+         this.props.output_coin_type + ":" + this.state.withdraw_address
      )
    }
 
@@ -75,11 +97,21 @@ class WithdrawModal extends React.Component {
            balance = "No funds";
        }
 
+       let invalid_address_message = null;
+       if (!this.state.withdraw_address_check_in_progress)
+       {
+          if (!this.state.withdraw_address_is_valid)
+            invalid_address_message = <span>Please enter a valid {this.props.output_coin_name} address</span>;
+          // if (this.state.withdraw_address_is_valid)
+          //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;
+          // else
+          //   invalid_address_message = <Icon name="cross-circle" className="alert" />;
+       }
 
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
                    <div className="content-block">
-                      <h3>Withdraw {this.props.receive_asset_name}({this.props.receive_asset_symbol})</h3>
+                      <h3>Withdraw {this.props.output_coin_name}({this.props.output_coin_symbol})</h3>
                    </div>
                    <div className="content-block">
                      <AmountSelector label="modal.withdraw.amount" 
@@ -91,10 +123,12 @@ class WithdrawModal extends React.Component {
                                      display_balance={balance}
                                      />
                    </div>
-                   <div className="content-block full-width-content">
+                   <div className="content-block">
                        <label><Translate component="span" content="modal.withdraw.address"/></label>
-                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
-                       {/*<div>{memo_error}</div>*/}
+                       <span>
+                          <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off" style={{width: "100%"}} />
+                          {invalid_address_message}
+                       </span>
                    </div>
                                   
                    <div className="content-block">
@@ -111,4 +145,4 @@ class WithdrawModal extends React.Component {
    
 };
 
-export default WithdrawModal
+export default WithdrawModalBlocktrades

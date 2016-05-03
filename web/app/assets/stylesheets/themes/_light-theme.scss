@@ -7,18 +7,18 @@ $primary-text-color: darken(#3d3d3d, 10%);
 $secondary-text-color: lighten($primary-text-color, 22%);
 $light-text-color: #3d3d3d;
 $dark-text-color: lighten($light-text-color, 12%);
-$link-text-color: #aeabff;
+$link-text-color: #337ab7;
 $error-text-color: #E3745B;
 
 $bg-color: #FFF;
 $panel-bg-color: #e5e6e4;
 $light-panel-bg-color: #FFF;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
-$button-bg-color: #8c88ff;
+$button-bg-color: #2196F3;
 $secondary-button-bg-color: #999999;
 
 $alert-color: $error-text-color;
-$info-color: #A0A4B8;
+$info-color: #CE7925;
 $success-color: #21D19F;
 $warning-color: #f35b92;
 $fee-color: #7f055e;
@@ -31,6 +31,9 @@ $positive-color: #6EC105;
 $negative-color: #E1424A;
 $row-accent-color: #FFFFFF;
 $header-color: #DCDCDC;
+
+// Chat colors
+$chat-text-color: #191A1F;
 
 .lightTheme {
   @include theme(
@@ -56,7 +59,8 @@ $header-color: #DCDCDC;
     $positive-color,
     $negative-color,
     $row-accent-color,
-    $header-color
+    $header-color,
+    $chat-text-color
   );
   
   .blocktrades-bridge input, .blocktrades-bridge select{

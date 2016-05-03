@@ -81,7 +81,6 @@ class Transfer extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
-        console.log("onAmountChanged:", amount, asset);
         if (!asset) {
             return;
         }

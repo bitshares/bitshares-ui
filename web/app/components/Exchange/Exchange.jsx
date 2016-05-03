@@ -772,7 +772,7 @@ class Exchange extends React.Component {
                     quote: order.sell_price.base,
                     base: order.sell_price.quote
                 },
-                buyAmount: null,
+                buyAmount: 1,
                 buyTotal: null
             });
 
@@ -793,7 +793,7 @@ class Exchange extends React.Component {
                     quote: order.sell_price.base,
                     base: order.sell_price.quote
                 },
-                sellAmount: null,
+                sellAmount: 1,
                 sellTotal: null
             });
         }

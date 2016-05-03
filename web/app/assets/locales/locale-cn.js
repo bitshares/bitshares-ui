@@ -937,7 +937,9 @@ module.exports = {
         },
         meta: {
             open_website: "访问官网"
-        }
+        },
+        generate_new: "生成新地址",
+        calc: "计算中"
     },
     propose: "提议",
     cancel: "取消",
@@ -963,7 +965,8 @@ module.exports = {
             key_approvals_to_remove: "要移除的公钥许可"
         },
         approve: "批准",
-        reject: "否决"
+        reject: "否决",
+        asset_create: "使用账户{account}创建资产%{asset}s"
     },
     proposal_create: {
         review_period: "复审期开始",

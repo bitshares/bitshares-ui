@@ -66,6 +66,7 @@ import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
+import Chat from "./components/Chat/Chat";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -80,7 +81,9 @@ class App extends React.Component {
         this.state = {
             loading: true,
             synced: false,
-            theme: SettingsStore.getState().settings.get("themes")};
+            theme: SettingsStore.getState().settings.get("themes"),
+            disableChat: SettingsStore.getState().settings.get("disableChat", false)
+        };
     }
 
     componentWillUnmount() {
@@ -146,6 +149,11 @@ class App extends React.Component {
                 theme: settings.get("themes")
             });
         }
+        if (settings.get("disableChat") !== this.state.disableChat) {
+            this.setState({
+                disableChat: settings.get("disableChat")
+            });
+        }
     }
 
 
@@ -173,6 +181,7 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
+                    {this.state.disableChat === 1 ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );
@@ -269,68 +278,69 @@ let willTransitionTo = (nextState, replaceState, callback) => {
 let routes = (
     <Route path="/" component={RootIntl} onEnter={willTransitionTo}>
         <IndexRoute component={DashboardContainer}/>
-        <Route name="auth" path="/auth/:data" component={Auth}/>
-        <Route name="dashboard" path="/dashboard" component={DashboardContainer}/>
-        <Route name="explorer" path="explorer" component={Explorer}/>
-        <Route name="fees" path="/explorer/fees" component={FeesContainer}/>
-        <Route name="blocks" path="/explorer/blocks" component={Blocks}/>
-        <Route name="assets" path="/explorer/assets" component={Assets}/>
-        <Route name="accounts" path="/explorer/accounts" component={AccountsContainer}/>
-        <Route name="witnesses" path="/explorer/witnesses" component={Witnesses}>
+        <Route path="/auth/:data" component={Auth}/>
+        <Route path="/dashboard" component={DashboardContainer}/>
+        <Route path="explorer" component={Explorer}/>
+        <Route path="/explorer/fees" component={FeesContainer}/>
+        <Route path="/explorer/blocks" component={Blocks}/>
+        <Route path="/explorer/assets" component={Assets}/>
+        <Route path="/explorer/accounts" component={AccountsContainer}/>
+        <Route path="/explorer/witnesses" component={Witnesses}>
             <IndexRoute component={Witnesses}/>
         </Route>
-        <Route name="committee-members" path="/explorer/committee-members" component={CommitteeMembers}>
+        <Route path="/explorer/committee-members" component={CommitteeMembers}>
             <IndexRoute component={CommitteeMembers}/>
         </Route>
-        <Route name="wallet" path="wallet" component={WalletManager}>
+        <Route path="wallet" component={WalletManager}>
             {/* wallet management console */}
             <IndexRoute component={WalletOptions}/>
-            <Route name="wmc-change-wallet" path="change" component={ChangeActiveWallet}/>
-            <Route name="wmc-change-password" path="change-password" component={WalletChangePassword}/>
-            <Route name="wmc-import-keys" path="import-keys" component={ImportKeys}/>
-            <Route name="wmc-brainkey" path="brainkey" component={Brainkey}/>
-            <Route name="wmc-wallet-create" path="create" component={WalletCreate}/>
-            <Route name="wmc-wallet-delete" path="delete" component={WalletDelete}/>
-            <Route name="wmc-backup-verify-restore" path="backup/restore" component={BackupRestore}/>
-            <Route name="wmc-backup-create" path="backup/create" component={BackupCreate}/>
-            <Route name="wmc-backup-brainkey" path="backup/brainkey" component={BackupBrainkey}/>
-            <Route name="wmc-balance-claims" path="balance-claims" component={BalanceClaimActive}/>
+            <Route path="change" component={ChangeActiveWallet}/>
+            <Route path="change-password" component={WalletChangePassword}/>
+            <Route path="import-keys" component={ImportKeys}/>
+            <Route path="brainkey" component={Brainkey}/>
+            <Route path="create" component={WalletCreate}/>
+            <Route path="delete" component={WalletDelete}/>
+            <Route path="backup/restore" component={BackupRestore}/>
+            <Route path="backup/create" component={BackupCreate}/>
+            <Route path="backup/brainkey" component={BackupBrainkey}/>
+            <Route path="balance-claims" component={BalanceClaimActive}/>
         </Route>
-        <Route name="create-wallet" path="create-wallet" component={WalletCreate}/>
-        <Route name="transfer" path="transfer" component={Transfer}/>
-        <Route name="invoice" path="invoice/:data" component={Invoice}/>
-        <Route name="markets" path="explorer/markets" component={Markets}/>
-        <Route name="exchange" path="market/:marketID" component={Exchange}/>
-        <Route name="settings" path="settings" component={Settings}/>
-        <Route name="block" path="block/:height" component={BlockContainer}/>
-        <Route name="asset" path="asset/:symbol" component={AssetContainer}/>
-        <Route name="create-account" path="create-account" component={CreateAccount}/>
-        <Route name="existing-account" path="existing-account" component={ExistingAccount}>
+        <Route path="create-wallet" component={WalletCreate}/>
+        <Route path="transfer" component={Transfer}/>
+        <Route path="invoice/:data" component={Invoice}/>
+        <Route path="explorer/markets" component={Markets}/>
+        <Route path="market/:marketID" component={Exchange}/>
+        <Route path="settings" component={Settings}/>
+        <Route path="block/:height" component={BlockContainer}/>
+        <Route path="asset/:symbol" component={AssetContainer}/>
+        <Route path="create-account" component={CreateAccount}/>
+        <Route path="existing-account" component={ExistingAccount}>
             <IndexRoute component={ExistingAccountOptions}/>
-            <Route name="welcome-import-backup" path="import-backup" component={BackupRestore}/>
-            <Route name="welcome-import-keys" path="import-keys" component={ImportKeys}/>
-            <Route name="welcome-brainkey" path="brainkey" component={Brainkey}/>
-            <Route name="welcome-balance-claim" path="balance-claim" component={BalanceClaimActive}/>
+            <Route path="import-backup" component={BackupRestore}/>
+            <Route path="import-keys" component={ImportKeys}/>
+            <Route path="brainkey" component={Brainkey}/>
+            <Route path="balance-claim" component={BalanceClaimActive}/>
         </Route>
-        <Route name="account" path="/account/:account_name" component={AccountPage}>
+        <Route path="/account/:account_name" component={AccountPage}>
             <IndexRoute component={AccountOverview}/>
-            <Route name="account-overview" path="overview" component={AccountOverview}/>
-            <Route name="account-assets" path="assets" component={AccountAssets}/>
-            <Route name="account-create-asset" path="create-asset" component={AccountAssetCreate}/>
-            <Route name="account-update-asset" path="update-asset/:asset" component={AccountAssetUpdate}/>
-            <Route name="account-member-stats" path="member-stats" component={AccountMembership}/>
+            <Route path="overview" component={AccountOverview}/>
+            <Route path="assets" component={AccountAssets}/>
+            <Route path="create-asset" component={AccountAssetCreate}/>
+            <Route path="update-asset/:asset" component={AccountAssetUpdate}/>
+            <Route path="member-stats" component={AccountMembership}/>
             <Route path="vesting" component={AccountVesting}/>
-            <Route name="account-permissions" path="permissions" component={AccountPermissions}/>
-            <Route name="account-voting" path="voting" component={AccountVoting}/>
-            <Route name="account-orders" path="orders" component={AccountOrders}/>
+            <Route path="permissions" component={AccountPermissions}/>
+            <Route path="voting" component={AccountVoting}/>
+            <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
+            <Route path="orders" component={AccountOrders}/>
             <Route path="whitelist" component={AccountWhitelist}/>
         </Route>
         <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
-        <Route name="init-error" path="/init-error" component={InitError}/>
-        <Route name="help" path="/help" component={Help}>
-            <Route name="path1" path=":path1" component={Help}>
-                <Route name="path2" path=":path2" component={Help}>
-                    <Route name="path3" path=":path3" component={Help}/>
+        <Route path="/init-error" component={InitError}/>
+        <Route path="/help" component={Help}>
+            <Route path=":path1" component={Help}>
+                <Route path=":path2" component={Help}>
+                    <Route path=":path3" component={Help}/>
                 </Route>
             </Route>
         </Route>

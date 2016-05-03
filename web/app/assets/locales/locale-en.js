@@ -49,6 +49,7 @@
         unignore: "Unignore",
         show_ignored: "Show ignored accounts",
         hide_ignored: "Hide ignored accounts",
+        accounts: "Accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
@@ -251,6 +252,8 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
+        home: "Home",
+        welcome: "Welcome to Bitshares",
         bts_market: "Market",
         history: "History",
         payees: "Payees",
@@ -266,9 +269,11 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        no_price: "No price available",
         percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
+        create_new: "Create New Account",
         identicon: "Identicon",
         pay_from: "Pay From",
         existing_accounts: "Existing Accounts",
@@ -682,7 +687,8 @@
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
         "olDarkTheme": "Openledger dark",
-        reset: "Reset settings"
+        reset: "Reset settings",
+        disableChat: "Disable chat"
     },
     footer: {
         title: "Graphene",
@@ -760,7 +766,9 @@
         invert: "Invert the price",
         to_market: "Go to market",
         zoom_all: "All",
-        settings: "Chart options"
+        settings: "Chart options",
+        featured: "Featured Markets",
+        new: "New"
     },
     fees: {
      title: "Fee Schedule"
@@ -935,5 +943,17 @@
         meta: {
             open_website: "Open Website"
         }
+    },
+    chat: {
+        title: "Trollbox",
+        button: "Chat",
+        send: "Send",
+        color: "Username color",
+        user: "Username",
+        done: "Done",
+        welcome_user: "Welcome to Bitshares",
+        welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds. For a list of available commands, type /help.",
+        disconnected: "You are currently disconnected from the chat, please click below to reconnect.",
+        rate: "Please wait at least 2s before posting a new message"
     }
 };

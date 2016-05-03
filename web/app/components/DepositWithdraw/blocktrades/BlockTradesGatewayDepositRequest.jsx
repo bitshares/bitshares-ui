@@ -1,26 +1,16 @@
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import LoadingIndicator from "../../LoadingIndicator";
 import ChainStore from "api/ChainStore";
-import ChainTypes from "../../Utility/ChainTypes";
-import BindToChainState from "../../Utility/BindToChainState";
-import Statistics from "../Statistics";
-import AccountActions from "actions/AccountActions";
-import Icon from "../../Icon/Icon";
-import TimeAgo from "../../Utility/TimeAgo";
-import HelpContent from "../../Utility/HelpContent";
-import AmountSelector from "../../Utility/AmountSelector";
-import WithdrawModalBlocktrades from "../../Modal/WithdrawModalBlocktrades";
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
+import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
-import RefcodeInput from "../../Forms/RefcodeInput";
-import ReactTooltip from "react-tooltip"
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
-
-var Post = require("../../Utility/FormPost.js");
+import Post from "common/formPost";
 
 @BindToChainState({keep_updating:true})
 class BlockTradesGatewayDepositRequest extends React.Component {
@@ -119,7 +109,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             let balance_object_id = account_balances_object.get(this.props.receive_asset.get('id'));
             if (balance_object_id)
             {
-                let balance_object = ChainStore.objects_by_id.get(balance_object_id);
+                let balance_object = ChainStore.getObject(balance_object_id);
                 if (balance_object)
                 {
                     let balance = balance_object.get('balance');

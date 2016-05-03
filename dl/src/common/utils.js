@@ -73,12 +73,13 @@ var Utils = {
     },
 
     format_volume(amount) {
-        if (amount < 10) {
-            return this.format_number(amount, 2);
-        } else if (amount < 10000) {
-            return this.format_number(amount, 0);
+
+        if (amount < 10000) {
+            return this.format_number(amount, 3);
+        } else if (amount < 1000000) {
+            return (Math.round(amount / 10) / 100).toFixed(2) + "k";
         } else {
-            return Math.round(amount / 1000) + "k";
+            return (Math.round(amount / 10000) / 100).toFixed(2) + "M";
         }
     },
 

@@ -1,6 +1,8 @@
 import React from "react";
 import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
+import SettingsStore from "stores/SettingsStore";
+
 import AltContainer from "alt-container";
 import Dashboard from "./Dashboard";
 import Immutable from "immutable";
@@ -9,7 +11,7 @@ class DashboardContainer extends React.Component {
     render() {
         return (
             <AltContainer
-                stores={[AccountStore]}
+                stores={[AccountStore, SettingsStore]}
                 inject={{
                 /** bind to chain state will use this to trigger updates to the dashboard */
                 // resolvedLinkedAccounts: () => {
