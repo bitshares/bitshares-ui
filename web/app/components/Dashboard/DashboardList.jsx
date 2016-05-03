@@ -225,7 +225,7 @@ class DashboardList extends React.Component {
         let filterText = counterpart.translate("markets.filter").toUpperCase();
 
         return (
-            <div>
+            <div style={this.props.style}>
                 {!this.props.compact ? (
                     <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
                         <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />

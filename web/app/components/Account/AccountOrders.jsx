@@ -110,12 +110,9 @@ class AccountOrders extends React.Component {
         }
 
         return (
-            <div className="grid-block">
-                <div className="grid-content small-12">
-                    {!tables.length ? <div style={{fontSize: "2rem"}}><Translate content="account.no_orders" /></div> : null}
-                    {tables}
-                </div>
-
+            <div className="grid-content no-overflow" style={{minWidth: "50rem", paddingBottom: 15}}>
+                {!tables.length ? <div style={{fontSize: "2rem"}}><Translate content="account.no_orders" /></div> : null}
+                {tables}
             </div>
         );
     }

@@ -246,7 +246,6 @@ class Download extends BackupBaseComponent {
         
         if(blob.size !== this.props.backup.size)
             throw new Error("Invalid backup to download conversion")
-        
         saveAs(blob, this.props.backup.name);
         WalletActions.setBackupDate()
     }
@@ -254,6 +253,22 @@ class Download extends BackupBaseComponent {
 
 @connectToStores
 class Create extends BackupBaseComponent {
+
+    getBackupName() {
+        var name = this.props.wallet.current_wallet
+        var address_prefix = chain_config.address_prefix.toLowerCase()
+        if(name.indexOf(address_prefix) !== 0)
+            name = address_prefix + "_" + name
+
+        let date =  new Date();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let stampedName = `${name}_${date.getFullYear()}${month >= 10 ? month : "0" + month}${day >= 10 ? day : "0" + day}`;
+
+        name = stampedName + ".bin";
+
+        return name;
+    }
     
     render() {
         var has_backup = !!this.props.backup.contents
@@ -272,11 +287,7 @@ class Create extends BackupBaseComponent {
     onCreateBackup() {
         var backup_pubkey = WalletDb.getWallet().password_pubkey
         backup(backup_pubkey).then( contents => {
-            var name = this.props.wallet.current_wallet
-            var address_prefix = chain_config.address_prefix.toLowerCase()
-            if(name.indexOf(address_prefix) !== 0)
-                name = address_prefix + "_" + name
-            name = name + ".bin"
+            let name = this.getBackupName();
             BackupActions.incommingBuffer({name, contents})
         })
     }

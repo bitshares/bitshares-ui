@@ -817,6 +817,11 @@
     }
   }
 
+  div.fm-container:hover {
+    background-color: darken($light-panel-bg-color, 5%);
+    cursor: pointer;
+   }
+
 }
 
 

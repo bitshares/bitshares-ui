@@ -221,19 +221,17 @@ class TotalValue extends React.Component {
                 let symbol = assets[asset].get("symbol");
                 let amount = utils.get_asset_amount(assetValues[asset], toAsset);
                 if (amount) {
-                    if (amount < minValue) { // really close to zero, but not zero, probably a result of incomplete data
+                    if (amount < minValue && amount > -minValue) { // really close to zero, but not zero, probably a result of incomplete data
                         amount = noDataSymbol;
-                        missingData=true;
+                        missingData = true;
                     } else if (hiPrec) {
-                        if (amount < 0.01)
-                            amount = "<0.01";
-                        else
-                            amount = utils.format_number(amount, 2);
+                        if (amount >= 0 && amount < 0.01)      amount = "<0.01";
+                        else if (amount < 0 && amount > -0.01) amount = "-0.01<";
+                        else                                   amount = utils.format_number(amount, 2);
                     } else {
-                        if (amount < 1)
-                            amount = "<1";
-                        else
-                            amount = utils.format_number(amount, 0);
+                        if (amount >= 0 && amount < 1)         amount = "<1";
+                        else if (amount < 0 && amount > -0.01) amount = "-1<";
+                        else                                   amount = utils.format_number(amount, 0);
                     }
                 } else {
                     amount = noDataSymbol;
@@ -251,11 +249,11 @@ class TotalValue extends React.Component {
         
         // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
         if (!inHeader) {
-            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>;
+            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>;
         } else {
             return (
                 <div data-tip={totalsTip} data-place="bottom" data-type="light" html data-html={true} >
-                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("precision")}/>
+                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
 
             );
