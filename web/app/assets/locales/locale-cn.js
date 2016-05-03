@@ -980,5 +980,17 @@ module.exports = {
         expiration_time: "过期时间",
         proposed_operations: "提议的操作",
         fee_paying_account: "付费账户"
+    },
+    chat: {
+        title: "聊天室",
+        button: "聊天",
+        send: "发送",
+        color: "用户名颜色",
+        user: "用户名",
+        done: "完成",
+        welcome_user: "欢迎访问BitShares",
+        welcome: "这是P2P聊天室。没有管理员，也不能保证唯一的用户名。可以从设置中禁用聊天功能。发送消息的频率被限制在每2秒1条。输入 /help 获得命令帮助信息。",
+        disconnected: "你已从聊天室断开链接，请点击下方重新连接。",
+        rate: "请等待至少2秒发送新消息。"
     }
 };
