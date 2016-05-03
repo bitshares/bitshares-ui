@@ -119,7 +119,7 @@ class RecentTransactions extends React.Component {
         });
     }
 
-    _getHistory(accountsList, filter) {
+    _getHistory(accountsList, filterOp, customFilter) {
         let history = [];
         let seen_ops = new Set();
         for (let account of accountsList) {
@@ -128,9 +128,25 @@ class RecentTransactions extends React.Component {
                 if (h) history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
             }
         }
-        if (filter) {
+        if (filterOp) {
             history = history.filter(a => {
-                return a.op[0] === operations[filter];
+                return a.op[0] === operations[filterOp];
+            });
+        }
+
+        if (customFilter) {
+            history = history.filter(a => {
+                let finalValue = customFilter.fields.reduce((final, filter) => {
+                    switch (filter) {
+                        case "asset_id":
+                            return final && a.op[1]["amount"][filter] === customFilter.values[filter];
+                            break;
+                        default:
+                            return final && a.op[1][filter] === customFilter.values[filter];
+                            break;
+                    }
+                }, true)
+                return finalValue;
             });
         }
         return history;
@@ -141,10 +157,10 @@ class RecentTransactions extends React.Component {
     }
 
     render() {
-        let {accountsList, compactView, filter, style, maxHeight} = this.props;
+        let {accountsList, compactView, filter, customFilter, style, maxHeight} = this.props;
         let {limit, headerHeight} = this.state;
         let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
-        let history = this._getHistory(accountsList, filter).sort(compareOps);
+        let history = this._getHistory(accountsList, filter, customFilter).sort(compareOps);
         let historyCount = history.length;
 
         style = style ? style : {};
@@ -174,11 +190,11 @@ class RecentTransactions extends React.Component {
                     <div ref="header">
 
                         <div className="block-content-header">
-                            <span><Translate content="account.recent" /> </span>
+                            <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
                             
                             {historyCount > 0 ?
                             <span style={{fontSize: "60%", textTransform: "lowercase"}}>
-                                (
+                                &nbsp;(
                                     <a
                                     onClick={this._downloadCSV.bind(this)}
                                     data-tip={counterpart.translate("transaction.csv_tip")}
