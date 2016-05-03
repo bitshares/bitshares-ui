@@ -61,8 +61,6 @@ export default class BlockTradesGateway extends React.Component {
     }
 
     onSelectCoin(e) {
-        console.log("e:", e.target.value);
-
         this.setState({
             activeCoin: e.target.value
         });
@@ -94,8 +92,6 @@ export default class BlockTradesGateway extends React.Component {
         let coin = coins.filter(coin => {
             return (action === "withdraw" ? coin.symbol : coin.backingCoinType.toUpperCase()) === activeCoin;
         })[0];
-
-        console.log(provider, this.state.action, "coin:", coin);
 
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567"},
@@ -164,7 +160,6 @@ export default class BlockTradesGateway extends React.Component {
 
                     >
                         { ({asset, to, fromAccount}) => {
-                            console.log("to:", to.get("name"), "from", fromAccount.get("name"))
                             return <RecentTransactions
                                 accountsList={Immutable.List([this.props.account.get("id")])}
                                 limit={10}

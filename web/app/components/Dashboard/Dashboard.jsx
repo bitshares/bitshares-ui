@@ -152,6 +152,7 @@ class Dashboard extends React.Component {
                         limit={10}
                         compactView={true}
                         fullHeight={true}
+                        showFilters={true}
                     />
 
                 </div>

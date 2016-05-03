@@ -50,7 +50,6 @@ class AccountDepositWithdraw extends React.Component {
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
         fetch("https://blocktrades.us/api/v2/coins").then(reply => reply.json().then(result => {
-            console.log("result:", result);
             this.setState({
                 blockTradesCoins: result
             });
