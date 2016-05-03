@@ -230,7 +230,7 @@
   // buttons
 
   .button {
-    background-color: $button-bg-color;
+    background: $button-bg-color;
     &:hover, &:focus, &:active {
       background-color: lighten($button-bg-color, 4%) !important;
     }

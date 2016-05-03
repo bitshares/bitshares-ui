@@ -13,13 +13,15 @@ import MetaexchangeDepositRequest from "../DepositWithdraw/metaexchange/Metaexch
 import TranswiserDepositWithdraw from "../DepositWithdraw/transwiser/TranswiserDepositWithdraw";
 import BlockTradesBridgeDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesBridgeDepositRequest";
 import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
+import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
 import Tabs from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import Post from "common/formPost";
+let olGatewayCoins = require("components/DepositWithdraw/openledger/gatewayCoins.json");
 
-@BindToChainState({keep_updating:true})
+@BindToChainState()
 class AccountDepositWithdraw extends React.Component {
 
     static propTypes = {
@@ -39,8 +41,6 @@ class AccountDepositWithdraw extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        console.log("nextProps.account !== this.props.account:", nextProps.account !== this.props.account);
-        console.log("blockTradesCoins, this.state.blockTradesCoins:", !utils.are_equal_shallow(nextState.blockTradesCoins, this.state.blockTradesCoins));
         return (
             nextProps.account !== this.props.account ||
             !utils.are_equal_shallow(nextState.blockTradesCoins, this.state.blockTradesCoins)
@@ -60,6 +60,16 @@ class AccountDepositWithdraw extends React.Component {
     }
 
     render() {
+        let blockTradesGatewayCoins = this.state.blockTradesCoins.filter(coin => {
+            if (coin.backingCoinType === "muse") {
+                return false;
+            }
+            
+            return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
+        })
+        .map(coin => {
+            return coin;
+        });
 
         return (
 		<div className={this.props.contained ? "grid-content" : "grid-container"}>
@@ -92,107 +102,30 @@ class AccountDepositWithdraw extends React.Component {
                         </div>
                         <div className="content-block">
                             <h3><Translate content="gateway.gateway" /></h3>
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th><Translate content="gateway.symbol" /></th>
-                                    <th><Translate content="gateway.deposit_to" /></th>
-                                    <th><Translate content="gateway.generate" /></th>
-                                    <th><Translate content="gateway.balance" /></th>
-                                    <th><Translate content="gateway.withdraw" /></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-btc"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    receive_asset="TRADE.BTC"
-                                    deposit_asset="BTC"
-                                    deposit_coin_type="btc"
-                                    deposit_asset_name="Bitcoin"
-                                    deposit_wallet_type="bitcoin"
-                                    receive_coin_type="trade.btc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-ltc"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="ltc"
-                                    deposit_asset_name="Litecoin"
-                                    deposit_asset="LTC"
-                                    deposit_wallet_type="litecoin"
-                                    receive_asset="TRADE.LTC"
-                                    receive_coin_type="trade.ltc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-doge"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="doge"
-                                    deposit_asset_name="Dogecoin"
-                                    deposit_asset="DOGE"
-                                    deposit_wallet_type="dogecoin"
-                                    receive_asset="TRADE.DOGE"
-                                    receive_coin_type="trade.doge" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-nsr"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="nsr"
-                                    deposit_asset_name="NuShares"
-                                    deposit_asset="NSR"
-                                    deposit_wallet_type="nushares"
-                                    receive_asset="TRADE.NSR"
-                                    receive_coin_type="trade.nsr" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-nbt"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="nbt"
-                                    deposit_asset_name="NuBits"
-                                    deposit_asset="NBT"
-                                    deposit_wallet_type="nubits"
-                                    receive_asset="TRADE.NBT"
-                                    receive_coin_type="trade.nbt" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-dash"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="dash"
-                                    deposit_asset_name="Dash"
-                                    deposit_asset="DASH"
-                                    deposit_wallet_type="dash"
-                                    receive_asset="TRADE.DASH"
-                                    receive_coin_type="trade.dash" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="blocktrades-trade-ppc"
-                                    gateway="blocktrades"
-                                    url="https://api.blocktrades.us/v2"
-                                    issuer_account="blocktrades"
-                                    account={this.props.account}
-                                    deposit_coin_type="ppc"
-                                    deposit_asset_name="Peercoin"
-                                    deposit_asset="PPC"
-                                    deposit_wallet_type="peercoin"
-                                    receive_asset="TRADE.PPC"
-                                    receive_coin_type="trade.ppc" />
-                                </tbody>
-                            </table>
+
+                            {blockTradesGatewayCoins.length ? 
+                            <BlockTradesGateway
+                                account={this.props.account}
+                                coins={blockTradesGatewayCoins}
+                                provider="blocktrades"
+                            /> : null}
+
                         </div>
                     </Tabs.Tab>
 
                     <Tabs.Tab title="Openledger">
+                        <div className="content-block">
+                            <h3><Translate content="gateway.gateway" /></h3>
+
+                            {blockTradesGatewayCoins.length ? 
+                            <BlockTradesGateway
+                                account={this.props.account}
+                                coins={olGatewayCoins}
+                                provider="openledger"
+                            /> : null}
+
+                        </div>
+
                         <div className="content-block">
                             <h3>Fiat</h3>
                             <div className="float-right"><a href="https://www.ccedk.com/" target="__blank">VISIT WEBSITE</a></div>
@@ -203,194 +136,6 @@ class AccountDepositWithdraw extends React.Component {
                             <OpenLedgerFiatTransactionHistory
                                     rpc_url="https://openledger.info/api/"
                                     account={this.props.account} />
-                        </div>
-                        <div className="content-block">
-                            <h3><Translate content="gateway.gateway" /></h3>
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th><Translate content="gateway.symbol" /></th>
-                                    <th><Translate content="gateway.deposit_to" /></th>
-                                    <th><Translate content="gateway.generate" /></th>
-                                    <th><Translate content="gateway.balance" /></th>
-                                    <th><Translate content="gateway.withdraw" /></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.bks"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="BKS"
-                                    deposit_asset_name="BlockShares"
-                                    deposit_coin_type="bks"
-                                    deposit_wallet_type="blockshares"
-                                    receive_asset="OPEN.BKS"
-                                    receive_coin_type="open.bks" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.btc"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="BTC"
-                                    deposit_coin_type="btc"
-                                    deposit_asset_name="Bitcoin"
-                                    deposit_wallet_type="bitcoin"
-                                    receive_asset="OPEN.BTC"
-                                    receive_coin_type="open.btc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.dash"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="DASH"
-                                    deposit_coin_type="dash"
-                                    deposit_asset_name="Dash"
-                                    deposit_wallet_type="dash"
-                                    receive_asset="OPEN.DASH"
-                                    receive_coin_type="open.dash" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.dgd"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="DGD"
-                                    deposit_coin_type="dgd"
-                                    deposit_asset_name="Digix DGD"
-                                    deposit_wallet_type="ethereum"
-                                    receive_asset="OPEN.DGD"
-                                    receive_coin_type="open.dgd" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.doge"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="DOGE"
-                                    deposit_coin_type="doge"
-                                    deposit_asset_name="Dogecoin"
-                                    deposit_wallet_type="dogecoin"
-                                    receive_asset="OPEN.DOGE"
-                                    receive_coin_type="open.doge" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.egd"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="EGD"
-                                    deposit_asset_name="E-Gold"
-                                    deposit_coin_type="egd"
-                                    deposit_wallet_type="egold"
-                                    receive_asset="OPEN.EGD"
-                                    receive_coin_type="open.egd" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.emc"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="EMC"
-                                    deposit_asset_name="EmerCoin"
-                                    deposit_coin_type="emc"
-                                    deposit_wallet_type="emercoin"
-                                    receive_asset="OPEN.EMC"
-                                    receive_coin_type="open.emc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.eth"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="ETH"
-                                    deposit_asset_name="Ether"
-                                    deposit_coin_type="eth"
-                                    deposit_wallet_type="ethereum"
-                                    receive_asset="OPEN.ETH"
-                                    receive_coin_type="open.eth" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.ltc"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="LTC"
-                                    deposit_coin_type="ltc"
-                                    deposit_asset_name="Litecoin"
-                                    deposit_wallet_type="litecoin"
-                                    receive_asset="OPEN.LTC"
-                                    receive_coin_type="open.ltc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.muse"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="MUSE"
-                                    deposit_asset_name="Muse"
-                                    deposit_coin_type="muse"
-                                    deposit_account="openledger-wallet"
-                                    deposit_wallet_type="muse"
-                                    receive_asset="OPEN.MUSE"
-                                    receive_coin_type="open.muse"
-                                    deposit_memo_name="memo" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.nbt"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="NBT"
-                                    deposit_asset_name="NuBits"
-                                    deposit_coin_type="nbt"
-                                    deposit_wallet_type="nubits"
-                                    receive_asset="OPEN.NBT"
-                                    receive_coin_type="open.nbt" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.nsr"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="NSR"
-                                    deposit_asset_name="NuShares"
-                                    deposit_coin_type="nsr"
-                                    deposit_wallet_type="nushares"
-                                    receive_asset="OPEN.NSR"
-                                    receive_coin_type="open.nsr" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.ppc"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="PPC"
-                                    deposit_coin_type="peercoin"
-                                    deposit_asset_name="Peercoin"
-                                    deposit_wallet_type="peercoin"
-                                    receive_asset="OPEN.PPC"
-                                    receive_coin_type="open.ppc" />
-                                <BlockTradesGatewayDepositRequest
-                                    key="ccedk-open.steem"
-                                    gateway="openledger"
-                                    url="https://bitshares.openledger.info/depositwithdraw/api/v2"
-                                    issuer_account="openledger-wallet"
-                                    account={this.props.account}
-                                    deposit_asset="STEEM"
-                                    deposit_asset_name="Steem"
-                                    deposit_coin_type="steem"
-                                    deposit_account="openledger"
-                                    deposit_wallet_type="steem"
-                                    receive_asset="OPEN.STEEM"
-                                    receive_coin_type="open.steem"
-                                    deposit_memo_name="memo" />
-                                </tbody>
-                            </table>
                         </div>
                     </Tabs.Tab>
 

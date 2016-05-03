@@ -45,8 +45,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             input_from_output: 1
         };
 
+        let urls = {
+            blocktrades: "https://api.blocktrades.us/v2",
+            openledger: "https://bitshares.openledger.info/depositwithdraw/api/v2"
+        }
+
         this.state =
         {
+            url: props.url || urls[props.gateway],
+
             // things that get displayed for deposits
             deposit_input_coin_type: null,
             deposit_output_coin_type: null,
@@ -83,22 +90,22 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
         // get basic data from blocktrades
 
-        let coin_types_url = this.props.url + "/coins";
+        let coin_types_url = this.state.url + "/coins";
         let coin_types_promise = fetch(coin_types_url,
                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                  .then(response => response.json());
         
-        let wallet_types_url = this.props.url + "/wallets";
+        let wallet_types_url = this.state.url + "/wallets";
         let wallet_types_promise = fetch(wallet_types_url, 
                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                    .then(response => response.json());
         
-        let trading_pairs_url = this.props.url + "/trading-pairs";
+        let trading_pairs_url = this.state.url + "/trading-pairs";
         let trading_pairs_promise = fetch(trading_pairs_url, 
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
-        let active_wallets_url = this.props.url + "/active-wallets";
+        let active_wallets_url = this.state.url + "/active-wallets";
         let active_wallets_promise = fetch(active_wallets_url, 
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
@@ -308,7 +315,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
         this.state.input_address_requests_in_progress[input_coin_type][output_coin_type] = true;
 
-        fetch(this.props.url + '/simple-api/initiate-trade', {
+        fetch(this.state.url + '/simple-api/initiate-trade', {
             method:'post',
             headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
             body: body
@@ -371,7 +378,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.deposit_limit_requests_in_progress[input_coin_type] = this.state.input_address_requests_in_progress[input_coin_type] || {};
         this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type] = true;
 
-        let deposit_limit_url = this.props.url + 
+        let deposit_limit_url = this.state.url + 
                                 "/deposit-limits?inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
         let deposit_limit_promise = fetch(deposit_limit_url, 
@@ -401,7 +408,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateOutputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, input_amount)
     {
-        let estimate_output_url = this.props.url + 
+        let estimate_output_url = this.state.url + 
                                 "/estimate-output-amount?inputAmount=" + encodeURIComponent(input_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
@@ -449,7 +456,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateInputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, output_amount)
     {
-        let estimate_input_url = this.props.url + 
+        let estimate_input_url = this.state.url + 
                                 "/estimate-input-amount?outputAmount=" + encodeURIComponent(output_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
@@ -660,7 +667,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 {deposit_error_element}
                             </td>
                             <td>
-                                <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} /> 
+                                <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} />
                             </td>
                             <td>
                                 {input_address_and_memo.address}<br/>
@@ -725,7 +732,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                     output_coin_type={this.state.withdraw_output_coin_type}
                                     modal_id={withdraw_modal_id} 
-                                    url={this.props.url}
+                                    url={this.state.url}
                                     output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
                             </div>
                         </Modal>
