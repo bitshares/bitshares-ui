@@ -1,16 +1,15 @@
 import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import BalanceComponent from "../Utility/BalanceComponent";
+import BalanceComponent from "components/Utility/BalanceComponent";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-
-var Post = require ("../Utility/FormPost.js");
+import Post from "common/formPost";
 
 @BindToChainState({keep_updating:true})
 class WithdrawModalMetaexchange extends React.Component {
@@ -27,7 +26,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		receive_asset_name: React.PropTypes.string,
 		receive_asset_symbol: React.PropTypes.string,
 		is_bts_withdraw: React.PropTypes.string,
-	}
+	};
 
    constructor( props ) {
       super(props);
@@ -47,17 +46,22 @@ class WithdrawModalMetaexchange extends React.Component {
 		 quote:"fetching...",
 		 limit:"fetching..."
       }
-	  
-		if (this.props.is_bts_withdraw)
-		{
-			Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair}).then( reply=>reply.json().then(reply=>
-			{
-				// console.log(reply);
-				this.setState( {limit:reply.bid_max} );
+   }
 
-				this.updateQuote(1);
-			}));
-		}
+   componentDidMount() {
+        if (this.props.is_bts_withdraw) {
+            Post.PostForm(this.props.api_root+"/1/getMarket", {symbol_pair:this.props.symbol_pair})
+            .then( reply => reply.json()
+                .then(reply=> {
+                    // console.log(reply);
+                    this.setState( {limit:reply.bid_max} );
+
+                    this.updateQuote(1);
+                })
+            ).catch(err => {
+            console.log("PostForm error:", err);
+            });
+        }
    }
    
 	updateWithdrawalAddress()
@@ -77,11 +81,15 @@ class WithdrawModalMetaexchange extends React.Component {
    {
 		this.setState( {quote:"fetching...", quote_amount:amount});
 		
-		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount}).then( reply=>reply.json().then(reply=>
-				{
-					// console.log(reply);
-					this.setState( {quote:reply.result} );
-				}));
+		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount})
+        .then( reply=> reply.json()
+            .then(reply=> {
+				// console.log(reply);
+				this.setState( {quote:reply.result} );
+			})
+        ).catch(err => {
+            console.log("PostForm getQuote error:", err);
+        });
    }
 
 	onWithdrawAmountChange( {amount, asset} ) 

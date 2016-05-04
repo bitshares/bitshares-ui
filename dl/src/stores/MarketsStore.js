@@ -3,6 +3,7 @@ var alt = require("../alt-instance");
 var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
+import ls from "common/localStorage";
 import ChainStore from "api/ChainStore";
 import utils from "common/utils";
 
@@ -14,7 +15,7 @@ import {
 }
 from "./tcomb_structs";
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+let marketStorage = new ls("__graphene__");
 
 class MarketsStore {
     constructor() {
@@ -87,15 +88,12 @@ class MarketsStore {
     }
 
     _getBucketSize() {
-        let bs = ls ? ls.getItem("__graphene___bucketSize") : null;
-        return bs ? parseInt(bs) : 4 * 3600;
+        return parseInt(marketStorage.get("bucketSize", 4 * 3600));
     }
 
     _setBucketSize(size) {
         this.bucketSize = size;
-        if (ls) {
-            ls.setItem("__graphene___bucketSize", size);
-        }
+        marketStorage.set("bucketSize", size);
     }
 
     onChangeBase(market) {
@@ -739,8 +737,6 @@ class MarketsStore {
                 maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.quoteAsset,
-                    this.baseAsset,
                     true
                 )
                  this.lowestCallPrice = settlementPrice / 5;
@@ -749,8 +745,7 @@ class MarketsStore {
                 maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    this.baseAsset,
-                    this.quoteAsset
+                    false
                 )
                 this.lowestCallPrice = settlementPrice * 5;
             }

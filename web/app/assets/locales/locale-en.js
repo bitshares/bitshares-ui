@@ -14,7 +14,7 @@
         account: "Account",
         dashboard: "Dashboard",
         explorer: "Explore",
-        exchange: "Trade",
+        exchange: "Exchange",
         payments: "Send", // temporary, once we have tabs on Payments, I'll change it back to payments (Valentine)
         logout: "Logout",
         settings: "Settings",
@@ -49,6 +49,7 @@
         unignore: "Unignore",
         show_ignored: "Show ignored accounts",
         hide_ignored: "Hide ignored accounts",
+        accounts: "Accounts",
         whitelist: {
             title: "Whitelist",
             black: "Blacklist",
@@ -251,6 +252,8 @@
         follow: "Follow",
         pay: "Pay",
         overview: "Overview",
+        home: "Home",
+        welcome: "Welcome to Bitshares",
         bts_market: "Market",
         history: "History",
         payees: "Payees",
@@ -266,16 +269,18 @@
         },
         collaterals: "Collateral Positions",
         eq_value: "Equivalent Value",
+        no_price: "No price available",
         percent: "Percent of total supply",
         please_create_account: "Please create an account",
         create_account: "Create account",
+        create_new: "Create New Account",
         identicon: "Identicon",
         pay_from: "Pay From",
         existing_accounts: "Existing Accounts",
         name_input: {
             name_is_taken: "Account name is already taken.",
             not_found: "Account not found.",
-            premium_name_faucet: "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
+            premium_name_faucet: "Account names must containing at least one dash or digit.",
             premium_name_warning: "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
         },
         propose_from: "Propose From",
@@ -366,6 +371,7 @@
         expires: "Expires",
         update_account: "Update account data for {account}",
         status: "Status",
+        asset_create: "Create the asset %(asset)s using the account {account}",
         update: {
             active_approvals_to_add: "Active approvals to add",
             active_approvals_to_remove: "Active approvals to remove",
@@ -441,6 +447,7 @@
         settlement_date: "Settlement date",
         asset_reserve: "reserved asset amount",
         trxTypes: {
+            all: "Show all",
             transfer: "Transfer",
             limit_order_create: "Place order",
             limit_order_cancel: "Cancel order",
@@ -681,7 +688,8 @@
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
         "olDarkTheme": "Openledger dark",
-        reset: "Reset settings"
+        reset: "Reset settings",
+        disableChat: "Disable chat"
     },
     footer: {
         title: "OpenLedger",
@@ -759,7 +767,9 @@
         invert: "Invert the price",
         to_market: "Go to market",
         zoom_all: "All",
-        settings: "Chart options"
+        settings: "Chart options",
+        featured: "Featured Markets",
+        new: "New"
     },
     fees: {
      title: "Fee Schedule"
@@ -914,12 +924,31 @@
         gateway: "Gateway",
         symbol: "Symbol",
         deposit_to: "Deposit To",
-        balance: "Balance",
+        balance: "Current balance",
         generate: "Generate",
+        generate_new: "Get new address",
         deposit: "Deposit",
-        withdraw: "Withdraw",
+        withdraw: "Withdrawal",
+        withdraw_now: "Withdraw now",
         inventory: "Inventory",
         scan_qr: "Scan QR",
+        calc: "Calculating",
+        choose_deposit: "Please select the coin you would like to deposit",
+        choose_withdraw: "Please select the coin you would like to withdraw",
+        deposit_to: "Please send your %(asset)s to the address below",
+        asset_to_deposit: "Asset to deposit:",
+        asset_to_receive: "You will receive:",
+        receive_account: "Receiving account:",
+        deposit_summary: "Deposit summary",
+        deposit_inst: "Deposit instructions",
+        recent_deposit: "Recent deposits",
+        recent_withdraw: "Recent withdrawals",
+        withdraw_summary: "Withdrawal summary",
+        withdraw_inst: "Withdrawal instructions",
+        withdraw_to: "Click the button below to open a %(asset)s withdrawal",
+        intermediate: "Intermediate account",
+        asset_to_withdraw: "Asset to withdraw:",
+        support_block: "For support, please contact Blocktrades at:",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Visit to deposit",
@@ -932,5 +961,17 @@
         meta: {
             open_website: "Open Website"
         }
+    },
+    chat: {
+        title: "Trollbox",
+        button: "Chat",
+        send: "Send",
+        color: "Username color",
+        user: "Username",
+        done: "Done",
+        welcome_user: "Welcome to Bitshares",
+        welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds. For a list of available commands, type /help.",
+        disconnected: "You are currently disconnected from the chat, please click below to reconnect.",
+        rate: "Please wait at least 2s before posting a new message"
     }
 };

@@ -52,7 +52,13 @@ class WebsocketAddModal extends React.Component {
     onRemoveSubmit(e) {
         e.preventDefault();
         let removeIndex = this.props.apis.indexOf(this.props.api[0]);
+
         SettingsActions.removeWS(removeIndex);
+        SettingsActions.changeSetting.defer({
+            setting: "connection",
+            value: this.props.apis[0]
+        });
+        this.props.changeConnection(this.props.apis[0]);
         this.close();
     }
 

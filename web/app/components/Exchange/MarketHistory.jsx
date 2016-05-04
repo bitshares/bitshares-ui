@@ -129,7 +129,7 @@ class MarketHistory extends React.Component {
                 index++;
                 return index % 2 === 0;
             })
-            .take(50)
+            .take(100)
             .map(order => {
                 keyIndex++;
                 let paysAsset, receivesAsset, isAsk = false;

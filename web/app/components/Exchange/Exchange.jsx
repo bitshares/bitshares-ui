@@ -772,7 +772,7 @@ class Exchange extends React.Component {
                     quote: order.sell_price.base,
                     base: order.sell_price.quote
                 },
-                buyAmount: null,
+                buyAmount: 1,
                 buyTotal: null
             });
 
@@ -793,7 +793,7 @@ class Exchange extends React.Component {
                     quote: order.sell_price.base,
                     base: order.sell_price.quote
                 },
-                sellAmount: null,
+                sellAmount: 1,
                 sellTotal: null
             });
         }
@@ -926,12 +926,14 @@ class Exchange extends React.Component {
             settlementBase, settlementQuote, settlementPrice, highestBid,
             squeezePrice, lowestAsk, showCallLimit;
 
-        if (quote && base) {
-            if (quote.get("bitasset") && quote.getIn(["bitasset", "current_feed"]) && base.get("id") === "1.3.0") {
+        let {isMarketAsset} = market_utils.isMarketAsset(quote, base);
+
+        if (isMarketAsset && quote && base) {
+            if (quote.get("bitasset") && quote.getIn(["bitasset", "current_feed"]) && base.get("id") === quote.getIn(["bitasset", "options", "short_backing_asset"])) {
                 settlement_price = quote.getIn(["bitasset", "current_feed", "settlement_price"]);
                 short_squeeze = quote.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
 
-            } else if (base.get("bitasset") && base.getIn(["bitasset", "current_feed"]) && quote.get("id") === "1.3.0") {
+            } else if (base.get("bitasset") && base.getIn(["bitasset", "current_feed"]) && quote.get("id") === base.getIn(["bitasset", "options", "short_backing_asset"])) {
                 settlement_price = base.getIn(["bitasset", "current_feed", "settlement_price"]);
                 short_squeeze = base.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
             }
@@ -947,7 +949,7 @@ class Exchange extends React.Component {
                     settlementQuote = {precision: quote.get("precision"), id: quote.get("id")};
                 }
 
-                settlementPrice = utils.get_asset_price(settlement_price.getIn(["quote", "amount"]), settlementQuote, settlement_price.getIn(["base", "amount"]), settlementBase, flipped);
+                settlementPrice = market_utils.getFeedPrice(settlement_price, flipped);
 
                 if (flipped) {
                     highestBid = bids.reduce((total, bid) => {

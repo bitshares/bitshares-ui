@@ -59,6 +59,9 @@ var Utils = {
     },
 
     get_asset_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, inverted = false) {
+        if (!quoteAsset || !baseAsset) {
+            return 1;
+        }
         var price = this.get_asset_amount(quoteAmount, quoteAsset) / this.get_asset_amount(baseAmount, baseAsset);
         return inverted ? 1 / price : price;
     },
@@ -70,12 +73,13 @@ var Utils = {
     },
 
     format_volume(amount) {
-        if (amount < 10) {
-            return this.format_number(amount, 2);
-        } else if (amount < 10000) {
-            return this.format_number(amount, 0);
+
+        if (amount < 10000) {
+            return this.format_number(amount, 3);
+        } else if (amount < 1000000) {
+            return (Math.round(amount / 10) / 100).toFixed(2) + "k";
         } else {
-            return Math.round(amount / 1000) + "k";
+            return (Math.round(amount / 10000) / 100).toFixed(2) + "M";
         }
     },
 

@@ -310,7 +310,7 @@ class CommitteeMembersStoreWrapper extends React.Component {
 
     static getPropsFromStores() {
         return {
-            cardViewCommittee: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
+            cardView: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
             filterCommitteeMember: SettingsStore.getState().viewSettings.get("filterCommitteeMember"),
         }
     }

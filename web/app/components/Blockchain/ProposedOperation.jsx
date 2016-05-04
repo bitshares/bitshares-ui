@@ -322,11 +322,15 @@ class ProposedOperation extends React.Component {
             case "asset_create":
                 color = "warning";
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].issuer)}&nbsp;
-                        <Translate component="span" content="transaction.create_asset" />
-                        &nbsp;{this.linkToAsset(op[1].symbol)}
-                    </span>
+                    <TranslateWithLinks
+                            string="proposal.asset_create"
+                            keys={[
+                                {type: "account", value: op[1].issuer, arg: "account"}
+                            ]}
+                            params={{
+                                asset: op[1].symbol
+                            }}
+                        />
                 );
                 break;
 

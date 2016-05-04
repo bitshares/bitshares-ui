@@ -31,6 +31,9 @@ $negative-color: #E1424A;
 $row-accent-color: #3C3C3C;
 $header-color: #484848;
 
+// Chat colors
+$chat-text-color: #191A1F;
+
 .darkTheme {
   @include theme(
     $primary-text-color,
@@ -55,6 +58,7 @@ $header-color: #484848;
     $positive-color,
     $negative-color,
     $row-accent-color,
-    $header-color
+    $header-color,
+    $chat-text-color
   );
 }

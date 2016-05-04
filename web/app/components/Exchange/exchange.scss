@@ -202,10 +202,6 @@ a.order-cancel {
   overflow: visible;
 }
 
-li.stat.clickable:hover {
-  background-color: #4C4C4C;
-}
-
 .market-stats {
   > li {
     display: inline-block;
@@ -292,7 +288,7 @@ li.stat.clickable:hover {
 }
 
 .active-bucket {
-  background-color: lighten($light-panel-bg-color, 12%) !important;
+  background-color: lighten($light-panel-bg-color, 12%) ;
   text-transform: uppercase;
 }
 

@@ -113,7 +113,7 @@ class FormattedPrice extends React.Component {
             );
         }
         let symbols = hide_symbols ? '' :
-                      (<a><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></a>);
+                      (<span><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
 
         const currency_popover_body = !hide_symbols ? (
           <div>

@@ -130,7 +130,8 @@ module.exports = {
             backing: "做空时可抵押的资产类型",
             error_precision: "该资产的精度不同于 %(asset)s",
             error_invalid: "该资产不能使用",
-            market: "关注的市场交易对"
+            market: "关注的市场交易对",
+            precision_warning: "警告：创建后该数值将无法更改。"
         },
         perm: {
             active: "活跃权限",
@@ -153,7 +154,13 @@ module.exports = {
             warning3: "账户名被授权",
             warning4: "公钥已被授权",
             action: "操作",
-            acct_or_key: " 账户名/公钥"
+            acct_or_key: " 账户名/公钥",
+            key_viewer: "私钥查看器",
+            "public": "公钥",
+            "private": "私钥(WIF - 钱包导入格式)",
+            show: "显示",
+            brain: "脑钱包位置",
+            from: "已从账户导入"
         },
         votes: {
             proxy_short: "代理投票",
@@ -197,7 +204,15 @@ module.exports = {
             total_budget: "预算总额",
             unused_budget: "未使用预算",
             "new": "新增预算项目",
-            active: "活跃预算项目"
+            active: "活跃预算项目",
+            go_proxy: "前往",
+            w_approved_by: "账户%(account)s赞同的见证人",
+            w_not_approved_by: "账户%(account)s反对的见证人",
+            cm_approved_by: "账户%(account)s赞同的理事会成员",
+            cm_not_approved_by: "账户%(account)s反对的理事会成员",
+            already: "账户已存在列表中",
+            proxy_known: "已知投票代理",
+            expired: "已过期预算项目"
         },
         options: {
             num_witnesses: "信任见证人",
@@ -260,14 +275,19 @@ module.exports = {
         vesting: {
             title: "待解冻余额",
             balance_number: "余额 #%(id)s",
-            no_balances: "该账户无待解冻余额"
+            no_balances: "该账户无待解冻余额",
+            explain: "待解冻金额包含通过推荐计划返现的手续费支出，以及通过预算计划获得的收入。待解冻金额在解冻期间组建释放，直到所有待解冻金额全部释放。"
         },
         show_hidden: "显示已忽略资产",
         hide_hidden: "隐藏已忽略资产",
         ignore: "忽略",
         unignore: "取消忽略",
         show_ignored: "显示已忽略账户",
-        hide_ignored: "显示已忽略账户"
+        hide_ignored: "显示已忽略账户",
+        accounts: "账户",
+        home: "首页",
+        no_price: "无可用价格信息",
+        create_new: "创建新账户"
     },
     transfer: {
         from: "来自",
@@ -294,7 +314,9 @@ module.exports = {
         broadcasting: "交易广播中...",
         close: "关闭",
         pay_from: "支付自",
-        memo_unlock: "解锁钱包以查看交易备注"
+        memo_unlock: "解锁钱包以查看交易备注",
+        warn_name_unable_read_memo: "警告：%(name)s 无法阅读此备注消息",
+        optional: "可选"
     },
     operation: {
         pending: " %(blocks)s 个区块待定",
@@ -332,7 +354,8 @@ module.exports = {
         witness_update: "{account} 更新了见证人信息",
         witness_pay: "提取见证人收入到账户",
         witness_receive: "Received witness from witness",
-        worker_create: "{account} 创建了预算提案，请求每日支付 {pay}"
+        worker_create: "{account} 创建了预算提案，请求每日支付 {pay}",
+        committee_member_update_global_parameters: "{account} 更新了全局理事会参数"
     },
     transaction: {
         sent: "发送",
@@ -503,7 +526,9 @@ module.exports = {
             black_listed: "加入黑名单",
             white_and_black_listed: "加入白/黑名单"
         },
-        asset_reserve: "保留资产数量"
+        asset_reserve: "保留资产数量",
+        csv: "导出到.csv 文件",
+        csv_tip: "下载数据格式以逗号间隔的历史数据"
     },
     explorer: {
         accounts: {
@@ -670,7 +695,8 @@ module.exports = {
         darkTheme: "黑色主题",
         lightTheme: "白色主题",
         olDarkTheme: "Openledger黑",
-        reset: "恢复默认值"
+        reset: "恢复默认值",
+        disableChat: "禁用聊天"
     },
     pagination: {
         newer: "更近",
@@ -753,7 +779,9 @@ module.exports = {
         to_market: "前往交易市场",
         zoom: "缩放",
         zoom_all: "显示全部",
-        settings: "图表选项"
+        settings: "图表选项",
+        featured: "热门市场",
+        "new": "新增"
     },
     markets: {
         title: "交易所",
@@ -916,11 +944,53 @@ module.exports = {
         },
         meta: {
             open_website: "访问官网"
-        }
+        },
+        generate_new: "生成新地址",
+        calc: "计算中"
     },
     propose: "提议",
     cancel: "取消",
     fees: {
         title: "费率表"
+    },
+    proposal: {
+        transfer: "从账户{from}发送{amount}到{to}",
+        limit_order_create: "为账户%(account)s下单，买入%(buy_amount)s，卖出%(sell_amount)s",
+        limit_order_sell: "为账户(account)下单，以价格{price}卖出(amount)",
+        limit_order_buy: "为账户(account)下单，以价格{price}买入(amount)",
+        committee_member_update_global_parameters: "{account}更新理事会全局参数",
+        action: "操作",
+        expires: "过期时间",
+        update_account: "更新账户{account}信息",
+        status: "状态",
+        update: {
+            active_approvals_to_add: "要添加的活跃权限许可",
+            active_approvals_to_remove: "要移除的活跃权限许可",
+            owner_approvals_to_add: "要添加的账户权限许可",
+            owner_approvals_to_remove: "要移除的账户权限许可",
+            key_approvals_to_add: "要添加的公钥许可",
+            key_approvals_to_remove: "要移除的公钥许可"
+        },
+        approve: "批准",
+        reject: "否决",
+        asset_create: "使用账户{account}创建资产%{asset}s"
+    },
+    proposal_create: {
+        review_period: "复审期开始",
+        expiration_time: "过期时间",
+        proposed_operations: "提议的操作",
+        fee_paying_account: "付费账户"
+    },
+    chat: {
+        title: "聊天室",
+        button: "聊天",
+        send: "发送",
+        color: "用户名颜色",
+        user: "用户名",
+        done: "完成",
+        welcome_user: "欢迎访问BitShares",
+        welcome: "这是P2P聊天室。没有管理员，也不能保证唯一的用户名。可以从设置中禁用聊天功能。发送消息的频率被限制在每2秒1条。输入 /help 获得命令帮助信息。",
+        disconnected: "你已从聊天室断开链接，请点击下方重新连接。",
+        rate: "请等待至少2秒发送新消息。"
     }
 };

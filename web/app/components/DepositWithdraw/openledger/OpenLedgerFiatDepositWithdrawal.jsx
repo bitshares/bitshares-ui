@@ -1,27 +1,16 @@
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import FormattedAsset from "../../Utility/FormattedAsset";
-import LoadingIndicator from "../../LoadingIndicator";
-import ChainStore from "api/ChainStore";
-import ChainTypes from "../../Utility/ChainTypes";
-import BindToChainState from "../../Utility/BindToChainState";
-import Statistics from "../Statistics";
-import AccountActions from "actions/AccountActions";
-import Icon from "../../Icon/Icon";
-import TimeAgo from "../../Utility/TimeAgo";
-import HelpContent from "../../Utility/HelpContent";
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
 import WalletDb from "stores/WalletDb";
-import WithdrawModal from "../../Modal/WithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
-import BalanceComponent from "../../Utility/BalanceComponent";
-import RefcodeInput from "../../Forms/RefcodeInput";
-import DepositFiatOpenLedger from "../../Modal/DepositFiatOpenLedger";
-import WithdrawFiatOpenLedger from "../../Modal/WithdrawFiatOpenLedger";
-var Post = require("../../Utility/FormPost.js");
+import BalanceComponent from "components/Utility/BalanceComponent";
+import DepositFiatOpenLedger from "./DepositFiatOpenLedger";
+import WithdrawFiatOpenLedger from "./WithdrawFiatOpenLedger";
 
 @BindToChainState({keep_updating:true})
 class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
