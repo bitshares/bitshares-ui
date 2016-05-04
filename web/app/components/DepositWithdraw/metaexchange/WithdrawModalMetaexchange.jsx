@@ -1,16 +1,15 @@
 import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import BalanceComponent from "../Utility/BalanceComponent";
+import BalanceComponent from "components/Utility/BalanceComponent";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-
-var Post = require ("../Utility/FormPost.js");
+import Post from "common/formPost";
 
 @BindToChainState({keep_updating:true})
 class WithdrawModalMetaexchange extends React.Component {

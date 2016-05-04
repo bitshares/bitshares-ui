@@ -283,7 +283,11 @@ module.exports = {
         ignore: "忽略",
         unignore: "取消忽略",
         show_ignored: "显示已忽略账户",
-        hide_ignored: "显示已忽略账户"
+        hide_ignored: "显示已忽略账户",
+        accounts: "账户",
+        home: "首页",
+        no_price: "无可用价格信息",
+        create_new: "创建新账户"
     },
     transfer: {
         from: "来自",
@@ -691,7 +695,8 @@ module.exports = {
         darkTheme: "黑色主题",
         lightTheme: "白色主题",
         olDarkTheme: "Openledger黑",
-        reset: "恢复默认值"
+        reset: "恢复默认值",
+        disableChat: "禁用聊天"
     },
     pagination: {
         newer: "更近",
@@ -774,7 +779,9 @@ module.exports = {
         to_market: "前往交易市场",
         zoom: "缩放",
         zoom_all: "显示全部",
-        settings: "图表选项"
+        settings: "图表选项",
+        featured: "热门市场",
+        "new": "新增"
     },
     markets: {
         title: "交易所",
@@ -973,5 +980,17 @@ module.exports = {
         expiration_time: "过期时间",
         proposed_operations: "提议的操作",
         fee_paying_account: "付费账户"
+    },
+    chat: {
+        title: "聊天室",
+        button: "聊天",
+        send: "发送",
+        color: "用户名颜色",
+        user: "用户名",
+        done: "完成",
+        welcome_user: "欢迎访问BitShares",
+        welcome: "这是P2P聊天室。没有管理员，也不能保证唯一的用户名。可以从设置中禁用聊天功能。发送消息的频率被限制在每2秒1条。输入 /help 获得命令帮助信息。",
+        disconnected: "你已从聊天室断开链接，请点击下方重新连接。",
+        rate: "请等待至少2秒发送新消息。"
     }
 };

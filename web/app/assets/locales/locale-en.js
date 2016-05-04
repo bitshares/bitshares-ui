@@ -447,6 +447,7 @@
         settlement_date: "Settlement date",
         asset_reserve: "reserved asset amount",
         trxTypes: {
+            all: "Show all",
             transfer: "Transfer",
             limit_order_create: "Place order",
             limit_order_cancel: "Cancel order",
@@ -687,7 +688,8 @@
         "darkTheme": "Dark theme",
         "lightTheme": "Light theme",
         "olDarkTheme": "Openledger dark",
-        reset: "Reset settings"
+        reset: "Reset settings",
+        disableChat: "Disable chat"
     },
     footer: {
         title: "BitShares 2.0",
@@ -922,14 +924,31 @@
         gateway: "Gateway",
         symbol: "Symbol",
         deposit_to: "Deposit To",
-        balance: "Balance",
+        balance: "Current balance",
         generate: "Generate",
-        generate_new: "New address",
+        generate_new: "Get new address",
         deposit: "Deposit",
-        withdraw: "Withdraw",
+        withdraw: "Withdrawal",
+        withdraw_now: "Withdraw now",
         inventory: "Inventory",
         scan_qr: "Scan QR",
         calc: "Calculating",
+        choose_deposit: "Please select the coin you would like to deposit",
+        choose_withdraw: "Please select the coin you would like to withdraw",
+        deposit_to: "Please send your %(asset)s to the address below",
+        asset_to_deposit: "Asset to deposit:",
+        asset_to_receive: "You will receive:",
+        receive_account: "Receiving account:",
+        deposit_summary: "Deposit summary",
+        deposit_inst: "Deposit instructions",
+        recent_deposit: "Recent deposits",
+        recent_withdraw: "Recent withdrawals",
+        withdraw_summary: "Withdrawal summary",
+        withdraw_inst: "Withdrawal instructions",
+        withdraw_to: "Click the button below to open a %(asset)s withdrawal",
+        intermediate: "Intermediate account",
+        asset_to_withdraw: "Asset to withdraw:",
+        support_block: "For support, please contact Blocktrades at:",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Visit to deposit",
@@ -942,5 +961,17 @@
         meta: {
             open_website: "Open Website"
         }
+    },
+    chat: {
+        title: "Trollbox",
+        button: "Chat",
+        send: "Send",
+        color: "Username color",
+        user: "Username",
+        done: "Done",
+        welcome_user: "Welcome to Bitshares",
+        welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds. For a list of available commands, type /help.",
+        disconnected: "You are currently disconnected from the chat, please click below to reconnect.",
+        rate: "Please wait at least 2s before posting a new message"
     }
 };

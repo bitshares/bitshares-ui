@@ -35,12 +35,14 @@ class RecentTransactions extends React.Component {
         limit: React.PropTypes.number,
         maxHeight: React.PropTypes.number,
         fullHeight: React.PropTypes.bool,
+        showFilters: React.PropTypes.bool
     };
 
     static defaultProps = {
         limit: 25,
         maxHeight: 500,
-        fullHeight: false
+        fullHeight: false,
+        showFilters: false
     };
 
     constructor(props) {
@@ -48,7 +50,8 @@ class RecentTransactions extends React.Component {
         this.state = {
             limit: props.limit || 20,
             csvExport: false,
-            headerHeight: 85
+            headerHeight: 85,
+            filter: "all"
         };
     }
 
@@ -77,8 +80,17 @@ class RecentTransactions extends React.Component {
         if(!utils.are_equal_shallow(this.props.accountsList, nextProps.accountsList)) return true;
         if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if(this.state.headerHeight !== nextState.headerHeight) return true;
+        if(this.state.filter !== nextState.filter) return true;
+        if (this.props.customFilter) {
+            if(!utils.are_equal_shallow(this.props.customFilter.fields, nextProps.customFilter.fields) ||
+                !utils.are_equal_shallow(this.props.customFilter.values, nextProps.customFilter.values)) {
+                return true;
+            };
+        }
+
+        if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
-        for(let key = 0; key < nextProps.accountsList.length; ++key) {
+        for(let key = 0; key < nextProps.accountsList.length; ++key) {            
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
             if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
@@ -119,7 +131,7 @@ class RecentTransactions extends React.Component {
         });
     }
 
-    _getHistory(accountsList, filter) {
+    _getHistory(accountsList, filterOp, customFilter) {
         let history = [];
         let seen_ops = new Set();
         for (let account of accountsList) {
@@ -128,9 +140,25 @@ class RecentTransactions extends React.Component {
                 if (h) history = history.concat(h.toJS().filter(op => !seen_ops.has(op.id) && seen_ops.add(op.id)));
             }
         }
-        if (filter) {
+        if (filterOp) {
             history = history.filter(a => {
-                return a.op[0] === operations[filter];
+                return a.op[0] === operations[filterOp];
+            });
+        }
+
+        if (customFilter) {
+            history = history.filter(a => {
+                let finalValue = customFilter.fields.reduce((final, filter) => {
+                    switch (filter) {
+                        case "asset_id":
+                            return final && a.op[1]["amount"][filter] === customFilter.values[filter];
+                            break;
+                        default:
+                            return final && a.op[1][filter] === customFilter.values[filter];
+                            break;
+                    }
+                }, true)
+                return finalValue;
             });
         }
         return history;
@@ -140,16 +168,31 @@ class RecentTransactions extends React.Component {
         this.setState({csvExport: true});
     }
 
+    _onChangeFilter(e) {
+        this.setState({
+            filter: e.target.value
+        });
+    }
+
     render() {
-        let {accountsList, compactView, filter, style, maxHeight} = this.props;
+        let {accountsList, compactView, filter, customFilter, style, maxHeight} = this.props;
         let {limit, headerHeight} = this.state;
         let current_account_id = accountsList.length === 1 && accountsList[0] ? accountsList[0].get("id") : null;
-        let history = this._getHistory(accountsList, filter).sort(compareOps);
+        let history = this._getHistory(accountsList, this.props.showFilters && this.state.filter !== "all" ?  this.state.filter : filter, customFilter).sort(compareOps);
         let historyCount = history.length;
 
         style = style ? style : {};
         style.width = "100%";
         style.height = "100%";
+
+        let options = null;
+        if (true || this.props.showFilters) {
+            options = ["all", "transfer", "limit_order_create", "limit_order_cancel", "fill_order", "account_create", "account_update", "asset_create",
+            "witness_withdraw_pay", "vesting_balance_withdraw"]
+            .map(type => {
+                return <option value={type} key={type}>{counterpart.translate("transaction.trxTypes." + type)}</option>;
+            });
+        }
 
         const display_history = history.length ?
             history.slice(0, limit)
@@ -174,11 +217,11 @@ class RecentTransactions extends React.Component {
                     <div ref="header">
 
                         <div className="block-content-header">
-                            <span><Translate content="account.recent" /> </span>
+                            <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
                             
                             {historyCount > 0 ?
                             <span style={{fontSize: "60%", textTransform: "lowercase"}}>
-                                (
+                                &nbsp;(
                                     <a
                                     onClick={this._downloadCSV.bind(this)}
                                     data-tip={counterpart.translate("transaction.csv_tip")}
@@ -189,6 +232,11 @@ class RecentTransactions extends React.Component {
                                 </a>
                                 )
                             </span> : null}
+
+                            {this.props.showFilters ? (
+                            <div className="float-right">
+                                <select value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                            </div>) : null}
                         </div>
 
                         <table className={"table" + (compactView ? " compact" : "")}>

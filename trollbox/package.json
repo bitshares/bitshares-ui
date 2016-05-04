@@ -1,0 +1,15 @@
+{
+  "name": "trollbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "trollbox.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon trollbox.js"
+  },
+  "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.9.2"
+  }
+}

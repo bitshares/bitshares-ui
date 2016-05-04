@@ -1,10 +1,9 @@
 import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
-
-var Post = require ("../Utility/FormPost.js");
+import ChainTypes from "components/Utility/ChainTypes";
+import BindToChainState from "components/Utility/BindToChainState";
+import Post from "common/formPost";
 
 @BindToChainState({keep_updating:true})
 class DepositModalMetaexchange extends React.Component {

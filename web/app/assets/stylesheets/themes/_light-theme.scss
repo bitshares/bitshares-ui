@@ -14,7 +14,7 @@ $bg-color: #FFF;
 $panel-bg-color: #e5e6e4;
 $light-panel-bg-color: #FFF;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
-$button-bg-color: #8c88ff;
+$button-bg-color: #2196F3;
 $secondary-button-bg-color: #999999;
 
 $alert-color: $error-text-color;
@@ -31,6 +31,9 @@ $positive-color: #6EC105;
 $negative-color: #E1424A;
 $row-accent-color: #FFFFFF;
 $header-color: #DCDCDC;
+
+// Chat colors
+$chat-text-color: #191A1F;
 
 .lightTheme {
   @include theme(
@@ -56,7 +59,8 @@ $header-color: #DCDCDC;
     $positive-color,
     $negative-color,
     $row-accent-color,
-    $header-color
+    $header-color,
+    $chat-text-color
   );
   
   .blocktrades-bridge input, .blocktrades-bridge select{

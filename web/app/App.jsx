@@ -66,6 +66,7 @@ import createBrowserHistory from 'history/lib/createHashHistory';
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
+import Chat from "./components/Chat/Chat";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
@@ -80,7 +81,9 @@ class App extends React.Component {
         this.state = {
             loading: true,
             synced: false,
-            theme: SettingsStore.getState().settings.get("themes")};
+            theme: SettingsStore.getState().settings.get("themes"),
+            disableChat: SettingsStore.getState().settings.get("disableChat", false)
+        };
     }
 
     componentWillUnmount() {
@@ -146,6 +149,11 @@ class App extends React.Component {
                 theme: settings.get("themes")
             });
         }
+        if (settings.get("disableChat") !== this.state.disableChat) {
+            this.setState({
+                disableChat: settings.get("disableChat")
+            });
+        }
     }
 
 
@@ -173,6 +181,7 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
+                    {this.state.disableChat === 1 ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );

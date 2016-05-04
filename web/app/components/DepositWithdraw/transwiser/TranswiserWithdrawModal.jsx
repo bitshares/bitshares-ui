@@ -1,13 +1,13 @@
 import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import ChainTypes from "../../Utility/ChainTypes";
+import ChainTypes from "components/Utility/ChainTypes";
 import ChainStore from "api/ChainStore";
-import BindToChainState from "../../Utility/BindToChainState";
+import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import BalanceComponent from "../../Utility/BalanceComponent";
+import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
-import AmountSelector from "../../Utility/AmountSelector";
+import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
 @BindToChainState({keep_updating:true})
