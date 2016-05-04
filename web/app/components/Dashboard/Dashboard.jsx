@@ -147,10 +147,10 @@ class Dashboard extends React.Component {
                     </div>
 
                     <RecentTransactions
-                        style={{marginBottom: 20}}
+                        style={{marginBottom: 20, marginTop: 20}}
                         accountsList={this.props.linkedAccounts}
                         limit={10}
-                        compactView={true}
+                        compactView={false}
                         fullHeight={true}
                         showFilters={true}
                     />
