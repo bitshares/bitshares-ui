@@ -90,7 +90,6 @@ class SettingsEntry extends React.Component {
                 break;
 
             default:
-
                 if (typeof selected === "number") {
                     value = defaults[selected];
                 }

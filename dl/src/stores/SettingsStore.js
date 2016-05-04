@@ -22,7 +22,7 @@ class SettingsStore {
             showSettles: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            disableChat: 0
+            disableChat: false
         });
 
         this.baseOptions = [CORE_ASSET, "BTC", "USD", "CNY", "OPEN.BTC", "OPEN.USD"];
@@ -138,7 +138,7 @@ class SettingsStore {
 
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        this.defaults = ss.get("defaults_v1", this.defaults);
+        this.defaults = _.merge({}, ss.get("defaults_v1", this.defaults));
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
