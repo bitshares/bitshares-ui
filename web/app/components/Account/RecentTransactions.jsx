@@ -81,8 +81,16 @@ class RecentTransactions extends React.Component {
         if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if(this.state.headerHeight !== nextState.headerHeight) return true;
         if(this.state.filter !== nextState.filter) return true;
+        if (this.props.customFilter) {
+            if(!utils.are_equal_shallow(this.props.customFilter.fields, nextProps.customFilter.fields) ||
+                !utils.are_equal_shallow(this.props.customFilter.values, nextProps.customFilter.values)) {
+                return true;
+            };
+        }
+
+        if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
-        for(let key = 0; key < nextProps.accountsList.length; ++key) {
+        for(let key = 0; key < nextProps.accountsList.length; ++key) {            
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
             if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
@@ -179,7 +187,7 @@ class RecentTransactions extends React.Component {
 
         let options = null;
         if (true || this.props.showFilters) {
-            options = ["all", "transfer", "limit_order_create", "limit_order_cancel", "fill_order", "account_create", "asset_create",
+            options = ["all", "transfer", "limit_order_create", "limit_order_cancel", "fill_order", "account_create", "account_update", "asset_create",
             "witness_withdraw_pay", "vesting_balance_withdraw"]
             .map(type => {
                 return <option value={type} key={type}>{counterpart.translate("transaction.trxTypes." + type)}</option>;

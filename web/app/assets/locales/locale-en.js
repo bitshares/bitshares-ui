@@ -447,7 +447,7 @@
         settlement_date: "Settlement date",
         asset_reserve: "reserved asset amount",
         trxTypes: {
-            all: "All",
+            all: "Show all",
             transfer: "Transfer",
             limit_order_create: "Place order",
             limit_order_cancel: "Cancel order",
