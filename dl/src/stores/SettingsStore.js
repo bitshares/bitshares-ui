@@ -74,7 +74,7 @@ class SettingsStore {
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
-        this.defaults = {
+        let defaults = {
             locale: [
                 "en",
                 "cn",
@@ -103,8 +103,8 @@ class SettingsStore {
                 {translate: "no"}
             ],
             disableChat: [
-                {translate: "no"},
-                {translate: "yes"}
+                {translate: "yes"},
+                {translate: "no"}
             ],
             themes: [
                 "darkTheme",
@@ -138,7 +138,7 @@ class SettingsStore {
 
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        this.defaults = _.merge({}, ss.get("defaults_v1", this.defaults));
+        this.defaults = _.merge({}, defaults, ss.get("defaults_v1"));
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
