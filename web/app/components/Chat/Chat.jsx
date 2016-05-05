@@ -76,7 +76,7 @@ export default class Chat extends React.Component {
         this.state = {
             messages: [{user: counterpart.translate("chat.welcome_user"), message: counterpart.translate("chat.welcome")}],
             connected: false,
-            showChat: props.viewSettings.get("showChat", false),
+            showChat: props.viewSettings.get("showChat", true),
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
             userName: props.viewSettings.get("chatUsername", "anonymous"),
             shouldScroll: true,
@@ -545,7 +545,7 @@ export default class Chat extends React.Component {
                         <div className="grid-block shrink">
                             <div >
                                 <form onSubmit={this.submitMessage.bind(this)}  className="button-group" style={{marginBottom: 0}}>
-                                    <input style={{marginBottom: 0, width: 300, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
+                                    <input style={{marginBottom: 0, width: 350, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
                                 </form>
                             </div>
                         </div>) : null}
