@@ -94,8 +94,8 @@ export default class BlockTradesGateway extends React.Component {
         })[0];
 
         let issuers = {
-            blocktrades: {name: "blocktrades", id: "1.2.32567"},
-            openledger: {name: "openledger-wallet", id: "1.2.96397"}
+            blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
+            openledger: {name: "openledger-wallet", id: "1.2.96397", support: "opensupport@blocktrades.us"}
         };
 
         let issuer = issuers[provider];
@@ -144,7 +144,7 @@ export default class BlockTradesGateway extends React.Component {
                             deposit_memo_name={coin.memo}
                             action={this.state.action}
                         />
-                        <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href="mail:support@blocktrades.us">support@blocktrades.us</a></div>
+                        <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
                     </div>
 
                     <TransactionWrapper
