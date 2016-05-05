@@ -16,6 +16,19 @@ import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {FetchChainObjects} from "api/ChainStore";
 
+
+const PROD = true;
+const hostConfig = PROD ? { // Prod config
+    host: 'bitshares.openledger.info',
+    path: '/trollbox',
+    secure: true,
+    port: 443
+} : { // Dev config
+    host: 'localhost',
+    path: '/trollbox',
+    port: 9000
+};
+
 class Comment extends React.Component {
     
     shouldComponentUpdate(nextProps) {
@@ -101,22 +114,18 @@ export default class Chat extends React.Component {
     }
 
     _connectToServer() {
-        this._peer = new Peer({
-            host: 'bitshares.openledger.info',
-            path: '/trollbox',
-            secure: true,
-            port: 443
-        });
+        this._peer = new Peer(hostConfig);
 
         this._peer.on('open', id => {
             console.log("open, my ID is:", id);
             this._myID = id;
             this.setState({
                 connected: true,
-                loading: false
+                loading: false,
+                open: true
             });
 
-            this._peer.listAllPeers(this._connectToPeers.bind(this));
+            this._peer.listAllPeers(this._connectToPeers.bind(this, true));
         });
 
         this._peer.on('connection', this.onConnection.bind(this));
@@ -124,33 +133,65 @@ export default class Chat extends React.Component {
 
         this._peer.on('error', err => {
             console.log(err);
-            this.setState({
-                connected: false
-            });
+            if (err.message.indexOf("Lost connection to server") !== -1) {
+                this.setState({
+                    open: false
+                });
+            }
 
-            this._peer.reconnect();
+            if (err.message.indexOf("Could not get an ID from the server") !== -1) {
+                this.setState({
+                    open: false,
+                    loading: false,
+                    connected: false
+                });
+            }
+
+            // this._peer.reconnect();
+            // this._connectToServer();
         });
     }
 
-    _connectToPeers(peers) {
+    _broadCastPeers() {
+        let peersArray = this.connections.map((conn, peer) => {
+            return peer;
+        }).toArray();
+        console.log("peersArray:", peersArray);
+
+        this._broadCastMessage({
+            peers: peersArray
+        }, false);
+    }    
+
+    _connectToPeers(broadcast = false, peers) {
         if (!Array.isArray(peers)) {
             peers = [peers];
         }
-        console.log("peers:", peers);
+
         // this._peers = Immutable.List(peers);
         peers.forEach(peer => {
-
-            if (peer !== this._myID) {
+            if (peer !== this._myID && !this.connections.has(peer)) {
                 let conn = this._peer.connect(peer);
+
                 conn.on('data', this._handleMessage);
                 conn.on('close', this.onDisconnect.bind(this, peer));
                 this.connections = this.connections.set(peer, conn);
             }
         });
         this.forceUpdate();
+        // if (broadcast) {
+        //     setTimeout(this._broadCastPeers.bind(this), 2000);
+        // }
+
+        console.log("this.connections:", this.connections.toJS());
     }
 
     _handleMessage(data) {
+
+        if (data.peers) {
+            return this._connectToPeers(false, data.peers);
+        }
+
         this.state.messages.push(data);
         if (this.state.messages.length >= 100) {
             this.state.messages.shift();
@@ -175,28 +216,32 @@ export default class Chat extends React.Component {
     }
 
     onConnection(c) {
-        console.log("connection:", c);
-        this.connections = this.connections.set(c.id, c);
+        console.log("connection:", c.peer);
+        this.connections = this.connections.set(c.peer, c);
         c.on('data', this._handleMessage);
-        c.on('close', this.onDisconnect.bind(this, c.id));
+        c.on('close', this.onDisconnect.bind(this, c.peer));
         this.forceUpdate();
     }
 
-    onDisconnect(id) {
-        console.log("disconnected:", id);
-        this.connections = this.connections.delete(id);
+    onDisconnect(peer) {
+        console.log("disconnected:", peer);
+        this.connections = this.connections.delete(peer);
         this.forceUpdate();
+
+        if (!this.connections.size && !this.state.open) {
+            this.setState({
+                connected: false
+            });
+        }
     }
 
     onTip(input) {
-        console.log("input:", input);
         Promise.all([
             FetchChainObjects(ChainStore.getAsset, [input.asset]),
             FetchChainObjects(ChainStore.getAccount, [this.props.currentAccount]),
             FetchChainObjects(ChainStore.getAccount, [input.to])
         ])
         .then(objects => {
-            console.log("objects:", objects);
             let asset = objects[0][0];
             let fromAccount = objects[1][0];
             let toAccount = objects[2][0];
@@ -211,7 +256,6 @@ export default class Chat extends React.Component {
                 null,
                 asset.get("id")
             ).then( () => {
-                console.log("transfer.then", this);
                 TransactionConfirmStore.unlisten(this.onTrxIncluded);
                 TransactionConfirmStore.listen(this.onTrxIncluded);
             }).catch( e => {
@@ -223,17 +267,14 @@ export default class Chat extends React.Component {
     }
 
     onTrxIncluded(confirm_store_state) {
-        console.log("confirm_store_state:", confirm_store_state);
         if(confirm_store_state.included && confirm_store_state.broadcast) {
             // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
-            console.log("included");
             this._onTipSuccess();
         } else if (confirm_store_state.closed) {
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
-            console.log("closed");
         }
     }
 
@@ -245,13 +286,9 @@ export default class Chat extends React.Component {
             color: "#B71A00"
         };
 
-        if (this.connections.size) {
-            this.connections.forEach(c => {
-                c.send(message);
-            });            
-        }
+        // Public and local broadcast
+        this._broadCastMessage(message);
 
-        this._handleMessage(message);
         this.refs.input.value = "";
     }
 
@@ -289,6 +326,7 @@ export default class Chat extends React.Component {
                 "This help: /help"
             ];
 
+            // Only local broadcast
             commands.forEach(command => {
                 this._handleMessage({
                     user: "SYSTEM",
@@ -321,16 +359,25 @@ export default class Chat extends React.Component {
             color: this.state.myColor || "#ffffff"
         };
 
+        // Public and local broadcast
+        this._broadCastMessage(message);
+
+        // Reset input and message timestamp
+        this.refs.input.value = "";
+        this.lastMessage = new Date().getTime();
+    }
+
+    _broadCastMessage(message, local = true) {
+        // Local broadcast
+        if (local) {
+            this._handleMessage(message);
+        }
+        // Public broadcast
         if (this.connections.size) {
             this.connections.forEach(c => {
                 c.send(message);
             });            
         }
-
-        this.refs.input.value = "";
-        this._handleMessage(message);
-
-        this.lastMessage = new Date().getTime();
     }
 
     onToggleChat(e) {
@@ -353,7 +400,6 @@ export default class Chat extends React.Component {
     }
 
     onPickAccount(e) {
-        console.log("onPickAccount:", e);
         this.setState({
             userName: e.target.value
         });
@@ -364,7 +410,6 @@ export default class Chat extends React.Component {
     }
 
     _resetServer() {
-        console.log("_resetServer", this.state.userName);
         this._peer.destroy();
         this._connectToServer();
     }
@@ -488,7 +533,7 @@ export default class Chat extends React.Component {
                             <div style={{padding: 20}}>
                                 <Translate content="chat.disconnected" />
                                 <div style={{paddingTop: 30}}>
-                                    <div onClick={this._resetServer.bind(this)} className="button">Reconnect</div>
+                                    <div onClick={this._resetServer.bind(this)} className="button"><Translate content="chat.reconnect" /></div>
                                 </div>
                             </div>
                         </div>) : (
