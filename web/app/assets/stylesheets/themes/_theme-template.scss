@@ -641,7 +641,7 @@
   }
 
   td.orderHistoryBid {
-   
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $bid-color;
@@ -664,7 +664,7 @@
 
   td.orderHistoryAsk  {
 
-    
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $ask-color;
@@ -678,7 +678,7 @@
   }
 
 .orderbook td.orderHistoryAsk {
-   
+
   > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $primary-text-color;
@@ -809,8 +809,8 @@
   .active-bucket {
     @include button-focus($primary-text-color, $panel-bg-color, 10);
   }
-   
-   
+
+
   .indicators, li.stat.clickable{
     color: $secondary-text-color;
     &:hover{
@@ -834,9 +834,11 @@
         color: $chat-text-color;
     }
 
+    select {
+    height: 3rem;
+    font-size: 12px;
+    }
+
   }
 
 }
-
-
-
