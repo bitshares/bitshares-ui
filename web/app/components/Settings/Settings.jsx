@@ -90,6 +90,7 @@ class SettingsEntry extends React.Component {
                 break;
 
             default:
+
                 if (typeof selected === "number") {
                     value = defaults[selected];
                 }
@@ -104,11 +105,13 @@ class SettingsEntry extends React.Component {
                     value = selected;
                 }
 
+
                 if (defaults) {
-                    options = defaults.map(entry => {
+                    options = defaults.map((entry, index) => {
                         let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
+
                         let key = entry.translate ? entry.translate : entry;
-                        return <option value={option} key={key}>{option}</option>;
+                        return <option value={entry.translate ? entry.translate : entry} key={key}>{option}</option>;
                     })
                 } else {
                     input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>
@@ -122,7 +125,7 @@ class SettingsEntry extends React.Component {
         if (!value && !options) return null;
 
         if (value && value.translate) {
-            value = counterpart.translate(`settings.${value.translate}`);
+            value = value.translate;
         }
 
         return (
@@ -210,6 +213,14 @@ class Settings extends React.Component {
                 this.setState({
                     connection: e.target.value
                 });
+                break;
+
+            case "disableChat":
+                SettingsActions.changeSetting({setting: "disableChat", value: e.target.value === "yes" });
+                break;
+
+            case "showSettles":
+                SettingsActions.changeSetting({setting: "showSettles", value: e.target.value === "yes" });
                 break;
 
             case "unit":

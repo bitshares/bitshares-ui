@@ -181,7 +181,7 @@ class App extends React.Component {
                         {this.props.children}
                     </div>
                     <Footer synced={this.state.synced}/>
-                    {this.state.disableChat === 1 ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
+                    {this.state.disableChat ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );
