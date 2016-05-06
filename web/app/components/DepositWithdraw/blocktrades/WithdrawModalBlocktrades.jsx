@@ -98,10 +98,10 @@ class WithdrawModalBlocktrades extends React.Component {
        }
 
        let invalid_address_message = null;
-       if (!this.state.withdraw_address_check_in_progress)
+       if (!this.state.withdraw_address_check_in_progress && (this.state.withdraw_address && this.state.withdraw_address.length))
        {
           if (!this.state.withdraw_address_is_valid)
-            invalid_address_message = <span>Please enter a valid {this.props.output_coin_name} address</span>;
+            invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_type} /></div>;
           // if (this.state.withdraw_address_is_valid)
           //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;
           // else
@@ -111,7 +111,7 @@ class WithdrawModalBlocktrades extends React.Component {
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
                    <div className="content-block">
-                      <h3>Withdraw {this.props.output_coin_name}({this.props.output_coin_symbol})</h3>
+                      <h3><Translate content="gateway.withdraw_coin" coin={this.props.output_coin_name} symbol={this.props.output_coin_symbol} /></h3>
                    </div>
                    <div className="content-block">
                      <AmountSelector label="modal.withdraw.amount" 
