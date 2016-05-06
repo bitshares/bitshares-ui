@@ -1,14 +1,19 @@
 #chatbox {
     color: #818479;
-    direction: ltr;
-    display: block;
     font-size: 12px;
-    height: 35px;
-    position: fixed;
-    right: 10px;
-    width: auto;
     z-index: 30;
     transition: all 0.25s ease;
+
+    &.chat-floating {
+        position: fixed;
+        right: 10px;
+        direction: ltr;
+        display: block;
+        width: auto;
+        bottom: 0;
+    }
+    &.chat-docked {
+    }
 
     select, input {
         height: 2rem;
@@ -50,16 +55,25 @@
         z-index: 1;
         border-radius: 4px;
         bottom: 6px;
+        right: 5px;
         position: absolute;
     }
 
+    .docked {
+        background-color: #fff;
+        box-shadow: 1px 3px 5px 3px rgba(0,0,0,.4);
+        min-width: 200px;
+        z-index: 1;
+        border-radius: 4px;
+    }
+
     .chatbox-title {
-        background-color: black;
         padding: 8px 5px;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
         border-bottom: 1px solid grey;
         color: white;
+        text-transform: uppercase;
     }
 
     .chatbox-close {
@@ -74,9 +88,9 @@
     }
 
     .chatbox-content {
-        background-color: #ccc;
-        padding: 3px 13px 3px 10px;
-        color: white;
+        > .grid-content {
+            padding: 3px 13px 3px 10px;
+        }
     }
 
     .chatbox-settings {

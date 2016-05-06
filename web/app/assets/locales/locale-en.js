@@ -971,6 +971,7 @@
         done: "Done",
         reconnect: "Reconnect",
         welcome_user: "Welcome to Bitshares",
+        users: "%(count)s users online",
         welcome: "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds. For a list of available commands, type /help.",
         disconnected: "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
         rate: "Please wait at least 2s before posting a new message"
