@@ -830,13 +830,16 @@
 
     .chatbox-content {
         background-color: #ccc;
-        padding: 3px 13px 3px 10px;
         color: $chat-text-color;
     }
 
+    .chatbox-title {
+      background-color: $header-color !important;
+    }
+
     select {
-    height: 3rem;
-    font-size: 12px;
+      height: 3rem;
+      font-size: 12px;
     }
 
   }
