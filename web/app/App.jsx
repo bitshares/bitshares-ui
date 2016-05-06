@@ -177,11 +177,16 @@ class App extends React.Component {
                 <div className="grid-frame vertical">
                     <Header/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    <div className="grid-block vertical">
-                        {this.props.children}
+                    <div className="grid-block">
+                        <div className="grid-block vertical">
+                            {this.props.children}
+                        </div>
+                        <div className="grid-block shrink" style={{overflow: "hidden"}}>
+                            {this.state.disableChat ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
+
+                        </div>
                     </div>
                     <Footer synced={this.state.synced}/>
-                    {this.state.disableChat ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );

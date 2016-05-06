@@ -80,8 +80,9 @@ export default class Chat extends React.Component {
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
             userName: props.viewSettings.get("chatUsername", "anonymous"),
             shouldScroll: true,
-            loading: true
-        }
+            loading: true,
+            docked: props.viewSettings.get("dockedChat", false)
+        };
 
         this._peer = null;
 
@@ -432,9 +433,19 @@ export default class Chat extends React.Component {
         this.refs.input.value += userName + ", ";
     }
 
+    _onToggleDock() {
+        this.setState({
+            docked: !this.state.docked
+        });
+
+        SettingsActions.changeViewSetting({
+            dockedChat: !this.state.docked
+        });
+    }
+
     render() {
 
-        let {userName, loading} = this.state;
+        let {userName, loading, docked} = this.state;
 
 
         let messages = this.state.messages.map((msg, index) => {
@@ -455,12 +466,12 @@ export default class Chat extends React.Component {
         let {showChat, showSettings, connected} = this.state;
 
         let chatStyle = {
-            display: showChat ? "block" : "none",
-            float: "right",
-            height: "35px",
-            margin: "0 .5em",
-            width: "350px",
-            marginRight: "1em"
+            display: !showChat ? "none" : !docked ?"block" : "inherit",
+            float: !docked ? "right" : null,
+            height: !docked ? 35 : null,
+            margin: !docked ? "0 .5em" : null,
+            width: !docked ? 350 : 300,
+            marginRight: !docked ? "1rem" : null
         };
 
         let accountOptions = this.props.linkedAccounts
@@ -511,21 +522,29 @@ export default class Chat extends React.Component {
         );
 
         return (
-            <div id="chatbox" style={{bottom: this.props.footerVisible ? 36 : 0}}>
+            <div
+                id="chatbox"
+                className={docked ? "chat-docked grid-block" : "chat-floating"}
+                style={{
+                    bottom: this.props.footerVisible && !docked ? 36 : null,
+                    height: !docked ? 35 : null
+                }}
+            >
                 {!showChat ? 
                 <a className="toggle-controlbox" onClick={this.onToggleChat.bind(this)}>
                     <span className="chat-toggle"><Translate content="chat.button" /></span>
                 </a> : null}
                 
-                <div style={chatStyle} className="chatbox">
-                    <div className="flyout grid-block main-content vertical">
+                <div style={chatStyle} className={"chatbox"}>
+                    <div className={"grid-block main-content vertical " + (docked ? "docked" : "flyout")} >
                         <div className="chatbox-title grid-block shrink">
                             <Translate content="chat.title" />
-                            <span>&nbsp;- {this.connections.size + 1} users online</span>
+                            <span>&nbsp;- <Translate content="chat.users" count={this.connections.size + 1} /></span>
+                            &nbsp;<span className="clickable" onClick={this._onToggleDock.bind(this)}>{docked ? "Undock" : "Dock"}</span>
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
                                 <Icon name="cog"/>
                             </div>
-                            <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
+                            {docked ? null : <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>}
                         </div>
 
                         {loading ? <div><LoadingIndicator /></div> : !connected ? (
@@ -537,15 +556,17 @@ export default class Chat extends React.Component {
                                 </div>
                             </div>
                         </div>) : (
-                        <div className="grid-block vertical chatbox-content" ref="chatbox" onScroll={this._onScroll.bind(this)}>
-                            {!showSettings ? <div>{messages}</div> : settings}
+                        <div className="grid-block vertical no-overflow chatbox-content" ref="chatbox" onScroll={this._onScroll.bind(this)}>
+                            <div className="grid-content">
+                                {!showSettings ? <div>{messages}</div> : settings}
+                            </div>
                         </div>)}
 
                         {!showSettings && connected && !loading ? (
                         <div className="grid-block shrink">
                             <div >
                                 <form onSubmit={this.submitMessage.bind(this)}  className="button-group" style={{marginBottom: 0}}>
-                                    <input style={{marginBottom: 0, width: 350, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
+                                    <input style={{marginBottom: 0, width: !docked ? 350 : 300, paddingTop: 5, paddingBottom: 5, backgroundColor: "white", fontSize: 12}} ref="input" type="text" />
                                 </form>
                             </div>
                         </div>) : null}
