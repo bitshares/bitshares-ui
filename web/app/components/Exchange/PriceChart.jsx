@@ -4,7 +4,7 @@ import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
-import _ from "lodash";
+import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 
@@ -226,7 +226,7 @@ class PriceChart extends React.Component {
         let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady,
             indicators, indicatorSettings, latest, bucketSize, theme} = this.props;
 
-        let priceSeriesData = _.cloneDeep(priceData);
+        let priceSeriesData = cloneDeep(priceData);
         let currentIndicator = this.getIndicators(this.props);
 
         let positiveColor = colors[theme].positiveColor;
