@@ -5,7 +5,7 @@ import ChainTypes from "components/Utility/ChainTypes"
 import BindToChainState from "components/Utility/BindToChainState"
 import Immutable from "immutable"
 import AccountStore from "stores/AccountStore"
-import _ from "lodash"
+import {pairs} from "lodash"
 
 @connectToStores
 export class ResolveLinkedAccounts extends Component {
@@ -31,7 +31,7 @@ class ResolveLinkedAccountsChainState extends Component {
 
     render() {
         var linkedAccounts = []
-        _.pairs(this.props.linkedAccounts).forEach( account => {
+        pairs(this.props.linkedAccounts).forEach( account => {
             if( !account[1]) return
             console.log("... account.toJS()", account[1].toJS())
             linkedAccounts.push(account[1])

@@ -2,7 +2,7 @@
 import React from "react";
 var Highcharts = require("highcharts/highstock");
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
-import _ from "lodash";
+import {takeRight} from "lodash";
 import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {
@@ -50,7 +50,7 @@ class BlocktimeChart extends React.Component {
         });
 
         if (blockTimes && blockTimes.length) {
-            blockTimes = _.takeRight(blockTimes, 30);
+            blockTimes = takeRight(blockTimes, 30);
         }
 
         let colors = blockTimes.map(entry => {

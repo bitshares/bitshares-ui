@@ -1,6 +1,6 @@
 import React from "react";
 import {PropTypes} from "react-router";
-import _ from "lodash";
+import {reduce, zipObject} from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
 
@@ -15,13 +15,13 @@ function split_into_sections(str) {
     let sections = str.split(/\[#\s?(.+?)\s?\]/);
     if (sections.length === 1) return sections[0];
     if (sections[0].length < 4) sections.splice(0, 1);
-    sections = _.reduce(sections, (result, n) => {
+    sections = reduce(sections, (result, n) => {
         let last = result.length > 0 ? result[result.length-1] : null;
         if (!last || last.length === 2) { last = [n]; result.push(last); }
         else last.push(n);
         return result;
     }, []);
-    return _.zipObject(sections);
+    return zipObject(sections);
 }
 
 function adjust_links(str) {
