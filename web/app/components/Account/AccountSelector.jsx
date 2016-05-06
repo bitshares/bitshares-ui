@@ -75,7 +75,7 @@ class AccountSelector extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if(this.props.onAccountChanged && newProps.account !== this.props.account)
+        if((this.props.onAccountChanged && newProps.account) && newProps.account !== this.props.account)
             this.props.onAccountChanged(newProps.account);
     }
 
