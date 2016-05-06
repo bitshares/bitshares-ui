@@ -1,11 +1,11 @@
 import React from "react";
 import HelpContent from "./Utility/HelpContent";
-import _ from "lodash";
+import {pairs} from "lodash";
 
 class Help extends React.Component {
 
     render() {
-        let path = _.pairs(this.props.params).map(p => p[1]).join("/");
+        let path = pairs(this.props.params).map(p => p[1]).join("/");
         return (
             <div className="grid-block page-layout">
                 <div className="show-for-medium grid-block medium-2 left-column">
