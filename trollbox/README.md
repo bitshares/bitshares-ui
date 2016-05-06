@@ -2,19 +2,18 @@
 
 This is a very simple server using peerjs-server to provide a centralized connection point for trollbox peer discovery.
 
-To get started, simply use the following commands:
+To get started, simply type the following commands:
 
 ```
 npm install
 npm install -g forever
-npm install -g nodemon
 npm start
 ```
 
-By default this will launch a server on port 9000, without SSL. If you're using SSL or would like to modify the port, edit config.js.
+By default this will launch a server on port 9000, without SSL. If you're using SSL or would like to modify the port, edit config.js. The SSL is `not` necessary if you're using a reverse proxy as described below for nginx.
 
 ## Nginx reverse proxy
-In order to use Nginx for SSL, you need to add the following proxy location to your nginx.conf file in your SSL server block:
+In order to use Nginx as a reverse proxy, you need to add the following proxy location to your nginx.conf file in your server block. To use with SSL, simply add this in your SSL server block.
 
 ```
  location ~ /trollbox/? {
@@ -32,4 +31,16 @@ In order to use Nginx for SSL, you need to add the following proxy location to y
     proxy_read_timeout 3600s;
 }
 ```
+## Production
+For production you can use the forever script:
 
+```
+npm run forever
+```
+This will launch the server using forever.js, which will automatically restart the server if it crashes. Some useful commands for forever, to be used in a terminal:
+
+```
+forever list
+forever stop <process>
+forever restart <process>
+```
