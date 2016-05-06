@@ -302,4 +302,25 @@ class RecentTransactions extends React.Component {
     }
 }
 
+@BindToChainState()
+class TransactionWrapper extends React.Component {
+
+    static propTypes = {
+        asset: ChainTypes.ChainAsset.isRequired,
+        to: ChainTypes.ChainAccount.isRequired,
+        fromAccount: ChainTypes.ChainAccount.isRequired
+    };
+
+    static defaultProps = {
+        asset: "1.3.0"
+    };
+
+    render() {
+        return <span className="wrapper">{this.props.children(this.props)}</span>;
+    }
+
+}
+
+RecentTransactions.TransactionWrapper = TransactionWrapper;
+
 export default RecentTransactions;

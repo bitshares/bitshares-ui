@@ -5,7 +5,7 @@ import AccountBalance from "components/Account/AccountBalance";
 import connectToStores from "alt/utils/connectToStores";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import RecentTransactions from "components/Account/RecentTransactions";
+import RecentTransactions, {TransactionWrapper} from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 import cnames from "classnames";
 import AssetName from "components/Utility/AssetName";
@@ -105,11 +105,12 @@ export default class BlockTradesGateway extends React.Component {
         return (
 
             <div style={this.props.style}>
-
+                <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.gateway_text" /></div>
                 <div style={{paddingBottom: 15}}>
                     <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit")} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
                     <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
                 </div>
+
                 {!coin ? <LoadingIndicator /> :
                 <div>    
                     <div>
@@ -147,6 +148,7 @@ export default class BlockTradesGateway extends React.Component {
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
                     </div>
 
+                    {coin && coin.symbol ? 
                     <TransactionWrapper
                         asset={coin.symbol}
                         fromAccount={
@@ -179,25 +181,10 @@ export default class BlockTradesGateway extends React.Component {
                             />
                             }
                         }
-                    </TransactionWrapper>
+                    </TransactionWrapper> : null}
                 </div>
                 }
             </div>
         )
     }
-}
-
-@BindToChainState()
-class TransactionWrapper extends React.Component {
-
-    static propTypes = {
-        asset: ChainTypes.ChainAsset.isRequired,
-        to: ChainTypes.ChainAccount.isRequired,
-        fromAccount: ChainTypes.ChainAccount.isRequired
-    };
-
-    render() {
-        return <span className="wrapper">{this.props.children(this.props)}</span>;
-    }
-
 }
