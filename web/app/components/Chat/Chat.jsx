@@ -73,14 +73,16 @@ export default class Chat extends React.Component {
     constructor(props) {
         super(props);
 
+        let anonName = "anonymous" + Math.round(10000 * Math.random());
         this.state = {
             messages: [{user: counterpart.translate("chat.welcome_user"), message: counterpart.translate("chat.welcome")}],
             connected: false,
             showChat: props.viewSettings.get("showChat", true),
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
-            userName: props.viewSettings.get("chatUsername", "anonymous"),
+            userName: props.viewSettings.get("chatUsername", anonName),
             shouldScroll: true,
             loading: true,
+            anonName: anonName,
             docked: props.viewSettings.get("dockedChat", false)
         };
 
@@ -193,9 +195,19 @@ export default class Chat extends React.Component {
             return this._connectToPeers(false, data.peers);
         }
 
-        this.state.messages.push(data);
-        if (this.state.messages.length >= 100) {
-            this.state.messages.shift();
+        if (data.historyCount) {
+            return console.log("chatHistory:", data);
+        }
+
+        if (data.chatHistory) {
+            return console.log("chatHistory:", data);
+        }
+
+        if (data.message && data.user && data.color) {
+            this.state.messages.push(data);
+            if (this.state.messages.length >= 100) {
+                this.state.messages.shift();
+            }
         }
         this.forceUpdate(this._scrollToBottom.bind(this));
     }
@@ -217,7 +229,6 @@ export default class Chat extends React.Component {
     }
 
     onConnection(c) {
-        console.log("connection:", c.peer);
         this.connections = this.connections.set(c.peer, c);
         c.on('data', this._handleMessage);
         c.on('close', this.onDisconnect.bind(this, c.peer));
@@ -225,7 +236,6 @@ export default class Chat extends React.Component {
     }
 
     onDisconnect(peer) {
-        console.log("disconnected:", peer);
         this.connections = this.connections.delete(peer);
         this.forceUpdate();
 
@@ -486,7 +496,7 @@ export default class Chat extends React.Component {
             return <option key={account} value={account}>{account}</option>;
         }).toArray();
 
-        accountOptions.push(<option key="default" value={"anonymous"}>anonymous</option>)
+        accountOptions.push(<option key="default" value={this.state.anonName}>{this.state.anonName}</option>)
 
 
         let settings = (
