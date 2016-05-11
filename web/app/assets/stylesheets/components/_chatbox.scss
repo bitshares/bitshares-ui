@@ -100,6 +100,17 @@
         top: 4px;
     }
 
+    .chatbox-pin {
+        cursor: pointer;
+        position: absolute;
+        right: 60px;
+        top: 4px;
+
+        >span.rotate > svg {
+            transform: rotate3d(0, 0, 1, 90deg);
+        }
+    }
+
     .settings-title {
         padding-bottom: 8px;
     }
