@@ -16,7 +16,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {FetchChainObjects} from "api/ChainStore";
 
 
-const PROD = false;
+const PROD = true;
 const hostConfig = PROD ? { // Prod config
     host: 'bitshares.openledger.info',
     path: '/trollbox',
