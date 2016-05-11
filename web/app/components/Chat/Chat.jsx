@@ -588,7 +588,9 @@ export default class Chat extends React.Component {
                         <div className="chatbox-title grid-block shrink">
                             <Translate content="chat.title" />
                             <span>&nbsp;- <Translate content="chat.users" count={this.connections.size + 1} /></span>
-                            &nbsp;<span className="clickable" onClick={this._onToggleDock.bind(this)}>{docked ? "Undock" : "Dock"}</span>
+                            <div className="chatbox-pin" onClick={this._onToggleDock.bind(this)}>
+                                {docked ? <Icon className="rotate" name="thumb-tack"/> : <Icon name="thumb-tack"/>}
+                            </div>
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
                                 <Icon name="cog"/>
                             </div>
