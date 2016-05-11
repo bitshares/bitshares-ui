@@ -84,12 +84,22 @@ export default class BlockTradesGateway extends React.Component {
             return <LoadingIndicator />;
         }
 
-        let coinOptions = coins.map(coin => {
-            let option = action === "deposit" ? coin.backingCoinType.toUpperCase() : coin.symbol;
-            return <option value={option} key={coin.symbol}>{option}</option>;
+        let filteredCoins = coins.filter(a => {
+            if (!a || !a.backingCoinType) {
+                return false;
+            } else {
+                return true;
+            }
         });
 
-        let coin = coins.filter(coin => {
+        let coinOptions = filteredCoins.map(coin => {
+            let option = action === "deposit" ? coin.backingCoinType.toUpperCase() : coin.symbol;
+            return <option value={option} key={coin.symbol}>{option}</option>;
+        }).filter(a => {
+            return a !== null;
+        });
+
+        let coin = filteredCoins.filter(coin => {
             return (action === "withdraw" ? coin.symbol : coin.backingCoinType.toUpperCase()) === activeCoin;
         })[0];
 
