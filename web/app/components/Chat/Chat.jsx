@@ -8,7 +8,6 @@ import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import Peer from "peerjs";
-import Immutable from "immutable";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -93,7 +92,7 @@ export default class Chat extends React.Component {
 
         this._peer = null;
 
-        this.connections = Immutable.Map();
+        this.connections = new Map();
         this._myID = null;
 
         this.onChangeColor = debounce(this.onChangeColor, 150);
@@ -184,7 +183,7 @@ export default class Chat extends React.Component {
 
                 conn.on('data', this._handleMessage);
                 conn.on('close', this.onDisconnect.bind(this, peer));
-                this.connections = this.connections.set(peer, conn);
+                this.connections.set(peer, conn);
             }
         });
         if (shouldUpdate) {
@@ -194,7 +193,7 @@ export default class Chat extends React.Component {
         //     setTimeout(this._broadCastPeers.bind(this), 2000);
         // }
 
-        console.log("this.connections:", this.connections.toJS());
+        // console.log("this.connections:", this.connections);
     }
 
 
@@ -259,7 +258,7 @@ export default class Chat extends React.Component {
     }
 
     onConnection(c) {
-        this.connections = this.connections.set(c.peer, c);
+        this.connections.set(c.peer, c);
         c.on('data', this._handleMessage);
         c.on('close', this.onDisconnect.bind(this, c.peer));
         setTimeout(() => {c.send({id: this._myID,historyCount: this.state.messages.reduce((value, msg) => {return value + (msg.user !== "SYSTEM" ? 1 : 0)}, 0)})}, 200);
@@ -267,9 +266,10 @@ export default class Chat extends React.Component {
     }
 
     onDisconnect(peer) {
-        console.log("onDisconnect peer:", peer);
-        this.connections = this.connections.delete(peer);
-        
+        this.connections.get(peer).close();
+        this.connections.delete(peer);
+        this.forceUpdate();
+
         if (!this.connections.size && !this.state.open) {
             this.setState({
                 connected: false
