@@ -923,6 +923,7 @@
         bridge: "Köprü",
         gateway: "Kapı",
         symbol: "Sembol",
+        website: "Websitesini ziyaret edin",
         deposit_to: "Yatırılacak Yer",
         balance: "Mevcut Bakiye",
         generate: "Yeni Üret",
@@ -949,6 +950,12 @@
         intermediate: "Aracı hesap",
         asset_to_withdraw: "Çekilecek aktif:",
         support_block: "Destek için, lütfen Blocktrades'e şuradan ulaşın:",
+        valid_address: "Lütfen geçerli bir  %(coin_type)s adresi giriniz",
+        withdraw_coin: " %(coin)s (%(symbol)s) çekiniz",
+        limit: "Sınır: %(amount)s %(symbol)s",
+        bridge_text: " Bir köprü bir aktifi bir diğerine 'shapeshift' yapmanızı sağlar , mesela BTC'yi BTS'ye.",
+        gateway_text: "Bir kapı BitShares aktiflerinden ve gerçek aktiflere ve geri geçmenizi sağlar, mesela OPEN.BTC 'den  BTC'ye .",
+        fiat_text: "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
         transwiser: {
             gateway: "Transwiser",
             visit_weidian: "Yatırmak için ziyaret edin",
@@ -969,9 +976,11 @@
         color: "Kullanıcı rengi",
         user: "Kullanıcı adı",
         done: "Tamam",
+        reconnect: "Tekrar bağlan",
         welcome_user: "Bitshares'e Hoşgeldiniz",
+        users: "%(count)s kullanıcı çevrimiçi",
         welcome: "Bu yöneticisi olmayan ve kullanıcı adlarının gerçek olmama ihtimali olan eşten eşe bir sohbet odasıdır. Ayarlardan kapatılabilir. 2 saniyede 1 mesaj olarak sınırlıdır . Mevcut komutlar için /help yazın..",
-        disconnected: "Şu an sohbetle bağlantınız bulunmamaktadır, bağlanmak için lütfen aşağıya tıklayınız.",
+        disconnected: "Şu anda hiçbir eşe yada merkezi sunucuya bağlı değilsiniz, lütfen aşağı tıklayarak tekrar bağlanınız. Bağlanamıyorsanız, bu sunucu down demektir, lütfen sonra tekrar deneyiniz.",
         rate: "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin"
     }
 };
