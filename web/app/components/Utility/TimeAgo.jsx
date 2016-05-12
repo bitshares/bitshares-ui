@@ -4,7 +4,7 @@ import {FormattedRelative} from "react-intl";
 class TimeAgo extends React.Component {
 
     static propTypes = {
-        time: React.PropTypes.object.isRequired,
+        time: React.PropTypes.any.isRequired,
         chain_time: React.PropTypes.bool,
         component: React.PropTypes.element,
         className: React.PropTypes.string
