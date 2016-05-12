@@ -199,7 +199,7 @@ export default class Chat extends React.Component {
 
 
     _handleMessage(data) {
-        if (data.peers) {
+        if ("peers" in data && data.peers.length) {
             return this._connectToPeers(false, data.peers);
         }
 
@@ -214,7 +214,7 @@ export default class Chat extends React.Component {
             return this.connections.get(data.id).send({requestHistory: this._myID});
         }
 
-        if (data.history) {
+        if ("history" in data) {
             this.setState({
                 fetchingHistory: false,
                 hasFetchedHistory: true
@@ -226,7 +226,7 @@ export default class Chat extends React.Component {
             this.forceUpdate();
         }
 
-        if (data.message && data.user && data.color) {
+        if ("message" in data && data.user && data.color) {
             this.state.messages.push(data);
             if (this.state.messages.length >= 100) {
                 this.state.messages.shift();
@@ -261,7 +261,10 @@ export default class Chat extends React.Component {
         this.connections.set(c.peer, c);
         c.on('data', this._handleMessage);
         c.on('close', this.onDisconnect.bind(this, c.peer));
-        setTimeout(() => {c.send({id: this._myID,historyCount: this.state.messages.reduce((value, msg) => {return value + (msg.user !== "SYSTEM" ? 1 : 0)}, 0)})}, 200);
+        setTimeout(() => {c.send({
+            id: this._myID,
+            historyCount: this.state.messages.reduce((value, msg) => {return value + (msg.user !== "SYSTEM" ? 1 : 0)}, 0)})
+        }, 200);
         this.forceUpdate();
     }
 
