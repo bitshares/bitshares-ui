@@ -74,7 +74,7 @@ class Dashboard extends React.Component {
         let ignored = this.props.myIgnoredAccounts.toArray().sort();
         
         let featuredMarkets = [
-            ["BTS", "OPEN.STEEM"],
+            ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
             ["OPEN.BTC", "OPEN.ETH"],
@@ -85,11 +85,12 @@ class Dashboard extends React.Component {
             ["BTS", "CNY"],
             ["BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["BTS", "SILVER"],
+            ["BTS", "SILVER"]
             // ["BTS", "EUR"]
         ];
 
         let newAssets = [
+            "OPEN.DAO",
             "OPEN.STEEM",
             "MKR",
             "OPEN.DGD",
