@@ -307,7 +307,7 @@ class PriceChart extends React.Component {
                     lineColor: negativeColor,
                     upColor: positiveColor,
                     upLineColor: positiveColor,
-                    lineWidth: 4
+                    lineWidth: 2
                 },
                 column: {
                     animation: false,
