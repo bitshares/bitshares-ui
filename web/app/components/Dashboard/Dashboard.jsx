@@ -83,7 +83,7 @@ class Dashboard extends React.Component {
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
-            ["BTC", "BTS"],
+            ["OPEN.BTC", "BTS"],
             ["BTS", "GOLD"],
             ["BTS", "SILVER"]
             // ["BTS", "EUR"]
