@@ -1,3 +1,29 @@
+
+---------------------------------------------------------------------
+Release 2.0.160514
+---------------------------------------------------------------------
+
+New features
+--------
+- Simple p2p chat history
+- More improvements to the deposit/withdraw screens
+- Make trollbox dockable on right side
+- Use separate support addresses for OpenLedger and BlockTrades deposits
+- Add OPEN.ETH:OPEN.DAO market to featured markets
+
+Bug fixes
+--------
+- Fix Settings page issue with chat disable
+- Fix settings page causing the GUI to freeze (#842)
+- Improvements to trollbox server to ensure uptime
+- Fix chatbox select box height (thanks to nmywn)
+- Turkish translation updates
+- Add some filtering to BlockTrades coins to prevent errors
+- Separate price and volume slightly in PriceChart, adjust colors
+- Improve depth chart zoom level
+- Improve Footer hide behaviour
+- Fix trollbox mem leak and connection counter, improve error handling #844
+
 ---------------------------------------------------------------------
 Release 2.0.160504
 ---------------------------------------------------------------------
