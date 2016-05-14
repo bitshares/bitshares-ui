@@ -23,6 +23,8 @@ Bug fixes
 - Improve depth chart zoom level
 - Improve Footer hide behaviour
 - Fix trollbox mem leak and connection counter, improve error handling #844
+- Update packages: react to 15.0.2, react-highcharts, fix breaking changes
+- Fix an AccountSelector bug causing name resets while typing
 
 ---------------------------------------------------------------------
 Release 2.0.160504
