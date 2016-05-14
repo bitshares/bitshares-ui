@@ -28,42 +28,16 @@ class Footer extends React.Component {
         history: React.PropTypes.object
     };
 
-    constructor() {
-        super();
-
-        this.state = {
-            hideFooter: false
-        };
-    }
-
-    componentWillMount() {
-        this.context.history.listen((err, state) => {
-            if (state.location.pathname.indexOf("market") !== -1) {
-                this.setState({
-                    hideFooter: true
-                });
-            } else {
-            this.setState({
-                    hideFooter: false
-                })
-            }
-        });
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
             nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
-            nextProps.synced !== this.props.synced ||
-            nextState.hideFooter !== nextState.hideFooter
+            nextProps.synced !== this.props.synced
        );
     }
 
     render() {
-        if (this.state.hideFooter) {
-            return null;
-        }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
