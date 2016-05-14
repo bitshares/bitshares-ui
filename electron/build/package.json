@@ -3,7 +3,7 @@
   "productName": "BitShares2-light",
   "identifier": "org.bitshares.graphene",
   "description": "BitShares - cryptocurrency and decentralized exchange",
-  "version": "2.0.160504",
+  "version": "2.0.160514",
   "author": "community@bitshares.org",
   "main": "electron.js",
   "config": {
