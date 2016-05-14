@@ -8,7 +8,6 @@ import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import ConfirmModal from "../Modal/ConfirmModal";
-import notify from "actions/NotificationActions";
 import LoadingIndicator from "../LoadingIndicator";
 import Immutable from "immutable";
 import WalletDb from "stores/WalletDb";

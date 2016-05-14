@@ -2,7 +2,6 @@ import React from "react";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import notify from "actions/NotificationActions";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
