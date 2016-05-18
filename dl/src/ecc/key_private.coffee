@@ -85,6 +85,21 @@ class PrivateKey
         if S.length < 32
           pad = new Buffer(32 - S.length).fill(0)
           S = Buffer.concat([pad, S])
+
+        # SHA512 used in ECIES
+        hash.sha512 S
+        
+    get_shared_secret_legacy:(public_key)->
+        KB = public_key.toUncompressed().toBuffer()
+        KBP = Point.fromAffine(
+            secp256k1
+            x = BigInteger.fromBuffer KB.slice 1,33
+            y = BigInteger.fromBuffer KB.slice 33,65
+        )
+        r = @toBuffer()
+        P = KBP.multiply BigInteger.fromBuffer r
+        S = P.affineX.toBuffer {size: 32}
+
         # SHA512 used in ECIES
         hash.sha512 S
 
