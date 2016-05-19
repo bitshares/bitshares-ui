@@ -110,6 +110,12 @@ export default class Chat extends React.Component {
         );
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.footerVisible !== prevProps.footerVisible) {
+            this._scrollToBottom();
+        }
+    }
+
     componentWillMount() {
         this._connectToServer();
     }
