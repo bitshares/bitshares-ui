@@ -10,7 +10,7 @@ import BrainkeyStoreFactory from "stores/BrainkeyStore"
 import BindToChainState from "components/Utility/BindToChainState"
 import ChainTypes from "components/Utility/ChainTypes"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
-import _ from "lodash"
+import {pairs} from "lodash"
 import Translate from "react-translate-component";
 
 class BrainkeyBaseComponent extends Component {
@@ -65,7 +65,7 @@ class BrainkeyAccounts {
     }
     
     render() {
-        var rows = _.pairs(this.props.accounts).filter( account => !!account[1] )
+        var rows = pairs(this.props.accounts).filter( account => !!account[1] )
             .map( account => account[1].get("name") ).sort()
             .map( name => <AccountCard key={name} account={name}/> )
         return <span>

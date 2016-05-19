@@ -26,12 +26,15 @@ class Aes
         Aes.fromSha512(_hash)
     
     ##* nonce is optional (null or empty string)
-    Aes.decrypt_with_checksum = (private_key, public_key, nonce = "", message) ->
+    Aes.decrypt_with_checksum = (private_key, public_key, nonce = "", message, legacy = false) ->
         
         unless Buffer.isBuffer message
             message = new Buffer message, 'hex'
-        
-        S = private_key.get_shared_secret public_key
+
+        if legacy
+            S = private_key.get_shared_secret_legacy public_key
+        else
+            S = private_key.get_shared_secret public_key 
         
         # D E B U G
         # console.log('decrypt_with_checksum', {
@@ -47,6 +50,7 @@ class Aes
             new Buffer(""+nonce) 
             new Buffer(S.toString('hex'))
         ]
+
         planebuffer = aes.decrypt message
         unless planebuffer.length >= 4
             throw new Error "Invalid key, could not decrypt message(1)"

@@ -4,8 +4,9 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import Post from "common/formPost";
+import utils from "common/utils";
 
-@BindToChainState({keep_updating:true})
+@BindToChainState()
 class DepositModalMetaexchange extends React.Component {
 
 	static propTypes =  
@@ -50,7 +51,7 @@ class DepositModalMetaexchange extends React.Component {
                 }
             })
         ).catch(err => {
-            console.log("PostForm error:", err);
+            console.log("metaex deposit post error:", err);
         });
    }
 
@@ -67,8 +68,8 @@ class DepositModalMetaexchange extends React.Component {
 		let memoPart = (
             <div className="content-block full-width-content">
                <label>{memoName}</label>
-               <input type="text" value={this.props.memo} tabIndex="4" autoComplete="off"/>
-			   <div>Don't forget to include this {memoName} with the transaction you send, otherwise your deposit will not credit!</div>
+               <code style={{fontSize: "1.2rem"}} tabIndex="4">{this.props.memo}</code>
+			   <div style={{marginTop: 15}}>Don't forget to include this {memoName} with the transaction you send, otherwise your deposit will not credit!</div>
 			</div>
         );
 					
@@ -76,7 +77,7 @@ class DepositModalMetaexchange extends React.Component {
 		if (this.props.is_bts_deposit)
 		{
 			depositPart = <h3>Deposit {this.state.receive_asset_name}({this.props.receive_asset_symbol})</h3>
-			quotePart = <p>1 {this.state.receive_asset_symbol} = {this.state.quote} {this.props.receive_asset_symbol}</p>
+			quotePart = <p>1 {this.state.receive_asset_symbol} = {utils.format_number(this.state.quote, 8)} {this.props.receive_asset_symbol}</p>
 		}
 		else
 		{
@@ -97,15 +98,15 @@ class DepositModalMetaexchange extends React.Component {
                    </div>
                    <div className="content-block full-width-content">
                        <label>Deposit address</label>
-                       <input type="text" value={this.props.deposit_address} tabIndex="4" autoComplete="off"/>
-					   <p>There is a deposit limit of {this.state.limit} {this.state.receive_asset_symbol}</p>
+                       <code style={{fontSize: "1.2rem"}}tabIndex="4">{this.props.deposit_address}</code>
+					   <p style={{marginTop: 15}}>There is a deposit limit of {utils.format_number(this.state.limit, 8)} {this.state.receive_asset_symbol}</p>
 						{quotePart}
                    </div>
 				   
 				  {memoPart} 
 				   <div className="content-block">
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="modal.ok" /></a>
+                           <div href className="button"><Translate content="modal.ok" /></div>
                        </Trigger>
                    </div>
                  </div> 

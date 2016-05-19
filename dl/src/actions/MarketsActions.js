@@ -154,12 +154,13 @@ class MarketsActions {
                             !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
                                 base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                             ]),
-                            !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
+                            !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 200]),
                             !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
                                 base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                             ])
                         ])
                         .then(results => {
+
                             this.dispatch({
                                 limits: results[0],
                                 calls: results[1],
@@ -219,7 +220,7 @@ class MarketsActions {
                         base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ]),
                     Apis.instance().history_api().exec("get_market_history_buckets", []),
-                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
+                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 200]),
                     Apis.instance().history_api().exec("get_market_history", [
                         base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                     ])

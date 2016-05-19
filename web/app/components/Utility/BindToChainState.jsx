@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import {curry, flow, reject, clone, pairs, filter, omit, get, pick} from "lodash";
 import ChainStore from "api/ChainStore";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
@@ -32,9 +32,9 @@ import LoadingIndicator from "../LoadingIndicator";
  */
 
 const arrayElement = (element_number, array) => array[element_number];
-const firstEl = _.curry(arrayElement)(0);
-const secondEl = _.curry(arrayElement)(1);
-const checkChainType = _.curry( (chain_type, t) => t === chain_type || t === chain_type.isRequired );
+const firstEl = curry(arrayElement)(0);
+const secondEl = curry(arrayElement)(1);
+const checkChainType = curry( (chain_type, t) => t === chain_type || t === chain_type.isRequired );
 const isObjectType = checkChainType(ChainTypes.ChainObject);
 const isAccountType = checkChainType(ChainTypes.ChainAccount);
 const isKeyRefsType = checkChainType(ChainTypes.ChainKeyRefs);
@@ -59,9 +59,9 @@ function BindToChainState(options) {
 
             constructor(props) {
                 super(props);
-                let prop_types_array = _.pairs(Component.propTypes);
+                let prop_types_array = pairs(Component.propTypes);
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
+                    this.chain_objects = reject(Object.keys(this.props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
                     this.chain_accounts = [];
                     this.chain_key_refs = [];
                     this.chain_address_balances = [];
@@ -72,15 +72,15 @@ function BindToChainState(options) {
                     this.required_props = [];
                     this.all_chain_props = this.chain_objects;
                 } else {
-                    this.chain_objects = prop_types_array.filter(_.flow(secondEl, isObjectType)).map(firstEl);
-                    this.chain_accounts = prop_types_array.filter(_.flow(secondEl, isAccountType)).map(firstEl);
-                    this.chain_key_refs = prop_types_array.filter(_.flow(secondEl, isKeyRefsType)).map(firstEl);
-                    this.chain_address_balances = prop_types_array.filter(_.flow(secondEl, isAddressBalancesType)).map(firstEl);
-                    this.chain_assets = prop_types_array.filter(_.flow(secondEl, isAssetType)).map(firstEl);
-                    this.chain_objects_list = prop_types_array.filter(_.flow(secondEl, isObjectsListType)).map(firstEl);
-                    this.chain_accounts_list = prop_types_array.filter(_.flow(secondEl, isAccountsListType)).map(firstEl);
-                    this.chain_assets_list = prop_types_array.filter(_.flow(secondEl, isAssetsListType)).map(firstEl);
-                    this.required_props = prop_types_array.filter(_.flow(secondEl, checkIfRequired)).map(firstEl);
+                    this.chain_objects = prop_types_array.filter(flow(secondEl, isObjectType)).map(firstEl);
+                    this.chain_accounts = prop_types_array.filter(flow(secondEl, isAccountType)).map(firstEl);
+                    this.chain_key_refs = prop_types_array.filter(flow(secondEl, isKeyRefsType)).map(firstEl);
+                    this.chain_address_balances = prop_types_array.filter(flow(secondEl, isAddressBalancesType)).map(firstEl);
+                    this.chain_assets = prop_types_array.filter(flow(secondEl, isAssetType)).map(firstEl);
+                    this.chain_objects_list = prop_types_array.filter(flow(secondEl, isObjectsListType)).map(firstEl);
+                    this.chain_accounts_list = prop_types_array.filter(flow(secondEl, isAccountsListType)).map(firstEl);
+                    this.chain_assets_list = prop_types_array.filter(flow(secondEl, isAssetsListType)).map(firstEl);
+                    this.required_props = prop_types_array.filter(flow(secondEl, checkIfRequired)).map(firstEl);
                     this.all_chain_props = [...this.chain_objects,
                                             ...this.chain_accounts,
                                             ...this.chain_key_refs,
@@ -92,11 +92,11 @@ function BindToChainState(options) {
                     this.required_props = this.all_chain_props;
                 }
                 this.dynamic_props = {}
-                this.default_props = _.clone(Component.defaultProps) || {};
+                this.default_props = clone(Component.defaultProps) || {};
                 for (let key in this.default_props) {
                     let value = this.default_props[key];
                     if (typeof(value) === "string" && value.indexOf("props.") === 0) {
-                        this.dynamic_props[key] = _.get(this, value);
+                        this.dynamic_props[key] = get(this, value);
                     }
                 }
 
@@ -123,18 +123,18 @@ function BindToChainState(options) {
 
             componentWillReceiveProps(next_props) {
                 if(options && options.all_props) {
-                    this.chain_objects = _.reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
+                    this.chain_objects = reject(Object.keys(next_props), (e) => e === "children" || e === "keep_updating" || e === "show_loader");
                     this.all_chain_props = this.chain_objects;
-                    this.state = _.pick(this.state, this.chain_objects);
+                    this.state = pick(this.state, this.chain_objects);
                 }
                 let props_obj = null;
                 for(let k in this.dynamic_props) {
                     let selector = this.default_props[k];
                     if(!props_obj) props_obj = {props: next_props};
-                    let cur_value  = _.get(this, selector);
-                    let next_value = _.get(props_obj, selector);
+                    let cur_value  = get(this, selector);
+                    let next_value = get(props_obj, selector);
                     if (next_value && next_value !== cur_value) {
-                        this.dynamic_props[k] = _.get(props_obj, selector);
+                        this.dynamic_props[k] = get(props_obj, selector);
                     }
                 }
                 this.update(next_props);
@@ -333,7 +333,7 @@ function BindToChainState(options) {
             }
 
             render() {
-                const props = _.omit(this.props, this.all_chain_props);
+                const props = omit(this.props, this.all_chain_props);
 
                 //console.log("----- Wrapper render ----->", this.componentName(), this.props, this.state);
                 for (let prop of this.required_props)  {

@@ -38,13 +38,14 @@ class WithdrawModalMetaexchange extends React.Component {
       this.state = {
 		base_symbol:parts[0],
 		quote_symbol:parts[1],
-         withdraw_amount:null,
-         withdraw_address:withdrawAddress,
-		 memo:null,
-		 deposit_address:null,
-		 quote_amount:1,
-		 quote:"fetching...",
-		 limit:"fetching..."
+		withdraw_amount:null,
+		withdraw_address: withdrawAddress,
+		memo:null,
+		deposit_address: "",
+		withdraw_address: "",
+		quote_amount:1,
+		quote:"fetching...",
+		limit:"fetching..."
       }
    }
 
@@ -100,6 +101,10 @@ class WithdrawModalMetaexchange extends React.Component {
 
 	onWithdrawAddressChanged( e ) 
 	{
+		this.setState({
+			withdraw_address: e.target.value
+		});
+
 		let wallet = WalletDb.getWallet();
 		wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'] = e.target.value;
 		WalletDb._updateWallet();
@@ -119,11 +124,14 @@ class WithdrawModalMetaexchange extends React.Component {
 							}
 							else
 							{
-								this.props.issuer = reply.deposit_address;
+								// this.props.issuer = reply.deposit_address;
 								var apiReply = {api_error:"", memo:reply.memo, deposit_address:reply.deposit_address};
 								this.setState( apiReply );
 							}
-						}));
+						}))
+						.catch(err => {
+							console.log("metax post error:", err);
+						});
 	}
 
 	onSubmit() 
@@ -173,7 +181,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		if (this.props.is_bts_withdraw)
 		{
 			quotePart = <p>{this.state.quote_amount} BTS = {this.state.quote} BTC</p>
-			limitPart = <p>There is a withdrawal limit of {this.state.limit} {this.props.receive_asset_symbol}</p>
+			limitPart = <div style={{paddingTop: 10}}>There is a withdrawal limit of {this.state.limit} {this.props.receive_asset_symbol}</div>
 			titlePart = <h3>Withdraw to Bitcoin</h3>
 		}
 		else
@@ -201,17 +209,26 @@ class WithdrawModalMetaexchange extends React.Component {
 					{quotePart}
                    </div>
                    <div className="content-block full-width-content">
-                       <label><Translate component="span" content="modal.withdraw.address"/></label>
-                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onBlur={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
-						<div className="error-area">{this.state.api_error}</div>
+                        <label><Translate component="span" content="modal.withdraw.address"/></label>
+                        <input
+                       		type="text"
+                       		value={this.state.withdraw_address}
+                       		tabIndex="4"
+                       		onChange={this.onWithdrawAddressChanged.bind(this)}
+                       		autoComplete="off"
+                   		/>
+						<div className="has-error error-area">{this.state.api_error}</div>
                    </div>
                                   
                    <div className="content-block">
-                     <input type="submit" className="button" 
-                            onClick={this.onSubmit.bind(this)} 
-                            value={counterpart.translate("modal.withdraw.submit")} />
+                     	<input 
+	                     	type="submit"
+	                 		className="button" 
+	                        onClick={this.onSubmit.bind(this)} 
+	                        value={counterpart.translate("modal.withdraw.submit")}
+	                    />
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                           <div href className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
                  </div> 

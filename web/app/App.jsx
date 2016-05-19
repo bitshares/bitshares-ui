@@ -168,6 +168,8 @@ class App extends React.Component {
        
         let content = null;
 
+        let showFooter = this.props.location.pathname.indexOf("market") === -1;
+
         if (this.state.loading) {
             content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
         } else if (this.props.location.pathname === "/init-error") {
@@ -177,11 +179,16 @@ class App extends React.Component {
                 <div className="grid-frame vertical">
                     <Header/>
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
-                    <div className="grid-block vertical">
-                        {this.props.children}
+                    <div className="grid-block">
+                        <div className="grid-block vertical">
+                            {this.props.children}
+                        </div>
+                        <div className="grid-block shrink" style={{overflow: "hidden"}}>
+                            {this.state.disableChat ? null : <Chat footerVisible={showFooter}/>}
+
+                        </div>
                     </div>
-                    <Footer synced={this.state.synced}/>
-                    {this.state.disableChat === 1 ? null : <Chat footerVisible={this.props.location.pathname.indexOf("market") === -1}/>}
+                    {showFooter ? <Footer synced={this.state.synced}/> : null}
                     <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
                 </div>
             );

@@ -74,25 +74,28 @@ class Dashboard extends React.Component {
         let ignored = this.props.myIgnoredAccounts.toArray().sort();
         
         let featuredMarkets = [
-            ["BTS", "OPEN.STEEM"],
+            ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
             ["OPEN.BTC", "OPEN.ETH"],
             ["OPEN.BTC", "OPEN.STEEM"],
+            ["BTS", "BTSR"],
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
             ["BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["BTS", "SILVER"],
-            ["BTS", "EUR"]
+            ["BTS", "SILVER"]
+            // ["BTS", "EUR"]
         ];
 
         let newAssets = [
+            "OPEN.DAO",
             "OPEN.STEEM",
             "MKR",
             "OPEN.DGD",
-            "OPEN.ETH"
+            "OPEN.ETH",
+            "BTSR"
         ];
 
         let markets = featuredMarkets.map((pair, index) => {
@@ -147,11 +150,12 @@ class Dashboard extends React.Component {
                     </div>
 
                     <RecentTransactions
-                        style={{marginBottom: 20}}
+                        style={{marginBottom: 20, marginTop: 20}}
                         accountsList={this.props.linkedAccounts}
                         limit={10}
-                        compactView={true}
+                        compactView={false}
                         fullHeight={true}
+                        showFilters={true}
                     />
 
                 </div>

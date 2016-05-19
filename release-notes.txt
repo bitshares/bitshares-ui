@@ -1,3 +1,53 @@
+
+---------------------------------------------------------------------
+Release 2.0.160514
+---------------------------------------------------------------------
+
+New features
+--------
+- Simple p2p chat history
+- More improvements to the deposit/withdraw screens
+- Make trollbox dockable on right side
+- Use separate support addresses for OpenLedger and BlockTrades deposits
+- Add OPEN.ETH:OPEN.DAO market to featured markets
+
+Bug fixes
+--------
+- Fix Settings page issue with chat disable
+- Fix settings page causing the GUI to freeze (#842)
+- Improvements to trollbox server to ensure uptime
+- Fix chatbox select box height (thanks to nmywn)
+- Turkish translation updates
+- Add some filtering to BlockTrades coins to prevent errors
+- Separate price and volume slightly in PriceChart, adjust colors
+- Improve depth chart zoom level
+- Improve Footer hide behaviour
+- Fix trollbox mem leak and connection counter, improve error handling #844
+- Update packages: react to 15.0.2, react-highcharts, fix breaking changes
+- Fix an AccountSelector bug causing name resets while typing
+
+---------------------------------------------------------------------
+Release 2.0.160504
+---------------------------------------------------------------------
+
+New features
+--------
+- Trollbox has been added (with tipping!)
+- Revamped deposit/withdraw for Blocktrades/Openledger
+- Add and show more 'Featured Markets'
+- Transaction filtering in recent transactions lists
+
+Bug fixes
+--------
+- Chinese and Turkish translation updates
+- Increase grid-container max-width to 70rem
+- Change CCEDK in deposit/withdraw to Openledger
+- Format MarketCard volumes, add some spacing
+- Improve volume formatting
+- Show more decimals for BTC equivalent balance values
+- Show market name in AccountOverview asset popover market link
+- Fix AccountPermissions width issue
+
 ---------------------------------------------------------------------
 Release 2.0.160428
 ---------------------------------------------------------------------
