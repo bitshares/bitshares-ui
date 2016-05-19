@@ -228,16 +228,42 @@ class PrivateKeyStore extends BaseStore {
             isMine = true;            
         }
 
-        try {
-            memo_text = private_key ? Aes.decrypt_with_checksum(
-                private_key,
-                public_key,
-                memo.nonce,
-                memo.message
-            ).toString("utf-8") : null;
-        } catch(e) {
-            console.log("transfer memo exception ...", e);
-            memo_text = "*";
+        if (private_key) {
+            let tryLegacy = false;
+            try {
+                memo_text = private_key ? Aes.decrypt_with_checksum(
+                    private_key,
+                    public_key,
+                    memo.nonce,
+                    memo.message
+                ).toString("utf-8") : null;
+
+                if (private_key && !memo_text) {
+                    // debugger
+                    
+                }
+            } catch(e) {
+                console.log("transfer memo exception ...", e);            
+                memo_text = "*";
+                tryLegacy = true;
+            }
+
+            // Apply legacy method if new, correct method fails to decode
+            if (private_key && tryLegacy) {
+                // debugger;
+                try {
+                    memo_text = Aes.decrypt_with_checksum(
+                        private_key,
+                        public_key,
+                        memo.nonce,
+                        memo.message,
+                        true
+                    ).toString("utf-8");
+                } catch(e) {
+                    console.log("transfer memo exception ...", e);            
+                    memo_text = "**";
+                }            
+            }
         }
 
         return {

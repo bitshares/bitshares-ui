@@ -107,8 +107,7 @@ class AssetSelector extends React.Component {
                       <input 
                              disabled={this.props.disabled}
                              type="text"
-                             value={this.props.assetInput}
-                             defaultValue={this.props.assetInput}
+                             value={this.props.assetInput || ""}
                              placeholder={counterpart.translate("explorer.assets.symbol")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}

@@ -230,7 +230,7 @@
   // buttons
 
   .button {
-    background-color: $button-bg-color;
+    background: $button-bg-color;
     &:hover, &:focus, &:active {
       background-color: lighten($button-bg-color, 4%) !important;
     }
@@ -641,7 +641,7 @@
   }
 
   td.orderHistoryBid {
-   
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $bid-color;
@@ -664,7 +664,7 @@
 
   td.orderHistoryAsk  {
 
-    
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $ask-color;
@@ -678,7 +678,7 @@
   }
 
 .orderbook td.orderHistoryAsk {
-   
+
   > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $primary-text-color;
@@ -809,8 +809,8 @@
   .active-bucket {
     @include button-focus($primary-text-color, $panel-bg-color, 10);
   }
-   
-   
+
+
   .indicators, li.stat.clickable{
     color: $secondary-text-color;
     &:hover{
@@ -830,13 +830,18 @@
 
     .chatbox-content {
         background-color: #ccc;
-        padding: 3px 13px 3px 10px;
         color: $chat-text-color;
+    }
+
+    .chatbox-title {
+      background-color: $header-color !important;
+    }
+
+    select {
+      height: 3rem;
+      font-size: 12px;
     }
 
   }
 
 }
-
-
-

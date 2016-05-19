@@ -107,7 +107,7 @@ class AccountWhitelist extends React.Component {
         super();
 
         this.state = {
-            accountName: null,
+            accountName: "",
             accountToList: null
         };
     }
@@ -151,6 +151,7 @@ class AccountWhitelist extends React.Component {
     }
 
     _onAccountFound(account) {
+        console.log("accountFound:", account);
         this.setState({
             accountName: account ? account.get("name") : null,
             accountToList: account ? account.get("id") : null
@@ -158,6 +159,7 @@ class AccountWhitelist extends React.Component {
     }
 
     _onAccountChanged(account) {
+        console.log("account changed:", account);
         this.setState({
             accountName: account,
             accountToList: null

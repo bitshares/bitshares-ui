@@ -26,7 +26,7 @@ class BlockTradesDepositAddressCache {
         wallet.deposit_keys[exchange_name] = wallet.deposit_keys[exchange_name] || {};
         let index = this.getIndexForDepositKeyInExchange(account_name, input_coin_type, output_coin_type);
         wallet.deposit_keys[exchange_name][index] = wallet.deposit_keys[exchange_name][index] || []
-        
+
         let number_of_keys = wallet.deposit_keys[exchange_name][index].length;
         if (number_of_keys)
             return wallet.deposit_keys[exchange_name][index][number_of_keys - 1];
