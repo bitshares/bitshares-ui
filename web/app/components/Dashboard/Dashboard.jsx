@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
             ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
-            ["OPEN.BTC", "OPEN.STEEM"],
+            ["BTS", "OPEN.STEEM"],
             ["BTS", "OPEN.LISK"],
             ["BTS", "BTSR"],
             ["BTS", "OBITS"],
@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
             ["BTS", "CNY"],
             ["BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["OPEN.BTC", "OPEN.ETH"],
+            ["BTS", "OPEN.ETH"],
             // ["BTS", "SILVER"]
             // ["BTS", "EUR"]
         ];
