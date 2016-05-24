@@ -248,8 +248,20 @@ class Settings extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
-                    <div className="grid-content">
+                <div className="grid-block main-content">
+                    <div className="grid-container">
+                        <div className="button-group" style={{paddingTop: 20}}>
+                            <Link to="wallet">
+                                <div className="button">
+                                    <Translate content="wallet.console" />
+                                </div>
+                            </Link>
+                            <br />
+                            <div onClick={this.onReset} className="button">
+                                    <Translate content="settings.reset" />
+                            </div>
+                        </div>
+
                         {settings.map((value, setting) => {
                             return (
                                 <SettingsEntry
@@ -263,15 +275,7 @@ class Settings extends React.Component {
                                     {...this.state}
                                 />);
                         }).toArray()}
-                        <Link to="wallet">
-                            <div className="button outline">
-                                <Translate content="wallet.console" />
-                            </div>
-                        </Link>
-                        <br />
-                        <div onClick={this.onReset} className="button outline" style={{marginTop: 15}}>
-                                <Translate content="settings.reset" />
-                        </div>
+                        
                     </div>
                 </div>
                 <WebsocketAddModal
