@@ -242,7 +242,7 @@ class RecentTransactions extends React.Component {
                         <table className={"table" + (compactView ? " compact" : "")}>
                             <thead>
                             <tr>
-                                {compactView ? null : <th style={{width: 200}}><Translate content="explorer.block.op" /></th>}
+                                {compactView ? null : <th style={{width: "20%"}}><Translate content="explorer.block.op" /></th>}
                                 <th><Translate content="account.votes.info" /></th>
                             </tr>
                             </thead>

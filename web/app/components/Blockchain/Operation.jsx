@@ -88,7 +88,7 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td className="left-td">
+                        <td style={{width: "20%"}} className="left-td">
                             <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
                         </td>)}
                     <td style={{padding: "8px 5px"}}>
@@ -96,8 +96,8 @@ class Row extends React.Component {
                             <span>{this.props.info}</span>
                         </div>
                         <div style={{fontSize: 14, paddingTop: 5}}>
-                            <span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>
-                            <span> - <BlockTime  block_number={block}/></span>
+                            {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
+                            <BlockTime  block_number={block}/>
                             <span className="facolor-fee"> - <FormattedAsset amount={fee.amount} asset={fee.asset_id} /></span>
                             {pending ? <span> - {pending}</span> : null}
                         </div>
