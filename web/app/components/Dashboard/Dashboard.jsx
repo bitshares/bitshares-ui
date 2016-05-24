@@ -77,25 +77,22 @@ class Dashboard extends React.Component {
             ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
-            ["OPEN.BTC", "OPEN.ETH"],
             ["OPEN.BTC", "OPEN.STEEM"],
+            ["BTS", "OPEN.LISK"],
             ["BTS", "BTSR"],
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
             ["BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["BTS", "SILVER"]
+            ["OPEN.BTC", "OPEN.ETH"],
+            // ["BTS", "SILVER"]
             // ["BTS", "EUR"]
         ];
 
         let newAssets = [
             "OPEN.DAO",
-            "OPEN.STEEM",
-            "MKR",
-            "OPEN.DGD",
-            "OPEN.ETH",
-            "BTSR"
+            "OPEN.LISK"
         ];
 
         let markets = featuredMarkets.map((pair, index) => {
