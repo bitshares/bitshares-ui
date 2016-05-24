@@ -8,7 +8,7 @@ export default class PasswordConfirm extends Component {
     static propTypes = {
         // Called everytime a valid password is provided and matches a confirmed password
         onValid: PropTypes.func.isRequired
-    }
+    };
     
     constructor() {
         super()
@@ -20,26 +20,49 @@ export default class PasswordConfirm extends Component {
             valid: false
         }
     }
+
+    componentDidMount() {
+        if (this.refs.firstPassword) {
+            this.refs.firstPassword.focus();
+        }
+    }
     
     render() {
-        var {password, confirm, valid, errors} = this.state
-        return <div className={cname(
-            "grid-content", "no-overflow", {"has-error": errors.size})}>
-            <div>
-                <Translate component="label" content="wallet.password" />
-                <input type="password" id="password"
-                    onChange={this.formChange.bind(this)}
-                    value={this.state.password}/>
-            </div>
-            <div>
-                <Translate component="label" content="wallet.confirm" />
-                <input type="password" id="confirm"
-                    onChange={this.formChange.bind(this)}
-                    value={this.state.confirm}/>
-            </div>
-            <div>{errors.get("password_match") || errors.get("password_length")}</div>
-            <br/>
-        </div>
+        var {password, confirm, valid, errors} = this.state;
+        let {newPassword} = this.props;
+        let tabIndex = 1;
+        console.log("props:", this.props);
+        return (
+            <form
+                noValidate
+                onSubmit={"onSubmit" in this.props ? this.props.onSubmit : () => {console.log("onsubmit")}}
+                className={cname("grid-content", "no-overflow", {"has-error": errors.size})}
+            >
+                    <Translate component="label" content={newPassword ? "wallet.new_password" : "wallet.password"} />
+                    <input
+                        type="password"
+                        id="password"
+                        ref="firstPassword"
+                        onChange={this.formChange.bind(this)}
+                        value={this.state.password}
+                        tabIndex={tabIndex++}
+                    />
+
+                    <Translate component="label" content={newPassword ? "wallet.new_confirm" : "wallet.confirm"} />
+                    <input
+                        type="password" 
+                        id="confirm"
+                        onChange={this.formChange.bind(this)}
+                        value={this.state.confirm}
+                        tabIndex={tabIndex++}
+                    />
+
+                <div style={{paddingBottom: 10}}>{errors.get("password_match") || errors.get("password_length")}</div>
+
+                {this.props.children}
+                <br/>
+            </form>
+        );
     }
     
     formChange(event) {

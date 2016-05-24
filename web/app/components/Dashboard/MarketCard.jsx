@@ -71,7 +71,7 @@ class MarketCard extends React.Component {
         return (
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
-                    <img width="70" height="70" src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+                    <img style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
                 </div>
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>

@@ -77,25 +77,22 @@ class Dashboard extends React.Component {
             ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
-            ["OPEN.BTC", "OPEN.ETH"],
             ["OPEN.BTC", "OPEN.STEEM"],
+            ["OPEN.BTC", "OPEN.LISK"],
             ["BTS", "BTSR"],
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
             ["OPEN.BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["BTS", "SILVER"]
+            ["OPEN.BTC", "OPEN.ETH"],
+            // ["BTS", "SILVER"]
             // ["BTS", "EUR"]
         ];
 
         let newAssets = [
             "OPEN.DAO",
-            "OPEN.STEEM",
-            "MKR",
-            "OPEN.DGD",
-            "OPEN.ETH",
-            "BTSR"
+            "OPEN.LISK"
         ];
 
         let markets = featuredMarkets.map((pair, index) => {
@@ -121,7 +118,7 @@ class Dashboard extends React.Component {
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{paddingTop: 25}}>
+                <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
                     <Translate content="exchange.featured" component="h4" />
                     <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow">
                         {markets}

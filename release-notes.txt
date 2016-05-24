@@ -25,6 +25,57 @@ Bug fixes
 - Fix trollbox mem leak and connection counter, improve error handling #844
 
 ---------------------------------------------------------------------
+Release 2.0.160524
+---------------------------------------------------------------------
+
+New features
+--------
+- Improvements to account creation and wallet creation pages
+- Improvements to wallet management
+- Update several 3rd party libraries
+- Add Lisk symbol and OPEN.LISK to dashboard, homogenize icon sizes
+
+Bug fixes
+--------
+- Fix tooltip bug causing the screen to scroll to the top
+- Add some padding to Dashboard sides
+- Allow Transfer page recent history to take full height
+- Change purple link/button color to blue
+- Fix unrestrained icon height issues in the dashboard
+- Scroll the Chat to the bottom if the footer visibility changes
+- Chinese translation updates
+- Fix Chatbox not scrolling to bottom on new messages
+- Fix a bug that made the cli_wallet unable to decode GUI memos
+- Fix the BlockTrades gateway, which was not validating withdrawal addresses correctly
+
+---------------------------------------------------------------------
+Release 2.0.160514
+---------------------------------------------------------------------
+
+New features
+--------
+- Simple p2p chat history
+- More improvements to the deposit/withdraw screens
+- Make trollbox dockable on right side
+- Use separate support addresses for OpenLedger and BlockTrades deposits
+- Add OPEN.ETH:OPEN.DAO market to featured markets
+
+Bug fixes
+--------
+- Fix Settings page issue with chat disable
+- Fix settings page causing the GUI to freeze (#842)
+- Improvements to trollbox server to ensure uptime
+- Fix chatbox select box height (thanks to nmywn)
+- Turkish translation updates
+- Add some filtering to BlockTrades coins to prevent errors
+- Separate price and volume slightly in PriceChart, adjust colors
+- Improve depth chart zoom level
+- Improve Footer hide behaviour
+- Fix trollbox mem leak and connection counter, improve error handling #844
+- Update packages: react to 15.0.2, react-highcharts, fix breaking changes
+- Fix an AccountSelector bug causing name resets while typing
+
+---------------------------------------------------------------------
 Release 2.0.160504
 ---------------------------------------------------------------------
 

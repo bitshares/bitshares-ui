@@ -56,10 +56,10 @@ class CreateAccount extends React.Component {
     }
 
     isValid() {
-        let first_account = AccountStore.getMyAccounts().length === 0;
+        let firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
-        if (!first_account) valid = valid && this.state.registrar_account;
+        if (!firstAccount) valid = valid && this.state.registrar_account;
         return valid;
     }
 
@@ -77,13 +77,18 @@ class CreateAccount extends React.Component {
 
     onFinishConfirm(confirm_store_state) {
         if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
-            let trx_obj = confirm_store_state.broadcasted_transaction.toObject();
-            let op0 = trx_obj.operations[0];
+            // let trx_obj = confirm_store_state.broadcasted_transaction.toObject();
+            // let op0 = trx_obj.operations[0];
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
-            if(op0[0] === 5 && op0[1].name === this.state.accountName) {
-                this.props.history.pushState(null, `/account/${this.state.accountName}/overview`);
-            }
+
+            ChainStore.getAccount(this.state.accountName);
+            console.log("onFinishConfirm");
+            this.props.history.pushState(null, `/wallet/backup/create?newAccount=true`);
+            // if(op0[0] === 5 && op0[1].name === this.state.accountName) {
+            //     this.props.history.pushState(null, `/account/${this.state.accountName}/overview`);
+            // }
+            
         }
     }
 
@@ -92,11 +97,15 @@ class CreateAccount extends React.Component {
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
             AccountActions.createAccount(name, this.state.registrar_account, this.state.registrar_account, 0, refcode).then(() => {
+                // User registering his own account
                 if(this.state.registrar_account) {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
-                } else {
-                    this.props.history.pushState(null, `/account/${name}/overview`);
+                } else { // Account registered by the faucet
+                    console.log("account registed by faucet");
+                    this.props.history.pushState(null, `/wallet/backup/create?newAccount=true`);
+                    // this.props.history.pushState(null, `/account/${name}/overview`);
+                    
                 }
             }).catch(error => {
                 console.log("ERROR AccountActions.createAccount", error);
@@ -175,28 +184,41 @@ class CreateAccount extends React.Component {
     }
 
     render() {
+        let {registrar_account} = this.state;
+
         let my_accounts = AccountStore.getMyAccounts()
-        let first_account = my_accounts.length === 0;
+        let firstAccount = my_accounts.length === 0;
+
+        let hasWallet = WalletDb.getWallet();
         let valid = this.isValid();
-        let buttonClass = classNames("button no-margin", {disabled: !valid});
+
+        let isLTM = false;
+        let registrar = registrar_account ? ChainStore.getAccount(registrar_account) : null; 
+        if (registrar) {
+            if( registrar.get( 'lifetime_referrer' ) == registrar.get( 'id' ) ) {
+                isLTM = true;
+            }
+        }
+
+        let buttonClass = classNames("button no-margin", {disabled: (!valid || (registrar_account && !isLTM))});
 
         let header_items = {
             icon: <div className="form-group">
                 <label><Translate content="account.identicon"/></label>
                 <AccountImage account={this.state.validAccountName ? this.state.accountName : null}/>
             </div>,
-            title: first_account ?
-                (<div>
-                    <h1><Translate content="account.welcome"/></h1>
-                    <h3><Translate content="account.please_create_account"/></h3>
-                    <hr/>
-                </div>) :
-                (
-                    <div>
-                        <h1><Translate content="account.create_account"/></h1>
+            title: firstAccount ?
+                    (<div>
+                        <h1><Translate content="account.welcome"/></h1>
+                        <h3><Translate content="account.please_create_account"/></h3>
                         <hr/>
-                    </div>
-                )
+                    </div>) :
+                    (
+                        <div>
+                            <h1><Translate content="account.create_account"/></h1>
+                            <hr/>
+                        </div>
+                    )
         };
 
         const header = <TransitionMotion
@@ -218,46 +240,66 @@ class CreateAccount extends React.Component {
         </TransitionMotion>
 
         return (
-            <div className="grid-block vertical">
-                <div className="grid-content">
-                    <div className="create-account-header">
-                        {header}
-                    </div>
-                    <div className="content-block center-content">
-                        <div style={{width: '21em'}}>
-                            <form onSubmit={this.onSubmit.bind(this)} noValidate>
-                                <AccountNameInput ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}} cheapNameOnly={first_account}
-                                                  onChange={this.onAccountNameChange.bind(this)}
-                                                  accountShouldNotExist={true}/>
 
-                                {WalletDb.getWallet() ?
-                                    null :
-                                    <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
-                                }
-                                {
-                                    first_account ? null : (
-                                        <div className="full-width-content form-group">
-                                            <label><Translate content="account.pay_from" /></label>
-                                            <AccountSelect account_names={my_accounts}
-                                                           onChange={this.onRegistrarAccountChange.bind(this)}/>
-                                        </div>)
-                                }
-                                {this.state.hide_refcode ? null :
-                                    <div>
-                                        <RefcodeInput ref="refcode" label="refcode.refcode_optional" expandable={true}/>
-                                        <br/>
+            <div className="grid-container">
+                <div className="create-account-header">
+                    {header}
+                </div>
+                <div className="content-block center-content">
+                        <form
+                            style={{maxWidth: "45rem"}}
+                            onSubmit={this.onSubmit.bind(this)}
+                            noValidate
+                        >
+                            <div className="grid-content">
+                                <Translate style={{textAlign: "left"}} component="p" content="wallet.create_account_text" />
+                                {firstAccount ? <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> : null}
+                                <AccountNameInput
+                                    ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
+                                    cheapNameOnly={firstAccount}
+                                    onChange={this.onAccountNameChange.bind(this)}
+                                    accountShouldNotExist={true}
+                                />
+                            </div>
+                            {hasWallet ?
+                                null :
+                                <div className="grid-content">
+                                    <div style={{
+                                        textAlign: "left",
+                                        paddingBottom: 10
+                                    }}>
+                                        <Translate component="p" content="wallet.account_create_wallet_text" />
                                     </div>
-                                }
-                                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> :<button className={buttonClass}><Translate content="account.create_account" /></button>}
-                                <br/>
-                                <br/>
-                                <label className="inline"><Link to="/existing-account"><Translate content="account.existing_accounts" /></Link></label>
-                                {false && this.state.hide_refcode ? <span>&nbsp; &bull; &nbsp;
-                                    <label className="inline"><a href onClick={this.showRefcodeInput.bind(this)}><Translate content="refcode.enter_refcode"/></a></label>
-                                </span> : null}
-                            </form>
-                        </div>
-                    </div>
+                                    <PasswordInput ref="password" confirmation={true} onChange={this.onPasswordChange.bind(this)}/>
+                                </div>
+                            }
+                            {
+                            firstAccount ? null : (
+                                <div className="full-width-content grid-content form-group no-overflow">
+                                    <label><Translate content="account.pay_from" /></label>
+                                    <AccountSelect
+                                        account_names={my_accounts}
+                                        onChange={this.onRegistrarAccountChange.bind(this)}
+                                    />
+                                    {(registrar_account && !isLTM) ? <div style={{textAlign: "left"}} className="facolor-error"><Translate content="wallet.must_be_ltm" /></div> : null}
+                                </div>)
+                            }
+                            {this.state.hide_refcode ? null :
+                                <div>
+                                    <RefcodeInput ref="refcode" label="refcode.refcode_optional" expandable={true}/>
+                                    <br/>
+                                </div>
+                            }
+                            {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
+                            
+                            <div style={{paddingTop: 20}}>
+                                <label className="inline">
+                                    <Link to="/existing-account">
+                                        <Translate content="wallet.restore" />
+                                    </Link>
+                                </label>
+                            </div>
+                        </form>
                 </div>
             </div>
         );

@@ -27,8 +27,8 @@ export default class BackupBrainkey extends Component {
         var content
         var brainkey_backup_date = WalletDb.getWallet().brainkey_backup_date
         var brainkey_backup_time = brainkey_backup_date ?
-            <h3><Translate content="wallet.verified" /> <FormattedDate value={brainkey_backup_date}/></h3>:
-            <h3><Translate content="wallet.brainkey_not_verified" /></h3>
+            <div><Translate content="wallet.brainkey_backed_up" />: <FormattedDate value={brainkey_backup_date}/></div> :
+            <Translate className="facolor-error" component="p" content="wallet.brainkey_not_backed_up" />
 
         if(this.state.verified) {
             var sha1 = hash.sha1(this.state.brainkey).toString('hex').substring(0,4)
@@ -47,7 +47,6 @@ export default class BackupBrainkey extends Component {
 
         if(!content && this.state.verify) {
             content = <span>
-                <h3><Translate content="wallet.backup_brainkey" /></h3>
                 <label><Translate content="wallet.reenter_brainkey" /></label>
                 <BrainkeyInput onChange={this.onVerifyBrainkey.bind(this)} hideCheckDigits/>
                 <div>{this.state.brainkey ?
@@ -79,7 +78,6 @@ export default class BackupBrainkey extends Component {
         if(!content) {
             var valid = this.state.password && this.state.password !== ""
             content = <span>
-                <h3><Translate content="wallet.backup_brainkey" /></h3>
                 <label><Translate content="wallet.enter_password" /></label>
                 <form onSubmit={this.onSubmit.bind(this)} className="name-form" noValidate>
                     <input type="password" id="password" onChange={this.onPassword.bind(this)}/>

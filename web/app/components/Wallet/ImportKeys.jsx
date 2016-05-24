@@ -16,6 +16,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
 import LoadingIndicator from "components/LoadingIndicator"
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
@@ -35,6 +36,7 @@ export default class ImportKeys extends Component {
     constructor() {
         super();
         this.state = this._getInitialState();
+        this.state.privateKey = true;
     }
     
     static getStores() {
@@ -72,167 +74,11 @@ export default class ImportKeys extends Component {
         var state = this._getInitialState(keep_file_name);
         this.setState(state, ()=> this.updateOnChange());
     }
-    
-    render() {
-        var keys_to_account = this.state.keys_to_account
-        var key_count = Object.keys(keys_to_account).length
-        var account_keycount = this.getImportAccountKeyCount(keys_to_account)
-        
-        // Create wallet prior to the import keys (keeps layout clean)
-        if( ! WalletDb.getWallet()) return <WalletCreate hideTitle={true}/>
-        if( this.props.importing ) {
-            return <div>
-                <h3><Translate content="wallet.import_keys" /></h3>
-                <div className="center-content">
-                    <LoadingIndicator type="circle"/>
-                </div>
-            </div>
-        }
-        
-        var filtering = this.state.genesis_filtering
-        var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
-        var account_rows = null
-        if(this.state.genesis_filter_status.length) {
-            account_rows = []
-            for(let status of this.state.genesis_filter_status) {
-                account_rows.push(
-                    <tr key={status.account_name}>
-                        <td>{status.account_name}</td>
-                        <td>{filtering ?
-                            <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
-                            : <span>{status.count}</span>
-                        }</td>
-                    </tr>
-                )
-            }
-        }
-        
-        var import_ready = key_count !== 0
-        var password_placeholder = "Enter import file password"
-        if (import_ready) password_placeholder = ""
-
-        if( ! account_rows && account_keycount) {
-            account_rows = [];
-            for (let account_name in account_keycount) {
-                account_rows.push(
-                    <tr key={account_name}>
-                        <td>{account_name}</td>
-                        <td>{account_keycount[account_name]}</td>
-                    </tr>);
-            }
-        }
-        return (
-            <div>
-                <h3><Translate content="wallet.import_keys" /></h3>
-                {/* Key file upload */}
-                <div>
-                    <span>{this.state.key_text_message ?
-                        this.state.key_text_message :
-                        <KeyCount key_count={key_count}/>
-                    }</span>
-                    { ! import_ready ? 
-                        null :
-                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
-                    }
-                </div>
-                
-                { account_rows ? 
-                <div>
-                    { ! account_rows.length ? "No Accounts" :
-                    <div>
-                        <table className="table center-content">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "center"}}>Account</th>
-                                    <th style={{textAlign: "center"}}># of keys</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {account_rows}
-                            </tbody>
-                        </table>
-                        <br/>
-                    </div>}
-                </div> : null}
-                <br/>
-                    
-                { ! import_ready && ! this.state.genesis_filter_initalizing ?
-                <div>
-                    <div className="center-content">
-                        <div>
-                            <div>
-                                <label>BTS 0.9.x key export file
-                                {this.state.no_file ? null : <span>&nbsp;
-                                    (<a onClick={this.reset.bind(this)}>Reset</a>)</span>}
-                                </label>
-                                <input
-                                    type="file" id="file_input"
-                                    style={{ border: 'solid' }}
-                                    key={this.state.reset_file_name}
-                                    onChange={this.upload.bind(this)} />
-                                <div>{this.state.import_file_message}</div>
-                            </div>
-                            { this.state.no_file ? <span>
-                            <br/><br/>
-                            <div>
-                                <label>Paste Private keys (Wallet Import Format - WIF)</label>
-                                <input type="password" onChange={this.onWif.bind(this)} id="wif" />
-                            </div>
-                            </span>:null}
-                        </div>
-                        <br/>
-
-                        { ! this.state.no_file ?
-                            (<div>
-                                <input
-                                    type="password" ref="password" autoComplete="off"
-                                    key={this.state.reset_password}
-                                    placeholder={password_placeholder}
-                                    onChange={this._passwordCheck.bind(this)}
-                                />
-                                <div>{this.state.import_password_message}</div>
-                            </div>) : null}
-                        <br/>
-                        <a href className="button success" onClick={this.onBack.bind(this)}>
-                            Cancel </a>
-                    </div>
-                </div> : null}
-                
-                { this.state.genesis_filter_initalizing ? <div>
-                    <div className="center-content">
-                        <LoadingIndicator type="circle"/>
-                    </div>
-                </div>:null}
-
-                { import_ready ?
-                <div>
-                    <h4 className="center-content">Unclaimed balances belonging to these keys:</h4>
-                    <div className="grid-block center-content">
-                        <div className="grid-content no-overflow">
-                            <label>Asset Totals</label>
-                            <BalanceClaimAssetTotal />
-                        </div>
-                    </div>
-                    <br/>
-
-                    <div className="center-content" style={{width: "100%"}}>
-                        <div className="button-group content-block">
-                            <a href className={cname("button success", {disabled:!import_ready})}
-                               onClick={this._saveImport.bind(this)} >
-                                Import
-                            </a>
-                            <a href className="button secondary" onClick={this.reset.bind(this)}>
-                                Cancel
-                            </a>
-                        </div>
-                    </div>
-                </div> : null}
-            </div>
-        );
-    }
-    
+            
     onWif(event) {
-        var value = event.target.value
+        debugger;
+        event.preventDefault();
+        var value = this.refs.wifInput.value;
         this.addByPattern(value)
     }
     
@@ -491,21 +337,25 @@ export default class ImportKeys extends Component {
     }
     
     _passwordCheck(evt) {
-        var pwNode = ReactDOM.findDOMNode(this.refs.password)
-        if(pwNode) pwNode.focus()
-        var password = evt ? evt.target.value : ""
+        if (evt && "preventDefault" in evt) {
+            evt.preventDefault();
+        }
+        var pwNode = this.refs.password;
+        // if(pwNode) pwNode.focus()
+        var password = pwNode ? pwNode.value : ""
         var checksum = this.state.password_checksum
         var new_checksum = hash.sha512(hash.sha512(password)).toString("hex")
         if(checksum != new_checksum) {
-            this.setState({no_file: false, 
-                import_password_message: "Enter import file password" 
-                    + (password != "" ? " (keep going)":"") })
-            return
+            return this.setState({
+                no_file: false,
+                import_password_message: password.length ? "Incorrect password" : null
+            });
+            
         }
         this.setState({
             no_file: false,
             reset_password: Date.now(),
-            import_password_message: "Password matches. Loading..."
+            import_password_message: counterpart.translate("wallet.import_pass_match")
         }, ()=> this._decryptPrivateKeys(password))
         // setTimeout(, 250)
     }
@@ -672,6 +522,203 @@ export default class ImportKeys extends Component {
         // removes the message on the next render
         this.state.key_text_message = null
         return count
+    }
+
+    toggleImportType(type) {
+        if (!type) {
+            return;
+        }
+        console.log("toggleImportType", type);
+        this.setState({
+            privateKey: type === "privateKey"
+        });
+    }
+
+    render() {
+        var {keys_to_account, privateKey} = this.state;
+        var key_count = Object.keys(keys_to_account).length
+        var account_keycount = this.getImportAccountKeyCount(keys_to_account)
+        
+        // Create wallet prior to the import keys (keeps layout clean)
+        if( ! WalletDb.getWallet()) return <WalletCreate importKeys={true} hideTitle={true}/>
+        if( this.props.importing ) {
+            return <div>
+                <div className="center-content">
+                    <LoadingIndicator type="circle"/>
+                </div>
+            </div>
+        }
+        
+        var filtering = this.state.genesis_filtering
+        var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
+        var account_rows = null
+        if(this.state.genesis_filter_status.length) {
+            account_rows = []
+            for(let status of this.state.genesis_filter_status) {
+                account_rows.push(
+                    <tr key={status.account_name}>
+                        <td>{status.account_name}</td>
+                        <td>{filtering ?
+                            <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
+                            : <span>{status.count}</span>
+                        }</td>
+                    </tr>
+                )
+            }
+        }
+        
+        var import_ready = key_count !== 0
+        var password_placeholder = counterpart.translate("wallet.import_password");
+
+        if (import_ready) password_placeholder = ""
+
+        if( ! account_rows && account_keycount) {
+            account_rows = [];
+            for (let account_name in account_keycount) {
+                account_rows.push(
+                    <tr key={account_name}>
+                        <td>{account_name}</td>
+                        <td>{account_keycount[account_name]}</td>
+                    </tr>);
+            }
+        }
+
+
+        let cancelButton = (
+            <div className="button success" onClick={this.onBack.bind(this)}>
+                <Translate content="wallet.cancel" />
+            </div>
+        );
+
+        let tabIndex = 1;
+
+        return (
+            <div>
+                {/* Key file upload */}
+                <div>
+                    <span>{this.state.key_text_message ?
+                        this.state.key_text_message :
+                        <KeyCount key_count={key_count}/>
+                    }</span>
+                    { ! import_ready ? 
+                        null :
+                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                    }
+                </div>
+                
+                { account_rows ? 
+                <div>
+                    { ! account_rows.length ? counterpart.translate("wallet.no_accounts") :
+                    <div>
+                        <table className="table center-content">
+                            <thead>
+                                <tr>
+                                    <th style={{textAlign: "center"}}>Account</th>
+                                    <th style={{textAlign: "center"}}># of keys</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {account_rows}
+                            </tbody>
+                        </table>
+                        <br/>
+                    </div>}
+                </div> : null}
+                <br/>
+                    
+                { ! import_ready && ! this.state.genesis_filter_initalizing ?
+                <div>
+                    <div className="center-content">
+                        <div className="button-group">
+                            <button onClick={this.toggleImportType.bind(this, "privateKey")} className={cname("button", {outline: !privateKey})}><Translate content="wallet.import_private_key" /></button>
+                            <button onClick={this.toggleImportType.bind(this, "bts")} className={cname("button", {outline: privateKey})}><Translate content="wallet.import_bts" /></button>
+                        </div>
+                        <div>
+                            {privateKey ? (
+                            <form onSubmit={this.onWif.bind(this)} style={{paddingTop: 20}}>
+                                    <Translate component="label" content="wallet.paste_private" />
+                                    <input ref="wifInput" type="password" id="wif" tabIndex={tabIndex++} />
+                                    
+                                    <button className="button" type="submit"><Translate content="wallet.submit" /></button>
+                                    {cancelButton}
+                            </form>) : (
+                            <form onSubmit={this._passwordCheck.bind(this)}>
+                                <label><Translate content="wallet.bts_09_export" />
+                                {this.state.no_file ? null : <span>&nbsp;
+                                    (<a onClick={this.reset.bind(this)}>Reset</a>)</span>}
+                                </label>
+                                <input
+                                    type="file"
+                                    id="file_input"                                    
+                                    style={{
+                                        border: "solid" ,
+                                        marginBottom: 15,
+                                        width: "100%"
+                                    }}
+                                    key={this.state.reset_file_name}
+                                    onChange={this.upload.bind(this)}
+                                />
+                                <div>{this.state.import_file_message}</div>
+                                { ! this.state.no_file ?
+                                    (<div>
+                                        <input
+                                            type="password"
+                                            ref="password"
+                                            key={this.state.reset_password}
+                                            placeholder={password_placeholder}
+                                            onChange={() => {if (this.state.import_password_message && this.state.import_password_message.length) {
+                                                this.setState({
+                                                    import_password_message: null
+                                                })
+                                            }}}
+                                        />
+                                        <p className="facolor-error">{this.state.import_password_message}</p>
+                                    </div>) : null}
+                                    <div className="button-group">
+                                    <button className={cname("button", {disabled: !!this.state.no_file})} type="submit"><Translate content="wallet.submit" /></button>
+                                    {cancelButton}
+                                    </div>
+                            </form>)}
+                        </div>
+                        <br/>
+
+                        
+                        <br/>
+                        
+                    </div>
+                </div> : null}
+                
+                { this.state.genesis_filter_initalizing ? <div>
+                    <div className="center-content">
+                        <LoadingIndicator type="circle"/>
+                    </div>
+                </div>:null}
+
+                { import_ready ?
+                <div>
+                    <h4 className="center-content"><Translate content="wallet.unclaimed" />:</h4>
+                    <div className="grid-block center-content">
+                        <div className="grid-content no-overflow">
+                            <Translate component="label" content="wallet.totals" />
+                            <BalanceClaimAssetTotal />
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div className="center-content" style={{width: "100%"}}>
+                        <div className="button-group content-block">
+                            <div className={cname("button success", {disabled: !import_ready})}
+                               onClick={this._saveImport.bind(this)} >
+                                <Translate content="wallet.import_balance" />
+                            </div>
+                            <div className="button secondary" onClick={this.reset.bind(this)}>
+                                <Translate content="wallet.cancel" />
+                            </div>
+                        </div>
+                    </div>
+                </div> : null}
+            </div>
+        );
     }
 
 }

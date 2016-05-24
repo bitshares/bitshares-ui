@@ -468,7 +468,8 @@ module.exports = {
             blind_transfer: "隐私转账",
             transfer_from_blind: "从隐私账户转出",
             committee_member_update: "更新理事会成员账户",
-            asset_claim_fees: "领取资产手续费"
+            asset_claim_fees: "领取资产手续费",
+            all: "Show all"
         },
         confirm: "请确认交易",
         broadcast_success: "交易已向网络广播",
@@ -946,7 +947,30 @@ module.exports = {
             open_website: "访问官网"
         },
         generate_new: "生成新地址",
-        calc: "计算中"
+        calc: "计算中",
+        website: "访问网站",
+        withdraw_now: "提现",
+        choose_deposit: "请选择充值的币种",
+        choose_withdraw: "请选择提现的币种",
+        asset_to_deposit: "充值资产:",
+        asset_to_receive: "你将收到:",
+        receive_account: "接收账户:",
+        deposit_summary: "充值摘要",
+        deposit_inst: "充值指示",
+        recent_deposit: "最近的充值",
+        recent_withdraw: "最近的提现",
+        withdraw_summary: "提现摘要",
+        withdraw_inst: "提现指示",
+        withdraw_to: "点击下方按钮进行 %(asset)s 提现",
+        intermediate: "中间账户",
+        asset_to_withdraw: "提现资产:",
+        support_block: "获得客户支持，请联络 Blocktrades:",
+        valid_address: "请输入合法的 %(coin_type)s 地址",
+        withdraw_coin: "提现 %(coin)s (%(symbol)s)",
+        limit: "限额: %(amount)s %(symbol)s",
+        bridge_text: "桥接能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
+        gateway_text: "网关能让你将BitShares中的资产与外部资产进行互换，比如OPEN.BTC到BTC。",
+        fiat_text: "法币的冲提现服务由CCEDK提供。你必须先行在CCEDK上进行账户注册。下面是支持的货币："
     },
     propose: "提议",
     cancel: "取消",
@@ -991,6 +1015,8 @@ module.exports = {
         welcome_user: "欢迎访问BitShares",
         welcome: "这是P2P聊天室。没有管理员，也不能保证唯一的用户名。可以从设置中禁用聊天功能。发送消息的频率被限制在每2秒1条。输入 /help 获得命令帮助信息。",
         disconnected: "你已从聊天室断开链接，请点击下方重新连接。",
-        rate: "请等待至少2秒发送新消息。"
+        rate: "请等待至少2秒发送新消息。",
+        reconnect: "重新连接",
+        users: "%(count)s 用户在线"
     }
 };
