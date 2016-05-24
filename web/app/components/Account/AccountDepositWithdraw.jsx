@@ -42,6 +42,7 @@ class AccountDepositWithdraw extends React.Component {
         super();
         this.state = {
             blockTradesCoins: [],
+            blockTradesBackedCoins: [],
             olService: props.viewSettings.get("olService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge")
@@ -52,6 +53,7 @@ class AccountDepositWithdraw extends React.Component {
         return (
             nextProps.account !== this.props.account ||
             !utils.are_equal_shallow(nextState.blockTradesCoins, this.state.blockTradesCoins) ||
+            !utils.are_equal_shallow(nextState.blockTradesBackedCoins, this.state.blockTradesBackedCoins) ||
             nextState.olService !== this.state.olService ||
             nextState.btService !== this.state.btService ||
             nextState.metaService !== this.state.metaService
@@ -64,9 +66,29 @@ class AccountDepositWithdraw extends React.Component {
             this.setState({
                 blockTradesCoins: result
             });
+            this.setState({
+                blockTradesBackedCoins: this.getBlocktradesBackedCoins(result)
+            });
         })).catch(err => {
             console.log("error fetching blocktrades list of coins", err);
         });
+    }
+
+    getBlocktradesBackedCoins(allBlocktradesCoins) {
+        let coins_by_type = {};
+        allBlocktradesCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
+        let blocktradesBackedCoins = [];
+        allBlocktradesCoins.forEach(coin_type => {
+            if (coin_type.walletSymbol.startsWith('TRADE.') && coin_type.backingCoinType)
+            {
+                blocktradesBackedCoins.push({
+                    name: coins_by_type[coin_type.backingCoinType].name,
+                    walletType: coins_by_type[coin_type.backingCoinType].walletType,
+                    backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
+                    symbol: coin_type.walletSymbol
+                });
+            }});
+        return blocktradesBackedCoins;
     }
 
     toggleOLService(service) {
@@ -103,16 +125,16 @@ class AccountDepositWithdraw extends React.Component {
         let {account} = this.props;
         let {olService, btService, metaService} = this.state;
 
-        let blockTradesGatewayCoins = this.state.blockTradesCoins.filter(coin => {
+        let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
             if (coin.backingCoinType === "muse") {
                 return false;
             }
-            
             return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
         })
         .map(coin => {
             return coin;
-        });
+        })
+        .sort((a, b) => { return a.symbol > b.symbol; });
 
         return (
 		<div className={this.props.contained ? "grid-content" : "grid-container"}>

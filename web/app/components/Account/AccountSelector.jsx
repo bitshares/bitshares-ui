@@ -118,21 +118,21 @@ class AccountSelector extends React.Component {
                         <Translate component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
-                      <span className="inline-label">
-                      <input type="text"
-                             value={this.props.accountName || ""}
-                             placeholder={this.props.placeholder || counterpart.translate("account.name")}
-                             ref="user_input"
-                             onChange={this.onInputChanged.bind(this)}
-                             onKeyDown={this.onKeyDown.bind(this)}
-                             tabIndex={this.props.tabIndex}/>
-                          { this.props.children }
-                          { this.props.onAction ? (
-                              <button className={action_class}
-                                      onClick={this.onAction.bind(this)}>
-                                  <Translate content={this.props.action_label}/></button>
-                          ) : null }
-                      </span>
+                      <div className="inline-label">
+                          <input type="text"
+                                 value={this.props.accountName || ""}
+                                 placeholder={this.props.placeholder || counterpart.translate("account.name")}
+                                 ref="user_input"
+                                 onChange={this.onInputChanged.bind(this)}
+                                 onKeyDown={this.onKeyDown.bind(this)}
+                                 tabIndex={this.props.tabIndex}/>
+                              { this.props.children }
+                              { this.props.onAction ? (
+                                  <button className={action_class}
+                                          onClick={this.onAction.bind(this)}>
+                                      <Translate content={this.props.action_label}/></button>
+                              ) : null }
+                      </div>
                     </div>
                     <div className="error-area">
                         <span>{error}</span>

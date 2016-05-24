@@ -110,6 +110,12 @@ export default class Chat extends React.Component {
         );
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.footerVisible !== prevProps.footerVisible) {
+            this._scrollToBottom();
+        }
+    }
+
     componentWillMount() {
         this._connectToServer();
     }
@@ -145,7 +151,6 @@ export default class Chat extends React.Component {
                     open: false
                 });
             }
-
             if (err.message.indexOf("Could not get an ID from the server") !== -1) {
                 this.setState({
                     open: false,
@@ -214,7 +219,7 @@ export default class Chat extends React.Component {
             return this.connections.get(data.id).send({requestHistory: this._myID});
         }
 
-        if ("history" in data) {
+        if ("history" in data && data.history.length) {
             this.setState({
                 fetchingHistory: false,
                 hasFetchedHistory: true
@@ -224,6 +229,8 @@ export default class Chat extends React.Component {
                 this.state.messages.push(msg);
             });
             this.forceUpdate();
+
+            this._scrollToBottom();
         }
 
         if ("message" in data && data.user && data.color) {
@@ -245,6 +252,7 @@ export default class Chat extends React.Component {
 
     _onScroll(e) {
         let {scrollTop, scrollHeight, clientHeight} = this.refs.chatbox;
+
         let shouldScroll = scrollHeight - scrollTop <= clientHeight;
         if (shouldScroll !== this.state.shouldScroll) {
             this.setState({
@@ -609,8 +617,9 @@ export default class Chat extends React.Component {
                                 </div>
                             </div>
                         </div>) : (
-                        <div className="grid-block vertical no-overflow chatbox-content" ref="chatbox" onScroll={this._onScroll.bind(this)}>
-                            <div className="grid-content">
+
+                        <div className="grid-block vertical no-overflow chatbox-content"  onScroll={this._onScroll.bind(this)}>
+                            <div className="grid-content" ref="chatbox">
                                 {!showSettings ? <div>{messages}</div> : settings}
                             </div>
                         </div>)}
