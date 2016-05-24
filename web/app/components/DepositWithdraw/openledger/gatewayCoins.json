@@ -48,6 +48,12 @@
     "symbol": "OPEN.ETH"
   },
   {
+    "backingCoinType": "LISK",
+    "name": "Lisk",
+    "walletType": "lisk",
+    "symbol": "OPEN.LISK"
+  },
+  {
     "backingCoinType": "LTC",
     "name": "Litecoin",
     "walletType": "litecoin",
