@@ -51,7 +51,7 @@ import PrivateKeyActions from "actions/PrivateKeyActions";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import ChainStore from "api/ChainStore";
-import {BackupCreate, BackupVerify, BackupRestore} from "./components/Wallet/Backup";
+import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";

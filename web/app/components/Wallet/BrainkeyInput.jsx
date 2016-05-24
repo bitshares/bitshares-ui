@@ -46,11 +46,11 @@ export default class BrainkeyInput extends Component {
         }
         return (
             <span className="">
-                <div style={{width: '400px'}}>
+                <div>
                     <textarea onChange={this.formChange.bind(this)}
                         value={this.state.brnkey} id="brnkey"
-                        style={{width: '400px', height:'80px'}} />
-                    <div className="grid-block">{ checked_words }</div>
+                        style={{height: 60}} />
+                    <div style={{textAlign: "left"}} className="grid-content no-padding no-overflow">{ checked_words }</div>
                     { this.state.check_digits && ! this.props.hideCheckDigits ? <div>
                         <br/>
                         <pre className="no-overflow">{this.state.check_digits} * Check Digits</pre>

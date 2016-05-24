@@ -21,16 +21,16 @@ class ExistingAccount extends ExistingAccountBaseComponent {
     render() {
         var has_wallet = this.props.wallet.wallet_names.count() != 0
         return (
-            <div className="grid-block vertical">
+            <div className="grid-container">
                 <div className="grid-content">
                     <div className="content-block center-content">
                         <div className="page-header">
                             <h1><Translate content="account.welcome" /></h1>
                             {!has_wallet ?
-                                <h3><Translate content="wallet.create_wallet" /></h3> :
+                                <h3><Translate content="wallet.create_wallet_backup" /></h3> :
                                 <h3><Translate content="wallet.setup_wallet" /></h3>}
                         </div>
-                        <div className="content-block" style={{width: '24em'}}>
+                        <div className="content-block">
                             {this.props.children}
                         </div>
                     </div>
@@ -54,11 +54,7 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                     <hr/>
                 </div>:null}
 
-                { has_wallet ? <BalanceClaimActive/>:null}
-
-                {!has_wallet ? <div>
-                    <h6><Translate content="wallet.import_20_notice1" /><br/><Translate content="wallet.import_20_notice2" /></h6>
-                </div>:null}
+                {!has_wallet ? (null) : <BalanceClaimActive/>}
 
                 {has_wallet ? <span>
                     <Link to="dashboard"><div className="button outline">

@@ -88,7 +88,7 @@ export class BrainkeyInputAccept extends Component {
         var ready = this.state.brnkey && this.state.brnkey !== ""
         return (
             <span className="grid-container">
-                <div style={{width: '400px'}}>
+                <div>
                     <BrainkeyInput onChange={this.onBrainkeyChange.bind(this)}/>
                 </div>
                 <div className={cname("button success", {disabled: ! ready})}

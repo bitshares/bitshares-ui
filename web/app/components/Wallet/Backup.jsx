@@ -36,39 +36,40 @@ class BackupBaseComponent extends Component {
 @connectToStores
 export class BackupCreate extends BackupBaseComponent {
     render() {
-        return <span>
-
-            <h3><Translate content="wallet.create_backup" /></h3>
-
-            <Create>
+        return (
+            <div style={{maxWidth: "40rem"}}>
+            <Create newAccount={this.props.location.query.newAccount}>
                 <NameSizeModified/>
                 <Sha1/>
                 <Download/>
                 <Reset/>
             </Create>
             
-        </span>
+        </div>
+    );
     }
 }
 
 @connectToStores
 export class BackupVerify extends BackupBaseComponent {
     render() {
-        return <span>
+        return (
+            <div style={{maxWidth: "40rem"}}>
 
-            <h3><Translate content="wallet.verify_prior_backup" /></h3>
+                <h3><Translate content="wallet.verify_prior_backup" /></h3>
 
-            <Upload>
-                <NameSizeModified/>
-                <DecryptBackup saveWalletObject={true}>
-                    <h4><Translate content="wallet.verified" /></h4>
-                    <WalletObjectInspector
-                        walletObject={this.props.backup.wallet_object}/>
-                </DecryptBackup>
-                <Reset/>
-            </Upload>
+                <Upload>
+                    <NameSizeModified/>
+                    <DecryptBackup saveWalletObject={true}>
+                        <h4><Translate content="wallet.verified" /></h4>
+                        <WalletObjectInspector
+                            walletObject={this.props.backup.wallet_object}/>
+                    </DecryptBackup>
+                    <Reset/>
+                </Upload>
         
-        </span>
+            </div>
+        );
     }
 }
 
@@ -99,20 +100,21 @@ export class BackupRestore extends BackupBaseComponent {
         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
         var restored = has_new_wallet
         
-        return <span>
-
-            <h3><Translate content="wallet.import_backup" /></h3>
-            {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
-            <Upload>
-                <NameSizeModified/>
-                <DecryptBackup saveWalletObject={true}>
-                    <NewWalletName>
-                        <Restore/>
-                    </NewWalletName>
-                </DecryptBackup>
-                <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
-            </Upload>
-        </span>
+        return (
+            <div>
+                <Translate style={{textAlign: "left"}} component="p" content="wallet.import_backup_choose" />
+                {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
+                <Upload>
+                    <NameSizeModified/>
+                    <DecryptBackup saveWalletObject={true}>
+                        <NewWalletName>
+                            <Restore/>
+                        </NewWalletName>
+                    </DecryptBackup>
+                    <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
+                </Upload>
+            </div>
+        );
     }
     
 }
@@ -271,17 +273,28 @@ class Create extends BackupBaseComponent {
     }
     
     render() {
+
         var has_backup = !!this.props.backup.contents
         if( has_backup ) return <div>{this.props.children}</div>
         
         var ready = WalletDb.getWallet() != null
         
-        return <div>
-            <div onClick={this.onCreateBackup.bind(this)}
-                className={cname("button success", {disabled: !ready})}>
-                <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} /></div>
-            <LastBackupDate/>
-        </div>
+        return (
+            <div>
+                <div style={{textAlign: "left"}}>
+                    {this.props.newAccount ? <Translate component="p" content="wallet.backup_new_account"/> : null}
+                    <Translate component="p" content="wallet.backup_explain"/>
+                </div>
+                <div
+                    onClick={this.onCreateBackup.bind(this)}
+                    className={cname("button success", {disabled: !ready})}
+                    style={{marginBottom: 10}}
+                >
+                    <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} />
+                </div>
+                <LastBackupDate/>
+            </div>
+        );
     }
     
     onCreateBackup() {
@@ -300,11 +313,11 @@ class LastBackupDate extends Component {
         var last_modified = WalletDb.getWallet().last_modified
         var backup_time = backup_date ?
             <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
-            <h4><Translate content="wallet.never_backed_up" /></h4>
+            <Translate style={{paddingTop: 20}} className="facolor-error" component="p" content="wallet.never_backed_up" />
         var needs_backup = null
         if( backup_date ) {
             needs_backup = last_modified.getTime() > backup_date.getTime() ?
-                <h4><Translate content="wallet.need_backup" /></h4>:
+                <h4 className="facolor-error"><Translate content="wallet.need_backup" /></h4>:
                 <h4 className="success"><Translate content="wallet.noneed_backup" /></h4>
         }
         return <span>
