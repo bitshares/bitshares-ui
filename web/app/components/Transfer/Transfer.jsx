@@ -239,7 +239,6 @@ class Transfer extends React.Component {
             <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
                 <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                        <div>
                         <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
                         {/*  F R O M  */}
                         <div className="content-block">
@@ -323,7 +322,6 @@ class Transfer extends React.Component {
                                 </button>
                             </span>}
                         </div>
-                        </div>
                         {/* TODO: show remaining balance */}
 
                         </div>
@@ -336,6 +334,7 @@ class Transfer extends React.Component {
                             limit={25}
                             compactView={true}
                             filter="transfer"
+                            fullHeight={true}
                         />
                     </div>
                 </div>
