@@ -18,6 +18,12 @@
     "symbol": "OPEN.DASH"
   },
   {
+    "backingCoinType": "DAO",
+    "name": "The DAO",
+    "walletType": "ethereum",
+    "symbol": "OPEN.DAO"
+  },
+  {
     "backingCoinType": "DGD",
     "name": "Digix DGD",
     "walletType": "ethereum",
