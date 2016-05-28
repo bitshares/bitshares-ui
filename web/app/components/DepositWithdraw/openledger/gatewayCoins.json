@@ -18,6 +18,12 @@
     "symbol": "OPEN.DASH"
   },
   {
+    "backingCoinType": "DAO",
+    "name": "The DAO",
+    "walletType": "ethereum",
+    "symbol": "OPEN.DAO"
+  },
+  {
     "backingCoinType": "DGD",
     "name": "Digix DGD",
     "walletType": "ethereum",
@@ -46,6 +52,12 @@
     "name": "Ether",
     "walletType": "ethereum",
     "symbol": "OPEN.ETH"
+  },
+  {
+    "backingCoinType": "LISK",
+    "name": "Lisk",
+    "walletType": "lisk",
+    "symbol": "OPEN.LISK"
   },
   {
     "backingCoinType": "LTC",
