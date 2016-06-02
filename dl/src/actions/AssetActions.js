@@ -1,10 +1,10 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
+import {Apis} from "graphenejs-lib";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
 import ApplicationApi from "../rpc_api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import big from "bignumber.js";
 import assetConstants from "chain/asset_constants";
 

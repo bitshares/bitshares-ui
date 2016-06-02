@@ -13,6 +13,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import AssetName from "../Utility/AssetName";
 import Tabs, {Tab} from "../Utility/Tabs";
 import MarketLink from "../Utility/MarketLink";
+import {ChainStore} from "graphenejs-lib";
 
 class Assets extends React.Component {
 

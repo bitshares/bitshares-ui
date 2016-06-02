@@ -149,7 +149,7 @@ class DepositFiatOpenLedger extends React.Component {
                                onClick={this.onClose.bind(this)} 
                                value={counterpart.translate("account.perm.cancel")} />
                         {/* <Trigger close={this.props.modal_id}>
-                          <a href className="secondary button">Close</a>
+                          <a href className=" button">Close</a>
                         </Trigger> */}
                       </div>
                     </div> 
@@ -177,11 +177,11 @@ class DepositFiatOpenLedger extends React.Component {
                         <input type="submit" className="button" 
                                onClick={this.onSubmitDeposit.bind(this)} 
                                value={counterpart.translate("modal.deposit.submit")} />
-                        <input type="submit" className="secondary button" 
+                        <input type="submit" className=" button" 
                                onClick={this.onClose.bind(this)} 
                                value={counterpart.translate("account.perm.cancel")} />
                           {/* <Trigger close={this.props.modal_id}>
-                              <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                              <a href className=" button"><Translate content="account.perm.cancel" /></a>
                           </Trigger> */}
                       </div>
                     </div> 

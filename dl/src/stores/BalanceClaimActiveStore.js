@@ -1,18 +1,12 @@
 import alt from "alt-instance"
 import Immutable from "immutable"
-
-import Address from "ecc/address"
-import PublicKey from "ecc/key_public"
-import key from "common/key_utils"
 import BaseStore from "stores/BaseStore"
-import Apis from "rpc_api/ApiInstances"
+import {Apis, Address, PublicKey, key, ChainStore} from "graphenejs-lib";
 import iDB from "idb-instance"
-import config from "chain/config"
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletActions from "actions/WalletActions"
-import ChainStore from "api/ChainStore"
 
 class BalanceClaimActiveStore extends BaseStore {
     

@@ -3,7 +3,7 @@ import connectToStores from "alt/utils/connectToStores";
 import AccountStore from "stores/AccountStore";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
@@ -13,7 +13,7 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import {FetchChainObjects} from "api/ChainStore";
+import {FetchChainObjects} from "graphenejs-lib";;
 
 
 const PROD = true;

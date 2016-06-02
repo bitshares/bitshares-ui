@@ -4,7 +4,6 @@ import {Link, PropTypes} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
@@ -12,11 +11,12 @@ import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+let {operations} = require("graphenejs-lib").ChainTypes;
 
 require("./operations.scss");
 
@@ -143,7 +143,7 @@ class ProposedOperation extends React.Component {
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
                 column = (
-                    <span key={"transfer_" + this.props.key} className="right-td">
+                    <span className="right-td">
                         <TranslateWithLinks
                             string="proposal.transfer"
                             keys={[

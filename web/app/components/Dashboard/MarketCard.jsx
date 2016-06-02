@@ -2,7 +2,7 @@ import React from "react";
 import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import AssetName from "../Utility/AssetName";
 import assetUtils from "common/asset_utils";
 import cnames from "classnames";

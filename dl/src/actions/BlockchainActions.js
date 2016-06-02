@@ -1,5 +1,5 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
+import {Apis} from "graphenejs-lib";
 
 let subs = {
     globals: false

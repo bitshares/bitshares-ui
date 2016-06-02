@@ -76,7 +76,7 @@ class WebsocketAddModal extends React.Component {
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_add"}>
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
                 </form>
@@ -115,7 +115,7 @@ class WebsocketAddModal extends React.Component {
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_remove"}>
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
                 </form>

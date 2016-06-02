@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from "react-dom";
-import Apis from "rpc_api/ApiInstances"
+import {Apis} from "graphenejs-lib";
 import ApplicationApi from "rpc_api/ApplicationApi"
 import WalletApi from "rpc_api/WalletApi"
 import DebugApi from "rpc_api/DebugApi"

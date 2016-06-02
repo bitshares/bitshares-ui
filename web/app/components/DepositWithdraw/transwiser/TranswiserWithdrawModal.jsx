@@ -2,7 +2,7 @@ import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
 import BalanceComponent from "components/Utility/BalanceComponent";
@@ -130,7 +130,7 @@ class TranswiserWithdrawModal extends React.Component {
                             onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modalId}>
-                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                           <a href className=" button"><Translate content="account.perm.cancel" /></a>
                        </Trigger>
                    </div>
                  </div>

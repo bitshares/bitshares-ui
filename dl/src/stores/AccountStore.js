@@ -4,8 +4,7 @@ import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
-import validation from "common/validation"
-import ChainStore from "api/ChainStore"
+import {ChainStore, ChainValidation} from "graphenejs-lib";
 import AccountRefsStore from "stores/AccountRefsStore"
 import AddressIndex from "stores/AddressIndex"
 import SettingsStore from "stores/SettingsStore"
@@ -65,7 +64,6 @@ class AccountStore extends BaseStore {
     
     loadDbData() {
         var linkedAccounts = Immutable.Set().asMutable();
-        
         iDB.load_data("linked_accounts")
         .then(data => {
             for (let a of data) {
@@ -258,7 +256,7 @@ class AccountStore extends BaseStore {
         if(account.name == "" || this.state.linkedAccounts.get(account.name))
             return Promise.resolve()
         
-        if( ! validation.is_account_name(account.name))
+        if( ! ChainValidation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
         
         return iDB.add_to_store("linked_accounts", {name: account.name}).then(() => {
@@ -271,7 +269,7 @@ class AccountStore extends BaseStore {
     }
 
     onLinkAccount(name) {
-        if( ! validation.is_account_name(name, true))
+        if( ! ChainValidation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
         
         // Link
@@ -292,7 +290,7 @@ class AccountStore extends BaseStore {
     }
 
     onUnlinkAccount(name) {
-        if( ! validation.is_account_name(name, true))
+        if( ! ChainValidation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
         
         // Unlink

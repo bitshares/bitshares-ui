@@ -11,7 +11,7 @@ import AssetName from "../Utility/AssetName";
 import CollateralPosition from "../Blockchain/CollateralPosition";
 import RecentTransactions from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 

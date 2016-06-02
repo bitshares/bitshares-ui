@@ -1,5 +1,6 @@
 import React from "react";
 import {FormattedRelative} from "react-intl";
+import {ChainStore} from "graphenejs-lib";
 
 class TimeAgo extends React.Component {
 

@@ -2,17 +2,10 @@ import WalletDb from "stores/WalletDb"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import ApplicationApi from "../rpc_api/ApplicationApi"
-import PrivateKey from "../ecc/key_private"
-import Apis from "../rpc_api/ApiInstances"
-import ops from "../chain/signed_transaction"
-import chain_types from "../chain/chain_types"
-import lookup from "chain/lookup"
-import PublicKey from "ecc/key_public"
-import Address from "ecc/address"
+import {Apis, TransactionBuilder, PublicKey, FetchChain} from "graphenejs-lib"
 import alt from "alt-instance"
 import iDB from "idb-instance"
 import Immutable from "immutable"
-import config from "chain/config"
 import SettingsStore from "stores/SettingsStore"
 
 var application_api = new ApplicationApi()
@@ -127,7 +120,7 @@ class WalletActions {
     }
 
     claimVestingBalance(account, cvb) {
-        var tr = new ops.signed_transaction();
+        var tr = new TransactionBuilder();
 
         let balance = cvb.getIn(["balance", "amount"]),
             earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]),
@@ -163,12 +156,11 @@ class WalletActions {
             var db = Apis.instance().db_api()
             var address_publickey_map = {}
             
-            var account_lookup = lookup.account_id(account_name_or_id)
+            var account_lookup = FetchChain("getAccount", account_name_or_id);
             var unlock = WalletUnlockActions.unlock()
-            var plookup = lookup.resolve()
             
-            var p = Promise.all([ unlock, plookup ]).then( ()=> {
-                var account = account_lookup.resolve
+            var p = Promise.all([ unlock, account_lookup ]).then( (results)=> {
+                var account = results[1];
                 //DEBUG console.log('... account',account)
                 if(account == void 0)
                     return Promise.reject("Unknown account " + account_name_or_id)
@@ -213,7 +205,7 @@ class WalletActions {
                 }
                 
                 //DEBUG console.log('... balance_claims',balance_claims)
-                var tr = new ops.signed_transaction()
+                var tr = new TransactionBuilder();
                 
                 for(let balance_claim of balance_claims) {
                     tr.add_type_operation("balance_claim", balance_claim)

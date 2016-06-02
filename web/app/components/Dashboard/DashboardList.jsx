@@ -14,7 +14,7 @@ import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";

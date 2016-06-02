@@ -19,7 +19,7 @@ import {Link} from "react-router";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import {ChainStore, EmitterInstance} from "graphenejs-lib";
 import BindToChainState from "../Utility/BindToChainState";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountActions from "actions/AccountActions";
@@ -27,7 +27,6 @@ import SettingsActions from "actions/SettingsActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
-import ee from "emitter-instance";
 import market_utils from "common/market_utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
@@ -39,7 +38,7 @@ import Highcharts from "highcharts/highstock";
 
 require("./exchange.scss");
 
-let emitter = ee.emitter();
+let emitter = EmitterInstance.emitter();
 let callListener, limitListener, newCallListener, feedUpdateListener, settleOrderListener;
 let SATOSHI = 8;
 

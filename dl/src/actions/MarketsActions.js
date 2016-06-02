@@ -1,13 +1,12 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
-import {operations} from "chain/chain_types";
-import ChainStore from "api/ChainStore";
+import {Apis, ChainStore, ChainTypes} from "graphenejs-lib";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
 import Immutable from "immutable";
 
+let {operations} = ChainTypes;
 let ops = Object.keys(operations);
 
 let subs = {};

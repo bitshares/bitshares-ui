@@ -1,4 +1,4 @@
-import Apis from "rpc_api/ApiInstances"
+import {Apis} from "graphenejs-lib";
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 

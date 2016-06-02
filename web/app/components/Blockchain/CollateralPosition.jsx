@@ -8,6 +8,7 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
+import {ChainStore} from "graphenejs-lib";
 
 let wallet_api = new WalletApi();
 /**

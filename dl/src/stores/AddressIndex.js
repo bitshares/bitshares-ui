@@ -1,9 +1,8 @@
 import alt from "../alt-instance";
 import iDB from "../idb-instance";
-import key from "common/key_utils"
+import {key, ChainConfig} from "graphenejs-lib";
 import Immutable from "immutable"
 import BaseStore from "stores/BaseStore"
-import chain_config from "chain/config"
 
 class AddressIndex extends BaseStore {
     
@@ -53,7 +52,7 @@ class AddressIndex extends BaseStore {
             this.loadAddyMap().then( () => {
                 var AddressIndexWorker = require("worker!workers/AddressIndexWorker")
                 var worker = new AddressIndexWorker
-                worker.postMessage({ pubkeys, address_prefix: chain_config.address_prefix })
+                worker.postMessage({ pubkeys, address_prefix: ChainConfig.address_prefix })
                 var _this = this
                 worker.onmessage = event => { try {
                     var key_addresses = event.data

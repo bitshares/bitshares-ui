@@ -2,19 +2,15 @@ import alt from "alt-instance"
 import BaseStore from "stores/BaseStore"
 
 import iDB from "idb-instance";
-import Apis from "rpc_api/ApiInstances"
-import key from "common/key_utils";
 import idb_helper from "idb-helper";
 import _ from "lodash";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
-import PrivateKey from "ecc/key_private"
 import TransactionConfirmActions from "actions/TransactionConfirmActions"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import PrivateKeyActions from "actions/PrivateKeyActions"
-import chain_config from "chain/config"
-import ChainStore from "api/ChainStore"
+import {Apis, ChainStore, PrivateKey, ChainConfig, key, Aes} from "graphenejs-lib";
 import AddressIndex from "stores/AddressIndex"
 
 var aes_private
@@ -167,7 +163,7 @@ class WalletDb extends BaseStore {
     
     getBrainKeyPrivate(brainkey_plaintext = this.getBrainKey()) {
         if( ! brainkey_plaintext) throw new Error("missing brainkey")
-        return PrivateKey.fromSeed( key.normalize_brain_key(brainkey_plaintext) )
+        return PrivateKey.fromSeed( key.normalize_brainKey(brainkey_plaintext) )
     }
     
     onCreateWallet(
@@ -206,7 +202,7 @@ class WalletDb extends BaseStore {
             if( ! brainkey_plaintext)
                 brainkey_plaintext = key.suggest_brain_key()
             else
-                brainkey_plaintext = key.normalize_brain_key(brainkey_plaintext)
+                brainkey_plaintext = key.normalize_brainKey(brainkey_plaintext)
             var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
             var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
             var encrypted_brainkey = local_aes_private.encryptToHex( brainkey_plaintext )
@@ -298,7 +294,7 @@ class WalletDb extends BaseStore {
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead||0) + 1)
         for (var i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
-            var private_key = key.get_brainkey_private( brainkey, i )
+            var private_key = key.get_brainPrivateKey( brainkey, i )
             var pubkey =
                 this.generateNextKey_pubcache[i] ?
                 this.generateNextKey_pubcache[i] :
@@ -319,7 +315,7 @@ class WalletDb extends BaseStore {
             this._updateWallet()
         }
         sequence = wallet.brainkey_sequence
-        var private_key = key.get_brainkey_private( brainkey, sequence )
+        var private_key = key.get_brainPrivateKey( brainkey, sequence )
         if( save ) {
             // save deterministic private keys ( the user can delete the brainkey )
             this.saveKey( private_key, sequence )
@@ -370,8 +366,8 @@ class WalletDb extends BaseStore {
                         var public_key = private_key.toPublicKey() // S L O W
                         public_key_string = public_key.toPublicKeyString()
                     } else
-                        if(public_key_string.indexOf(chain_config.address_prefix) != 0)
-                            throw new Error("Public Key should start with " + chain_config.address_prefix)
+                        if(public_key_string.indexOf(ChainConfig.address_prefix) != 0)
+                            throw new Error("Public Key should start with " + ChainConfig.address_prefix)
                     
                     var private_key_object = {
                         import_account_names,
@@ -432,8 +428,8 @@ class WalletDb extends BaseStore {
             var public_key = private_key.toPublicKey()
             public_key_string = public_key.toPublicKeyString()
         } else 
-            if(public_key_string.indexOf(chain_config.address_prefix) != 0)
-                throw new Error("Public Key should start with " + chain_config.address_prefix)
+            if(public_key_string.indexOf(ChainConfig.address_prefix) != 0)
+                throw new Error("Public Key should start with " + ChainConfig.address_prefix)
         
         var private_key_object = {
             import_account_names,

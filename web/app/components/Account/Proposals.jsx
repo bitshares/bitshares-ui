@@ -7,6 +7,7 @@ import ChainTypes from "components/Utility/ChainTypes"
 import utils from "common/utils"
 import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
+import {ChainStore} from "graphenejs-lib";
 
 @BindToChainState({keep_updating: true})
 export default class Proposals extends Component {

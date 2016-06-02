@@ -13,9 +13,8 @@ import BackupActions, {backup, restore, decryptWalletBackup} from "actions/Backu
 import notify from "actions/NotificationActions"
 import {saveAs} from "common/filesaver.js"
 import cname from "classnames"
-import hash from "common/hash"
 import Translate from "react-translate-component";
-import chain_config from "chain/config"
+import {ChainConfig} from "graphenejs-lib";
 
 class BackupBaseComponent extends Component {
     
@@ -258,7 +257,7 @@ class Create extends BackupBaseComponent {
 
     getBackupName() {
         var name = this.props.wallet.current_wallet
-        var address_prefix = chain_config.address_prefix.toLowerCase()
+        var address_prefix = ChainConfig.address_prefix.toLowerCase()
         if(name.indexOf(address_prefix) !== 0)
             name = address_prefix + "_" + name
 

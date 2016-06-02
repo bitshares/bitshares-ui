@@ -4,7 +4,7 @@ var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
 import ls from "common/localStorage";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
 
 import {

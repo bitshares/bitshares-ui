@@ -7,7 +7,7 @@ import market_utils from "common/market_utils";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import LoadingIndicator from "../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import MarketLink from "../Utility/MarketLink";
 
 class AccountOrders extends React.Component {

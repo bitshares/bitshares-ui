@@ -1,8 +1,9 @@
+import {Apis, ChainStore} from "graphenejs-lib";
+
 import React from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, Redirect} from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
-import Apis from "rpc_api/ApiInstances";
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
 import Blocks from "./components/Explorer/BlocksContainer";
@@ -50,7 +51,6 @@ import WalletDb from "stores/WalletDb";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
-import ChainStore from "api/ChainStore";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword"
 import WalletManagerStore from "stores/WalletManagerStore";
@@ -70,7 +70,7 @@ import Chat from "./components/Chat/Chat";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 require("./assets/stylesheets/app.scss");
-require("dl_cli_index").init(window) // Adds some object refs to the global window object
+// require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
 let history = createBrowserHistory({queryKey: false})
 
@@ -243,14 +243,17 @@ class Auth extends React.Component {
 }
 
 let willTransitionTo = (nextState, replaceState, callback) => {
+
+    let connectionString = SettingsStore.getSetting("connection");
+
     if (nextState.location.pathname === "/init-error") {
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
         db.then(() => {
-            Apis.instance().init_promise.then(() => callback()).catch(() => callback());
+            Apis.instance(connectionString).init_promise.then(() => callback()).catch(() => callback());
         });
         return;
     }
-    Apis.instance().init_promise.then(() => {
+    Apis.instance(connectionString).init_promise.then(() => {
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
         return Promise.all([db]).then(() => {
             console.log("db init done");

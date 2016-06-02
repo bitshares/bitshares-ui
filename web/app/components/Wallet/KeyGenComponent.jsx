@@ -1,9 +1,7 @@
 import React from "react"
 import Webcam from "lib/react-webcam"
-import PrivateKey from "ecc/key_private"
+import {PrivateKey, key} from "graphenejs-lib";
 import qr from "common/qr-image"
-import hash from "common/hash"
-import key from "common/key_utils"
 
 class KeyGenComponent extends React.Component {
 

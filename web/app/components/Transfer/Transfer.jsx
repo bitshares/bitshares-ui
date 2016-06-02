@@ -11,7 +11,7 @@ import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import RecentTransactions from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 
 class Transfer extends React.Component {
 
@@ -313,7 +313,7 @@ class Transfer extends React.Component {
                                 <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
                                     <Translate component="span" content="propose" />
                                 </button>
-                                <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
+                                <button className=" button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
                                     <Translate component="span" content="cancel" />
                                 </button>
                             </span>:<span>

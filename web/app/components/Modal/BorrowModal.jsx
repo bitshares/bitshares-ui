@@ -16,6 +16,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
+import {ChainStore} from "graphenejs-lib";
 
 let wallet_api = new WalletApi();
 
@@ -320,7 +321,7 @@ class BorrowModalContent extends React.Component {
                     </form>
                     <div className="grid-content button-group text-center no-overflow">
                         <Trigger close={this.props.modalId}>
-                            <div href className="secondary button warning"><Translate content="account.perm.cancel" /></div>
+                            <div href className=" button warning"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </div>)
@@ -400,7 +401,7 @@ class BorrowModalContent extends React.Component {
                         <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
                         <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></div>
                         {/*<Trigger close={this.props.modalId}>
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>*/}
                     </div>
                 </form>

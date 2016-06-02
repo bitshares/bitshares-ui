@@ -1,9 +1,7 @@
 import utils from "./utils";
-import {
-    object_type
-}
-from "chain/chain_types";
-var opTypes = Object.keys(object_type);
+import {ChainStore, ChainTypes} from "graphenejs-lib";
+let {object_type} = ChainTypes;
+let opTypes = Object.keys(object_type);
 
 class MarketUtils {
     constructor() {
@@ -14,7 +12,7 @@ class MarketUtils {
         if (typeof id !== "string") {
             return false;
         }
-        var type = id.split(".")[1];
+        let type = id.split(".")[1];
         return opTypes[type];
     }
 

@@ -14,7 +14,6 @@ import utils from "common/utils";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
-import validation from "common/validation";
 import classnames from "classnames";
 import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";

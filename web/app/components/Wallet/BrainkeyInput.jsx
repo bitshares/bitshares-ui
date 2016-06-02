@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from "react"
 import cname from "classnames"
-import hash from "common/hash"
+import {hash, key} from "graphenejs-lib";
 import Translate from "react-translate-component";
 import dictionary from "common/dictionary_en"
 
@@ -49,7 +49,7 @@ export default class BrainkeyInput extends Component {
                 <div>
                     <textarea onChange={this.formChange.bind(this)}
                         value={this.state.brnkey} id="brnkey"
-                        style={{height: 60}} />
+                        style={{height: 100, minWidth: 450}} />
                     <div style={{textAlign: "left"}} className="grid-content no-padding no-overflow">{ checked_words }</div>
                     { this.state.check_digits && ! this.props.hideCheckDigits ? <div>
                         <br/>
@@ -67,7 +67,7 @@ export default class BrainkeyInput extends Component {
         var state = {}
         state[id] = value
         if(id === "brnkey") {
-            var brnkey = key.normalize_brain_key(value)
+            var brnkey = key.normalize_brainKey(value)
             this.props.onChange( brnkey.length < 50 ? null : brnkey )
             state.check_digits = brnkey.length < 50 ? null :
                 hash.sha1(brnkey).toString('hex').substring(0,4)

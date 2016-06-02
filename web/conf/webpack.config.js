@@ -28,7 +28,6 @@ module.exports = function(options) {
     // COMMON PLUGINS
     var plugins = [
         new webpack.optimize.DedupePlugin(),
-        new Clean(cleanDirectories),
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(git.tag())
         })
@@ -40,6 +39,7 @@ module.exports = function(options) {
         scssLoaders = extractForProduction(scssLoaders);
 
         // PROD PLUGINS
+        plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}));
         plugins.push(new ExtractTextPlugin("app.css"));
         plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
@@ -121,7 +121,7 @@ module.exports = function(options) {
         "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "lzma", "bytebuffer", "lodash"
+        "immutable", "lzma", "bytebuffer", "lodash", "graphenejs-lib"
     ];
 
     return config;
