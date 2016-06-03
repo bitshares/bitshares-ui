@@ -2,7 +2,8 @@ var numeral = require("numeral");
 
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-var {object_type, operations} = require("graphenejs-lib").ChainTypes;
+import {ChainTypes} from "graphenejs-lib";
+var {object_type, operations} = ChainTypes;
 
 var Utils = {
     get_object_id: (obj_id) => {

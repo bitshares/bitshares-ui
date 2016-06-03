@@ -6,7 +6,7 @@
   "author": "Cryptonomex, Inc.",
   "license": "LicenseRef-LICENSE",
   "engines": {
-    "node": ">=4.0.0",
+    "node": ">=5.0.0",
     "npm": ">=3.0.0"
   },
   "repository": {
@@ -31,11 +31,11 @@
     "event-emitter": "^0.3.4",
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
     "git-rev-sync": "^1.4.0",
-    "graphenejs-lib": "git+https://github.com/svk31/graphenejs-lib.git",
+    "graphenejs-lib": "^0.2.1",
     "highcharts": "^4.2.3",
     "history": "1.13.1",
     "html-loader": "^0.3.0",
-    "immutable": "^3.7.6",
+    "immutable": "^3.8.1",
     "indexeddbshim": "^2.0.4",
     "intl": "^1.1.0",
     "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
@@ -82,6 +82,7 @@
     "file-loader": "^0.8.4",
     "jest-cli": "~0.4.1",
     "json-loader": "^0.5.3",
+    "mocha": "^2.5.3",
     "node-sass": "^3.4.1",
     "postcss-loader": "^0.8.2",
     "react-transform-catch-errors": "^1.0.0",
@@ -94,7 +95,7 @@
     "svg-inline-loader": "^0.3.0",
     "svgo-loader": "^1.1.0",
     "url-loader": "^0.5.6",
-    "webpack": "^1.12.15",
+    "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
     "worker-loader": "^0.6.0"
   },

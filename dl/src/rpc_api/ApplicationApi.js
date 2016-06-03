@@ -1,5 +1,3 @@
-let Long = require('bytebuffer').Long;
-
 import WalletUnlockActions from "../actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
 import {Aes, ChainValidation, key, TransactionBuilder, TransactionHelper, FetchChain} from "graphenejs-lib";

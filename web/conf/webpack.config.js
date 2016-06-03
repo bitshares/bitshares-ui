@@ -67,7 +67,7 @@ module.exports = function(options) {
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "source-map" : "eval",
+        devtool: options.prod ? "source-map" : "inline-eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [
