@@ -3,8 +3,9 @@ secureRandom = require 'secure-random'
 
 WalletDb = require "stores/WalletDb"
 AccountActions = require "actions/AccountActions"
-PrivateKey = require "ecc/key_private"
 PrivateKeyStore = require "stores/PrivateKeyStore"
+
+var {PrivateKey} = require("graphenejs-lib");
 
 # register listener
 require "stores/WalletUnlockStore"
