@@ -17,7 +17,7 @@ import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
-import {debounce} from "lodash";
+import debounce from "lodash.debounce";
 
 let lastLookup = new Date();
 
@@ -287,7 +287,7 @@ class MyMarkets extends React.Component {
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
-        this.getAssetList = _.debounce(AssetActions.getAssetList, 150);
+        this.getAssetList = debounce(AssetActions.getAssetList, 150);
     }
 
     shouldComponentUpdate(nextProps, nextState) {

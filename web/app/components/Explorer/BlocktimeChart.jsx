@@ -2,7 +2,7 @@
 import React from "react";
 var Highcharts = require("highcharts/highstock");
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
-import {takeRight} from "lodash";
+import takeRight from "lodash.takeright";
 import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {

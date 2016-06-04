@@ -5,7 +5,7 @@ import ChainTypes from "components/Utility/ChainTypes"
 import BindToChainState from "components/Utility/BindToChainState"
 import Immutable from "immutable"
 import AccountStore from "stores/AccountStore"
-import {pairs} from "lodash"
+import pairs from "lodash.pairs"
 
 @connectToStores
 export class ResolveLinkedAccounts extends Component {

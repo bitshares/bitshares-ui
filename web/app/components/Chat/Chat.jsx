@@ -4,7 +4,7 @@ import AccountStore from "stores/AccountStore";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "graphenejs-lib";
-import {debounce} from "lodash";
+import debounce from "lodash.debounce";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import Peer from "peerjs";

@@ -8,7 +8,7 @@ import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
 import Immutable from "immutable";
 import AssetActions from "actions/AssetActions";
-import {debounce} from "lodash";
+import debounce from "lodash.debounce";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LoadingIndicator from "../LoadingIndicator";

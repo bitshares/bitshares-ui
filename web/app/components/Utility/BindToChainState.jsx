@@ -1,5 +1,13 @@
 import React from "react";
-import {curry, flow, reject, clone, pairs, filter, omit, get, pick} from "lodash";
+import curry from "lodash.curry";
+import flow from "lodash.flow";
+import reject from "lodash.reject";
+import clone from "lodash.clone";
+import pairs from "lodash.pairs";
+import filter from "lodash.filter";
+import omit from "lodash.omit";
+import get from "lodash.get";
+import pick from "lodash.pick";
 import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";

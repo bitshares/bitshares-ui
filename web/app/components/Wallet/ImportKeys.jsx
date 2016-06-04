@@ -69,7 +69,6 @@ export default class ImportKeys extends Component {
     }
             
     onWif(event) {
-        debugger;
         event.preventDefault();
         var value = this.refs.wifInput.value;
         this.addByPattern(value)

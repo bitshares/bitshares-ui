@@ -6,7 +6,7 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import pu from "common/permission_utils";
-import {cloneDeep} from "lodash";
+import cloneDeep from "lodash.clonedeep";
 import {ChainStore} from "graphenejs-lib";
 
 @BindToChainState()

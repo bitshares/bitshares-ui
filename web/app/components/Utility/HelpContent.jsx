@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes} from "react-router";
-import {reduce, zipObject} from "lodash";
+import reduce from "lodash.reduce"
+import zipObject from "lodash.zipobject"
 import counterpart from "counterpart";
 import utils from "common/utils";
 
