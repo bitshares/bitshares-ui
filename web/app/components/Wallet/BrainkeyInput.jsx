@@ -2,22 +2,40 @@ import React, {PropTypes, Component} from "react"
 import cname from "classnames"
 import {hash, key} from "graphenejs-lib";
 import Translate from "react-translate-component";
-import dictionary from "common/dictionary_en"
 
-var dictionary_set = new Set(dictionary.split(','))
+var dictionary_set;
 
 export default class BrainkeyInput extends Component {
     
     static propTypes = {
         onChange: PropTypes.func.isRequired
-    }
+    };
     
     constructor() {
-        super()
-        this.state = { brnkey: "" }
+        super();
+        this.state = {
+            brnkey: "",
+            loading: true
+        }
+    }
+
+    componentWillMount() {
+        fetch("/dictionary.json").then( (reply) => {
+            return reply.json().then(result => {
+                dictionary_set = new Set(result.en.split(','));
+                this.setState({
+                    loading: false
+                });
+        })})
+        .catch(err => {
+            console.log("fetch dictionary error:", err);
+        });
     }
     
     render() {
+        if (this.state.loading || !dictionary_set) {
+            return <div style={{padding: 20}}>Fetching dictionary....</div>
+        }
         var spellcheck_words = this.state.brnkey.split(" ")
         var checked_words = []
         spellcheck_words.forEach( (word, i) => {

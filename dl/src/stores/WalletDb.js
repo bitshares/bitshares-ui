@@ -3,7 +3,7 @@ import BaseStore from "stores/BaseStore"
 
 import iDB from "idb-instance";
 import idb_helper from "idb-helper";
-import _ from "lodash";
+import cloneDeep from "lodash.clonedeep";
 
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import {WalletTcomb, PrivateKeyTcomb} from "./tcomb_structs";
@@ -20,7 +20,7 @@ var TRACE = false
 
 /** Represents a single wallet and related indexedDb database operations. */
 class WalletDb extends BaseStore {
-    
+
     constructor() {
         super()
         this.state = { wallet: null, saving_keys: false }
@@ -35,7 +35,7 @@ class WalletDb extends BaseStore {
             "importKeysWorker"
         )
     }
-    
+
     /** Discover derived keys that are not in this wallet */
     checkNextGeneratedKey() {
         if( ! this.state.wallet) return
@@ -48,26 +48,26 @@ class WalletDb extends BaseStore {
         try { this.generateNextKey( false /*save*/ ) } catch(e) {
             console.error(e) }
     }
-    
+
     getWallet() {
         return this.state.wallet
     }
-    
+
     onLock() {
         aes_private = null
     }
-    
+
     isLocked() {
         return aes_private ? false : true
     }
-    
+
     decryptTcomb_PrivateKey(private_key_tcomb) {
         if( ! private_key_tcomb) return null
         if( ! aes_private) throw new Error("wallet locked")
         var private_key_hex = aes_private.decryptHex(private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
     }
-    
+
     /** @return ecc/PrivateKey or null */
     getPrivateKey(public_key) {
         if(! public_key) return null
@@ -76,13 +76,13 @@ class WalletDb extends BaseStore {
         if(! private_key_tcomb) return null
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
-    
+
     process_transaction(tr, signer_pubkeys, broadcast) {
         if(Apis.instance().chain_id !== this.state.wallet.chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.state.wallet.chain_id + ", but got " +
                 Apis.instance().chain_id)
-        
+
         return WalletUnlockActions.unlock().then( () => {
             return tr.set_required_fees().then(()=> {
                 var signer_pubkeys_added = {}
@@ -131,28 +131,28 @@ class WalletDb extends BaseStore {
                         }
                         else
                             return tr.broadcast()
-                        
+
                     } else
                         return tr.serialize()
                 })
             })
         })
     }
-    
+
     transaction_update() {
         var transaction = iDB.instance().db().transaction(
             ["wallet"], "readwrite"
         )
         return transaction
     }
-    
+
     transaction_update_keys() {
         var transaction = iDB.instance().db().transaction(
             ["wallet", "private_keys"], "readwrite"
         )
         return transaction
     }
-    
+
     getBrainKey() {
         var wallet = this.state.wallet
         if ( ! wallet.encrypted_brainkey) throw new Error("missing brainkey")
@@ -160,80 +160,88 @@ class WalletDb extends BaseStore {
         var brainkey_plaintext = aes_private.decryptHexToText( wallet.encrypted_brainkey )
         return brainkey_plaintext
     }
-    
+
     getBrainKeyPrivate(brainkey_plaintext = this.getBrainKey()) {
         if( ! brainkey_plaintext) throw new Error("missing brainkey")
         return PrivateKey.fromSeed( key.normalize_brainKey(brainkey_plaintext) )
     }
-    
+
     onCreateWallet(
         password_plaintext,
         brainkey_plaintext,
         unlock = false,
         public_name = "default"
     ) {
-        return new Promise( (resolve, reject) => {
-            if( typeof password_plaintext !== 'string')
-                throw new Error("password string is required")
-            
-            var brainkey_backup_date
-            if(brainkey_plaintext) {
-                if(typeof brainkey_plaintext !== "string")
-                    throw new Error("Brainkey must be a string")
-                
-                if(brainkey_plaintext.trim() === "")
-                    throw new Error("Brainkey can not be an empty string")
-            
-                if(brainkey_plaintext.length < 50)
-                    throw new Error("Brainkey must be at least 50 characters long")
+        let dictionaryPromise = brainkey_plaintext ? null : fetch("/dictionary.json");
+        return Promise.all([
+            dictionaryPromise
+        ]).then(res => {
+            return res[0].json().then(dictionary => {
+                return new Promise( (resolve, reject) => {
+                    if( typeof password_plaintext !== 'string')
+                        throw new Error("password string is required")
 
-                // The user just provided the Brainkey so this avoids
-                // bugging them to back it up again.
-                brainkey_backup_date = new Date()
-            }
-            var password_aes = Aes.fromSeed( password_plaintext )
-            
-            var encryption_buffer = key.get_random_key().toBuffer()
-            // encryption_key is the global encryption key (does not change even if the passsword changes)
-            var encryption_key = password_aes.encryptToHex( encryption_buffer )
-            // If unlocking, local_aes_private will become the global aes_private object
-            var local_aes_private = Aes.fromSeed( encryption_buffer )
-            
-            if( ! brainkey_plaintext)
-                brainkey_plaintext = key.suggest_brain_key()
-            else
-                brainkey_plaintext = key.normalize_brainKey(brainkey_plaintext)
-            var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
-            var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
-            var encrypted_brainkey = local_aes_private.encryptToHex( brainkey_plaintext )
-            
-            var password_private = PrivateKey.fromSeed( password_plaintext )
-            var password_pubkey = password_private.toPublicKey().toPublicKeyString()
-            
-            let wallet = {
-                public_name,
-                password_pubkey,
-                encryption_key,
-                encrypted_brainkey,
-                brainkey_pubkey,
-                brainkey_sequence: 0,
-                brainkey_backup_date,
-                created: new Date(),
-                last_modified: new Date(),
-                chain_id: Apis.instance().chain_id
-            }
-            WalletTcomb(wallet) // validation
-            var transaction = this.transaction_update()
-            var add = idb_helper.add( transaction.objectStore("wallet"), wallet )
-            var end = idb_helper.on_transaction_end(transaction).then( () => {
-                this.state.wallet = wallet
-                this.setState({ wallet })
-                if(unlock) aes_private = local_aes_private
+                    var brainkey_backup_date
+                    if(brainkey_plaintext) {
+                        if(typeof brainkey_plaintext !== "string")
+                            throw new Error("Brainkey must be a string")
+
+                        if(brainkey_plaintext.trim() === "")
+                            throw new Error("Brainkey can not be an empty string")
+
+                        if(brainkey_plaintext.length < 50)
+                            throw new Error("Brainkey must be at least 50 characters long")
+
+                        // The user just provided the Brainkey so this avoids
+                        // bugging them to back it up again.
+                        brainkey_backup_date = new Date()
+                    }
+                    var password_aes = Aes.fromSeed( password_plaintext )
+
+                    var encryption_buffer = key.get_random_key().toBuffer()
+                    // encryption_key is the global encryption key (does not change even if the passsword changes)
+                    var encryption_key = password_aes.encryptToHex( encryption_buffer )
+                    // If unlocking, local_aes_private will become the global aes_private object
+                    var local_aes_private = Aes.fromSeed( encryption_buffer )
+
+                    if( ! brainkey_plaintext)
+                        brainkey_plaintext = key.suggest_brain_key(dictionary.en)
+                    else
+                        brainkey_plaintext = key.normalize_brainKey(brainkey_plaintext)
+                    var brainkey_private = this.getBrainKeyPrivate( brainkey_plaintext )
+                    var brainkey_pubkey = brainkey_private.toPublicKey().toPublicKeyString()
+                    var encrypted_brainkey = local_aes_private.encryptToHex( brainkey_plaintext )
+
+                    var password_private = PrivateKey.fromSeed( password_plaintext )
+                    var password_pubkey = password_private.toPublicKey().toPublicKeyString()
+
+                    let wallet = {
+                        public_name,
+                        password_pubkey,
+                        encryption_key,
+                        encrypted_brainkey,
+                        brainkey_pubkey,
+                        brainkey_sequence: 0,
+                        brainkey_backup_date,
+                        created: new Date(),
+                        last_modified: new Date(),
+                        chain_id: Apis.instance().chain_id
+                    }
+                    WalletTcomb(wallet) // validation
+                    var transaction = this.transaction_update()
+                    var add = idb_helper.add( transaction.objectStore("wallet"), wallet )
+                    var end = idb_helper.on_transaction_end(transaction).then( () => {
+                        this.state.wallet = wallet
+                        this.setState({ wallet })
+                        if(unlock) aes_private = local_aes_private
+                    })
+                    resolve( Promise.all([ add, end ]) )
+                })
             })
-            resolve( Promise.all([ add, end ]) )
+
         })
     }
-    
+
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false ) {
         var wallet = this.state.wallet
@@ -245,33 +253,33 @@ class WalletDb extends BaseStore {
                 var password_aes = Aes.fromSeed( password )
                 var encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
                 aes_private = Aes.fromSeed( encryption_plainbuffer )
-            }                 
+            }
             return true
         } catch(e) {
             console.error(e)
             return false
         }
     }
-    
+
     /** This may lock the wallet unless <b>unlock</b> is used. */
     changePassword( old_password, new_password, unlock = false ) {
         return new Promise( resolve => {
             var wallet = this.state.wallet
             if( ! this.validatePassword( old_password ))
                 throw new Error("wrong password")
-            
+
             var old_password_aes = Aes.fromSeed( old_password )
             var new_password_aes = Aes.fromSeed( new_password )
-            
+
             if( ! wallet.encryption_key)
                 // This change pre-dates the live chain..
                 throw new Error("This wallet does not support the change password feature.")
             var encryption_plainbuffer = old_password_aes.decryptHexToBuffer( wallet.encryption_key )
             wallet.encryption_key = new_password_aes.encryptToHex( encryption_plainbuffer )
-            
+
             var new_password_private = PrivateKey.fromSeed( new_password )
             wallet.password_pubkey = new_password_private.toPublicKey().toPublicKeyString()
-            
+
             if( unlock ) {
                 aes_private = Aes.fromSeed( encryption_plainbuffer )
             } else {
@@ -281,7 +289,7 @@ class WalletDb extends BaseStore {
             resolve( this.setWalletModified() )
         })
     }
-    
+
     /** @throws "missing brainkey", "wallet locked"
         @return { private_key, sequence }
     */
@@ -300,12 +308,12 @@ class WalletDb extends BaseStore {
                 this.generateNextKey_pubcache[i] :
                 this.generateNextKey_pubcache[i] =
                 private_key.toPublicKey().toPublicKeyString()
-            
+
             var next_key = ChainStore.getAccountRefsOfKey( pubkey )
             // TODO if ( next_key === undefined ) return undefined
             if(next_key && next_key.size) {
                 used_sequence = i
-                console.log("WARN: Private key sequence " + used_sequence + " in-use. " + 
+                console.log("WARN: Private key sequence " + used_sequence + " in-use. " +
                     "I am saving the private key and will go onto the next one.")
                 this.saveKey( private_key, used_sequence )
             }
@@ -324,7 +332,7 @@ class WalletDb extends BaseStore {
         }
         return { private_key, sequence }
     }
-    
+
     incrementBrainKeySequence( transaction ) {
         var wallet = this.state.wallet
         // increment in RAM so this can't be out-of-sync
@@ -333,14 +341,14 @@ class WalletDb extends BaseStore {
         return this._updateWallet( transaction )
         //TODO .error( error => ErrorStore.onAdd( "wallet", "incrementBrainKeySequence", error ))
     }
-    
+
     importKeysWorker(private_key_objs) {
         return new Promise( (resolve, reject) => {
             var pubkeys = []
             for(let private_key_obj of private_key_objs)
                 pubkeys.push( private_key_obj.public_key_string )
             var addyIndexPromise = AddressIndex.addAll(pubkeys)
-            
+
             var private_plainhex_array = []
             for(let private_key_obj of private_key_objs)
                 private_plainhex_array.push( private_key_obj.private_plainhex )
@@ -368,7 +376,7 @@ class WalletDb extends BaseStore {
                     } else
                         if(public_key_string.indexOf(ChainConfig.address_prefix) != 0)
                             throw new Error("Public Key should start with " + ChainConfig.address_prefix)
-                    
+
                     var private_key_object = {
                         import_account_names,
                         encrypted_key: private_cipherhex,
@@ -398,7 +406,7 @@ class WalletDb extends BaseStore {
             } catch( e ) { console.error('AesWorker.encrypt', e) }}
         })
     }
-    
+
     saveKeys(private_keys, transaction, public_key_string) {
         var promises = []
         for(let private_key_record of private_keys) {
@@ -412,7 +420,7 @@ class WalletDb extends BaseStore {
         }
         return Promise.all(promises)
     }
-    
+
     saveKey(
         private_key,
         brainkey_sequence,
@@ -427,10 +435,10 @@ class WalletDb extends BaseStore {
             // console.log('WARN: public key was not provided, this may incur slow performance')
             var public_key = private_key.toPublicKey()
             public_key_string = public_key.toPublicKeyString()
-        } else 
+        } else
             if(public_key_string.indexOf(ChainConfig.address_prefix) != 0)
                 throw new Error("Public Key should start with " + ChainConfig.address_prefix)
-        
+
         var private_key_object = {
             import_account_names,
             encrypted_key: private_cipherhex,
@@ -445,23 +453,23 @@ class WalletDb extends BaseStore {
         })
         return p1
     }
-    
+
     setWalletModified(transaction) {
         return this._updateWallet( transaction )
     }
-    
+
     setBackupDate() {
         var wallet = this.state.wallet
         wallet.backup_date = new Date()
         return this._updateWallet()
     }
-    
+
     setBrainkeyBackupDate() {
         var wallet = this.state.wallet
         wallet.brainkey_backup_date = new Date()
         return this._updateWallet()
     }
-    
+
     /** Saves wallet object to disk.  Always updates the last_modified date. */
     _updateWallet(transaction = this.transaction_update()) {
         var wallet = this.state.wallet
@@ -470,11 +478,11 @@ class WalletDb extends BaseStore {
             return
         }
         //DEBUG console.log('... wallet',wallet)
-        var wallet_clone = _.cloneDeep( wallet )
+        var wallet_clone = cloneDeep( wallet )
         wallet_clone.last_modified = new Date()
-        
+
         WalletTcomb(wallet_clone) // validate
-        
+
         var wallet_store = transaction.objectStore("wallet")
         var p = idb_helper.on_request_end( wallet_store.put(wallet_clone) )
         var p2 = idb_helper.on_transaction_end( transaction  ).then( () => {
@@ -501,7 +509,7 @@ class WalletDb extends BaseStore {
             return false //stop iterating
         });
     }
-    
+
 }
 
 export var WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
