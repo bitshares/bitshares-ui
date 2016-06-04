@@ -28,6 +28,7 @@ module.exports = function(options) {
     // COMMON PLUGINS
     var plugins = [
         new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(git.tag())
         })
@@ -40,9 +41,23 @@ module.exports = function(options) {
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}));
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}})),
         plugins.push(new ExtractTextPlugin("app.css"));
-        plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
+        if (!options.noUgly) {
+            plugins.push(new webpack.optimize.UglifyJsPlugin({
+                warnings: false,
+                dead_code: true,
+                sequences: true,
+                join_vars: true,
+                minimize: true,
+                sourceMap: false,
+                compress: true,
+                drop_debugger: true,
+                booleans: true,
+                conditionals: true,
+                output: {screw_ie8: true}
+            }));
+        }
         plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
@@ -67,7 +82,7 @@ module.exports = function(options) {
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "source-map" : "inline-eval",
+        devtool: options.prod ? "source-map" : "eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [
@@ -82,7 +97,13 @@ module.exports = function(options) {
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
-                { test: /\.json/, loader: "json" },
+                { 
+                    test: /\.json/, loader: "json",
+                    exclude: [
+                        path.resolve(root_dir, "../dl/src/common"),
+                        path.resolve(root_dir, "app/assets/locales")
+                    ] 
+                },
                 { test: /\.coffee$/, loader: "coffee-loader" },
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
                 { test: /\.css$/, loader: cssLoaders },
@@ -99,7 +120,6 @@ module.exports = function(options) {
             }
         },
         resolve: {
-            alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
             root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
@@ -121,7 +141,7 @@ module.exports = function(options) {
         "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
         "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
         "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "lzma", "bytebuffer", "lodash", "graphenejs-lib"
+        "immutable", "graphenejs-lib"
     ];
 
     return config;

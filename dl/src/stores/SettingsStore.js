@@ -2,7 +2,7 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 var IntlActions = require("../actions/IntlActions");
 var Immutable = require("immutable");
-import {merge} from "lodash";
+import merge from "lodash.merge"
 import ls from "common/localStorage";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
@@ -254,7 +254,7 @@ class SettingsStore {
         }
     }
 
-    onSwitchLocale(locale) {
+    onSwitchLocale({locale}) {
         console.log("onSwitchLocale:", locale);
 
         this.onChangeSetting({setting: "locale", value: locale});
