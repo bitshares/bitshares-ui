@@ -1,6 +1,6 @@
 import React from "react";
 import HelpContent from "./Utility/HelpContent";
-import pairs from "lodash.pairs";
+import {pairs} from "lodash";
 
 class Help extends React.Component {
 

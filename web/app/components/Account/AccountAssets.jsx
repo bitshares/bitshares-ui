@@ -12,7 +12,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import utils from "common/utils";
 import AutocompleteInput from "../Forms/AutocompleteInput";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
 import classnames from "classnames";
 import counterpart from "counterpart";

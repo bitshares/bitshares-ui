@@ -45,24 +45,26 @@ module.exports = function(options) {
         plugins.push(new ExtractTextPlugin("app.css"));
         if (!options.noUgly) {
             plugins.push(new webpack.optimize.UglifyJsPlugin({
-                warnings: false,
-                dead_code: true,
-                sequences: true,
-                join_vars: true,
                 minimize: true,
-                sourceMap: false,
-                compress: true,
-                drop_debugger: true,
-                booleans: true,
-                conditionals: true,
-                output: {screw_ie8: true}
+                sourceMap: true,
+                compress: {
+                    warnings: true
+                },
+                output: {
+                    screw_ie8: true
+                }
             }));
         }
-        plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
+
+        // plugins.push(new webpack.optimize.CommonsChunkPlugin({
+        //     names: ["app", "vendors"],
+        //     filename: "vendors.js"
+        // }));
+
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"development"'}}));
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('development')}})),
         plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
@@ -82,7 +84,7 @@ module.exports = function(options) {
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "source-map" : "eval",
+        devtool: options.prod ? "cheap-module-source-map" : "eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [
@@ -137,12 +139,12 @@ module.exports = function(options) {
         }
     };
 
-    if(options.prod) config.entry.vendors = [
-        "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
-        "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-        "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "graphenejs-lib"
-    ];
+    // if(options.prod) config.entry.vendors = [
+    //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
+    //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
+    //     "whatwg-fetch", "alt", "react-json-inspector",
+    //     "immutable", "graphenejs-lib"
+    // ];
 
     return config;
 

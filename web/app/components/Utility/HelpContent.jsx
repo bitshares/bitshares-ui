@@ -1,7 +1,6 @@
 import React from "react";
 import {PropTypes} from "react-router";
-import reduce from "lodash.reduce"
-import zipObject from "lodash.zipobject"
+import {reduce, zipObject} from "lodash"
 import counterpart from "counterpart";
 import utils from "common/utils";
 
@@ -35,16 +34,6 @@ function adjust_links(str) {
     });
 }
 
-req.keys().forEach(function(filename) {
-    var res = filename.match(/\/(.+?)\/(.+)\./);
-    let locale = res[1];
-    let key = res[2];
-    let help_locale = HelpData[locale];
-    if (!help_locale) HelpData[locale] = help_locale = {};
-    let content = req(filename);
-    help_locale[key] = split_into_sections(adjust_links(content));
-});
-
 //console.log("-- HelpData -->", HelpData);
 
 class HelpContent extends React.Component {
@@ -52,15 +41,29 @@ class HelpContent extends React.Component {
     static propTypes = {
         path: React.PropTypes.string.isRequired,
         section: React.PropTypes.string
-    }
+    };
 
     static contextTypes = {
         history: PropTypes.history
-    }
+    };
 
     constructor(props) {
         super(props);
         window._onClickLink = this.onClickLink.bind(this);
+    }
+
+    componentWillMount() {
+        let locale = this.props.locale || counterpart.getLocale() || "en";
+
+        req.keys().filter(a => {return a.indexOf(`/${locale}/`) !== -1;}).forEach(function(filename) {
+            var res = filename.match(/\/(.+?)\/(.+)\./);
+            let locale = res[1];
+            let key = res[2];
+            let help_locale = HelpData[locale];
+            if (!help_locale) HelpData[locale] = help_locale = {};
+            let content = req(filename);
+            help_locale[key] = split_into_sections(adjust_links(content));
+        });
     }
 
     onClickLink(e) {

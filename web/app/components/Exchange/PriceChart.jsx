@@ -4,7 +4,7 @@ import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
-import cloneDeep from "lodash.clonedeep";
+import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 

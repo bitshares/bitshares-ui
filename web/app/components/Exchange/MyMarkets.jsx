@@ -17,7 +17,7 @@ import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
-import debounce from "lodash.debounce";
+import {debounce} from "lodash";
 
 let lastLookup = new Date();
 
