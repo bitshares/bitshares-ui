@@ -40,7 +40,7 @@ import IntlActions from "actions/IntlActions";
 import MobileMenu from "components/Layout/MobileMenu";
 import LoadingIndicator from "./components/LoadingIndicator";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
-import WalletUnlockModal from "./components/Wallet/WalletUnlockModal"
+import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
 import iDB from "idb-instance";
@@ -52,7 +52,7 @@ import PrivateKeyActions from "actions/PrivateKeyActions";
 import ReactTooltip from "react-tooltip";
 import Invoice from "./components/Transfer/Invoice";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
-import WalletChangePassword from "./components/Wallet/WalletChangePassword"
+import WalletChangePassword from "./components/Wallet/WalletChangePassword";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
@@ -62,7 +62,7 @@ import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
-import createBrowserHistory from 'history/lib/createHashHistory';
+import createBrowserHistory from "history/lib/createHashHistory";
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
@@ -72,7 +72,7 @@ require("./components/Utility/Prototypes"); // Adds a .equals method to Array fo
 require("./assets/stylesheets/app.scss");
 // require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
-let history = createBrowserHistory({queryKey: false})
+let history = createBrowserHistory({queryKey: false});
 
 class App extends React.Component {
 
@@ -91,13 +91,13 @@ class App extends React.Component {
         SettingsStore.unlisten(this._onSettingsChange);
     }
 
-    componentDidMount() { 
+    componentDidMount() {
         try {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
 
             Promise.all([
-                AccountStore.loadDbData()            
+                AccountStore.loadDbData()
             ]).then(() => {
                 AccountStore.tryToSetCurrentAccount();
                 this.setState({loading: false});
@@ -165,7 +165,7 @@ class App extends React.Component {
     // }
 
     render() {
-       
+
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
@@ -173,7 +173,7 @@ class App extends React.Component {
         if (this.state.loading) {
             content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
         } else if (this.props.location.pathname === "/init-error") {
-            content = <div className="grid-frame vertical">{this.props.children}</div>
+            content = <div className="grid-frame vertical">{this.props.children}</div>;
         } else {
             content = (
                 <div className="grid-frame vertical">
@@ -211,13 +211,13 @@ class App extends React.Component {
 @connectToStores
 class RootIntl extends React.Component {
     static getStores() {
-        return [IntlStore]
+        return [IntlStore];
     };
 
     static getPropsFromStores() {
         return {
             locale: IntlStore.getState().currentLocale
-        }
+        };
     };
 
     componentDidMount() {
@@ -247,14 +247,14 @@ let willTransitionTo = (nextState, replaceState, callback) => {
     let connectionString = SettingsStore.getSetting("connection");
 
     if (nextState.location.pathname === "/init-error") {
-        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
+        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
         db.then(() => {
             Apis.instance(connectionString).init_promise.then(() => callback()).catch(() => callback());
         });
         return;
     }
     Apis.instance(connectionString).init_promise.then(() => {
-        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise
+        var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
         return Promise.all([db]).then(() => {
             console.log("db init done");
             return Promise.all([
@@ -272,7 +272,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
                 WalletManagerStore.init()
             ]).then(()=> {
                 callback();
-            })
+            });
         });
     }).catch( error => {
         console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
@@ -282,7 +282,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             replaceState(null, "/init-error");
             callback();
         }
-    })
+    });
 };
 
 let routes = (
@@ -359,4 +359,3 @@ let routes = (
 
 
 ReactDOM.render(<Router history={history} routes={routes}/>, document.getElementById("content"));
-
