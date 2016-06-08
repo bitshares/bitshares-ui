@@ -73,6 +73,7 @@ require("./assets/stylesheets/app.scss");
 // require("dl_cli_index").init(window) // Adds some object refs to the global window object
 
 let history = createBrowserHistory({queryKey: false});
+ChainStore.setDispatchFrequency(20);
 
 class App extends React.Component {
 
