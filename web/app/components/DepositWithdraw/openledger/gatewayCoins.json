@@ -66,6 +66,12 @@
     "symbol": "OPEN.LTC"
   },
   {
+    "backingCoinType": "ETHEREUM_MKR",
+    "name": "Makercoin",
+    "walletType": "ethereum",
+    "symbol": "OPEN.MKR"
+  },
+  {
     "backingCoinType": "MUSE",
     "name": "Muse",
     "walletType": "muse",
