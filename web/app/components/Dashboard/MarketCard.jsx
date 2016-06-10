@@ -64,7 +64,13 @@ class MarketCard extends React.Component {
         let stats = marketStats.get(marketID);
         let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";
 
-        if (base.get("issuer") === "1.2.0" || base.get("issuer") === "1.2.3") {
+        if ((base.get("issuer") === "1.2.0" || 
+             base.get("issuer") === "1.2.3") &&
+           !(base.get("symbol") != "GOLD" ||
+             base.get("symbol") != "BTC" ||
+             base.get("symbol") != "EUR" ||
+             base.get("symbol") != "USD" ||
+             base.get("symbol") != "CNY")) {
             imgName = "bts";
         }
 
