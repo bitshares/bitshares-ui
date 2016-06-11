@@ -128,7 +128,7 @@ class ProposedOperation extends React.Component {
     render() {
         let {op, current, block} = this.props;
         let line = null, column = null, color = "info";
-        
+
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
             case "transfer":
@@ -150,7 +150,7 @@ class ProposedOperation extends React.Component {
                                 {type: "account", value: op[1].from, arg: "from"},
                                 {type: "amount", value: op[1].amount, arg: "amount", decimalOffset: op[1].amount.asset_id === "1.3.0" ? 5 : null},
                                 {type: "account", value: op[1].to, arg: "to"}
-                            ]}                                    
+                            ]}
                         />
                         {memoComponent}
                     </span>
@@ -171,7 +171,7 @@ class ProposedOperation extends React.Component {
                                     {type: "account", value: op[1].seller, arg: "account"},
                                     {type: "amount", value: isAsk ? op[1].amount_to_sell : op[1].min_to_receive, arg: "amount"},
                                     {type: "price", value: {base: isAsk ? op[1].min_to_receive : op[1].amount_to_sell, quote: isAsk ? op[1].amount_to_sell : op[1].min_to_receive}, arg: "price"}
-                                ]}                                    
+                                ]}
                             />
                         </span>
                 );
@@ -245,7 +245,7 @@ class ProposedOperation extends React.Component {
                             string="proposal.update_account"
                             keys={[
                                 {type: "account", value: op[1].account, arg: "account"},
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -338,10 +338,13 @@ class ProposedOperation extends React.Component {
             case "asset_update_bitasset":
                 color = "warning";
                 column = (
-                    <span>
-                        <Translate component="span" content="transaction.update_asset" />
-                        &nbsp;{this.linkToAsset(op[1].asset_to_update)}
-                    </span>
+                    <TranslateWithLinks
+                            string="proposal.asset_update"
+                            keys={[
+                                {type: "account", value: op[1].issuer, arg: "account"},
+                                {type: "asset", value: op[1].asset_to_update, arg: "asset"}
+                            ]}
+                        />
                 );
                 break;
 
@@ -762,7 +765,7 @@ class ProposedOperation extends React.Component {
                             string="proposal.committee_member_update_global_parameters"
                             keys={[
                                 {type: "account", value: "1.2.0", arg: "account"}
-                            ]}                                                    
+                            ]}
                         />
                     </span>
                 );
