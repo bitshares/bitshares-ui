@@ -3,8 +3,8 @@ import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
 
-import {Apis, ChainStore, PrivateKey, PublicKey, Aes, key, ChainConfig} from "graphenejs-lib";
-
+import {ChainStore, PrivateKey, PublicKey, Aes, key} from "graphenejs-lib";
+import {Apis, ChainConfig} from "graphenejs-ws";
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"
 
@@ -12,18 +12,18 @@ import alt from 'alt-instance'
 import iDB from 'idb-instance'
 
 module.exports = {
-    
+
     PrivateKey, PublicKey, Aes, key,
     WalletDb, WalletManagerStore, PrivateKeyStore,
-    AccountStore, 
+    AccountStore,
     BackupActions,
     WalletActions,
     ChainStore,
     ChainConfig,
-    
+
     alt, iDB,  Apis,
     db: ()=> Apis.instance().db_api(),
-    
+
     resolve: (object, atty = "_") => {
         if( ! object["then"]) {
             console.log(object)
@@ -41,7 +41,7 @@ module.exports = {
             })
         })
     },
-    
+
     init: context => {
         if( ! context) return
         for (var obj in module.exports) {
@@ -49,5 +49,5 @@ module.exports = {
             context[obj] = module.exports[obj]
         }
     }
-    
+
 }

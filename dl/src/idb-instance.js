@@ -1,4 +1,4 @@
-import {Apis} from "graphenejs-lib";
+import {Apis} from "graphenejs-ws";
 import idb_helper from "idb-helper"
 import iDBRoot from "idb-root"
 

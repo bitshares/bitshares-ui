@@ -1,6 +1,6 @@
 {
   "name": "Graphene-UI",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Advanced wallet interface for graphene based blockchains (Bishares, Muse..)",
   "homepage": "https://github.com/cryptonomex/graphene_ui",
   "author": "Cryptonomex, Inc.",
@@ -32,7 +32,8 @@
     "event-emitter": "^0.3.4",
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
     "git-rev-sync": "^1.4.0",
-    "graphenejs-lib": "^0.2.1",
+    "graphenejs-lib": "^0.3.0",
+    "graphenejs-ws": "^0.1.0",
     "highcharts": "^4.2.3",
     "history": "1.13.1",
     "html-loader": "^0.3.0",

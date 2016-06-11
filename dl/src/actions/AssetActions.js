@@ -1,5 +1,5 @@
 var alt = require("../alt-instance");
-import {Apis} from "graphenejs-lib";
+import {Apis} from "graphenejs-ws";
 import utils from "common/utils";
 import WalletApi from "../rpc_api/WalletApi";
 import ApplicationApi from "../rpc_api/ApplicationApi";

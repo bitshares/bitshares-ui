@@ -4,7 +4,8 @@ import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
 import cname from "classnames"
 import notify from "actions/NotificationActions";
-import {Apis, PrivateKey, Address, Aes, PublicKey, ChainConfig, hash} from "graphenejs-lib";
+import {PrivateKey, Address, Aes, PublicKey, hash} from "graphenejs-lib";
+import {Apis, ChainConfig} from "graphenejs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletCreate from "components/Wallet/WalletCreate"
@@ -25,23 +26,23 @@ var import_keys_assert_checking = false
 
 @connectToStores
 export default class ImportKeys extends Component {
-    
+
     constructor() {
         super();
         this.state = this._getInitialState();
         this.state.privateKey = true;
     }
-    
+
     static getStores() {
         return [ImportKeysStore]
     }
-    
+
     static getPropsFromStores() {
         return {
             importing: ImportKeysStore.getState().importing
         }
     }
-    
+
     _getInitialState(keep_file_name = false) {
         return {
             keys_to_account: { },
@@ -61,24 +62,24 @@ export default class ImportKeys extends Component {
             genesis_filter_finished: undefined
         };
     }
-    
+
     reset(e, keep_file_name) {
         if(e) e.preventDefault()
         var state = this._getInitialState(keep_file_name);
         this.setState(state, ()=> this.updateOnChange());
     }
-            
+
     onWif(event) {
         event.preventDefault();
         var value = this.refs.wifInput.value;
         this.addByPattern(value)
     }
-    
+
     onBack(e) {
         if(e) e.preventDefault()
         window.history.back()
     }
-    
+
     updateOnChange() {
         BalanceClaimActiveActions.setPubkeys(Object.keys(this.state.imported_keys_public))
     }
@@ -94,7 +95,7 @@ export default class ImportKeys extends Component {
             }
         return found ? account_keycount : null
     }
-    
+
     upload(evt) {
         this.reset(null, true)
         var file = evt.target.files[0]
@@ -105,7 +106,7 @@ export default class ImportKeys extends Component {
                 var json_contents
                 try {
                     json_contents = JSON.parse(contents)
-                    // This is the only chance to encounter a large file, 
+                    // This is the only chance to encounter a large file,
                     // try this format first.
                     this._parseImportKeyUpload(json_contents, file.name, update_state => {
                         // console.log("update_state", update_state)
@@ -135,7 +136,7 @@ export default class ImportKeys extends Component {
         }
         reader.readAsText(file)
     }
-    
+
     /** BTS 1.0 client wallet_export_keys format. */
     _parseImportKeyUpload(json_contents, file_name, update_state) {
         var password_checksum, unfiltered_account_keys
@@ -143,17 +144,17 @@ export default class ImportKeys extends Component {
             password_checksum = json_contents.password_checksum
             if( ! password_checksum)
                 throw file_name + " is an unrecognized format"
-            
+
             if( ! Array.isArray(json_contents.account_keys))
                 throw file_name + " is an unrecognized format"
-            
+
             unfiltered_account_keys = json_contents.account_keys
 
         } catch(e) { throw e.message || e }
-        
+
         // BTS 1.0 wallets may have a lot of generated but unused keys or spent TITAN addresses making
         // wallets so large it is was not possible to use the JavaScript wallets with them.
-        
+
         var genesis_filter = new GenesisFilter
         if( ! genesis_filter.isAvailable() ) {
             update_state({ password_checksum, account_keys: unfiltered_account_keys,
@@ -163,7 +164,7 @@ export default class ImportKeys extends Component {
         this.setState({ genesis_filter_initalizing: true }, ()=>// setTimeout(()=>
             genesis_filter.init(()=> {
                 var filter_status = this.state.genesis_filter_status
-                
+
                 // FF < version 41 does not support worker threads internals (like blob urls)
                 // var GenesisFilterWorker = require("worker!workers/GenesisFilterWorker")
                 // var worker = new GenesisFilterWorker
@@ -175,7 +176,7 @@ export default class ImportKeys extends Component {
                 //     var { status, account_keys } = event.data
                 //     // ...
                 // } catch( e ) { console.error('GenesisFilterWorker', e) }}
-                
+
                 var account_keys = unfiltered_account_keys
                 genesis_filter.filter( account_keys, status => {
                     //console.log("import filter", status)
@@ -212,30 +213,30 @@ export default class ImportKeys extends Component {
                             // new account
                             filter_status.push( status )
                     }
-                    update_state({ genesis_filter_status: filter_status }) 
+                    update_state({ genesis_filter_status: filter_status })
                 })
             })
         //, 100)
         )
     }
-    
+
     /**
     BTS 1.0 hosted wallet backup (wallet.bitshares.org) is supported.
-    
+
     BTS 1.0 native wallets should use wallet_export_keys instead of a wallet backup.
-    
+
     Note,  Native wallet backups will be rejected.  The logic below does not
     capture assigned account names (for unregisted accounts) and does not capture
     signing keys.  The hosted wallet has only registered accounts and no signing
     keys.
-    
+
     */
     _parseWalletJson(json_contents) {
         var password_checksum
         var encrypted_brainkey
         var address_to_enckeys = {}
         var account_addresses = {}
-        
+
         var savePubkeyAccount = function (pubkey, account_name) {
             //replace BTS with GPH
             pubkey = ChainConfig.address_prefix + pubkey.substring(3)
@@ -246,14 +247,14 @@ export default class ImportKeys extends Component {
             addresses.push(address)
             account_addresses[account_name] = addresses
         }
-        
+
         try {
             if(! Array.isArray(json_contents)) {
                 //DEBUG console.log('... json_contents',json_contents)
                 throw new Error("Invalid wallet format")
             }
             for(let element of json_contents) {
-                
+
                 if( "key_record_type" == element.type &&
                     element.data.account_address &&
                     element.data.encrypted_private_key
@@ -265,7 +266,7 @@ export default class ImportKeys extends Component {
                     address_to_enckeys[address] = enckeys
                     continue
                 }
-                
+
                 if( "account_record_type" == element.type) {
                     var account_name = element.data.name
                     savePubkeyAccount(element.data.owner_key, account_name)
@@ -274,36 +275,36 @@ export default class ImportKeys extends Component {
                     }
                     continue
                 }
-                
+
                 if ( "property_record_type" == element.type &&
                     "encrypted_brainkey" == element.data.key
                 ) {
                     encrypted_brainkey = element.data.value
                     continue
                 }
-                
+
                 if( "master_key_record_type" == element.type) {
                     if( ! element.data)
                         throw file.name + " invalid master_key_record record"
-                    
+
                     if( ! element.data.checksum)
                         throw file.name + " is missing master_key_record checksum"
-                    
+
                     password_checksum = element.data.checksum
                 }
-                
+
             }
             if( ! encrypted_brainkey)
                 throw "Please use a BTS 1.0 wallet_export_keys file instead"
-            
+
             if( ! password_checksum)
                 throw file.name + " is missing password_checksum"
-            
+
             if( ! enckeys.length)
                 throw file.name + " does not contain any private keys"
-            
+
         } catch(e) { throw e.message || e }
-        
+
         var account_keys = []
         for(let account_name in account_addresses) {
             var encrypted_private_keys = []
@@ -327,7 +328,7 @@ export default class ImportKeys extends Component {
             //encrypted_brainkey
         })
     }
-    
+
     _passwordCheck(evt) {
         if (evt && "preventDefault" in evt) {
             evt.preventDefault();
@@ -342,7 +343,7 @@ export default class ImportKeys extends Component {
                 no_file: false,
                 import_password_message: password.length ? "Incorrect password" : null
             });
-            
+
         }
         this.setState({
             no_file: false,
@@ -351,7 +352,7 @@ export default class ImportKeys extends Component {
         }, ()=> this._decryptPrivateKeys(password))
         // setTimeout(, 250)
     }
-    
+
     _decryptPrivateKeys(password) {
         var password_aes = Aes.fromSeed(password)
         var format_error1_once = true
@@ -371,7 +372,7 @@ export default class ImportKeys extends Component {
                 let encrypted_private = account.encrypted_private_keys[i]
                 let public_key_string = account.public_keys ?
                     account.public_keys[i] : null // performance gain
-                
+
                 try {
                     var private_plainhex = password_aes.decryptHex(encrypted_private)
                     if(import_keys_assert_checking && public_key_string) {
@@ -383,31 +384,31 @@ export default class ImportKeys extends Component {
 
                         let address_string = account.addresses ?
                             account.addresses[i] : null // assert checking
-                        
+
                         if(address_string && addy.substring(3) != address_string.substring(3))
                             error = "address imported " + address_string + " but calculated " + addy + ". "
-                        
+
                         if(pubby.substring(3) != public_key_string.substring(3))
                             error += "public key imported " + public_key_string + " but calculated " + pubby
-                        
+
                         if(error != "")
                             console.log("ERROR Miss-match key",error)
                     }
-                    
+
                     if( ! public_key_string) {
                         var private_key = PrivateKey.fromHex( private_plainhex )
                         var public_key = private_key.toPublicKey()// S L O W
                         public_key_string = public_key.toPublicKeyString()
                     } else {
                         if( ! same_prefix_regex.test(public_key_string))
-                            // This was creating a unresponsive chrome browser 
-                            // but after the results were shown.  It was probably  
+                            // This was creating a unresponsive chrome browser
+                            // but after the results were shown.  It was probably
                             // caused by garbage collection.
                             public_key_string = ChainConfig.address_prefix +
                                 public_key_string.substring(3)
                     }
                     this.state.imported_keys_public[public_key_string] = true
-                    var {account_names} = this.state.keys_to_account[private_plainhex] || 
+                    var {account_names} = this.state.keys_to_account[private_plainhex] ||
                         {account_names: []}
                     var dup = false
                     for(let _name of account_names)
@@ -460,7 +461,7 @@ export default class ImportKeys extends Component {
             setTimeout(()=> this.saveImport(), 200)
         })
     }
-    
+
     saveImport() {
         var keys_to_account = this.state.keys_to_account
         var private_key_objs = []
@@ -490,12 +491,12 @@ export default class ImportKeys extends Component {
     addByPattern(contents) {
         if( ! contents)
             return false
-        
+
         var count = 0, invalid_count = 0
         var wif_regex = /5[HJK][1-9A-Za-z]{49}/g
         for(let wif of contents.match(wif_regex) || [] ) {
-            try { 
-                var private_key = PrivateKey.fromWif(wif) //could throw and error 
+            try {
+                var private_key = PrivateKey.fromWif(wif) //could throw and error
                 var private_plainhex = private_key.toBuffer().toString('hex')
                 var public_key = private_key.toPublicKey() // S L O W
                 var public_key_string = public_key.toPublicKeyString()
@@ -508,7 +509,7 @@ export default class ImportKeys extends Component {
         this.setState({
             key_text_message: 'Found ' +
                 (!count ? "" : count + " valid") +
-                (!invalid_count ? "" : " and " + invalid_count + " invalid") + 
+                (!invalid_count ? "" : " and " + invalid_count + " invalid") +
                 " key" + ( count > 1 || invalid_count > 1 ? "s" : "") + "."
         }, ()=> this.updateOnChange())
         // removes the message on the next render
@@ -530,7 +531,7 @@ export default class ImportKeys extends Component {
         var {keys_to_account, privateKey} = this.state;
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
-        
+
         // Create wallet prior to the import keys (keeps layout clean)
         if( ! WalletDb.getWallet()) return <WalletCreate importKeys={true} hideTitle={true}/>
         if( this.props.importing ) {
@@ -540,7 +541,7 @@ export default class ImportKeys extends Component {
                 </div>
             </div>
         }
-        
+
         var filtering = this.state.genesis_filtering
         var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
         var account_rows = null
@@ -558,7 +559,7 @@ export default class ImportKeys extends Component {
                 )
             }
         }
-        
+
         var import_ready = key_count !== 0
         var password_placeholder = counterpart.translate("wallet.import_password");
 
@@ -592,13 +593,13 @@ export default class ImportKeys extends Component {
                         this.state.key_text_message :
                         <KeyCount key_count={key_count}/>
                     }</span>
-                    { ! import_ready ? 
+                    { ! import_ready ?
                         null :
                         <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
                     }
                 </div>
-                
-                { account_rows ? 
+
+                { account_rows ?
                 <div>
                     { ! account_rows.length ? counterpart.translate("wallet.no_accounts") :
                     <div>
@@ -617,7 +618,7 @@ export default class ImportKeys extends Component {
                     </div>}
                 </div> : null}
                 <br/>
-                    
+
                 { ! import_ready && ! this.state.genesis_filter_initalizing ?
                 <div>
                     <div className="center-content">
@@ -630,7 +631,7 @@ export default class ImportKeys extends Component {
                             <form onSubmit={this.onWif.bind(this)} style={{paddingTop: 20}}>
                                     <Translate component="label" content="wallet.paste_private" />
                                     <input ref="wifInput" type="password" id="wif" tabIndex={tabIndex++} />
-                                    
+
                                     <button className="button" type="submit"><Translate content="wallet.submit" /></button>
                                     {cancelButton}
                             </form>) : (
@@ -641,7 +642,7 @@ export default class ImportKeys extends Component {
                                 </label>
                                 <input
                                     type="file"
-                                    id="file_input"                                    
+                                    id="file_input"
                                     style={{
                                         border: "solid" ,
                                         marginBottom: 15,
@@ -674,12 +675,12 @@ export default class ImportKeys extends Component {
                         </div>
                         <br/>
 
-                        
+
                         <br/>
-                        
+
                     </div>
                 </div> : null}
-                
+
                 { this.state.genesis_filter_initalizing ? <div>
                     <div className="center-content">
                         <LoadingIndicator type="circle"/>
@@ -721,4 +722,3 @@ class KeyCount extends Component {
         return <span>Found {this.props.key_count} private keys</span>
     }
 }
-

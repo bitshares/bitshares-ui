@@ -1,11 +1,12 @@
 import alt from "../alt-instance";
 import iDB from "../idb-instance";
-import {key, ChainConfig} from "graphenejs-lib";
+import {key} from "graphenejs-lib";
+import {ChainConfig} from "graphenejs-ws";
 import Immutable from "immutable"
 import BaseStore from "stores/BaseStore"
 
 class AddressIndex extends BaseStore {
-    
+
     constructor() {
         super()
         this.state = {
@@ -16,13 +17,13 @@ class AddressIndex extends BaseStore {
         // loadAddyMap is for debugging, this.add will load this on startup
         this._export("add", "addAll", "loadAddyMap")
     }
-    
+
     saving() {
         if( this.state.saving ) return
         this.state.saving = true
         this.setState({ saving: true })
     }
-    
+
     /** Add public key string (if not already added).  Reasonably efficient
         for less than 10K keys.
     */
@@ -44,7 +45,7 @@ class AddressIndex extends BaseStore {
             } else this.setState({saving: false})
         }).catch ( e => { throw e })
     }
-    
+
     /** Worker thread implementation (for more than 10K keys) */
     addAll(pubkeys) {
         return new Promise( (resolve, reject) => {
@@ -81,7 +82,7 @@ class AddressIndex extends BaseStore {
             }).catch ( e => { throw e })
         })
     }
-    
+
     loadAddyMap() {
         if(this.loadAddyMapPromise) return this.loadAddyMapPromise
         this.loadAddyMapPromise = iDB.root.getProperty("AddressIndex").then( map => {
@@ -92,7 +93,7 @@ class AddressIndex extends BaseStore {
         })
         return this.loadAddyMapPromise
     }
-    
+
     saveAddyMap() {
         clearTimeout(this.saveAddyMapTimeout)
         this.saveAddyMapTimeout = setTimeout(()=> {
@@ -102,7 +103,7 @@ class AddressIndex extends BaseStore {
             return iDB.root.setProperty("AddressIndex", this.state.addresses.toObject())
         }, 100)
     }
-    
+
 }
 // console.log("post msg a");
 // worker.postMessage("a")

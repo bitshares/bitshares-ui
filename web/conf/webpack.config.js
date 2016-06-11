@@ -71,12 +71,12 @@ module.exports = function(options) {
     var config = {
         entry: {
             app: options.prod ?
-                path.resolve(root_dir, "app/Main.js") :
-                [
-                    "webpack-dev-server/client?http://localhost:8080",
-                    "webpack/hot/only-dev-server",
-                    path.resolve(root_dir, "app/Main-dev.js")
-                ]
+            path.resolve(root_dir, "app/Main.js") :
+            [
+                "webpack-dev-server/client?http://localhost:8080",
+                "webpack/hot/only-dev-server",
+                path.resolve(root_dir, "app/Main-dev.js")
+            ]
         },
         output: {
             path: outputPath,
@@ -88,23 +88,23 @@ module.exports = function(options) {
         debug: options.prod ? false : true,
         module: {
             loaders: [
-                { 
+                {
                     test: /\.jsx$/,
                     include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps"), "/home/sigve/Dev/graphene/react-foundation-apps"],
                     loaders: options.prod ? ["babel-loader"] : ["babel-loader?cacheDirectory"]
                 },
-                { 
+                {
                     test: /\.js$/,
                     exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
-                { 
+                {
                     test: /\.json/, loader: "json",
                     exclude: [
                         path.resolve(root_dir, "../dl/src/common"),
                         path.resolve(root_dir, "app/assets/locales")
-                    ] 
+                    ]
                 },
                 { test: /\.coffee$/, loader: "coffee-loader" },
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
