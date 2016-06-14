@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";

@@ -1,11 +1,9 @@
-import config from "chain/config";
 import React from "react";
 import {Link} from "react-router";
 import connectToStores from "alt/utils/connectToStores";
 import accountUtils from "common/account_utils";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import WalletDb from "stores/WalletDb";
@@ -45,7 +43,8 @@ class AccountDepositWithdraw extends React.Component {
             blockTradesBackedCoins: [],
             olService: props.viewSettings.get("olService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
-            metaService: props.viewSettings.get("metaService", "bridge")
+            metaService: props.viewSettings.get("metaService", "bridge"),
+            depositWithdrawDefaultActiveTab: 1
         }
     }
 
@@ -123,7 +122,7 @@ class AccountDepositWithdraw extends React.Component {
 
     render() {
         let {account} = this.props;
-        let {olService, btService, metaService} = this.state;
+        let {olService, btService, metaService, depositWithdrawDefaultActiveTab} = this.state;
 
         let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
             if (coin.backingCoinType === "muse") {
@@ -144,7 +143,7 @@ class AccountDepositWithdraw extends React.Component {
     			<Tabs
                     setting="depositWithdrawSettingsTab"
                     tabsClass="bordered-header no-padding"
-                    defaultActiveTab={config.depositWithdrawDefaultActiveTab}
+                    defaultActiveTab={depositWithdrawDefaultActiveTab}
                     contentClass="grid-content"
                 >
 

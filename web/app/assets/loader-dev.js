@@ -5,3 +5,4 @@ require("babel/polyfill");
 require("whatwg-fetch");
 require("indexeddbshim");
 require("./asset-symbols/symbols.js");
+require("./locales/locales.js");

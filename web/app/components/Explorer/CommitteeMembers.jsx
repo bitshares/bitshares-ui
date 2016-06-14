@@ -4,7 +4,7 @@ import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import connectToStores from "alt/utils/connectToStores";

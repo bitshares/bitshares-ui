@@ -2,7 +2,7 @@ import alt from "../alt-instance";
 import iDB from "../idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
-import ChainStore from "api/ChainStore"
+import {ChainStore} from "graphenejs-lib";
 import PrivateKeyStore from "stores/PrivateKeyStore"
 import PrivateKeyActions from "actions/PrivateKeyActions"
 

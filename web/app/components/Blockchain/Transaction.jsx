@@ -6,7 +6,6 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
 import {FormattedDate} from "react-intl";
-import {operations} from "chain/chain_types";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
@@ -18,6 +17,8 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
 import MemoText from "./MemoText";
+import {ChainTypes} from "graphenejs-lib";
+let {operations} = ChainTypes;
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -913,7 +914,6 @@ class Transaction extends React.Component {
                     break;
 
                 case "proposal_create":
-                    console.log("op:", op);
                     var expiration_date = new Date(op[1].expiration_time+'Z')
                     var has_review_period = op[1].review_period_seconds !== undefined
                     var review_begin_time = ! has_review_period ? null :

@@ -1,6 +1,6 @@
 import React from "react";
 import {curry, flow, reject, clone, pairs, filter, omit, get, pick} from "lodash";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
 import LoadingIndicator from "../LoadingIndicator";

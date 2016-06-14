@@ -1,6 +1,6 @@
 import utils from "common/utils";
 import Immutable from "immutable";
-import {object_type} from "chain/chain_types";
+var {object_type} = require("graphenejs-lib").ChainTypes;
 
 function createChainableTypeChecker(validate) {
     function checkType(isRequired, props, propName, componentName, location) {

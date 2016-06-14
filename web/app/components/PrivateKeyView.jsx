@@ -5,6 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api"
 import WalletUnlockActions from "actions/WalletUnlockActions"
 import WalletDb from "stores/WalletDb"
 import Translate from "react-translate-component";
+import PrivateKeyStore from "stores/PrivateKeyStore";
 
 export default class PrivateKeyView extends Component {
     
@@ -85,7 +86,7 @@ export default class PrivateKeyView extends Component {
                     </div>
                 </div>
                 <div className="button-group">
-                    <div onClick={this.onClose.bind(this)} className="secondary button"><Translate content="transfer.close" /></div>
+                    <div onClick={this.onClose.bind(this)} className=" button"><Translate content="transfer.close" /></div>
                 </div>
             </Modal>
         </span>

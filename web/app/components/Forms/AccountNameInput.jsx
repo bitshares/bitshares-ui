@@ -3,7 +3,7 @@ import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import validation from "common/validation";
+import {ChainValidation} from "graphenejs-lib";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";
@@ -85,14 +85,14 @@ class AccountNameInput extends React.Component {
     validateAccountName(value) {
         this.state.error = value === "" ?
             "Please enter valid account name" :
-            validation.is_account_name_error(value)
+            ChainValidation.is_account_name_error(value)
 
         this.state.warning = null
         if(this.props.cheapNameOnly) {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
                 this.state.error = counterpart.translate("account.name_input.premium_name_faucet");
         } else {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
                 this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
         }
         this.setState({value: value, error: this.state.error, warning: this.state.warning});

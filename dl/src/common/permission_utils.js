@@ -1,4 +1,4 @@
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import Immutable from "immutable";
 
 let KeyAuth = function(auth) {

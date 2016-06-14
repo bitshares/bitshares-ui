@@ -2,11 +2,11 @@ var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
 var IntlActions = require("../actions/IntlActions");
 var Immutable = require("immutable");
-var _ =require("lodash");
+import {merge} from "lodash"
+import ls from "common/localStorage";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
-import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
@@ -132,13 +132,13 @@ class SettingsStore {
             onSwitchLocale: IntlActions.switchLocale
         });
 
-        this.settings = Immutable.Map(_.merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
+        this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
         this.starredMarkets = Immutable.Map(ss.get("starredMarkets", defaultMarkets));
 
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        this.defaults = _.merge({}, defaults, ss.get("defaults_v1"));
+        this.defaults = merge({}, defaults, ss.get("defaults_v1"));
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
@@ -167,7 +167,7 @@ class SettingsStore {
     }
 
     onChangeViewSetting(payload) {
-        for (key in payload) {
+        for (let key in payload) {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
 
@@ -175,7 +175,7 @@ class SettingsStore {
     }
 
     onChangeMarketDirection(payload) {
-        for (key in payload) {
+        for (let key in payload) {
             this.marketDirections = this.marketDirections.set(key, payload[key]);
         }
 
@@ -254,7 +254,7 @@ class SettingsStore {
         }
     }
 
-    onSwitchLocale(locale) {
+    onSwitchLocale({locale}) {
         console.log("onSwitchLocale:", locale);
 
         this.onChangeSetting({setting: "locale", value: locale});

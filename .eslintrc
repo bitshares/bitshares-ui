@@ -1,5 +1,4 @@
 {
-  "extends": "airbnb",
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -18,7 +17,6 @@
     "semi": [2, "always"],
     "camelcase": [0],
     "no-console": [0],
-    "object-curly-spacing": [0],
-    "react/jsx-indent-props": [2,4]
-  }
+    "object-curly-spacing": [0]
+    }
 }

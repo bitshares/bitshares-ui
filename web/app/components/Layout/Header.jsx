@@ -21,7 +21,7 @@ import Immutable from "immutable";
 class Header extends React.Component {
 
     static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
     }
 
     static getPropsFromStores() {
@@ -32,7 +32,7 @@ class Header extends React.Component {
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
             starredAccounts: SettingsStore.getState().starredAccounts
-        }
+        };
     }
 
     static contextTypes = {
@@ -162,11 +162,11 @@ class Header extends React.Component {
                 </a>
             );
         } else if (linkedAccounts.size === 1) {
-                linkToAccountOrDashboard = (
-                    <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
-                        <Translate component="span" content="header.account" />
-                    </a>
-                );
+            linkToAccountOrDashboard = (
+                <a className={cnames({active: active.indexOf("account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview/`)}>
+                    <Translate component="span" content="header.account" />
+                </a>
+            );
         } else {
             linkToAccountOrDashboard = (
                 <a className={cnames({active: active.indexOf("create-account") !== -1})} onClick={this._onNavigate.bind(this, "/create-account")}>
@@ -184,7 +184,7 @@ class Header extends React.Component {
 
         let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
             <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/USD_BTS`)}><Translate component="span" content="header.exchange" /></a>
+            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/market/USD_BTS")}><Translate component="span" content="header.exchange" /></a>;
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null;
@@ -239,7 +239,7 @@ class Header extends React.Component {
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
                         <li>{tradeLink}</li>
                         <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
-                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={`/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">

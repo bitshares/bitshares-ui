@@ -31,7 +31,7 @@ export default class PasswordConfirm extends Component {
         var {password, confirm, valid, errors} = this.state;
         let {newPassword} = this.props;
         let tabIndex = 1;
-        console.log("props:", this.props);
+
         return (
             <form
                 noValidate

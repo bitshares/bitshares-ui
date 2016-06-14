@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
 import {IntlProvider} from "react-intl";
 import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
@@ -8,9 +7,8 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {operations} from "chain/chain_types";
+let {operations} = require("graphenejs-lib").ChainTypes;
 import TransitionWrapper from "../Utility/TransitionWrapper";
-import ReactDOM from "react-dom";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 
@@ -57,7 +55,7 @@ class RecentTransactions extends React.Component {
 
     componentDidMount() {
         if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            let t = this.refs.transactions;
             ps.initialize(t);
 
             this._setHeaderHeight();
@@ -116,7 +114,7 @@ class RecentTransactions extends React.Component {
         }
 
         if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            let t = this.refs.transactions;
             ps.update(t);
 
             this._setHeaderHeight();

@@ -13,7 +13,7 @@ import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import Apis from "rpc_api/ApiInstances"
+import {Apis} from "graphenejs-ws";
 
 class WalletUnlockModal extends React.Component {
 
@@ -111,7 +111,7 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
                         </Trigger>
                     </div>
                 </form>

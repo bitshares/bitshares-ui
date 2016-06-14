@@ -9,6 +9,7 @@ import AccountBalance from "../../Account/AccountBalance";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
+import WalletDb from "stores/WalletDb";
 
 @BindToChainState({keep_updating:true})
 export default class MetaexchangeDepositRequest extends React.Component {

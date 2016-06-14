@@ -12,9 +12,9 @@ import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import connectToStores from "alt/utils/connectToStores";
-import {operations} from "chain/chain_types";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
+let {operations} = require("graphenejs-lib").ChainTypes;
 
 @connectToStores
 class MarketHistory extends React.Component {

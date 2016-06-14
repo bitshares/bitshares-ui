@@ -4,7 +4,6 @@ import {Link, PropTypes} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
 import BlockTime from "./BlockTime";
@@ -14,9 +13,10 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
+let {operations} = require("graphenejs-lib").ChainTypes;
 
 require("./operations.scss");
 
