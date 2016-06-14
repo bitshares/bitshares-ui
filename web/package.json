@@ -32,7 +32,7 @@
     "event-emitter": "^0.3.4",
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
     "git-rev-sync": "^1.4.0",
-    "graphenejs-lib": "^0.3.0",
+    "graphenejs-lib": "^0.4.0",
     "graphenejs-ws": "^0.1.0",
     "highcharts": "^4.2.3",
     "history": "1.13.1",
