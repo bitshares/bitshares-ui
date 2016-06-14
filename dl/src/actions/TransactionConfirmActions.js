@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import {ChainConfig} from "graphenejs-lib";
+import {ChainConfig} from "graphenejs-ws";
 
 class TransactionConfirmActions {
 
@@ -43,11 +43,11 @@ class TransactionConfirmActions {
     error(msg) {
         this.dispatch({error: msg});
     }
-    
+
     togglePropose() {
         this.dispatch();
     }
-    
+
     proposeFeePayingAccount(fee_paying_account) {
         this.dispatch(fee_paying_account);
     }
