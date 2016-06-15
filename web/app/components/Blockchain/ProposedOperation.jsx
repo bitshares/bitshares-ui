@@ -779,6 +779,20 @@ class ProposedOperation extends React.Component {
                 );
                 break;
 
+            case "override_transfer":
+                column = (
+                    <TranslateWithLinks
+                        string="proposal.override_transfer"
+                        keys={[
+                            {type: "account", value: op[1].issuer, arg: "issuer"},
+                            {type: "account", value: op[1].from, arg: "from"},
+                            {type: "account", value: op[1].to, arg: "to"},
+                            {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
+                );
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (

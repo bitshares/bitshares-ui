@@ -356,7 +356,8 @@
     "witness_pay": "Withdrew witness pay to account",
     "witness_receive": "Received witness from witness",
     "committee_member_update_global_parameters": "{account} updated the global committee parameters",
-    "worker_create": "{account} created a worker proposal with daily pay of {pay}"
+    "worker_create": "{account} created a worker proposal with daily pay of {pay}",
+    "override_transfer": "{issuer} transferred {amount} from {from} to {to}"
   },
   "proposal": {
     "transfer": "Transfer {amount} from {from} to {to}",
@@ -379,7 +380,8 @@
       "key_approvals_to_remove": "Key approvals to remove"
     },
     "approve": "Approve",
-    "reject": "Reject"
+    "reject": "Reject",
+    "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
