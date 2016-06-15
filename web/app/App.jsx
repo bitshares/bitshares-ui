@@ -84,7 +84,8 @@ class App extends React.Component {
             loading: true,
             synced: false,
             theme: SettingsStore.getState().settings.get("themes"),
-            disableChat: SettingsStore.getState().settings.get("disableChat", false)
+            disableChat: SettingsStore.getState().settings.get("disableChat", false),
+            isMobile: false
         };
     }
 
@@ -120,6 +121,13 @@ class App extends React.Component {
         const user_agent = navigator.userAgent.toLowerCase();
         if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
             this.refs.browser_modal.show();
+        }
+
+        // Check for mobile device to disable chat
+        if (/android|ipad|ios|iphone|windows phone/i.test(user_agent)) {
+            this.setState({
+                isMobile: true
+            });
         }
 
         this.props.history.listen(() => {
@@ -167,6 +175,7 @@ class App extends React.Component {
     // }
 
     render() {
+        let {disableChat, isMobile} = this.state;
 
         let content = null;
 
@@ -186,7 +195,7 @@ class App extends React.Component {
                             {this.props.children}
                         </div>
                         <div className="grid-block shrink" style={{overflow: "hidden"}}>
-                            {this.state.disableChat ? null : <Chat footerVisible={showFooter}/>}
+                            {disableChat || isMobile ? null : <Chat footerVisible={showFooter}/>}
 
                         </div>
                     </div>
