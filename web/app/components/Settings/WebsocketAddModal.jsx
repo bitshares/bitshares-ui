@@ -66,7 +66,7 @@ class WebsocketAddModal extends React.Component {
         return (
             <Modal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
                 <Trigger close="">
-                    <a href="#" className="close-button">&times;</a>
+                    <div className="close-button">&times;</div>
                 </Trigger>
                 <Translate component="h3" content="settings.add_ws" />
                 <form onSubmit={this.onAddSubmit.bind(this)} noValidate>
@@ -76,7 +76,7 @@ class WebsocketAddModal extends React.Component {
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_add"}>
-                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                            <div  className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </form>
