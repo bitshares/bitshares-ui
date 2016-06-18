@@ -41,7 +41,7 @@
     "coffee-loader": "~0.7.2",
     "coffee-script": "~1.8.0",
     "coffeeify": "~0.7.0",
-    "eslint": "^2.11.1",
+    "eslint": "^2.13.0",
     "fake-indexeddb": "^1.0.3",
     "mocha": "^2.5.3",
     "mocha-traceur": "~2.1.0",
