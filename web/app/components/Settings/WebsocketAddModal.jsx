@@ -115,7 +115,7 @@ class WebsocketAddModal extends React.Component {
                             <Translate content="transfer.confirm" />
                         </button>
                         <Trigger close={"ws_modal_remove"}>
-                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                            <div className="button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </form>

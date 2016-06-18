@@ -28,8 +28,8 @@ class ConfirmModal extends React.Component {
 
     confirmClicked(e) {
         e.preventDefault();
-        ZfApi.publish(this.props.modalId, "close");       
-        this.state.callback();   
+        ZfApi.publish(this.props.modalId, "close");
+        this.state.callback();
     }
 
     _onCheck(e) {
@@ -48,18 +48,18 @@ class ConfirmModal extends React.Component {
                 <div className="grid-block vertical">
                         {this.state.content}
 
-                        {this.props.setting ? 
+                        {this.props.setting ?
                             (<div style={{marginBottom: "1rem", marginTop: "1rem"}}>
                                 <Translate component="label" content="settings.always_confirm" />
                                 {/* This won't work using a single <input> with checked={this.state.show}, not sure why */
-                                    this.state.show ? <input key="true_checked" type="checkbox" checked={true} onChange={this._onCheck.bind(this)}/> : 
+                                    this.state.show ? <input key="true_checked" type="checkbox" checked={true} onChange={this._onCheck.bind(this)}/> :
                                     <input key="false_checked" type="checkbox" checked={false} onChange={this._onCheck.bind(this)}/>}
                             </div>)
                             : null}
                     <div className="grid-content button-group no-overflow">
                         <a className="button" href onClick={this.confirmClicked.bind(this)}>{this.state.confirmText}</a>
                         <Trigger close={this.props.modalId}>
-                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                            <div className="button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </div>

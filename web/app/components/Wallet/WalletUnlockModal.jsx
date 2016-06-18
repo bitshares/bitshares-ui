@@ -22,14 +22,14 @@ class WalletUnlockModal extends React.Component {
         this.state = this._getInitialState()
         this.onPasswordEnter = this.onPasswordEnter.bind(this)
     }
-    
+
     _getInitialState() {
         return {
             password_error: null,
             password_input_reset: Date.now()
         }
     }
-    
+
     reset() {
         this.setState(this._getInitialState())
     }
@@ -55,13 +55,13 @@ class WalletUnlockModal extends React.Component {
             }
         })
     }
-    
+
     componentDidUpdate() {
         //DEBUG console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
         if(this.props.resolve) {
             if (WalletDb.isLocked())
                 ZfApi.publish(this.props.modalId, "open")
-            else 
+            else
                 this.props.resolve()
         }
     }
@@ -87,15 +87,15 @@ class WalletUnlockModal extends React.Component {
         }
         return false
     }
-    
+
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
         var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
-        
+
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.password_input.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
-        return ( 
+        return (
             // U N L O C K
             <Modal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <Trigger close="">
@@ -111,14 +111,14 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
                         <Trigger close={this.props.modalId}>
-                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                            <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </form>
             </Modal>
         )
     }
-    
+
 }
 
 WalletUnlockModal.defaultProps = {

@@ -82,7 +82,7 @@ class WithdrawModal extends React.Component {
                       <h3>Withdraw {this.props.receive_asset_name}({this.props.receive_asset_symbol})</h3>
                    </div>
                    <div className="content-block">
-                     <AmountSelector label="modal.withdraw.amount" 
+                     <AmountSelector label="modal.withdraw.amount"
                                      amount={this.state.withdraw_amount}
                                      asset={this.props.asset.get('id')}
                                      assets={[this.props.asset.get('id')]}
@@ -96,19 +96,19 @@ class WithdrawModal extends React.Component {
                        <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
                        {/*<div>{memo_error}</div>*/}
                    </div>
-                                  
+
                    <div className="content-block">
-                     <input type="submit" className="button" 
-                            onClick={this.onSubmit.bind(this)} 
+                     <input type="submit" className="button"
+                            onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modal_id}>
-                           <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
-                 </div> 
+                 </div>
                </form>)
    }
-   
+
 };
 
 export default WithdrawModal

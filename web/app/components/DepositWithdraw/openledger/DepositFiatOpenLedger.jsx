@@ -40,25 +40,25 @@ class DepositFiatOpenLedger extends React.Component {
      let precision = utils.get_asset_precision(asset.get("precision"));
      let amount = this.state.deposit_amount.replace( /,/g, "" )
      console.log( "deposit_amount: ", amount );
-     
+
      let json_rpc_request = {
-      "jsonrpc": "2.0", 
-      "method": "getDepositAccount", 
+      "jsonrpc": "2.0",
+      "method": "getDepositAccount",
       "params": {
-         "bitsharesAccountName": this.props.account.get('name'), 
-         "currency": this.props.deposit_asset, 
-         "amount": amount 
-      }, 
-      "id": 1 
+         "bitsharesAccountName": this.props.account.get('name'),
+         "currency": this.props.deposit_asset,
+         "amount": amount
+      },
+      "id": 1
      };
-     
+
      let is_deposit_approved_promise = fetch(this.props.rpc_url,
-                                             {method: 'POST', 
-                                              headers: new Headers({"Accept": "application/json", 
-                                              "content-type":"application/x-www-form-urlencoded"}), 
+                                             {method: 'POST',
+                                              headers: new Headers({"Accept": "application/json",
+                                              "content-type":"application/x-www-form-urlencoded"}),
                                               body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                           .then(response => response.json());
-        
+
      is_deposit_approved_promise.then((json_response) => {
        if ('result' in json_response)
          this.setState({ deposit_info: json_response.result });
@@ -86,7 +86,7 @@ class DepositFiatOpenLedger extends React.Component {
     onOpenLink() {
         window.open(this.state.deposit_info.link, "_blank");
     }
-    
+
     render() {
        if (this.state.deposit_error) // then we've failed to approve them
        {
@@ -99,11 +99,11 @@ class DepositFiatOpenLedger extends React.Component {
                         <p>{ this.state.deposit_error }</p>
                       </div>
                       <div className="content-block">
-                        <input type="submit" className="button" 
-                               onClick={this.onClose.bind(this)} 
+                        <input type="submit" className="button"
+                               onClick={this.onClose.bind(this)}
                                value="Close" />
                       </div>
-                    </div> 
+                    </div>
                   </form>);
        }
        else if (this.state.deposit_info) // then they've been approved for deposit
@@ -119,11 +119,11 @@ class DepositFiatOpenLedger extends React.Component {
 
                          </div>
                          <div className="content-block">
-                        <input type="submit" className="button" 
-                               onClick={this.onClose.bind(this)} 
+                        <input type="submit" className="button"
+                               onClick={this.onClose.bind(this)}
                                value="Close" />
                          </div>
-                       </div> 
+                       </div>
                      </form>);
 
           // old dead code for displaying all returned fields as text
@@ -143,16 +143,16 @@ class DepositFiatOpenLedger extends React.Component {
                           </tbody>
                         </table>
                       </div>
-                                     
+
                       <div className="content-block">
-                        <input type="submit" className="button" 
-                               onClick={this.onClose.bind(this)} 
+                        <input type="submit" className="button"
+                               onClick={this.onClose.bind(this)}
                                value={counterpart.translate("account.perm.cancel")} />
                         {/* <Trigger close={this.props.modal_id}>
-                          <a href className=" button">Close</a>
+                          <div className="button">Close</a>
                         </Trigger> */}
                       </div>
-                    </div> 
+                    </div>
                   </form>);
        }
        else // they haven't clicked deposit, ask them how much they're depositing
@@ -163,7 +163,7 @@ class DepositFiatOpenLedger extends React.Component {
                          <h3>Deposit {this.props.deposit_asset}</h3>
                       </div>
                       <div className="content-block">
-                        <AmountSelector label="modal.deposit.amount" 
+                        <AmountSelector label="modal.deposit.amount"
                                         amount={this.state.deposit_amount}
                                         asset={this.props.receive_asset.get('id')}
                                         assets={[this.props.receive_asset.get('id')]}
@@ -172,23 +172,23 @@ class DepositFiatOpenLedger extends React.Component {
                                         display_balance={null}
                                         />
                       </div>
-                                     
+
                       <div className="content-block">
-                        <input type="submit" className="button" 
-                               onClick={this.onSubmitDeposit.bind(this)} 
+                        <input type="submit" className="button"
+                               onClick={this.onSubmitDeposit.bind(this)}
                                value={counterpart.translate("modal.deposit.submit")} />
-                        <input type="submit" className=" button" 
-                               onClick={this.onClose.bind(this)} 
+                        <input type="submit" className=" button"
+                               onClick={this.onClose.bind(this)}
                                value={counterpart.translate("account.perm.cancel")} />
                           {/* <Trigger close={this.props.modal_id}>
-                              <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                              <div className="button"><Translate content="account.perm.cancel" /></div>
                           </Trigger> */}
                       </div>
-                    </div> 
+                    </div>
                   </form>);
        }
    }
-   
+
 };
 
 export default DepositFiatOpenLedger

@@ -54,7 +54,7 @@ class TranswiserDepositModal extends React.Component {
                    */}
                     <div className="content-block">
                        <Trigger close={this.props.modalId}>
-                           <a href className=" button"><Translate content="modal.ok" /></a>
+                           <div className="button"><Translate content="modal.ok" /></div>
                        </Trigger>
                     </div>
                </div>

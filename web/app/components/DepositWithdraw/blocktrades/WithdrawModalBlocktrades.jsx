@@ -58,7 +58,7 @@ class WithdrawModalBlocktrades extends React.Component {
                }
             })});
 
-      this.setState( 
+      this.setState(
          {
             withdraw_address: new_withdraw_address,
             withdraw_address_check_in_progress: true,
@@ -114,7 +114,7 @@ class WithdrawModalBlocktrades extends React.Component {
                       <h3><Translate content="gateway.withdraw_coin" coin={this.props.output_coin_name} symbol={this.props.output_coin_symbol} /></h3>
                    </div>
                    <div className="content-block">
-                     <AmountSelector label="modal.withdraw.amount" 
+                     <AmountSelector label="modal.withdraw.amount"
                                      amount={this.state.withdraw_amount}
                                      asset={this.props.asset.get('id')}
                                      assets={[this.props.asset.get('id')]}
@@ -130,19 +130,19 @@ class WithdrawModalBlocktrades extends React.Component {
                           {invalid_address_message}
                        </span>
                    </div>
-                                  
+
                    <div className="content-block">
-                     <input type="submit" className="button" 
-                            onClick={this.onSubmit.bind(this)} 
+                     <input type="submit" className="button"
+                            onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modal_id}>
-                           <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
-                 </div> 
+                 </div>
                </form>)
    }
-   
+
 };
 
 export default WithdrawModalBlocktrades

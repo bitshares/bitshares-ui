@@ -251,7 +251,7 @@ class BorrowModalContent extends React.Component {
         }
 
         if (this._isPredictionMarket(this.props)) {
-            return 1;   
+            return 1;
         }
 
         return 1 / utils.get_asset_price(
@@ -321,7 +321,7 @@ class BorrowModalContent extends React.Component {
                     </form>
                     <div className="grid-content button-group text-center no-overflow">
                         <Trigger close={this.props.modalId}>
-                            <div href className=" button warning"><Translate content="account.perm.cancel" /></div>
+                            <div className=" button warning"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </div>)
@@ -401,7 +401,7 @@ class BorrowModalContent extends React.Component {
                         <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
                         <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></div>
                         {/*<Trigger close={this.props.modalId}>
-                            <a href className=" button"><Translate content="account.perm.cancel" /></a>
+                            <div className="button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>*/}
                     </div>
                 </form>
