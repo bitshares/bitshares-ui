@@ -818,6 +818,25 @@
     }
   }
 
+
+  .mymarkets-tabs {
+      > li {
+          @include button-focus($secondary-text-color, $panel-bg-color, 0);
+          &:hover {
+            @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+
+          &.active {
+              @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+      }
+  }
+
+  .mymarkets-list {
+      border-top: 2px solid $panel-bg-color;
+  }
+
+
   div.fm-container:hover {
     background-color: darken($light-panel-bg-color, 5%);
     cursor: pointer;

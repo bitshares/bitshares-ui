@@ -168,10 +168,10 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 }
 
 .bid-total {
-  color: $bid-color !important;  
+  color: $bid-color !important;
 }
 
-.ask-total { 
+.ask-total {
   color: $ask-color !important;
 }
 
@@ -226,7 +226,7 @@ a.order-cancel {
   list-style: none;
   overflow: hidden;
   margin: 0px;
-  padding: 0px; 
+  padding: 0px;
 }
 
 .top-stats li {
@@ -505,3 +505,17 @@ table thead tr th.mymarkets-header {
   100% { background-color: transparent;}
 }
 
+.mymarkets-tabs {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    margin-top: 5px;
+
+    > li {
+        padding: 3px;
+        font-size: 12px;
+        display: inline-block;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+}
