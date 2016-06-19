@@ -1,15 +1,15 @@
 [
+    {
+      "backingCoinType": "BTC",
+      "name": "Bitcoin",
+      "walletType": "bitcoin",
+      "symbol": "OPEN.BTC"
+    },
   {
     "backingCoinType": "BKS",
     "name": "BlockShares",
     "walletType": "blockshares",
     "symbol": "OPEN.BKS"
-  },
-  {
-    "backingCoinType": "BTC",
-    "name": "Bitcoin",
-    "walletType": "bitcoin",
-    "symbol": "OPEN.BTC"
   },
   {
     "backingCoinType": "DASH",
