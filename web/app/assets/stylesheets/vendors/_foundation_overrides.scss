@@ -18,6 +18,10 @@
   width: auto;
   min-width: 12em;
 
+  ul {
+      font-size: 14px;
+  }
+
   .no-first-element-top-border > :first-child > a {
     border-top: none;
     border-top-left-radius: 4px;

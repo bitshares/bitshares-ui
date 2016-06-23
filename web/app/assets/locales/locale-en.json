@@ -21,8 +21,8 @@
     "create_account": "Create Account",
     "create_asset": "Create Asset",
     "update_asset": "Update Asset",
-    "lock": "Lock",
-    "unlock": "Unlock",
+    "lock": "Lock Wallet",
+    "unlock": "Unlock Wallet",
     "help": "Help",
     "locked_tip": "Wallet is locked.<br/>Click to unlock.",
     "unlocked_tip": "Wallet is unlocked.<br/>Click to lock."
