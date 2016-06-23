@@ -176,7 +176,7 @@ class Header extends React.Component {
         let lock_unlock = (this.props.current_wallet && myAccountCount) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
-                <a href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light" data-html><Icon className="icon-14px" name="locked"/></a>
+                <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light" data-html><Icon className="icon-14px" name="locked"/></a>
                 : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light" data-html><Icon className="icon-14px" name="unlocked"/></a> }
             </div>
         ) : null;
@@ -204,7 +204,7 @@ class Header extends React.Component {
                     });
 
                 accountsDropDown = tradingAccounts.length === 1 ? (
-                    <a onClick={this.onClickUser.bind(this, currentAccount)} className="button">
+                    <a style={{padding: "1rem"}} onClick={this.onClickUser.bind(this, currentAccount)} className="button">
                         <span>
                             <Icon className="icon-14px" name="user"/>
                         </span>
@@ -213,7 +213,7 @@ class Header extends React.Component {
                 ) : (
                     <ActionSheet>
                         <ActionSheet.Button title="">
-                            <a className="button">
+                            <a style={{padding: "1rem"}} className="button">
                                 <span onClick={this.onClickUser.bind(this, currentAccount)}>
                                     <Icon className="icon-14px" name="user"/>
                                 </span>&nbsp;{account_display_name} &nbsp;
@@ -255,12 +255,11 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
                         <div className="grid-block shrink overflow-visible account-drop-down">
-
                             {accountsDropDown}
                         </div>
                         {walletBalance}
                         <div className="grp-menu-item" >
-                            <Link to="/settings" data-tip={settings} data-place="bottom" data-type="light"><Icon className="icon-14px" name="cog"/></Link>
+                            <Link style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom" data-type="light"><Icon className="icon-14px" name="cog"/></Link>
                         </div>
                         {lock_unlock}
 
