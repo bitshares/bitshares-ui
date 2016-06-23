@@ -29,7 +29,7 @@ class SettingsStore {
         let topMarkets = [
             "MKR", "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK",
             "OPEN.STEEM", "OPEN.DAO", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
-            "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC"
+            "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER"
         ];
 
         this.preferredBases = Immutable.List(["OPEN.BTC", "USD", CORE_ASSET, "BTC", "CNY"]);
