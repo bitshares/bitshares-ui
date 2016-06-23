@@ -8,12 +8,6 @@
   }
 }
 
-.icon.locked > svg {
-  width: 1.15rem;
-  height: 1.15rem;
-
-}
-
 .header {
   padding-left: 0 !important;
   padding-right: 1rem;
@@ -64,4 +58,13 @@
 .user-icon > a {
   padding-left: 0.3rem;
   padding-right: 0.3rem;
+}
+
+.header .button.create-account {
+    margin-left: 16px;
+
+  > span {
+      font-size: 14px;
+      text-transform: capitalize;
+  }
 }

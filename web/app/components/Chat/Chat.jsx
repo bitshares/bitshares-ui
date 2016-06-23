@@ -604,10 +604,10 @@ export default class Chat extends React.Component {
                             <Translate content="chat.title" />
                             <span>&nbsp;- <Translate content="chat.users" count={this.connections.size + 1} /></span>
                             <div className="chatbox-pin" onClick={this._onToggleDock.bind(this)}>
-                                {docked ? <Icon className="rotate" name="thumb-tack"/> : <Icon name="thumb-tack"/>}
+                                {docked ? <Icon className="icon-14px rotate" name="thumb-tack"/> : <Icon className="icon-14px" name="thumb-tack"/>}
                             </div>
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
-                                <Icon name="cog"/>
+                                <Icon className="icon-14px" name="cog"/>
                             </div>
                             {docked ? null : <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>}
                         </div>

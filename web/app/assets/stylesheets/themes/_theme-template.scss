@@ -251,8 +251,12 @@
     }
   }
 
-  .header .button,  header .button:active {
+  .header .button,  .header .button:active {
     background-color: $panel-bg-color !important;
+  }
+
+  .header .button.create-account {
+    background-color: $button-bg-color !important;
   }
 
   .grp-menu-item button {
