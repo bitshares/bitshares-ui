@@ -20,6 +20,10 @@
 
   ul {
       font-size: 14px;
+
+      a {
+          border-top: none;
+      }
   }
 
   .no-first-element-top-border > :first-child > a {
