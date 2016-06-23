@@ -124,7 +124,8 @@ class App extends React.Component {
         }
 
         // Check for mobile device to disable chat
-        if (/safari|android|ipad|ios|iphone|windows phone/i.test(user_agent)) {
+        let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        if (/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari) {
             this.setState({
                 isMobile: true
             });
