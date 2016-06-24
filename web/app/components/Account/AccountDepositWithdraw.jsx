@@ -22,8 +22,6 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 
-let olGatewayCoins = require("components/DepositWithdraw/openledger/gatewayCoins.json");
-
 @BindToChainState()
 class AccountDepositWithdraw extends React.Component {
 
@@ -41,6 +39,8 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             blockTradesCoins: [],
             blockTradesBackedCoins: [],
+            openLedgerCoins: [],
+            openLedgerBackedCoins: [],
             olService: props.viewSettings.get("olService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge"),
@@ -54,6 +54,8 @@ class AccountDepositWithdraw extends React.Component {
             nextProps.account !== this.props.account ||
             !utils.are_equal_shallow(nextState.blockTradesCoins, this.state.blockTradesCoins) ||
             !utils.are_equal_shallow(nextState.blockTradesBackedCoins, this.state.blockTradesBackedCoins) ||
+            !utils.are_equal_shallow(nextState.openLedgerCoins, this.state.openLedgerCoins) ||
+            !utils.are_equal_shallow(nextState.openLedgerBackedCoins, this.state.openLedgerBackedCoins) ||
             nextState.olService !== this.state.olService ||
             nextState.btService !== this.state.btService ||
             nextState.metaService !== this.state.metaService ||
@@ -63,6 +65,7 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
+		
         fetch("https://blocktrades.us/api/v2/coins").then(reply => reply.json().then(result => {
             this.setState({
                 blockTradesCoins: result
@@ -72,6 +75,17 @@ class AccountDepositWithdraw extends React.Component {
             });
         })).catch(err => {
             console.log("error fetching blocktrades list of coins", err);
+        });
+		
+        fetch("https://blocktrades.us/ol/api/v2/coins").then(reply => reply.json().then(result => {
+            this.setState({
+                openLedgerCoins: result
+            });
+            this.setState({
+                openLedgerBackedCoins: this.getOpenledgerBackedCoins(result)
+            });
+        })).catch(err => {
+            console.log("error fetching openledger list of coins", err);
         });
     }
 
@@ -90,6 +104,23 @@ class AccountDepositWithdraw extends React.Component {
                 });
             }});
         return blocktradesBackedCoins;
+    }
+	
+	getOpenledgerBackedCoins(allOpenledgerCoins) {
+        let coins_by_type = {};
+        allOpenledgerCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
+        let openledgerBackedCoins = [];
+        allOpenledgerCoins.forEach(coin_type => {
+            if (coin_type.walletSymbol.startsWith('OPEN.') && coin_type.backingCoinType)
+            {
+                openledgerBackedCoins.push({
+                    name: coins_by_type[coin_type.backingCoinType].name,
+                    walletType: coins_by_type[coin_type.backingCoinType].walletType,
+                    backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
+                    symbol: coin_type.walletSymbol
+                });
+            }});
+        return openledgerBackedCoins;
     }
 
     toggleOLService(service) {
@@ -139,12 +170,17 @@ class AccountDepositWithdraw extends React.Component {
             services, activeService} = this.state;
 
         let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
-            if (coin.backingCoinType === "muse") {
+            if (coin.backingCoinType === "muse") {    // it is not filterring, should be MUSE
                 return false;
             }
             return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
         })
         .map(coin => {
+            return coin;
+        })
+        .sort((a, b) => { return a.symbol > b.symbol; });
+		
+        let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
             return coin;
         })
         .sort((a, b) => { return a.symbol > b.symbol; });
@@ -216,12 +252,12 @@ class AccountDepositWithdraw extends React.Component {
                                 <div onClick={this.toggleOLService.bind(this, "gateway")} className={cnames("button", olService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
                                 <div onClick={this.toggleOLService.bind(this, "fiat")} className={cnames("button", olService === "fiat" ? "active" : "outline")}>Fiat</div>
                             </div>
-
-
-                            {olService === "gateway" && blockTradesGatewayCoins.length ?
+                            
+                            
+                            {olService === "gateway" && openLedgerGatewayCoins.length ? 
                             <BlockTradesGateway
                                 account={account}
-                                coins={olGatewayCoins}
+                                coins={openLedgerGatewayCoins}
                                 provider="openledger"
                             /> : null}
 

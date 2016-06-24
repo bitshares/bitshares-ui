@@ -46,3 +46,41 @@
   color: #ababab;
   line-height: 150%;
 }
+
+.blocktrades-select .blocktrades-select-option {
+  width: 100%;
+  height: 250px;
+  border: solid 1px #000;
+  background-color: #fff;
+  position: absolute;
+  border-top: none;
+  top: 238px;
+  overflow: auto;
+}
+
+.blocktrades-select .blocktrades-select-option a {
+  display: block;
+  color: black;
+  padding: 1px;
+  cursor: default;
+}
+
+.blocktrades-select .blocktrades-select-option a:hover {
+  color: #5c9be5;
+}
+
+.blocktrades-select	input	{
+  float: left;
+  height: 38px;
+}
+
+.blocktrades-select	span {
+  width: 5%;
+  height: 38px;
+  float: left;
+  color: black;
+  background: #eeeeee;
+  text-align: center;
+  line-height: 38px;
+  cursor: default;
+}

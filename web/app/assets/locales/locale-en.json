@@ -947,6 +947,11 @@
       "from": "Account to reserve from",
       "submit": "Reserve"
     },
+    "confirmation": {
+      "title": "The address you entered does not appear valid, are you sure you want to make the withdrawal?",
+      "accept": "Yes",
+      "cancel": "No"
+    },      
     "ok": "OK"
   },
   "init_error": {
