@@ -278,8 +278,10 @@ class WithdrawModalBlocktrades extends React.Component {
                     <span>  
    				        <div className="blocktrades-select">
                             <input type="text" value={withdraw_address_selected} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off" style={{width: "95%"}} />
-	                        <span onClick={this.onDropDownList.bind(this)}>▼</span>
-                            {options}
+	                        <span onClick={this.onDropDownList.bind(this)}>▼</span><br/><br/>
+							<div className="blocktrades-setoptions"> 
+                                {options}
+							</div>
                         </div>
                         {invalid_address_message}
                     </span>

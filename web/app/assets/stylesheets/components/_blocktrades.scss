@@ -47,14 +47,16 @@
   line-height: 150%;
 }
 
-.blocktrades-select .blocktrades-select-option {
+.blocktrades-select-option {
   width: 100%;
-  height: 250px;
+  height: auto;
+  max-height: 250px;
   border: solid 1px #000;
   background-color: #fff;
   position: absolute;
   border-top: none;
-  top: 238px;
+  padding-bottom: 3px;
+  top: 7px;
   overflow: auto;
 }
 
@@ -69,7 +71,11 @@
   color: #5c9be5;
 }
 
-.blocktrades-select	input	{
+.blocktrades-setoptions {
+  position: relative;
+}
+
+.blocktrades-select	input {
   float: left;
   height: 38px;
 }
