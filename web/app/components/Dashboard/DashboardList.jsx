@@ -48,7 +48,7 @@ class DashboardList extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("dashboardSortInverse", true),
             sortBy: props.viewSettings.get("dashboardSort", "star"),
-            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
+            dashboardFilter: props.viewSettings.get("dashboardFilter", "")
         };
 
     }
@@ -121,7 +121,7 @@ class DashboardList extends React.Component {
                 }
             }
         }
-        
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
@@ -147,6 +147,7 @@ class DashboardList extends React.Component {
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
+                let isLTM = account.get("lifetime_referrer_name") === accountName;
 
                 if (account.get("orders")) {
                     account.get("orders").forEach( (orderID, key) => {
@@ -202,7 +203,7 @@ class DashboardList extends React.Component {
                             <Icon className={starClass} name="fi-star"/>
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
-                            {accountName}
+                            <span className={isLTM ? "lifetime" : ""}>{accountName}</span>
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
@@ -246,7 +247,7 @@ class DashboardList extends React.Component {
                         {accounts}
                     </tbody>
                 </table>
-            </div>          
+            </div>
         )
 
     }
@@ -256,7 +257,7 @@ class DashboardList extends React.Component {
 
 @connectToStores
 class AccountsListWrapper extends React.Component {
-    
+
     static getStores() {
         return [SettingsStore]
     };

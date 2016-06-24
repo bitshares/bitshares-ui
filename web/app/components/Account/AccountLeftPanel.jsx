@@ -54,14 +54,14 @@ class AccountLeftPanel extends React.Component {
         let {account, linkedAccounts, isMyAccount} = this.props;
         let account_name = account.get("name");
         let linkBtn = null;
-        // if (!isMyAccount) {
-            linkBtn = linkedAccounts.has(account_name) ?
-                <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
-                    content={`account.${!isMyAccount ? "unfollow" : "ignore"}`}/></a> :
-                <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
-                    content={`account.${!isMyAccount ? "follow" : "unignore"}`}/></a>;
-        // }
-        let settings       = counterpart.translate("header.settings");
+        
+        linkBtn = linkedAccounts.has(account_name) ?
+            <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
+                content={`account.${!isMyAccount ? "unfollow" : "ignore"}`}/></a> :
+            <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
+                content={`account.${!isMyAccount ? "follow" : "unignore"}`}/></a>;
+
+        let settings = counterpart.translate("header.settings");
         return (
             <div className="grid-block vertical account-left-panel no-padding no-overflow">
                 <div className="grid-block">
@@ -84,7 +84,7 @@ class AccountLeftPanel extends React.Component {
                                 <li><Link to={`/account/${account_name}/orders/`} activeClassName="active"><Translate content="account.open_orders"/></Link></li>
                                 <li><Link to={`/account/${account_name}/voting/`} activeClassName="active"><Translate content="account.voting"/></Link></li>
                                 {isMyAccount ? <li><Link to={`/account/${account_name}/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
-                                
+
                                 {/* Advanced features*/}
                                 <Translate className="menu-subheader" component="li" content="account.user_issued_assets.advanced" />
                                 <li><Link to={`/account/${account_name}/assets/`} activeClassName="active"><Translate content="explorer.assets.title"/></Link></li>
