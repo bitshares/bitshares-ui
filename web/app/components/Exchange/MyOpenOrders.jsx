@@ -14,6 +14,7 @@ import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
+import Icon from "../Icon/Icon";
 
 class TableHeader extends React.Component {
 
@@ -73,9 +74,9 @@ class OrderRow extends React.Component {
                         format="short"
                         />
                     </td>
-                    <td className="text-right" style={{width: "18%", padding: "2px 5px"}}>
+                    <td className="text-center" style={{width: "18%", padding: "2px 5px"}}>
                         <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
-                        <span>{cancel_text}</span>
+                        <Icon name="cross-circle" className="icon-14px" />
                         </a>
                     </td>
                 </tr>
@@ -108,7 +109,7 @@ class MyOpenOrders extends React.Component {
 
     componentDidUpdate(prevProps) {
         let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
-        Ps.update(asksContainer);     
+        Ps.update(asksContainer);
     }
 
     render() {

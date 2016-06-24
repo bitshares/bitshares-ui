@@ -527,3 +527,9 @@ table thead tr th.mymarkets-header {
     appearance: menulist;
     text-align: left;
 }
+
+a.order-cancel > .icon > svg {
+  > path {
+    fill : #e8564b;
+  }
+}
