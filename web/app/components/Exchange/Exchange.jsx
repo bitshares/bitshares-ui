@@ -290,6 +290,10 @@ class Exchange extends React.Component {
             });
             return this._subToMarket(nextProps);
         }
+
+        if (this.state.sub && nextProps.bucketSize !== this.props.bucketSize) {
+            return this._changeBucketSize(nextProps.bucketSize);
+        }
     }
 
     componentWillUnmount() {
@@ -498,11 +502,11 @@ class Exchange extends React.Component {
     }
 
     _changeBucketSize(size, e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize(size);
+            MarketsActions.changeBucketSize.defer(size);
             let currentSub = this.state.sub.split("_");
-            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
+            MarketsActions.unSubscribeMarket.defer(currentSub[0], currentSub[1]);
             this._subToMarket(this.props, size);
         }
     }

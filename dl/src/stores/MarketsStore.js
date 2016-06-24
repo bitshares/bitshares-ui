@@ -31,7 +31,7 @@ class MarketsStore {
         this.calls = [];
         this.flat_bids = [];
         this.flat_asks = [];
-        this.flat_calls = [];        
+        this.flat_calls = [];
         this.totalBids = 0;
         this.totalCalls = 0;
         this.priceData = [];
@@ -158,6 +158,9 @@ class MarketsStore {
 
         if (result.buckets) {
             this.buckets = result.buckets;
+            if (result.buckets.indexOf(this.bucketSize) === -1) {
+                this.bucketSize = result.buckets[result.buckets.length - 1];
+            }
         }
 
         if (result.limits) {
@@ -237,7 +240,7 @@ class MarketsStore {
         }
 
         if (result.recent && result.recent.length) {
-            
+
             let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset);
 
             this.marketStats = this.marketStats.set("change", stats.change);
@@ -399,7 +402,7 @@ class MarketsStore {
             }
 
             if (low === 0) {
-                low = findMin(open, close);                
+                low = findMin(open, close);
             }
 
             if (isNaN(high) || high === Infinity) {
@@ -407,11 +410,11 @@ class MarketsStore {
             }
 
             if (close === Infinity || close === 0) {
-                close = open;               
+                close = open;
             }
 
             if (open === Infinity || open === 0) {
-                open = close;               
+                open = close;
             }
 
             prices.push([date, open, high, low, close]);
@@ -842,9 +845,9 @@ class MarketsStore {
 
             result.settles.forEach(settle => {
                 // let key = settle.owner + "_" + settle.balance.asset_id;
-                
+
                 settle.settlement_date = new Date(settle.settlement_date);
-                
+
                 this.activeMarketSettles = this.activeMarketSettles.add(
                     SettleOrder(settle)
                 );
