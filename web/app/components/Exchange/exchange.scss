@@ -519,3 +519,11 @@ table thead tr th.mymarkets-header {
         cursor: pointer;
     }
 }
+
+.buysell-select {
+    background: none !important;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+    text-align: left;
+}
