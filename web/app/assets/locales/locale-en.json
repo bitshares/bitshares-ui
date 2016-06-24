@@ -945,6 +945,7 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "service": "Transfer Service",
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",

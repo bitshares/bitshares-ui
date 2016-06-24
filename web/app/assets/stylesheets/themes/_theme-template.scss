@@ -840,6 +840,10 @@
       border-top: 2px solid $panel-bg-color;
   }
 
+  select.bts-select {
+      color: $secondary-text-color;
+  }
+
 
   div.fm-container:hover {
     background-color: darken($light-panel-bg-color, 5%);

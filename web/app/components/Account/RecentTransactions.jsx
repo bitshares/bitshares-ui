@@ -88,7 +88,7 @@ class RecentTransactions extends React.Component {
 
         if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
-        for(let key = 0; key < nextProps.accountsList.length; ++key) {            
+        for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
             if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
@@ -216,7 +216,7 @@ class RecentTransactions extends React.Component {
 
                         <div className="block-content-header">
                             <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
-                            
+
                             {historyCount > 0 ?
                             <span style={{fontSize: "60%", textTransform: "lowercase"}}>
                                 &nbsp;(
@@ -233,7 +233,7 @@ class RecentTransactions extends React.Component {
 
                             {this.props.showFilters ? (
                             <div className="float-right">
-                                <select value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                <select className="bts-select" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
                             </div>) : null}
                         </div>
 
@@ -250,7 +250,7 @@ class RecentTransactions extends React.Component {
                     <div
                         className="box-content grid-block no-margin"
                         style={!this.props.fullHeight ? {
-                            maxHeight: maxHeight - headerHeight 
+                            maxHeight: maxHeight - headerHeight
                         } : null}
                         ref="transactions">
                         <table className={"table" + (compactView ? " compact" : "")}>
