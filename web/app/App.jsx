@@ -99,18 +99,20 @@ class App extends React.Component {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
 
-            Promise.all([
-                AccountStore.loadDbData()
-            ]).then(() => {
-                AccountStore.tryToSetCurrentAccount();
-                this.setState({loading: false});
-            }).catch(error => {
-                console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
-                this.setState({loading: false});
-            });
+
 
             ChainStore.init().then(() => {
                 this.setState({synced: true});
+
+                Promise.all([
+                    AccountStore.loadDbData(Apis.instance().chainId)
+                ]).then(() => {
+                    AccountStore.tryToSetCurrentAccount();
+                    this.setState({loading: false});
+                }).catch(error => {
+                    console.log("[App.jsx] ----- ERROR ----->", error, error.stack);
+                    this.setState({loading: false});
+                });
             }).catch(error => {
                 console.log("[App.jsx] ----- ChainStore.init error ----->", error, error.stack);
                 this.setState({loading: false});

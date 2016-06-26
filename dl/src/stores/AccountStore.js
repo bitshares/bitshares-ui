@@ -4,7 +4,8 @@ import alt from "../alt-instance";
 import AccountActions from "../actions/AccountActions";
 import iDB from "../idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore"
-import {ChainStore, ChainValidation} from "graphenejs-lib";
+import {ChainStore, ChainValidation, FetchChain} from "graphenejs-lib";
+import {Apis} from "graphenejs-ws";
 import AccountRefsStore from "stores/AccountRefsStore"
 import AddressIndex from "stores/AddressIndex"
 import SettingsStore from "stores/SettingsStore"
@@ -21,7 +22,7 @@ class AccountStore extends BaseStore {
     constructor() {
         super();
         this.state = this._getInitialState()
-        ChainStore.subscribe(this.chainStoreUpdate.bind(this))
+
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onCreateAccount: AccountActions.createAccount,
@@ -39,14 +40,17 @@ class AccountStore extends BaseStore {
             "getMyAuthorityForAccount",
             "isMyKey"
         );
+
+        this.getMyAccounts = this.getMyAccounts.bind(this);
     }
-    
+
     _getInitialState() {
         this.account_refs = null
         this.initial_account_refs_load = true // true until all undefined accounts are found
 
-        return { 
+        return {
             update: false,
+            subbed: false,
             currentAccount: null,
             linkedAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
@@ -61,29 +65,57 @@ class AccountStore extends BaseStore {
             this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
         }
     }
-    
+
     loadDbData() {
         var linkedAccounts = Immutable.Set().asMutable();
-        iDB.load_data("linked_accounts")
-        .then(data => {
-            for (let a of data) {
-                linkedAccounts.add(a.name);
-                this._addIgnoredAccount(a.name);
-            }
+        let chainId = Apis.instance().chain_id;
+        return new Promise((resolve, reject) => {
+            iDB.load_data("linked_accounts")
+            .then(data => {
+                console.log("linked_accounts:", data);
+                let accountPromises = data.filter(a => {
+                    if (a.chainId) {
+                        return a.chainId === chainId;
+                    } else {
+                        return true;
+                    }
+                }).map(a => {
+                    linkedAccounts.add(a.name);
+                    this._addIgnoredAccount(a.name);
+                    return FetchChain("getAccount", a.name);
+                });
 
-            this.setState({
-                linkedAccounts: linkedAccounts.asImmutable()
+                this.setState({
+                    linkedAccounts: linkedAccounts.asImmutable()
+                });
+                Promise.all(accountPromises).then(results => {
+                    ChainStore.subscribe(this.chainStoreUpdate.bind(this));
+
+                    this.setState({
+                        subbed: true
+                    });
+                    resolve();
+                }).catch(err => {
+                    ChainStore.subscribe(this.chainStoreUpdate.bind(this));
+                    this.setState({
+                        subbed: true
+                    });
+                    reject(err);
+                });
+            }).catch(err => {
+                reject(err);
             });
-        })
+        });
+
     }
-    
+
     chainStoreUpdate() {
         if(this.state.update) {
-            this.setState({update: false})
+            this.setState({update: false});
         }
-        this.addAccountRefs()
+        this.addAccountRefs();
     }
-    
+
     addAccountRefs() {
         //  Simply add them to the linkedAccounts list (no need to persist them)
         var account_refs = AccountRefsStore.getState().account_refs
@@ -109,31 +141,45 @@ class AccountStore extends BaseStore {
         this.initial_account_refs_load = pending
         this.tryToSetCurrentAccount();
     }
-    
+
     getMyAccounts() {
-        var accounts = []
+        if (!this.state.subbed) {
+            return [];
+        }
+
+        let accounts = [];
+        let needsUpdate = false;
         for(let account_name of this.state.linkedAccounts) {
-            var account = ChainStore.getAccount(account_name)
+            let account = ChainStore.getAccount(account_name);
             if(account === undefined) {
-                this.state.update = true
-                continue
+                // console.log(account_name, "account undefined");
+                needsUpdate = true;
+                continue;
             }
             if(account == null) {
-                console.log("WARN: non-chain account name in linkedAccounts", account_name)
-                continue
+                console.log("WARN: non-chain account name in linkedAccounts", account_name);
+                continue;
             }
-            var auth = this.getMyAuthorityForAccount(account)
+            var auth = this.getMyAuthorityForAccount(account);
+
             if(auth === undefined) {
-                this.state.update = true
-                continue
-            } 
-            if(auth === "full") {
-                accounts.push(account_name)
+                // console.log(account_name, "auth undefined");
+                needsUpdate = true;
+                continue;
             }
+
+            if(auth === "full") {
+                accounts.push(account_name);
+            }
+
+            // console.log("account:", account_name, "auth:", auth);
+
         }
+        if (needsUpdate) this.state.update = true;
+        // console.log("accounts:", accounts, "linkedAccounts:", this.state.linkedAccounts);
         return accounts.sort()
     }
-    
+
     /**
         @todo "partial"
         @return string "none", "full", "partial" or undefined (pending a chain store lookup)
@@ -143,27 +189,27 @@ class AccountStore extends BaseStore {
 
         let owner_authority = account.get("owner")
         let active_authority = account.get("active")
-        
+
         let owner_pubkey_threshold = pubkeyThreshold(owner_authority)
         if(owner_pubkey_threshold == "full") return "full"
         let active_pubkey_threshold = pubkeyThreshold(active_authority)
         if(active_pubkey_threshold == "full") return "full"
-        
+
         let owner_address_threshold = addressThreshold(owner_authority)
         if(owner_address_threshold == "full") return "full"
         let active_address_threshold = addressThreshold(active_authority)
         if(active_address_threshold == "full") return "full"
-        
+
         let owner_account_threshold, active_account_threshold;
 
         // if (account.get("name") === "secured-x") {
         //     debugger;
         // }
-        if(recursion_count < 3) {            
+        if(recursion_count < 3) {
             owner_account_threshold = this._accountThreshold(owner_authority, recursion_count)
             if ( owner_account_threshold === undefined ) return undefined
             if(owner_account_threshold == "full") return "full"
-            
+
             active_account_threshold = this._accountThreshold(active_authority, recursion_count)
             if ( active_account_threshold === undefined ) return undefined
             if(active_account_threshold == "full") return "full"
@@ -203,7 +249,7 @@ class AccountStore extends BaseStore {
         if( authority === undefined ) return undefined
         return authority === "partial" || authority === "full";
     }
-    
+
     onAccountSearch(payload) {
         this.state.searchTerm = payload.searchTerm;
         this.state.searchAccounts = this.state.searchAccounts.clear();
@@ -225,7 +271,7 @@ class AccountStore extends BaseStore {
         }
         if (this.state.linkedAccounts.size) {
             return this.setCurrentAccount(this.state.linkedAccounts.first());
-        }  
+        }
     }
 
     setCurrentAccount(name) {
@@ -241,7 +287,7 @@ class AccountStore extends BaseStore {
     onSetCurrentAccount(name) {
         this.setCurrentAccount(name);
     }
-    
+
     onCreateAccount(name_or_account) {
         var account = name_or_account;
         if (typeof account === "string") {
@@ -249,17 +295,20 @@ class AccountStore extends BaseStore {
                 name: account
             };
         }
-        
+
         if(account["toJS"])
             account = account.toJS()
-        
+
         if(account.name == "" || this.state.linkedAccounts.get(account.name))
             return Promise.resolve()
-        
+
         if( ! ChainValidation.is_account_name(account.name))
             throw new Error("Invalid account name: " + account.name)
-        
-        return iDB.add_to_store("linked_accounts", {name: account.name}).then(() => {
+
+        return iDB.add_to_store("linked_accounts", {
+            name: account.name,
+            chainId: Apis.instance().chain_id
+        }).then(() => {
             console.log("[AccountStore.js] ----- Added account to store: ----->", account.name);
             this.state.linkedAccounts = this.state.linkedAccounts.add(account.name);
             if (this.state.linkedAccounts.size === 1) {
@@ -271,11 +320,12 @@ class AccountStore extends BaseStore {
     onLinkAccount(name) {
         if( ! ChainValidation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
-        
+
         // Link
         iDB.add_to_store("linked_accounts", {
-            name
-        });        
+            name,
+            chainId: Apis.instance().chain_id
+        });
         this.state.linkedAccounts = this.state.linkedAccounts.add(name);
 
         // remove from unFollow
@@ -292,7 +342,7 @@ class AccountStore extends BaseStore {
     onUnlinkAccount(name) {
         if( ! ChainValidation.is_account_name(name, true))
             throw new Error("Invalid account name: " + name)
-        
+
         // Unlink
         iDB.remove_from_store("linked_accounts", name);
         this.state.linkedAccounts = this.state.linkedAccounts.delete(name);
@@ -304,9 +354,9 @@ class AccountStore extends BaseStore {
         let maxEntries = 50;
         if (this.state.unFollowedAccounts.size > maxEntries) {
             this.state.unFollowedAccounts = this.state.unFollowedAccounts.takeLast(maxEntries);
-        }    
-             
-        accountStorage.set("unfollowed_accounts", this.state.unFollowedAccounts);        
+        }
+
+        accountStorage.set("unfollowed_accounts", this.state.unFollowedAccounts);
 
         // Update current account if no accounts are linked
         if (this.state.linkedAccounts.size === 0) {
