@@ -81,7 +81,8 @@ class WithdrawModalBlocktrades extends React.Component {
    }
 
     onWithdrawAddressChanged( e ) {
-        let new_withdraw_address = e.target.value;
+
+        let new_withdraw_address = e.target.value.trim();
 
         fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
             {
@@ -105,7 +106,7 @@ class WithdrawModalBlocktrades extends React.Component {
             {
             withdraw_address: new_withdraw_address,
             withdraw_address_check_in_progress: true,
-			withdraw_address_selected: e.target.value,
+			withdraw_address_selected: e.target.value.trim(),
             withdraw_address_is_valid: null
             });
    }
@@ -197,6 +198,7 @@ class WithdrawModalBlocktrades extends React.Component {
 		    storedAddress = JSON.parse(localStorage.getItem("withdrawals"));
 	    }
         let balance = null;
+		let style_select = "blocktrades-select-option";
 	 
         // console.log( "account: ", this.props.account.toJS() );
         let account_balances = this.props.account.get("balances").toJS();
@@ -217,10 +219,14 @@ class WithdrawModalBlocktrades extends React.Component {
         let invalid_address_message = null;
 	    let options = null;
 	    let confirmation = null;
+		
+		if (storedAddress.length == 0) {
+			style_select = "blocktrades-disabled-select-option";
+		}
 	   
 	    if (this.state.options_is_valid) {
 	        options = 
-			    <div className="blocktrades-select-option" onClick={this.onSelectChanged.bind(this)}>
+			    <div className={style_select} onClick={this.onSelectChanged.bind(this)}>
                     {storedAddress.map(function(name, index){
                     return <a value={index}>{name}</a>;
                     })}
@@ -277,9 +283,9 @@ class WithdrawModalBlocktrades extends React.Component {
                     <label><Translate component="span" content="modal.withdraw.address"/></label>
                     <span>  
    				        <div className="blocktrades-select">
-                            <input type="text" value={withdraw_address_selected} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off" style={{width: "95%"}} />
+                            <input type="text" value={withdraw_address_selected} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off" style={{width: "94%"}} />
 	                        <span onClick={this.onDropDownList.bind(this)}>▼</span><br/><br/>
-							<div className="blocktrades-setoptions"> 
+							<div className="blocktrades-position"> 
                                 {options}
 							</div>
                         </div>
