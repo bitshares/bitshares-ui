@@ -37,18 +37,20 @@ class Comment extends React.Component {
     }
 
     render() {
+        let {comment, user, color} = this.props;
+        let systemUsers = [counterpart.translate("chat.welcome_user"), "SYSTEM"];
         return (
             <div style={{padding: "3px 1px"}}>
                 <span
                     className="clickable"
-                    onClick={this.props.onSelectUser.bind(this, this.props.user)}
+                    onClick={this.props.onSelectUser.bind(this, user)}
                     style={{
                         fontWeight: "bold",
-                        color: this.props.color
+                        color: color
                     }}>
-                        {this.props.user}:&nbsp;
+                        {user}:&nbsp;
                 </span>
-                <span className="chat-text">{this.props.comment.substr(0, 140)}</span>
+                <span className="chat-text">{systemUsers.indexOf(user) !== -1 ? comment : comment.substr(0, 140)}</span>
             </div>
         );
     }
