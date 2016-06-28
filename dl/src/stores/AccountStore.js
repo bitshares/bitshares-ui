@@ -72,7 +72,6 @@ class AccountStore extends BaseStore {
         return new Promise((resolve, reject) => {
             iDB.load_data("linked_accounts")
             .then(data => {
-                console.log("linked_accounts:", data);
                 let accountPromises = data.filter(a => {
                     if (a.chainId) {
                         return a.chainId === chainId;
@@ -261,8 +260,9 @@ class AccountStore extends BaseStore {
     }
 
     tryToSetCurrentAccount() {
+
         if (accountStorage.has("currentAccount")) {
-            return this.setCurrentAccount(accountStorage.get("currentAccount"));
+            return this.setCurrentAccount(accountStorage.get("currentAccount", null));
         }
 
         let {starredAccounts} = SettingsStore.getState();

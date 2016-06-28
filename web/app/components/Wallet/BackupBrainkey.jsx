@@ -8,12 +8,12 @@ import {hash} from "graphenejs-lib";
 import cname from "classnames"
 
 export default class BackupBrainkey extends Component {
-    
+
     constructor() {
         super()
         this.state = this._getInitialState()
     }
-    
+
     _getInitialState() {
         return {
             password: null,
@@ -21,7 +21,7 @@ export default class BackupBrainkey extends Component {
             invalid_password: false
         }
     }
-    
+
     render() {
         var content
         var brainkey_backup_date = WalletDb.getWallet().brainkey_backup_date;
@@ -84,30 +84,28 @@ export default class BackupBrainkey extends Component {
                 </form>
             </span>
         }
-        return <div className="grid-block vertical" style={{overflowY: 'hidden'}}>
-            <div className="grid-container">
-                <div className="grid-content no-overflow">
-                    {content}
-                </div>
+        return <div className="grid-block vertical">
+            <div className="grid-content no-overflow">
+                {content}
             </div>
         </div>
     }
-    
-   
-    onComplete(brnkey) {        
+
+
+    onComplete(brnkey) {
         this.setState({ verified: true })
         WalletActions.setBrainkeyBackupDate()
     }
-    
+
     reset() {
         this.setState(this._getInitialState())
     }
-    
+
     onBack(e) {
         e.preventDefault()
         window.history.back()
     }
-    
+
     onSubmit(e) {
         e.preventDefault()
         var was_locked = WalletDb.isLocked()
@@ -115,7 +113,7 @@ export default class BackupBrainkey extends Component {
             var brainkey = WalletDb.getBrainKey()
             if(was_locked) WalletDb.onLock()
             this.setState({ brainkey })
-        } else 
+        } else
             this.setState({ invalid_password: true })
     }
 

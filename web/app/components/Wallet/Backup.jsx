@@ -15,6 +15,7 @@ import {saveAs} from "common/filesaver.js"
 import cname from "classnames"
 import Translate from "react-translate-component";
 import {ChainConfig} from "graphenejs-ws";
+import {PrivateKey} from "graphenejs-lib";
 
 class BackupBaseComponent extends Component {
 
@@ -37,11 +38,10 @@ export class BackupCreate extends BackupBaseComponent {
     render() {
         return (
             <div style={{maxWidth: "40rem"}}>
-            <Create newAccount={this.props.location.query.newAccount}>
+            <Create newAccount={this.props.location ? this.props.location.query.newAccount : null}>
                 <NameSizeModified/>
                 <Sha1/>
                 <Download/>
-                <Reset/>
             </Create>
 
         </div>
@@ -61,8 +61,6 @@ export class BackupVerify extends BackupBaseComponent {
                     <NameSizeModified/>
                     <DecryptBackup saveWalletObject={true}>
                         <h4><Translate content="wallet.verified" /></h4>
-                        <WalletObjectInspector
-                            walletObject={this.props.backup.wallet_object}/>
                     </DecryptBackup>
                     <Reset/>
                 </Upload>
@@ -110,7 +108,6 @@ export class BackupRestore extends BackupBaseComponent {
                             <Restore/>
                         </NewWalletName>
                     </DecryptBackup>
-                    <Reset label={restored ? <Translate content="wallet.done" /> : <Translate content="wallet.reset" />}/>
                 </Upload>
             </div>
         );
@@ -144,7 +141,7 @@ class Restore extends BackupBaseComponent {
 
         return <span>
             <h3><Translate content="wallet.ready_to_restore" /></h3>
-            <div className="button success"
+            <div className="button outline"
                 onClick={this.onRestore.bind(this)}><Translate content="wallet.restore_wallet_of" name={new_wallet} /></div>
         </span>
     }
@@ -192,18 +189,24 @@ class NewWalletName extends BackupBaseComponent {
             this.props.wallet.wallet_names.has(this.state.new_wallet) : false
         var name_ready = ! has_wallet_name_conflict && has_wallet_name
 
-        return <span>
+        return (
+        <form onSubmit={this.onAccept.bind(this)}>
             <h5><Translate content="wallet.new_wallet_name" /></h5>
-            <input type="text" id="new_wallet"
+            <input
+                type="text"
+                id="new_wallet"
                 onChange={this.formChange.bind(this)}
-                value={this.state.new_wallet} />
+                value={this.state.new_wallet}
+            />
             <p>{ has_wallet_name_conflict ? <Translate content="wallet.wallet_exist" /> : null}</p>
-            <div className={cname("button success", {disabled: ! name_ready})}
-                onClick={this.onAccept.bind(this)}><Translate content="wallet.accept" /></div>
-        </span>
+            <div type="submit" className={cname("button outline", {disabled: ! name_ready})}>
+                <Translate content="wallet.accept" />
+            </div>
+        </form>);
     }
 
-    onAccept() {
+    onAccept(e) {
+        if (e) e.preventDefault();
         this.setState({accept: true})
         WalletManagerStore.setNewWallet(this.state.new_wallet)
     }
@@ -237,8 +240,8 @@ class Download extends BackupBaseComponent {
     }
 
     render() {
-        return <span className="button success"
-            onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></span>
+        return <div className="button outline"
+            onClick={this.onDownload.bind(this)}><Translate content="wallet.download" /></div>
     }
 
     onDownload() {
@@ -286,7 +289,7 @@ class Create extends BackupBaseComponent {
                 </div>
                 <div
                     onClick={this.onCreateBackup.bind(this)}
-                    className={cname("button success", {disabled: !ready})}
+                    className={cname("button outline", {disabled: !ready})}
                     style={{marginBottom: 10}}
                 >
                     <Translate content="wallet.create_backup_of" name={this.props.wallet.current_wallet} />
@@ -339,7 +342,7 @@ class Upload extends BackupBaseComponent {
         var is_invalid =
             this.props.backup.contents &&
             ! this.props.backup.public_key
-
+        console.log("props:", this.props);
         return <span>
             <input type="file" id="backup_input_file" style={{ border: 'solid' }}
                 onChange={this.onFileUpload.bind(this)} />
@@ -388,18 +391,24 @@ class DecryptBackup extends BackupBaseComponent {
 
     render() {
         if(this.state.verified) return <span>{this.props.children}</span>
-        return <span>
+        return (
+        <form onSubmit={this.onPassword.bind(this)}>
             <label><Translate content="wallet.enter_password" /></label>
             <input type="password" id="backup_password"
                 onChange={this.formChange.bind(this)}
                 value={this.state.backup_password}/>
             <Sha1/>
-            <span className="button success"
-                onClick={this.onPassword.bind(this)}><Translate content="wallet.verify" /></span>
-        </span>
+            <div
+                type="submit"
+                className="button outline"
+            >
+                <Translate content="wallet.submit" />
+            </div>
+        </form>);
     }
 
-    onPassword() {
+    onPassword(e) {
+        if (e) e.preventDefault();
         var private_key = PrivateKey.fromSeed(this.state.backup_password || "")
         var contents = this.props.backup.contents
         decryptWalletBackup(private_key.toWif(), contents).then( wallet_object => {

@@ -44,7 +44,7 @@
   }
 
   label, label > span {
-    color: $secondary-text-color;
+    color: $primary-text-color;
   }
 
   // select:hover {
@@ -560,11 +560,16 @@
   }
 
   // Block List (section)
-  section input[type="text"] {
+  section input[type="text"], section input[type="password"] {
     background-color: transparent;
+    border:none;
+    border-bottom: 1px solid $panel-bg-color;
+    color: $primary-text-color;
     &:hover, &:active, &:focus {
       color: $primary-text-color;
       background-color: transparent;
+      border:none;
+      border-bottom: 1px solid $panel-bg-color;
     }
   }
 
@@ -868,7 +873,20 @@
       height: 3rem;
       font-size: 12px;
     }
+  }
 
+  // Settings
+  .settings-menu {
+      > li {
+          &:hover {
+                background-color: darken($light-panel-bg-color, 5%);
+          }
+
+          &.active {
+                color: $link-text-color;
+          }
+
+      }
   }
 
 }

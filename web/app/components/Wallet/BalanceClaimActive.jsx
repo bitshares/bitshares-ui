@@ -18,24 +18,24 @@ import Translate from "react-translate-component";
 
 @connectToStores
 export default class BalanceClaimActive extends Component {
-    
+
     static getStores() {
         return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore]
     }
-    
+
     static getPropsFromStores() {
         var props = BalanceClaimActiveStore.getState()
         props.account_refs = AccountRefsStore.getState().account_refs
         return props
     }
-    
+
     componentWillMount() {
         var keys = PrivateKeyStore.getState().keys
         var keySeq = keys.keySeq()
         BalanceClaimActiveActions.setPubkeys( keySeq )
         this.existing_keys = keySeq
     }
-    
+
     componentWillReceiveProps(nextProps) {
         var keys = PrivateKeyStore.getState().keys
         var keySeq = keys.keySeq()
@@ -43,8 +43,8 @@ export default class BalanceClaimActive extends Component {
             this.existing_keys = keySeq
             BalanceClaimActiveActions.setPubkeys( keySeq )
         }
-    }    
-   
+    }
+
     render() {
         if( !this.props.account_refs.size) {
             return (
@@ -56,7 +56,7 @@ export default class BalanceClaimActive extends Component {
 
         if( this.props.loading) {
             return (
-                <div className="center-content">
+                <div>
                     <br/>
                     <h5><Translate content="wallet.loading_balances"/>&hellip;</h5>
                     <br/>
@@ -68,6 +68,7 @@ export default class BalanceClaimActive extends Component {
         if( !this.props.balances || !this.props.balances.size) {
             return (
                 <div>
+                    <br/>
                     <h5><Translate content="wallet.no_balance" /></h5>
                 </div>
             );
@@ -77,7 +78,7 @@ export default class BalanceClaimActive extends Component {
         var claim_balance_label = import_ready ?
                 ` (${this.props.claim_account_name})` :
                 null;
-        
+
         return (
             <div>
                 <div className="content-block center-content">
@@ -86,7 +87,7 @@ export default class BalanceClaimActive extends Component {
                 <div className="grid-block vertical">
                     <div className="grid-content" style={{overflowY:'hidden !important'}}>
                         <div className="full-width-content center-content">
-                            <MyAccounts 
+                            <MyAccounts
                                 key={this.props.balances}
                                 accounts={Immutable.List(this.props.account_refs)}
                                 onChange={this.onClaimAccountChange.bind(this)}/>
@@ -104,16 +105,16 @@ export default class BalanceClaimActive extends Component {
             </div>
         )
     }
-    
+
     onBack(e) {
         e.preventDefault()
         window.history.back()
     }
-    
+
     onClaimAccountChange(claim_account_name) {
         BalanceClaimActiveActions.claimAccountChange(claim_account_name)
     }
-    
+
     onClaimBalance() {
         WalletActions.importBalance( this.props.claim_account_name,
             this.props.selected_balances, true //broadcast
@@ -125,6 +126,5 @@ export default class BalanceClaimActive extends Component {
             throw error
         })
     }
-    
-}
 
+}

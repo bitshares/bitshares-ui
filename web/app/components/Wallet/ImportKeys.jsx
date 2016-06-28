@@ -30,7 +30,6 @@ export default class ImportKeys extends Component {
     constructor() {
         super();
         this.state = this._getInitialState();
-        this.state.privateKey = true;
     }
 
     static getStores() {
@@ -42,6 +41,10 @@ export default class ImportKeys extends Component {
             importing: ImportKeysStore.getState().importing
         }
     }
+
+    static defaultProps = {
+        privateKey: true
+    };
 
     _getInitialState(keep_file_name = false) {
         return {
@@ -75,9 +78,9 @@ export default class ImportKeys extends Component {
         this.addByPattern(value)
     }
 
-    onBack(e) {
+    onCancel(e) {
         if(e) e.preventDefault()
-        window.history.back()
+        this.setState(this._getInitialState());
     }
 
     updateOnChange() {
@@ -478,7 +481,7 @@ export default class ImportKeys extends Component {
             ImportKeysStore.importing(false)
             var import_count = private_key_objs.length
             notify.success(`Successfully imported ${import_count} keys.`)
-            this.onBack() // back to claim balances
+            this.onCancel() // back to claim balances
         }).catch( error => {
             console.log("error:", error)
             ImportKeysStore.importing(false)
@@ -517,18 +520,19 @@ export default class ImportKeys extends Component {
         return count
     }
 
-    toggleImportType(type) {
-        if (!type) {
-            return;
-        }
-        console.log("toggleImportType", type);
-        this.setState({
-            privateKey: type === "privateKey"
-        });
-    }
+    // toggleImportType(type) {
+    //     if (!type) {
+    //         return;
+    //     }
+    //     console.log("toggleImportType", type);
+    //     this.setState({
+    //         privateKey: type === "privateKey"
+    //     });
+    // }
 
     render() {
-        var {keys_to_account, privateKey} = this.state;
+        var {privateKey} = this.props;
+        var {keys_to_account} = this.state;
         var key_count = Object.keys(keys_to_account).length
         var account_keycount = this.getImportAccountKeyCount(keys_to_account)
 
@@ -578,7 +582,7 @@ export default class ImportKeys extends Component {
 
 
         let cancelButton = (
-            <div className="button success" onClick={this.onBack.bind(this)}>
+            <div className="button success" onClick={this.onCancel.bind(this)}>
                 <Translate content="wallet.cancel" />
             </div>
         );
@@ -603,7 +607,7 @@ export default class ImportKeys extends Component {
                 <div>
                     { ! account_rows.length ? counterpart.translate("wallet.no_accounts") :
                     <div>
-                        <table className="table center-content">
+                        <table className="table">
                             <thead>
                                 <tr>
                                     <th style={{textAlign: "center"}}>Account</th>
@@ -621,14 +625,11 @@ export default class ImportKeys extends Component {
 
                 { ! import_ready && ! this.state.genesis_filter_initalizing ?
                 <div>
-                    <div className="center-content">
-                        <div className="button-group">
-                            <button onClick={this.toggleImportType.bind(this, "privateKey")} className={cname("button", {outline: !privateKey})}><Translate content="wallet.import_private_key" /></button>
-                            <button onClick={this.toggleImportType.bind(this, "bts")} className={cname("button", {outline: privateKey})}><Translate content="wallet.import_bts" /></button>
-                        </div>
+                    <div>
+
                         <div>
                             {privateKey ? (
-                            <form onSubmit={this.onWif.bind(this)} style={{paddingTop: 20}}>
+                            <form onSubmit={this.onWif.bind(this)}>
                                     <Translate component="label" content="wallet.paste_private" />
                                     <input ref="wifInput" type="password" id="wif" tabIndex={tabIndex++} />
 
@@ -645,8 +646,7 @@ export default class ImportKeys extends Component {
                                     id="file_input"
                                     style={{
                                         border: "solid" ,
-                                        marginBottom: 15,
-                                        width: "100%"
+                                        marginBottom: 15
                                     }}
                                     key={this.state.reset_file_name}
                                     onChange={this.upload.bind(this)}
@@ -689,8 +689,8 @@ export default class ImportKeys extends Component {
 
                 { import_ready ?
                 <div>
-                    <h4 className="center-content"><Translate content="wallet.unclaimed" />:</h4>
-                    <div className="grid-block center-content">
+                    <h4><Translate content="wallet.unclaimed" />:</h4>
+                    <div className="grid-block">
                         <div className="grid-content no-overflow">
                             <Translate component="label" content="wallet.totals" />
                             <BalanceClaimAssetTotal />
@@ -698,7 +698,7 @@ export default class ImportKeys extends Component {
                     </div>
                     <br/>
 
-                    <div className="center-content" style={{width: "100%"}}>
+                    <div>
                         <div className="button-group content-block">
                             <div className={cname("button success", {disabled: !import_ready})}
                                onClick={this._saveImport.bind(this)} >
