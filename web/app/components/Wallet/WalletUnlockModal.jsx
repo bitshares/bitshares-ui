@@ -90,7 +90,6 @@ class WalletUnlockModal extends React.Component {
 
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
-        var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
 
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.password_input.clear())
@@ -101,7 +100,7 @@ class WalletUnlockModal extends React.Component {
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <h3><Translate content="header.unlock" /> {unlock_what}</h3>
+                <h3><Translate content="header.unlock" /></h3>
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     <PasswordInput ref="password_input"
                         onEnter={this.onPasswordEnter}
@@ -109,7 +108,7 @@ class WalletUnlockModal extends React.Component {
                         wrongPassword={this.state.password_error}
                         noValidation />
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
+                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
                         <Trigger close={this.props.modalId}>
                             <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
