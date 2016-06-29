@@ -103,7 +103,7 @@ class MarketGroup extends React.Component {
 
     render() {
         let {columns, markets, base, marketStats, starredMarkets,
-            current, maxRows, baseOptions} = this.props;
+            current, maxRows} = this.props;
         let {sortBy, inverseSort, open} = this.state;
 
         if (!markets || !markets.length) {
@@ -112,26 +112,26 @@ class MarketGroup extends React.Component {
 
         let headers = columns.map(header => {
             switch (header.name) {
-                case "market":
-                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "name")}><Translate content="exchange.market" /></th>;
+            case "market":
+                return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "name")}><Translate content="exchange.market" /></th>;
 
-                case "vol":
-                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "volume")}style={{textAlign: "right"}}><Translate content="exchange.vol_short" /></th>;
+            case "vol":
+                return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "volume")}style={{textAlign: "right"}}><Translate content="exchange.vol_short" /></th>;
 
-                case "price":
-                    return <th key={header.name} style={{textAlign: "right"}}><Translate content="exchange.price" /></th>;
+            case "price":
+                return <th key={header.name} style={{textAlign: "right"}}><Translate content="exchange.price" /></th>;
 
-                case "quoteSupply":
-                    return <th key={header.name}><Translate content="exchange.quote_supply" /></th>;
+            case "quoteSupply":
+                return <th key={header.name}><Translate content="exchange.quote_supply" /></th>;
 
-                case "baseSupply":
-                    return <th key={header.name}><Translate content="exchange.base_supply" /></th>;
+            case "baseSupply":
+                return <th key={header.name}><Translate content="exchange.base_supply" /></th>;
 
-                case "change":
-                    return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
+            case "change":
+                return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
 
-                default:
-                    return <th key={header.name}></th>;
+            default:
+                return <th key={header.name}></th>;
             }
         });
 
@@ -139,7 +139,6 @@ class MarketGroup extends React.Component {
 
         let marketRows = markets
             .map(market => {
-
                 return (
                     <MarketRow
                         key={market.id}
@@ -154,7 +153,7 @@ class MarketGroup extends React.Component {
                         starred={starredMarkets.has(market.id)}
                         current={current === market.id}
                     />
-                );                   
+                );
             }).filter(a => {
                 return a !== null;
             }).sort((a, b) => {
@@ -165,78 +164,50 @@ class MarketGroup extends React.Component {
 
                 switch (sortBy) {
 
-                    case "name":
-                        if (a_symbols[0] > b_symbols[0]) {
+                case "name":
+                    if (a_symbols[0] > b_symbols[0]) {
+                        return inverseSort ? -1 : 1;
+                    } else if (a_symbols[0] < b_symbols[0]) {
+                        return inverseSort ? 1 : -1;
+                    } else {
+                        if (a_symbols[1] > b_symbols[1]) {
                             return inverseSort ? -1 : 1;
-                        } else if (a_symbols[0] < b_symbols[0]) {
+                        } else if (a_symbols[1] < b_symbols[1]) {
                             return inverseSort ? 1 : -1;
                         } else {
-                            if (a_symbols[1] > b_symbols[1]) {
-                                return inverseSort ? -1 : 1;
-                            } else if (a_symbols[1] < b_symbols[1]) {
-                                return inverseSort ? 1 : -1
-                            } else {
-                                return 0;
-                            }
-                        }
-
-                    case "volume":
-                        if (aStats && bStats) {
-                            if (inverseSort) {
-                                return bStats.volumeBase - aStats.volumeBase;
-                            } else {
-                                return aStats.volumeBase - bStats.volumeBase;
-                            }
-                        } else {
                             return 0;
                         }
+                    }
 
-                    case "change":
-                        if (aStats && bStats) {
-                            if (inverseSort) {
-                                return bStats.change - aStats.change;
-                            } else {
-                                return aStats.change - bStats.change;
-                            }
+                case "volume":
+                    if (aStats && bStats) {
+                        if (inverseSort) {
+                            return bStats.volumeBase - aStats.volumeBase;
                         } else {
-                            return 0;
+                            return aStats.volumeBase - bStats.volumeBase;
                         }
+                    } else {
+                        return 0;
+                    }
+
+                case "change":
+                    if (aStats && bStats) {
+                        if (inverseSort) {
+                            return bStats.change - aStats.change;
+                        } else {
+                            return aStats.change - bStats.change;
+                        }
+                    } else {
+                        return 0;
+                    }
                 }
-            }).filter(() => {
-                ++index;
-                return index < maxRows;
             });
-
-        let options = baseOptions.map((option, index) => {
-            let {name} = utils.replaceName(option);
-            return <option key={index} value={option}>{name}</option>;
-        });
 
         let caret = open ? <span>&#9660;</span> : <span>&#9650;</span>;
 
         return (
             <div style={{paddingRight: 10}}>
-            <div
-                id={base}
-                onClick={this._onToggle.bind(this)}
-                className="mymarkets-group-header"
-            >
-                <div style={{zIndex: 10}}>
-                    {base !== "others" && this.props.allowChange ?
-                    (<span>
-                        <select
-                            onChange={this._onSelectBase.bind(this)}
-                            className="mymarkets-base-select"
-                            value={base}
-                        >
-                            {options}
-                        </select>
-                         ({marketRows.length})
-                    </span>) :
-                    base !== "others" ? <span><AssetName name={base} replace /> ({marketRows.length})</span> : <span><Translate content="exchange.others" /> ({marketRows.length})</span>}
-                    {!this.props.forceOpen ? <div className="float-right">{caret}</div> : null}
-                </div>
-            </div>
+
                 {open ? (
                 <table className="table table-hover text-right">
                     <thead>
@@ -280,6 +251,7 @@ class MyMarkets extends React.Component {
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
             sortBy: props.viewSettings.get("myMarketsSort", "volume"),
             activeTab: props.viewSettings.get("favMarketTab", "starred"),
+            activeMarketTab: props.viewSettings.get("activeMarketTab", 0),
             lookupQuote: quote,
             lookupBase: base,
             inputValue: inputValue,
@@ -287,16 +259,21 @@ class MyMarkets extends React.Component {
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
-        this.getAssetList = _.debounce(AssetActions.getAssetList, 150);
+        this.getAssetList = debounce(AssetActions.getAssetList, 150);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.activeTab !== "all" && nextState.activeTab === "all" && this.state.inputValue) {
+            this._lookupAssets({target: {value: this.state.inputValue}}, true);
+        }
+
         return (
             !Immutable.is(nextProps.assets, this.props.assets) ||
             !Immutable.is(nextProps.searchAssets, this.props.searchAssets) ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
             !Immutable.is(nextProps.starredMarkets, this.props.starredMarkets) ||
             !Immutable.is(nextProps.marketStats, this.props.marketStats) ||
+            nextState.activeMarketTab !== this.state.activeMarketTab ||
             nextState.inverseSort !== this.state.inverseSort ||
             nextState.sortBy !== this.state.sortBy ||
             nextState.activeTab !== this.state.activeTab ||
@@ -335,7 +312,7 @@ class MyMarkets extends React.Component {
 
     _setMinWidth() {
         if (this.props.setMinWidth && this.refs.favorites && this.props.activeTab === "starred") {
-            
+
             if (this.state.minWidth !== this.refs.favorites.offsetWidth) {
                 this.setState({
                     minWidth: this.refs.favorites.offsetWidth
@@ -389,6 +366,7 @@ class MyMarkets extends React.Component {
     }
 
     _lookupAssets(e, force = false) {
+        console.log("lookup assets");
         if (!e.target.value && e.target.value !== "") {
             return;
         }
@@ -423,9 +401,19 @@ class MyMarkets extends React.Component {
         }
     }
 
+    toggleActiveMarketTab(index) {
+        SettingsActions.changeViewSetting({
+            activeMarketTab: index
+        });
+
+        this.setState({
+            activeMarketTab: index
+        });
+    }
+
     render() {
         let {starredMarkets, marketStats, columns, searchAssets,
-            preferredBases, core, current, viewSettings, listHeight, baseOptions} = this.props;
+            preferredBases, core, current, viewSettings, listHeight} = this.props;
         let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
         let otherMarkets = <tr></tr>;
 
@@ -463,7 +451,7 @@ class MyMarkets extends React.Component {
 
         bases = bases.concat(preferredBases.filter(a => {
             if (!lookupBase || !lookupBase.length) {
-                return true
+                return true;
             }
             return a.indexOf(lookupBase) === 0;
         }).toArray());
@@ -545,9 +533,9 @@ class MyMarkets extends React.Component {
                             quote: market.quote,
                             base: market.base
                         }
-                    ); 
+                    );
                 }
-                   
+
             }).filter(a => {
                 return a !== null;
             })
@@ -560,17 +548,11 @@ class MyMarkets extends React.Component {
         let allClass = cnames(hc, {inactive: activeTab === "starred"});
 
         let listStyle = {
-            minWidth: this.state.minWidth,
-            paddingTop: 8
+            minWidth: this.state.minWidth
         };
         if (listHeight) {
             listStyle.height = listHeight;
         }
-
-        // Filter out already picked baseOptions
-        baseOptions = baseOptions.filter(a => {
-            return !preferredBases.includes(a);
-        });
 
         return (
             <div className={this.props.className} style={this.props.style}>
@@ -592,19 +574,40 @@ class MyMarkets extends React.Component {
                         {activeTab === "all" ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null}
                     </div> ) : null}
 
+                <ul className="mymarkets-tabs">
+                    {preferredBases.map((base, index) => {
+                        return (
+                            <li
+                                key={base}
+                                onClick={this.toggleActiveMarketTab.bind(this, index)}
+                                className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === index})}
+                            >
+                                <AssetName name={base} />
+                            </li>
+                        );
+                    })}
+                    <li
+                        style={{textTransform: "uppercase"}}
+                        onClick={this.toggleActiveMarketTab.bind(this, preferredBases.size + 1)}
+                        className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === (preferredBases.size + 1)})}
+                    >
+                        <Translate content="exchange.others" />
+                    </li>
+                </ul>
+
                 <div
                     style={listStyle}
                     className="table-container grid-block vertical mymarkets-list"
                     ref="favorites"
                 >
-                    {preferredBases.map((base, index) => {
+
+                    {preferredBases.filter(a => {return a === preferredBases.get(this.state.activeMarketTab);}).map((base, index) => {
                         return <MarketGroup
                             index={index}
                             allowChange={false}
                             key={base}
                             current={current}
                             starredMarkets={starredMarkets}
-                            baseOptions={baseOptions}
                             marketStats={marketStats}
                             viewSettings={viewSettings}
                             columns={columns}
@@ -612,14 +615,13 @@ class MyMarkets extends React.Component {
                             base={base}
                             maxRows={activeTab === "starred" ? 20 : 10}
                             forceOpen={activeTab === "all"}
-                        />
+                        />;
                     })}
-
+                    {this.state.activeMarketTab === preferredBases.size + 1 ?
                     <MarketGroup
                         index={preferredBases.size}
                         current={current}
                         starredMarkets={starredMarkets}
-                        baseOptions={baseOptions}
                         marketStats={marketStats}
                         viewSettings={viewSettings}
                         columns={columns}
@@ -627,7 +629,7 @@ class MyMarkets extends React.Component {
                         base="others"
                         maxRows={activeTab === "starred" ? 20 : 10}
                         forceOpen={activeTab === "all"}
-                    />
+                    /> : null}
                 </div>
             </div>
         );
@@ -637,7 +639,7 @@ class MyMarkets extends React.Component {
 @connectToStores
 class MyMarketsWrapper extends React.Component {
     static getStores() {
-        return [SettingsStore, MarketsStore, AssetStore]
+        return [SettingsStore, MarketsStore, AssetStore];
     }
 
     static getPropsFromStores() {
@@ -645,10 +647,9 @@ class MyMarketsWrapper extends React.Component {
             starredMarkets: SettingsStore.getState().starredMarkets,
             viewSettings: SettingsStore.getState().viewSettings,
             preferredBases: SettingsStore.getState().preferredBases,
-            baseOptions: SettingsStore.getState().baseOptions,
             marketStats: MarketsStore.getState().allMarketStats,
             searchAssets: AssetStore.getState().assets
-        }
+        };
     }
 
     render () {

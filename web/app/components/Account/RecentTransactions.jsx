@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
 import {IntlProvider} from "react-intl";
 import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
@@ -8,9 +7,8 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {operations} from "chain/chain_types";
+let {operations} = require("graphenejs-lib").ChainTypes;
 import TransitionWrapper from "../Utility/TransitionWrapper";
-import ReactDOM from "react-dom";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 
@@ -57,7 +55,7 @@ class RecentTransactions extends React.Component {
 
     componentDidMount() {
         if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            let t = this.refs.transactions;
             ps.initialize(t);
 
             this._setHeaderHeight();
@@ -90,7 +88,7 @@ class RecentTransactions extends React.Component {
 
         if(this.props.maxHeight !== nextProps.maxHeight) return true;
         if (nextState.limit !== this.state.limit || nextState.csvExport !== this.state.csvExport) return true;
-        for(let key = 0; key < nextProps.accountsList.length; ++key) {            
+        for(let key = 0; key < nextProps.accountsList.length; ++key) {
             let npa = nextProps.accountsList[key];
             let nsa = this.props.accountsList[key];
             if(npa && nsa && (npa.get("history") !== nsa.get("history"))) return true;
@@ -116,7 +114,7 @@ class RecentTransactions extends React.Component {
         }
 
         if (!this.props.fullHeight) {
-            let t = ReactDOM.findDOMNode(this.refs.transactions);
+            let t = this.refs.transactions;
             ps.update(t);
 
             this._setHeaderHeight();
@@ -218,7 +216,7 @@ class RecentTransactions extends React.Component {
 
                         <div className="block-content-header">
                             <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
-                            
+
                             {historyCount > 0 ?
                             <span style={{fontSize: "60%", textTransform: "lowercase"}}>
                                 &nbsp;(
@@ -235,7 +233,7 @@ class RecentTransactions extends React.Component {
 
                             {this.props.showFilters ? (
                             <div className="float-right">
-                                <select value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                <select className="bts-select" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
                             </div>) : null}
                         </div>
 
@@ -252,7 +250,7 @@ class RecentTransactions extends React.Component {
                     <div
                         className="box-content grid-block no-margin"
                         style={!this.props.fullHeight ? {
-                            maxHeight: maxHeight - headerHeight 
+                            maxHeight: maxHeight - headerHeight
                         } : null}
                         ref="transactions">
                         <table className={"table" + (compactView ? " compact" : "")}>

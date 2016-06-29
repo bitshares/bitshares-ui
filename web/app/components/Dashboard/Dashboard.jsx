@@ -70,9 +70,11 @@ class Dashboard extends React.Component {
         let {linkedAccounts, myIgnoredAccounts} = this.props;
         let {width, height, showIgnored} = this.state;
 
-        let names = this.props.linkedAccounts.toArray().sort();
-        let ignored = this.props.myIgnoredAccounts.toArray().sort();
-        
+        let names = linkedAccounts.toArray().sort();
+        let ignored = myIgnoredAccounts.toArray().sort();
+
+        let accountCount = linkedAccounts.size + myIgnoredAccounts.size;
+
         let featuredMarkets = [
             ["OPEN.ETH", "OPEN.DAO"],
             ["OPEN.BTC", "MKR"],
@@ -104,7 +106,7 @@ class Dashboard extends React.Component {
             if (index > 8) {
                 className += " show-for-large";
             }
-            
+
             return (
                 <MarketCard
                     key={pair[0] + "_" + pair[1]}
@@ -114,7 +116,7 @@ class Dashboard extends React.Component {
                     base={pair[1]}
                 />
             );
-        })
+        });
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
@@ -124,13 +126,13 @@ class Dashboard extends React.Component {
                         {markets}
                     </div>
 
-                    <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                    {accountCount ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
                         <div className="block-content-header" style={{marginBottom: 15}}>
                             <Translate content="account.accounts" />
                         </div>
                         <div className="box-content">
                             <DashboardList accounts={Immutable.List(names)} width={width} />
-                            {myIgnoredAccounts.size ? 
+                            {myIgnoredAccounts.size ?
                                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                                     <tbody>
                                         <tr>
@@ -140,20 +142,20 @@ class Dashboard extends React.Component {
                                                 </div>
                                             </td>
                                         </tr>
-                                    </tbody>                                
+                                    </tbody>
                                 </table> : null}
                             {showIgnored ? <DashboardList compact accounts={Immutable.List(ignored)} width={width} /> : null}
                         </div>
-                    </div>
+                    </div> : null}
 
-                    <RecentTransactions
+                    {accountCount ? <RecentTransactions
                         style={{marginBottom: 20, marginTop: 20}}
                         accountsList={this.props.linkedAccounts}
                         limit={10}
                         compactView={false}
                         fullHeight={true}
                         showFilters={true}
-                    />
+                    /> : null}
 
                 </div>
             </div>);

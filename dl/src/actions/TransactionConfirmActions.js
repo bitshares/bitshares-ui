@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import config from "../chain/config.coffee";
+import {ChainConfig} from "graphenejs-ws";
 
 class TransactionConfirmActions {
 
@@ -12,7 +12,7 @@ class TransactionConfirmActions {
 
         let broadcast_timeout = setTimeout(() => {
             this.actions.error("Your transaction has expired without being confirmed, please try again later.");
-        }, config.expire_in_secs * 2000);
+        }, ChainConfig.expire_in_secs * 2000);
 
         transaction.broadcast(() => this.actions.wasBroadcast()).then( (res)=> {
             clearTimeout(broadcast_timeout);
@@ -43,11 +43,11 @@ class TransactionConfirmActions {
     error(msg) {
         this.dispatch({error: msg});
     }
-    
+
     togglePropose() {
         this.dispatch();
     }
-    
+
     proposeFeePayingAccount(fee_paying_account) {
         this.dispatch(fee_paying_account);
     }

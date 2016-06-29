@@ -44,7 +44,7 @@
   }
 
   label, label > span {
-    color: $secondary-text-color;
+    color: $primary-text-color;
   }
 
   // select:hover {
@@ -251,8 +251,12 @@
     }
   }
 
-  .header .button,  header .button:active {
+  .header .button,  .header .button:active {
     background-color: $panel-bg-color !important;
+  }
+
+  .header .button.create-account {
+    background-color: $button-bg-color !important;
   }
 
   .grp-menu-item button {
@@ -556,11 +560,16 @@
   }
 
   // Block List (section)
-  section input[type="text"] {
+  section input[type="text"], section input[type="password"] {
     background-color: transparent;
+    border:none;
+    border-bottom: 1px solid $panel-bg-color;
+    color: $primary-text-color;
     &:hover, &:active, &:focus {
       color: $primary-text-color;
       background-color: transparent;
+      border:none;
+      border-bottom: 1px solid $panel-bg-color;
     }
   }
 
@@ -818,6 +827,29 @@
     }
   }
 
+
+  .mymarkets-tabs {
+      > li {
+          @include button-focus($secondary-text-color, $panel-bg-color, 0);
+          &:hover {
+            @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+
+          &.active {
+              @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+      }
+  }
+
+  .mymarkets-list {
+      border-top: 2px solid $panel-bg-color;
+  }
+
+  select.bts-select {
+      color: $secondary-text-color;
+  }
+
+
   div.fm-container:hover {
     background-color: darken($light-panel-bg-color, 5%);
     cursor: pointer;
@@ -841,7 +873,20 @@
       height: 3rem;
       font-size: 12px;
     }
+  }
 
+  // Settings
+  .settings-menu {
+      > li {
+          &:hover {
+                background-color: darken($light-panel-bg-color, 5%);
+          }
+
+          &.active {
+                color: $link-text-color;
+          }
+
+      }
   }
 
 }

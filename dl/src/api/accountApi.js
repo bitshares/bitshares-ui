@@ -1,8 +1,7 @@
-import Apis from "../rpc_api/ApiInstances";
-import {object_type} from "../chain/chain_types";
-var PrivateKey = require("../ecc/key_private");
+import {ChainTypes} from "graphenejs-lib";
+import {Apis} from "graphenejs-ws";
 
-let op_history = parseInt(object_type.operation_history, 10);
+let op_history = parseInt(ChainTypes.operation_history, 10);
 
 class Api {
 

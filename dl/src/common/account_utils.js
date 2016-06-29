@@ -1,4 +1,4 @@
-import ChainStore from "../api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import utils from "./utils";
 
 export default class AccountUtils {
@@ -34,7 +34,11 @@ export default class AccountUtils {
 
         let fee = utils.estimateFee(operation, null, globalObject);
 
-        let accountBalances = account.get("balances")
+        let accountBalances = account.get("balances");
+        if (!accountBalances) {
+            return {assets: ["1.3.0"], fees: {"1.3.0": 0}};
+        }
+
         accountBalances.forEach((balanceID, assetID) => {
             let balanceObject = ChainStore.getObject(balanceID);
             let balance = balanceObject ? parseInt(balanceObject.get("balance"), 10) : 0;

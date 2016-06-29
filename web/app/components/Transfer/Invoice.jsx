@@ -5,12 +5,11 @@ import ConfirmModal from "../Modal/ConfirmModal";
 import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import AccountInfo from "../Account/AccountInfo";
-import ChainStore from "api/ChainStore";
 import BalanceComponent from "../Utility/BalanceComponent";
-import {FetchChainObjects} from "api/ChainStore";
+import {ChainStore, FetchChainObjects} from "graphenejs-lib";;
 import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import lzma from "lzma";
+import {decompress} from "lzma";
 import bs58 from "common/base58";
 import utils from "common/utils";
 
@@ -45,7 +44,7 @@ class Invoice extends React.Component {
     componentDidMount() {
         let compressed_data = bs58.decode(this.props.params.data);
         try {
-            lzma.decompress(compressed_data, result => {
+            decompress(compressed_data, result => {
                 let invoice = JSON.parse(result);
                 FetchChainObjects(ChainStore.getAsset, [invoice.currency]).then(assets_array => {
                     this.setState({invoice, asset: assets_array[0]});

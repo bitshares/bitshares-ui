@@ -42,7 +42,7 @@ export default class BlockTradesGateway extends React.Component {
         return activeCoin;
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.provider !== this.props.provider) {
             this.setState({
                 activeCoin: this._getActiveCoin(nextProps, this.state.action)
@@ -50,15 +50,15 @@ export default class BlockTradesGateway extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextState.action !== this.state.action) {
-            this.setState({
-                activeCoin: this._getActiveCoin(nextProps, nextState)
-            });
-        }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     if (nextState.action !== this.state.action) {
+    //         this.setState({
+    //             activeCoin: this._getActiveCoin(nextProps, nextState)
+    //         });
+    //     }
 
-        return true;
-    }
+    //     return true;
+    // }
 
     onSelectCoin(e) {
         this.setState({
@@ -71,8 +71,11 @@ export default class BlockTradesGateway extends React.Component {
     }
 
     changeAction(type) {
+        let activeCoin = this._getActiveCoin(this.props, {action: type});
+
         this.setState({
-            action: type
+            action: type,
+            activeCoin: activeCoin
         });
     }
 
@@ -100,7 +103,7 @@ export default class BlockTradesGateway extends React.Component {
         });
 
         let coin = filteredCoins.filter(coin => {
-            return (action === "withdraw" ? coin.symbol : coin.backingCoinType.toUpperCase()) === activeCoin;
+            return (action === "deposit" ? coin.backingCoinType.toUpperCase() === activeCoin : coin.symbol === activeCoin);
         })[0];
 
         let issuers = {
@@ -122,7 +125,7 @@ export default class BlockTradesGateway extends React.Component {
                 </div>
 
                 {!coin ? <LoadingIndicator /> :
-                <div>    
+                <div>
                     <div>
                         <span><Translate content={"gateway.choose_" + action} />: </span>
                         <select
@@ -131,7 +134,7 @@ export default class BlockTradesGateway extends React.Component {
                                 display: "inline",
                                 maxWidth: "15rem"
                             }}
-                            className="external-coin-types"
+                            className="external-coin-types bts-select"
                             onChange={this.onSelectCoin.bind(this)}
                             value={activeCoin}
                         >
@@ -158,7 +161,7 @@ export default class BlockTradesGateway extends React.Component {
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
                     </div>
 
-                    {coin && coin.symbol ? 
+                    {coin && coin.symbol ?
                     <TransactionWrapper
                         asset={coin.symbol}
                         fromAccount={
@@ -186,7 +189,7 @@ export default class BlockTradesGateway extends React.Component {
                                             from: fromAccount.get("id") ,
                                             asset_id: asset.get("id")
                                         }
-                                  
+
                                     }}
                             />
                             }
