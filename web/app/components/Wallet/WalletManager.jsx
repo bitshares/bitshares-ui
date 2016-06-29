@@ -237,11 +237,11 @@ export class ChangeActiveWallet extends WalletBaseComponent {
 
     onConfirm() {
         WalletActions.setWallet(this.state.current_wallet);
-        if (window.electron) {
-            window.location.hash = "";
-            window.remote.getCurrentWindow().reload();
-        }
-        else window.location.href = "/";
+        // if (window.electron) {
+        //     window.location.hash = "";
+        //     window.remote.getCurrentWindow().reload();
+        // }
+        // else window.location.href = "/";
     }
 
     onChange(event) {
