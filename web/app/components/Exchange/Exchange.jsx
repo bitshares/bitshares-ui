@@ -299,11 +299,12 @@ class Exchange extends React.Component {
     componentWillUnmount() {
         let {quoteAsset, baseAsset} = this.props;
         MarketsActions.unSubscribeMarket(quoteAsset.get("id"), baseAsset.get("id"));
-        emitter.off('cancel-order', limitListener);
-        emitter.off('close-call', callListener);
-        emitter.off('call-order-update', newCallListener);
-        emitter.off('bitasset-update', feedUpdateListener);
-
+        if (emitter) {
+            emitter.off('cancel-order', limitListener);
+            emitter.off('close-call', callListener);
+            emitter.off('call-order-update', newCallListener);
+            emitter.off('bitasset-update', feedUpdateListener);
+    }
         window.removeEventListener("resize", this._getWindowSize, false);
 
     }
@@ -1387,7 +1388,7 @@ class Exchange extends React.Component {
 
                                 </div>
                                 <div className="grid-block vertical">
-                                    <div className="grid-block wrap" style={{borderBottom: "1px solid grey"}}>
+                                    <div className="grid-block show-for-medium wrap" style={{borderBottom: "1px solid grey"}}>
                                         <ul className="market-stats stats top-stats">
                                             {settlementPrice ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
                                             {lowestCallPrice && showCallLimit ?

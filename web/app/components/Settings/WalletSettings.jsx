@@ -3,7 +3,7 @@ import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "..
 import BalanceClaimActive from "../Wallet/BalanceClaimActive";
 import Translate from "react-translate-component";
 
-export default class AccountsSettings extends React.Component {
+export default class WalletSettings extends React.Component {
 
     constructor() {
         super();

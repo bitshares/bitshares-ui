@@ -342,7 +342,7 @@ class Upload extends BackupBaseComponent {
         var is_invalid =
             this.props.backup.contents &&
             ! this.props.backup.public_key
-        console.log("props:", this.props);
+
         return <span>
             <input type="file" id="backup_input_file" style={{ border: 'solid' }}
                 onChange={this.onFileUpload.bind(this)} />

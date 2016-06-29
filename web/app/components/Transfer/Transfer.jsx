@@ -61,7 +61,7 @@ class Transfer extends React.Component {
     componentWillMount() {
         this.nestedRef = null;
     }
-   
+
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
@@ -105,12 +105,12 @@ class Transfer extends React.Component {
             TransactionConfirmStore.reset();
         }
     }
-    
+
     onPropose(propose, e) {
         e.preventDefault()
         this.setState({ propose, propose_account: null })
     }
-    
+
     onProposeAccount(propose_account) {
         this.setState({ propose_account });
     }
@@ -160,7 +160,7 @@ class Transfer extends React.Component {
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
 
         let from_my_account = AccountStore.isMyAccount(from_account);
-            
+
         if(from_account && ! from_my_account && ! propose ) {
             from_error = <span>
                 {counterpart.translate("account.errors.not_yours")}
@@ -289,13 +289,13 @@ class Transfer extends React.Component {
                                             onChange={this.onFeeChanged.bind(this)}
                                             asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                             assets={fee_asset_types}
-                                            tabIndex={tabIndex++}                                        
+                                            tabIndex={tabIndex++}
                                             />
                         </div>
-                        
-                        {/* P R O P O S E   F R O M 
+
+                        {/* P R O P O S E   F R O M
                             Having some proposed transaction logic here (prior to the transaction confirmation)
-                            allows adjusting of the memo to / from parameters. 
+                            allows adjusting of the memo to / from parameters.
                         */}
                         {propose ?
                         <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
@@ -327,7 +327,7 @@ class Transfer extends React.Component {
                         </div>
 
                 </form>
-                <div className="grid-content medium-6 right-column">
+                <div className="grid-content show-for-medium medium-6 right-column">
                     <div className="grid-content no-padding">
                         <RecentTransactions
                             accountsList={accountsList}

@@ -6,6 +6,7 @@ import WalletManagerStore from "stores/WalletManagerStore"
 import BalanceClaimByAsset from "components/Wallet/BalanceClaimByAsset"
 import Translate from "react-translate-component"
 import cname from "classnames"
+import counterpart from "counterpart";
 
 class WalletBaseComponent extends Component {
 
@@ -297,9 +298,9 @@ export class WalletDelete extends WalletBaseComponent {
         //     placeholder = <option value="">{placeholder}</option>;
         // }
         var options = [placeholder]
-        options.push(<option key="select_option" value="">Select Wallet&hellip;</option>)
+        options.push(<option key="select_option" value="">{counterpart.translate("settings.delete_select")}&hellip;</option>)
         this.props.wallet_names.forEach( wallet_name => {
-            options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toUpperCase()}</option>)
+            options.push(<option key={wallet_name} value={wallet_name}>{wallet_name.toLowerCase()}</option>)
         })
 
         var is_dirty = !!this.state.selected_wallet
@@ -311,7 +312,7 @@ export class WalletDelete extends WalletBaseComponent {
                 <ul>
                     <li className="with-dropdown">
                         <select
-                            value={this.state.selected_wallet}
+                            value={this.state.selected_wallet || ""}
                             style={{margin: "0 auto"}}
                             onChange={this.onChange.bind(this)}
                         >

@@ -712,7 +712,8 @@
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
     "backupcreate_backup": "Create wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
-    "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0"
+    "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
+    "delete_select": "Select wallet to delete"
   },
   "footer": {
     "title": "Graphene",
