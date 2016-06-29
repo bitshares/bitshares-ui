@@ -132,7 +132,7 @@ export default class Chat extends React.Component {
         this._peer = new Peer(hostConfig);
 
         this._peer.on("open", id => {
-            console.log("open, my ID is:", id);
+            // console.log("open, my ID is:", id);
             this._myID = id;
             this.setState({
                 connected: true,

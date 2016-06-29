@@ -196,7 +196,7 @@ class MarketsStore {
                 this.pendingCounter = 0;
             }
 
-            console.log("time to process limit orders:", new Date() - limitStart, "ms");
+            // console.log("time to process limit orders:", new Date() - limitStart, "ms");
         }
 
         if (result.calls) {
