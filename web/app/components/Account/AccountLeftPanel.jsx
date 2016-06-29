@@ -70,11 +70,11 @@ class AccountLeftPanel extends React.Component {
         let account_name = account.get("name");
         let linkBtn = null;
 
-        linkBtn = linkedAccounts.has(account_name) ?
+        linkBtn = isMyAccount ? null : linkedAccounts.has(account_name) ?
             <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
-                content={`account.${!isMyAccount ? "unfollow" : "ignore"}`}/></a> :
+                content="account.unfollow"/></a> :
             <a style={{marginBottom: "1rem"}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
-                content={`account.${!isMyAccount ? "follow" : "unignore"}`}/></a>;
+                content="account.follow"/></a>;
 
         let settings = counterpart.translate("header.settings");
 
