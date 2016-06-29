@@ -92,6 +92,10 @@ export class BackupRestore extends BackupBaseComponent {
         }
     }
 
+    componentWillMount() {
+        BackupActions.reset();
+    }
+
     render() {
         var new_wallet = this.props.wallet.new_wallet
         var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
@@ -99,7 +103,7 @@ export class BackupRestore extends BackupBaseComponent {
 
         return (
             <div>
-                <Translate style={{textAlign: "left"}} component="p" content="wallet.import_backup_choose" />
+                <Translate style={{textAlign: "left", maxWidth: "30rem"}} component="p" content="wallet.import_backup_choose" />
                 {(new FileReader).readAsBinaryString ? null : <p className="error">Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.</p>}
                 <Upload>
                     <NameSizeModified/>
@@ -332,22 +336,42 @@ class LastBackupDate extends Component {
 @connectToStores
 class Upload extends BackupBaseComponent {
 
+    reset() {
+        // debugger;
+        // this.refs.file_input.value = "";
+        BackupActions.reset();
+    }
+
     render() {
+        let resetButton = (
+            <div style={{paddingTop: 20}}>
+                <div
+                    onClick={this.reset.bind(this)}
+                    className={cname("button outline", {disabled: !this.props.backup.contents})}
+                >
+                    <Translate content="wallet.reset" />
+                </div>
+            </div>
+        );
+
         if(
             this.props.backup.contents &&
             this.props.backup.public_key
         )
-            return <span>{this.props.children}</span>
+            return <span>{this.props.children}{resetButton}</span>
 
         var is_invalid =
             this.props.backup.contents &&
             ! this.props.backup.public_key
 
-        return <span>
-            <input type="file" id="backup_input_file" style={{ border: 'solid' }}
-                onChange={this.onFileUpload.bind(this)} />
-            { is_invalid ? <h5><Translate content="wallet.invalid_format" /></h5> : null }
-        </span>
+        return (
+            <div>
+                <input ref="file_input" type="file" id="backup_input_file" style={{ border: "solid" }}
+                    onChange={this.onFileUpload.bind(this)} />
+                { is_invalid ? <h5><Translate content="wallet.invalid_format" /></h5> : null }
+                {resetButton}
+            </div>
+        );
     }
 
     onFileUpload(evt) {
@@ -384,7 +408,7 @@ class DecryptBackup extends BackupBaseComponent {
 
     _getInitialState() {
         return {
-            backup_password: null,
+            backup_password: "",
             verified: false
         }
     }
