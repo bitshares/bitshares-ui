@@ -76,10 +76,10 @@ class DashboardList extends React.Component {
     }
 
     _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
+        this.setState({dashboardFilter: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
+            dashboardFilter: e.target.value.toLowerCase()
         });
     }
 
@@ -125,7 +125,7 @@ class DashboardList extends React.Component {
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            return a.get("name").toLowerCase().indexOf(dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -202,7 +202,7 @@ class DashboardList extends React.Component {
                         <td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>
-                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
                             <span className={isLTM ? "lifetime" : ""}>{accountName}</span>
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
@@ -223,14 +223,14 @@ class DashboardList extends React.Component {
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        let filterText = counterpart.translate("explorer.accounts.filter") + "...";
 
         return (
             <div style={this.props.style}>
                 {!this.props.compact ? (
-                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                    <section style={{paddingLeft: "5px", maxWidth: "20rem"}}>
                         <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                    </div>) : null}
+                    </section>) : null}
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                     {!this.props.compact ? (
                     <thead>

@@ -524,7 +524,8 @@
   },
   "explorer": {
     "accounts": {
-      "title": "Accounts"
+      "title": "Accounts",
+      "filter": "Filter accounts"
     },
     "blocks": {
       "title": "Blockchain",
