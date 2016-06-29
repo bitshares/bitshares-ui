@@ -10,6 +10,7 @@ import Popover from "react-popover";
 import MarketLink from "./MarketLink";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
+import {ChainStore} from "graphenejs-lib";
 
 /**
  *  Given an amount and an asset, render it with proper precision

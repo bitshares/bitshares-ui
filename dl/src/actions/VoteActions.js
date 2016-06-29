@@ -1,6 +1,6 @@
 import alt from "../alt-instance";
 import WalletApi from "rpc_api/WalletApi";
-import cloneDeep from "lodash.clonedeep"
+import {cloneDeep} from "lodash"
 import WalletDb from "../stores/WalletDb";
 
 let wallet_api = new WalletApi();

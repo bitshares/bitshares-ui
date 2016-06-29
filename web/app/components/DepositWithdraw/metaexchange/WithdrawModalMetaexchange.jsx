@@ -228,7 +228,7 @@ class WithdrawModalMetaexchange extends React.Component {
 	                        value={counterpart.translate("modal.withdraw.submit")}
 	                    />
                        <Trigger close={this.props.modal_id}>
-                           <div href className="button"><Translate content="account.perm.cancel" /></div>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
                  </div> 

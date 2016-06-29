@@ -9,6 +9,7 @@ import AccountBalance from "../../Account/AccountBalance";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
+import WalletDb from "stores/WalletDb";
 
 @BindToChainState({keep_updating:true})
 export default class MetaexchangeDepositRequest extends React.Component {
@@ -130,7 +131,7 @@ export default class MetaexchangeDepositRequest extends React.Component {
             <td>{this.props.deposit_asset} </td>
 
 
-            <td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
+            {/*<td> <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
                 <Modal id={deposit_modal_id} overlay={true}>
                     <Trigger close={deposit_modal_id}>
                         <a href="#" className="close-button">&times;</a>
@@ -149,7 +150,7 @@ export default class MetaexchangeDepositRequest extends React.Component {
                             modal_id={deposit_modal_id} />
                     </div>
                 </Modal>
-            </td>
+            </td>*/}
 
             <td><button className={"button outline"}><a target="__blank" href={this.getMetaLink()}>Open in metaexchange</a></button></td>
 

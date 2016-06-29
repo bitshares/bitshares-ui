@@ -1,14 +1,12 @@
 import React from "react";
 import utils from "common/utils";
-import validation from "common/validation";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainStore, PublicKey, ChainValidation} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
 import counterpart from "counterpart";
-import PublicKey from "ecc/key_public";
 import Icon from "../Icon/Icon";
 
 /**
@@ -50,7 +48,7 @@ class AccountSelector extends React.Component {
     getNameType(value) {
         if(!value) return null;
         if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(validation.is_account_name(value, true)) return "name";
+        if(ChainValidation.is_account_name(value, true)) return "name";
         if(this.props.allowPubKey && PublicKey.fromPublicKeyString(value)) return "pubkey";
         return null;
     }

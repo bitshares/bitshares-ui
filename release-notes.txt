@@ -27,6 +27,44 @@ Bug fixes
 - Fix an AccountSelector bug causing name resets while typing
 
 ---------------------------------------------------------------------
+Release 2.0.160629
+---------------------------------------------------------------------
+
+New features
+--------
+- Api code moved to new [graphenejs-ws](https://github.com/svk31/graphenejs-ws) library
+- Crypto and blockchain state code moved to [graphenejs-lib](https://github.com/svk31/graphenejs-lib) library
+- Add OPEN.MKR deposit/withdrawal
+- Limit chat messages to 140 characters
+- Refactor MyMarkets selection to tabbed layout
+- Remove MetaEx deposits, add warning and link
+- Add OpenLedger deposit/withdrawal support for Omni & related coins (USDT, EURT)
+- Updated header layout, new dropdown menu
+- Add lightning bolt to indicate lifetime members
+- Refactor Deposit/Withdraw tabs to a dropdown selection
+- Modify OpenOrders layout, use x icon for Cancel order
+- Big refactor of the Settings page to more friendly layout
+- Hide advanced features by default
+
+Bug fixes
+--------
+- Update several packages to newer versions
+- Remove brainkey dictionary from app.js and load async instead
+- Refactor language selection to fetch language files async on demand
+- Improve build routine, reduce filesize
+- Fix cancel button font color in WebSocketAddModal
+- Fix buttons with invisible text
+- Improve Exchange fee asset selection
+- Disable chat in Safari
+- Use 8 decimal prices for assets like BTC in markets list
+- Make sure a valid price history bucket size is selected on load
+- Improve visibility of Buy/Sell fee selector
+- Improve initial load of AccountStore, should fix #827
+- Update default markets
+- Remove 'Ignore' button in AccountLeftPanel
+- Lowercase account names in DashboardList, change filter style and text
+
+---------------------------------------------------------------------
 Release 2.0.160524
 ---------------------------------------------------------------------
 

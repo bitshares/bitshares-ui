@@ -4,7 +4,7 @@ var MarketsActions = require("../actions/MarketsActions");
 var SettingsActions = require("../actions/SettingsActions");
 var market_utils = require("../common/market_utils");
 import ls from "common/localStorage";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
 
 import {
@@ -31,7 +31,7 @@ class MarketsStore {
         this.calls = [];
         this.flat_bids = [];
         this.flat_asks = [];
-        this.flat_calls = [];        
+        this.flat_calls = [];
         this.totalBids = 0;
         this.totalCalls = 0;
         this.priceData = [];
@@ -158,6 +158,9 @@ class MarketsStore {
 
         if (result.buckets) {
             this.buckets = result.buckets;
+            if (result.buckets.indexOf(this.bucketSize) === -1) {
+                this.bucketSize = result.buckets[result.buckets.length - 1];
+            }
         }
 
         if (result.buckets) {
@@ -197,7 +200,7 @@ class MarketsStore {
                 this.pendingCounter = 0;
             }
 
-            console.log("time to process limit orders:", new Date() - limitStart, "ms");
+            // console.log("time to process limit orders:", new Date() - limitStart, "ms");
         }
 
         if (result.calls) {
@@ -241,7 +244,7 @@ class MarketsStore {
         }
 
         if (result.recent && result.recent.length) {
-            
+
             let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset);
 
             this.marketStats = this.marketStats.set("change", stats.change);
@@ -403,7 +406,7 @@ class MarketsStore {
             }
 
             if (low === 0) {
-                low = findMin(open, close);                
+                low = findMin(open, close);
             }
 
             if (isNaN(high) || high === Infinity) {
@@ -411,11 +414,11 @@ class MarketsStore {
             }
 
             if (close === Infinity || close === 0) {
-                close = open;               
+                close = open;
             }
 
             if (open === Infinity || open === 0) {
-                open = close;               
+                open = close;
             }
 
             prices.push([date, open, high, low, close]);
@@ -846,9 +849,9 @@ class MarketsStore {
 
             result.settles.forEach(settle => {
                 // let key = settle.owner + "_" + settle.balance.asset_id;
-                
+
                 settle.settlement_date = new Date(settle.settlement_date);
-                
+
                 this.activeMarketSettles = this.activeMarketSettles.add(
                     SettleOrder(settle)
                 );

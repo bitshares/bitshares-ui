@@ -3,7 +3,7 @@ import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import LoadingIndicator from "../LoadingIndicator";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";
@@ -104,11 +104,11 @@ class AccountMembership extends React.Component {
                        <div>
                            <div className="large-6 medium-8">
                                <HelpContent path="components/AccountMembership" section="lifetime" feesCashback={100 - network_fee} price={{amount: lifetime_cost, asset: core_asset}}/>
-                               <div href className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
+                               <div className="button no-margin" onClick={this.upgradeAccount.bind(this, account.id, true)}>
                                    <Translate content="account.member.upgrade_lifetime"/>
                                </div> &nbsp; &nbsp;
                                {true || member_status === "annual" ? null :
-                               <div href className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
+                               <div className="button" onClick={this.upgradeAccount.bind(this, account.id, false)}>
                                    <Translate content="account.member.subscribe"/>
                                </div>}
                             </div>

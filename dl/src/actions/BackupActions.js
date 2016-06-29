@@ -1,13 +1,10 @@
 import alt from "alt-instance"
 import iDB from "idb-instance"
 
-import lzma from "lzma"
+import {compress, decompress} from "lzma"
 import {saveAs} from "common/filesaver.js"
 
-import PrivateKey from 'ecc/key_private'
-import PublicKey from 'ecc/key_public'
-import Aes from 'ecc/aes'
-import key from "common/key_utils"
+import {PrivateKey, PublicKey, Aes, key} from "graphenejs-lib";
 
 import WalletActions from "actions/WalletActions"
 import WalletDb from "stores/WalletDb"
@@ -86,7 +83,7 @@ export function createWalletBackup(
         var public_key = PublicKey.fromPublicKeyString(backup_pubkey)
         var onetime_private_key = key.get_random_key(entropy)
         var walletString = JSON.stringify(wallet_object, null, 0)
-        lzma.compress(walletString, compression_mode, compressedWalletBytes => {
+        compress(walletString, compression_mode, compressedWalletBytes => {
             var backup_buffer =
                 Aes.encrypt_with_checksum(onetime_private_key, public_key,
                     null/*nonce*/, compressedWalletBytes)
@@ -123,7 +120,7 @@ export function decryptWalletBackup(backup_wif, backup_buffer) {
         }
         
         try {
-            lzma.decompress(backup_buffer, wallet_string => {
+            decompress(backup_buffer, wallet_string => {
                 try {
                     var wallet_object = JSON.parse(wallet_string)
                     resolve(wallet_object)

@@ -14,6 +14,7 @@ import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
 import utils from "common/utils";
+import {ChainStore} from "graphenejs-lib";
 
 class AssetFlag extends React.Component {
     render()
@@ -138,7 +139,7 @@ class Asset extends React.Component {
         return markets.map(
             function (market) {
                 if (market == symbol)
-                    return '';
+                    return null;
                 var marketID = market + '_' + symbol;
                 var marketName = market + '/' + symbol;
                 return (
@@ -159,7 +160,7 @@ class Asset extends React.Component {
 
 
         // Add <a to any links included in the description
-        
+
         let description = assetUtils.parseDescription(asset.options.description);
         let desc = description.main;
         let short_name = description.short_name ? description.short_name : null;
@@ -260,7 +261,7 @@ class Asset extends React.Component {
                         {stealthSupply}
                         {marketFee}
                         {maxMarketFee}
-                        </tbody>
+                    </tbody>
                 </table>
 
                 <br/>
@@ -319,11 +320,11 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : null} </td>
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : null} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -354,7 +355,7 @@ class Asset extends React.Component {
                 <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
             </tr>
-        ) : '';
+        ) : null;
 
         // options.max_supply initially a string
         var maxSupply = (
@@ -379,7 +380,7 @@ class Asset extends React.Component {
                     <Translate content="explorer.asset.permissions.whitelist_markets"/>:
                     &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
             </span>
-        ) : '';
+        ) : null;
 
         return (
             <div className="asset-card">
@@ -405,7 +406,7 @@ class Asset extends React.Component {
 
         var bitAsset = asset.bitasset;
         if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0 || bitAsset.is_prediction_market) {
-            return '';
+            return null;
         }
 
         let now = new Date().getTime();

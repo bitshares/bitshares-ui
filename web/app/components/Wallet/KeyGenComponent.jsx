@@ -1,14 +1,39 @@
 import React from "react"
 import Webcam from "lib/react-webcam"
-import PrivateKey from "ecc/key_private"
-import qr from "common/qr-image"
-import hash from "common/hash"
-import key from "common/key_utils"
+import {PrivateKey, key} from "graphenejs-lib";
+import qr from "common/qr-image";
+
+var privKey = null;
 
 class KeyGenComponent extends React.Component {
 
+    constructor() {
+        super();
+
+        this.state = {
+            ready: false,
+            dictionary
+        };
+    }
+
+    componentWillMount() {
+        let dictionaryPromise = brainkey_plaintext ? null : fetch("/dictionary.json");
+        return Promise.all([
+            dictionaryPromise
+        ]).then(res => {
+            let [dictionary] = res.json();
+            privkey = new BrainKeyUi().create();
+            this.setState({
+                ready: true
+            })
+        });
+    }
+
     render() {
-        var privkey = new BrainKeyUi().create()
+        if (!this.state.ready || !privKey) {
+            return null
+        };
+        // var privkey = new BrainKeyUi().create()
         return <div>
             <QrScan/>
             <hr/>
@@ -23,6 +48,7 @@ class BrainKeyUi {
     
     create(entropy_string = "add mouse entropy...") {
         return key.suggest_brain_key(
+            dictionary,
             key.browserEntropy() +
             entropy_string
         )

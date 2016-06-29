@@ -5,7 +5,7 @@ import classNames from "classnames";
 import Translate from "react-translate-component";
 
 class PasswordInput extends Component {
-    
+
     static propTypes = {
         onChange: PropTypes.func,
         onEnter: PropTypes.func,
@@ -19,14 +19,14 @@ class PasswordInput extends Component {
         wrongPassword: false,
         noValidation: false
     };
-    
+
     constructor() {
         super();
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {value: "", error: null, wrong: false, doesnt_match: false};
     }
-    
+
     value() {
         let node = ReactDOM.findDOMNode(this.refs.password);
         return node ? node.value : "";
@@ -85,15 +85,31 @@ class PasswordInput extends Component {
             <div>
                 <div className={password_class_name}>
                     <Translate component="label" content="wallet.password" />
-                    <input name="password" type="password" ref="password" autoComplete="off"
-                           onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
+                    <section>
+                        <input
+                            name="password"
+                            type="password"
+                            ref="password"
+                            autoComplete="off"
+                            onChange={this.handleChange}
+                            onKeyDown={this.onKeyDown}
+                            placeholder="Enter password"
+                        />
+                    </section>
                     {password_error}
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
                     <Translate component="label" content="wallet.confirm" />
-                    <input name="confirm_password" type="password" ref="confirm_password" autoComplete="off"
-                           onChange={this.handleChange}/>
+                    <section>
+                        <input
+                            name="confirm_password"
+                            type="password"
+                            ref="confirm_password"
+                            autoComplete="off"
+                            onChange={this.handleChange}
+                        />
+                    </section>
                     {confirmation_error}
                 </div> : null}
             </div>

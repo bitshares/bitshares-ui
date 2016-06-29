@@ -1,6 +1,5 @@
-import React from "react";
+import React, {PropTypes} from "react";
 import Immutable from "immutable";
-import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
@@ -9,10 +8,8 @@ import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import {ChainStore, FetchChainObjects} from "graphenejs-lib";
 import AccountImage from "./AccountImage";
-import {FetchChainObjects} from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";

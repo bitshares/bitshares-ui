@@ -1,15 +1,21 @@
 [
+    {
+      "backingCoinType": "BTC",
+      "name": "Bitcoin",
+      "walletType": "bitcoin",
+      "symbol": "OPEN.BTC"
+    },
+  {
+    "backingCoinType": "AGRS",
+    "name": "Agoras Tokens",
+    "walletType": "omni",
+    "symbol": "OPEN.AGRS"
+  },
   {
     "backingCoinType": "BKS",
     "name": "BlockShares",
     "walletType": "blockshares",
     "symbol": "OPEN.BKS"
-  },
-  {
-    "backingCoinType": "BTC",
-    "name": "Bitcoin",
-    "walletType": "bitcoin",
-    "symbol": "OPEN.BTC"
   },
   {
     "backingCoinType": "DASH",
@@ -54,6 +60,12 @@
     "symbol": "OPEN.ETH"
   },
   {
+    "backingCoinType": "EURT",
+    "name": "Euro Tether",
+    "walletType": "omni",
+    "symbol": "OPEN.EURT"
+  },
+  {
     "backingCoinType": "LISK",
     "name": "Lisk",
     "walletType": "lisk",
@@ -64,6 +76,18 @@
     "name": "Litecoin",
     "walletType": "litecoin",
     "symbol": "OPEN.LTC"
+  },
+  {
+    "backingCoinType": "ETHEREUM_MKR",
+    "name": "Makercoin",
+    "walletType": "ethereum",
+    "symbol": "OPEN.MKR"
+  },
+  {
+    "backingCoinType": "MAID",
+    "name": "MaidSafe",
+    "walletType": "omni",
+    "symbol": "OPEN.MAID"
   },
   {
     "backingCoinType": "MUSE",
@@ -86,6 +110,12 @@
     "symbol": "OPEN.NSR"
   },
   {
+    "backingCoinType": "OMNI",
+    "name": "Omni",
+    "walletType": "omni",
+    "symbol": "OPEN.OMNI"
+  },
+  {
     "backingCoinType": "PPC",
     "name": "Peercoin",
     "walletType": "peercoin",
@@ -98,5 +128,17 @@
     "symbol": "OPEN.STEEM",
     "memo": "memo",
     "depositAccount": "openledger"
+  },
+  {
+    "backingCoinType": "AMP",
+    "name": "Synereo",
+    "walletType": "omni",
+    "symbol": "OPEN.AMP"
+  },
+  {
+    "backingCoinType": "USDT",
+    "name": "USD Tether",
+    "walletType": "omni",
+    "symbol": "OPEN.USDT"
   }
 ]
