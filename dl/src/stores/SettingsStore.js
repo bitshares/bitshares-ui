@@ -30,7 +30,7 @@ class SettingsStore {
             "MKR", "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK",
             "OPEN.STEEM", "OPEN.DAO", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
             "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER",
-            "OPEN.USDT", "OPEN.EURT"
+            "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL"
         ];
 
         this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
