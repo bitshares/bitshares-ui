@@ -33,9 +33,9 @@ class SettingsStore {
             "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL"
         ];
 
-        this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
+        // this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
         // Openledger
-        // this.preferredBases = Immutable.List(["OPEN.BTC", "OPEN.ETH", "OPEN.USDT", "OPEN.EURT", CORE_ASSET]);
+        this.preferredBases = Immutable.List(["OPEN.BTC", "OPEN.ETH", "OPEN.USDT", "OPEN.EURT", CORE_ASSET]);
 
         function addMarkets(target, base, markets) {
             markets.filter(a => {

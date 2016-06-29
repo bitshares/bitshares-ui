@@ -18,3 +18,5 @@ require("file?name=asset-symbols/[name].png!./btsr.png");
 require("file?name=asset-symbols/[name].png!./dao.png");
 require("file?name=asset-symbols/[name].png!./lisk.png");
 require("file?name=asset-symbols/[name].png!./peerplays.png");
+require("file?name=asset-symbols/[name].png!./eurt.png");
+require("file?name=asset-symbols/[name].png!./usdt.png");

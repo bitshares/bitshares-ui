@@ -76,8 +76,8 @@ class Dashboard extends React.Component {
         let accountCount = linkedAccounts.size + myIgnoredAccounts.size;
 
         let featuredMarkets = [
-            ["OPEN.ETH", "OPEN.DAO"],
-            ["OPEN.BTC", "MKR"],
+            ["OPEN.BTC", "BTS"],
+            ["OPEN.BTC", "OPEN.MKR"],
             ["OPEN.BTC", "OPEN.DGD"],
             ["OPEN.BTC", "OPEN.STEEM"],
             ["OPEN.BTC", "OPEN.LISK"],
@@ -85,16 +85,16 @@ class Dashboard extends React.Component {
             ["BTS", "OBITS"],
             ["BTS", "USD"],
             ["BTS", "CNY"],
-            ["OPEN.BTC", "BTS"],
             ["BTS", "GOLD"],
-            ["OPEN.BTC", "OPEN.ETH"],
+            ["OPEN.BTC", "OPEN.EURT"],
+            ["OPEN.BTC", "OPEN.USDT"]
             // ["BTS", "SILVER"]
             // ["BTS", "EUR"]
         ];
 
         let newAssets = [
-            "OPEN.DAO",
-            "OPEN.LISK"
+            "OPEN.USDT",
+            "OPEN.EURT"
         ];
 
         let markets = featuredMarkets.map((pair, index) => {
