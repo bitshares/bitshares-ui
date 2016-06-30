@@ -425,6 +425,7 @@ class DecryptBackup extends BackupBaseComponent {
             <div
                 type="submit"
                 className="button outline"
+                onClick={this.onPassword.bind(this)}
             >
                 <Translate content="wallet.submit" />
             </div>
