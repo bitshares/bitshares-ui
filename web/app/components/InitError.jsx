@@ -6,6 +6,7 @@ import SettingsStore from "stores/SettingsStore";
 import Translate from "react-translate-component";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
+import {Apis} from "graphenejs-ws";
 
 @connectToStores
 class InitError extends React.Component {
@@ -29,7 +30,8 @@ class InitError extends React.Component {
     }
 
     onChangeWS(e) {
-        SettingsActions.changeSetting({setting: "connection", value: e.target.value });        
+        SettingsActions.changeSetting({setting: "connection", value: e.target.value });
+        Apis.reset(e.target.value);
     }
 
     onReloadClick(e) {
@@ -58,7 +60,7 @@ class InitError extends React.Component {
         return (
             <div className="grid-block page-layout">
                 <div className="grid-container">
-                    <div className="grid-content">
+                    <div className="grid-content no-overflow">
                         <br/>
                         <Translate component="h3" content={`init_error.title`} />
                         <br/>
@@ -66,13 +68,20 @@ class InitError extends React.Component {
                             <header><Translate component="span" content={`settings.connection`} /></header>
                             <ul>
                                 <li className="with-dropdown">
-                                    <div style={{position: "absolute", right: "0.8rem", top: "0.2rem"}}
-                                         className="button no-margin outline"
-                                         onClick={this.triggerModal.bind(this)} id="add"
-                                         data-tip="Add connection string" data-type="light">+</div>
+
                                     <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
                                         {options}
                                     </select>
+
+                                    <div style={{paddingTop: 10}} className="button-group">
+                                        <div
+                                            onClick={this.triggerModal.bind(this)}
+                                            className="button outline"
+                                            id="add"
+                                        >
+                                                <Translate id="add_text" content="settings.add_api" />
+                                        </div>
+                                    </div>
                                 </li>
                                 <li className="key-value clearfix">
                                     <div className="float-left">Connection Status</div>
@@ -83,10 +92,12 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <div className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
-                        <br />
-                        <div onClick={this.onReset.bind(this)} className="button" style={{marginTop: 15}}>
-                            <Translate content="settings.reset" />
+                        <div className="button-group">
+                            <div className="button outline" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
+
+                            <div onClick={this.onReset.bind(this)} className="button outline">
+                                <Translate content="settings.reset" />
+                            </div>
                         </div>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>

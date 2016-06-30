@@ -203,7 +203,7 @@ class NewWalletName extends BackupBaseComponent {
                 value={this.state.new_wallet}
             />
             <p>{ has_wallet_name_conflict ? <Translate content="wallet.wallet_exist" /> : null}</p>
-            <div type="submit" className={cname("button outline", {disabled: ! name_ready})}>
+            <div onClick={ this.onAccept.bind(this) } type="submit" className={cname("button outline", {disabled: ! name_ready})}>
                 <Translate content="wallet.accept" />
             </div>
         </form>);
