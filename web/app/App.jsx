@@ -261,11 +261,18 @@ let willTransitionTo = (nextState, replaceState, callback) => {
     let connectionString = SettingsStore.getSetting("connection");
 
     if (nextState.location.pathname === "/init-error") {
+
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-        db.then(() => {
-            Apis.instance(connectionString).init_promise.then(() => callback()).catch(() => callback());
+        return db.then(() => {
+            Apis.reset("ws://127.0.0.1:8090").init_promise
+            .then(() => {
+                return callback();
+            }).catch((err) => {
+                console.log("err:", err);
+                return callback();
+            });
         });
-        return;
+
     }
     Apis.instance(connectionString).init_promise.then(() => {
         var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
