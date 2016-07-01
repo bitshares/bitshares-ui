@@ -53,7 +53,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
         this.state =
         {
-            url: props.url || urls[props.gateway],
+            url: "https://api.blocktrades.us/v2",
 
             // things that get displayed for deposits
             deposit_input_coin_type: null,
@@ -88,25 +88,44 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null
         };
+		
+		let checkUrl = "https://api.blocktrades.us/v2";
+		let state_coin_info = 0;
+		
+		this.checkConnection(checkUrl, state_coin_info);
+		
+		let coin_types_urlc = checkUrl;
+		let coin_types_promisec = fetch(coin_types_urlc + "/coins",
+                                       {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                 .then(response => response.json())
+								 .catch((error) => {
+									this.checkConnection("https://api.blocktrades.info/v2", 2);										
+								});
+    }
+	
+	checkConnection(checkUrl, state_coin_info) 
+	{
+		this.setState({
+            url: checkUrl
+        });									
 
         // get basic data from blocktrades
-
-        let coin_types_url = this.state.url + "/coins";
-        let coin_types_promise = fetch(coin_types_url,
+		let coin_types_url = checkUrl + "/coins";
+		let coin_types_promise = fetch(coin_types_url,
                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                  .then(response => response.json());
-        
-        let wallet_types_url = this.state.url + "/wallets";
+								 
+        let wallet_types_url = checkUrl + "/wallets";
         let wallet_types_promise = fetch(wallet_types_url, 
                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                    .then(response => response.json());
         
-        let trading_pairs_url = this.state.url + "/trading-pairs";
+        let trading_pairs_url = checkUrl + "/trading-pairs";
         let trading_pairs_promise = fetch(trading_pairs_url, 
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
-        let active_wallets_url = this.state.url + "/active-wallets";
+        let active_wallets_url = checkUrl + "/active-wallets";
         let active_wallets_promise = fetch(active_wallets_url, 
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
@@ -218,148 +237,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
 
         })
-        .catch((error) => {
+		.catch((error) => {
             this.setState( {
-				url: "https://api.blocktrades.info/v2"
-            });
-		
-            let coin_types_url_failover = this.state.url + "/coins";
-            let coin_types_promise_failover = fetch(coin_types_url_failover,
-                                       {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                 .then(response => response.json());
-        
-            let wallet_types_url_failover = this.state.url + "/wallets";
-            let wallet_types_promise_failover = fetch(wallet_types_url_failover, 
-                                         {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                   .then(response => response.json());
-        
-            let trading_pairs_url_failover = this.state.url + "/trading-pairs";
-            let trading_pairs_promise_failover = fetch(trading_pairs_url_failover, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                    .then(response => response.json());
-
-            let active_wallets_url_failover = this.state.url + "/active-wallets";
-            let active_wallets_promise_failover = fetch(active_wallets_url_failover, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                    .then(response => response.json());
-									
-            Promise.all([coin_types_promise_failover, wallet_types_promise_failover, trading_pairs_promise_failover, active_wallets_promise_failover])
-            .then((json_responses) => {
-                let [coin_types, wallet_types_reply, trading_pairs, active_wallets] = json_responses;
-
-                // get quick access to coins by their types
-                let coins_by_type = {};
-                coin_types.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
-
-                // determine which mappings we will display for deposits and withdrawals
-                let allowed_mappings_for_deposit = {}; // all non-bts to bts
-                let allowed_mappings_for_withdraw = {}; // all bts to non-bts
-                trading_pairs.forEach(pair => {
-                    let input_coin_info = coins_by_type[pair.inputCoinType];
-                    let output_coin_info = coins_by_type[pair.outputCoinType];
-
-                    // filter out pairs where one asset is a backed asset and the other is a backing asset,
-                    // those pairs rightly belong under the gateway section, not under the bridge section.
-                    if (input_coin_info.backingCoinType != pair.outputCoinType &&
-                        output_coin_info.backingCoinType != pair.inputCoinType)
-                    {
-                        // filter out mappings where one of the wallets is offline
-                        if (active_wallets.indexOf(input_coin_info.walletType) != -1 &&
-                           active_wallets.indexOf(output_coin_info.walletType) != -1)
-                        {
-                            if (input_coin_info.walletType != "bitshares2" && 
-                                output_coin_info.walletType == "bitshares2")
-                            {
-                                allowed_mappings_for_deposit[pair.inputCoinType] = allowed_mappings_for_deposit[pair.inputCoinType] || [];
-                                allowed_mappings_for_deposit[pair.inputCoinType].push(pair.outputCoinType);
-                            }
-                            else if (input_coin_info.walletType == "bitshares2" && 
-                                     output_coin_info.walletType != "bitshares2")
-                            {
-                                allowed_mappings_for_withdraw[pair.inputCoinType] = allowed_mappings_for_withdraw[pair.inputCoinType] || [];
-                                allowed_mappings_for_withdraw[pair.inputCoinType].push(pair.outputCoinType);
-                            }
-                        }
-                    }
-                });
-
-                // we can now set the input and output coin types
-                let deposit_input_coin_type = null;
-                let deposit_output_coin_type = null;
-                let allowed_deposit_coin_types = Object.keys(allowed_mappings_for_deposit);
-                allowed_deposit_coin_types.forEach(deposit_coin_type => { allowed_mappings_for_deposit[deposit_coin_type].sort(); });
-
-                if (allowed_deposit_coin_types.length)
-                {
-                    if (this.props.initial_deposit_input_coin_type &&
-                        this.props.initial_deposit_input_coin_type in allowed_mappings_for_deposit)
-                        deposit_input_coin_type = this.props.initial_deposit_input_coin_type;
-                    else
-                        deposit_input_coin_type = allowed_deposit_coin_types[0];
-                    let output_coin_types_for_this_input = allowed_mappings_for_deposit[deposit_input_coin_type];
-                    if (this.props.initial_deposit_output_coin_type &&
-                        output_coin_types_for_this_input.indexOf(this.props.initial_deposit_output_coin_type) != -1)
-                        deposit_output_coin_type = this.props.initial_deposit_output_coin_type;
-                    else
-                        deposit_output_coin_type = output_coin_types_for_this_input[0];
-                }
-            
-                let withdraw_input_coin_type = null;
-                let withdraw_output_coin_type = null;
-                let allowed_withdraw_coin_types = Object.keys(allowed_mappings_for_withdraw);
-                allowed_withdraw_coin_types.forEach(withdraw_coin_type => { allowed_mappings_for_withdraw[withdraw_coin_type].sort(); });
-
-                if (allowed_withdraw_coin_types.length)
-                {
-                    if (this.props.initial_withdraw_input_coin_type &&
-                        this.props.initial_withdraw_input_coin_type in allowed_mappings_for_withdraw)
-                        withdraw_input_coin_type = this.props.initial_withdraw_input_coin_type;
-                    else
-                        withdraw_input_coin_type = allowed_withdraw_coin_types[0];
-                    let output_coin_types_for_this_input = allowed_mappings_for_withdraw[withdraw_input_coin_type];
-                    if (this.props.initial_withdraw_output_coin_type &&
-                        output_coin_types_for_this_input.indexOf(this.props.initial_withdraw_output_coin_type) != -1)
-                        withdraw_output_coin_type = this.props.initial_withdraw_output_coin_type;
-                    else
-                        withdraw_output_coin_type = output_coin_types_for_this_input[0];
-                }
-            
-                let input_address_and_memo = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);
-                let deposit_limit = this.getCachedOrFreshDepositLimit("deposit", deposit_input_coin_type, deposit_output_coin_type);
-                let deposit_estimated_output_amount = this.getAndUpdateOutputEstimate("deposit", deposit_input_coin_type, deposit_output_coin_type, this.state.deposit_estimated_input_amount);
-
-                let withdraw_estimated_output_amount = this.getAndUpdateOutputEstimate("withdraw", withdraw_input_coin_type, withdraw_output_coin_type, this.state.withdraw_estimated_input_amount);
-                let withdraw_limit = this.getCachedOrFreshDepositLimit("withdraw", withdraw_input_coin_type, withdraw_output_coin_type);
-
-                this.setState({
-                    coin_info_request_state: this.coin_info_request_states.request_complete,
-                    coins_by_type: coins_by_type,
-                    allowed_mappings_for_deposit: allowed_mappings_for_deposit,
-                    allowed_mappings_for_withdraw: allowed_mappings_for_withdraw,
-                    deposit_input_coin_type: deposit_input_coin_type,
-                    deposit_output_coin_type: deposit_output_coin_type,
-                    input_address_and_memo: input_address_and_memo,
-                    deposit_limit: deposit_limit,
-                    deposit_estimated_output_amount: deposit_estimated_output_amount,
-                    deposit_estimate_direction: this.estimation_directions.output_from_input,
-                    withdraw_input_coin_type: withdraw_input_coin_type,
-                    withdraw_output_coin_type: withdraw_output_coin_type,
-                    withdraw_limit: withdraw_limit,
-                    withdraw_estimated_output_amount: withdraw_estimated_output_amount,
-                    withdraw_estimate_direction: this.estimation_directions.output_from_input,
-                });
-
-            })
-            .catch((error) => {
-                this.setState( {
-                    coin_info_request_state: this.coin_info_request_states.request_failed,
-                    coins_by_type: null,
-                    allowed_mappings_for_deposit: null,
-                    allowed_mappings_for_withdraw: null
-                });						
-            });
+                coin_info_request_state: state_coin_info,
+                coins_by_type: null,
+                allowed_mappings_for_deposit: null,
+                allowed_mappings_for_withdraw: null
+            });						
 		});
-    }
+	}
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
