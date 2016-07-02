@@ -264,7 +264,8 @@ export class WalletDelete extends WalletBaseComponent {
 
     _onCancel() {
         this.setState({
-            confirm: 0
+            confirm: 0,
+            selected_wallet: null
         });
     }
 
@@ -335,17 +336,18 @@ export class WalletDelete extends WalletBaseComponent {
     }
 
     onConfirm() {
-        this.setState({ confirm: 1 })
+        this.setState({ confirm: 1 });
     }
 
     onConfirm2() {
-        WalletManagerStore.onDeleteWallet(this.state.selected_wallet)
-        window.history.back()
+        WalletManagerStore.onDeleteWallet(this.state.selected_wallet);
+        this._onCancel();
+        // window.history.back()
     }
 
     onChange(event) {
-        var selected_wallet = event.target.value
-        this.setState({selected_wallet})
+        var selected_wallet = event.target.value;
+        this.setState({selected_wallet});
     }
 
 }
