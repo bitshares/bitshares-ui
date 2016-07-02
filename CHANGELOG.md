@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------
+Release 2.0.160702
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Display 'New wallet' button for users with only one wallet
+- Fix light wallet local file loading, use data-urls for some pngs
+- Remove back call on wallet deletion
+- Update electron version
+- Center-align the advanced features button
+- Fix backup restore submit button
+- Fix api error redirection
+- Fix Backup restore accept button close #858
+- Fix initError loading issues and layout
+
+---------------------------------------------------------------------
 Release 2.0.160629
 ---------------------------------------------------------------------
 
