@@ -19,7 +19,9 @@
     "profile-build": "NODE_ENV=production webpack --config conf/webpack-prod.js --profile --json > stats-prod.json",
     "profile-nougly": "NODE_ENV=production webpack --config conf/webpack-prod-nougly.js --profile --json > stats-prod-nougly.json",
     "start": "node server.js",
-    "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --display-error-details --colors; echo 'copying to electron/build..'; cp -r dist/* ../electron/build/; echo 'done.'",
+    "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --display-error-details --colors",
+    "electron": "NODE_ENV=production webpack --config conf/webpack-electron.js --progress --display-error-details --colors;",
+    "postelectron": " echo 'copying to electron/build..'; cp -r dist/* ../electron/build/; echo 'done.'",
     "build-win32": "set NODE_ENV=production && webpack --config conf/webpack-prod.js --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'"
   },
   "dependencies": {
@@ -94,7 +96,7 @@
     "style-loader": "^0.12.4",
     "svg-inline-loader": "^0.3.0",
     "svgo-loader": "^1.1.0",
-    "url-loader": "^0.5.6",
+    "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
     "worker-loader": "^0.6.0"

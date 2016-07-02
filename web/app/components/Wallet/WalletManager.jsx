@@ -194,8 +194,6 @@ export class ChangeActiveWallet extends WalletBaseComponent {
 
     render() {
         var state = WalletManagerStore.getState()
-        if(state.wallet_names.count() === 1)
-            return <label>{this.state.current_wallet}</label>
 
         var options = []
         state.wallet_names.forEach( wallet_name => {
@@ -208,17 +206,24 @@ export class ChangeActiveWallet extends WalletBaseComponent {
             <div>
                 <section className="block-list">
                     <header><Translate content="wallet.active_wallet" />:</header>
-                    <ul>
+
+                        <ul>
                         <li className="with-dropdown">
-                            <select
+                            {state.wallet_names.count() <= 1 ? <div style={{paddingLeft :10}}>{this.state.current_wallet}</div> : (
+                                <select
                                 value={this.state.current_wallet}
                                 onChange={this.onChange.bind(this)}
                             >
                                     { options }
-                            </select>
+                            </select>)}
                         </li>
                     </ul>
                 </section>
+
+            <Link to="wallet/create">
+            <div className="button outline"><Translate content="wallet.new_wallet" /></div>
+            </Link>
+
             { is_dirty ? (
             <div
                 className="button outline"
@@ -226,10 +231,6 @@ export class ChangeActiveWallet extends WalletBaseComponent {
             >
                 <Translate content="wallet.change" name={this.state.current_wallet} />
             </div>) : null}
-
-            <Link to="wallet/create">
-            <div className="button outline"><Translate content="wallet.new_wallet" /></div>
-            </Link>
 
             </div>
         );
@@ -264,7 +265,8 @@ export class WalletDelete extends WalletBaseComponent {
 
     _onCancel() {
         this.setState({
-            confirm: 0
+            confirm: 0,
+            selected_wallet: null
         });
     }
 
@@ -335,17 +337,18 @@ export class WalletDelete extends WalletBaseComponent {
     }
 
     onConfirm() {
-        this.setState({ confirm: 1 })
+        this.setState({ confirm: 1 });
     }
 
     onConfirm2() {
-        WalletManagerStore.onDeleteWallet(this.state.selected_wallet)
-        window.history.back()
+        WalletManagerStore.onDeleteWallet(this.state.selected_wallet);
+        this._onCancel();
+        // window.history.back()
     }
 
     onChange(event) {
-        var selected_wallet = event.target.value
-        this.setState({selected_wallet})
+        var selected_wallet = event.target.value;
+        this.setState({selected_wallet});
     }
 
 }

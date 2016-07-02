@@ -17,6 +17,8 @@ import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import Immutable from "immutable";
 
+var logo = require("assets/ol_logo.png");
+
 @connectToStores
 class Header extends React.Component {
 
@@ -163,7 +165,7 @@ class Header extends React.Component {
                 className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
-                <img style={{margin: 0, height: 40}} src="logo.png"/>
+                <img style={{margin: 0, height: 40}} src={logo}/>
             </a>
         );
 
