@@ -5,12 +5,16 @@ import Translate from "react-translate-component";
 
 var dictionary_set;
 
+if (__ELECTRON__) {
+    dictionary_set = new Set(require("json!common/dictionary_en.json").en.split(","));
+}
+
 export default class BrainkeyInput extends Component {
-    
+
     static propTypes = {
         onChange: PropTypes.func.isRequired
     };
-    
+
     constructor() {
         super();
         this.state = {
@@ -20,18 +24,24 @@ export default class BrainkeyInput extends Component {
     }
 
     componentWillMount() {
-        fetch("/dictionary.json").then( (reply) => {
-            return reply.json().then(result => {
-                dictionary_set = new Set(result.en.split(','));
-                this.setState({
-                    loading: false
-                });
-        })})
-        .catch(err => {
-            console.log("fetch dictionary error:", err);
-        });
+        if (!__ELECTRON__) {
+            fetch("/dictionary.json").then( (reply) => {
+                return reply.json().then(result => {
+                    dictionary_set = new Set(result.en.split(','));
+                    this.setState({
+                        loading: false
+                    });
+            })})
+            .catch(err => {
+                console.log("fetch dictionary error:", err);
+            });
+        } else {
+            this.setState({
+                loading: false
+            });
+        }
     }
-    
+
     render() {
         if (this.state.loading || !dictionary_set) {
             return <div style={{padding: 20}}>Fetching dictionary....</div>
@@ -44,7 +54,7 @@ export default class BrainkeyInput extends Component {
             spellcheckword = spellcheckword.match(/[a-z]+/) //just spellcheck letters
             if(spellcheckword === null || dictionary_set.has(spellcheckword[0]))
                 checked_words.push(<span key={i} style={{padding: '1px', margin: '1px'}}>{word}</span>)
-            else 
+            else
                 checked_words.push(<MisspelledWord key={i}>{word}</MisspelledWord>)
         })
         // this.ready = checked_words.length > 0
