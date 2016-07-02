@@ -30,7 +30,8 @@ module.exports = function(options) {
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
-            APP_VERSION: JSON.stringify(git.tag())
+            APP_VERSION: JSON.stringify(git.tag()),
+            __ELECTRON__: !!options.electron
         })
     ];
 
@@ -41,7 +42,7 @@ module.exports = function(options) {
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}})),
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}));
         plugins.push(new ExtractTextPlugin("app.css"));
         if (!options.noUgly) {
             plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -113,6 +114,9 @@ module.exports = function(options) {
                     test: /\.scss$/,
                     loader: scssLoaders
                 },
+                { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
+                    path.resolve(root_dir, "app/assets/asset-symbols")
+                ] },
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
                 { test: /\.md/, loader: 'html?removeAttributeQuotes=false!remarkable' }
