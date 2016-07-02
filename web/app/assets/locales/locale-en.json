@@ -861,7 +861,7 @@
     "ready_to_restore": "Ready to Restore",
     "restore_wallet_of": "Restore (%(name)s Wallet)",
     "restore_success": "Successfully restored (%(name)s) wallet",
-    "change": "Change (%(name)s Wallet)",
+    "change": "Change to %(name)s",
     "import_20_notice1": "Import your BTS 2.0+ BACKUP first",
     "import_20_notice2": "(if you have one)",
     "loading_balances": "Looking for unclaimed balances",
