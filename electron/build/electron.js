@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    var app = require('app');
-    var BrowserWindow = require('browser-window');
-    var Menu = require("menu");
+    var app = require('electron').app;
+    var BrowserWindow = require('electron').BrowserWindow;
+    var Menu = require("electron").Menu;
     var env = require('./vendor/electron_boilerplate/env_config');
     var devHelper = require('./vendor/electron_boilerplate/dev_helper');
     var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
@@ -14,7 +14,7 @@
     // Preserver of the window size and position between app launches.
     var mainWindowState = windowStateKeeper('main', {
         width: 1000,
-        height: 600
+        height: 800
     });
     global.guid = mainWindowState.guid;
     global.version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
@@ -32,7 +32,7 @@
             mainWindow.maximize();
         }
 
-        mainWindow.loadUrl('file://' + __dirname + '/index.html');
+        mainWindow.loadURL('file://' + __dirname + '/index.html');
 
         //if (env.name !== 'production') {
         //devHelper.setDevMenu();
@@ -45,7 +45,7 @@
 
         mainWindow.webContents.on('new-window', function(e, url) {
             e.preventDefault();
-            require('shell').openExternal(url);
+            require('electron').shell.openExternal(url);
         });
 
         // Create the Application's main menu
@@ -84,7 +84,7 @@
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
                 click: function () {
-                    BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+                    BrowserWindow.getFocusedWindow().reload();
                 }
             }, {
                 label: 'Toggle DevTools',
