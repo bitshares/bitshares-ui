@@ -192,7 +192,7 @@ class WalletActions {
                     signer_pubkeys[public_key_string] = true
                     balance_claims.push({
                         fee: { amount: "0", asset_id: "1.3.0"},
-                        deposit_to_account: account,
+                        deposit_to_account: account.get("id"),
                         balance_to_claim: balance.id,
                         balance_owner_key: public_key_string,
                         total_claimed: {
