@@ -13,7 +13,7 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 
 class OrderBookRowVertical extends React.Component {
-    
+
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.price_full !== this.props.order.price_full ||
@@ -55,7 +55,7 @@ class OrderBookRowHorizontal extends React.Component {
         let {order, quote, base, type, position} = this.props;
 
         let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
-        
+
         let price = <PriceText preFormattedPrice={order.price} />;
         let amount = type === "bid" ?
             utils.format_number(order.amount, quote.get("precision")) :
@@ -63,7 +63,7 @@ class OrderBookRowHorizontal extends React.Component {
         let value = type === "bid" ?
             utils.format_asset(order.for_sale, base, true) :
             utils.format_number(order.value, base.get("precision"));
-        let total = type === "bid" ? 
+        let total = type === "bid" ?
             utils.format_asset(order.totalForSale, base, true) :
             utils.format_asset(order.totalValue, base, true);
 
@@ -84,7 +84,7 @@ class OrderBookRowHorizontal extends React.Component {
 
             </tr>
         );
-       
+
     }
 }
 
@@ -156,7 +156,7 @@ class OrderBook extends React.Component {
     componentWillUnmount() {
         window.removeEventListener("resize", this._updateHeight, false);
     }
-    
+
     componentDidMount() {
 
         if (!this.props.horizontal) {
@@ -170,7 +170,7 @@ class OrderBook extends React.Component {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
             Ps.initialize(bidsContainer);
             let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
-            Ps.initialize(asksContainer);            
+            Ps.initialize(asksContainer);
         }
     }
 
@@ -185,9 +185,9 @@ class OrderBook extends React.Component {
             Ps.update(bidsContainer);
         } else {
             let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
-            Ps.update(bidsContainer);         
+            Ps.update(bidsContainer);
             let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
-            Ps.update(asksContainer);     
+            Ps.update(asksContainer);
         }
     }
 
@@ -270,8 +270,7 @@ class OrderBook extends React.Component {
                 return a.price_full >= high / 5
             })
             .map((order, index) => {
-                totalBidAmount = market_utils.limitByPrecision(totalBidAmount + order.amount, base);
-
+                totalBidAmount = market_utils.limitByPrecision(totalBidAmount + utils.get_satoshi_amount(order.amount, base), base);
                 totalBidValue += order.value;
                 totalBidForSale += order.for_sale;
 
@@ -472,15 +471,15 @@ class OrderBook extends React.Component {
                                     </div>
                                 </div>
                                 <table className="table order-table table-hover text-right">
-                                    {this.state.flip ? rightHeader : leftHeader}    
-                                </table>    
+                                    {this.state.flip ? rightHeader : leftHeader}
+                                </table>
                                 <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 210}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
                                             className="orderbook orderbook-bottom"
                                             component="tbody"
-                                            transitionName="newrow"                                            
+                                            transitionName="newrow"
                                         >
                                             {bidRows}
                                         </TransitionWrapper>
@@ -527,7 +526,7 @@ class OrderBook extends React.Component {
                                                 ref="askTransition"
                                                 className="ps-container orderbook-top"
                                                 component="tbody"
-                                                transitionName="newrow"                                            
+                                                transitionName="newrow"
                                             >
                                                 {askRows}
                                             </TransitionWrapper>
@@ -550,7 +549,7 @@ class OrderBook extends React.Component {
                                             ref="bidTransition"
                                             className="ps-container orderbook-top"
                                             component="tbody"
-                                            transitionName="newrow"                                            
+                                            transitionName="newrow"
                                         >
                                             {bidRows}
                                         </TransitionWrapper>
