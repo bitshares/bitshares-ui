@@ -110,10 +110,6 @@ module.exports = function(options) {
                 { test: /\.coffee$/, loader: "coffee-loader" },
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
                 { test: /\.css$/, loader: cssLoaders },
-                {
-                    test: /\.scss$/,
-                    loaders: options.prod ? scssLoaders : ["style", "css?sourceMap", "sass?sourceMap"]
-                },
                 { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
                     path.resolve(root_dir, "app/assets/asset-symbols")
                 ] },
@@ -143,6 +139,18 @@ module.exports = function(options) {
         }
     };
 
+    var scssLoader = {
+        test: /\.scss$/
+    };
+
+    if (options.prod) {
+        scssLoader.loader = scssLoaders;
+    } else {
+        scssLoader.loaders = ["style", "css?sourceMap", "sass?sourceMap"];
+    }
+
+    config.module.loaders.push(scssLoader);
+
     // if(options.prod) config.entry.vendors = [
     //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
     //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
@@ -152,4 +160,4 @@ module.exports = function(options) {
 
     return config;
 
-}
+};
