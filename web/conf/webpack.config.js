@@ -112,7 +112,7 @@ module.exports = function(options) {
                 { test: /\.css$/, loader: cssLoaders },
                 {
                     test: /\.scss$/,
-                    loader: scssLoaders
+                    loaders: options.prod ? scssLoaders : ["style", "css?sourceMap", "sass?sourceMap"]
                 },
                 { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
                     path.resolve(root_dir, "app/assets/asset-symbols")
