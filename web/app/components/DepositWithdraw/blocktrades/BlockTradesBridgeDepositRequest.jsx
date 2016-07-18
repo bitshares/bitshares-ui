@@ -87,7 +87,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 		// check api.blocktrades.us/v2
 		let checkUrl = "https://api.blocktrades.us/v2";
 		this.urlConnection(checkUrl, 0);
-		let coin_types_promisecheck = fetch(checkUrl + "/active-wallets",
+		let coin_types_promisecheck = fetch(checkUrl + "/coins",
                                         {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());       
         let trading_pairs_promisecheck = fetch(checkUrl + "/trading-pairs", 
