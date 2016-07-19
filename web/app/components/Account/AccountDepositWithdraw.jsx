@@ -178,12 +178,24 @@ class AccountDepositWithdraw extends React.Component {
         .map(coin => {
             return coin;
         })
-        .sort((a, b) => { return a.symbol > b.symbol; });
+        .sort((a, b) => { 
+			if (a.symbol < b.symbol) 
+				return -1 
+			if (a.symbol > b.symbol)
+				return 1
+			return 0 
+		});
 		
         let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
             return coin;
         })
-        .sort((a, b) => { return a.symbol > b.symbol; });
+        .sort((a, b) => { 
+			if (a.symbol < b.symbol) 
+				return -1 
+			if (a.symbol > b.symbol)
+				return 1
+			return 0 
+		});
 
         let options = services.map(name => {
             return <option key={name} value={name}>{name}</option>;
