@@ -22,7 +22,8 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_symbol: React.PropTypes.string.isRequired,
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
-        output_wallet_type: React.PropTypes.string
+        output_wallet_type: React.PropTypes.string,
+		output_supports_memos: React.PropTypes.bool.isRequired
     };
 
     constructor( props ) {
@@ -191,6 +192,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 	   
     onDropDownList() { 
+	
         if(this.state.options_is_valid == false) {
 	        this.setState({options_is_valid: true});
 			this.setState({ withdraw_address_first: false });
@@ -206,7 +208,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     render() {		
-
+		
 	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
 	    if (JSON.parse(localStorage.getItem("withdrawals")) != null) {
@@ -280,9 +282,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	    let tabIndex = 1;
 		let withdraw_memo = null;
 		
-		let supported_memo_coins = ['btc', 'steem'];
-		
-		if (supported_memo_coins.indexOf(this.props.output_coin_type) > -1) {
+		if (this.props.output_supports_memos) {
 			withdraw_memo =
 				<div className="content-block">
 					<label><Translate component="span" content="transfer.memo"/></label>
