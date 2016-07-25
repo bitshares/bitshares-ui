@@ -120,6 +120,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSubmit() { 
+		
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
 			
             if (!this.state.withdraw_address_is_valid) {
@@ -152,14 +153,15 @@ class WithdrawModalBlocktrades extends React.Component {
             this.props.issuer.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-	    	this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo
+	    	this.state.memo ? this.props.output_coin_type + ":" + this.state.withdraw_address + ":" + new Buffer(this.state.memo, "utf-8") : this.props.output_coin_type + ":" + this.state.withdraw_address
 		    //this.props.output_coin_type + ":" + this.state.withdraw_address
             )}
 			
         }
 	}
    
-    onSubmitConfirmation() { 
+    onSubmitConfirmation() {
+		
         ZfApi.publish(this.getWithdrawModalId(), "close");
         if (localStorage.getItem("withdrawals") == null) {
 	        let withdrawals = [];
@@ -183,7 +185,7 @@ class WithdrawModalBlocktrades extends React.Component {
         this.props.issuer.get("id"),
         parseInt(amount * precision, 10),
         asset.get("id"), 
-	    this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo
+	    this.state.memo ? this.props.output_coin_type + ":" + this.state.withdraw_address + ":" + new Buffer(this.state.memo, "utf-8") : this.props.output_coin_type + ":" + this.state.withdraw_address
 	    //this.props.output_coin_type + ":" + this.state.withdraw_address
         )     
     }
@@ -203,7 +205,8 @@ class WithdrawModalBlocktrades extends React.Component {
         return "confirmation";
     }
 
-    render() {
+    render() {		
+
 	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
 	    if (JSON.parse(localStorage.getItem("withdrawals")) != null) {
@@ -230,7 +233,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	    let withdrawModalId = this.getWithdrawModalId();
         let invalid_address_message = null;
 	    let options = null;
-	    let confirmation = null;
+	    let confirmation = null;			
 		
 		if (storedAddress.length == 0) {
 			style_select = "blocktrades-disabled-select-option";
@@ -244,7 +247,6 @@ class WithdrawModalBlocktrades extends React.Component {
 					}, this)}
                 </div>;
 		}
-	    
 	   
         if (!this.state.withdraw_address_check_in_progress && (this.state.withdraw_address && this.state.withdraw_address.length))
         {
@@ -276,6 +278,17 @@ class WithdrawModalBlocktrades extends React.Component {
         }
 	   
 	    let tabIndex = 1;
+		let withdraw_memo = null;
+		
+		let supported_memo_coins = ['btc', 'steem'];
+		
+		if (supported_memo_coins.indexOf(this.props.output_coin_type) > -1) {
+			withdraw_memo =
+				<div className="content-block">
+					<label><Translate component="span" content="transfer.memo"/></label>
+					<textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+				</div>;	
+		}
 
         return (<form className="grid-block vertical full-width-content">
             <div className="grid-container">
@@ -305,10 +318,7 @@ class WithdrawModalBlocktrades extends React.Component {
                         {invalid_address_message}
                     </span>
                 </div>
-			    <div className="content-block">
-                    <label><Translate component="span" content="transfer.memo"/></label>
-                    <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                </div>
+				{withdraw_memo}
                 <div className="content-block">
                     <input type="submit" className="button" 
                     onClick={this.onSubmit.bind(this)} 
