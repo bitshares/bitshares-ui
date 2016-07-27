@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
@@ -23,24 +24,27 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
         output_wallet_type: React.PropTypes.string,
-		output_supports_memos: React.PropTypes.bool.isRequired
+		output_supports_memos: React.PropTypes.bool.isRequired,
+		output_supports_wallet_type: React.PropTypes.string,
+		output_last_withdrawal: React.PropTypes.string,
+		output_combobox_addresses: React.PropTypes.array
     };
 
     constructor( props ) {
         super(props);
         this.state = {
         withdraw_amount: null,
-        withdraw_address: localStorage.getItem("lastwithdrawal"),
+        withdraw_address: this.props.output_last_withdrawal,
         withdraw_address_check_in_progress: false,
 		withdraw_address_is_valid: false,
 	    options_is_valid: false,
 		confirmation_is_valid: false,
-		withdraw_address_selected: localStorage.getItem("lastwithdrawal"),
-		memo: null,
+		withdraw_address_selected: this.props.output_last_withdrawal,
+		memo: '',
 		withdraw_address_first: true
         }
 		
-		this.onSelectChanged(null, localStorage.getItem("lastwithdrawal"));
+		this.onSelectChanged(null, this.props.output_last_withdrawal);
     }
    
     onMemoChanged( e ) {
@@ -55,8 +59,10 @@ class WithdrawModalBlocktrades extends React.Component {
 
 		let new_withdraw_address = null;
 		if (!this.state.withdraw_address_first) {
-			new_withdraw_address = JSON.parse(localStorage.getItem("withdrawals"))[index];
-			localStorage.setItem("lastwithdrawal", JSON.parse(localStorage.getItem("withdrawals"))[index]);
+			new_withdraw_address = this.props.output_combobox_addresses[index];
+			let setting = {};
+			setting[`send_last_${this.props.output_supports_wallet_type}`] = this.props.output_combobox_addresses[index];
+			SettingsActions.changeViewSetting(setting);
 		} else {
 			new_withdraw_address = e;
 		}
@@ -129,22 +135,28 @@ class WithdrawModalBlocktrades extends React.Component {
 				ZfApi.publish(this.getWithdrawModalId(), "open");
 	        } else {
 		   
-		    if (localStorage.getItem("withdrawals") == null) {
+		    if (this.props.output_combobox_addresses === null) {
 			   
 		        let withdrawals = [];
-		        withdrawals.push(this.state.withdraw_address);
-		        localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+				withdrawals.push(this.state.withdraw_address);
+				let setting = {};
+				setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+				SettingsActions.changeViewSetting(setting);
             } else { 
 		   
-		        let withdrawals = JSON.parse(localStorage.getItem("withdrawals"));
+		        let withdrawals = this.props.output_combobox_addresses;
 		        if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
 					 
 	                withdrawals.push(this.state.withdraw_address);
-	                localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+	         		let setting = {};
+					setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+					SettingsActions.changeViewSetting(setting);
 	            }
 	        }
 	  	    
-			localStorage.setItem("lastwithdrawal", this.state.withdraw_address);
+			let setting = {};
+			setting[`send_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
+			SettingsActions.changeViewSetting(setting);
             let asset = this.props.asset;
             let precision = utils.get_asset_precision(asset.get("precision"));
             let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -164,19 +176,25 @@ class WithdrawModalBlocktrades extends React.Component {
     onSubmitConfirmation() {
 		
         ZfApi.publish(this.getWithdrawModalId(), "close");
-        if (localStorage.getItem("withdrawals") == null) {
+        if (this.props.output_combobox_addresses === null) {
 	        let withdrawals = [];
-	        withdrawals.push(this.state.withdraw_address);
-	        localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+			withdrawals.push(this.state.withdraw_address);
+			let setting = {};
+			setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+			SettingsActions.changeViewSetting(setting);
         } else { 
-	        let withdrawals = JSON.parse(localStorage.getItem("withdrawals"));
+	        let withdrawals = this.props.output_combobox_addresses;
 		    if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
 		        withdrawals.push(this.state.withdraw_address);
-	            localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+	    		let setting = {};
+				setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+				SettingsActions.changeViewSetting(setting);
 	        }
 	    }
 	  	
-		localStorage.setItem("lastwithdrawal", this.state.withdraw_address);
+		let setting = {};
+        setting[`send_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
+        SettingsActions.changeViewSetting(setting);
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -191,8 +209,8 @@ class WithdrawModalBlocktrades extends React.Component {
         )     
     }
 	   
-    onDropDownList() { 
-	
+    onDropDownList() {
+
         if(this.state.options_is_valid == false) {
 	        this.setState({options_is_valid: true});
 			this.setState({ withdraw_address_first: false });
@@ -211,8 +229,8 @@ class WithdrawModalBlocktrades extends React.Component {
 		
 	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
-	    if (JSON.parse(localStorage.getItem("withdrawals")) != null) {
-		    storedAddress = JSON.parse(localStorage.getItem("withdrawals"));
+	    if (this.props.output_combobox_addresses != null) {
+		    storedAddress = this.props.output_combobox_addresses;
 	    }
         let balance = null;
 		let style_select = "blocktrades-select-option";

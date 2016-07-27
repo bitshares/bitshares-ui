@@ -31,7 +31,10 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
         deprecated_in_favor_of: ChainTypes.ChainAsset,
         deprecated_message: React.PropTypes.string,
         action: React.PropTypes.string,
-		supports_output_memos: React.PropTypes.bool.isRequired
+		supports_output_memos: React.PropTypes.bool.isRequired,
+		supports_wallet_type: React.PropTypes.string,
+		last_withdrawal: React.PropTypes.string,
+		combobox_addresses: React.PropTypes.array
     };
 
     constructor(props) {
@@ -300,6 +303,9 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
                                 output_coin_type={this.props.deposit_coin_type}
                                 output_wallet_type={this.props.deposit_wallet_type}
 								output_supports_memos={this.props.supports_output_memos}
+								output_supports_wallet_type={this.props.supports_wallet_type}
+								output_last_withdrawal={this.props.last_withdrawal}
+								output_combobox_addresses={this.props.combobox_addresses}
                                 memo_prefix={withdraw_memo_prefix}
                                 modal_id={withdraw_modal_id} />
                         </div>

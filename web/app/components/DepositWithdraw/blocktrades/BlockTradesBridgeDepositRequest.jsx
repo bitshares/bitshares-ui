@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
+import connectToStores from "alt/utils/connectToStores";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
@@ -11,6 +12,7 @@ import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 import Post from "common/formPost";
 import utils from "common/utils";
+import SettingsStore from "stores/SettingsStore";
 
 @BindToChainState({keep_updating:true})
 class BlockTradesBridgeDepositRequest extends React.Component {
@@ -48,6 +50,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
         this.state =
         {
+			supports_output_memos: '',
+			supports_output_wallet_type: '',
+			lastWithdrawal: this.props.viewSettings.get('send_last_bitcoin', null),
+			comboboxAddresses: this.props.viewSettings.get('send_bitcoin', null),
             url: "https://api.blocktrades.us/v2",
 			
             // things that get displayed for deposits
@@ -251,6 +257,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_limit: withdraw_limit,
                 withdraw_estimated_output_amount: withdraw_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
+                supports_output_memos: coins_by_type['btc'].supportsOutputMemos,
+				supports_output_wallet_type: coins_by_type['btc'].walletType
             });
         })
 		.catch((error) => {
@@ -571,6 +579,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
         let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
+		
+        possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+			if(new_output_coin_type===allowed_withdraw_output_coin_type){
+				this.setState({
+				lastWithdrawal: this.props.viewSettings.get(`send_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+				comboboxAddresses: this.props.viewSettings.get(`send_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+                supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
+				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
+				});	
+			}
+        });
         
         this.setState(
         {
@@ -585,7 +604,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     
     onOutputCoinTypeChanged(deposit_or_withdraw, event)
     {
+
         let new_output_coin_type = event.target.value;
+		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
+	
+        withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+			if(new_output_coin_type===allowed_withdraw_output_coin_type){
+				this.setState({
+				lastWithdrawal: this.props.viewSettings.get(`send_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+				comboboxAddresses: this.props.viewSettings.get(`send_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+                supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
+				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
+				});	
+			}
+        });
+				
         let new_input_address_and_memo = this.state.input_address_and_memo;
         if (deposit_or_withdraw == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
@@ -835,6 +868,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                 output_coin_type={this.state.withdraw_output_coin_type}
+								output_supports_memos={this.state.supports_output_memos}
+								output_supports_wallet_type={this.state.supports_output_wallet_type}
+								output_last_withdrawal={this.state.lastWithdrawal}
+								output_combobox_addresses={this.state.comboboxAddresses}
                                 modal_id={withdraw_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
@@ -847,3 +884,20 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 }; // BlockTradesBridgeDepositRequest
 
 export default BlockTradesBridgeDepositRequest;
+
+@connectToStores
+export default class DepositStoreWrapper extends React.Component {
+    static getStores() {
+        return [SettingsStore]
+    };
+
+    static getPropsFromStores() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        }
+    };
+
+    render () {
+        return <BlockTradesBridgeDepositRequest {...this.props}/>
+    }
+}	
