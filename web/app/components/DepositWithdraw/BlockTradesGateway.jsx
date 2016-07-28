@@ -45,22 +45,22 @@ export default class BlockTradesGateway extends React.Component {
     }
 	
     _getLastWithdrawal(props) {
-		let lastWithdrawal = props.viewSettings.get('send_last_bitshares2', null);
+		let lastWithdrawal = props.viewSettings.get('sendd_last_bitshares2', '');
         return lastWithdrawal;
     }
 	
 	_getComboboxAddresses(props) {
-		let comboboxAddresses = props.viewSettings.get('send_bitshares2', null);
+		let comboboxAddresses = props.viewSettings.get('sendd_bitshares2', null);
         return comboboxAddresses;
     }
 	
     _getLastWithdrawal_update(supportsWalletType) {
-		let lastWithdrawal = this.props.viewSettings.get(`send_last_${supportsWalletType}`, null);
+		let lastWithdrawal = this.props.viewSettings.get(`sendd_last_${supportsWalletType}`, '');
         return lastWithdrawal;
     }
 	
 	_getComboboxAddresses_update(supportsWalletType) {
-		let comboboxAddresses = this.props.viewSettings.get(`send_${supportsWalletType}`, null);
+		let comboboxAddresses = this.props.viewSettings.get(`sendd_${supportsWalletType}`, null);
         return comboboxAddresses;
     }
 

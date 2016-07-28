@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
+import connectToStores from "alt/utils/connectToStores";
 import SettingsActions from "actions/SettingsActions";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
@@ -11,6 +12,7 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import SettingsStore from "stores/SettingsStore";
 
 @BindToChainState({keep_updating:true})
 class WithdrawModalBlocktrades extends React.Component {
@@ -33,6 +35,9 @@ class WithdrawModalBlocktrades extends React.Component {
     constructor( props ) {
         super(props);
         this.state = {
+		combobox_addresses: this.props.output_combobox_addresses,
+		current_wallet: this.props.output_supports_wallet_type,
+		current_coin_type: this.props.output_coin_type,
         withdraw_amount: null,
         withdraw_address: this.props.output_last_withdrawal,
         withdraw_address_check_in_progress: false,
@@ -46,6 +51,39 @@ class WithdrawModalBlocktrades extends React.Component {
 		
 		this.onSelectChanged(null, this.props.output_last_withdrawal);
     }
+	
+	componentWillReceiveProps() {
+		this.setState(
+			{
+			options_is_valid: false
+			});
+	}
+	
+	componentDidUpdate() {
+		if (this.state.current_wallet !== this.props.output_supports_wallet_type)
+		{
+			this.setState(
+			{
+				current_wallet: this.props.output_supports_wallet_type,
+				withdraw_address: this.props.viewSettings.get(`sendd_last_${this.props.output_supports_wallet_type}`, ''),
+				withdraw_address_selected: this.props.viewSettings.get(`sendd_last_${this.props.output_supports_wallet_type}`, '') 
+			});
+		}
+		if (this.state.combobox_addresses !== this.props.output_combobox_addresses) {
+			this.setState(
+			{
+				combobox_addresses: this.props.output_combobox_addresses
+			});
+		}
+		if (this.state.current_coin_type !== this.props.output_coin_type) {
+			this.setState(
+			{
+				memo: '',
+				withdraw_amount: null,
+				current_coin_type: this.props.output_coin_type
+			});
+		}
+	}
    
     onMemoChanged( e ) {
 	    this.setState( {memo: e.target.value} ); 
@@ -61,7 +99,7 @@ class WithdrawModalBlocktrades extends React.Component {
 		if (!this.state.withdraw_address_first) {
 			new_withdraw_address = this.props.output_combobox_addresses[index];
 			let setting = {};
-			setting[`send_last_${this.props.output_supports_wallet_type}`] = this.props.output_combobox_addresses[index];
+			setting[`sendd_last_${this.props.output_supports_wallet_type}`] = this.props.output_combobox_addresses[index];
 			SettingsActions.changeViewSetting(setting);
 		} else {
 			new_withdraw_address = e;
@@ -140,7 +178,7 @@ class WithdrawModalBlocktrades extends React.Component {
 		        let withdrawals = [];
 				withdrawals.push(this.state.withdraw_address);
 				let setting = {};
-				setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+				setting[`sendd_${this.props.output_supports_wallet_type}`] = withdrawals;
 				SettingsActions.changeViewSetting(setting);
             } else { 
 		   
@@ -149,13 +187,13 @@ class WithdrawModalBlocktrades extends React.Component {
 					 
 	                withdrawals.push(this.state.withdraw_address);
 	         		let setting = {};
-					setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+					setting[`sendd_${this.props.output_supports_wallet_type}`] = withdrawals;
 					SettingsActions.changeViewSetting(setting);
 	            }
 	        }
 	  	    
 			let setting = {};
-			setting[`send_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
+			setting[`sendd_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
 			SettingsActions.changeViewSetting(setting);
             let asset = this.props.asset;
             let precision = utils.get_asset_precision(asset.get("precision"));
@@ -176,25 +214,26 @@ class WithdrawModalBlocktrades extends React.Component {
     onSubmitConfirmation() {
 		
         ZfApi.publish(this.getWithdrawModalId(), "close");
+
         if (this.props.output_combobox_addresses === null) {
 	        let withdrawals = [];
 			withdrawals.push(this.state.withdraw_address);
 			let setting = {};
-			setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+			setting[`sendd_${this.props.output_supports_wallet_type}`] = withdrawals;
 			SettingsActions.changeViewSetting(setting);
+			
         } else { 
 	        let withdrawals = this.props.output_combobox_addresses;
 		    if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
 		        withdrawals.push(this.state.withdraw_address);
 	    		let setting = {};
-				setting[`send_${this.props.output_supports_wallet_type}`] = withdrawals;
+				setting[`sendd_${this.props.output_supports_wallet_type}`] = withdrawals;
 				SettingsActions.changeViewSetting(setting);
 	        }
 	    }
-	  	
 		let setting = {};
-        setting[`send_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
-        SettingsActions.changeViewSetting(setting);
+		setting[`sendd_last_${this.props.output_supports_wallet_type}`] = this.state.withdraw_address;
+		SettingsActions.changeViewSetting(setting);
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -210,13 +249,13 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 	   
     onDropDownList() {
-
-        if(this.state.options_is_valid == false) {
+		
+        if(this.state.options_is_valid === false) {
 	        this.setState({options_is_valid: true});
 			this.setState({ withdraw_address_first: false });
         }
 	 
-        if(this.state.options_is_valid == true) {
+        if(this.state.options_is_valid === true) {
 	        this.setState({options_is_valid: false});
         }
     }
@@ -229,8 +268,8 @@ class WithdrawModalBlocktrades extends React.Component {
 		
 	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
-	    if (this.props.output_combobox_addresses != null) {
-		    storedAddress = this.props.output_combobox_addresses;
+	    if (this.state.combobox_addresses != null) {
+		    storedAddress = this.state.combobox_addresses;
 	    }
         let balance = null;
 		let style_select = "blocktrades-select-option";
@@ -254,7 +293,6 @@ class WithdrawModalBlocktrades extends React.Component {
         let invalid_address_message = null;
 	    let options = null;
 	    let confirmation = null;			
-		
 		if (storedAddress.length == 0) {
 			style_select = "blocktrades-disabled-select-option";
 		}
@@ -352,4 +390,21 @@ class WithdrawModalBlocktrades extends React.Component {
     }  
 };
 
-export default WithdrawModalBlocktrades
+export default WithdrawModalBlocktrades;
+
+@connectToStores
+export default class WithdrawStoreWrapper extends React.Component {
+    static getStores() {
+        return [SettingsStore]
+    };
+
+    static getPropsFromStores() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        }
+    };
+
+    render () {
+        return <WithdrawModalBlocktrades {...this.props}/>
+    }
+}	

@@ -52,8 +52,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
 			supports_output_memos: '',
 			supports_output_wallet_type: '',
-			lastWithdrawal: this.props.viewSettings.get('send_last_bitcoin', null),
-			comboboxAddresses: this.props.viewSettings.get('send_bitcoin', null),
+			lastWithdrawal: this.props.viewSettings.get('sendd_last_bitcoin', null),
+			comboboxAddresses: this.props.viewSettings.get('sendd_bitcoin', null),
             url: "https://api.blocktrades.us/v2",
 			
             // things that get displayed for deposits
@@ -583,8 +583,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 			if(new_output_coin_type===allowed_withdraw_output_coin_type){
 				this.setState({
-				lastWithdrawal: this.props.viewSettings.get(`send_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
-				comboboxAddresses: this.props.viewSettings.get(`send_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+				lastWithdrawal: this.props.viewSettings.get(`sendd_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, ''),
+				comboboxAddresses: this.props.viewSettings.get(`sendd_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
                 supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
 				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
 				});	
@@ -604,15 +604,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     
     onOutputCoinTypeChanged(deposit_or_withdraw, event)
     {
-
         let new_output_coin_type = event.target.value;
 		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
 	
         withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 			if(new_output_coin_type===allowed_withdraw_output_coin_type){
 				this.setState({
-				lastWithdrawal: this.props.viewSettings.get(`send_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
-				comboboxAddresses: this.props.viewSettings.get(`send_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
+				lastWithdrawal: this.props.viewSettings.get(`sendd_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, ''),
+				comboboxAddresses: this.props.viewSettings.get(`sendd_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
                 supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
 				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
 				});	
