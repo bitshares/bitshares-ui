@@ -1,6 +1,5 @@
 import React from "react";
 import {Link} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
@@ -12,7 +11,6 @@ import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 import Post from "common/formPost";
 import utils from "common/utils";
-import SettingsStore from "stores/SettingsStore";
 
 @BindToChainState({keep_updating:true})
 class BlockTradesBridgeDepositRequest extends React.Component {
@@ -52,8 +50,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
 			supports_output_memos: '',
 			supports_output_wallet_type: '',
-			lastWithdrawal: this.props.viewSettings.get('sendd_last_bitcoin', null),
-			comboboxAddresses: this.props.viewSettings.get('sendd_bitcoin', null),
             url: "https://api.blocktrades.us/v2",
 			
             // things that get displayed for deposits
@@ -583,8 +579,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 			if(new_output_coin_type===allowed_withdraw_output_coin_type){
 				this.setState({
-				lastWithdrawal: this.props.viewSettings.get(`sendd_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, ''),
-				comboboxAddresses: this.props.viewSettings.get(`sendd_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
                 supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
 				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
 				});	
@@ -610,8 +604,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 			if(new_output_coin_type===allowed_withdraw_output_coin_type){
 				this.setState({
-				lastWithdrawal: this.props.viewSettings.get(`sendd_last_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, ''),
-				comboboxAddresses: this.props.viewSettings.get(`sendd_${this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType}`, null),
                 supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
 				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
 				});	
@@ -866,11 +858,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol}
                                 output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
+								input_coin_type={this.state.withdraw_input_coin_type}
                                 output_coin_type={this.state.withdraw_output_coin_type}
 								output_supports_memos={this.state.supports_output_memos}
 								output_supports_wallet_type={this.state.supports_output_wallet_type}
-								output_last_withdrawal={this.state.lastWithdrawal}
-								output_combobox_addresses={this.state.comboboxAddresses}
                                 modal_id={withdraw_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
@@ -883,20 +874,3 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 }; // BlockTradesBridgeDepositRequest
 
 export default BlockTradesBridgeDepositRequest;
-
-@connectToStores
-export default class DepositStoreWrapper extends React.Component {
-    static getStores() {
-        return [SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
-
-    render () {
-        return <BlockTradesBridgeDepositRequest {...this.props}/>
-    }
-}	

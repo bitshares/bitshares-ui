@@ -32,8 +32,6 @@ export default class BlockTradesGateway extends React.Component {
 
         this.state = {
             activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-			lastWithdrawal: this._getLastWithdrawal(props),
-			comboboxAddresses: this._getComboboxAddresses(props),
             action: "deposit"
         };
     }
@@ -43,27 +41,6 @@ export default class BlockTradesGateway extends React.Component {
         let activeCoin = cachedCoin ? cachedCoin : props.coins.length ? props.coins[0][state.action === "withdraw" ? "symbol" : "backingCoinType"].toUpperCase() : null;
         return activeCoin;
     }
-	
-    _getLastWithdrawal(props) {
-		let lastWithdrawal = props.viewSettings.get('sendd_last_bitshares2', '');
-        return lastWithdrawal;
-    }
-	
-	_getComboboxAddresses(props) {
-		let comboboxAddresses = props.viewSettings.get('sendd_bitshares2', null);
-        return comboboxAddresses;
-    }
-	
-    _getLastWithdrawal_update(supportsWalletType) {
-		let lastWithdrawal = this.props.viewSettings.get(`sendd_last_${supportsWalletType}`, '');
-        return lastWithdrawal;
-    }
-	
-	_getComboboxAddresses_update(supportsWalletType) {
-		let comboboxAddresses = this.props.viewSettings.get(`sendd_${supportsWalletType}`, null);
-        return comboboxAddresses;
-    }
-
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.provider !== this.props.provider) {
@@ -85,9 +62,7 @@ export default class BlockTradesGateway extends React.Component {
 
     onSelectCoin(supportsWalletType, e) {
         this.setState({
-            activeCoin: e.target.value,
-			lastWithdrawal: this._getLastWithdrawal_update(supportsWalletType),
-			comboboxAddresses: this._getComboboxAddresses_update(supportsWalletType)
+            activeCoin: e.target.value
         });
 
         let setting = {};
@@ -101,9 +76,7 @@ export default class BlockTradesGateway extends React.Component {
 
         this.setState({
             action: type,
-            activeCoin: activeCoin,
-			lastWithdrawal: this._getLastWithdrawal_update(supportsWalletType),
-			comboboxAddresses: this._getComboboxAddresses_update(supportsWalletType)
+            activeCoin: activeCoin
         });
     }
 
@@ -186,8 +159,6 @@ export default class BlockTradesGateway extends React.Component {
                             deposit_memo_name={coin.memo}
 							supports_output_memos={coin.supportsMemos}
 							supports_wallet_type={coin.supportsWalletType}
-							last_withdrawal={this.state.lastWithdrawal}
-							combobox_addresses={this.state.comboboxAddresses}
                             action={this.state.action}
                         />
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
