@@ -675,9 +675,11 @@ class Exchange extends React.Component {
         return ((satAmount / price.base.amount) * price.quote.amount) / amountPrecision;
     }
 
-    getSellTotal(price, amount = 0) {
+    getSellTotal(price, amount = 0, satAmount) {
         let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        let satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        if (!satAmount) {
+            satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
+        }
         return ((satAmount / price.quote.amount) * price.base.amount) / totalPrecision;
     }
 
@@ -768,13 +770,13 @@ class Exchange extends React.Component {
 
             let sellAmount = order.totalAmount;
 
-            let sellTotal = this.getSellTotal(order.sell_price, sellAmount);
+            let sellTotal = this.getSellTotal(order.sell_price, null, sellAmount);
 
             this.setState({
                 displaySellPrice: displaySellPrice,
                 sellPrice: order.sell_price,
                 sellAmount: utils.get_asset_amount(sellAmount, quote),
-                sellTotal: utils.get_asset_amount(sellTotal, base),
+                sellTotal: market_utils.limitByPrecision(sellTotal, base),
                 displayBuyPrice: displaySellPrice,
                 buyPrice: {
                     quote: order.sell_price.base,

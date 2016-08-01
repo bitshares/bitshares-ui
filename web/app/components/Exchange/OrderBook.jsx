@@ -267,10 +267,10 @@ class OrderBook extends React.Component {
                 if (this.state.showAllBids) {
                     return true;
                 }
-                return a.price_full >= high / 5
+                return a.price_full >= high / 5;
             })
             .map((order, index) => {
-                totalBidAmount = market_utils.limitByPrecision(totalBidAmount + utils.get_satoshi_amount(order.amount, base), base);
+                totalBidAmount = market_utils.limitByPrecision(totalBidAmount + utils.get_satoshi_amount(order.amount, quote), quote);
                 totalBidValue += order.value;
                 totalBidForSale += order.for_sale;
 
