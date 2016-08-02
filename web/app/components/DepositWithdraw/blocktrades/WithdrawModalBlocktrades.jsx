@@ -29,15 +29,17 @@ class WithdrawModalBlocktrades extends React.Component {
         super(props);
         this.state = {
         withdraw_amount: null,
-        withdraw_address: null,
+        withdraw_address: localStorage.getItem("lastwithdrawal"),
         withdraw_address_check_in_progress: false,
 		withdraw_address_is_valid: false,
 	    options_is_valid: false,
 		confirmation_is_valid: false,
-		select_withdraw_address: null,
-		withdraw_address_selected: null,
-		memo: null
+		withdraw_address_selected: localStorage.getItem("lastwithdrawal"),
+		memo: null,
+		withdraw_address_first: true
         }
+		
+		this.onSelectChanged(null, localStorage.getItem("lastwithdrawal"));
     }
    
     onMemoChanged( e ) {
@@ -48,9 +50,16 @@ class WithdrawModalBlocktrades extends React.Component {
         this.setState( {withdraw_amount:amount} );
     }
    
-    onSelectChanged( e ) {
-	    let new_withdraw_address = JSON.parse(localStorage.getItem("withdrawals"))[e.target.value];
+    onSelectChanged(index, e) {
 
+		let new_withdraw_address = null;
+		if (!this.state.withdraw_address_first) {
+			new_withdraw_address = JSON.parse(localStorage.getItem("withdrawals"))[index];
+			localStorage.setItem("lastwithdrawal", JSON.parse(localStorage.getItem("withdrawals"))[index]);
+		} else {
+			new_withdraw_address = e;
+		}
+		
         fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
             {
             method: 'get',
@@ -71,14 +80,13 @@ class WithdrawModalBlocktrades extends React.Component {
 			
 	        this.setState(
 	        {
-			withdraw_address_selected: JSON.parse(localStorage.getItem("withdrawals"))[e.target.value],
-			select_withdraw_address: e.target.value,
+			withdraw_address_selected: new_withdraw_address,
 			options_is_valid: false,
 			withdraw_address: new_withdraw_address,
             withdraw_address_check_in_progress: true,
             withdraw_address_is_valid: null
 		    });
-   }
+    }
 
     onWithdrawAddressChanged( e ) {
 
@@ -106,17 +114,17 @@ class WithdrawModalBlocktrades extends React.Component {
             {
             withdraw_address: new_withdraw_address,
             withdraw_address_check_in_progress: true,
-			withdraw_address_selected: e.target.value.trim(),
+			withdraw_address_selected: new_withdraw_address,
             withdraw_address_is_valid: null
             });
-   }
+    }
 
     onSubmit() { 
-        if (!this.state.withdraw_address_check_in_progress && (this.state.withdraw_address && this.state.withdraw_address.length)) {
-		 
+        if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
+			
             if (!this.state.withdraw_address_is_valid) {
 		   
-            ZfApi.publish(this.getWithdrawModalId(), "open");
+				ZfApi.publish(this.getWithdrawModalId(), "open");
 	        } else {
 		   
 		    if (localStorage.getItem("withdrawals") == null) {
@@ -134,6 +142,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	            }
 	        }
 	  	    
+			localStorage.setItem("lastwithdrawal", this.state.withdraw_address);
             let asset = this.props.asset;
             let precision = utils.get_asset_precision(asset.get("precision"));
             let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -146,6 +155,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	    	this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo
 		    //this.props.output_coin_type + ":" + this.state.withdraw_address
             )}
+			
         }
 	}
    
@@ -162,7 +172,8 @@ class WithdrawModalBlocktrades extends React.Component {
 	            localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
 	        }
 	    }
-	  	    
+	  	
+		localStorage.setItem("lastwithdrawal", this.state.withdraw_address);
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -180,6 +191,7 @@ class WithdrawModalBlocktrades extends React.Component {
     onDropDownList() { 
         if(this.state.options_is_valid == false) {
 	        this.setState({options_is_valid: true});
+			this.setState({ withdraw_address_first: false });
         }
 	 
         if(this.state.options_is_valid == true) {
@@ -192,7 +204,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     render() {
-	    let {select_withdraw_address, withdraw_address_selected, memo} = this.state;
+	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
 	    if (JSON.parse(localStorage.getItem("withdrawals")) != null) {
 		    storedAddress = JSON.parse(localStorage.getItem("withdrawals"));
@@ -226,16 +238,17 @@ class WithdrawModalBlocktrades extends React.Component {
 	   
 	    if (this.state.options_is_valid) {
 	        options = 
-			    <div className={style_select} onClick={this.onSelectChanged.bind(this)}>
+			    <div className={style_select}>
                     {storedAddress.map(function(name, index){
-                    return <a value={index}>{name}</a>;
-                    })}
+                    return <a onClick={this.onSelectChanged.bind(this, index)}>{name}</a>;
+					}, this)}
                 </div>;
-	    }
+		}
+	    
 	   
         if (!this.state.withdraw_address_check_in_progress && (this.state.withdraw_address && this.state.withdraw_address.length))
         {
-            if (!this.state.withdraw_address_is_valid){
+            if (!this.state.withdraw_address_is_valid) {
 			  
             invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_type} /></div>;
 		    confirmation = 
