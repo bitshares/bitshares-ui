@@ -47,7 +47,11 @@
   line-height: 150%;
 }
 
-.blocktrades-select-option {
+.blocktrades-position-options {
+  position: relative;
+}
+
+.blocktrades-position-options .blocktrades-options {
   width: 100%;
   height: auto;
   max-height: 250px;
@@ -55,15 +59,15 @@
   background-color: #fff;
   position: absolute;
   border-top: none;
-  top: 7px;
+  top: 1px;
   overflow: auto;
 }
 
-.blocktrades-disabled-select-option {
+.blocktrades-position-options .blocktrades-disabled-options {
   display: none;
 }
 
-.blocktrades-select .blocktrades-select-option a {
+.blocktrades-position-options .blocktrades-options a {
   display: block;
   color: black;
   padding: 1px;
@@ -72,24 +76,13 @@
   padding-top: 3px;
 }
 
-.blocktrades-select .blocktrades-select-option a:hover {
+.blocktrades-position-options .blocktrades-options a:hover {
   color: #fff;
   background-color: #3399ff;
 }
 
-.blocktrades-position {
-  position: relative;
-}
-
-.blocktrades-select	input {
-  float: left;
-  height: 38px;
-}
-
-.blocktrades-select	span {
-  width: 6%;
-  height: 38px;
-  float: left;
+.blocktrades-select-dropdown span {
+  width: 38px;
   color: black;
   background: #eeeeee;
   text-align: center;
