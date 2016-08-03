@@ -99,7 +99,7 @@ class CollateralPosition extends React.Component {
                 <td>
                     <ActionSheet>
                         <ActionSheet.Button title="">
-                            <a style={{padding: "1rem"}}>
+                            <a>
                                 &nbsp;<Translate content="account.perm.action" /> &nbsp;
                                 <Icon className="icon-14px" name="chevron-down"/>
                             </a>
