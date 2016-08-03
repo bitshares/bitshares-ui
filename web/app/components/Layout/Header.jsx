@@ -218,7 +218,6 @@ class Header extends React.Component {
                     });
 
                 let options = [
-                    {to: `/account/${currentAccount}/overview`, text: "header.account"},
                     {to: "/settings", text: "header.settings"},
                     {to: "/help", text: "header.help"},
                     {to: "/explorer", text: "header.explorer"}
@@ -271,6 +270,7 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{dashboard}</li>
+                        {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} activeClassName="active"><Translate content="header.account" /></Link></li>}
                         <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
                         <li>{tradeLink}</li>
                         {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}

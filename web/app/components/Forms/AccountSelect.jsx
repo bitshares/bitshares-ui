@@ -12,7 +12,7 @@ export default class AccountSelect extends React.Component {
         tabIndex: React.PropTypes.number
         //defaultAccount: React.PropTypes.string
     };
-    
+
     constructor(props) {
         super(props);
         this.state = {selected: null};
@@ -35,7 +35,7 @@ export default class AccountSelect extends React.Component {
     reset() {
         this.setState({selected: null});
     }
-    
+
     render() {
         var account_names = this.props.account_names;
         var selected_account = this.props.selected;
@@ -45,7 +45,7 @@ export default class AccountSelect extends React.Component {
             placeholder = <option value="" disabled>{placeholder}</option>;
         }
         else {
-            //When disabled and list_size was 1, chrome was skipping the 
+            //When disabled and list_size was 1, chrome was skipping the
             //placeholder and selecting the 1st item automatically (not shown)
             placeholder = <option value="">{placeholder}</option>;
         }
@@ -55,7 +55,7 @@ export default class AccountSelect extends React.Component {
                 ref='account-selector'
                 key={selected_account}
                 defaultValue={selected_account}
-                className="form-control account-select"
+                className="form-control account-select bts-select"
                 onChange={this._onAccountChange.bind(this)}
                 style={this.props.center?{margin: '0 auto'}:null}
                 tabIndex={this.props.tabIndex}
@@ -74,7 +74,7 @@ export default class AccountSelect extends React.Component {
         //            {height: 150, width: 150}
         //        }/>
     }
-    
+
     _onAccountChange(e) {
         //DEBUG console.log('... _onAccountChange',e.target.value)
         e.preventDefault();
@@ -88,5 +88,5 @@ export default class AccountSelect extends React.Component {
             this.props.onChange(value);
         }
     }
-    
+
 }
