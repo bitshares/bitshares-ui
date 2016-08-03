@@ -76,7 +76,6 @@ class AccountOverview extends React.Component {
                 assetInfoLinks = (
                 <ul>
                     <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
-                    {asset.get("id") !== "1.3.0" ? <li><a href={`#/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a></li> : null}
                     <li>{marketLink}</li>
                 </ul>);
             }
