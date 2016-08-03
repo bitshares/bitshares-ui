@@ -343,3 +343,9 @@ select.bts-select {
     -moz-appearance: menulist;
     appearance: menulist;
 }
+
+@media screen and (max-width: 900px) {
+    .column-hide-small {
+        display: none;
+    }
+}

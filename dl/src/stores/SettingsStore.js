@@ -20,6 +20,7 @@ class SettingsStore {
             faucet_address: "http://bitshares.openledger.info",
             unit: CORE_ASSET,
             showSettles: false,
+            showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "olDarkTheme",
             disableChat: false
@@ -77,6 +78,10 @@ class SettingsStore {
                 "GBP"
             ],
             showSettles: [
+                {translate: "yes"},
+                {translate: "no"}
+            ],
+            showAssetPercent: [
                 {translate: "yes"},
                 {translate: "no"}
             ],
