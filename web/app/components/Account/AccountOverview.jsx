@@ -90,7 +90,7 @@ class AccountOverview extends React.Component {
                     {/*<td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>*/}
                     <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
                     {showAssetPercent ? <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td> : null}
-                    <td style={{textAlign: "right"}}>
+                    <td style={{textAlign: "center"}}>
                         <ActionSheet>
                             <ActionSheet.Button title="">
                                 <a>
