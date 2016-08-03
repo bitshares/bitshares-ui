@@ -48,8 +48,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
         this.state =
         {
+			coin_symbol: 'btc',
 			supports_output_memos: '',
-			supports_output_wallet_type: '',
             url: "https://api.blocktrades.us/v2",
 			
             // things that get displayed for deposits
@@ -253,8 +253,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_limit: withdraw_limit,
                 withdraw_estimated_output_amount: withdraw_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
-                supports_output_memos: coins_by_type['btc'].supportsOutputMemos,
-				supports_output_wallet_type: coins_by_type['btc'].walletType
+                supports_output_memos: coins_by_type['btc'].supportsOutputMemos
             });
         })
 		.catch((error) => {
@@ -576,14 +575,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
         let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
 		
-        possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
-			if(new_output_coin_type===allowed_withdraw_output_coin_type){
-				this.setState({
-                supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
-				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
-				});	
-			}
-        });
+		if (deposit_or_withdraw == "withdraw") {
+			possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_input_coin_type + 'input',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});	
+				}
+			});
+		}
         
         this.setState(
         {
@@ -601,14 +602,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         let new_output_coin_type = event.target.value;
 		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
 	
-        withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
-			if(new_output_coin_type===allowed_withdraw_output_coin_type){
-				this.setState({
-                supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
-				supports_output_wallet_type: this.state.coins_by_type[allowed_withdraw_output_coin_type].walletType
-				});	
-			}
-        });
+		if (deposit_or_withdraw == "withdraw") {
+			withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_output_coin_type + 'output',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});	
+				}
+			});
+		}
 				
         let new_input_address_and_memo = this.state.input_address_and_memo;
         if (deposit_or_withdraw == "deposit")
@@ -853,15 +856,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <br/>
                         <div className="grid-block vertical">
                             <WithdrawModalBlocktrades
+								key={`${this.state.coin_symbol}`}
                                 account={this.props.account.get('name')}
                                 issuer={this.props.issuer_account.get('name')}
                                 asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol}
                                 output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
-								input_coin_type={this.state.withdraw_input_coin_type}
                                 output_coin_type={this.state.withdraw_output_coin_type}
 								output_supports_memos={this.state.supports_output_memos}
-								output_supports_wallet_type={this.state.supports_output_wallet_type}
                                 modal_id={withdraw_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 

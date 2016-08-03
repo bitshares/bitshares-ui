@@ -60,7 +60,7 @@ export default class BlockTradesGateway extends React.Component {
     //     return true;
     // }
 
-    onSelectCoin(supportsWalletType, e) {
+    onSelectCoin(e) {
         this.setState({
             activeCoin: e.target.value
         });
@@ -70,7 +70,7 @@ export default class BlockTradesGateway extends React.Component {
         SettingsActions.changeViewSetting(setting);
     }
 
-    changeAction(type, supportsWalletType) {
+    changeAction(type) {
 		
         let activeCoin = this._getActiveCoin(this.props, {action: type});
 
@@ -121,8 +121,8 @@ export default class BlockTradesGateway extends React.Component {
             <div style={this.props.style}>
                 <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.gateway_text" /></div>
                 <div style={{paddingBottom: 15}}>
-                    <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit",coin.supportsWalletType)} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
-                    <div onClick={this.changeAction.bind(this, "withdraw", coin.supportsWalletType)} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
+                    <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit")} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
+                    <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
                 </div>
 
                 {!coin ? <LoadingIndicator /> :
@@ -136,7 +136,7 @@ export default class BlockTradesGateway extends React.Component {
                                 maxWidth: "15rem"
                             }}
                             className="external-coin-types bts-select"
-                            onChange={this.onSelectCoin.bind(this, coin.supportsWalletType)}
+                            onChange={this.onSelectCoin.bind(this)}
                             value={activeCoin}
                         >
                             {coinOptions}
@@ -158,7 +158,6 @@ export default class BlockTradesGateway extends React.Component {
                             receive_coin_type={coin.symbol.toLowerCase()}
                             deposit_memo_name={coin.memo}
 							supports_output_memos={coin.supportsMemos}
-							supports_wallet_type={coin.supportsWalletType}
                             action={this.state.action}
                         />
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>

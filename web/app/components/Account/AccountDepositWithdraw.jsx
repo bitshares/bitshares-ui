@@ -101,8 +101,7 @@ class AccountDepositWithdraw extends React.Component {
                     walletType: coins_by_type[coin_type.backingCoinType].walletType,
                     backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
                     symbol: coin_type.walletSymbol,
-					supportsMemos: coin_type.supportsOutputMemos,
-					supportsWalletType: coin_type.walletType
+					supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos
                 });
             }});
         return blocktradesBackedCoins;
@@ -120,8 +119,7 @@ class AccountDepositWithdraw extends React.Component {
                     walletType: coins_by_type[coin_type.backingCoinType].walletType,
                     backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
                     symbol: coin_type.walletSymbol,
-					supportsMemos: coin_type.supportsOutputMemos,
-					supportsWalletType: coin_type.walletType
+					supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos
                 });
             }});
         return openledgerBackedCoins;

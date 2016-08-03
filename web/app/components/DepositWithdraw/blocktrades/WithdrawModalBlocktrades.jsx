@@ -22,83 +22,15 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_name: React.PropTypes.string.isRequired,
         output_coin_symbol: React.PropTypes.string.isRequired,
         output_coin_type: React.PropTypes.string.isRequired,
-		input_coin_type: React.PropTypes.string,
         url: React.PropTypes.string,
         output_wallet_type: React.PropTypes.string,
-		output_supports_memos: React.PropTypes.bool.isRequired,
-		output_wallet_type: React.PropTypes.string
+		output_supports_memos: React.PropTypes.bool.isRequired
     };
 
     constructor( props ) {
         super(props);
-        this.state = {
-		current_wallet: this.props.output_wallet_type,
-		current_output_coin_type: this.props.output_coin_type,
-		current_input_coin_type: this.props.input_coin_type,
-        withdraw_amount: null,
-        withdraw_address: localStorage.getItem(`combobox_last_${this.props.output_wallet_type}`),
-        withdraw_address_check_in_progress: false,
-		withdraw_address_is_valid: false,
-	    options_is_valid: false,
-		confirmation_is_valid: false,
-		withdraw_address_selected: localStorage.getItem(`combobox_last_${this.props.output_wallet_type}`),
-		memo: '',
-		withdraw_address_first: true
-        }
-		this.onAddressCheck(localStorage.getItem(`combobox_last_${this.props.output_wallet_type}`));
-    }
-	
-	componentWillReceiveProps() {
-		this.setState(
-			{
-			options_is_valid: false
-			});
-	}
-	
-	componentDidUpdate() {
-		if (this.state.current_wallet !== this.props.output_wallet_type)
-		{
-			this.setState(
-			{
-				current_wallet: this.props.output_wallet_type
-			});
-			this.onAddressCheck(localStorage.getItem(`combobox_last_${this.props.output_wallet_type}`));
-		}
 		
-		if (this.state.current_output_coin_type !== this.props.output_coin_type) {
-			this.setState(
-			{
-				memo: '',
-				withdraw_amount: null,
-				current_output_coin_type: this.props.output_coin_type
-			});
-		}
-		
-		if (this.state.current_input_coin_type !== this.props.input_coin_type) {
-			this.setState(
-			{
-				memo: '',
-				withdraw_amount: null,
-				current_input_coin_type: this.props.input_coin_type
-			});
-		}
-	}
-   
-    onMemoChanged( e ) {
-	    this.setState( {memo: e.target.value} ); 
-    }
-
-    onWithdrawAmountChange( {amount, asset} ) {
-        this.setState( {withdraw_amount:amount} );
-    }
-	
-    onAddressCheck(e) {
-		
-		let new_withdraw_address = e;
-		if (new_withdraw_address == null) {
-			new_withdraw_address = '';
-		}
-        fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
+        fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) : ''),
             {
             method: 'get',
             headers: new Headers({"Accept": "application/json"})
@@ -106,7 +38,7 @@ class WithdrawModalBlocktrades extends React.Component {
             {
                 // only process it if the user hasn't changed the address
                 // since we initiated the request
-                if (this.state.withdraw_address === new_withdraw_address)
+                if (this.state.withdraw_address === localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) : '')
                 {
                     this.setState(
                     {
@@ -115,21 +47,32 @@ class WithdrawModalBlocktrades extends React.Component {
                     });
                 }
             })});
-			
-	        this.setState(
-	        {
-			withdraw_address_selected: new_withdraw_address,
-			options_is_valid: false,
-			withdraw_address: new_withdraw_address,
-            withdraw_address_check_in_progress: true,
-            withdraw_address_is_valid: null
-		    });
+		
+        this.state = {
+        withdraw_amount: null,
+        withdraw_address: localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) : '',
+        withdraw_address_check_in_progress: true,
+		withdraw_address_is_valid: null,
+	    options_is_valid: false,
+		confirmation_is_valid: false,
+		withdraw_address_selected: localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`comboboxx_last_${this.props.output_wallet_type}`) : '',
+		memo: '',
+		withdraw_address_first: true
+        }
+    }
+	   
+    onMemoChanged( e ) {
+	    this.setState( {memo: e.target.value} ); 
+    }
+
+    onWithdrawAmountChange( {amount, asset} ) {
+        this.setState( {withdraw_amount:amount} );
     }
    
     onSelectChanged(index, e) {
 
-		let new_withdraw_address = JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`))[index];
-		localStorage.setItem(`combobox_last_${this.props.output_wallet_type}`, JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`))[index]);
+		let new_withdraw_address = JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`))[index];
+		localStorage.setItem(`comboboxx_last_${this.props.output_wallet_type}`, JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`))[index]);
 		
         fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_withdraw_address),
             {
@@ -199,21 +142,21 @@ class WithdrawModalBlocktrades extends React.Component {
 				ZfApi.publish(this.getWithdrawModalId(), "open");
 	        } else {
 		   
-		   if (localStorage.getItem(`combobox_${this.props.output_wallet_type}`) == null) {
+		   if (localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`) == null) {
 			   
 		        let withdrawals = [];
 				withdrawals.push(this.state.withdraw_address);
-				localStorage.setItem(`combobox_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
+				localStorage.setItem(`comboboxx_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
             } else { 
 		   
-		        let withdrawals = JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`));
+		        let withdrawals = JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`));
 		        if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
 					 
 	                withdrawals.push(this.state.withdraw_address);
-					localStorage.setItem(`combobox_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
+					localStorage.setItem(`comboboxx_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
 	            }
 	        }
-	  	    localStorage.setItem(`combobox_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
+	  	    localStorage.setItem(`comboboxx_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
             let asset = this.props.asset;
             let precision = utils.get_asset_precision(asset.get("precision"));
             let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -234,20 +177,20 @@ class WithdrawModalBlocktrades extends React.Component {
 		
         ZfApi.publish(this.getWithdrawModalId(), "close");
 
-        if (localStorage.getItem(`combobox_${this.props.output_wallet_type}`) == null) {
+        if (localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`) == null) {
 	        let withdrawals = [];
 			withdrawals.push(this.state.withdraw_address);
-			localStorage.setItem(`combobox_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
+			localStorage.setItem(`comboboxx_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
 			
         } else { 
 	      
-			let withdrawals = JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`));
+			let withdrawals = JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`));
 		    if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
 		        withdrawals.push(this.state.withdraw_address);
-				localStorage.setItem(`combobox_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
+				localStorage.setItem(`comboboxx_${this.props.output_wallet_type}`, JSON.stringify(withdrawals));
 	        }
 	    }
-		localStorage.setItem(`combobox_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
+		localStorage.setItem(`comboboxx_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.withdraw_amount.replace( /,/g, "" )
@@ -264,7 +207,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	   
     onDropDownList() {
 		
-		if (JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`)) != null) {
+		if (JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`)) != null) {
 			
 			if(this.state.options_is_valid === false) {
 				this.setState({options_is_valid: true});
@@ -285,8 +228,8 @@ class WithdrawModalBlocktrades extends React.Component {
 		
 	    let {withdraw_address_selected, memo} = this.state;
 	    let storedAddress = [];  
-	    if (JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`)) != null) {
-		    storedAddress = JSON.parse(localStorage.getItem(`combobox_${this.props.output_wallet_type}`));
+	    if (JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`)) != null) {
+		    storedAddress = JSON.parse(localStorage.getItem(`comboboxx_${this.props.output_wallet_type}`));
 	    }
         let balance = null;
 		let style_select = "blocktrades-options";
@@ -318,7 +261,7 @@ class WithdrawModalBlocktrades extends React.Component {
 	        options = 
 			    <div className={style_select}>
                     {storedAddress.map(function(name, index){
-                    return <a onClick={this.onSelectChanged.bind(this, index)}>{name}</a>;
+                    return <a key={index} onClick={this.onSelectChanged.bind(this, index)}>{name}</a>;
 					}, this)}
                 </div>;
 		}
