@@ -178,7 +178,7 @@ class AccountOverview extends React.Component {
         let showAssetPercent = settings.get("showAssetPercent", false);
 
         return (
-            <div className="grid-content">
+            <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
                         <div className="block-content-header">
