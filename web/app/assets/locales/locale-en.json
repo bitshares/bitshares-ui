@@ -49,6 +49,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
+    "estimate_value": "Estimated account value",
     "whitelist": {
       "title": "Whitelist",
       "black": "Blacklist",

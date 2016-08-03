@@ -9,6 +9,8 @@ import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import {ChainStore} from "graphenejs-lib";
+import ActionSheet from "react-foundation-apps/src/action-sheet";
+import Icon from "../Icon/Icon";
 
 let wallet_api = new WalletApi();
 /**
@@ -89,23 +91,41 @@ class CollateralPosition extends React.Component {
                 <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
                 <td>{<FormattedAsset amount={co.collateral} asset={co.call_price.base.asset_id}/>}</td>
                 <td>{utils.format_number(cr, 2)}</td>
-                <td>{<FormattedPrice
+                <td className="column-hide-small">{<FormattedPrice
                     base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                     quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}/>}
                 </td>
 
                 <td>
-                    <button onClick={this._onUpdatePosition.bind(this)} className="button outline"><Translate content="borrow.update" /></button>
+                    <ActionSheet>
+                        <ActionSheet.Button title="">
+                            <a style={{padding: "1rem"}}>
+                                &nbsp;<Translate content="account.perm.action" /> &nbsp;
+                                <Icon className="icon-14px" name="chevron-down"/>
+                            </a>
+                        </ActionSheet.Button>
+                        <ActionSheet.Content >
+                            <ul className="no-first-element-top-border">
+                                <li className="dropdown-options">
+                                        <a onClick={this._onUpdatePosition.bind(this)}>
+                                            <Translate content="borrow.adjust" />
+                                        </a>
+                                </li>
+                                <li className="dropdown-options">
+                                    <a onClick={this._onClosePosition.bind(this)}>
+                                        <Translate content="borrow.close" />
+                                    </a>
+                                </li>
+                            </ul>
+                        </ActionSheet.Content>
+                    </ActionSheet>
                     {quoteAsset ? (
-                    <BorrowModal                
+                    <BorrowModal
                         ref={"cp_modal_" + co.call_price.quote.asset_id}
                         quote_asset={co.call_price.quote.asset_id}
                         backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                         account={this.props.account}
                     />) : null}
-                </td>
-                <td>
-                    <button onClick={this._onClosePosition.bind(this)} className="button outline"><Translate content="borrow.close" /></button>
                 </td>
             </tr>
         );
