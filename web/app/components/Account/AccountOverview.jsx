@@ -52,16 +52,17 @@ class AccountOverview extends React.Component {
     _renderBalances(balanceList) {
         let {settings, hiddenAssets} = this.props;
         let preferredUnit = settings.get("unit") || "1.3.0";
+        let showAssetPercent = settings.get("showAssetPercent", false);
 
         let balances = [];
         balanceList.forEach( balance => {
             let balanceObject = ChainStore.getObject(balance);
-            let asset_type = balanceObject.get("asset_type"); 
+            let asset_type = balanceObject.get("asset_type");
             let asset = ChainStore.getObject(asset_type);
             let isBitAsset = asset && asset.has("bitasset_data_id");
 
             const core_asset = ChainStore.getAsset("1.3.0");
-            
+
             let assetInfoLinks;
             if (asset) {
                 let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
@@ -83,7 +84,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}}><BalanceComponent balance={balance} assetInfo={assetInfoLinks}/></td>
                     {/*<td style={{textAlign: "right"}}><MarketLink.ObjectWrapper object={balance}></MarketLink.ObjectWrapper></td>*/}
                     <td style={{textAlign: "right"}}><BalanceValueComponent balance={balance} toAsset={preferredUnit}/></td>
-                    <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td>
+                    {showAssetPercent ? <td style={{textAlign: "right"}}><BalanceComponent balance={balance} asPercentage={true}/></td> : null}
                     <td style={{textAlign: "right"}}><div onClick={this._hideAsset.bind(this, asset_type, includeAsset)} className="button outline">{includeAsset ? "-" : "+"}</div></td>
                 </tr>
             );
@@ -99,7 +100,7 @@ class AccountOverview extends React.Component {
     }
 
     render() {
-        let {account, hiddenAssets} = this.props;
+        let {account, hiddenAssets, settings} = this.props;
         let {showHidden} = this.state;
 
         if (!account) {
@@ -147,8 +148,10 @@ class AccountOverview extends React.Component {
                 </tr>
             );
         }
-        
+
         let totalBalance = includedBalancesList.size ? <TotalBalanceValue balances={includedBalancesList}/> : null;
+
+        let showAssetPercent = settings.get("showAssetPercent", false);
 
         return (
             <div className="grid-content">
@@ -164,7 +167,7 @@ class AccountOverview extends React.Component {
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
                                     {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
-                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th>
+                                    {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                     <th>{/* Hide button */}</th>
                                 </tr>
                             </thead>
@@ -179,7 +182,7 @@ class AccountOverview extends React.Component {
                                 {hiddenBalancesList.size ? (
                                     <tr>
                                         <td colSpan="4" style={{textAlign: "right"}}>
-                                            <div    
+                                            <div
                                                 className="button outline"
                                                 onClick={this._toggleHiddenAssets.bind(this)}
                                             >
@@ -218,14 +221,14 @@ class AccountOverview extends React.Component {
                     </div>
                 </div>) : null}
 
-                {account.get("proposals") && account.get("proposals").size ? 
+                {account.get("proposals") && account.get("proposals").size ?
                 <div className="content-block">
                     <div className="block-content-header">
                         <Translate content="explorer.proposals.title" account={account.get("id")} />
                     </div>
                     <Proposals account={account.get("id")}/>
                 </div> : null}
-                
+
                 <div className="content-block">
                     <RecentTransactions
                         accountsList={Immutable.fromJS([account.get("id")])}

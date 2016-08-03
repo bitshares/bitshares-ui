@@ -681,6 +681,7 @@
     "remove_ws": "Remove websocket API",
     "faucet_address": "Faucet Address",
     "showSettles": "Show settle orders in depth chart",
+    "showAssetPercent": "Show asset percentages on the account page",
     "yes": "Yes",
     "no": "No",
     "walletLockTimeout": "Wallet auto-lock time (seconds)",
