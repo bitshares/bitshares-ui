@@ -18,7 +18,12 @@ class AccountNameInput extends React.Component {
         onEnter: PropTypes.func,
         accountShouldExist: PropTypes.bool,
         accountShouldNotExist: PropTypes.bool,
-        cheapNameOnly: PropTypes.bool
+        cheapNameOnly: PropTypes.bool,
+        noLabel: PropTypes.bool
+    };
+
+    static defaultProps = {
+        noLabel: false
     };
 
     constructor() {
@@ -120,21 +125,24 @@ class AccountNameInput extends React.Component {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
         let warning = this.state.warning;
-        
+        let {noLabel} = this.props;
+
         return (
             <div className={class_name}>
-                <label><Translate content="account.name" /></label>
-                <input
-                    name="value"
-                    type="text"
-                    id={this.props.id}
-                    ref="input"
-                    autoComplete="off"
-                    placeholder={this.props.placeholder}
-                    onChange={this.handleChange}
-                    onKeyDown={this.onKeyDown}
-                    value={this.state.account_name || this.props.initial_value}
-                />
+                {noLabel ? null : <label><Translate content="account.name" /></label>}
+                <section>
+                    <input
+                        name="value"
+                        type="text"
+                        id={this.props.id}
+                        ref="input"
+                        autoComplete="off"
+                        placeholder={this.props.placeholder}
+                        onChange={this.handleChange}
+                        onKeyDown={this.onKeyDown}
+                        value={this.state.account_name || this.props.initial_value}
+                    />
+                </section>
                 <div style={{textAlign: "left"}} className="facolor-error">{error}</div>
                 <div style={{textAlign: "left"}} className="facolor-warning">{error ? null : warning}</div>
             </div>
