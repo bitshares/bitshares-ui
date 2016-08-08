@@ -156,8 +156,7 @@ export default class BlockTradesGateway extends React.Component {
                             deposit_wallet_type={coin.walletType}
                             receive_asset={coin.symbol}
                             receive_coin_type={coin.symbol.toLowerCase()}
-                            deposit_memo_name={coin.memo}
-							supports_output_memos={coin.supportsMemos}
+                            supports_output_memos={coin.supportsMemos}
                             action={this.state.action}
                         />
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>

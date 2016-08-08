@@ -27,11 +27,10 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
         deposit_asset: React.PropTypes.string,
         deposit_wallet_type: React.PropTypes.string,
         receive_asset: ChainTypes.ChainAsset,
-        deposit_memo_name: React.PropTypes.string,
         deprecated_in_favor_of: ChainTypes.ChainAsset,
         deprecated_message: React.PropTypes.string,
         action: React.PropTypes.string,
-		supports_output_memos: React.PropTypes.bool.isRequired
+        supports_output_memos: React.PropTypes.bool.isRequired
     };
 
     constructor(props) {
@@ -64,11 +63,6 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
             outputCoinType: this.props.receive_coin_type,
             outputAddress: this.props.account.get('name')
         };
-
-        if (this.props.deposit_memo_name)
-            body.inputAddressType = "shared_address_with_memo";
-        else
-            body.inputAddressType = "unique_address";
 
         let body_string = JSON.stringify(body);
  
@@ -176,7 +170,7 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
             if (receive_address.memo)
             {
                 // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
-                deposit_address_fragment = (<span><code>{receive_address.address}</code><br />with {this.props.deposit_memo_name} <code>{receive_address.memo}</code></span>);
+                deposit_address_fragment = (<span><code>{receive_address.address}</code><br />with memo <code>{receive_address.memo}</code></span>);
             }
             else
             {
