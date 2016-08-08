@@ -66,17 +66,19 @@ class AccountOverview extends React.Component {
             const core_asset = ChainStore.getAsset("1.3.0");
 
             let assetInfoLinks;
-            let marketLink;
+            let marketLink, settleLink;
             if (asset) {
                 let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
 
                 let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
                 marketLink = asset.get("id") !== "1.3.0" ? <a href={`#/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
+                settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a>;
 
                 assetInfoLinks = (
                 <ul>
                     <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
                     <li>{marketLink}</li>
+                    {isBitAsset ? <li>{settleLink}</li> : null}
                 </ul>);
             }
 
@@ -92,7 +94,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "center"}}>
                         <ActionSheet>
                             <ActionSheet.Button title="">
-                                <a>
+                                <a className="action-button">
                                     &nbsp;<Translate content="account.perm.action" />&nbsp;
                                     <Icon className="icon-14px" name="chevron-down"/>
                                 </a>
@@ -102,9 +104,14 @@ class AccountOverview extends React.Component {
                                     <li className="dropdown-options">
                                         <a onClick={this._hideAsset.bind(this, asset_type, includeAsset)}>{includeAsset ? "Hide asset" : "Show asset"}</a>
                                     </li>
+
                                     <li className="dropdown-options">
                                         {marketLink}
                                     </li>
+
+                                    {isBitAsset ? <li className="dropdown-options">
+                                        {settleLink}
+                                    </li> : null}
                                 </ul>
                             </ActionSheet.Content>
                         </ActionSheet>
