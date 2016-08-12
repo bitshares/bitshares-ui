@@ -228,7 +228,12 @@ export default class Chat extends React.Component {
                 hasFetchedHistory: true
             });
 
-            data.history.forEach(msg => {
+            data.history.filter(a => {
+                return (
+                    a.user !== "Welcome to Bitshares" &&
+                    a.user !== "Welcome to Openledger"
+                );
+            }).forEach(msg => {
                 this.state.messages.push(msg);
             });
             this.forceUpdate();
