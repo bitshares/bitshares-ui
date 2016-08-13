@@ -14,7 +14,7 @@
     "sub_text_2" : "Once you've synchronized your clock, please refresh this page."
   },
   "header": {
-    "title": "Graphene UI",
+    "title": "Bitshares UI",
     "account": "Account",
     "dashboard": "Dashboard",
     "explorer": "Explore",
@@ -724,7 +724,7 @@
     "delete_select": "Select wallet to delete"
   },
   "footer": {
-    "title": "Graphene",
+    "title": "Bitshares",
     "block": "Head block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
