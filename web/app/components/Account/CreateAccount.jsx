@@ -232,11 +232,11 @@ class CreateAccount extends React.Component {
                 </div>
 
                 {/* Skip to step 3 */}
-                <div style={{paddingTop: 20}}>
+                {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
                     <label style={{textTransform: "none"}}>
                         <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
                     </label>
-                </div>
+                </div>}
             </form>
         );
     }
