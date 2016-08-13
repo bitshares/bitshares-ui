@@ -76,11 +76,11 @@ class Dashboard extends React.Component {
         let accountCount = linkedAccounts.size + myIgnoredAccounts.size;
 
         let featuredMarkets = [
-            ["OPEN.BTC", "BTS"],
-            ["OPEN.BTC", "OPEN.MKR"],
+            ["OPEN.BTC", "BTS", false],
+            ["BTS", "PEERPLAYS"],
             ["OPEN.BTC", "OPEN.DGD"],
             ["OPEN.BTC", "OPEN.STEEM"],
-            ["OPEN.BTC", "OPEN.LISK"],
+            ["OPEN.BTC", "ICOO"],
             ["BTS", "BTSR"],
             ["BTS", "OBITS"],
             ["BTS", "USD"],
@@ -114,6 +114,7 @@ class Dashboard extends React.Component {
                     className={className}
                     quote={pair[0]}
                     base={pair[1]}
+                    invert={pair[2]}
                 />
             );
         });

@@ -21,7 +21,12 @@ class MarketCard extends React.Component {
 
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired
+        base: ChainTypes.ChainAsset.isRequired,
+        invert: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        invert: true
     };
 
     constructor() {
@@ -34,7 +39,7 @@ class MarketCard extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !utils.are_equal_shallow(nextProps, this.props)
-        )
+        );
     }
 
     componentWillMount() {
@@ -64,7 +69,7 @@ class MarketCard extends React.Component {
         let stats = marketStats.get(marketID);
         let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";
 
-        if ((base.get("issuer") === "1.2.0" || 
+        if ((base.get("issuer") === "1.2.0" ||
              base.get("issuer") === "1.2.3") &&
            !(base.get("symbol") != "GOLD" ||
              base.get("symbol") != "BTC" ||
@@ -81,7 +86,15 @@ class MarketCard extends React.Component {
                 </div>
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
-                    <div className="fm-name">{desc.short_name ? <span>{desc.short_name}&nbsp;<span>({name})</span></span> : <AssetName name={base.get("symbol")} />}</div>
+                    <div className="fm-name">{desc.short_name ? <span>{desc.short_name}</span> : <AssetName name={base.get("symbol")} />}</div>
+                    <div className="fm-volume">{!stats ? null : utils.format_price(
+                        stats.close.quote.amount,
+                        base,
+                        stats.close.base.amount,
+                        quote,
+                        true,
+                        this.props.invert
+                    )}</div>
                     <div className="fm-volume">{!stats ? null : utils.format_volume(stats.volumeBase, quote.get("precision"))} <AssetName name={quote.get("symbol")} /></div>
                     <div className={cnames("fm-change", changeClass)}>{!stats ? null : stats.change}%</div>
                 </div>

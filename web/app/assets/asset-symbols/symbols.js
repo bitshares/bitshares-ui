@@ -7,6 +7,7 @@ require("file?name=asset-symbols/[name].png!./eur.png");
 require("file?name=asset-symbols/[name].png!./cny.png");
 require("file?name=asset-symbols/[name].png!./gold.png");
 require("file?name=asset-symbols/[name].png!./btc.png");
+require("file?name=asset-symbols/silver.png!./bts.png");
 
 // 3rd party assets
 require("file?name=asset-symbols/[name].png!./eth.png");
@@ -20,3 +21,4 @@ require("file?name=asset-symbols/[name].png!./lisk.png");
 require("file?name=asset-symbols/[name].png!./peerplays.png");
 require("file?name=asset-symbols/[name].png!./eurt.png");
 require("file?name=asset-symbols/[name].png!./usdt.png");
+require("file?name=asset-symbols/[name].png!./icoo.png");
