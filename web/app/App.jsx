@@ -67,7 +67,7 @@ import createBrowserHistory from "history/lib/createHashHistory";
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
-import Chat from "./components/Chat/Chat";
+import Chat from "./components/Chat/ChatWrapper";
 import Icon from "./components/Icon/Icon";
 import Translate from "react-translate-component";
 
@@ -87,7 +87,8 @@ class App extends React.Component {
             synced: false,
             syncFail: false,
             theme: SettingsStore.getState().settings.get("themes"),
-            disableChat: SettingsStore.getState().settings.get("disableChat", false),
+            disableChat: SettingsStore.getState().settings.get("disableChat", true),
+            showChat: SettingsStore.getState().viewSettings.get("showChat", false),
             isMobile: false
         };
     }
@@ -158,7 +159,7 @@ class App extends React.Component {
     }
 
     _onSettingsChange() {
-        let {settings} = SettingsStore.getState();
+        let {settings, viewSettings} = SettingsStore.getState();
         if (settings.get("themes") !== this.state.theme) {
             this.setState({
                 theme: settings.get("themes")
@@ -169,6 +170,13 @@ class App extends React.Component {
                 disableChat: settings.get("disableChat")
             });
         }
+
+        if (viewSettings.get("showChat") !== this.state.showChat) {
+            this.setState({
+                showChat: viewSettings.get("showChat")
+            });
+        }
+
     }
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
@@ -178,7 +186,7 @@ class App extends React.Component {
     // }
 
     render() {
-        let {disableChat, isMobile} = this.state;
+        let {disableChat, isMobile, showChat} = this.state;
 
         let content = null;
 
@@ -212,7 +220,7 @@ class App extends React.Component {
                             {this.props.children}
                         </div>
                         <div className="grid-block shrink" style={{overflow: "hidden"}}>
-                            {disableChat || isMobile ? null : <Chat footerVisible={showFooter}/>}
+                            {isMobile ? null : <Chat showChat={showChat} disable={disableChat} footerVisible={showFooter}/>}
 
                         </div>
                     </div>
