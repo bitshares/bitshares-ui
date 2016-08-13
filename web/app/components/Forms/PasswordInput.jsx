@@ -11,13 +11,15 @@ class PasswordInput extends Component {
         onEnter: PropTypes.func,
         confirmation: PropTypes.bool,
         wrongPassword: PropTypes.bool,
-        noValidation: PropTypes.bool
+        noValidation: PropTypes.bool,
+        noLabel: PropTypes.bool
     };
 
     static defaultProps = {
         confirmation: false,
         wrongPassword: false,
-        noValidation: false
+        noValidation: false,
+        noLabel: false
     };
 
     constructor() {
@@ -81,10 +83,12 @@ class PasswordInput extends Component {
         if(this.state.doesnt_match) confirmation_error = <div>Confirmation doesn't match Password</div>;
         let password_class_name = classNames("form-group", {"has-error": password_error});
         let password_confirmation_class_name = classNames("form-group", {"has-error": this.state.doesnt_match});
+        let {noLabel} = this.props;
+
         return (
             <div>
                 <div className={password_class_name}>
-                    <Translate component="label" content="wallet.password" />
+                    {noLabel ? null : <Translate component="label" content="wallet.password" />}
                     <section>
                         <input
                             name="password"
@@ -100,13 +104,14 @@ class PasswordInput extends Component {
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
-                    <Translate component="label" content="wallet.confirm" />
+                    {noLabel ? null : <Translate component="label" content="wallet.confirm" />}
                     <section>
                         <input
                             name="confirm_password"
                             type="password"
                             ref="confirm_password"
                             autoComplete="off"
+                            placeholder="Confirm password"
                             onChange={this.handleChange}
                         />
                     </section>

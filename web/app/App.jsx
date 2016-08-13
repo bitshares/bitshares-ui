@@ -67,7 +67,9 @@ import createBrowserHistory from "history/lib/createHashHistory";
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
-import Chat from "./components/Chat/Chat";
+import Chat from "./components/Chat/ChatWrapper";
+import Icon from "./components/Icon/Icon";
+import Translate from "react-translate-component";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
@@ -83,8 +85,10 @@ class App extends React.Component {
         this.state = {
             loading: true,
             synced: false,
+            syncFail: false,
             theme: SettingsStore.getState().settings.get("themes"),
-            disableChat: SettingsStore.getState().settings.get("disableChat", false),
+            disableChat: SettingsStore.getState().settings.get("disableChat", true),
+            showChat: SettingsStore.getState().viewSettings.get("showChat", false),
             isMobile: false
         };
     }
@@ -106,14 +110,15 @@ class App extends React.Component {
                     AccountStore.loadDbData(Apis.instance().chainId)
                 ]).then(() => {
                     AccountStore.tryToSetCurrentAccount();
-                    this.setState({loading: false});
+                    this.setState({loading: false, syncFail: false});
                 }).catch(error => {
                     console.log("[App.jsx] ----- ERROR ----->", error);
                     this.setState({loading: false});
                 });
             }).catch(error => {
                 console.log("[App.jsx] ----- ChainStore.init error ----->", error);
-                this.setState({loading: false});
+                let syncFail = error.message === "ChainStore sync error, please check your system clock" ? true : false;
+                this.setState({loading: false, syncFail});
             });
         } catch(e) {
             console.error("e:", e);
@@ -154,7 +159,7 @@ class App extends React.Component {
     }
 
     _onSettingsChange() {
-        let {settings} = SettingsStore.getState();
+        let {settings, viewSettings} = SettingsStore.getState();
         if (settings.get("themes") !== this.state.theme) {
             this.setState({
                 theme: settings.get("themes")
@@ -165,9 +170,14 @@ class App extends React.Component {
                 disableChat: settings.get("disableChat")
             });
         }
+
+        if (viewSettings.get("showChat") !== this.state.showChat) {
+            this.setState({
+                showChat: viewSettings.get("showChat")
+            });
+        }
+
     }
-
-
 
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
@@ -176,13 +186,27 @@ class App extends React.Component {
     // }
 
     render() {
-        let {disableChat, isMobile} = this.state;
+        let {disableChat, isMobile, showChat} = this.state;
 
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
 
-        if (this.state.loading) {
+        if (this.state.syncFail) {
+            content = (
+                <div className="grid-frame vertical">
+                    <div className="grid-container text-center" style={{paddingTop: "5rem"}}>
+
+                        <h2><Translate content="sync_fail.title" /></h2>
+                        <br />
+                        <p><Translate content="sync_fail.sub_text_1" /></p>
+                        <p><Translate content="sync_fail.sub_text_2" /></p>
+                        <Icon name="clock" size="5x"/>
+                    </div>
+
+                </div>
+            );
+        } else if (this.state.loading) {
             content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
         } else if (this.props.location.pathname === "/init-error") {
             content = <div className="grid-frame vertical">{this.props.children}</div>;
@@ -196,7 +220,7 @@ class App extends React.Component {
                             {this.props.children}
                         </div>
                         <div className="grid-block shrink" style={{overflow: "hidden"}}>
-                            {disableChat || isMobile ? null : <Chat footerVisible={showFooter}/>}
+                            {isMobile ? null : <Chat showChat={showChat} disable={disableChat} footerVisible={showFooter}/>}
 
                         </div>
                     </div>

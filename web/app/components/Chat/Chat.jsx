@@ -227,7 +227,12 @@ export default class Chat extends React.Component {
                 hasFetchedHistory: true
             });
 
-            data.history.forEach(msg => {
+            data.history.filter(a => {
+                return (
+                    a.user !== "Welcome to Bitshares" &&
+                    a.user !== "Welcome to Openledger"
+                );
+            }).forEach(msg => {
                 this.state.messages.push(msg);
             });
             this.forceUpdate();
@@ -503,6 +508,17 @@ export default class Chat extends React.Component {
         });
     }
 
+    disableChat(e) {
+        e.preventDefault();
+        SettingsActions.changeViewSetting({
+            showChat: false
+        });
+        SettingsActions.changeSetting({
+            setting: "disableChat",
+            value: true
+        });
+    }
+
     render() {
 
         let {userName, loading, docked} = this.state;
@@ -576,6 +592,10 @@ export default class Chat extends React.Component {
                     onChange={this.onChangeColor.bind(this)}
                     type="color"
                 />
+
+                <div onClick={this.disableChat.bind(this)} className="button">
+                    <Translate content="settings.disableChat" />
+                </div>
 
                 {/* Done button */}
                 <div style={{position: "absolute", bottom: 5, right: 0}}>
