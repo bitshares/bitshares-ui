@@ -1,4 +1,29 @@
 ---------------------------------------------------------------------
+Release 2.0.160813
+---------------------------------------------------------------------
+
+New features
+--------
+- Refactor account creation
+- Disable chart indicators by default
+- BlockTrades deposit/withdraw improvements
+- Update Featured assets, add ICOO/PeerPlays
+- Change depth chart tooltip to table layout
+- Restore the Account link to the Header
+- Disable Chat by default, make it easier to enable/disable
+- Add current price to Dashboard MarketCards
+
+Bug fixes
+--------
+- Rearrange Exchange components and improve responsive behaviour
+- Adjust DepthChart min/max range
+- Prevent infinite loop on bad system clock, add warning
+- Filter out duplicate welcome messages from chat history
+- Fix Orderbook click calculation
+- Fix buy side order book click total calculation
+- Fix for 1.0 balance claims
+
+---------------------------------------------------------------------
 Release 2.0.160702
 ---------------------------------------------------------------------
 Bug fixes
