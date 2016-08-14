@@ -79,6 +79,8 @@ class MarketCard extends React.Component {
             imgName = "bts";
         }
 
+        console.log("stats:", stats);
+
         return (
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
@@ -87,7 +89,7 @@ class MarketCard extends React.Component {
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
                     <div className="fm-name">{desc.short_name ? <span>{desc.short_name}</span> : <AssetName name={base.get("symbol")} />}</div>
-                    <div className="fm-volume">{(!stats || !stats.close || !("amount" in stats.close)) ? null : utils.format_price(
+                    <div className="fm-volume">{(!stats || !stats.close) ? null : utils.format_price(
                         stats.close.quote.amount,
                         base,
                         stats.close.base.amount,
