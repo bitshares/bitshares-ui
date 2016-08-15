@@ -1,0 +1,20 @@
+{
+  "name": "trollbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "trollbox.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --delay 5 trollbox.js ",
+    "forever": "forever -e error.log trollbox.js  2>&1 | logrotate-stream trollbox.log --keep 3 --size '50m' --compress &"
+  },
+  "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "peer": "^0.2.8"
+  },
+  "devDependencies": {
+    "logrotate-stream": "^0.2.5",
+    "nodemon": "^1.9.2"
+  }
+}

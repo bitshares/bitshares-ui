@@ -1,16 +1,15 @@
-
 import React, {Component, Children} from "react"
 import { RouteHandler } from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import Immutable from "immutable"
 import cname from "classnames"
-import key from "common/key_utils"
+import {key} from "graphenejs-lib";
 import BrainkeyActions from "actions/BrainkeyActions"
 import BrainkeyStoreFactory from "stores/BrainkeyStore"
 import BindToChainState from "components/Utility/BindToChainState"
 import ChainTypes from "components/Utility/ChainTypes"
 import BrainkeyInput from "components/Wallet/BrainkeyInput"
-import _ from "lodash"
+import {pairs} from "lodash"
 import Translate from "react-translate-component";
 
 class BrainkeyBaseComponent extends Component {
@@ -65,7 +64,7 @@ class BrainkeyAccounts {
     }
     
     render() {
-        var rows = _.pairs(this.props.accounts).filter( account => !!account[1] )
+        var rows = pairs(this.props.accounts).filter( account => !!account[1] )
             .map( account => account[1].get("name") ).sort()
             .map( name => <AccountCard key={name} account={name}/> )
         return <span>
@@ -88,7 +87,7 @@ export class BrainkeyInputAccept extends Component {
         var ready = this.state.brnkey && this.state.brnkey !== ""
         return (
             <span className="grid-container">
-                <div style={{width: '400px'}}>
+                <div>
                     <BrainkeyInput onChange={this.onBrainkeyChange.bind(this)}/>
                 </div>
                 <div className={cname("button success", {disabled: ! ready})}

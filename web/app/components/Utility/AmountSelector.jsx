@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
@@ -130,7 +130,7 @@ class AmountSelector extends React.Component {
                     <input 
                            disabled={this.props.disabled}
                            type="text"
-                           value={value}
+                           value={value || ""}
                            placeholder={this.props.placeholder}
                            onChange={this._onChange.bind(this) }
                            tabIndex={this.props.tabIndex}/>

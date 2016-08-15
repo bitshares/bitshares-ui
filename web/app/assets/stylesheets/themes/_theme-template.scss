@@ -23,7 +23,8 @@
   $positive-color,
   $negative-color,
   $row-accent-color,
-  $header-color
+  $header-color,
+  $chat-text-color
   ) {
 
   #content-wrapper {
@@ -43,7 +44,7 @@
   }
 
   label, label > span {
-    color: $secondary-text-color;
+    color: $primary-text-color;
   }
 
   // select:hover {
@@ -229,7 +230,7 @@
   // buttons
 
   .button {
-    background-color: $button-bg-color;
+    background: $button-bg-color;
     &:hover, &:focus, &:active {
       background-color: lighten($button-bg-color, 4%) !important;
     }
@@ -250,8 +251,12 @@
     }
   }
 
-  .header .button,  header .button:active {
+  .header .button,  .header .button:active {
     background-color: $panel-bg-color !important;
+  }
+
+  .header .button.create-account {
+    background-color: $button-bg-color !important;
   }
 
   .grp-menu-item button {
@@ -555,11 +560,17 @@
   }
 
   // Block List (section)
-  section input[type="text"] {
+  section input[type="text"], section input[type="password"] {
     background-color: transparent;
+    border:none;
+    border-bottom: 1px solid $panel-bg-color;
+    color: $primary-text-color;
+    max-width: 30rem;
     &:hover, &:active, &:focus {
       color: $primary-text-color;
       background-color: transparent;
+      border:none;
+      border-bottom: 1px solid $panel-bg-color;
     }
   }
 
@@ -640,7 +651,7 @@
   }
 
   td.orderHistoryBid {
-   
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $bid-color;
@@ -663,7 +674,7 @@
 
   td.orderHistoryAsk  {
 
-    
+
     > span.price-integer, > span > span.price-integer {
       font-weight: bold;
       color: $ask-color;
@@ -677,7 +688,7 @@
   }
 
 .orderbook td.orderHistoryAsk {
-   
+
   > span.price-integer, > span > span.price-integer {
     font-weight: bold;
     color: $primary-text-color;
@@ -706,7 +717,7 @@
 
   .orderbook-latest-price {
       div {
-        background-color: #4C4C4C !important;
+        background-color: $panel-bg-color !important;
         border-bottom: 1px solid grey !important;
         border-top: 1px solid grey !important;
         padding: 10px 0 !important;
@@ -749,7 +760,7 @@
   }
 
   .buy-sell-box {
-      background-color: lighten($panel-bg-color, 12%);
+      background-color: $header-color;
 
       > select {
           padding: 0;
@@ -757,9 +768,9 @@
           height: 1.75rem;
           line-height: 1.75rem;
           border: none;
-          color: white;
+          color: $primary-text-color;
           background-size: 8px 8px;
-          background-color: lighten($panel-bg-color, 12%);
+          background-color: $header-color;
           font-size: 12px;
       }
   }
@@ -808,8 +819,8 @@
   .active-bucket {
     @include button-focus($primary-text-color, $panel-bg-color, 10);
   }
-   
-   
+
+
   .indicators, li.stat.clickable{
     color: $secondary-text-color;
     &:hover{
@@ -817,12 +828,66 @@
     }
   }
 
+
+  .mymarkets-tabs {
+      > li {
+          @include button-focus($secondary-text-color, $panel-bg-color, 0);
+          &:hover {
+            @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+
+          &.active {
+              @include button-focus($primary-text-color, $panel-bg-color, 10);
+          }
+      }
+  }
+
+  .mymarkets-list {
+      border-top: 2px solid $panel-bg-color;
+  }
+
+  select.bts-select {
+      color: $secondary-text-color;
+  }
+
+
   div.fm-container:hover {
     background-color: darken($light-panel-bg-color, 5%);
     cursor: pointer;
-   }
+  }
+
+  #chatbox {
+    .chat-text {
+      color: $chat-text-color;
+    }
+
+    .chatbox-content {
+        background-color: #ccc;
+        color: $chat-text-color;
+    }
+
+    .chatbox-title {
+      background-color: $header-color !important;
+    }
+
+    select {
+      height: 3rem;
+      font-size: 12px;
+    }
+  }
+
+  // Settings
+  .settings-menu {
+      > li {
+          &:hover {
+                background-color: darken($light-panel-bg-color, 5%);
+          }
+
+          &.active {
+                color: $link-text-color;
+          }
+
+      }
+  }
 
 }
-
-
-

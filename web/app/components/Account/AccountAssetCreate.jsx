@@ -1,11 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
 import classnames from "classnames";
-import validation from "common/validation";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import ChainStore from "api/ChainStore";
+import {ChainStore, ChainValidation} from "graphenejs-lib";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
@@ -355,7 +354,7 @@ class AccountAssetCreate extends React.Component {
             max_supply: null
         };
 
-        errors.symbol = validation.is_valid_symbol_error(new_state.symbol);
+        errors.symbol = ChainValidation.is_valid_symbol_error(new_state.symbol);
         let existingAsset = ChainStore.getAsset(new_state.symbol);
         if (existingAsset) {
             errors.symbol = counterpart.translate("account.user_issued_assets.exists");

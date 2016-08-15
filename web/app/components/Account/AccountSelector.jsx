@@ -1,14 +1,12 @@
 import React from "react";
 import utils from "common/utils";
-import validation from "common/validation";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainStore, PublicKey, ChainValidation} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
 import counterpart from "counterpart";
-import PublicKey from "ecc/key_public";
 import Icon from "../Icon/Icon";
 
 /**
@@ -50,7 +48,7 @@ class AccountSelector extends React.Component {
     getNameType(value) {
         if(!value) return null;
         if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(validation.is_account_name(value, true)) return "name";
+        if(ChainValidation.is_account_name(value, true)) return "name";
         if(this.props.allowPubKey && PublicKey.fromPublicKeyString(value)) return "pubkey";
         return null;
     }
@@ -75,7 +73,7 @@ class AccountSelector extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if(this.props.onAccountChanged && newProps.account !== this.props.account)
+        if((this.props.onAccountChanged && newProps.account) && newProps.account !== this.props.account)
             this.props.onAccountChanged(newProps.account);
     }
 
@@ -118,21 +116,21 @@ class AccountSelector extends React.Component {
                         <Translate component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
-                      <span className="inline-label">
-                      <input type="text"
-                             value={this.props.accountName || ""}
-                             placeholder={this.props.placeholder || counterpart.translate("account.name")}
-                             ref="user_input"
-                             onChange={this.onInputChanged.bind(this)}
-                             onKeyDown={this.onKeyDown.bind(this)}
-                             tabIndex={this.props.tabIndex}/>
-                          { this.props.children }
-                          { this.props.onAction ? (
-                              <button className={action_class}
-                                      onClick={this.onAction.bind(this)}>
-                                  <Translate content={this.props.action_label}/></button>
-                          ) : null }
-                      </span>
+                      <div className="inline-label">
+                          <input type="text"
+                                 value={this.props.accountName || ""}
+                                 placeholder={this.props.placeholder || counterpart.translate("account.name")}
+                                 ref="user_input"
+                                 onChange={this.onInputChanged.bind(this)}
+                                 onKeyDown={this.onKeyDown.bind(this)}
+                                 tabIndex={this.props.tabIndex}/>
+                              { this.props.children }
+                              { this.props.onAction ? (
+                                  <button className={action_class}
+                                          onClick={this.onAction.bind(this)}>
+                                      <Translate content={this.props.action_label}/></button>
+                              ) : null }
+                      </div>
                     </div>
                     <div className="error-area">
                         <span>{error}</span>

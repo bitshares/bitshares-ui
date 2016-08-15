@@ -1,9 +1,8 @@
 import React from "react";
 import utils from "common/utils";
-import validation from "common/validation";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainValidation} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
@@ -52,7 +51,7 @@ class AssetSelector extends React.Component {
     getNameType(value) {
         if(!value) return null;
         // if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(!validation.is_valid_symbol_error(value, true)) return "symbol";
+        if(!ChainValidation.is_valid_symbol_error(value, true)) return "symbol";
         return null;
     }
 
@@ -107,8 +106,7 @@ class AssetSelector extends React.Component {
                       <input 
                              disabled={this.props.disabled}
                              type="text"
-                             value={this.props.assetInput}
-                             defaultValue={this.props.assetInput}
+                             value={this.props.assetInput || ""}
                              placeholder={counterpart.translate("explorer.assets.symbol")}
                              ref="user_input"
                              onChange={this.onInputChanged.bind(this)}

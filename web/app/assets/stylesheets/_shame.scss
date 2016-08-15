@@ -329,3 +329,24 @@ label.inline {
 .asset-prefix-replaced {
   font-variant: small-caps;
 }
+
+select {
+    line-height: normal !important;
+}
+
+select.bts-select {
+    border: none;
+    background: none;
+    background-color: transparent;
+    max-width: 500px;
+    border-bottom: 1px solid #444;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+}
+
+@media screen and (max-width: 900px) {
+    .column-hide-small {
+        display: none;
+    }
+}

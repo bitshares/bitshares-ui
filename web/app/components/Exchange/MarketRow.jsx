@@ -20,7 +20,7 @@ class MarketRow extends React.Component {
 
     static defaultProps = {
         noSymbols: false,
-        tempComponent: "tr"        
+        tempComponent: "tr"
     };
 
     static contextTypes = {history: PropTypes.history};
@@ -48,7 +48,7 @@ class MarketRow extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !utils.are_equal_shallow(nextProps, this.props)
-        )
+        );
     }
 
     _onStar(quote, base, e) {
@@ -83,91 +83,98 @@ class MarketRow extends React.Component {
         let buttonStyle = null;
         if (this.props.compact) {
             buttonClass += " no-margin";
-            buttonStyle = {marginBottom: 0, fontSize: "0.75rem" , padding: "4px 10px" , borderRadius: "0px" , letterSpacing: "0.05rem"}
+            buttonStyle = {marginBottom: 0, fontSize: "0.75rem" , padding: "4px 10px" , borderRadius: "0px" , letterSpacing: "0.05rem"};
         }
 
         let columns = this.props.columns.map(column => {
             switch (column.name) {
-                case "star":
-                    let starClass = starred ? "gold-star" : "grey-star";
-                    return (
-                        <td onClick={this._onStar.bind(this, quote.get("symbol"), base.get("symbol"))} key={column.index}>
-                            <Icon className={starClass} name="fi-star"/>
-                        </td>
-                    );
+            case "star":
+                let starClass = starred ? "gold-star" : "grey-star";
+                return (
+                    <td onClick={this._onStar.bind(this, quote.get("symbol"), base.get("symbol"))} key={column.index}>
+                        <Icon className={starClass} name="fi-star"/>
+                    </td>
+                );
 
-                case "vol":
-                    let amount = stats ? stats.volumeBase : 0;
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
-                            {utils.format_volume(amount)}
-                        </td>
-                    );
+            case "vol":
+                let amount = stats ? stats.volumeBase : 0;
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
+                        {utils.format_volume(amount)}
+                    </td>
+                );
 
-                case "change":
-                    let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                    let changeClass = change === "0.00" ? "" : change > 0 ? "change-up" : "change-down";
+            case "change":
+                let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
+                let changeClass = change === "0.00" ? "" : change > 0 ? "change-up" : "change-down";
 
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} className={"text-right " + changeClass} key={column.index}>
-                            {change + "%"}
-                        </td>
-                    );
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} className={"text-right " + changeClass} key={column.index}>
+                        {change + "%"}
+                    </td>
+                );
 
-                case "marketName":
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
-                            <div className={buttonClass} style={buttonStyle}>{marketName}</div>
-                        </td>
-                    );
+            case "marketName":
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                        <div className={buttonClass} style={buttonStyle}>{marketName}</div>
+                    </td>
+                );
 
-                case "market":
-                    return (<td onClick={this._onClick.bind(this, marketID)} key={column.index}>
-                            {this.props.name}
-                        </td>);
+            case "market":
+                return (<td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                        {this.props.name}
+                    </td>);
 
-                case "price":
-                    let finalPrice = stats && stats.latestPrice ?
-                        stats.latestPrice :
-                        stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
-                        utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
-                        utils.get_asset_price(price.base.amount, base, price.quote.amount, quote)
+            case "price":
+                let finalPrice = stats && stats.latestPrice ?
+                    stats.latestPrice :
+                    stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
+                    utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
+                    utils.get_asset_price(price.base.amount, base, price.quote.amount, quote);
 
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
-                            {utils.format_number(finalPrice, finalPrice > 1000 ? 0 : finalPrice > 10 ? 2 : 6)}
-                        </td>
-                    )
+                let highPrecisionAssets = ["BTC", "OPEN.BTC", "TRADE.BTC", "GOLD", "SILVER"];
+                let precision = 6;
+                if (highPrecisionAssets.indexOf(base.get("symbol")) !== -1) {
+                    precision = 8;
+                }
 
-                case "quoteSupply":
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
-                            {dynamic_data ? <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={parseInt(dynamic_data.get("current_supply"), 10)}
-                                asset={quote.get("id")}/> : null}
-                        </td>
-                    );
 
-                case "baseSupply":
-                    return (
-                        <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
-                            {base_dynamic_data ? <FormattedAsset
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
+                        {utils.format_number(finalPrice, finalPrice > 1000 ? 0 : finalPrice > 10 ? 2 : precision)}
+                    </td>
+                );
+
+            case "quoteSupply":
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                        {dynamic_data ? <FormattedAsset
                             style={{fontWeight: "bold"}}
-                            amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
-                            asset={base.get("id")}/> : null}
-                        </td>
-                    );
+                            amount={parseInt(dynamic_data.get("current_supply"), 10)}
+                            asset={quote.get("id")}/> : null}
+                    </td>
+                );
 
-                case "remove":
-                    return (
-                        <td key={column.index} className="clickable" onClick={this.props.removeMarket}>
-                            <span style={{marginBottom: "6px", marginRight: "6px", zIndex: 999}} className="text float-right remove">–</span>
-                        </td>
-                    )
+            case "baseSupply":
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                        {base_dynamic_data ? <FormattedAsset
+                        style={{fontWeight: "bold"}}
+                        amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
+                        asset={base.get("id")}/> : null}
+                    </td>
+                );
 
-                default:
-                    break;
+            case "remove":
+                return (
+                    <td key={column.index} className="clickable" onClick={this.props.removeMarket}>
+                        <span style={{marginBottom: "6px", marginRight: "6px", zIndex: 999}} className="text float-right remove">–</span>
+                    </td>
+                );
+
+            default:
+                break;
             }
 
         }).sort((a,b) => {
@@ -177,7 +184,7 @@ class MarketRow extends React.Component {
         let className = "clickable";
         if (this.props.current) {
             className += " activeMarket";
-        } 
+        }
 
         return (
             <tr className={className} style={rowStyles}>{columns}</tr>

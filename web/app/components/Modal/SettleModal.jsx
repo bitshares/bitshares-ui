@@ -13,6 +13,7 @@ import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
+import {ChainStore} from "graphenejs-lib";
 
 let wallet_api = new WalletApi();
 

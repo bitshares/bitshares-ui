@@ -1,0 +1,144 @@
+[
+    {
+      "backingCoinType": "BTC",
+      "name": "Bitcoin",
+      "walletType": "bitcoin",
+      "symbol": "OPEN.BTC"
+    },
+  {
+    "backingCoinType": "AGRS",
+    "name": "Agoras Tokens",
+    "walletType": "omni",
+    "symbol": "OPEN.AGRS"
+  },
+  {
+    "backingCoinType": "BKS",
+    "name": "BlockShares",
+    "walletType": "blockshares",
+    "symbol": "OPEN.BKS"
+  },
+  {
+    "backingCoinType": "DASH",
+    "name": "Dash",
+    "walletType": "dash",
+    "symbol": "OPEN.DASH"
+  },
+  {
+    "backingCoinType": "DAO",
+    "name": "The DAO",
+    "walletType": "ethereum",
+    "symbol": "OPEN.DAO"
+  },
+  {
+    "backingCoinType": "DGD",
+    "name": "Digix DGD",
+    "walletType": "ethereum",
+    "symbol": "OPEN.DGD"
+  },
+  {
+    "backingCoinType": "DOGE",
+    "name": "Dogecoin",
+    "walletType": "dogecoin",
+    "symbol": "OPEN.DOGE"
+  },
+  {
+    "backingCoinType": "EGD",
+    "name": "E-Gold",
+    "walletType": "egold",
+    "symbol": "OPEN.EGD"
+  },
+  {
+    "backingCoinType": "EMC",
+    "name": "EmerCoin",
+    "walletType": "emercoin",
+    "symbol": "OPEN.EMC"
+  },
+  {
+    "backingCoinType": "ETH",
+    "name": "Ether",
+    "walletType": "ethereum",
+    "symbol": "OPEN.ETH"
+  },
+  {
+    "backingCoinType": "EURT",
+    "name": "Euro Tether",
+    "walletType": "omni",
+    "symbol": "OPEN.EURT"
+  },
+  {
+    "backingCoinType": "LISK",
+    "name": "Lisk",
+    "walletType": "lisk",
+    "symbol": "OPEN.LISK"
+  },
+  {
+    "backingCoinType": "LTC",
+    "name": "Litecoin",
+    "walletType": "litecoin",
+    "symbol": "OPEN.LTC"
+  },
+  {
+    "backingCoinType": "ETHEREUM_MKR",
+    "name": "Makercoin",
+    "walletType": "ethereum",
+    "symbol": "OPEN.MKR"
+  },
+  {
+    "backingCoinType": "MAID",
+    "name": "MaidSafe",
+    "walletType": "omni",
+    "symbol": "OPEN.MAID"
+  },
+  {
+    "backingCoinType": "MUSE",
+    "name": "Muse",
+    "walletType": "muse",
+    "symbol": "OPEN.MUSE",
+    "memo": "memo",
+    "depositAccount": "openledger-wallet"
+  },
+  {
+    "backingCoinType": "NBT",
+    "name": "NuBits",
+    "walletType": "nubits",
+    "symbol": "OPEN.NBT"
+  },
+  {
+    "backingCoinType": "NSR",
+    "name": "NuShares",
+    "walletType": "nushares",
+    "symbol": "OPEN.NSR"
+  },
+  {
+    "backingCoinType": "OMNI",
+    "name": "Omni",
+    "walletType": "omni",
+    "symbol": "OPEN.OMNI"
+  },
+  {
+    "backingCoinType": "PPC",
+    "name": "Peercoin",
+    "walletType": "peercoin",
+    "symbol": "OPEN.PPC"
+  },
+  {
+    "backingCoinType": "STEEM",
+    "name": "Steem",
+    "walletType": "steem",
+    "symbol": "OPEN.STEEM",
+    "memo": "memo",
+    "depositAccount": "openledger"
+  },
+  {
+    "backingCoinType": "AMP",
+    "name": "Synereo",
+    "walletType": "omni",
+    "symbol": "OPEN.AMP"
+  },
+  {
+    "backingCoinType": "USDT",
+    "name": "USD Tether",
+    "walletType": "omni",
+    "symbol": "OPEN.USDT"
+  }
+]

@@ -13,6 +13,7 @@ import WalletApi from "rpc_api/WalletApi";
 import Immutable from "immutable";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
+import {ChainStore} from "graphenejs-lib";
 
 let wallet_api = new WalletApi();
 
@@ -188,7 +189,7 @@ class ProposalApproveModal extends React.Component {
                             onClick={this._onProposalAction.bind(this, proposal)}
                             value={isAdd ? "Approve" : "Remove"} 
                         />
-                        <div onClick={this.onCancel.bind(this)} className="secondary button">
+                        <div onClick={this.onCancel.bind(this)} className=" button">
                             <Translate content="account.perm.cancel" />
                         </div>
                     </div>

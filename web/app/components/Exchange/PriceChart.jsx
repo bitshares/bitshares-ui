@@ -4,7 +4,7 @@ import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
-import _ from "lodash";
+import {cloneDeep, reduce} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 
@@ -14,7 +14,7 @@ require("./highcharts-plugins/ema.js");
 require("./highcharts-plugins/atr.js");
 require("./highcharts-plugins/sma.js");
 require("./highcharts-plugins/indicators.css");
-require("./highcharts-plugins/highstock-current-price-indicator.js")
+require("./highcharts-plugins/highstock-current-price-indicator.js");
 
 class PriceChart extends React.Component {
 
@@ -50,7 +50,7 @@ class PriceChart extends React.Component {
             let changed, added, changedSetting;
 
             for (let key in nextProps.indicatorSettings) {
-                let change = _(nextProps.indicatorSettings[key]).reduce((total, a, settingKey) => {
+                let change = reduce(nextProps.indicatorSettings[key], (total, a, settingKey) => {
 
                     let change = a !== this.props.indicatorSettings[key][settingKey];
                     changedSetting = change ? settingKey : changedSetting;
@@ -62,14 +62,14 @@ class PriceChart extends React.Component {
 
             if (changedSetting !== "period") {
                 let indicators = chart.indicators.allItems;
-                let options = this.getIndicators(nextProps, changed)[0]
+                let options = this.getIndicators(nextProps, changed)[0];
 
                 for (var i = indicators.length - 1 ; i >= 0 ; i--) {
-                        if (indicators[i].name === changed) {
-                            indicators[i].update(options);
-                            break;
-                        }
-                    };
+                    if (indicators[i].name === changed) {
+                        indicators[i].update(options);
+                        break;
+                    }
+                };
                 chart.redraw();
                 return false;
             }
@@ -110,7 +110,7 @@ class PriceChart extends React.Component {
         let height = ReactDOM.findDOMNode(this).offsetHeight;
         this.setState({offsetHeight: height - 10});
 
-        if (this.refs.chart && 
+        if (this.refs.chart &&
             (nextProps.verticalOrderbook !== this.props.verticalOrderbook ||
             nextProps.height !== this.props.height)
                 ) {
@@ -123,7 +123,7 @@ class PriceChart extends React.Component {
             if (this.refs.chart) {
                 this.refs.chart.chart.reflow();
             }
-        }, timeout);   
+        }, timeout);
     }
 
     getIndicators(props, select = false) {
@@ -135,86 +135,86 @@ class PriceChart extends React.Component {
             if (indicators[indicator] && (!select || select === indicator)) {
                 // console.log(indicator, "params:", indicatorSettings[indicator]);
                 switch (indicator) {
-                    case "sma":
-                        currentIndicator.push({
-                            id: 'primary',
-                            type: 'sma',
-                            params: indicatorSettings[indicator],
-                            tooltip:{
-                                pointFormat: '<span style="color: {point.color}; ">pointFormat SMA: </span> {point.y}<br>'
-                            },
-                        })
-                        break;
+                case "sma":
+                    currentIndicator.push({
+                        id: "primary",
+                        type: "sma",
+                        params: indicatorSettings[indicator],
+                        tooltip:{
+                            pointFormat: '<span style="color: {point.color}; ">pointFormat SMA: </span> {point.y}<br>'
+                        },
+                    });
+                    break;
 
-                    case "ema":
-                        currentIndicator.push({
-                            id: 'primary',
-                            type: 'ema',
-                            params: indicatorSettings[indicator],
-                            styles: {
-                                strokeWidth: 2,
-                                stroke: props.priceData.length ? "green" : "black",
-                                dashstyle: 'solid'
-                            }
-                        })
-                        break;
+                case "ema":
+                    currentIndicator.push({
+                        id: "primary",
+                        type: "ema",
+                        params: indicatorSettings[indicator],
+                        styles: {
+                            strokeWidth: 2,
+                            stroke: props.priceData.length ? "green" : "black",
+                            dashstyle: "solid"
+                        }
+                    });
+                    break;
 
-                    case "rsi":
-                        currentIndicator.push({
-                            id: 'primary',
-                            type: 'rsi',
-                            params: indicatorSettings[indicator],
-                            styles: {
-                                strokeWidth: 2,
-                                stroke: '#A7DACD',
-                                dashstyle: 'solid'
+                case "rsi":
+                    currentIndicator.push({
+                        id: "primary",
+                        type: "rsi",
+                        params: indicatorSettings[indicator],
+                        styles: {
+                            strokeWidth: 2,
+                            stroke: "#A7DACD",
+                            dashstyle: "solid"
+                        },
+                        yAxis: {
+                            lineWidth:2,
+                            title: {
+                                text: "RSI",
+                                style: {
+                                    color: "#FFFFFF"
+                                }
                             },
-                            yAxis: {
-                                lineWidth:2,
-                                title: {
-                                    text:'RSI',
-                                    style: {
-                                        color: "#FFFFFF"
-                                    }
-                                },
-                                labels: {
-                                    style: {
-                                        color: "#FFFFFF"
-                                    }
+                            labels: {
+                                style: {
+                                    color: "#FFFFFF"
                                 }
                             }
-                        });
-                        break;
+                        }
+                    });
+                    break;
 
-                    case "atr":
-                        currentIndicator.push({
-                            id: 'primary',
-                            type: 'atr',
-                            params: indicatorSettings[indicator],
-                            styles: {
-                                strokeWidth: 2,
-                                stroke: 'orange',
-                                dashstyle: 'solid'
+                case "atr":
+                    currentIndicator.push({
+                        id: "primary",
+                        type: "atr",
+                        params: indicatorSettings[indicator],
+                        styles: {
+                            strokeWidth: 2,
+                            stroke: "orange",
+                            dashstyle: "solid"
+                        },
+                        yAxis: {
+                            lineWidth: 2,
+                            title: {
+                                text:  "ATR",
+                                style: {
+                                    color: "#FFFFFF"
+                                }
                             },
-                            yAxis: {
-                                lineWidth: 2,
-                                title: {
-                                    text: 'ATR',
-                                    style: {
-                                        color: "#FFFFFF"
-                                    }
-                                },
-                                labels: {
-                                    style: {
-                                        color: "#FFFFFF"
-                                    }
+                            labels: {
+                                style: {
+                                    color: "#FFFFFF"
                                 }
                             }
-                        });
-                        break;
+                        }
+                    });
+                    break;
 
-                    default:
-                        currentIndicator = [];
+                default:
+                    currentIndicator = [];
                 }
             }
         }
@@ -226,12 +226,12 @@ class PriceChart extends React.Component {
         let {priceData, volumeData, quoteSymbol, baseSymbol, base, quote, marketReady,
             indicators, indicatorSettings, latest, bucketSize, theme} = this.props;
 
-        let priceSeriesData = _.cloneDeep(priceData);
+        let priceSeriesData = cloneDeep(priceData);
         let currentIndicator = this.getIndicators(this.props);
 
         let positiveColor = colors[theme].positiveColor;
         let negativeColor = colors[theme].negativeColor;
-        
+
         if (!priceSeriesData.length && latest) {
             let now = (new Date).getTime();
             priceSeriesData.push([now, latest.full, latest.full, latest.full, latest.full]);
@@ -306,7 +306,8 @@ class PriceChart extends React.Component {
                     color: negativeColor,
                     lineColor: negativeColor,
                     upColor: positiveColor,
-                    upLineColor: positiveColor
+                    upLineColor: positiveColor,
+                    lineWidth: 2
                 },
                 column: {
                     animation: false,
@@ -336,11 +337,12 @@ class PriceChart extends React.Component {
                     if (!this.points || this.points.length === 0) {
                         return "";
                     }
-                    let TA = _(this.points[1].indicators).reduce((finalString, indicator, key) => {
-                        return finalString + "<b>" + key.toUpperCase() + "</b>" + ": " + Highcharts.numberFormat(indicator[1], price_dec, ".", ",") + "  ";
-                    }, "");
 
-                   return ("<span style='color: " + colors[theme].tooltipColor +";fill: "+ colors[theme].tooltipFillColor + "'>" +
+                    let TA = (this.points[1] && "indicators" in this.points[1]) ? reduce(this.points[1].indicators, (finalString, indicator, key) => {
+                        return finalString + "<b>" + key.toUpperCase() + "</b>" + ": " + Highcharts.numberFormat(indicator[1], price_dec, ".", ",") + "  ";
+                    }, "") : "";
+
+                    return ("<span style='color: " + colors[theme].tooltipColor +";fill: "+ colors[theme].tooltipFillColor + "'>" +
                              "<b>Open:&nbsp;&nbsp;&nbsp;</b>" + Highcharts.numberFormat(this.points[1].point.open, price_dec, ".", ",") +
                              "<b>&nbsp;&nbsp;High:&nbsp;&nbsp;&nbsp;</b>" + Highcharts.numberFormat(this.points[1].point.high, price_dec, ".", ",") +
                              "<b>&nbsp;&nbsp;Time:&nbsp;&nbsp;&nbsp;</b>" + time +
@@ -357,7 +359,7 @@ class PriceChart extends React.Component {
             series: [
                 {
                     type: "column",
-                    name: `Volume`,
+                    name: "Volume",
                     data: volumeData,
                     color: colors[theme].volumeColor,
                     yAxis: 1
@@ -365,56 +367,57 @@ class PriceChart extends React.Component {
                 {
                     id: "primary",
                     type: "candlestick",
-                    name: `Price`,
+                    name: "Price",
                     data: priceSeriesData
                 }
             ],
             yAxis: [{
-                    labels: {
-                        style: {
-                            color: colors[theme].axisLabelsColor
-                        },
-                        align: "left",
-                        x: 10,
-                        format: "{value:,." + (base.get("precision")) + "f}"
+                labels: {
+                    style: {
+                        color: colors[theme].axisLabelsColor
                     },
-                    opposite: true,
-                    title: {
-                        text: null,
-                        style: {
-                            color: colors[theme].axisLabelsColor
-                        }
-                    },
-                    offset: 5,
-                    lineWidth: 1,
-                    lineColor: "rgba(183, 183, 183, 0.29)",
-                    gridLineWidth: 0,
-                    plotLines: [],
-                    crosshair: {
-                        snap: false
-                    },
-                    startOnTick: false,
-                    endOnTick: true,
-                    showLastLabel: true,
-                    maxPadding: 0,
-                    currentPriceIndicator: {
-                        precision: base.get("precision"),
-                        backgroundColor: '#C38B8B',
-                        borderColor: '#000000',
-                        lineColor: '#C38B8B',
-                        lineDashStyle: 'Solid',
-                        lineOpacity: 0.8,
-                        enabled: priceSeriesData.length > 0 && marketReady,
-                        style: {
-                            color: '#ffffff',
-                            fontSize: '10px'
-                        },
-                        x: -30,
-                        y: 0,
-                        zIndex: 99,
-                        width: 80
+                    align: "left",
+                    x: 10,
+                    format: "{value:,." + (base.get("precision")) + "f}"
+                },
+                opposite: true,
+                title: {
+                    text: null,
+                    style: {
+                        color: colors[theme].axisLabelsColor
                     }
                 },
+                offset: 5,
+                lineWidth: 1,
+                lineColor: "rgba(183, 183, 183, 0.29)",
+                gridLineWidth: 0,
+                plotLines: [],
+                crosshair: {
+                    snap: false
+                },
+                startOnTick: false,
+                endOnTick: true,
+                showLastLabel: true,
+                maxPadding: 0,
+                currentPriceIndicator: {
+                    precision: base.get("precision"),
+                    backgroundColor: "#C38B8B",
+                    borderColor: "#000000",
+                    lineColor: "#C38B8B",
+                    lineDashStyle: "Solid",
+                    lineOpacity: 0.8,
+                    enabled: priceSeriesData.length > 0 && marketReady,
+                    style: {
+                        color: "#ffffff",
+                        fontSize: "10px"
+                    },
+                    x: -30,
+                    y: 0,
+                    zIndex: 99,
+                    width: 80
+                },
+                height: "90%"
+            },
                 {
                     labels: {
                         style: {
@@ -453,8 +456,10 @@ class PriceChart extends React.Component {
                     min: 0,
                     crosshair: {
                         snap: false
-                    }
-            }],
+                    },
+                    height: "50%",
+                    top: "50%"
+                }],
             xAxis: {
                 type: "datetime",
                 lineWidth: 1,

@@ -1,13 +1,13 @@
 var alt = require("../alt-instance");
-import Apis from "rpc_api/ApiInstances";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "../stores/WalletDb";
-import {operations} from "chain/chain_types";
-import ChainStore from "api/ChainStore";
+import {ChainStore, ChainTypes} from "graphenejs-lib";
+import {Apis} from "graphenejs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
 import Immutable from "immutable";
 
+let {operations} = ChainTypes;
 let ops = Object.keys(operations);
 
 let subs = {};
@@ -67,7 +67,7 @@ class MarketsActions {
                     base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                 ]),
                 Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 1])
-            ])            
+            ])
             .then(result => {
                 marketStats[market] = {
                     lastFetched: new Date()
@@ -99,12 +99,12 @@ class MarketsActions {
 
                     // // We get two notifications for each limit order created, ignore the second one
                     // if (subResult.length === 1 && subResult[0].length === 1 && subResult[0][0] === lastLimitOrder) {
-                    //     return; 
+                    //     return;
                     // }
-                    
+
                     // Check whether the market had a fill order, and whether it only has a new limit order
                     subBatchResults.forEach(result => {
-                       
+
                         result.forEach(notification => {
                             if (typeof notification === "string") {
                                 let split = notification.split(".");
@@ -119,8 +119,8 @@ class MarketsActions {
                                     hasFill = true;
                                 }
                             }
-                        })                       
-                        
+                        });
+
                     });
 
                     let callPromise = null,
@@ -146,20 +146,21 @@ class MarketsActions {
                     // Selectively call the different market api calls depending on the type
                     // of operations received in the subscription update
                     Promise.all([
-                            Apis.instance().db_api().exec("get_limit_orders", [
-                                base.get("id"), quote.get("id"), 100
-                            ]),
-                            onlyLimitOrder ? null : callPromise,
-                            onlyLimitOrder ? null : settlePromise,
-                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
-                                base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                            ]),
-                            !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                            !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
-                                base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                            ])
+                        Apis.instance().db_api().exec("get_limit_orders", [
+                            base.get("id"), quote.get("id"), 100
+                        ]),
+                        onlyLimitOrder ? null : callPromise,
+                        onlyLimitOrder ? null : settlePromise,
+                        !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                            base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                        ]),
+                        !hasFill ? null : Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 200]),
+                        !hasFill ? null : Apis.instance().history_api().exec("get_market_history", [
+                            base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                         ])
+                    ])
                         .then(results => {
+
                             this.dispatch({
                                 limits: results[0],
                                 calls: results[1],
@@ -178,11 +179,11 @@ class MarketsActions {
 
                     subBatchResults = subBatchResults.clear();
                     dispatchSubTimeout = null;
-                }, subBatchTime)
+                }, subBatchTime);
             } else {
                 subBatchResults = subBatchResults.concat(subResult);
             }
-            
+
         };
 
         if (!subs[subID] || currentBucketSize !== bucketSize) {
@@ -207,44 +208,44 @@ class MarketsActions {
             startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
             endDate.setDate(endDate.getDate() + 1);
             return Promise.all([
-                    Apis.instance().db_api().exec("subscribe_to_market", [
-                        subscription, base.get("id"), quote.get("id")
-                    ]),
-                    Apis.instance().db_api().exec("get_limit_orders", [
-                        base.get("id"), quote.get("id"), 100
-                    ]),
-                    callPromise,
-                    settlePromise,
-                    Apis.instance().history_api().exec("get_market_history", [
-                        base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ]),
-                    Apis.instance().history_api().exec("get_market_history_buckets", []),
-                    Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 100]),
-                    Apis.instance().history_api().exec("get_market_history", [
-                        base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    ])
+                Apis.instance().db_api().exec("subscribe_to_market", [
+                    subscription, base.get("id"), quote.get("id")
+                ]),
+                Apis.instance().db_api().exec("get_limit_orders", [
+                    base.get("id"), quote.get("id"), 100
+                ]),
+                callPromise,
+                settlePromise,
+                Apis.instance().history_api().exec("get_market_history", [
+                    base.get("id"), quote.get("id"), bucketSize, startDate.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
+                ]),
+                Apis.instance().history_api().exec("get_market_history_buckets", []),
+                Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 200]),
+                Apis.instance().history_api().exec("get_market_history", [
+                    base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
                 ])
-                .then((results) => {
+            ])
+            .then((results) => {
 
-                    subs[subID] = true;
+                subs[subID] = subscription;
 
-                    this.dispatch({
-                        limits: results[1],
-                        calls: results[2],
-                        settles: results[3],
-                        price: results[4],
-                        buckets: results[5],
-                        history: results[6],
-                        recent: results[7],
-                        market: subID,
-                        base: base,
-                        quote: quote,
-                        inverted: inverted
-                    });
-
-                }).catch((error) => {
-                    console.log("Error in MarketsActions.subscribeMarket: ", error);
+                this.dispatch({
+                    limits: results[1],
+                    calls: results[2],
+                    settles: results[3],
+                    price: results[4],
+                    buckets: results[5],
+                    history: results[6],
+                    recent: results[7],
+                    market: subID,
+                    base: base,
+                    quote: quote,
+                    inverted: inverted
                 });
+
+            }).catch((error) => {
+                console.log("Error in MarketsActions.subscribeMarket: ", error);
+            });
         }
         return Promise.resolve(true);
     }
@@ -259,8 +260,8 @@ class MarketsActions {
         clearBatchTimeouts();
         if (subs[subID]) {
             return Apis.instance().db_api().exec("unsubscribe_from_market", [
-                    quote, base
-                ])
+                subs[subID], quote, base
+            ])
                 .then((unSubResult) => {
                     this.dispatch({unSub: true});
                     delete subs[subID];
@@ -280,7 +281,7 @@ class MarketsActions {
 
         let feeAsset = ChainStore.getAsset(fee_asset_id);
         if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
-           fee_asset_id = "1.3.0";
+            fee_asset_id = "1.3.0";
         }
 
         tr.add_type_operation("limit_order_create", {
@@ -418,7 +419,7 @@ class MarketsActions {
             this.dispatch({
                 settles: result
             });
-        })
+        });
     }
 
 }

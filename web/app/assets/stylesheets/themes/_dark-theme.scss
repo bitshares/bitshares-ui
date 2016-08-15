@@ -6,14 +6,14 @@ $light-text-color: #fff;
 $dark-text-color: #444;
 $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
-$link-text-color: #aeabff;
+$link-text-color: #4A90E2;
 $error-text-color: #E3745B;
 
 $bg-color: #2a2a2a;
 $panel-bg-color: #3f3f3f;
 $light-panel-bg-color: #6a6a6a;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
-$button-bg-color: #8c88ff;
+$button-bg-color: #4A90E2;
 $secondary-button-bg-color: #999999;
 
 $alert-color: $error-text-color;
@@ -30,6 +30,9 @@ $positive-color: #6EC105;
 $negative-color: #E1424A;
 $row-accent-color: #3C3C3C;
 $header-color: #484848;
+
+// Chat colors
+$chat-text-color: #191A1F;
 
 .darkTheme {
   @include theme(
@@ -55,6 +58,7 @@ $header-color: #484848;
     $positive-color,
     $negative-color,
     $row-accent-color,
-    $header-color
+    $header-color,
+    $chat-text-color
   );
 }

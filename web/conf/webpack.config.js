@@ -28,9 +28,10 @@ module.exports = function(options) {
     // COMMON PLUGINS
     var plugins = [
         new webpack.optimize.DedupePlugin(),
-        new Clean(cleanDirectories),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
-            APP_VERSION: JSON.stringify(git.tag())
+            APP_VERSION: JSON.stringify(git.tag()),
+            __ELECTRON__: !!options.electron
         })
     ];
 
@@ -40,26 +41,43 @@ module.exports = function(options) {
         scssLoaders = extractForProduction(scssLoaders);
 
         // PROD PLUGINS
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"production"'}}));
+        plugins.push(new Clean(cleanDirectories, {root: root_dir}));
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}));
         plugins.push(new ExtractTextPlugin("app.css"));
-        plugins.push(new webpack.optimize.UglifyJsPlugin({warnings: false, minimize: true, sourceMap: false, compress: true, output: {screw_ie8: true}}));
-        plugins.push(new webpack.optimize.CommonsChunkPlugin("vendors", "vendors.js"));
+        if (!options.noUgly) {
+            plugins.push(new webpack.optimize.UglifyJsPlugin({
+                minimize: true,
+                sourceMap: true,
+                compress: {
+                    warnings: true
+                },
+                output: {
+                    screw_ie8: true
+                }
+            }));
+        }
+
+        // plugins.push(new webpack.optimize.CommonsChunkPlugin({
+        //     names: ["app", "vendors"],
+        //     filename: "vendors.js"
+        // }));
+
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: '"development"'}}));
+        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('development')}})),
         plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
     var config = {
         entry: {
             app: options.prod ?
-                path.resolve(root_dir, "app/Main.js") :
-                [
-                    "webpack-dev-server/client?http://localhost:8080",
-                    "webpack/hot/only-dev-server",
-                    path.resolve(root_dir, "app/Main-dev.js")
-                ]
+            path.resolve(root_dir, "app/Main.js") :
+            [
+                "webpack-dev-server/client?http://localhost:8080",
+                "webpack/hot/only-dev-server",
+                path.resolve(root_dir, "app/Main-dev.js")
+            ]
         },
         output: {
             path: outputPath,
@@ -67,22 +85,28 @@ module.exports = function(options) {
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "source-map" : "eval",
+        devtool: options.prod ? "cheap-module-source-map" : "eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [
-                { 
+                {
                     test: /\.jsx$/,
                     include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps"), "/home/sigve/Dev/graphene/react-foundation-apps"],
                     loaders: options.prod ? ["babel-loader"] : ["babel-loader?cacheDirectory"]
                 },
-                { 
+                {
                     test: /\.js$/,
                     exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
-                { test: /\.json/, loader: "json" },
+                {
+                    test: /\.json/, loader: "json",
+                    exclude: [
+                        path.resolve(root_dir, "../dl/src/common"),
+                        path.resolve(root_dir, "app/assets/locales")
+                    ]
+                },
                 { test: /\.coffee$/, loader: "coffee-loader" },
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
                 { test: /\.css$/, loader: cssLoaders },
@@ -90,6 +114,9 @@ module.exports = function(options) {
                     test: /\.scss$/,
                     loader: scssLoaders
                 },
+                { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
+                    path.resolve(root_dir, "app/assets/asset-symbols")
+                ] },
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
                 { test: /\.md/, loader: 'html?removeAttributeQuotes=false!remarkable' }
@@ -99,7 +126,6 @@ module.exports = function(options) {
             }
         },
         resolve: {
-            alias: {bytebuffer: path.resolve(root_dir, "../dl/node_modules/bytebuffer")},
             root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
@@ -117,12 +143,12 @@ module.exports = function(options) {
         }
     };
 
-    if(options.prod) config.entry.vendors = [
-        "react", "react-dom", "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
-        "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-        "whatwg-fetch", "alt", "react-json-inspector",
-        "immutable", "lzma", "bytebuffer", "lodash"
-    ];
+    // if(options.prod) config.entry.vendors = [
+    //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
+    //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
+    //     "whatwg-fetch", "alt", "react-json-inspector",
+    //     "immutable", "graphenejs-lib"
+    // ];
 
     return config;
 

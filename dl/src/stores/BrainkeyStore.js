@@ -1,8 +1,7 @@
 import alt from "alt-instance"
 import connectToStores from "alt/utils/connectToStores"
-import key from "common/key_utils"
 import Immutable from "immutable"
-import ChainStore from "api/ChainStore"
+import {ChainStore, key} from "graphenejs-lib";
 import BaseStore from "stores/BaseStore"
 import BrainkeyActions from "actions/BrainkeyActions"
 
@@ -101,7 +100,7 @@ class BrainkeyStoreImpl extends BaseStore {
     
     deriveKeys(brnkey = this.state.brnkey) {
         var sequence = this.derived_keys.length // next sequence (starting with 0)
-        var private_key = key.get_brainkey_private(brnkey, sequence)
+        var private_key = key.get_brainPrivateKey(brnkey, sequence)
         var derived_key = derivedKeyStruct(private_key)
         this.derived_keys.push(derived_key)
         if(this.derived_keys.length < DERIVIED_BRAINKEY_POOL_SIZE)

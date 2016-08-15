@@ -12,7 +12,7 @@ import AssetName from "../Utility/AssetName";
 
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
-    
+
     static propTypes = {
         balance: ChainTypes.ChainObject,
         type: PropTypes.string,
@@ -58,7 +58,7 @@ class BuySell extends React.Component {
             priceChange, onSubmit, balance, totalPrecision, totalChange,
             balancePrecision, quotePrecision, currentPrice, currentPriceObject,
             feeAsset, feeAssets} = this.props;
-        let amount, price, total;
+        let amount = 0, price = 0, total = 0;
 
         let caret = this.props.isOpen ? <span>&#9660;</span> : <span>&#9650;</span>;
 
@@ -95,19 +95,20 @@ class BuySell extends React.Component {
             feeAsset = feeAssets[0];
             feeAssets.splice(1, 1);
         }
+        let index = 0;
         let options = feeAssets.map(asset => {
             let {name, prefix} = utils.replaceName(asset.get("symbol"), asset.get("bitasset") && !asset.getIn(["bitasset", "is_prediction_market"]) && asset.get("issuer") === "1.2.0");
-            return <option key={asset.get("id")} value={asset.get("id")}>{prefix}{name}</option>;
+            return <option key={asset.get("id")} value={index++}>{prefix}{name}</option>;
         });
 
         // Subtract fee from amount to sell
         let balanceToAdd;
 
         if (this.props.feeAsset.get("symbol") === balanceSymbol) {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;  
+            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;
         } else {
             balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
-        } 
+        }
 
         return (
             <div className={this.props.className}>
@@ -164,8 +165,14 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                         <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: 5}}>
-                                        <select style={feeAssets.length === 1 ? {background: "none"} : null} disabled={feeAssets.length === 1} value={this.props.feeAsset.get("id")} className="form-control" onChange={this.props.onChangeFeeAsset}>
+                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
+                                        <select
+                                            style={feeAssets.length === 1 ? {background: "none"} : null}
+                                            disabled={feeAssets.length === 1}
+                                            value={feeAssets.indexOf(this.props.feeAsset)}
+                                            className={"form-control" + (feeAssets.length !== 1 ? " buysell-select" : "")}
+                                            onChange={this.props.onChangeFeeAsset}
+                                        >
                                             {options}
                                         </select>
                                     </div>
@@ -186,7 +193,7 @@ class BuySell extends React.Component {
                                                     </span>
                                                 </td>
                                           </tr>
-                                          
+
                                           <tr className="buy-sell-info">
                                                 <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (

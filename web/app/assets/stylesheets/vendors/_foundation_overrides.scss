@@ -18,6 +18,14 @@
   width: auto;
   min-width: 12em;
 
+  ul {
+      font-size: 14px;
+
+      a {
+          border-top: none;
+      }
+  }
+
   .no-first-element-top-border > :first-child > a {
     border-top: none;
     border-top-left-radius: 4px;
@@ -116,10 +124,23 @@ a {
 
 .block-list {
   margin-right: 0;
+  margin-bottom: 0;
   li > a {
     padding: 0.6rem;
   }
+
+  li {
+      border-top: none !important;
+
+      &.with-dropdown > select {
+          -webkit-appearance: menulist;
+          -moz-appearance: menulist;
+          appearance: menulist;
+      }
+  }
 }
+
+
 
 code {
   color: inherit;

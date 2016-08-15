@@ -1,11 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
 import classnames from "classnames";
-import validation from "common/validation";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedFee from "../Utility/FormattedFee";
 import counterpart from "counterpart";
@@ -622,7 +621,7 @@ class AccountAssetUpdate extends React.Component {
                                         <textarea
                                             style={{height: "7rem"}}
                                             rows="1"
-                                            value={update.description.main}
+                                            value={update.description.main || ""}
                                             onChange={this._onUpdateDescription.bind(this, "main")}
                                         />
                                     </label>
@@ -632,7 +631,7 @@ class AccountAssetUpdate extends React.Component {
                                         <input
                                             type="text"
                                             rows="1"
-                                            value={update.description.short_name}
+                                            value={update.description.short_name || ""}
                                             onChange={this._onUpdateDescription.bind(this, "short_name")}
                                         />
                                     </label>
@@ -744,7 +743,7 @@ class AccountAssetUpdate extends React.Component {
                                                         <td style={{border: "none", width: "80%"}}><Translate content="account.user_issued_assets.charge_market_fee" />:</td>
                                                         <td style={{border: "none"}}>
                                                             <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, "charge_market_fee")}>
-                                                                <input type="checkbox" checked={flagBooleans.charge_market_fee} />
+                                                                <input type="checkbox" onChange={() => {}} checked={flagBooleans.charge_market_fee} />
                                                                 <label />
                                                             </div>
                                                         </td>

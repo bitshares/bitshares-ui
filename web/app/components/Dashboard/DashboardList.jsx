@@ -14,7 +14,7 @@ import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
@@ -48,7 +48,7 @@ class DashboardList extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("dashboardSortInverse", true),
             sortBy: props.viewSettings.get("dashboardSort", "star"),
-            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
+            dashboardFilter: props.viewSettings.get("dashboardFilter", "")
         };
 
     }
@@ -76,10 +76,10 @@ class DashboardList extends React.Component {
     }
 
     _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
+        this.setState({dashboardFilter: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
+            dashboardFilter: e.target.value.toLowerCase()
         });
     }
 
@@ -121,11 +121,11 @@ class DashboardList extends React.Component {
                 }
             }
         }
-        
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            return a.get("name").toLowerCase().indexOf(dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -147,6 +147,7 @@ class DashboardList extends React.Component {
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
+                let isLTM = account.get("lifetime_referrer_name") === accountName;
 
                 if (account.get("orders")) {
                     account.get("orders").forEach( (orderID, key) => {
@@ -201,8 +202,8 @@ class DashboardList extends React.Component {
                         <td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>
-                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
-                            {accountName}
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
+                            <span className={isLTM ? "lifetime" : ""}>{accountName}</span>
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
@@ -222,14 +223,14 @@ class DashboardList extends React.Component {
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        let filterText = counterpart.translate("explorer.accounts.filter") + "...";
 
         return (
             <div style={this.props.style}>
                 {!this.props.compact ? (
-                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                    <section style={{paddingLeft: "5px", maxWidth: "20rem"}}>
                         <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                    </div>) : null}
+                    </section>) : null}
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                     {!this.props.compact ? (
                     <thead>
@@ -246,7 +247,7 @@ class DashboardList extends React.Component {
                         {accounts}
                     </tbody>
                 </table>
-            </div>          
+            </div>
         )
 
     }
@@ -256,7 +257,7 @@ class DashboardList extends React.Component {
 
 @connectToStores
 class AccountsListWrapper extends React.Component {
-    
+
     static getStores() {
         return [SettingsStore]
     };
