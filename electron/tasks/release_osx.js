@@ -98,6 +98,9 @@ var packToDmgFile = function () {
     // Delete DMG file with this name if already exists
     releasesDir.remove(dmgName);
 
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {osx: dmgName});
+
     gulpUtil.log('Packaging to DMG file...');
 
     var readyDmgPath = releasesDir.path(dmgName);

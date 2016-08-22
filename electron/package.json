@@ -17,6 +17,7 @@
   },
   "scripts": {
     "release": "./node_modules/.bin/gulp release --env=production",
+    "postrelease": "node ./tasks/write_digest",
     "start": "node ./tasks/start"
   }
 }
