@@ -55,6 +55,8 @@
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
     "estimate_value": "Estimated account value",
+    "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
+    "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
     "whitelist": {
       "title": "Whitelist",
       "black": "Blacklist",
@@ -297,6 +299,7 @@
     "older": "Older"
   },
   "transfer": {
+    "header": "Transfer details",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Amount",
