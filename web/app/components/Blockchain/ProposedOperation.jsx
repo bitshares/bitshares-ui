@@ -79,7 +79,9 @@ class Row extends React.Component {
                 </span>
                 {this.props.expiration ? (
                     <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
+                        <span>#{this.props.id} | </span>
                         <span><Translate content="proposal.expires" />: {endDate}</span>
+
                     </div>) : null}
             </div>
         );
@@ -473,7 +475,6 @@ class ProposedOperation extends React.Component {
                 break;
 
             case "witness_withdraw_pay":
-                console.log("witness_withdraw_pay:", op[1].witness_account);
                 if (current === op[1].witness_account) {
                     column = (
                         <span>
@@ -820,6 +821,7 @@ class ProposedOperation extends React.Component {
         line = column ? (
             <Row
                 index={this.props.index}
+                id={this.props.id}
                 block={block}
                 type={op[0]}
                 color={color}
