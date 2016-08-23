@@ -79,8 +79,6 @@ class MarketCard extends React.Component {
             imgName = "bts";
         }
 
-        console.log("stats:", stats);
-
         return (
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
