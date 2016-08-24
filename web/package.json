@@ -87,6 +87,7 @@
     "jest-cli": "~0.4.1",
     "json-loader": "^0.5.3",
     "mocha": "^2.5.3",
+    "node-libs-browser": "^1.0.0",
     "node-sass": "^3.4.1",
     "postcss-loader": "^0.8.2",
     "react-transform-hmr": "^1.0.4",
