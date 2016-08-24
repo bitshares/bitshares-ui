@@ -360,3 +360,7 @@ select.bts-select {
       font-size: 1.125rem;
   }
 }
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
