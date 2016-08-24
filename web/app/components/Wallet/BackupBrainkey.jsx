@@ -40,8 +40,6 @@ export default class BackupBrainkey extends Component {
                 <pre className="no-overflow">sha1 hash of the brainkey: {sha1}</pre>
                 <br/>
                 {brainkey_backup_time}
-                <br/>
-                <button className="button success" onClick={this.onBack.bind(this)}><Translate content="wallet.done" /></button>
             </div>
         }
 
@@ -62,7 +60,7 @@ export default class BackupBrainkey extends Component {
                 </div>
 
                 <button className="button success" onClick={this.onComplete.bind(this)}><Translate content="wallet.verify" /></button>
-                <button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>
+                <button className="button cancel" onClick={this.reset.bind(this)}><Translate content="wallet.cancel" /></button>
 
             </span>
         }
@@ -80,7 +78,6 @@ export default class BackupBrainkey extends Component {
                     </p>
                     <div>{brainkey_backup_time}<br/></div>
                     <button className="button success"><Translate content="wallet.show_brainkey" /></button>
-                    <button className="button cancel" onClick={this.onBack.bind(this)}><Translate content="wallet.cancel" /></button>
                 </form>
             </span>
         }
@@ -93,21 +90,24 @@ export default class BackupBrainkey extends Component {
 
 
     onComplete(brnkey) {
-        this.setState({ verified: true })
-        WalletActions.setBrainkeyBackupDate()
+        this.setState({ verified: true });
+        WalletActions.setBrainkeyBackupDate();
     }
 
-    reset() {
+    reset(e) {
+        if (e) {
+            e.preventDefault();
+        }
         this.setState(this._getInitialState())
     }
 
     onBack(e) {
         e.preventDefault()
-        window.history.back()
+        window.history.back();
     }
 
     onSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
         var was_locked = WalletDb.isLocked()
         if(WalletDb.validatePassword(this.state.password, true)) {
             var brainkey = WalletDb.getBrainKey()
