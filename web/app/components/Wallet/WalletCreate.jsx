@@ -45,8 +45,9 @@ class CreateNewWallet extends Component {
         hideTitle: React.PropTypes.bool
     };
 
-    constructor() {
-        super()
+    constructor(props) {
+        super();
+
         this.state = {
             wallet_public_name: "default",
             valid_password: null,
@@ -55,7 +56,7 @@ class CreateNewWallet extends Component {
             },
             isValid: false,
             create_submitted: false,
-            custom_brainkey: false,
+            custom_brainkey: props.restoreBrainkey || false,
             brnkey: null
         }
     }
@@ -157,12 +158,12 @@ class CreateNewWallet extends Component {
                         textAlign: "left"
                     }}
                 >
-                    <Translate component="p" content="wallet.create_importkeys_text" />
-                    <Translate component="p" content="wallet.create_text" />
+                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_importkeys_text" /> : null}
+                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_text" /> : null}                    
                 </div>
                 <PasswordConfirm onValid={this.onPassword.bind(this)}/>
                 { has_wallet ? (
-                    <div className="grid-content no-overflow">
+                    <div className="no-overflow">
                         <br/>
                         <section>
                         <label><Translate content="wallet.name" /></label>
@@ -177,7 +178,7 @@ class CreateNewWallet extends Component {
                         <br/>
                     </div>) : null}
 
-                <div className="grid-content no-overflow">
+                <div className="no-overflow">
 
                     { this.state.custom_brainkey ? (
                     <div>

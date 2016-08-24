@@ -721,10 +721,12 @@
     "backup_backup": "Restore from a backup file (.bin)",
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
+    "backup_brainkey": "Restore using a wallet brainkey",
     "backupcreate_backup": "Create wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
-    "delete_select": "Select wallet to delete"
+    "delete_select": "Select wallet to delete",
+    "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey."
   },
   "footer": {
     "title": "Graphene",
