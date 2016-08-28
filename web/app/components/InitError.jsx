@@ -31,7 +31,7 @@ class InitError extends React.Component {
 
     onChangeWS(e) {
         SettingsActions.changeSetting({setting: "connection", value: e.target.value });
-        Apis.reset(e.target.value);
+        Apis.reset(e.target.value, true);
     }
 
     onReloadClick(e) {

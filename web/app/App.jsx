@@ -62,13 +62,13 @@ import Brainkey from "./components/Wallet/Brainkey";
 import AccountRefsStore from "stores/AccountRefsStore";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
+import SyncError from "./components/SyncError";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import createBrowserHistory from "history/lib/createHashHistory";
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
 import connectToStores from "alt/utils/connectToStores";
 import Chat from "./components/Chat/ChatWrapper";
-import Icon from "./components/Icon/Icon";
 import Translate from "react-translate-component";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
@@ -194,17 +194,7 @@ class App extends React.Component {
 
         if (this.state.syncFail) {
             content = (
-                <div className="grid-frame vertical">
-                    <div className="grid-container text-center" style={{paddingTop: "5rem"}}>
-
-                        <h2><Translate content="sync_fail.title" /></h2>
-                        <br />
-                        <p><Translate content="sync_fail.sub_text_1" /></p>
-                        <p><Translate content="sync_fail.sub_text_2" /></p>
-                        <Icon name="clock" size="5x"/>
-                    </div>
-
-                </div>
+                <SyncError />
             );
         } else if (this.state.loading) {
             content = <div className="grid-frame vertical"><LoadingIndicator /></div>;

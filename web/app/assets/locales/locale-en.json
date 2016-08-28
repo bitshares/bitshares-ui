@@ -11,7 +11,7 @@
   "sync_fail": {
     "title": "Failed to sync with the API server",
     "sub_text_1" : "Please verify that your computer clock is correct.",
-    "sub_text_2" : "Once you've synchronized your clock, please refresh this page."
+    "sub_text_2" : "Once you've synchronized your clock, please refresh this page. If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header": {
     "title": "Graphene UI",
