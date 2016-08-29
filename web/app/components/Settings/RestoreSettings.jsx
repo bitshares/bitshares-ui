@@ -1,6 +1,7 @@
 import React from "react";
 import {BackupRestore} from "../Wallet/Backup";
 import ImportKeys from "../Wallet/ImportKeys";
+import WalletCreate from "../Wallet/WalletCreate";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
@@ -10,7 +11,7 @@ export default class RestoreSettings extends React.Component {
         super();
         this.state = {
             restoreType: 0,
-            types: ["backup", "key", "legacy"]
+            types: ["backup", "key", "legacy", "brainkey"]
         };
     }
 
@@ -34,6 +35,15 @@ export default class RestoreSettings extends React.Component {
             content = (
                 <div>
                     <BackupRestore />
+                </div>
+            );
+            break;
+
+        case "brainkey":
+            content = (
+                <div>
+                    <p style={{maxWidth: "40rem", paddingBottom: 10}}><Translate content="settings.restore_brainkey_text" /></p>
+                    <WalletCreate restoreBrainkey={true} />
                 </div>
             );
             break;

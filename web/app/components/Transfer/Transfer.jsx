@@ -236,10 +236,13 @@ class Transfer extends React.Component {
         let tabIndex = 1;
 
         return (
-            <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
+            <div className="grid-block vertical">
+            <div className="grid-block shrink vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
-                <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                        <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
+                <form style={{paddingBottom: 20}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+
+
+                        <Translate content="transfer.header" component="h4" />
                         {/*  F R O M  */}
                         <div className="content-block">
                             <AccountSelector label="transfer.from" ref="from"
@@ -247,6 +250,7 @@ class Transfer extends React.Component {
                                              onChange={this.fromChanged.bind(this)}
                                              onAccountChanged={this.onFromAccountChanged.bind(this)}
                                              account={from_name}
+                                             size={60}
                                              error={from_error}
                                              tabIndex={tabIndex++}/>
                         </div>
@@ -257,10 +261,11 @@ class Transfer extends React.Component {
                                              onChange={this.toChanged.bind(this)}
                                              onAccountChanged={this.onToAccountChanged.bind(this)}
                                              account={to_name}
+                                             size={60}
                                              tabIndex={tabIndex++}/>
                         </div>
                         {/*  A M O U N T   */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <AmountSelector label="transfer.amount"
                                             amount={amount}
                                             onChange={this.onAmountChanged.bind(this)}
@@ -270,9 +275,9 @@ class Transfer extends React.Component {
                                             tabIndex={tabIndex++}/>
                         </div>
                         {/*  M E M O  */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <label><Translate component="span" content="transfer.memo"/></label>
-                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                            <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
                             <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
@@ -281,7 +286,7 @@ class Transfer extends React.Component {
                         </div>
 
                         {/*  F E E   */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <AmountSelector refCallback={this.setNestedRef.bind(this)}
                                             label="transfer.fee"
                                             disabled={true}
@@ -298,7 +303,7 @@ class Transfer extends React.Component {
                             allows adjusting of the memo to / from parameters.
                         */}
                         {propose ?
-                        <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
+                        <div className="full-width-content form-group transfer-input">
                             <label><Translate content="account.propose_from" /></label>
                             <AccountSelect account_names={AccountStore.getMyAccounts()}
                                 onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
@@ -307,7 +312,7 @@ class Transfer extends React.Component {
 
                         {/*  S E N D  B U T T O N  */}
                         {error ? <div className="content-block has-error">{error}</div> : null}
-                        <div style={{paddingLeft: "96px"}}>
+                        <div>
                             {propose ?
                             <span>
                                 <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
@@ -323,20 +328,22 @@ class Transfer extends React.Component {
                             </span>}
                         </div>
                         {/* TODO: show remaining balance */}
-
-                        </div>
-
                 </form>
-                <div className="grid-content show-for-medium medium-6 right-column">
-                    <div className="grid-content no-padding">
-                        <RecentTransactions
-                            accountsList={accountsList}
-                            limit={25}
-                            compactView={true}
-                            filter="transfer"
-                            fullHeight={true}
-                        />
-                    </div>
+                <div className="grid-content medium-6 large-4 right-column">
+                <div className="grid-content no-padding">
+                    <RecentTransactions
+                        accountsList={accountsList}
+                        limit={25}
+                        compactView={true}
+                        filter="transfer"
+                        fullHeight={true}
+                    />
+                </div>
+                </div>
+
+                <div className="grid-content medium-6 large-4">
+
+                </div>
                 </div>
             </div>
         );

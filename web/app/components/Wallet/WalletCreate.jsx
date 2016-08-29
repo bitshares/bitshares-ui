@@ -45,15 +45,18 @@ class CreateNewWallet extends Component {
         hideTitle: React.PropTypes.bool
     };
 
-    constructor() {
-        super()
+    constructor(props) {
+        super();
+
         this.state = {
             wallet_public_name: "default",
             valid_password: null,
-            errors: {},
+            errors: {
+                validBrainkey: false
+            },
             isValid: false,
             create_submitted: false,
-            custom_brainkey: false,
+            custom_brainkey: props.restoreBrainkey || false,
             brnkey: null
         }
     }
@@ -80,9 +83,14 @@ class CreateNewWallet extends Component {
     }
 
     onSubmit(e) {
-        e.preventDefault()
-        var wallet_name = this.state.wallet_public_name
-        WalletActions.setWallet(wallet_name, this.state.valid_password, this.state.brnkey)
+        e.preventDefault();
+
+        let {wallet_public_name, valid_password, custom_brainkey, errors} = this.state;
+        if (!valid_password || errors.wallet_public_name || (custom_brainkey && !errors.validBrainkey)) {
+            return;
+        }
+
+        WalletActions.setWallet(wallet_public_name, valid_password, this.state.brnkey)
         this.setState({create_submitted: true})
     }
 
@@ -150,16 +158,17 @@ class CreateNewWallet extends Component {
                         textAlign: "left"
                     }}
                 >
-                    <Translate component="p" content="wallet.create_importkeys_text" />
-                    <Translate component="p" content="wallet.create_text" />
+                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_importkeys_text" /> : null}
+                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_text" /> : null}                    
                 </div>
                 <PasswordConfirm onValid={this.onPassword.bind(this)}/>
                 { has_wallet ? (
-                    <div className="grid-content no-overflow">
+                    <div className="no-overflow">
                         <br/>
                         <section>
                         <label><Translate content="wallet.name" /></label>
                         <input
+                            tabIndex={3}
                             type="text"
                             id="wallet_public_name"
                             defaultValue={this.state.wallet_public_name}
@@ -169,12 +178,18 @@ class CreateNewWallet extends Component {
                         <br/>
                     </div>) : null}
 
-                <div className="grid-content no-overflow">
+                <div className="no-overflow">
 
                     { this.state.custom_brainkey ? (
                     <div>
                         <label><Translate content="wallet.brainkey" /></label>
-                        <BrainkeyInput onChange={this.onBrainkey.bind(this)}/>
+                        <BrainkeyInput tabIndex={4} onChange={this.onBrainkey.bind(this)} errorCallback={(warn) => {
+                            let {errors} = this.state;
+                            errors.validBrainkey = warn;
+                            this.setState({
+                                errors
+                            });
+                        }}/>
                     </div>) : null}
 
                     <button className={cname("button",{disabled: !(this.state.isValid)})}>

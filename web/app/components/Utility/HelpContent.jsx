@@ -34,7 +34,7 @@ function adjust_links(str) {
     });
 }
 
-//console.log("-- HelpData -->", HelpData);
+// console.log("-- HelpData -->", HelpData);
 
 class HelpContent extends React.Component {
 
@@ -55,7 +55,13 @@ class HelpContent extends React.Component {
     componentWillMount() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
-        req.keys().filter(a => {return a.indexOf(`/${locale}/`) !== -1;}).forEach(function(filename) {
+        // Only load helpData for the current locale as well as the fallback 'en'
+        req.keys().filter(a => {
+            return (
+                a.indexOf(`/${locale}/`) !== -1 ||
+                a.indexOf("/en/") !== -1
+            );
+        }).forEach(function(filename) {
             var res = filename.match(/\/(.+?)\/(.+)\./);
             let locale = res[1];
             let key = res[2];
@@ -96,7 +102,7 @@ class HelpContent extends React.Component {
         }
         let value = HelpData[locale][this.props.path];
 
-        if (!value && locale != 'en') {
+        if (!value && locale !== "en") {
             console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`);
             value = HelpData['en'][this.props.path];
         }

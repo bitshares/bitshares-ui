@@ -1,4 +1,29 @@
 ---------------------------------------------------------------------
+Release 2.0.160829
+---------------------------------------------------------------------
+
+New features
+--------
+- Hash checksums for all binaries
+- Add copy address/memo buttons to deposit, improve mobile layout
+- Improve transfer layout, add exchange scam account warnings
+- Add option to move BuySell below Orderbook
+- Add brainkey option to Settings Restore page
+- Add API selection to SyncError page, improve the error message
+
+Bug fixes
+--------
+- Fix price display in MarketCards
+- Add proposed operation id to summary
+- Add deposit/withdraw to mobile menu
+- Fix hiding of disabled chat window
+- Fix WalletCreate submit with invalid inputs, close #860
+- Fix BackupBrainkey navigation
+- Hide input spinner in Firefox
+- Use newest version of node-libs-browser, fixes backups in Firefox close
+- Fix HelpContent 'en' locale fallback
+
+---------------------------------------------------------------------
 Release 2.0.160813
 ---------------------------------------------------------------------
 
