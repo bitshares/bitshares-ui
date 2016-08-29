@@ -11,7 +11,7 @@
   "sync_fail": {
     "title": "Failed to sync with the API server",
     "sub_text_1" : "Please verify that your computer clock is correct.",
-    "sub_text_2" : "Once you've synchronized your clock, please refresh this page."
+    "sub_text_2" : "Once you've synchronized your clock, please refresh this page. If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header": {
     "title": "Openledger",
@@ -55,6 +55,8 @@
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
     "estimate_value": "Estimated account value",
+    "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
+    "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
     "whitelist": {
       "title": "Whitelist",
       "black": "Blacklist",
@@ -297,6 +299,7 @@
     "older": "Older"
   },
   "transfer": {
+    "header": "Transfer details",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Amount",
@@ -718,10 +721,12 @@
     "backup_backup": "Restore from a backup file (.bin)",
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
+    "backup_brainkey": "Restore using a wallet brainkey",
     "backupcreate_backup": "Create wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
-    "delete_select": "Select wallet to delete"
+    "delete_select": "Select wallet to delete",
+    "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey."
   },
   "footer": {
     "title": "Openledger",

@@ -65,7 +65,7 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
-		
+
         fetch("https://blocktrades.us/api/v2/coins").then(reply => reply.json().then(result => {
             this.setState({
                 blockTradesCoins: result
@@ -76,7 +76,7 @@ class AccountDepositWithdraw extends React.Component {
         })).catch(err => {
             console.log("error fetching blocktrades list of coins", err);
         });
-		
+
         fetch("https://blocktrades.us/ol/api/v2/coins").then(reply => reply.json().then(result => {
             this.setState({
                 openLedgerCoins: result
@@ -106,7 +106,7 @@ class AccountDepositWithdraw extends React.Component {
             }});
         return blocktradesBackedCoins;
     }
-	
+
 	getOpenledgerBackedCoins(allOpenledgerCoins) {
         let coins_by_type = {};
         allOpenledgerCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
@@ -180,23 +180,23 @@ class AccountDepositWithdraw extends React.Component {
         .map(coin => {
             return coin;
         })
-        .sort((a, b) => { 
-			if (a.symbol < b.symbol) 
-				return -1 
+        .sort((a, b) => {
+			if (a.symbol < b.symbol)
+				return -1
 			if (a.symbol > b.symbol)
 				return 1
-			return 0 
+			return 0
 		});
-		
+
         let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
             return coin;
         })
-        .sort((a, b) => { 
-			if (a.symbol < b.symbol) 
-				return -1 
+        .sort((a, b) => {
+			if (a.symbol < b.symbol)
+				return -1
 			if (a.symbol > b.symbol)
 				return 1
-			return 0 
+			return 0
 		});
 
         let options = services.map(name => {
@@ -218,7 +218,7 @@ class AccountDepositWithdraw extends React.Component {
                     {options}
                 </select>
 
-    			<div className="grid-content" style={{paddingTop: 15}}>
+    			<div className="grid-content no-padding" style={{paddingTop: 15}}>
 
                 {activeService === services.indexOf("BlockTrades (TRADE.X)") ?
                 <div>
@@ -266,9 +266,9 @@ class AccountDepositWithdraw extends React.Component {
                                 <div onClick={this.toggleOLService.bind(this, "gateway")} className={cnames("button", olService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
                                 <div onClick={this.toggleOLService.bind(this, "fiat")} className={cnames("button", olService === "fiat" ? "active" : "outline")}>Fiat</div>
                             </div>
-                            
-                            
-                            {olService === "gateway" && openLedgerGatewayCoins.length ? 
+
+
+                            {olService === "gateway" && openLedgerGatewayCoins.length ?
                             <BlockTradesGateway
                                 account={account}
                                 coins={openLedgerGatewayCoins}

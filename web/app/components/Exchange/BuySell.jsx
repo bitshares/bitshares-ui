@@ -112,14 +112,15 @@ class BuySell extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div className="exchange-bordered" style={this.props.style}>
+                <div className="exchange-bordered buy-sell-container">
                     <div className={"exchange-content-header " + type}>
                         <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
-                        {this.props.smallScreen ? <div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-large">{caret}</div> : null}
+                        {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
+                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge">{caret}</div>}
                     </div>
-                    {!this.props.isOpen && this.props.smallScreen ? null : (
-                    <form className="order-form" noValidate>
+
+                    <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
                         <div className="grid-block vertical no-overflow no-padding">
 
                                 <div className="grid-block no-padding buy-sell-row">
@@ -229,7 +230,7 @@ class BuySell extends React.Component {
                                   </div>
                             </div>
 
-                    </form>)}
+                    </form>
                 </div>
             </div>
         );

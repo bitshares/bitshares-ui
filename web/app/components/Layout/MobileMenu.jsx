@@ -32,7 +32,8 @@ class MobileMenu extends React.Component {
         currentAccount: AccountStore.getState().currentAccount,
         locked: WalletUnlockStore.getState().locked,
         current_wallet: WalletManagerStore.getState().current_wallet,
-        lastMarket: SettingsStore.getState().viewSettings.get("lastMarket")
+        lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+        myAccounts: AccountStore.getMyAccounts()
       }
     }
 
@@ -47,25 +48,25 @@ class MobileMenu extends React.Component {
     }
 
     render() {
-        let id = this.props.id;
+        let {id, currentAccount, linkedAccounts, myAccounts} = this.props;
         let accounts = null;
-        let linkedAccounts = AccountStore.getState().linkedAccounts;
+
         if(linkedAccounts.size > 1) {
             accounts = linkedAccounts.map( a => {
                 return <li key={a} onClick={this.onClick}><Link to={`/account/${a}/overview`}>{a}</Link></li>;
             });
         }  else if (linkedAccounts.size === 1) {
-            accounts = <li key="account" onClick={this.onClick}><Link to={`/account/${linkedAccounts.first()}/overview`}><Translate component="span" content="header.account" /></Link></li>;
+            accounts = <li key="account" onClick={this.onClick}><Link to={`/account/${linkedAccounts.first()}/overview`}><Translate content="header.account" /></Link></li>;
         }
 
         let linkToAccountOrDashboard;
-        if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, "/dashboard")}><Translate component="span" content="header.dashboard" /></a>;
-        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview`)}><Translate component="span" content="header.account" /></a>;
+        if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, "/dashboard")}><Translate content="header.dashboard" /></a>;
+        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview`)}><Translate content="header.account" /></a>;
         else linkToAccountOrDashboard = <Link to="/create-account">Create Account</Link>;
 
         let tradeLink = this.props.lastMarket ?
-            <a onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a> :
-            <a onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate component="span" content="header.exchange" /></a>
+            <a onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate content="header.exchange" /></a> :
+            <a onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate content="header.exchange" /></a>
 
         return (
             <Panel id={id} position="left">
@@ -76,11 +77,12 @@ class MobileMenu extends React.Component {
                 <section style={{marginTop: "3rem"}} className="block-list">
                     <ul>
                         <li>{linkToAccountOrDashboard}</li>
-                        <li><a onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li>
+                        <li onClick={this.onClick}><Link to="transfer"><Translate content="header.payments"/></Link></li>
                         {linkedAccounts.size === 0 ? null :
                           <li>{tradeLink}</li>}
-                        <li onClick={this.onClick}><Link to="transfer"><Translate component="span" content="header.payments"/></Link></li>
-                        <li onClick={this.onClick}><Link to="settings"><Translate component="span" content="header.settings"/></Link></li>
+                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li onClick={this.onClick}><Link to={"/deposit-withdraw/"}><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                        <li><a onClick={this._onNavigate.bind(this, "/explorer")}><Translate content="header.explorer" /></a></li>
+                        <li onClick={this.onClick}><Link to="settings"><Translate content="header.settings"/></Link></li>
 
                     </ul>
                 </section>
