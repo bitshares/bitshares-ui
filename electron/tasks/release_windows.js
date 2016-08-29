@@ -108,6 +108,9 @@ var createInstaller = function () {
         deferred.resolve();
     });
 
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {windows: finalPackageName});
+
     return deferred.promise;
 };
 
