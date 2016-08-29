@@ -289,8 +289,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
         });
 
     }
-    Apis.instance(connectionString, true).init_promise.then((chainId) => {
-        console.log("chainId:", chainId);
+    Apis.instance(connectionString, true).init_promise.then(() => {
         var db;
         try {
             db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
