@@ -25,8 +25,6 @@ export default class ChatWrapper extends React.Component {
         let {showChat, dockedChat} = this.props;
         let content;
 
-        console.log("dockedChat:", dockedChat);
-
         let chatStyle = {
             display: !showChat ? "none" : !dockedChat ?"block" : "inherit",
             float: !dockedChat ? "right" : null,
