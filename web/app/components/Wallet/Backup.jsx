@@ -374,7 +374,7 @@ class Upload extends BackupBaseComponent {
 
         return (
             <div>
-                <input ref="file_input" type="file" id="backup_input_file" style={{ border: "solid" }}
+                <input ref="file_input" accept=".bin" type="file" id="backup_input_file" style={{ border: "solid" }}
                     onChange={this.onFileUpload.bind(this)} />
                 { is_invalid ? <h5><Translate content="wallet.invalid_format" /></h5> : null }
                 {resetButton}

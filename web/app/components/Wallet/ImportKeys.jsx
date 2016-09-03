@@ -13,6 +13,7 @@ import LoadingIndicator from "components/LoadingIndicator"
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
+import BalanceClaimActive from "../Wallet/BalanceClaimActive";
 import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal"
 import WalletDb from "stores/WalletDb";
@@ -30,6 +31,8 @@ export default class ImportKeys extends Component {
     constructor() {
         super();
         this.state = this._getInitialState();
+
+        this._renderBalanceClaims = this._renderBalanceClaims.bind(this);
     }
 
     static getStores() {
@@ -62,7 +65,8 @@ export default class ImportKeys extends Component {
             key_text_message: null,
             genesis_filtering: false,
             genesis_filter_status: [],
-            genesis_filter_finished: undefined
+            genesis_filter_finished: undefined,
+            importSuccess: false
         };
     }
 
@@ -480,8 +484,12 @@ export default class ImportKeys extends Component {
         WalletDb.importKeysWorker( private_key_objs ).then( result => {
             ImportKeysStore.importing(false)
             var import_count = private_key_objs.length
-            notify.success(`Successfully imported ${import_count} keys.`)
-            this.onCancel() // back to claim balances
+
+            notify.success(counterpart.translate("wallet.import_key_success", {count: import_count}));
+            this.setState({
+                importSuccess: true
+            });
+            // this.onCancel() // back to claim balances
         }).catch( error => {
             console.log("error:", error)
             ImportKeysStore.importing(false)
@@ -530,6 +538,20 @@ export default class ImportKeys extends Component {
     //     });
     // }
 
+    _renderBalanceClaims() {
+        return (
+            <div>
+                <BalanceClaimActive />
+
+                <div style={{paddingTop: 15}}>
+                    <div className="button success" onClick={this.onCancel.bind(this)}>
+                        <Translate content="wallet.done" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         var {privateKey} = this.props;
         var {keys_to_account} = this.state;
@@ -548,19 +570,22 @@ export default class ImportKeys extends Component {
 
         var filtering = this.state.genesis_filtering
         var was_filtered = !!this.state.genesis_filter_status.length && this.state.genesis_filter_finished
-        var account_rows = null
+        var account_rows = null;
+
         if(this.state.genesis_filter_status.length) {
             account_rows = []
             for(let status of this.state.genesis_filter_status) {
-                account_rows.push(
-                    <tr key={status.account_name}>
-                        <td>{status.account_name}</td>
-                        <td>{filtering ?
-                            <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
-                            : <span>{status.count}</span>
-                        }</td>
-                    </tr>
-                )
+                if (status.count && status.total) {
+                    account_rows.push(
+                        <tr key={status.account_name}>
+                            <td>{status.account_name}</td>
+                            <td>{filtering ?
+                                <span>Filtering { Math.round( (status.count / status.total) * 100) } % </span>
+                                : <span>{status.count}</span>
+                            }</td>
+                        </tr>
+                    )
+                }
             }
         }
 
@@ -589,17 +614,21 @@ export default class ImportKeys extends Component {
 
         let tabIndex = 1;
 
+        if (this.state.importSuccess) {
+            return this._renderBalanceClaims();
+        };
+
         return (
             <div>
                 {/* Key file upload */}
-                <div>
+                <div style={{padding: "10px 0"}}>
                     <span>{this.state.key_text_message ?
                         this.state.key_text_message :
                         <KeyCount key_count={key_count}/>
                     }</span>
                     { ! import_ready ?
                         null :
-                        <span> (<a onClick={this.reset.bind(this)}>reset</a>)</span>
+                        <span> (<a onClick={this.reset.bind(this)}><Translate content="wallet.reset" /></a>)</span>
                     }
                 </div>
 
@@ -610,8 +639,8 @@ export default class ImportKeys extends Component {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "center"}}>Account</th>
-                                    <th style={{textAlign: "center"}}># of keys</th>
+                                    <th><Translate content="explorer.account.title" /></th>
+                                    <th><Translate content="settings.restore_key_count" /></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -644,6 +673,7 @@ export default class ImportKeys extends Component {
                                 <input
                                     type="file"
                                     id="file_input"
+                                    accept=".json"
                                     style={{
                                         border: "solid" ,
                                         marginBottom: 15
@@ -689,26 +719,30 @@ export default class ImportKeys extends Component {
 
                 { import_ready ?
                 <div>
-                    <h4><Translate content="wallet.unclaimed" />:</h4>
-                    <div className="grid-block">
-                        <div className="grid-content no-overflow">
-                            <Translate component="label" content="wallet.totals" />
-                            <BalanceClaimAssetTotal />
-                        </div>
-                    </div>
-                    <br/>
 
                     <div>
-                        <div className="button-group content-block">
+                        <div className="button-group">
                             <div className={cname("button success", {disabled: !import_ready})}
                                onClick={this._saveImport.bind(this)} >
-                                <Translate content="wallet.import_balance" />
+                                <Translate content="wallet.import_keys" />
                             </div>
                             <div className="button secondary" onClick={this.reset.bind(this)}>
                                 <Translate content="wallet.cancel" />
                             </div>
                         </div>
                     </div>
+
+                    <h4><Translate content="wallet.unclaimed" /></h4>
+                    <Translate component="p" content="wallet.claim_later" />
+                    <div className="grid-block">
+
+
+                        <div className="grid-content no-overflow">
+                            <Translate component="label" content="wallet.totals" />
+                            <BalanceClaimAssetTotal />
+                        </div>
+                    </div>
+                    <br/>
                 </div> : null}
             </div>
         );

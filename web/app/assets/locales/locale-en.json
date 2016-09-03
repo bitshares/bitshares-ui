@@ -726,7 +726,8 @@
     "backupcreate_brainkey": "Create brainkey backup",
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
     "delete_select": "Select wallet to delete",
-    "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey."
+    "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
+    "restore_key_count": "# of keys"
   },
   "footer": {
     "title": "Bitshares",
@@ -911,6 +912,7 @@
     "change_backup": "Now that you've changed your password, we highly recommend making a new backup.",
     "paste_private": "Paste private keys here (Wallet Import Format - WIF)",
     "totals": "Asset Totals",
+    "claim_later": "Once you've imported the keys, you can claim these balances to an account of your choosing.",
     "bts_09_export": "BTS 0.9.3c key export file (.json)",
     "import_password": "Enter import file password",
     "import_pass_match": "Password matches. Decrypting the backup now...",
@@ -944,7 +946,8 @@
     "congrat": "Congratulations, you're ready!",
     "tips_explore": "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links on the left to start exploring.",
     "tips_header": "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
-    "tips_login": "IMPORTANT: There is no login/logout functionality here, you merely unlock your wallet when you wish to make a transaction."
+    "tips_login": "IMPORTANT: There is no login/logout functionality here, you merely unlock your wallet when you wish to make a transaction.",
+    "import_key_success": "Successfully imported %(count)s keys."
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
