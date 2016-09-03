@@ -65,6 +65,8 @@ class SettingsStore {
             ],
             connection: [
                 "wss://bitshares.openledger.info/ws",
+                "wss://bit.btsabc.org/ws",
+                "wss://bts.transwiser.com/ws",
                 "wss://bitshares.dacplay.org:8089/ws",
                 "wss://dele-puppy.com/ws",
                 "wss://valen-tin.fr:8090/ws"
