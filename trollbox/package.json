@@ -11,7 +11,7 @@
   "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "peer": "^0.2.8"
+    "peer": "git+https://github.com/svk31/peerjs-server"
   },
   "devDependencies": {
     "logrotate-stream": "^0.2.5",
