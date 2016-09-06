@@ -30,7 +30,8 @@ class AccountSelector extends React.Component {
         accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: React.PropTypes.bool // use it if you need to disable action button
+        disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
+        allowUppercase: React.PropTypes.bool // use it if you need to allow uppercase letters
     }
 
     // can be used in parent component: this.refs.account_selector.getAccount()
@@ -54,8 +55,10 @@ class AccountSelector extends React.Component {
     }
 
     onInputChanged(event) {
-        let value = event.target.value.trim().toLowerCase();
-
+        let value = event.target.value.trim();
+        if (!this.props.allowUppercase) {
+            value = value.toLowerCase();
+        }
         // If regex matches ^.*#/account/account-name/.*$, parse out account-name
         let newValue = value.match(/(?:#\/account\/)(.*)(?:\/overview)/);
         if (newValue) value = newValue[1];
