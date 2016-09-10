@@ -47,7 +47,7 @@ class WebsocketAddModal extends React.Component {
 
     onAddSubmit(e) {
         e.preventDefault();
-
+        debugger;
         SettingsActions.addWS(this.state.ws);
 
         this.setState({
@@ -58,7 +58,13 @@ class WebsocketAddModal extends React.Component {
 
     onRemoveSubmit(e) {
         e.preventDefault();
-        let removeIndex = this.props.apis.indexOf(this.refs.select.value);
+        let removeIndex;
+        debugger;
+        this.props.apis.forEach((api, index) => {
+            if (api.url === this.refs.select.value) {
+                removeIndex = index;
+            }
+        });
 
         SettingsActions.removeWS(removeIndex);
         SettingsActions.changeSetting.defer({
@@ -105,7 +111,7 @@ class WebsocketAddModal extends React.Component {
         }
         let options = this.props.apis.map((entry, index) => {
             if (index > 0) {
-                return <option value={entry} key={entry}>{entry}</option>;
+                return <option value={entry.url} key={entry.url}>{entry.location || entry.url} {entry.location ? `(${entry.url})` : null}</option>;
             }
         }).filter(a => {
             return !!a;
