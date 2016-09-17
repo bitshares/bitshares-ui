@@ -120,14 +120,13 @@ class WalletActions {
         }
     }
 
-    claimVestingBalance(account, cvb) {
+    claimVestingBalance(account, cvb, forceAll = false) {
         var tr = new TransactionBuilder();
 
         let balance = cvb.getIn(["balance", "amount"]),
             earned = cvb.getIn(["policy", 1, "coin_seconds_earned"]),
             vestingPeriod = cvb.getIn(["policy", 1, "vesting_seconds"]),
-            availablePercent = earned / (vestingPeriod * balance);
-
+            availablePercent = forceAll ? 1 : earned / (vestingPeriod * balance);
 
         tr.add_type_operation("vesting_balance_withdraw", {
             fee: { amount: "0", asset_id: "1.3.0"},

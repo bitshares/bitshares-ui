@@ -105,6 +105,7 @@
       "required": "Coin days required",
       "remaining": "Days left of vesting period",
       "claim": "Claim now",
+      "claim_all": "Try to claim all",
       "available": "Available to claim",
       "referral_link": "Your referral link",
       "referral_text": "Give this to link to people you want to refer to Bitshares"
