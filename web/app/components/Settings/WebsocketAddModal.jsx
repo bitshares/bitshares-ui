@@ -68,7 +68,7 @@ class WebsocketAddModal extends React.Component {
 
         SettingsActions.removeWS(removeIndex);
         SettingsActions.changeSetting.defer({
-            setting: "connection",
+            setting: "apiServer",
             value: this.props.apis[0]
         });
         this.props.changeConnection(this.props.apis[0]);

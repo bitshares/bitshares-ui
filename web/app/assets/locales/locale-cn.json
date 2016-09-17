@@ -684,7 +684,7 @@
     "confirm_no": "从不",
     "always_confirm": "总是要求确认",
     "wallets": "钱包管理",
-    "connection": "API 服务器设定",
+    "apiServer": "API 服务器设定",
     "add_ws": "添加新的 websocket API",
     "remove_ws": "删除 websocket API",
     "faucet_address": "水龙头地址",

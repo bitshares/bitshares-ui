@@ -480,7 +480,7 @@
     "confirm_no": "Nunca",
     "always_confirm": "Siempre pedir confirmación",
     "wallets": "Billeteras",
-    "connection": "Conexión API",
+    "apiServer": "Conexión API",
     "add_ws": "Agregar nueva API websocket",
     "remove_ws": "Remover API websocket",
     "faucet_address": "Faucet Address"

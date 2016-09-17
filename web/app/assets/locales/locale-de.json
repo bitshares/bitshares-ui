@@ -596,7 +596,7 @@
     "confirm_no": "Nie",
     "always_confirm": "Für jede Transaction nach Bestätigung fragen",
     "wallets": "Geldbörsen",
-    "connection": "API Anbindung",
+    "apiServer": "API Anbindung",
     "add_ws": "Websocket API hinzufügen",
     "remove_ws": "Websocket API entfernen",
     "faucet_address": "Faucet Address",
