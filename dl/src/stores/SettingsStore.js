@@ -60,7 +60,7 @@ class SettingsStore {
             {url: "wss://bitshares.dacplay.org:8089/ws", location:  "Hangzhou, China"},
             {url: "wss://openledger.hk/ws", location: "Hong Kong"},
             {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
-            {url: "wss://testnet.bitshares.eu/ws", location: "Frankfurt, Germany"}
+            {url: "wss://testnet.bitshares.eu/ws", location: "Public Testnet Server (Frankfurt, Germany)"}
         ];
 
         let defaults = {
