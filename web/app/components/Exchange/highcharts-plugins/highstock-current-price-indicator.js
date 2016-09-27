@@ -9,7 +9,7 @@
 // JSLint options:
 /*global Highcharts, document */
 
-import Highcharts from "highcharts/highstock";
+import Highcharts from "highcharts/highstock.src";
 import utils from "common/utils";
 
 (function(H) {
@@ -87,7 +87,7 @@ import utils from "common/utils";
         options = merge(true, defaultOptions, options);
 
         width = priceYAxis.opposite ? (marginRight ? marginRight : 40) : (marginLeft ? marginLeft : 40);
-        
+
         x = priceYAxis.opposite ? (chartWidth - width) : marginLeft;
         y = priceYAxis.toPixels(currentPrice);
 
@@ -130,7 +130,7 @@ import utils from "common/utils";
                     fill: options.backgroundColor,
                     stroke: options.borderColor,
                     height: 15,
-                    y: y - (height / 2) - 3,                  
+                    y: y - (height / 2) - 3,
                     zIndex: 1,
                         'stroke-width': 1
                 })
@@ -192,7 +192,7 @@ import utils from "common/utils";
             }
         }
     };
-    
+
     /**
      * Convert dash style name to array to be used a the value
      * for SVG element's "stroke-dasharray" attribute
