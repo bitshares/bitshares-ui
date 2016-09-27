@@ -9,7 +9,7 @@
 // JSLint options:
 /*global Highcharts, document */
 
-import Highcharts from "highcharts/highstock.src";
+import Highcharts from "highcharts/highstock";
 import utils from "common/utils";
 
 (function(H) {

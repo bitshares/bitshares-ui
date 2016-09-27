@@ -1,5 +1,5 @@
 import React from "react";
-import Highcharts from "highcharts/highstock.src";
+import Highcharts from "highcharts/highstock";
 var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import counterpart from "counterpart";
 

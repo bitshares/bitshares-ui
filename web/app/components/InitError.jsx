@@ -63,7 +63,7 @@ class InitError extends React.Component {
                         <Translate component="h3" content={`init_error.title`} />
                         <br/>
                         <section className="block-list">
-                            <header><Translate component="span" content={`settings.connection`} /></header>
+                            <header><Translate component="span" content={`settings.apiServer`} /></header>
                             <ul>
                                 <li className="with-dropdown">
 

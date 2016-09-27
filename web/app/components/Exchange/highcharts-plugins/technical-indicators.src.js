@@ -1,4 +1,4 @@
-import Highcharts from "highcharts/highstock.src";
+import Highcharts from "highcharts/highstock";
 
 (function (HC) {
         /***

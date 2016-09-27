@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highcharts from "highcharts/highstock.src";
+import Highcharts from "highcharts/highstock";
 let ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import counterpart from "counterpart";

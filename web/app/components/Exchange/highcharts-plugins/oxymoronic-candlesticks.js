@@ -11,7 +11,7 @@
 // JSLint options:
 /*global Highcharts*/
 
-import Highcharts from "highcharts/highstock.src";
+import Highcharts from "highcharts/highstock";
 
 (function (H) {
     'use strict';

@@ -144,7 +144,7 @@ module.exports = function(options) {
     };
 
     // if(options.prod) config.entry.vendors = [
-    //     "classnames", "react-router", "highcharts/highstock.src", "counterpart", "react-translate-component",
+    //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
     //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
     //     "whatwg-fetch", "alt", "react-json-inspector",
     //     "immutable", "graphenejs-lib"
