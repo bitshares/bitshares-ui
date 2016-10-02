@@ -11,8 +11,7 @@ class VestingBalance extends React.Component {
 
     _onClaim(claimAll, e) {
         e.preventDefault();
-        let vb = ChainStore.getObject( this.props.vb );
-        WalletActions.claimVestingBalance(this.props.account.id, vb, claimAll);
+        WalletActions.claimVestingBalance(this.props.account.id, this.props.vb, claimAll);
     }
 
     render() {
