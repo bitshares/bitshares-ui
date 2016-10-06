@@ -8,8 +8,8 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import EquivalentValueComponent from "../Utility/EquivalentValueComponent";
-import {operations} from "chain/chain_types";
-
+import {ChainStore} from "graphenejs-lib";
+let {operations} = require("graphenejs-lib").ChainTypes;
 let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids
@@ -19,7 +19,10 @@ let fee_grouping = {
     market   : [1,2,3,4,17,18],
     account  : [5,6,7,8,9],
     business : [20,21,22,23,24,29,30,31,34,35,36],
-}
+};
+
+// Operations that require LTM
+let ltm_required = [5, 7, 20, 21, 34];
 
 @BindToChainState({keep_updating:true})
 class FeeGroup extends React.Component {
@@ -43,13 +46,14 @@ class FeeGroup extends React.Component {
     }
 
     render() {
-        let {globalObject, settings, opIds} = this.props;
+        let {globalObject, settings, opIds, title} = this.props;
         globalObject = globalObject.toJSON();
+        const core_asset = ChainStore.getAsset("1.3.0");
 
         let current_fees = globalObject.parameters.current_fees;
         let scale   = current_fees.scale;
         let feesRaw = current_fees.parameters;
-        let preferredUnit = settings.get("unit") || "BTS";
+        let preferredUnit = settings.get("unit") || core_asset.get("symbol");
 
         let trxTypes = counterpart.translate("transaction.trxTypes");
 
@@ -67,7 +71,7 @@ class FeeGroup extends React.Component {
             let feename        = trxTypes[ operation_name ];
 
             let rows = []
-            let headInlucded = false
+            let headIncluded = false
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
@@ -79,8 +83,8 @@ class FeeGroup extends React.Component {
                 let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit}/> : feeTypes["_none"];
                 let title = null;
 
-                if (!headInlucded) {
-                    headInlucded = true
+                if (!headIncluded) {
+                    headIncluded = true
                     title = (<td rowSpan="6" style={{width:"15em"}}>
                                <span className={labelClass}>
                                 {feename}
@@ -88,18 +92,27 @@ class FeeGroup extends React.Component {
                              </td>)
                 }
 
-                rows.push(
-                        <tr key={opId + key}>
-                            {title}
-                            <td>{feeTypes[key]}</td>
-                            <td style={{textAlign: "right"}}>{equivalentAmount}</td>
-                            <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
-                        </tr>
-                       );
+                if (ltm_required.indexOf(opId)<0) {
+                    rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td>{feeTypes[key]}</td>
+                                <td style={{textAlign: "right"}}>{equivalentAmount}</td>
+                                <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                            </tr>
+                           );
+                } else {
+                    rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td>{feeTypes[key]}</td>
+                                <td style={{textAlign: "right"}}>- <sup>*</sup></td>
+                                <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                            </tr>
+                           );
+                }
             }
-
-            return (<tbody>{rows}</tbody>);
-
+            return (<tbody key={feeIdx}>{rows}</tbody>);
         })
 
         return (   
@@ -119,21 +132,19 @@ class FeeGroup extends React.Component {
                    </div>
            );
     }
-
 }
 
 class Fees extends React.Component {
 
     render() {
 
-        let arr = [5, 6, 7, 8, 9];
         let FeeGroupsTitle  = counterpart.translate("transaction.feeGroups");
         let feeGroups = []
 
         for (let groupName in fee_grouping) {
             let groupNameText = FeeGroupsTitle[groupName];
             let feeIds = fee_grouping[groupName];
-            feeGroups.push(<FeeGroup settings={this.props.settings} opIds={feeIds} title={groupNameText}/>);
+            feeGroups.push(<FeeGroup key={groupName} settings={this.props.settings} opIds={feeIds} title={groupNameText}/>);
         }
 
         return(

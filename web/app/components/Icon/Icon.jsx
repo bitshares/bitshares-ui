@@ -5,7 +5,8 @@ import React from "react";
 let icons = ["user", "trash", "chevron-down", "menu", "database", "search",
     "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo",
     "accounts", "witnesses", "assets", "proposals", "blocks", "committee_members", "workers", "key",
-    "checkmark-circle", "checkmark", "piggy", "locked", "unlocked" , "markets", "fi-star" ,"fees"];
+    "checkmark-circle", "checkmark", "piggy", "locked", "unlocked" , "markets", "fi-star" ,"fees",
+    "thumb-tack", "clock"];
 
 let icons_map = {};
 for (let i of icons) icons_map[i] = require(`./${i}.svg`);

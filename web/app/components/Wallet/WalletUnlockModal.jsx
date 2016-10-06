@@ -13,7 +13,7 @@ import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb"
 import WalletUnlockStore from "stores/WalletUnlockStore"
 import WalletUnlockActions from "actions/WalletUnlockActions"
-import Apis from "rpc_api/ApiInstances"
+import {Apis} from "graphenejs-ws";
 
 class WalletUnlockModal extends React.Component {
 
@@ -22,14 +22,14 @@ class WalletUnlockModal extends React.Component {
         this.state = this._getInitialState()
         this.onPasswordEnter = this.onPasswordEnter.bind(this)
     }
-    
+
     _getInitialState() {
         return {
             password_error: null,
             password_input_reset: Date.now()
         }
     }
-    
+
     reset() {
         this.setState(this._getInitialState())
     }
@@ -55,13 +55,13 @@ class WalletUnlockModal extends React.Component {
             }
         })
     }
-    
+
     componentDidUpdate() {
         //DEBUG console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
         if(this.props.resolve) {
             if (WalletDb.isLocked())
                 ZfApi.publish(this.props.modalId, "open")
-            else 
+            else
                 this.props.resolve()
         }
     }
@@ -87,37 +87,37 @@ class WalletUnlockModal extends React.Component {
         }
         return false
     }
-    
+
     render() {
         //DEBUG console.log('... U N L O C K',this.props)
-        var unlock_what = this.props.unlock_what || counterpart.translate("wallet.title");
-        
+
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.password_input.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
-        return ( 
+        return (
             // U N L O C K
             <Modal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <h3><Translate content="header.unlock" /> {unlock_what}</h3>
+                <h3><Translate content="header.unlock" /></h3>
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     <PasswordInput ref="password_input"
                         onEnter={this.onPasswordEnter}
                         key={this.state.password_input_reset}
-                        wrongPassword={this.state.password_error}/>
+                        wrongPassword={this.state.password_error}
+                        noValidation />
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /> {unlock_what}</button>
+                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
                         <Trigger close={this.props.modalId}>
-                            <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                            <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                 </form>
             </Modal>
         )
     }
-    
+
 }
 
 WalletUnlockModal.defaultProps = {

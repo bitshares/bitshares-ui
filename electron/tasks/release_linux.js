@@ -98,6 +98,9 @@ var packToDebFile = function () {
             deferred.resolve();
         });
 
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {linux: debPath});
+
     return deferred.promise;
 };
 

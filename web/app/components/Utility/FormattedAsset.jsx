@@ -1,6 +1,7 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import {PropTypes} from "react";
 import {Link} from "react-router";
 import ChainTypes from "./ChainTypes";
@@ -8,6 +9,8 @@ import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import MarketLink from "./MarketLink";
 import HelpContent from "./HelpContent";
+import AssetName from "./AssetName";
+import {ChainStore} from "graphenejs-lib";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -88,17 +91,19 @@ class FormattedAsset extends React.Component {
 
         }
 
-        var issuer = ChainStore.getObject(asset.issuer);
-        var issuerName = issuer ? issuer.get('name') : '';
+        let issuer = ChainStore.getObject(asset.issuer);
+        let issuerName = issuer ? issuer.get('name') : '';
+
+        let description = assetUtils.parseDescription(asset.options.description);
 
         const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
             <HelpContent
-                path={"assets/" + asset.symbol}
-                alt_path="assets/Asset"
+                path={"assets/Asset"}
                 section="summary"
                 symbol={asset.symbol}
-                description={asset.options.description}
-                issuer={issuerName}/>
+                description={description.short_name ? description.short_name : description.main}
+                issuer={issuerName}
+            />
             {this.props.assetInfo}
         </div>;
 
@@ -112,14 +117,15 @@ class FormattedAsset extends React.Component {
                     />
                 : null}
                 {!hide_asset && (this.props.assetInfo ? (
+                    <span>&nbsp;
                     <Popover
                         isOpen={this.state.isPopoverOpen}
                         onOuterAction={this.closePopover}
                         body={currency_popover_body}
                     >
-                        <span className="currency click-for-help" onClick={this.togglePopover}> {asset.symbol}</span>
-                    </Popover>) :
-                    <span className="currency" onClick={this.togglePopover}> {asset.symbol}</span>)}
+                        <span className="currency click-for-help" onClick={this.togglePopover}><AssetName name={asset.symbol} /></span>
+                    </Popover></span>) :
+                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)} 
                 </span>
         );
     }

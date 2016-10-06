@@ -1,6 +1,5 @@
 require("babel/polyfill");
-var key = require('common/key_utils')
-var Aes = require('ecc/aes')
+var {key, Aes} = require("graphenejs-lib");
 
 onmessage = function(event) { try {
     console.log("AesWorker start");

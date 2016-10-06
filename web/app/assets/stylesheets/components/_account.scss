@@ -20,8 +20,22 @@
 }
 
 .account-left-menu {
-  margin-left: 1.0rem !important;
+  margin-left: 1.25rem !important;
   > li {
+    &.menu-subheader {
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      padding: 1.5rem 0.5rem 0.25rem 0.5rem;
+      text-align: center;
+      border-bottom: none !important;
+
+      > span {
+          display: inline-block;
+          color: inherit;
+          cursor: pointer;
+      }
+    }
+
     > a {
       padding-left: 1.75rem !important;
       border-left: 2px solid transparent;
@@ -29,6 +43,8 @@
         border-left-color: #f00;
       }
     }
+
+
   }
 }
 
@@ -55,4 +71,8 @@
 
 .create-account-header {
   height: 180px;
+}
+
+a.action-button > span {
+    text-transform: lowercase;
 }

@@ -17,9 +17,10 @@ class ExchangeContainer extends React.Component {
 
     render() {
         let symbols = this.props.params.marketID.split("_");
+        let myAccountsCount = AccountStore.getMyAccounts().length;
 
         return (
-                <AltContainer 
+                <AltContainer
                   stores={[MarketsStore, AccountStore, SettingsStore]}
                   inject={{
                     limit_orders: () => {
@@ -54,7 +55,7 @@ class ExchangeContainer extends React.Component {
                     },
                     totalCalls: () => {
                         return MarketsStore.getState().totalCalls;
-                    },                    
+                    },
                     flat_asks: () => {
                         return MarketsStore.getState().flat_asks;
                     },
@@ -88,6 +89,9 @@ class ExchangeContainer extends React.Component {
                     viewSettings: () => {
                         return SettingsStore.getState().viewSettings;
                     },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
+                    },
                     starredMarkets: () => {
                         return SettingsStore.getState().starredMarkets;
                     },
@@ -97,7 +101,7 @@ class ExchangeContainer extends React.Component {
                     marketReady: () => {
                         return MarketsStore.getState().marketReady;
                     }
-                  }} 
+                  }}
                   >
                     <Exchange quoteAsset={symbols[0]} baseAsset={symbols[1]} {...this.props}/>
                 </AltContainer>

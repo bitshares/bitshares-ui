@@ -1,7 +1,9 @@
 var numeral = require("numeral");
+
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {object_type, operations} from "chain/chain_types";
+import {ChainTypes} from "graphenejs-lib";
+var {object_type, operations} = ChainTypes;
 
 var Utils = {
     get_object_id: (obj_id) => {
@@ -58,6 +60,9 @@ var Utils = {
     },
 
     get_asset_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, inverted = false) {
+        if (!quoteAsset || !baseAsset) {
+            return 1;
+        }
         var price = this.get_asset_amount(quoteAmount, quoteAsset) / this.get_asset_amount(baseAmount, baseAsset);
         return inverted ? 1 / price : price;
     },
@@ -69,12 +74,13 @@ var Utils = {
     },
 
     format_volume(amount) {
-        if (amount < 10) {
-            return this.format_number(amount, 2);
-        } else if (amount < 10000) {
-            return this.format_number(amount, 0);
+
+        if (amount < 10000) {
+            return this.format_number(amount, 3);
+        } else if (amount < 1000000) {
+            return (Math.round(amount / 10) / 100).toFixed(2) + "k";
         } else {
-            return Math.round(amount / 1000) + "k";
+            return (Math.round(amount / 10000) / 100).toFixed(2) + "M";
         }
     },
 
@@ -143,7 +149,7 @@ var Utils = {
         let baseID = base.toJS ? base.get("id") : base.id;
         let basePrecision  = base.toJS ? base.get("precision") : base.precision;
         if (quoteID === "1.3.0") {
-            priceText = this.format_number(price, quotePrecision - 1);
+            priceText = this.format_number(price, quotePrecision);
         } else if (baseID === "1.3.0") {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
         } else {
@@ -155,6 +161,10 @@ var Utils = {
     price_to_text: function(price, base, quote, forcePrecision = null) {
         if (typeof price !== "number" || !base || !quote) {
             return;
+        }
+
+        if (price === Infinity) {
+            price = 0;
         }
         let precision;
         let priceText;
@@ -170,24 +180,27 @@ var Utils = {
         let i;
 
         let zeros = 0;
-        if (price > 1) {
-            let l = dec.length;
-            for (i = l - 1; i >= 0; i--) {
-                if (dec[i] !== "0") {
-                    break;
-                }
-                zeros++;
-            };
-        } else {
-            let l = dec.length;
-            for (i = 0; i < l; i++) {
-                if (dec[i] !== "0") {
-                    i--;
-                    break;
-                }
-                zeros++;
-            };
+        if (dec) {
+            if (price > 1) {
+                let l = dec.length;
+                for (i = l - 1; i >= 0; i--) {
+                    if (dec[i] !== "0") {
+                        break;
+                    }
+                    zeros++;
+                };
+            } else {
+                let l = dec.length;
+                for (i = 0; i < l; i++) {
+                    if (dec[i] !== "0") {
+                        i--;
+                        break;
+                    }
+                    zeros++;
+                };
+            }
         }
+        
         let trailing = zeros ? dec.substr(Math.max(0, i + 1), dec.length) : null;
 
         if (trailing) {
@@ -318,6 +331,7 @@ var Utils = {
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
+
         if (!fromRate || !toRate) {
             return null;
         }
@@ -331,7 +345,6 @@ var Utils = {
             toID = toRate.get("id");
             toRate = toRate.get("bitasset") ? toRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
-
 
         let fromRateQuoteID = fromRate.quote.asset_id;
         let toRateQuoteID = toRate.quote.asset_id;
@@ -378,6 +391,7 @@ var Utils = {
     },
 
     convertValue: function(priceObject, amount, fromAsset, toAsset) {
+        priceObject = priceObject.toJS ?  priceObject.toJS() : priceObject;
         let quotePrecision = this.get_asset_precision(fromAsset.get("precision"));
         let basePrecision = this.get_asset_precision(toAsset.get("precision"));
 
@@ -456,8 +470,28 @@ var Utils = {
         // }
 
         // return result;
-    }
+    },
 
+    get_percentage(a, b) {
+        return Math.round((a/b) * 100) + "%";
+    },
+
+    replaceName(name, isBitAsset = false) {
+        let toReplace = ["TRADE.", "OPEN.", "METAEX."];
+        let suffix = "";
+        let i;
+        for (i = 0; i < toReplace.length; i++) {
+            if (name.indexOf(toReplace[i]) !== -1) {
+                name = name.replace(toReplace[i], "") + suffix;
+                break;
+            }
+        }
+
+        return {
+            name,
+            prefix: isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null
+        };
+    }
 };
 
 export default Utils;

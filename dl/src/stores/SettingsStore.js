@@ -1,62 +1,69 @@
 var alt = require("../alt-instance");
 var SettingsActions = require("../actions/SettingsActions");
-
+var IntlActions = require("../actions/IntlActions");
 var Immutable = require("immutable");
-var _ =require("lodash");
+import {merge} from "lodash";
+import ls from "common/localStorage";
 
-const STORAGE_KEY = "__graphene__";
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
-var ls = typeof localStorage === "undefined" ? null : localStorage;
+const STORAGE_KEY = "__graphene__";
+let ss = new ls(STORAGE_KEY);
 
 class SettingsStore {
     constructor() {
         this.exportPublicMethods({getSetting: this.getSetting.bind(this)});
 
-        this.settings = Immutable.Map({
+        this.defaultSettings = Immutable.Map({
             locale: "en",
-            connection: "wss://bitshares.openledger.info/ws",
+            apiServer: "wss://bitshares.openledger.info/ws",
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
             showSettles: false,
-            walletLockTimeout: 60 * 10
+            showAssetPercent: false,
+            walletLockTimeout: 60 * 10,
+            themes: "darkTheme",
+            disableChat: false
         });
 
-        this.viewSettings =  Immutable.Map({
-            cardView: true
+        // Default markets setup
+        let topMarkets = [
+            "MKR", "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK",
+            "OPEN.STEEM", "OPEN.DAO", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
+            "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER",
+            "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL"
+        ];
+
+        this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
+        // Openledger
+        // this.preferredBases = Immutable.List(["OPEN.BTC", "OPEN.ETH", "OPEN.USDT", "OPEN.EURT", CORE_ASSET]);
+
+        function addMarkets(target, base, markets) {
+            markets.filter(a => {
+                return a !== base;
+            }).forEach(market => {
+                target.push([`${market}_${base}`, {"quote": market,"base": base}]);
+            });
+        }
+
+        let defaultMarkets = [];
+        this.preferredBases.forEach(base => {
+            addMarkets(defaultMarkets, base, topMarkets);
         });
-
-        this.marketDirections = Immutable.Map({
-
-        });
-
-        this.hiddenAssets = Immutable.List([]);
-
-        this.starredMarkets = Immutable.Map([
-            [CORE_ASSET + "_BTC", {"quote": CORE_ASSET,"base": "BTC"}],
-            [CORE_ASSET + "_CNY", {"quote": CORE_ASSET,"base": "CNY"}],
-            [CORE_ASSET + "_EUR", {"quote": CORE_ASSET,"base": "EUR"}],
-            [CORE_ASSET + "_GOLD", {"quote": CORE_ASSET,"base": "GOLD"}],
-            [CORE_ASSET + "_SILVER", {"quote": CORE_ASSET,"base": "SILVER"}],
-            [CORE_ASSET + "_USD", {"quote": CORE_ASSET,"base": "USD"}],
-            ["BTC_USD", {"quote":"BTC","base":"USD"}],
-            ["BTC_CNY", {"quote":"BTC","base":"CNY"}],
-            [CORE_ASSET + "_OPENBTC", {"quote": CORE_ASSET,"base": "OPENBTC"} ],
-            [CORE_ASSET + "_OPENMUSE", {"quote": CORE_ASSET,"base": "OPENMUSE"} ],
-            [CORE_ASSET + "_TRADE.BTC", {"quote": CORE_ASSET,"base": "TRADE.BTC"} ],
-            ["TRADE.BTC_BTC", {"quote":"TRADE.BTC","base": "BTC"} ],
-            [CORE_ASSET + "_METAFEES", {"quote": CORE_ASSET,"base": "METAFEES"} ],
-            [CORE_ASSET + "_OBITS", {"quote": CORE_ASSET,"base": "OBITS"} ],
-            [CORE_ASSET + "_TRADE.MUSE", {"quote": CORE_ASSET,"base": "TRADE.MUSE"} ],
-            ["METAEX.BTC_BTC", {"quote":"METAEX.BTC","base": "BTC"} ],
-            [CORE_ASSET + "_METAEX.BTC", {"quote": CORE_ASSET,"base": "METAEX.BTC" } ]
-        ]);
-
-        this.starredAccounts = Immutable.Map();
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
-        this.defaults = {
+        let apiServer = [
+            {url: "wss://bitshares.openledger.info/ws", location: "Nuremberg, Germany"},
+            {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
+            {url: "wss://bts.transwiser.com/ws", location: "Hangzhou, China"},
+            {url: "wss://bitshares.dacplay.org:8089/ws", location:  "Hangzhou, China"},
+            {url: "wss://openledger.hk/ws", location: "Hong Kong"},
+            {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
+            {url: "wss://testnet.bitshares.eu/ws", location: "Public Testnet Server (Frankfurt, Germany)"}
+        ];
+
+        let defaults = {
             locale: [
                 "en",
                 "cn",
@@ -66,20 +73,31 @@ class SettingsStore {
                 "es",
                 "tr"
             ],
-            connection: [
-                "wss://bitshares.openledger.info/ws",
-                "wss://bitshares.dacplay.org:8089/ws"
-            ],
+            apiServer: [],
             unit: [
                 CORE_ASSET,
                 "USD",
                 "CNY",
                 "BTC",
-                "EUR"
+                "EUR",
+                "GBP"
             ],
             showSettles: [
                 {translate: "yes"},
                 {translate: "no"}
+            ],
+            showAssetPercent: [
+                {translate: "yes"},
+                {translate: "no"}
+            ],
+            disableChat: [
+                {translate: "yes"},
+                {translate: "no"}
+            ],
+            themes: [
+                "darkTheme",
+                "lightTheme",
+                "olDarkTheme"
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -97,38 +115,70 @@ class SettingsStore {
             onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
-            onHideAsset: SettingsActions.hideAsset
+            onHideAsset: SettingsActions.hideAsset,
+            onClearSettings: SettingsActions.clearSettings,
+            onSwitchLocale: IntlActions.switchLocale
         });
 
-        if (this._lsGet("settings_v3")) {
-            this.settings = Immutable.Map(_.merge(this.settings.toJS(), JSON.parse(this._lsGet("settings_v3"))));
+        this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
+
+        this.marketsString = "markets";
+        this.starredMarkets = Immutable.Map(ss.get(this.marketsString, defaultMarkets));
+
+        this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
+
+        let savedDefaults = ss.get("defaults_v1", {});
+        this.defaults = merge({}, defaults, savedDefaults);
+
+        (savedDefaults.connection || []).forEach(api => {
+            let hasApi = false;
+            if (typeof api === "string") {
+                api = {url: api, location: null};
+            }
+            apiServer.forEach(server => {
+                if (server.url === api.url) {
+                    hasApi = true;
+                }
+            });
+
+            if (!hasApi) {
+                this.defaults.apiServer.push(api);
+            }
+        });
+
+        (savedDefaults.apiServer || []).forEach(api => {
+            let hasApi = false;
+            if (typeof api === "string") {
+                api = {url: api, location: null};
+            }
+            this.defaults.apiServer.forEach(server => {
+                if (server.url === api.url) {
+                    hasApi = true;
+                }
+            });
+
+            if (!hasApi) {
+                this.defaults.apiServer.push(api);
+            }
+        });
+
+        for (let i = apiServer.length - 1; i >= 0; i--) {
+            let hasApi = false;
+            this.defaults.apiServer.forEach(api => {
+                if (api.url === apiServer[i].url) {
+                    hasApi = true;
+                }
+            });
+            if (!hasApi) {
+                this.defaults.apiServer.unshift(apiServer[i]);
+            }
         }
 
-        if (this._lsGet("starredMarkets")) {
-            this.starredMarkets = Immutable.Map(JSON.parse(this._lsGet("starredMarkets")));
-        }
+        this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
-        if (this._lsGet("starredAccounts")) {
-            this.starredAccounts = Immutable.Map(JSON.parse(this._lsGet("starredAccounts")));
-        }
+        this.marketDirections = Immutable.Map(ss.get("marketDirections"));
 
-        if (this._lsGet("defaults_v1")) {
-            this.defaults = _.merge(this.defaults, JSON.parse(this._lsGet("defaults_v1")));
-        }
-
-        if (this._lsGet("viewSettings_v1")) {
-            this.viewSettings = Immutable.Map(JSON.parse(this._lsGet("viewSettings_v1")));
-        }
-
-        if (this._lsGet("marketDirections")) {
-            this.marketDirections = Immutable.Map(JSON.parse(this._lsGet("marketDirections")));
-        }
-
-        if (this._lsGet("hiddenAssets")) {
-            this.hiddenAssets = Immutable.List(JSON.parse(this._lsGet("hiddenAssets")));
-        }
-
-
+        this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
     }
 
     getSetting(setting) {
@@ -141,26 +191,26 @@ class SettingsStore {
             payload.value
         );
 
-        this._lsSet("settings_v3", this.settings.toJS());
+        ss.set("settings_v3", this.settings.toJS());
         if (payload.setting === "walletLockTimeout") {
-            this._lsSet("lockTimeout", payload.value);
+            ss.set("lockTimeout", payload.value);
         }
     }
 
     onChangeViewSetting(payload) {
-        for (key in payload) {
+        for (let key in payload) {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
 
-        this._lsSet("viewSettings_v1", this.viewSettings.toJS());
+        ss.set("viewSettings_v1", this.viewSettings.toJS());
     }
 
     onChangeMarketDirection(payload) {
-        for (key in payload) {
+        for (let key in payload) {
             this.marketDirections = this.marketDirections.set(key, payload[key]);
         }
 
-        this._lsSet("marketDirections", this.marketDirections.toJS());
+        ss.set("marketDirections", this.marketDirections.toJS());
     }
 
     onHideAsset(payload) {
@@ -172,20 +222,7 @@ class SettingsStore {
             }
         }
 
-        this._lsSet("hiddenAssets", this.hiddenAssets.toJS());
-    }
-
-    _lsGet(key) {
-        if (ls) {
-            return ls.getItem(STORAGE_KEY + key);
-        }
-    }
-
-    _lsSet(key, object) {
-        if (ls) {
-            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
-        }
-
+        ss.set("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     onAddStarMarket(market) {
@@ -194,7 +231,7 @@ class SettingsStore {
         if (!this.starredMarkets.has(marketID)) {
             this.starredMarkets = this.starredMarkets.set(marketID, {quote: market.quote, base: market.base});
 
-            this._lsSet("starredMarkets", this.starredMarkets.toJS());
+            ss.set(this.marketsString, this.starredMarkets.toJS());
         } else {
             return false;
         }
@@ -205,14 +242,14 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
-        this._lsSet("starredMarkets", this.starredMarkets.toJS());
+        ss.set(this.marketsString, this.starredMarkets.toJS());
     }
 
     onAddStarAccount(account) {
         if (!this.starredAccounts.has(account)) {
             this.starredAccounts = this.starredAccounts.set(account, {name: account});
 
-            this._lsSet("starredAccounts", this.starredAccounts.toJS());
+            ss.set("starredAccounts", this.starredAccounts.toJS());
         } else {
             return false;
         }
@@ -222,19 +259,39 @@ class SettingsStore {
 
         this.starredAccounts = this.starredAccounts.delete(account);
 
-        this._lsSet("starredAccounts", this.starredAccounts.toJS());
+        ss.set("starredAccounts", this.starredAccounts.toJS());
     }
 
     onAddWS(ws) {
-        this.defaults.connection.push(ws);
-        this._lsSet("defaults_v1", this.defaults);
+        if (typeof ws === "string") {
+            ws = {url: ws, location: null};
+        }
+        this.defaults.apiServer.push(ws);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
-        if (index !== 0) { // Prevent removing the default connection
-            this.defaults.connection.splice(index, 1);
-            this._lsSet("defaults_v1", this.defaults);
+        if (index !== 0) { // Prevent removing the default apiServer
+            this.defaults.apiServer.splice(index, 1);
+            ss.set("defaults_v1", this.defaults);
         }
+    }
+
+    onClearSettings() {
+        ss.remove("settings_v3");
+        this.settings = this.defaultSettings;
+
+        ss.set("settings_v3", this.settings.toJS());
+
+        if (window && window.location) {
+            // window.location.reload();
+        }
+    }
+
+    onSwitchLocale({locale}) {
+        console.log("onSwitchLocale:", locale);
+
+        this.onChangeSetting({setting: "locale", value: locale});
     }
 }
 

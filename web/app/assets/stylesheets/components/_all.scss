@@ -10,3 +10,16 @@
 @import "pagination";
 @import "tables";
 @import "wallet";
+@import "chatbox";
+@import "dashboard";
+@import "settings";
+
+.lifetime {
+    background: url("../fresh-bolt2.png") no-repeat 100% 50%;
+    background-size: auto 80%;
+    padding-right: 0.75rem;
+}
+
+.bottom-border {
+    border-bottom: 1px solid #444;
+}

@@ -4,7 +4,7 @@ import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import connectToStores from "alt/utils/connectToStores";
@@ -284,9 +284,8 @@ class CommitteeMembers extends React.Component {
                         </div>
 
                     </div>
-                    <div className="grid-block">
-                        <div className="grid-content">
-                            <div className="grid-block small-12 medium-6">
+                    <div className="grid-block vertical">
+                            <div className="grid-block vertical small-12 medium-6">
                                 <Translate component="h3" content="markets.filter" />
                                 <input type="text" value={this.state.filterCommitteeMember} onChange={this._onFilter.bind(this)} />
                             </div>
@@ -297,7 +296,6 @@ class CommitteeMembers extends React.Component {
                                 cardView={this.state.cardView}
                             />
                         </div>
-                    </div>
                 </div>
             </div>
         );
@@ -312,7 +310,7 @@ class CommitteeMembersStoreWrapper extends React.Component {
 
     static getPropsFromStores() {
         return {
-            cardViewCommittee: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
+            cardView: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
             filterCommitteeMember: SettingsStore.getState().viewSettings.get("filterCommitteeMember"),
         }
     }

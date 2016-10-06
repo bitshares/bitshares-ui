@@ -1,6 +1,6 @@
-
 import React from "react";
-import Highcharts from "react-highcharts/bundle/highstock";
+import Highcharts from "highcharts/highstock";
+var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import counterpart from "counterpart";
 
 class TransactionChart extends React.Component {
@@ -149,7 +149,7 @@ class TransactionChart extends React.Component {
         };
 
         return (
-            trxData.length ? <Highcharts ref="trx_chart" config={config}/> : null
+            trxData.length ? <ReactHighstock ref="trx_chart" config={config}/> : null
         );
     }
 };

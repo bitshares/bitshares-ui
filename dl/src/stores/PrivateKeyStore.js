@@ -9,12 +9,7 @@ import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions"
 import CachedPropertyActions from "actions/CachedPropertyActions"
 import AddressIndex from "stores/AddressIndex"
-import ChainStore from "api/ChainStore"
-import PublicKey from "ecc/key_public"
-import Address from "ecc/address"
-
-import hash from "common/hash"
-
+import {PublicKey, Address, ChainStore, hash, Aes} from "graphenejs-lib";
 
 /** No need to wait on the promises returned by this store as long as
     this.state.privateKeyStorage_error == false and
@@ -228,16 +223,42 @@ class PrivateKeyStore extends BaseStore {
             isMine = true;            
         }
 
-        try {
-            memo_text = private_key ? Aes.decrypt_with_checksum(
-                private_key,
-                public_key,
-                memo.nonce,
-                memo.message
-            ).toString("utf-8") : null;
-        } catch(e) {
-            console.log("transfer memo exception ...", e);
-            memo_text = "*";
+        if (private_key) {
+            let tryLegacy = false;
+            try {
+                memo_text = private_key ? Aes.decrypt_with_checksum(
+                    private_key,
+                    public_key,
+                    memo.nonce,
+                    memo.message
+                ).toString("utf-8") : null;
+
+                if (private_key && !memo_text) {
+                    // debugger
+                    
+                }
+            } catch(e) {
+                console.log("transfer memo exception ...", e);            
+                memo_text = "*";
+                tryLegacy = true;
+            }
+
+            // Apply legacy method if new, correct method fails to decode
+            if (private_key && tryLegacy) {
+                // debugger;
+                try {
+                    memo_text = Aes.decrypt_with_checksum(
+                        private_key,
+                        public_key,
+                        memo.nonce,
+                        memo.message,
+                        true
+                    ).toString("utf-8");
+                } catch(e) {
+                    console.log("transfer memo exception ...", e);            
+                    memo_text = "**";
+                }            
+            }
         }
 
         return {

@@ -1,6 +1,5 @@
-import React from "react";
+import React, {PropTypes} from "react";
 import Immutable from "immutable";
-import {PropTypes} from "react";
 import Translate from "react-translate-component";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
@@ -9,10 +8,8 @@ import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import {ChainStore, FetchChainObjects} from "graphenejs-lib";
 import AccountImage from "./AccountImage";
-import {FetchChainObjects} from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";
@@ -38,18 +35,31 @@ class WorkerApproval extends React.Component{
    }
 
    onApprove() {
-      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) )
-         this.props.onRemoveVote( this.props.worker.get("vote_against") );
-      else
-         this.props.onAddVote( this.props.worker.get("vote_for") );
+      let addVotes = [], removeVotes = [];
+
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
+         removeVotes.push(this.props.worker.get("vote_against"));
+      }
+
+      if( !this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) { 
+         addVotes.push(this.props.worker.get("vote_for"));
+      }
+
+      this.props.onChangeVotes( addVotes, removeVotes);
    }
 
    onReject() {
-      if( this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) {
-         this.props.onRemoveVote( this.props.worker.get("vote_for") );
+      let addVotes = [], removeVotes = [];
+
+      if( this.props.vote_ids.has( this.props.worker.get("vote_against") ) ) {
+         removeVotes.push(this.props.worker.get("vote_against"));
       }
-      else
-         this.props.onAddVote( this.props.worker.get("vote_against") );
+
+      if( this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) {
+         removeVotes.push(this.props.worker.get("vote_for"));
+      }
+
+      this.props.onChangeVotes( addVotes, removeVotes);
    }
 
    render() {
@@ -58,18 +68,19 @@ class WorkerApproval extends React.Component{
       // console.log( "render...", worker);
       let total_votes = worker.total_votes_for - worker.total_votes_against; 
       let total_days = 1;
-      let approval = counterpart.translate("account.votes.status.neutral");
-
-      // console.log( "this.props.vote_ids: ", this.props.vote_ids )
-      if( this.props.vote_ids.has( worker.vote_for ) && !this.props.vote_ids.has( worker.vote_against ) ) {
-         approval = counterpart.translate("account.votes.status.supported");
-      } else if( !this.props.vote_ids.has( worker.vote_for ) && this.props.vote_ids.has( worker.vote_against ) ) {
-         approval = counterpart.translate("account.votes.status.rejected");
-      }
 
       let approvalState = this.props.vote_ids.has(worker.vote_for) ? true :
                           this.props.vote_ids.has(worker.vote_against) ? false :
                           null;
+
+      let approval = counterpart.translate("account.votes.status.neutral");
+
+      // console.log( "this.props.vote_ids: ", this.props.vote_ids )
+      if( approvalState === true ) {
+         approval = counterpart.translate("account.votes.status.supported");
+      } else if( approvalState === false ) {
+         approval = counterpart.translate("account.votes.status.rejected");
+      }
 
       let displayURL = worker.url ? worker.url.replace(/http:\/\/|https:\/\//, "") : "";
 
@@ -88,12 +99,15 @@ class WorkerApproval extends React.Component{
       let startDate = counterpart.localize(new Date(worker.work_begin_date), { type: 'date' });
       let endDate = counterpart.localize(new Date(worker.work_end_date), { type: 'date' });
       
+      let now = new Date();
+      let isExpired = new Date(worker.work_end_date) <= now;
+
       return  (
 
             <tr>
-                  <td style={{backgroundColor: fundedPercent > 0 ? "green" : "orange"}}>#{rank}</td>
+                  {isExpired ? null : <td style={{backgroundColor: fundedPercent > 0 ? "green" : "orange"}}>#{rank}</td>}
 
-                  <td>
+                  <td colSpan={isExpired ? "2" : "1"}>
                      <div>{worker.name}</div>
                      <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
                         {startDate} - {endDate}</div>
@@ -115,23 +129,19 @@ class WorkerApproval extends React.Component{
                   <td className="hide-column-small">
                      {utils.format_number(fundedPercent, 2)}%
                   </td>
-                  <td>
+                  <td style={{backgroundColor: approvalState === true ? "green" : approvalState === false ? "red" : "transparent"}}>
                      {approval}
                   </td>
-                  <td>
+                  <td style={{textAlign: "right"}}>
                      {approvalState !== true ? 
-                        <button className="button success" onClick={this.onApprove.bind(this)}>
+                        <button className="button outline success" onClick={this.onApprove.bind(this)}>
                            <Translate content="account.votes.approve_worker"/>
-                        </button> : null}
-                  </td>
-
-                  <td>
-                     {approvalState !== false ? 
-                        <button className="button info" onClick={this.onReject.bind(this)}>
+                        </button> :
+                        <button className="button outline info" onClick={this.onReject.bind(this)}>
                            <Translate content="account.votes.reject_worker"/>
-                        </button> : null}
-
+                        </button>}
                   </td>
+                 
                {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
                   
 

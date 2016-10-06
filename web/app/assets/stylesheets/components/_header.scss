@@ -8,10 +8,8 @@
   }
 }
 
-.icon.locked > svg {
-  width: 1.15rem;
-  height: 1.15rem;
-
+.float-left > span.icon.user {
+    top: 0;
 }
 
 .header {
@@ -24,6 +22,7 @@
     > a {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
+      font-size: 0.9rem;
       @include breakpoint(large) {
         padding-left: 1.75rem;
         padding-right: 1.75rem;
@@ -63,4 +62,13 @@
 .user-icon > a {
   padding-left: 0.3rem;
   padding-right: 0.3rem;
+}
+
+.header .button.create-account {
+    margin-left: 16px;
+
+  > span {
+      font-size: 14px;
+      text-transform: capitalize;
+  }
 }

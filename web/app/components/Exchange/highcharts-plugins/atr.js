@@ -1,37 +1,39 @@
+import Highcharts from "highcharts/highstock";
+
 (function (HC) {
     /***
-    
+
     Each indicator requires mothods:
-    
+
     - getDefaultOptions()                               - returns object with default parameters, like period etc.
     - getValues(chart, series, options, points) - returns array of calculated values for indicator
     - getGraph(chart, series, options, values)  - returns path, or columns as SVG elements to add.
-                                                        Doesn't add to the chart via renderer! 
-    
+                                                        Doesn't add to the chart via renderer!
+
     ***/
-    
+
     /***
     indicators: [{
         id: 'series-id',
         type: 'atr',
         params: {
             period: 'x'
-        },    
+        },
         styles: {
             lineWidth: 'x',
             strokeColor: 'y'
         }
     }]
-    
+
     ***/
-    
+
     var merge = HC.merge,
         isArray = HC.isArray,
         addAxisPane = HC.Axis.prototype.addAxisPane,
         minInArray = HC.Axis.prototype.minInArray,
         maxInArray = HC.Axis.prototype.maxInArray,
         UNDEFINED;
-    
+
     Indicator.prototype.atr = {
         getDefaultOptions: function(){
             return {
@@ -56,13 +58,13 @@
                 point,i,index,points,yValue;
 
             points = [[xValue, yValue]];
-           
+
             if((xVal.length <= period) || !isArray(yVal[0]) || yVal[0].length != 4) {
               return;
             }
 
             for(i = 1; i < yValLen; i++){
-              
+
               utils.accumulateAverage(points, xVal, yVal, i);
 
               if(period < range) {
@@ -73,11 +75,11 @@
                   yData.push(point[1]);
               } else if (period === range) {
                   prevATR = TR / (i-1);
-                  ATR.push([xVal[i-1],prevATR]); 
+                  ATR.push([xVal[i-1],prevATR]);
                   range ++;
               } else {
                   TR += utils.getTR(yVal[i-1],yVal[i-2]);
-                  range ++; 
+                  range ++;
               }
             }
 
@@ -89,13 +91,13 @@
             // registger extremes for axis;
                      options.yAxisMax = maxInArray(ATR);
                      options.yAxisMin = 0;
-           
+
            return {
              values: ATR,
              xData: xData,
              yData: yData
            };
-        }, 
+        },
         getGraph: function(chart, series, options, values) {
            var path = [],
                attrs = {},
@@ -125,9 +127,9 @@
            }
 
             userOptions = merge(defaultOptions, options.yAxis);
-           
+
            if(options.Axis === UNDEFINED) {
-             index = addAxisPane(chart,userOptions); 
+             index = addAxisPane(chart,userOptions);
              options.Axis = chart.yAxis[index];
              options.Axis.oldMax = max;
            } else {
@@ -141,9 +143,9 @@
                'stroke-width': 2,
                stroke: 'red',
                dashstyle: 'Dash'
-           },  options.styles);  
-           
-           path.push('M', xAxis.toPixels(values[0][0]), yAxis.toPixels(values[0][1])); 
+           },  options.styles);
+
+           path.push('M', xAxis.toPixels(values[0][0]), yAxis.toPixels(values[0][1]));
 
            for(i = 0; i < atrLen; i++) {
               atrX = values[i][0];
@@ -154,10 +156,10 @@
            return [chart.renderer.path(path).attr(attrs)];
         },
         utils: {
-            accumulateAverage: function(points, xVal, yVal, i){ 
+            accumulateAverage: function(points, xVal, yVal, i){
                 var xValue = xVal[i],
                     yValue = yVal[i];
-                    
+
                 points.push([xValue, yValue]);
             },
             populateAverage: function(points, xVal, yVal, i, period, prevATR){

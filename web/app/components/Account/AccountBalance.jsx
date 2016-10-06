@@ -1,5 +1,5 @@
 import React from "react";
-import FormattedAsset from "../Utility/FormattedAsset";
+import AssetName from "../Utility/AssetName";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
@@ -23,7 +23,7 @@ class AccountBalance extends React.Component {
         let balance_id = this.props.account.getIn( ['balances',asset_id] );
 
         if( balance_id ) return <BalanceComponent balance={balance_id} />
-        else return <span>0&nbsp;{this.props.asset.get('symbol')}</span>
+        else return <span>0&nbsp;<AssetName name={this.props.asset.get('symbol')} /></span>
     }
 }
 

@@ -8,6 +8,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import connectToStores from "alt/utils/connectToStores";
+import accountUtils from "common/account_utils";
 
 @BindToChainState({keep_updating: true, show_loader: true})
 class AccountPage extends React.Component {
@@ -22,8 +23,11 @@ class AccountPage extends React.Component {
 
     componentDidMount() {
         if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
-            AccountActions.setCurrentAccount(this.props.account.get("name"));
+            AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
+
+        // Fetch possible fee assets here to avoid async issues later (will resolve assets)
+        accountUtils.getPossibleFees(this.props.account, "transfer");
     }
 
     render() {
@@ -33,15 +37,17 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block medium-2 left-column no-padding">
+                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 250}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
                         linkedAccounts={linkedAccounts}
                         myAccounts={myAccounts}
+                        viewSettings={this.props.viewSettings}
                     />
                 </div>
-                <div className="grid-block small-12 medium-10 main-content">
+                <div className="grid-block main-content">
+                    <div className="grid-container" style={{paddingTop: 15}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
@@ -52,9 +58,11 @@ class AccountPage extends React.Component {
                             wallet_locked,
                             account,
                             isMyAccount,
-                            hiddenAssets
+                            hiddenAssets,
+                            contained: true
                         }
                     )}
+                    </div>
                 </div>
             </div>
         );
@@ -74,7 +82,8 @@ class AccountPageStoreWrapper extends React.Component {
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
-            myAccounts:  AccountStore.getState().myAccounts
+            myAccounts:  AccountStore.getState().myAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
         }
     }
 

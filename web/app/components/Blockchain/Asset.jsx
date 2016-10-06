@@ -8,10 +8,13 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
+import utils from "common/utils";
+import {ChainStore} from "graphenejs-lib";
 
 class AssetFlag extends React.Component {
     render()
@@ -136,7 +139,7 @@ class Asset extends React.Component {
         return markets.map(
             function (market) {
                 if (market == symbol)
-                    return '';
+                    return null;
                 var marketID = market + '_' + symbol;
                 var marketName = market + '/' + symbol;
                 return (
@@ -157,12 +160,20 @@ class Asset extends React.Component {
 
 
         // Add <a to any links included in the description
-        let desc = asset.options.description;
+
+        let description = assetUtils.parseDescription(asset.options.description);
+        let desc = description.main;
+        let short_name = description.short_name ? description.short_name : null;
+
         let urlTest = /(http?):\/\/(www\.)?[a-z0-9\.:].*?(?=\s)/g;
 
         // Regexp needs a whitespace after a url, so add one to make sure
         desc = desc && desc.length > 0 ? desc + " " : desc;
         let urls = desc.match(urlTest);
+
+        // Add market link
+        const core_asset = ChainStore.getAsset("1.3.0");
+        let preferredMarket = description.market ? description.market : core_asset ? core_asset.get("symbol") : "BTS";
 
         if (urls && urls.length) {
             urls.forEach(url => {
@@ -171,16 +182,20 @@ class Asset extends React.Component {
             })
         }
 
+        let {name, prefix} = utils.replaceName(asset.symbol, "bitasset" in asset && !asset.bitasset.is_prediction_market && asset.issuer === "1.2.0");
+
         return (
                 <div style={{overflow:"visible"}}>
                     <HelpContent
                         path = {"assets/" + asset.symbol}
                         alt_path = "assets/Asset"
                         section="summary"
-                        symbol= {asset.symbol}
+                        symbol={(prefix || "") + name}
                         description={desc}
                         issuer= {issuerName}
                     />
+                    {short_name ? <p>{short_name}</p> : null}
+                    <a style={{textTransform: "uppercase"}} href={`#/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
                 </div>
         );
     }
@@ -227,7 +242,7 @@ class Asset extends React.Component {
 
         return (
             <div className="asset-card">
-              <div className="card-divider">{asset.symbol}</div>
+              <div className="card-divider"><AssetName name={asset.symbol} /></div>
                 <table className="table key-value-table table-hover">
                     <tbody>
                         <tr>
@@ -238,11 +253,15 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.summary.issuer"/> </td>
                             <td> <LinkToAccountById account={asset.issuer}/> </td>
                         </tr>
+                        <tr>
+                            <td> <Translate content="explorer.assets.precision"/> </td>
+                            <td> {asset.precision} </td>
+                        </tr>
                         {currentSupply}
                         {stealthSupply}
                         {marketFee}
                         {maxMarketFee}
-                        </tbody>
+                    </tbody>
                 </table>
 
                 <br/>
@@ -255,7 +274,6 @@ class Asset extends React.Component {
     renderPriceFeed(asset) {
         var title = (<Translate content="explorer.asset.price_feed.title"/>);
         var bitAsset = asset.bitasset;
-
         if (!('current_feed' in bitAsset))
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
@@ -266,6 +284,7 @@ class Asset extends React.Component {
 
                 <table className="table key-value-table table-hover"  style={{ padding:"1.2rem"}}>
                     <tbody>
+
                         <tr>
                             <td> <Translate content="explorer.asset.price_feed.settlement_price"/> </td>
                             <td> {this.formattedPrice(currentFeed.settlement_price)} </td>
@@ -301,11 +320,11 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : null} </td>
                         </tr>
                         <tr>
                             <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : ''} </td>
+                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : null} </td>
                         </tr>
                     </tbody>
                 </table>
@@ -336,7 +355,7 @@ class Asset extends React.Component {
                 <td> <Translate content="explorer.asset.permissions.max_market_fee"/> </td>
                 <td> <FormattedAsset amount={+options.max_market_fee} asset={asset.id} /> </td>
             </tr>
-        ) : '';
+        ) : null;
 
         // options.max_supply initially a string
         var maxSupply = (
@@ -361,7 +380,7 @@ class Asset extends React.Component {
                     <Translate content="explorer.asset.permissions.whitelist_markets"/>:
                     &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
             </span>
-        ) : '';
+        ) : null;
 
         return (
             <div className="asset-card">
@@ -386,8 +405,8 @@ class Asset extends React.Component {
     renderPriceFeedData(asset) {
 
         var bitAsset = asset.bitasset;
-        if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0) {
-            return '';
+        if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0 || bitAsset.is_prediction_market) {
+            return null;
         }
 
         let now = new Date().getTime();

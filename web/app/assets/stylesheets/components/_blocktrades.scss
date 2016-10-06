@@ -1,5 +1,17 @@
-.blocktrades-bridge select {
-  width: 8em;
+.blocktrades-bridge select.native-coin-types {
+  width: 11em;
+  margin: 0 5px !important;
+  display: inline;
+  color: inherit;
+  background-color: transparent;
+  font-size: 0.9em;
+  border: 1px solid #555;
+  background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpath%20style%3D%22fill%3A%20%23555%22%20d%3D%22M0%200h32L16%2024%22/%3E%3C/svg%3E');
+}
+
+.blocktrades-bridge select.external-coin-types {
+  width: 11em;
+  margin: 0 5px !important;
   display: inline;
   color: inherit;
   background-color: transparent;
@@ -9,22 +21,72 @@
 }
 
 .blocktrades-bridge select option {
-  color: #000;
+  //color: #000;
+  padding-bottom: 5px;
 }
 
 .blocktrades-bridge input {
   width: 9em;
   display: inline;
   color: inherit;
-  background-color: transparent;
+  background-color: #3F3F3F !important;
   font-size: 0.9em;
   border: 1px solid #555;
   height: 2.4rem;
   padding: .5rem;
-  vertical-align: middle;
+  vertical-align: top;
+  margin: 0 5px !important;
+
+  &:hover {
+    color: white;
+  }
 }
 
 .blocktrades-bridge .deposit-limit {
-  color: #555;
+  color: #ababab;
   line-height: 150%;
+}
+
+.blocktrades-position-options {
+  position: relative;
+}
+
+.blocktrades-position-options .blocktrades-options {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  border: solid 1px #000;
+  background-color: #fff;
+  position: absolute;
+  border-top: none;
+  top: 1px;
+  overflow: auto;
+}
+
+.blocktrades-position-options .blocktrades-disabled-options {
+  display: none;
+}
+
+.blocktrades-position-options .blocktrades-options a {
+  display: block;
+  color: black;
+  padding: 1px;
+  cursor: default;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+.blocktrades-position-options .blocktrades-options a:hover {
+  color: #fff;
+  background-color: #3399ff;
+}
+
+.blocktrades-select-dropdown span {
+  width: 38px;
+  color: black;
+  background: #eeeeee;
+  text-align: center;
+  line-height: 38px;
+  cursor: default;
+  font-size: 10px;	
 }

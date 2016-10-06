@@ -14,12 +14,13 @@ import utils from "common/utils";
 import AutocompleteInput from "../Forms/AutocompleteInput";
 import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
-import validation from "common/validation";
 import classnames from "classnames";
 import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import IssueModal from "../Modal/IssueModal"
+import ReserveAssetModal from "../Modal/ReserveAssetModal"
 import connectToStores from "alt/utils/connectToStores";
+import assetUtils from "common/asset_utils";
 
 @connectToStores
 class AccountAssets extends React.Component {
@@ -41,7 +42,7 @@ class AccountAssets extends React.Component {
 
     static propTypes = {
         symbol: PropTypes.string.isRequired
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -119,8 +120,6 @@ class AccountAssets extends React.Component {
         this.setState({issue: issue});
     }
 
-
-
     _searchAccounts(searchTerm) {
         AccountActions.accountSearch(searchTerm);
     }
@@ -148,6 +147,23 @@ class AccountAssets extends React.Component {
                     autoDismiss: 10
                 });
             }
+        });
+    }
+
+    _reserveButtonClick(assetId, e) {
+        e.preventDefault();
+        this.setState({reserve: assetId});
+        ZfApi.publish("reserve_asset", "open");
+    }
+
+    _reserveAsset(account_id, e) {
+        e.preventDefault();
+        ZfApi.publish("reserve_asset", "close");
+        let {issue} = this.state;
+        let asset = this.props.assets.get(issue.asset_id);
+        issue.amount *= utils.get_asset_precision(asset.precision);
+        AssetActions.issueAsset(account_id, issue).then(result => {
+
         });
     }
 
@@ -194,26 +210,37 @@ class AccountAssets extends React.Component {
             return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
         })
         .map(asset => {
-            let desc = asset.options.description;
+            let description = assetUtils.parseDescription(asset.options.description);
+            let desc = description.short_name ? description.short_name : description.main;
+            
             if (desc.length > 100) {
                 desc = desc.substr(0, 100) + "...";
             }
             return (
                     <tr key={asset.symbol}>
-                       <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
-                       <td style={{maxWidth: "250px"}}>{desc}</td>
-                       <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
-                       <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
-                       <td>
-                          <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
+                        <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
+                        <td style={{maxWidth: "250px"}}>{desc}</td>
+                        <td><FormattedAsset amount={parseInt(asset.dynamic_data.current_supply, 10)} asset={asset.id} /></td>
+                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
+                        <td>
+                            {!asset.bitasset_data_id ? (
+                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
                                 <Translate content="transaction.trxTypes.asset_issue" />
-                          </button>
-                      </td>
-                       <td>
-                          <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
+                            </button>) : null}
+                        </td>
+
+                        <td>
+                            {!asset.bitasset_data_id ? (
+                            <button onClick={this._reserveButtonClick.bind(this, asset.id)} className="button outline">
+                                <Translate content="transaction.trxTypes.asset_reserve" />
+                            </button>) : null}
+                        </td>
+
+                        <td>
+                            <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
                                 <Translate content="transaction.trxTypes.asset_update" />
-                          </button>
-                      </td>
+                            </button>
+                        </td>
                     </tr>
                 );
         }).toArray();
@@ -224,10 +251,12 @@ class AccountAssets extends React.Component {
 
         return (    
             <div className="grid-content">
-                    <div className="content-block">
-                        <h3><Translate content="account.user_issued_assets.issued_assets" /></h3>
-
-                        <div>
+                                
+                    <div className="content-block generic-bordered-box">
+                        <div className="block-content-header">
+                            <Translate content="account.user_issued_assets.issued_assets" />
+                        </div>
+                        <div className="box-content">
                             <table className="table">
                                 <thead>
                                 <tr>
@@ -235,8 +264,7 @@ class AccountAssets extends React.Component {
                                     <th style={{maxWidth: "200px"}}><Translate content="account.user_issued_assets.description" /></th>
                                     <Translate component="th" content="markets.supply" />
                                     <th><Translate content="account.user_issued_assets.max_supply" /></th>
-                                    <th><Translate content="transaction.trxTypes.asset_issue" /></th>
-                                    <th><Translate content="transaction.trxTypes.asset_update" /></th>
+                                    <th style={{textAlign: "center"}} colSpan="3"><Translate content="account.perm.action" /></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -256,7 +284,24 @@ class AccountAssets extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <IssueModal asset_to_issue={this.state.issue.asset_id} />
+                            <IssueModal
+                                asset_to_issue={this.state.issue.asset_id}
+                                onClose={() => {ZfApi.publish("issue_asset", "close")}}
+                            />
+                        </div>
+                    </Modal>
+
+                    <Modal id="reserve_asset" overlay={true}>
+                        <Trigger close="reserve_asset">
+                            <a href="#" className="close-button">&times;</a>
+                        </Trigger>
+                        <br/>
+                        <div className="grid-block vertical">
+                            <ReserveAssetModal
+                                assetId={this.state.reserve}
+                                account={account}
+                                onClose={() => {ZfApi.publish("reserve_asset", "close")}}
+                            />
                         </div>
                     </Modal>
             </div>
