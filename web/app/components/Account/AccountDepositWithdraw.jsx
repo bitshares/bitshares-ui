@@ -11,7 +11,6 @@ import TranswiserDepositWithdraw from "../DepositWithdraw/transwiser/TranswiserD
 import BlockTradesBridgeDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesBridgeDepositRequest";
 import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
 import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
-import MetaExchange from "../DepositWithdraw/MetaExchange";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
 import Tabs from "../Utility/Tabs";
@@ -45,7 +44,7 @@ class AccountDepositWithdraw extends React.Component {
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge"),
             activeService: props.viewSettings.get("activeService", 0),
-            services: ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "MetaExchange"]
+            services: ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser"]
         };
     }
 
@@ -288,20 +287,6 @@ class AccountDepositWithdraw extends React.Component {
                                         account={account} />
                             </div> : null}
                         </div>
-                    </div> : null}
-
-                    {activeService === services.indexOf("MetaExchange") ?
-                    <div>
-                        <div className="float-right"><a style={{textTransform: "capitalize"}} href="https://metaexchange.info" target="__blank"><Translate content="gateway.website" /></a></div>
-                        <div className="button-group">
-                            <div onClick={this.toggleMetaService.bind(this, "bridge")} className={cnames("button", metaService === "bridge" ? "active" : "outline")}><Translate content="gateway.bridge" /></div>
-                            <div onClick={this.toggleMetaService.bind(this, "gateway")} className={cnames("button", metaService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
-                        </div>
-
-                        <MetaExchange
-                            account={account}
-                            service={metaService}
-                        />
                     </div> : null}
 
                     {activeService === services.indexOf("Transwiser") ?
