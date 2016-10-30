@@ -248,7 +248,7 @@ a.order-cancel {
     }
 
     > span:last-of-type {
-      padding-left: 5px;
+      padding-left: 3px;
     }
   }
 }
@@ -532,4 +532,8 @@ a.order-cancel > .icon > svg {
   > path {
     fill : #e8564b;
   }
+}
+
+.Stockcharts__wrapper {
+    overflow: auto;
 }

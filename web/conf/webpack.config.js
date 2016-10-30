@@ -85,7 +85,7 @@ module.exports = function(options) {
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "cheap-module-source-map" : "eval",
+        devtool: options.prod ? "module-source-map" : "eval",
         debug: options.prod ? false : true,
         module: {
             loaders: [

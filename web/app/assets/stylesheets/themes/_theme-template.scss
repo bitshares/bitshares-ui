@@ -643,7 +643,7 @@
     }
   }
 
-  .block-content-header {    
+  .block-content-header {
     //text-transform: uppercase;
     @include RobotoLight;
   }
@@ -751,7 +751,7 @@
         color: $primary-text-color;
       }
 
-      > span:last-of-type {
+      > span {
         color: #468EDE;
       }
     }

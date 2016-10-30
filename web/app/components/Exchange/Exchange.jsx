@@ -515,18 +515,6 @@ class Exchange extends React.Component {
         }
     }
 
-    _changeZoomPeriod(size, e) {
-        e.preventDefault();
-        if (size !== this.state.currentPeriod) {
-            this.setState({
-                currentPeriod: size
-            });
-            SettingsActions.changeViewSetting({
-                currentPeriod: size
-            });
-        }
-    }
-
     _subToMarket(props, newBucketSize) {
         let {quoteAsset, baseAsset, bucketSize} = props;
         if (newBucketSize) {
@@ -1045,7 +1033,7 @@ class Exchange extends React.Component {
 
     onChangeChartHeight(increase) {
         let newHeight = this.state.chartHeight + (increase ? 20 : -20);
-
+        console.log("newHeight", newHeight);
         this.setState({
             chartHeight: newHeight
         });
@@ -1223,28 +1211,21 @@ class Exchange extends React.Component {
             } else if (size < 3600) {
                 return (size / 60) + "m";
             } else if (size < 86400) {
-                return (size / 3600) + "h"
+                return (size / 3600) + "h";
             } else if (size < 604800) {
-                return (size / 86400) + "d"
+                return (size / 86400) + "d";
             } else if (size < 2592000) {
-                return (size / 604800) + "w"
+                return (size / 604800) + "w";
             } else {
-                return (size / 2592000) + "m"
+                return (size / 2592000) + "m";
             }
-        }
+        };
 
         let bucketOptions = buckets.filter(bucket => {
             return bucket > 60 * 4;
         }).map(bucket => {
-            return <div key={bucket} className={cnames("label bucket-option", {"active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>
+            return <div key={bucket} className={cnames("label bucket-option", {"active-bucket": bucketSize === bucket})} onClick={this._changeBucketSize.bind(this, bucket)}>{bucketText(bucket)}</div>;
         });
-
-        let oneHour = 3600;
-        let zoomPeriods = [oneHour * 6, oneHour * 48, oneHour * 48 * 2, oneHour * 24 * 7, oneHour * 24 * 14, oneHour * 24 * 30, "all"];
-
-        let zoomOptions = zoomPeriods.map(period => {
-            return <div key={period} className={cnames("label bucket-option", {"active-bucket": this.state.currentPeriod === period})} onClick={this._changeZoomPeriod.bind(this, period)}>{bucketText(period)}</div>
-        }) ;
 
         // Market stats
         let dayChange = marketStats.get("change");
@@ -1445,9 +1426,25 @@ class Exchange extends React.Component {
                                                     </span>
                                                 </li> : null}
 
-                                            {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
-
-                                            {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
+                                                {volumeBase >= 0 ?
+                                                <li className="stat">
+                                                    <span>
+                                                        <Translate component="span" content={"exchange.volume_24"} />
+                                                        <b className={"value stat-primary"}>
+                                                            {!marketReady ? 0 : utils.format_volume(volumeBase)}
+                                                        </b>
+                                                        <span style={{paddingLeft: 3}}>
+                                                            <AssetName name={base.get("symbol")} />
+                                                        </span>
+                                                        &nbsp;/&nbsp;
+                                                        <b className={"value stat-primary"}>
+                                                            {!marketReady ? 0 : utils.format_volume(volumeQuote)}
+                                                        </b>
+                                                        <span>
+                                                            <AssetName name={quote.get("symbol")} />
+                                                        </span>
+                                                    </span>
+                                                </li> : null}
 
                                             <li className="stat">
                                                 <span>
@@ -1461,13 +1458,10 @@ class Exchange extends React.Component {
                                     </div>
                                     <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
                                         <ul className="market-stats stats bottom-stats">
-                                            {!this.state.showDepthChart ? (
-                                                <li className="stat">
-                                                    <span>
-                                                        <span><Translate content="exchange.zoom" />:</span>
-                                                        <span>{zoomOptions}</span>
-                                                    </span>
-                                                </li>) : null}
+                                            <li className="stat">
+                                                <div style={{display: "inline-block", marginBottom: -3, padding: "3px 8px"}} className="button outline clickable" onClick={this.onChangeChartHeight.bind(this, false)}>-</div>
+                                                <div style={{display: "inline-block", marginBottom: -3, marginRight: 2, padding: "3px 8px"}} className="button outline clickable" onClick={this.onChangeChartHeight.bind(this, true)}>+</div>
+                                            </li>
                                             {!this.state.showDepthChart ? (
                                                 <li className="stat">
                                                     <span>
@@ -1476,12 +1470,12 @@ class Exchange extends React.Component {
                                                     </span>
                                                 </li>) : null}
 
-                                            {!this.state.showDepthChart && this.props.priceData.length ? (
+                                            {/*{!this.state.showDepthChart && this.props.priceData.length ? (
                                                 <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
                                                     <div className="indicators">
                                                         <Translate content="exchange.settings" />
                                                     </div>
-                                                </li>) : null}
+                                                </li>) : null}*/}
                                          </ul>
                                          <ul className="market-stats stats bottom-stats">
                                             {!isNullAccount && quoteIsBitAsset ?
@@ -1508,12 +1502,12 @@ class Exchange extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div ref="center" style={{overflowY: "auto"}}>
+                        <div ref="center">
                         {!this.state.showDepthChart ? (
                             <div
                                 className="grid-block shrink"
                                 id="market-charts"
-                                style={{marginTop: 0}}>
+                                style={{marginTop: 0, overflow: "auto"}}>
                                 {/* Price history chart */}
 
                                 <PriceChartD3

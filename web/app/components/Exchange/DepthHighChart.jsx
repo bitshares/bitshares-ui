@@ -20,6 +20,7 @@ class DepthHighChart extends React.Component {
             !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
+            nextProps.height !== this.props.height ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
