@@ -1,4 +1,24 @@
 ---------------------------------------------------------------------
+Release 2.0.161031
+---------------------------------------------------------------------
+
+New features
+--------
+- Add btsabs and Transwiser API servers
+- Allow the Chat box to be hidden from a docked state
+- Vesting balance amounts are now updated correctly, and a Try claim all button has been added
+- Chinese translation updates
+- MetaExchange has been removed from the deposit withdraw providers
+
+Bug fixes
+--------
+- Add Bitshares bloom filter for BTS 1 account imports
+- Fix a GenesisFilter bug and update ImportKeys flow slightly
+- Fix input of uppercase characters in AccountPermissions
+- Fix Highcharts build issues
+- Remove unused refcode inputs
+
+---------------------------------------------------------------------
 Release 2.0.160829
 ---------------------------------------------------------------------
 
