@@ -4,6 +4,7 @@ Release 2.0.161031
 
 New features
 --------
+- Add Blockpay to default markets and update markets list
 - Add btsabs and Transwiser API servers
 - Allow the Chat box to be hidden from a docked state
 - Vesting balance amounts are now updated correctly, and a Try claim all button has been added
