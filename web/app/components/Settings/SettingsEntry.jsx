@@ -6,7 +6,7 @@ import SettingsActions from "actions/SettingsActions";
 export default class SettingsEntry extends React.Component {
 
     _onConfirm() {
-        SettingsActions.changeSetting({setting: "connection", value: this.props.connection });
+        SettingsActions.changeSetting({setting: "apiServer", value: this.props.apiServer });
         setTimeout(this._onReloadClick, 250);
     }
 
@@ -19,7 +19,7 @@ export default class SettingsEntry extends React.Component {
     }
 
     render() {
-        let {defaults, setting, settings, connection} = this.props;
+        let {defaults, setting, settings, apiServer} = this.props;
         let options, optional, confirmButton, value, input, selected = settings.get(setting);
 
         let myLocale = counterpart.getLocale();
@@ -52,15 +52,17 @@ export default class SettingsEntry extends React.Component {
             value = null;
             break;
 
-        case "connection":
-            value = defaults.indexOf(connection) !== -1 ? connection : defaults[0];
+        case "apiServer":
+            // console.log("defaults:", defaults, apiServer);
+            // value = defaults.indexOf(apiServer) !== -1 ? apiServer : ;
+            value = defaults.reduce((final, entry) => {
+                return entry.url === apiServer ? apiServer : final;
+            }, null) || defaults[0];
             options = defaults.map(entry => {
                 let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                 let key = entry.translate ? entry.translate : entry;
-                return <option value={option} key={key}>{option}</option>;
+                return <option value={option.url} key={key.url}>{option.location || option.url} {option.location ? `(${option.url})` : null}</option>;
             });
-
-            let defaultConnection = defaults[0];
 
             let confirmButton = (
                 <div className="button-group" style={{padding: "10px"}}>

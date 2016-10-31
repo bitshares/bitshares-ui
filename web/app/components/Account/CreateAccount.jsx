@@ -15,7 +15,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
-import RefcodeInput from "../Forms/RefcodeInput";
+// import RefcodeInput from "../Forms/RefcodeInput";
 import {ChainStore, FetchChain} from "graphenejs-lib";
 import {BackupCreate} from "../Wallet/Backup";
 
@@ -154,10 +154,10 @@ class CreateAccount extends React.Component {
         this.setState({registrar_account});
     }
 
-    showRefcodeInput(e) {
-        e.preventDefault();
-        this.setState({hide_refcode: false});
-    }
+    // showRefcodeInput(e) {
+    //     e.preventDefault();
+    //     this.setState({hide_refcode: false});
+    // }
 
     _renderAccountCreateForm() {
 
@@ -256,12 +256,12 @@ class CreateAccount extends React.Component {
 
                 {firstAccount ? <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> : null}
 
-                {this.state.hide_refcode ? null :
+                {/* {this.state.hide_refcode ? null :
                     <div>
                         <RefcodeInput ref="refcode" label="refcode.refcode_optional" expandable={true}/>
                         <br/>
                     </div>
-                }
+                } */}
             </div>
         );
     }

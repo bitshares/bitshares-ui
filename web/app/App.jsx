@@ -283,7 +283,7 @@ class Auth extends React.Component {
 
 let willTransitionTo = (nextState, replaceState, callback) => {
 
-    let connectionString = SettingsStore.getSetting("connection");
+    let connectionString = SettingsStore.getSetting("apiServer");
 
     if (nextState.location.pathname === "/init-error") {
 

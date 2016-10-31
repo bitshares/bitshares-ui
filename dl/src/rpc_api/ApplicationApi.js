@@ -215,8 +215,6 @@ class ApplicationApi {
                 }
             }
 
-            debugger;
-
             let memo_from_privkey;
             if(encrypt_memo && memo ) {
                 memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
