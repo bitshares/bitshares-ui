@@ -16,7 +16,7 @@ class SettingsStore {
 
         this.defaultSettings = Immutable.Map({
             locale: "en",
-            apiServer: "wss://bitshares.openledger.info/ws",
+            connection: "wss://altcap.io/ws",
             faucet_address: "https://bitshares.openledger.info",
             unit: CORE_ASSET,
             showSettles: false,
@@ -28,13 +28,14 @@ class SettingsStore {
 
         // Default markets setup
         let topMarkets = [
+            "ALTCAP.X", "ALTCAP", "ALTFUND", "PERKS", "GBP", "CAD", "ARS", "OPEN.SBD",
             "MKR", "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK",
             "OPEN.STEEM", "OPEN.DAO", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
             "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER",
             "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY"
         ];
 
-        this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
+        this.preferredBases = Immutable.List([CORE_ASSET, "BTC", "GOLD", "SILVER", "USD", "CNY", "EUR", "GBP", "OPEN.BTC", "ALTCAP", "ALTCAP.X"]);
         // Openledger
         // this.preferredBases = Immutable.List(["OPEN.BTC", "OPEN.ETH", "OPEN.USDT", "OPEN.EURT", CORE_ASSET]);
 
@@ -54,6 +55,7 @@ class SettingsStore {
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
         let apiServer = [
+            {url: "wss://altcap.io/ws", location: "Paris, France"},
             {url: "wss://bitshares.openledger.info/ws", location: "Nuremberg, Germany"},
             {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
             {url: "wss://bts.transwiser.com/ws", location: "Hangzhou, China"},
