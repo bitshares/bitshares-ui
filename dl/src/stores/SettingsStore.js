@@ -28,14 +28,14 @@ class SettingsStore {
 
         // Default markets setup
         let topMarkets = [
-            "ALTCAP.X", "ALTCAP", "ALTFUND", "PERKS", "GBP", "CAD", "ARS", "OPEN.SBD",
+            "ALTCAP.X", "ALTCAP", "ALTFUND", "PERKS", "GBP", "CAD", "ARS", "OPEN.SBD", "BLOCKPAY",
             "MKR", "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK",
             "OPEN.STEEM", "OPEN.DAO", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
             "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER",
-            "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY"
+            "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL"
         ];
 
-        this.preferredBases = Immutable.List([CORE_ASSET, "BTC", "GOLD", "SILVER", "USD", "CNY", "EUR", "GBP", "OPEN.BTC", "ALTCAP", "ALTCAP.X"]);
+        this.preferredBases = Immutable.List([CORE_ASSET, "BTC", "GOLD", "SILVER", "USD", "CNY", "EUR", "GBP", "OPEN.BTC", "ALTCAP", "ALTCAP.X", "BTWTY"]);
         // Openledger
         // this.preferredBases = Immutable.List(["OPEN.BTC", "OPEN.ETH", "OPEN.USDT", "OPEN.EURT", CORE_ASSET]);
 
@@ -54,17 +54,6 @@ class SettingsStore {
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
         // and use an object {translate: key} in the defaults array
-        let apiServer = [
-            {url: "wss://altcap.io/ws", location: "Paris, France"},
-            {url: "wss://bitshares.openledger.info/ws", location: "Nuremberg, Germany"},
-            {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
-            {url: "wss://bts.transwiser.com/ws", location: "Hangzhou, China"},
-            {url: "wss://bitshares.dacplay.org:8089/ws", location:  "Hangzhou, China"},
-            {url: "wss://openledger.hk/ws", location: "Hong Kong"},
-            {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
-            {url: "wss://testnet.bitshares.eu/ws", location: "Public Testnet Server (Frankfurt, Germany)"}
-        ];
-
         let defaults = {
             locale: [
                 "en",
@@ -75,7 +64,15 @@ class SettingsStore {
                 "es",
                 "tr"
             ],
-            apiServer: [],
+            connection: [
+                "wss://altcap.io/ws",
+                "wss://bitshares.openledger.info/ws",
+                "wss://bit.btsabc.org/ws",
+                "wss://bts.transwiser.com/ws",
+                "wss://bitshares.dacplay.org:8089/ws",
+                "wss://dele-puppy.com/ws",
+                "wss://valen-tin.fr:8090/ws"
+            ],
             unit: [
                 CORE_ASSET,
                 "USD",
@@ -129,52 +126,7 @@ class SettingsStore {
 
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
-        let savedDefaults = ss.get("defaults_v1", {});
-        this.defaults = merge({}, defaults, savedDefaults);
-
-        (savedDefaults.connection || []).forEach(api => {
-            let hasApi = false;
-            if (typeof api === "string") {
-                api = {url: api, location: null};
-            }
-            apiServer.forEach(server => {
-                if (server.url === api.url) {
-                    hasApi = true;
-                }
-            });
-
-            if (!hasApi) {
-                this.defaults.apiServer.push(api);
-            }
-        });
-
-        (savedDefaults.apiServer || []).forEach(api => {
-            let hasApi = false;
-            if (typeof api === "string") {
-                api = {url: api, location: null};
-            }
-            this.defaults.apiServer.forEach(server => {
-                if (server.url === api.url) {
-                    hasApi = true;
-                }
-            });
-
-            if (!hasApi) {
-                this.defaults.apiServer.push(api);
-            }
-        });
-
-        for (let i = apiServer.length - 1; i >= 0; i--) {
-            let hasApi = false;
-            this.defaults.apiServer.forEach(api => {
-                if (api.url === apiServer[i].url) {
-                    hasApi = true;
-                }
-            });
-            if (!hasApi) {
-                this.defaults.apiServer.unshift(apiServer[i]);
-            }
-        }
+        this.defaults = merge({}, defaults, ss.get("defaults_v1"));
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
@@ -265,16 +217,13 @@ class SettingsStore {
     }
 
     onAddWS(ws) {
-        if (typeof ws === "string") {
-            ws = {url: ws, location: null};
-        }
-        this.defaults.apiServer.push(ws);
+        this.defaults.connection.push(ws);
         ss.set("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
-        if (index !== 0) { // Prevent removing the default apiServer
-            this.defaults.apiServer.splice(index, 1);
+        if (index !== 0) { // Prevent removing the default connection
+            this.defaults.connection.splice(index, 1);
             ss.set("defaults_v1", this.defaults);
         }
     }
