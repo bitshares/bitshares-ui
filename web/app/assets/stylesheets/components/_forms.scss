@@ -49,23 +49,42 @@ td > input, td > .autocomplete input {
     flex: auto;
   }
   > .account-image {
-    float: left;
+    float: right;
     width: 80px;
     > .icon > svg path {
       fill: rgba(255, 255, 255, 0.2);
     }
+
+    @include breakpoint(small only) {
+        display: none;
+    }
   }
   > .content-area {
     //width: 100%;
-    margin-left: 80px;
-    padding-left: 1rem;
+    width: calc(100% - 100px);
+    display: inline-block;
+
+    @include breakpoint(small only) {
+        width: 100%;
+    }
   }
   .error-area {
     padding-top: 0.5rem;
-    height: 1.5rem;
+    min-height: 30px;
     font-size: 1rem;
+    line-height: normal;
   }
   .right-label {
     float: right;
+  }
+}
+
+div.transfer-input {
+  //width: 100%;
+  width: calc(100% - 100px);
+  display: inline-block;
+
+  @include breakpoint(small only) {
+      width: 100%;
   }
 }

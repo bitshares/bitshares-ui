@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
-var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
+const ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import {cloneDeep, reduce} from "lodash";
 import Translate from "react-translate-component";
@@ -19,7 +19,7 @@ require("./highcharts-plugins/highstock-current-price-indicator.js");
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        let chart = this.refs.chart.chart;
+        let chart = this.refs.chart ? this.refs.chart.chart : null;
         if (chart && (!utils.are_equal_shallow(nextProps.indicators, this.props.indicators))) {
             let changed, added;
 
@@ -35,8 +35,9 @@ class PriceChart extends React.Component {
             if (added) {
                 chart.addIndicator(indicator, true);
             } else {
-                let indicators = chart.indicators.allItems;
-                for (var i = indicators.length - 1 ; i >= 0 ; i--) {
+                console.log("indicators:", chart.indicators);
+                let indicators = chart.indicators ? chart.indicators.allItems : [];
+                for (let i = indicators.length - 1 ; i >= 0 ; i--) {
                     if (indicators[i].name === changed) {
                         indicators[i].destroy();
                         break;
@@ -61,10 +62,10 @@ class PriceChart extends React.Component {
             }
 
             if (changedSetting !== "period") {
-                let indicators = chart.indicators.allItems;
+                let indicators = chart.indicators ? chart.indicators.allItems : [];
                 let options = this.getIndicators(nextProps, changed)[0];
 
-                for (var i = indicators.length - 1 ; i >= 0 ; i--) {
+                for (let i = indicators.length - 1 ; i >= 0 ; i--) {
                     if (indicators[i].name === changed) {
                         indicators[i].update(options);
                         break;
@@ -236,7 +237,7 @@ class PriceChart extends React.Component {
             let now = (new Date).getTime();
             priceSeriesData.push([now, latest.full, latest.full, latest.full, latest.full]);
             volumeData.push([now, 0]);
-            for (var i = 1; i < 100; i++) {
+            for (let i = 1; i < 100; i++) {
                 priceSeriesData.unshift([now - (bucketSize * 1000) * i, latest.full, latest.full, latest.full, latest.full]);
                 volumeData.unshift([now - (bucketSize * 1000) * i, 0]);
             };
@@ -252,7 +253,7 @@ class PriceChart extends React.Component {
         // if (volumeData.length === priceSeriesData.length) {
         //     colorByPoint = true;
         // }
-        // for (var i = 0; i < volumeData.length; i++) {
+        // for (let i = 0; i < volumeData.length; i++) {
         //     maxVolume = Math.max(maxVolume, volumeData[i][1]);
             // if (colorByPoint) {
             //     volumeColors.push(priceSeriesData[i][1] <= priceSeriesData[i][4] ? positiveColor : negativeColor);
@@ -262,7 +263,7 @@ class PriceChart extends React.Component {
         // Find highest price
         // let maxPrice = 0;
         // if (priceSeriesData.length) {
-        //     for (var i = 0; i < priceSeriesData.length; i++) {
+        //     for (let i = 0; i < priceSeriesData.length; i++) {
         //         maxPrice = Math.max(maxPrice, priceSeriesData[i][2]);
         //     }
         // }

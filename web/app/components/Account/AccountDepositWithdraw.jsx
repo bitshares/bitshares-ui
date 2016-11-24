@@ -11,7 +11,6 @@ import TranswiserDepositWithdraw from "../DepositWithdraw/transwiser/TranswiserD
 import BlockTradesBridgeDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesBridgeDepositRequest";
 import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
 import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
-import MetaExchange from "../DepositWithdraw/MetaExchange";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
 import Tabs from "../Utility/Tabs";
@@ -45,7 +44,7 @@ class AccountDepositWithdraw extends React.Component {
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge"),
             activeService: props.viewSettings.get("activeService", 0),
-            services: ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "MetaExchange"]
+            services: ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser"]
         };
     }
 
@@ -65,7 +64,7 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
-		
+
         fetch("https://blocktrades.us/api/v2/coins").then(reply => reply.json().then(result => {
             this.setState({
                 blockTradesCoins: result
@@ -76,7 +75,7 @@ class AccountDepositWithdraw extends React.Component {
         })).catch(err => {
             console.log("error fetching blocktrades list of coins", err);
         });
-		
+
         fetch("https://blocktrades.us/ol/api/v2/coins").then(reply => reply.json().then(result => {
             this.setState({
                 openLedgerCoins: result
@@ -106,7 +105,7 @@ class AccountDepositWithdraw extends React.Component {
             }});
         return blocktradesBackedCoins;
     }
-	
+
 	getOpenledgerBackedCoins(allOpenledgerCoins) {
         let coins_by_type = {};
         allOpenledgerCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
@@ -180,23 +179,23 @@ class AccountDepositWithdraw extends React.Component {
         .map(coin => {
             return coin;
         })
-        .sort((a, b) => { 
-			if (a.symbol < b.symbol) 
-				return -1 
+        .sort((a, b) => {
+			if (a.symbol < b.symbol)
+				return -1
 			if (a.symbol > b.symbol)
 				return 1
-			return 0 
+			return 0
 		});
-		
+
         let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
             return coin;
         })
-        .sort((a, b) => { 
-			if (a.symbol < b.symbol) 
-				return -1 
+        .sort((a, b) => {
+			if (a.symbol < b.symbol)
+				return -1
 			if (a.symbol > b.symbol)
 				return 1
-			return 0 
+			return 0
 		});
 
         let options = services.map(name => {
@@ -218,7 +217,7 @@ class AccountDepositWithdraw extends React.Component {
                     {options}
                 </select>
 
-    			<div className="grid-content" style={{paddingTop: 15}}>
+    			<div className="grid-content no-padding" style={{paddingTop: 15}}>
 
                 {activeService === services.indexOf("BlockTrades (TRADE.X)") ?
                 <div>
@@ -266,9 +265,9 @@ class AccountDepositWithdraw extends React.Component {
                                 <div onClick={this.toggleOLService.bind(this, "gateway")} className={cnames("button", olService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
                                 <div onClick={this.toggleOLService.bind(this, "fiat")} className={cnames("button", olService === "fiat" ? "active" : "outline")}>Fiat</div>
                             </div>
-                            
-                            
-                            {olService === "gateway" && openLedgerGatewayCoins.length ? 
+
+
+                            {olService === "gateway" && openLedgerGatewayCoins.length ?
                             <BlockTradesGateway
                                 account={account}
                                 coins={openLedgerGatewayCoins}
@@ -288,20 +287,6 @@ class AccountDepositWithdraw extends React.Component {
                                         account={account} />
                             </div> : null}
                         </div>
-                    </div> : null}
-
-                    {activeService === services.indexOf("MetaExchange") ?
-                    <div>
-                        <div className="float-right"><a style={{textTransform: "capitalize"}} href="https://metaexchange.info" target="__blank"><Translate content="gateway.website" /></a></div>
-                        <div className="button-group">
-                            <div onClick={this.toggleMetaService.bind(this, "bridge")} className={cnames("button", metaService === "bridge" ? "active" : "outline")}><Translate content="gateway.bridge" /></div>
-                            <div onClick={this.toggleMetaService.bind(this, "gateway")} className={cnames("button", metaService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
-                        </div>
-
-                        <MetaExchange
-                            account={account}
-                            service={metaService}
-                        />
                     </div> : null}
 
                     {activeService === services.indexOf("Transwiser") ?

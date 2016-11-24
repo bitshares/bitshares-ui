@@ -4,18 +4,9 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 
 export default class ChatWrapper extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            docked: false
-        };
-    }
-
     onToggleChat(e) {
         e.preventDefault();
-        let showChat = !this.state.showChat;
+        let showChat = !this.props.showChat;
 
         SettingsActions.changeViewSetting({
             showChat: showChat
@@ -31,17 +22,16 @@ export default class ChatWrapper extends React.Component {
     }
 
     render() {
-        let {docked} = this.state;
-        let {showChat} = this.props;
+        let {showChat, dockedChat} = this.props;
         let content;
 
         let chatStyle = {
-            display: !showChat ? "none" : !docked ?"block" : "inherit",
-            float: !docked ? "right" : null,
-            height: !docked ? 35 : null,
-            margin: !docked ? "0 .5em" : null,
-            width: !docked ? 350 : 300,
-            marginRight: !docked ? "1rem" : null
+            display: !showChat ? "none" : !dockedChat ?"block" : "inherit",
+            float: !dockedChat ? "right" : null,
+            height: !dockedChat ? 35 : null,
+            margin: !dockedChat ? "0 .5em" : null,
+            width: !dockedChat ? 350 : 300,
+            marginRight: !dockedChat ? "1rem" : null
         };
 
         if (this.props.disable) {
@@ -80,10 +70,10 @@ export default class ChatWrapper extends React.Component {
         return (
             <div
                 id="chatbox"
-                className={docked ? "chat-docked grid-block" : "chat-floating"}
+                className={dockedChat ? "chat-docked grid-block" : "chat-floating"}
                 style={{
-                    bottom: this.props.footerVisible && !docked ? 36 : null,
-                    height: !docked ? 35 : null
+                    bottom: this.props.footerVisible && !dockedChat ? 36 : null,
+                    height: !dockedChat ? 35 : null
                 }}
             >
                 {content}

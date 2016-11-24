@@ -13,7 +13,7 @@
     "dashboard": "概览",
     "explorer": "浏览",
     "exchange": "交易",
-    "payments": "支付",
+    "payments": "转账",
     "logout": "注销",
     "settings": "设置",
     "current": "当前账户",
@@ -70,7 +70,8 @@
       "claim": "立即领取",
       "available": "可领取数量",
       "referral_link": "你的推荐链接",
-      "referral_text": "分享此链接给你的朋友参与引荐计划"
+      "referral_text": "分享此链接给你的朋友参与引荐计划",
+      "claim_all": "尝试领取所有"
     },
     "connections": {
       "known": "识别为",
@@ -222,7 +223,7 @@
     "upgrade": "升级账户",
     "unfollow": "取消关注",
     "follow": "关注",
-    "pay": "支付",
+    "pay": "转账",
     "overview": "概述",
     "history": "交易历史",
     "payees": "收款人",
@@ -287,7 +288,10 @@
     "accounts": "账户",
     "home": "首页",
     "no_price": "无可用价格信息",
-    "create_new": "创建新账户"
+    "create_new": "创建新账户",
+    "estimate_value": "账户价值估算",
+    "polo_scam": "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
+    "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。"
   },
   "transfer": {
     "from": "来自",
@@ -316,7 +320,8 @@
     "pay_from": "支付自",
     "memo_unlock": "解锁钱包以查看交易备注",
     "warn_name_unable_read_memo": "警告：%(name)s 无法阅读此备注消息",
-    "optional": "可选"
+    "optional": "可选",
+    "header": "转账详情"
   },
   "operation": {
     "pending": " %(blocks)s 个区块待定",
@@ -355,7 +360,8 @@
     "witness_pay": "提取见证人收入到账户",
     "witness_receive": "Received witness from witness",
     "worker_create": "{account} 创建了预算提案，请求每日支付 {pay}",
-    "committee_member_update_global_parameters": "{account} 更新了全局理事会参数"
+    "committee_member_update_global_parameters": "{account} 更新了全局理事会参数",
+    "override_transfer": "{issuer} 从 {from} 到 {to} 发送 {amount} "
   },
   "transaction": {
     "sent": "发送",
@@ -529,11 +535,13 @@
     },
     "asset_reserve": "保留资产数量",
     "csv": "导出到.csv 文件",
-    "csv_tip": "下载数据格式以逗号间隔的历史数据"
+    "csv_tip": "下载数据格式以逗号间隔的历史数据",
+    "waiting": "等待确认中.."
   },
   "explorer": {
     "accounts": {
-      "title": "账户"
+      "title": "账户",
+      "filter": "过滤账户"
     },
     "blocks": {
       "title": "区块链",
@@ -684,7 +692,7 @@
     "confirm_no": "从不",
     "always_confirm": "总是要求确认",
     "wallets": "钱包管理",
-    "connection": "API 服务器设定",
+    "apiServer": "API 服务器设定",
     "add_ws": "添加新的 websocket API",
     "remove_ws": "删除 websocket API",
     "faucet_address": "水龙头地址",
@@ -697,7 +705,36 @@
     "lightTheme": "白色主题",
     "olDarkTheme": "Openledger黑",
     "reset": "恢复默认值",
-    "disableChat": "禁用聊天"
+    "disableChat": "禁用聊天",
+    "showAssetPercent": "在账户页上显示资产/供给占比",
+    "general": "通用设置",
+    "wallet": "钱包",
+    "accounts": "账户",
+    "no_accounts": "钱包不含任何账户。",
+    "password": "密码",
+    "backup": "备份",
+    "restore": "恢复/导入",
+    "access": "接入点",
+    "general_text": "调整基本设置参数。",
+    "wallet_text": "管理控制钱包。",
+    "accounts_text": "我的账户列表。",
+    "password_text": "修改钱包密码。",
+    "backup_text": "创建钱包备份。",
+    "restore_text": "从钱包备份文件恢复或者导入私钥。",
+    "access_text": "修改API及水龙头服务器。",
+    "view_keys": "查看密钥",
+    "add_api": "添加API服务器",
+    "remove_api": "移除API服务器",
+    "backup_backup": "从钱包备份文件恢复 (.bin)",
+    "backup_key": "导入私钥",
+    "backup_legacy": "从BTS 0.9.3c 版本客户端导出的JSON钱包文件导入 (.json)",
+    "backup_brainkey": "从脑钱包密钥恢复钱包",
+    "backupcreate_backup": "创建钱包备份",
+    "backupcreate_brainkey": "创建脑钱包备份",
+    "lookup_text": "查看来自BTS 1.0的未领取余额",
+    "delete_select": "选择要删除的钱包",
+    "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
+    "restore_key_count": "# of 密钥"
   },
   "pagination": {
     "newer": "更近",
@@ -798,7 +835,7 @@
     "title": "钱包",
     "confirm": "确认密码",
     "password": "密码",
-    "existing_password": "已存在密码",
+    "existing_password": "当前密码",
     "change_password": "修改密码",
     "change_wallet": "切换钱包",
     "wallet_created": "钱包已创建",
@@ -864,7 +901,62 @@
     "noneed_backup": "无需备份",
     "import_bts1": "从BitShares 0.9.3c导入",
     "import_keys_tool": "私钥导入工具",
-    "balance_claim_lookup": "查询余额"
+    "balance_claim_lookup": "查询余额",
+    "create_importkeys_text": "导入私钥前，你需要创建一个新的钱包来存储私钥。请根据提示创建钱包。",
+    "create_wallet_backup": "从备份创建新钱包",
+    "delete_confirm_line4": "是的，删除钱包 %(name)s",
+    "import_backup_choose": "请在对话框中选择备份文件。备份文件不会上传至远端服务器，只在本地浏览器中进行处理。",
+    "restore": "从备份恢复钱包",
+    "create_text": "钱包保存在你的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过备份文件的传输可以轻松实现钱包的跨浏览器或夸计算器的迁移。",
+    "account_create_wallet_text": "这个密码将被用来创建你的钱包，并且仅保存在本地的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过备份文件的传输可以轻松实现钱包的跨浏览器或夸计算器的迁移。",
+    "create_account_text": "请输入你期望的账户名。这个账户名将在区块链上进行注册，并将作为你的身份标识。",
+    "first_account_paid": "由于这是你的第一个账户，水龙头服务讲免费为你支付账户在区块链上的注册费用。",
+    "must_be_ltm": "费用的支付账户必须为一个终身会员账户。",
+    "backup_explain": "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
+    "backup_new_account": "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据、数字资产。",
+    "brainkey_not_backed_up": "该脑钱包密钥从未备份过。",
+    "brainkey_backed_up": "该脑钱包密钥上次备份于",
+    "new_password": "新密码",
+    "new_confirm": "重复密码",
+    "change_success": "密码更改成功！",
+    "change_backup": "你已经修改了密码，强烈建议你创建一个新的备份文件。",
+    "paste_private": "将私钥黏贴在这里 (钱包导入格式 - WIF)",
+    "totals": "资产总计",
+    "claim_later": "导入私钥后，你可以将私钥拥有的余额申领到你选择的账户中去。",
+    "bts_09_export": "BTS 0.9.3c 私钥导出文件 (.json)",
+    "import_password": "输入导入文件的密码",
+    "import_pass_match": "密码相符。解密备份文件中",
+    "submit": "提交",
+    "import_balance": "导入余额",
+    "import_bts": "导入一个 BTS 0.9.3c 私钥导出文件",
+    "import_private_key": "导入私钥",
+    "wallet_browser": "你的浏览器即你的钱包",
+    "has_wallet": "当你创建第一个账户时，一个钱包也同时被创建，并保存在你的浏览器中。",
+    "go_get_started": "参见新手指南",
+    "wallet_crucial": "你的钱包只保存在本地浏览器中，所以创建一个备份是至关重要的，在你的计算机或浏览器发生意外时，你将能够通过备份重新恢复钱包。",
+    "wallet_move": "这个备份文件也可以用来实现夸浏览器或跨计算机的钱包迁移。",
+    "wallet_lose_warning": "重要！如果你丢失了钱包或者忘记了钱包密码，你将无法访问钱包以及其中的私钥数据及相关数字资产。确保你已经创建了备份文件，并且备份文件放置在安全处，并且你的密码安全。",
+    "tips_deposit": "进行充值",
+    "link_deposit": "充值",
+    "tips_dashboard": "查看仪表盘",
+    "tips_transfer": "发起转账",
+    "link_transfer": "转账",
+    "tips_settings": "修改设置",
+    "tips_account": "查看你的新账户",
+    "link_account": "账户",
+    "wallet_new": "新账户",
+    "create_w_a": "创建一个钱包和一个账户",
+    "create_a": "创建一个新账户",
+    "create_success": "钱包创建成功",
+    "all_set": "准备完成！",
+    "step_1": "第一步 - 注册账户",
+    "step_2": "第二步 - 创建备份",
+    "step_3": "第三步 - 开始",
+    "congrat": "恭喜，准备就绪！",
+    "tips_explore": "现在你已经成功创建了一个账户，并且下载了备份文件，让我们开始吧。点击左侧的链接开始探索。",
+    "tips_header": "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
+    "tips_login": "重要！这里没有登录/注销的概念和功能，当你需要发生交易时解锁钱包，闲置或者手动选择进行钱包锁定。",
+    "import_key_success": "已成功导入 %(count)s 个密钥。"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",
@@ -905,6 +997,11 @@
       "amount": "数量",
       "from": "账户",
       "submit": "储备"
+    },
+    "confirmation": {
+      "title": "你输入的地址似乎不正确，确定要提现到该地址么？",
+      "accept": "是",
+      "cancel": "否"
     }
   },
   "init_error": {
@@ -970,7 +1067,8 @@
     "limit": "限额: %(amount)s %(symbol)s",
     "bridge_text": "桥接能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
     "gateway_text": "网关能让你将BitShares中的资产与外部资产进行互换，比如OPEN.BTC到BTC。",
-    "fiat_text": "法币的冲提现服务由CCEDK提供。你必须先行在CCEDK上进行账户注册。下面是支持的货币："
+    "fiat_text": "法币的冲提现服务由CCEDK提供。你必须先行在CCEDK上进行账户注册。下面是支持的货币：",
+    "service": "转账服务"
   },
   "propose": "提议",
   "cancel": "取消",
@@ -997,7 +1095,9 @@
     },
     "approve": "批准",
     "reject": "否决",
-    "asset_create": "使用账户{account}创建资产%{asset}s"
+    "asset_create": "使用账户{account}创建资产%{asset}s",
+    "asset_update": "使用 {account} 更新 {asset} ",
+    "override_transfer": "从 {from} 到 {to} 转账 {amount}， 由 {issuer} 授权"
   },
   "proposal_create": {
     "review_period": "复审期开始",
@@ -1017,6 +1117,13 @@
     "disconnected": "你已从聊天室断开链接，请点击下方重新连接。",
     "rate": "请等待至少2秒发送新消息。",
     "reconnect": "重新连接",
-    "users": "%(count)s 用户在线"
+    "users": "%(count)s 用户在线",
+    "disabled": "聊天室禁用",
+    "enable": "启用聊天室"
+  },
+  "sync_fail": {
+    "title": "无法与API服务器同步连接",
+    "sub_text_1": "请确认你的计算机系统时钟正确。",
+    "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
   }
 }

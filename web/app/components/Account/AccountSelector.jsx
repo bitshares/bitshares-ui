@@ -30,7 +30,8 @@ class AccountSelector extends React.Component {
         accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: React.PropTypes.bool // use it if you need to disable action button
+        disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
+        allowUppercase: React.PropTypes.bool // use it if you need to allow uppercase letters
     }
 
     // can be used in parent component: this.refs.account_selector.getAccount()
@@ -54,8 +55,10 @@ class AccountSelector extends React.Component {
     }
 
     onInputChanged(event) {
-        let value = event.target.value.trim(); //.toLowerCase();
-
+        let value = event.target.value.trim();
+        if (!this.props.allowUppercase) {
+            value = value.toLowerCase();
+        }
         // If regex matches ^.*#/account/account-name/.*$, parse out account-name
         let newValue = value.match(/(?:#\/account\/)(.*)(?:\/overview)/);
         if (newValue) value = newValue[1];
@@ -104,13 +107,37 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
+        let scamAccountsPolo = [
+            "polonie-wallet",
+            "polonie-xwallet",
+            "poloniex-deposit",
+            "poloniex-wallet",
+            "poloniexwall-et",
+            "poloniexwallett",
+            "poloniexwall-t",
+            "poloniexwalle",
+            "poloniex"
+        ];
+
+        let scamAccountsBittrex = [
+            "bittrex-deopsit",
+            "bittrex-deposi",
+            "bittrex-depositt",
+            "bittrex-dposit",
+            "bittrex"
+        ];
+
+        if (scamAccountsPolo.indexOf(this.props.accountName) !== -1) {
+            error = counterpart.translate("account.polo_scam");
+        }
+
+        if (scamAccountsBittrex.indexOf(this.props.accountName) !== -1) {
+            error = counterpart.translate("account.bittrex_scam");
+        }
+
         return (
             <div className="account-selector no-overflow" style={this.props.style}>
-                {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
-                <AccountImage size={{height: 80, width: 80}}
-                              account={this.props.account ? this.props.account.get('name') : null} custom_image={null}/>}
-
-                <div className="content-area">
+                 <div className="content-area">
                     <div className="header-area">
                         {error ? null : <div className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></div>}
                         <Translate component="label" content={this.props.label}/>
@@ -132,10 +159,14 @@ class AccountSelector extends React.Component {
                               ) : null }
                       </div>
                     </div>
+
                     <div className="error-area">
                         <span>{error}</span>
                     </div>
                 </div>
+                {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
+                <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
+                              account={this.props.account ? this.props.account.get('name') : null} custom_image={null}/>}
             </div>
         )
 

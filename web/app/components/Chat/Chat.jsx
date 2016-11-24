@@ -446,11 +446,13 @@ export default class Chat extends React.Component {
         e.preventDefault();
         let showChat = !this.state.showChat;
         this.setState({
-            showChat: showChat
+            showChat: showChat,
+            docked: (!showChat && this.state.docked) ? false : this.state.docked
         });
 
         SettingsActions.changeViewSetting({
-            showChat: showChat
+            showChat: showChat,
+            dockedChat: (!showChat && this.state.docked) ? false : this.state.docked
         });
     }
 
@@ -631,7 +633,7 @@ export default class Chat extends React.Component {
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
                                 <Icon className="icon-14px" name="cog"/>
                             </div>
-                            {docked ? null : <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>}
+                            <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
                         </div>
 
                         {loading ? <div><LoadingIndicator /></div> : !connected ? (

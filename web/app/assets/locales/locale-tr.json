@@ -671,7 +671,7 @@
     "confirm_no": "Hiçbirzaman",
     "always_confirm": "Onay için herzaman sor",
     "wallets": "Cüzdanlar",
-    "connection": "API Bağlantısı",
+    "apiServer": "API Bağlantısı",
     "add_ws": "Yeni websocket API ekle",
     "remove_ws": "Websocket API'sini kaldır",
     "faucet_address": "Musluk Adresi",

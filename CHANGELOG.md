@@ -1,4 +1,50 @@
 ---------------------------------------------------------------------
+Release 2.0.161031
+---------------------------------------------------------------------
+
+New features
+--------
+- Add Blockpay to default markets and update markets list
+- Add btsabs and Transwiser API servers
+- Allow the Chat box to be hidden from a docked state
+- Vesting balance amounts are now updated correctly, and a Try claim all button has been added
+- Chinese translation updates
+- MetaExchange has been removed from the deposit withdraw providers
+
+Bug fixes
+--------
+- Add Bitshares bloom filter for BTS 1 account imports
+- Fix a GenesisFilter bug and update ImportKeys flow slightly
+- Fix input of uppercase characters in AccountPermissions
+- Fix Highcharts build issues
+- Remove unused refcode inputs
+
+---------------------------------------------------------------------
+Release 2.0.160829
+---------------------------------------------------------------------
+
+New features
+--------
+- Hash checksums for all binaries
+- Add copy address/memo buttons to deposit, improve mobile layout
+- Improve transfer layout, add exchange scam account warnings
+- Add option to move BuySell below Orderbook
+- Add brainkey option to Settings Restore page
+- Add API selection to SyncError page, improve the error message
+
+Bug fixes
+--------
+- Fix price display in MarketCards
+- Add proposed operation id to summary
+- Add deposit/withdraw to mobile menu
+- Fix hiding of disabled chat window
+- Fix WalletCreate submit with invalid inputs, close #860
+- Fix BackupBrainkey navigation
+- Hide input spinner in Firefox
+- Use newest version of node-libs-browser, fixes backups in Firefox close
+- Fix HelpContent 'en' locale fallback
+
+---------------------------------------------------------------------
 Release 2.0.160813
 ---------------------------------------------------------------------
 

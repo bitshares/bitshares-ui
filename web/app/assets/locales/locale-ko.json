@@ -481,7 +481,7 @@
     "confirm_no": "사용안함",
     "always_confirm": "항상 확인을 함",
     "wallets": "지갑",
-    "connection": "API 연결",
+    "apiServer": "API 연결",
     "add_ws": "새로운 웹소켓 API 추가",
     "remove_ws": "웹소켓 API 제거",
     "faucet_address": "Faucet Address"

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import Highcharts from "highcharts/highstock";
-var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
+let ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {cloneDeep} from "lodash";
