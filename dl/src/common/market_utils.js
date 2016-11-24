@@ -175,7 +175,7 @@ class MarketUtils {
             if (parseInt(hourString, 10) < 10) {
                 hourString = "0" + hourString;
             }
-            time = date[0] + "/" + date[1] + " " + time.replace(hour, hourString);
+            time = date[0] + "/" + date[1] + "/" + date[2] + " " + time.replace(hour, hourString);
         }
         return {
             receives: isAsk ? receives : pays,
