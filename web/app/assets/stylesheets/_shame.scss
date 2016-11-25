@@ -329,3 +329,38 @@ label.inline {
 .asset-prefix-replaced {
   font-variant: small-caps;
 }
+
+select {
+    line-height: normal !important;
+}
+
+select.bts-select {
+    border: none;
+    background: none;
+    background-color: transparent;
+    max-width: 500px;
+    border-bottom: 1px solid #444;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+    height: inherit;
+}
+
+@media screen and (max-width: 900px) {
+    .column-hide-small {
+        display: none;
+    }
+}
+
+.block-content-header {
+  font-size: 1.4375rem;
+  padding: 0.5rem 0;
+
+  @include breakpoint(small only) {
+      font-size: 1.125rem;
+  }
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}

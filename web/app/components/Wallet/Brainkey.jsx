@@ -1,10 +1,9 @@
-
 import React, {Component, Children} from "react"
 import { RouteHandler } from "react-router"
 import connectToStores from "alt/utils/connectToStores"
 import Immutable from "immutable"
 import cname from "classnames"
-import key from "common/key_utils"
+import {key} from "graphenejs-lib";
 import BrainkeyActions from "actions/BrainkeyActions"
 import BrainkeyStoreFactory from "stores/BrainkeyStore"
 import BindToChainState from "components/Utility/BindToChainState"
@@ -88,7 +87,7 @@ export class BrainkeyInputAccept extends Component {
         var ready = this.state.brnkey && this.state.brnkey !== ""
         return (
             <span className="grid-container">
-                <div style={{width: '400px'}}>
+                <div>
                     <BrainkeyInput onChange={this.onBrainkeyChange.bind(this)}/>
                 </div>
                 <div className={cname("button success", {disabled: ! ready})}

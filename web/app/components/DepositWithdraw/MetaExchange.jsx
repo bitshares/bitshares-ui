@@ -13,13 +13,13 @@ export default class MetaExchange extends React.Component {
 
 		return (
 			<div>
+			<p style={{fontSize: "1.1rem"}} className="label warning">MetaExchange is closing down, please see this post for more info: <a href="https://metaexchange.info/closing" target="_blank" >https://metaexchange.info/closing</a></p>
 				{service === "bridge" ? (
 				<div className="content-block">
 	                <table className="table">
 	                    <thead>
 	                    <tr>
 	                        <th><Translate content="gateway.symbol" /></th>
-	                        <th></th>
 	                        <th><Translate content="gateway.meta.open_website" /></th>
 	                        <th><Translate content="gateway.balance" /></th>
 	                        <th><Translate content="gateway.withdraw" /></th>
@@ -38,12 +38,11 @@ export default class MetaExchange extends React.Component {
 	                    </tbody>
 	                </table>
 	            </div>) : (
-	            <div className="content-block">	                
+	            <div className="content-block">
 	                <table className="table">
 	                    <thead>
 	                    <tr>
 	                        <th><Translate content="gateway.symbol" /></th>
-	                        <th></th>
 	                        <th><Translate content="gateway.meta.open_website" /></th>
 	                        <th><Translate content="gateway.balance" /></th>
 	                        <th><Translate content="gateway.withdraw" /></th>
@@ -92,14 +91,14 @@ export default class MetaExchange extends React.Component {
                                 limit={10}
                                 compactView={true}
                                 fullHeight={true}
-                                filter="transfer"                                
+                                filter="transfer"
                                 customFilter={{
                                     fields: ["to", "from"],
                                     values: {
                                             to: to.get("id"),
-                                            from: fromAccount.get("id")                                            
+                                            from: fromAccount.get("id")
                                         }
-                                  
+
                                     }}
                             />
                             }

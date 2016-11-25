@@ -24,7 +24,7 @@
         var ref = encodeURIComponent(document.referrer);
         if (window.process && window.process.versions && window.process.versions['electron']) {
             window.electron = window.process.versions['electron'];
-            window.remote = require('remote');
+            window.remote = require('electron').remote;
             window._$guid$_ = window.remote.getGlobal('guid');
             window.app_version = window.remote.getGlobal('version');
             ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
@@ -39,7 +39,7 @@
     <main id="content">
         <h1 class="centerDiv" style="">Loading...</h1>
     </main>
-<script src="vendors.js" charset="utf-8"></script>
+
 <script src="app.js" charset="utf-8"></script>
 <script src="1.app.js" charset="utf-8"></script>
 <script>

@@ -7,6 +7,7 @@ import ChainTypes from "components/Utility/ChainTypes"
 import utils from "common/utils"
 import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
+import {ChainStore} from "graphenejs-lib";
 
 @BindToChainState({keep_updating: true})
 export default class Proposals extends Component {
@@ -33,7 +34,7 @@ export default class Proposals extends Component {
     }
 
     _canReject(proposal) {
-        return (proposal.available_active_approvals.length || proposal.available_owner_approvals.length);            
+        return (proposal.available_active_approvals.length || proposal.available_owner_approvals.length);
     }
 
     render() {
@@ -41,7 +42,7 @@ export default class Proposals extends Component {
         if( ! account ) return null;
 
         let proposals = [];
-            
+
         if( account.get("proposals").size ) {
             account.get("proposals").forEach( proposal_id => {
                 var proposal = ChainStore.getObject( proposal_id )
@@ -70,6 +71,7 @@ export default class Proposals extends Component {
                         hideOpLabel={true}
                         hideDate={true}
                         proposal={true}
+                        id={proposal.proposal.get("id")}
                     />
                 }).toArray();
 
@@ -93,7 +95,7 @@ export default class Proposals extends Component {
                     </td>
 
                     <td>
-                        {canReject ? 
+                        {canReject ?
                             (
                                 <button
                                 onClick={this._onApproveModal.bind(this, proposalId, "reject")}
@@ -101,7 +103,7 @@ export default class Proposals extends Component {
                             >
                                 <Translate content="proposal.reject" />
                             </button>
-                            
+
                             ) : null}
                             <ProposalApproveModal
                                 ref={proposalId + "_" + "reject"}
@@ -124,7 +126,7 @@ export default class Proposals extends Component {
                             action="approve"
                         />
                     </td>
-                    
+
 
                 </tr>
             );

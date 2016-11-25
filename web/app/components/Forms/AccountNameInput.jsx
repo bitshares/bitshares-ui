@@ -1,10 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import validation from "common/validation";
+import {ChainValidation} from "graphenejs-lib";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";
@@ -19,7 +18,12 @@ class AccountNameInput extends React.Component {
         onEnter: PropTypes.func,
         accountShouldExist: PropTypes.bool,
         accountShouldNotExist: PropTypes.bool,
-        cheapNameOnly: PropTypes.bool
+        cheapNameOnly: PropTypes.bool,
+        noLabel: PropTypes.bool
+    };
+
+    static defaultProps = {
+        noLabel: false
     };
 
     constructor() {
@@ -59,7 +63,7 @@ class AccountNameInput extends React.Component {
     }
 
     focus() {
-        ReactDOM.findDOMNode(this.refs.input).focus();
+        this.refs.input.focus();
     }
 
     valid() {
@@ -86,14 +90,14 @@ class AccountNameInput extends React.Component {
     validateAccountName(value) {
         this.state.error = value === "" ?
             "Please enter valid account name" :
-            validation.is_account_name_error(value)
+            ChainValidation.is_account_name_error(value)
 
         this.state.warning = null
         if(this.props.cheapNameOnly) {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
                 this.state.error = counterpart.translate("account.name_input.premium_name_faucet");
         } else {
-            if( ! this.state.error && ! validation.is_cheap_name( value ))
+            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
                 this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
         }
         this.setState({value: value, error: this.state.error, warning: this.state.warning});
@@ -120,16 +124,27 @@ class AccountNameInput extends React.Component {
     render() {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
-        let warning = this.state.warning
+        let warning = this.state.warning;
+        let {noLabel} = this.props;
+
         return (
             <div className={class_name}>
-                <label><Translate content="account.name" /></label>
-                <input name="value" type="text" id={this.props.id} ref="input" autoComplete="off"
-                       placeholder={this.props.placeholder}
-                       onChange={this.handleChange} onKeyDown={this.onKeyDown}
-                       value={this.state.account_name || this.props.initial_value}/>
-                <div className="facolor-error">{error}</div>
-                <div className="facolor-warning">{error ? null : warning}</div>
+                {noLabel ? null : <label><Translate content="account.name" /></label>}
+                <section>
+                    <input
+                        name="value"
+                        type="text"
+                        id={this.props.id}
+                        ref="input"
+                        autoComplete="off"
+                        placeholder={this.props.placeholder}
+                        onChange={this.handleChange}
+                        onKeyDown={this.onKeyDown}
+                        value={this.state.account_name || this.props.initial_value}
+                    />
+                </section>
+                <div style={{textAlign: "left"}} className="facolor-error">{error}</div>
+                <div style={{textAlign: "left"}} className="facolor-warning">{error ? null : warning}</div>
             </div>
         );
     }

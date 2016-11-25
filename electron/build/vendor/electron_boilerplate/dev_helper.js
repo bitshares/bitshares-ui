@@ -1,8 +1,8 @@
 'use strict';
 
-var app = require('app');
-var Menu = require('menu');
-var BrowserWindow = require('browser-window');
+var app = require('electron').app;
+var Menu = require('electron').Menu;
+var BrowserWindow = require('electron').BrowserWindow;
 
 module.exports.setDevMenu = function () {
     var devMenu = Menu.buildFromTemplate([{
@@ -11,7 +11,7 @@ module.exports.setDevMenu = function () {
             label: 'Reload',
             accelerator: 'CmdOrCtrl+R',
             click: function () {
-                BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+                BrowserWindow.getFocusedWindow().reload();
             }
         },{
             label: 'Toggle DevTools',

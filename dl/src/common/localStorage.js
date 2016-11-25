@@ -18,7 +18,7 @@ module.exports = (key) => {
         },
 
         set(key, object) {
-            if (object.toJS) {
+            if (object && object.toJS) {
                 object = object.toJS();
             }
             ls.setItem(STORAGE_KEY + key, JSON.stringify(object));

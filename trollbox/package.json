@@ -6,12 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --delay 5 trollbox.js ",
-    "forever": "forever -e error.log trollbox.js  2>&1 | logrotate-stream trollbox.log --keep 3 --size '50m' --compress &"
+    "forever": "forever --minUptime 600000 --spinSleepTime 10 -e error.log trollbox.js  2>&1 | logrotate-stream trollbox.log --keep 3 --size '50m' --compress &"
   },
   "author": "Sigve Kvalsvik <bitsharesblocks@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "peer": "^0.2.8"
+    "peer": "git+https://github.com/svk31/peerjs-server"
   },
   "devDependencies": {
     "logrotate-stream": "^0.2.5",

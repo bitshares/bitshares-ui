@@ -4,7 +4,7 @@ import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
@@ -174,18 +174,21 @@ class AccountPermissionsList extends React.Component {
 
         return (
             <div>
-                <AccountSelector label={this.props.label}
-                                 error={error}
-                                 placeholder={this.props.placeholder}
-                                 account={this.state.item_name_input}
-                                 accountName={this.state.item_name_input}
-                                 onChange={this.onItemChange}
-                                 onAccountChanged={this.onItemAccountChange}
-                                 onAction={this.onAddItem}
-                                 action_label="account.votes.add_witness"
-                                 tabIndex={this.props.tabIndex}
-                                 allowPubKey={true}
-                                 disableActionButton={!this.state.weight_input}>
+                <AccountSelector
+                    label={this.props.label}
+                    error={error}
+                    placeholder={this.props.placeholder}
+                    account={this.state.item_name_input}
+                    accountName={this.state.item_name_input}
+                    onChange={this.onItemChange}
+                    onAccountChanged={this.onItemAccountChange}
+                    onAction={this.onAddItem}
+                    action_label="account.votes.add_witness"
+                    tabIndex={this.props.tabIndex}
+                    allowPubKey={true}
+                    disableActionButton={!this.state.weight_input}
+                    allowUppercase={true}
+                >
                     <input value={this.state.weight_input}
                            onChange={this.onWeightChanged.bind(this)}
                            className="weight-input"

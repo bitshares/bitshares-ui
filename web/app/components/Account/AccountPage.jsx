@@ -37,15 +37,16 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block medium-2 left-column no-padding">
+                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 250}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
                         linkedAccounts={linkedAccounts}
                         myAccounts={myAccounts}
+                        viewSettings={this.props.viewSettings}
                     />
                 </div>
-                <div className="grid-block small-12 medium-10 main-content">
+                <div className="grid-block main-content">
                     <div className="grid-container" style={{paddingTop: 15}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
@@ -81,7 +82,8 @@ class AccountPageStoreWrapper extends React.Component {
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
-            myAccounts:  AccountStore.getState().myAccounts
+            myAccounts:  AccountStore.getState().myAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
         }
     }
 

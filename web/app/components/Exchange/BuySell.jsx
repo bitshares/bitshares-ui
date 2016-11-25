@@ -12,7 +12,7 @@ import AssetName from "../Utility/AssetName";
 
 @BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
-    
+
     static propTypes = {
         balance: ChainTypes.ChainObject,
         type: PropTypes.string,
@@ -95,30 +95,32 @@ class BuySell extends React.Component {
             feeAsset = feeAssets[0];
             feeAssets.splice(1, 1);
         }
+        let index = 0;
         let options = feeAssets.map(asset => {
             let {name, prefix} = utils.replaceName(asset.get("symbol"), asset.get("bitasset") && !asset.getIn(["bitasset", "is_prediction_market"]) && asset.get("issuer") === "1.2.0");
-            return <option key={asset.get("id")} value={asset.get("id")}>{prefix}{name}</option>;
+            return <option key={asset.get("id")} value={index++}>{prefix}{name}</option>;
         });
 
         // Subtract fee from amount to sell
         let balanceToAdd;
 
         if (this.props.feeAsset.get("symbol") === balanceSymbol) {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;  
+            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;
         } else {
             balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
-        } 
+        }
 
         return (
             <div className={this.props.className}>
-                <div className="exchange-bordered" style={this.props.style}>
+                <div className="exchange-bordered buy-sell-container">
                     <div className={"exchange-content-header " + type}>
                         <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
-                        {this.props.smallScreen ? <div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-large">{caret}</div> : null}
+                        {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
+                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge">{caret}</div>}
                     </div>
-                    {!this.props.isOpen && this.props.smallScreen ? null : (
-                    <form className="order-form" noValidate>
+
+                    <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
                         <div className="grid-block vertical no-overflow no-padding">
 
                                 <div className="grid-block no-padding buy-sell-row">
@@ -164,8 +166,14 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
                                         <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: 5}}>
-                                        <select style={feeAssets.length === 1 ? {background: "none"} : null} disabled={feeAssets.length === 1} value={this.props.feeAsset.get("id")} className="form-control" onChange={this.props.onChangeFeeAsset}>
+                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
+                                        <select
+                                            style={feeAssets.length === 1 ? {background: "none"} : null}
+                                            disabled={feeAssets.length === 1}
+                                            value={feeAssets.indexOf(this.props.feeAsset)}
+                                            className={"form-control" + (feeAssets.length !== 1 ? " buysell-select" : "")}
+                                            onChange={this.props.onChangeFeeAsset}
+                                        >
                                             {options}
                                         </select>
                                     </div>
@@ -186,7 +194,7 @@ class BuySell extends React.Component {
                                                     </span>
                                                 </td>
                                           </tr>
-                                          
+
                                           <tr className="buy-sell-info">
                                                 <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
@@ -222,7 +230,7 @@ class BuySell extends React.Component {
                                   </div>
                             </div>
 
-                    </form>)}
+                    </form>
                 </div>
             </div>
         );

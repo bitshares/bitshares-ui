@@ -5,146 +5,12 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router";
 import WebsocketAddModal from "./WebsocketAddModal";
-
-class SettingsEntry extends React.Component {
-
-    _onConfirm() {
-        SettingsActions.changeSetting({setting: "connection", value: this.props.connection });
-        setTimeout(this._onReloadClick, 250);
-    }
-
-    _onReloadClick() {
-        if (window.electron) {
-            window.location.hash = "";
-            window.remote.getCurrentWindow().reload();
-        }
-        else window.location.href = "/";
-    }
-
-    render() {
-        let {defaults, setting, settings, connection} = this.props;
-        let options, optional, confirmButton, value, input, selected = settings.get(setting);
-
-        let myLocale = counterpart.getLocale();
-
-        switch (setting) {
-            case "locale":
-                value = selected;
-                options = defaults.map(entry => {
-                    let translationKey = "languages." + entry;
-                    let value = counterpart.translate(translationKey);
-
-                    return <option key={entry} value={entry}>{value}</option>;
-                })
-
-                break;
-
-            case "themes":
-                value = selected;
-                options = defaults.map(entry => {
-                    let translationKey = "settings." + entry;
-                    let value = counterpart.translate(translationKey);
-
-                    return <option key={entry} value={entry}>{value}</option>;
-                })
-
-                break;
-
-            case "defaultMarkets":
-                options = null;
-                value = null;
-                break;
-
-            case "connection":
-                value = defaults.indexOf(connection) !== -1 ? connection : defaults[0];
-                options = defaults.map(entry => {
-                    let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
-                    let key = entry.translate ? entry.translate : entry;
-                    return <option value={option} key={key}>{option}</option>;
-                });
-
-                let defaultConnection = defaults[0];
-
-                let confirmButton = <div style={{padding: "10px"}}><button onClick={this._onConfirm.bind(this)} className="button outline"><Translate content="transfer.confirm" /></button></div>
-
-                optional = (
-                    <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
-                        {value !== defaultConnection ? <div onClick={this.props.triggerModal} id="remove" className="button outline" data-tip="Remove connection string" data-type="light">-</div> : null}
-                        <div onClick={this.props.triggerModal} id="add" className="button outline" data-tip="Add connection string" data-type="light">+</div>
-                    </div>);
-
-                break;
-
-            case "walletLockTimeout":
-                value = selected;
-                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>
-                break;
-
-            case "faucet_address":
-                if (!selected) {
-                    value = "https://";
-                } else {
-                    value = selected;
-                }
-                input = <input type="text" defaultValue={value} onChange={this.props.onChange.bind(this, setting)}/>
-                break;
-
-            default:
-
-                if (typeof selected === "number") {
-                    value = defaults[selected];
-                }
-                else if(typeof selected === "boolean") {
-                    if (selected) {
-                        value = defaults[0];
-                    } else {
-                        value = defaults[1];
-                    }
-                }
-                else if(typeof selected === "string") {
-                    value = selected;
-                }
-
-
-                if (defaults) {
-                    options = defaults.map((entry, index) => {
-                        let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
-
-                        let key = entry.translate ? entry.translate : entry;
-                        return <option value={entry.translate ? entry.translate : entry} key={key}>{option}</option>;
-                    })
-                } else {
-                    input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>
-                }
-                break;
-
-        }
-
-
-
-        if (!value && !options) return null;
-
-        if (value && value.translate) {
-            value = value.translate;
-        }
-
-        return (
-            <section className="block-list">
-                <header><Translate component="span" content={`settings.${setting}`} /></header>
-                {options ? <ul>
-                    <li className="with-dropdown">
-                        {optional}
-                        <select value={value} onChange={this.props.onChange.bind(this, setting)}>
-                            {options}
-                        </select>
-                        {confirmButton}
-                    </li>
-                </ul> : null}
-                {input ? <ul><li>{input}</li></ul> : null}
-            </section>
-        );
-    }
-}
+import SettingsEntry from "./SettingsEntry";
+import AccountsSettings from "./AccountsSettings";
+import WalletSettings from "./WalletSettings";
+import PasswordSettings from "./PasswordSettings";
+import RestoreSettings from "./RestoreSettings";
+import BackupSettings from "./BackupSettings";
 
 
 class Settings extends React.Component {
@@ -153,7 +19,22 @@ class Settings extends React.Component {
         super();
 
         this.state = {
-            connection: props.settings.get("connection")
+            apiServer: props.settings.get("apiServer"),
+            activeSetting: props.viewSettings.get("activeSetting", 0),
+            menuEntries: [
+                "general",
+                "wallet",
+                "accounts",
+                "password",
+                "backup",
+                "restore",
+                "access"
+            ],
+            settingEntries: {
+                general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
+                "disableChat", "showAssetPercent"],
+                access: ["apiServer", "faucet_address"]
+            }
         };
     }
 
@@ -181,56 +62,60 @@ class Settings extends React.Component {
         }
 
         switch (setting) {
-            case "locale":
-                let myLocale = counterpart.getLocale();
-                if (e.target.value !== myLocale) {
-                    IntlActions.switchLocale(e.target.value);
-                    SettingsActions.changeSetting({setting: "locale", value: e.target.value });
-                }
-                break;
+        case "locale":
+            let myLocale = counterpart.getLocale();
+            if (e.target.value !== myLocale) {
+                IntlActions.switchLocale(e.target.value);
+                SettingsActions.changeSetting({setting: "locale", value: e.target.value });
+            }
+            break;
 
-            case "themes":
-                SettingsActions.changeSetting({setting: "themes", value: e.target.value });
-                break;
+        case "themes":
+            SettingsActions.changeSetting({setting: "themes", value: e.target.value });
+            break;
 
-            case "defaultMarkets":
-                break;
+        case "defaultMarkets":
+            break;
 
-            case "walletLockTimeout":
-                let newValue = parseInt(e.target.value, 10);
-                if (newValue && !isNaN(newValue) && typeof newValue === "number") {
-                    SettingsActions.changeSetting({setting: "walletLockTimeout", value: e.target.value });
-                }
-                break;
+        case "walletLockTimeout":
+            let newValue = parseInt(e.target.value, 10);
+            if (newValue && !isNaN(newValue) && typeof newValue === "number") {
+                SettingsActions.changeSetting({setting: "walletLockTimeout", value: e.target.value });
+            }
+            break;
 
-            case "inverseMarket":
-            case "confirmMarketOrder":
-                value = findEntry(e.target.value, defaults[setting]) === 0; // USD/BTS is true, BTS/USD is false
-                break;
+        case "inverseMarket":
+        case "confirmMarketOrder":
+            value = findEntry(e.target.value, defaults[setting]) === 0; // USD/BTS is true, BTS/USD is false
+            break;
 
-            case "connection":
-                // SettingsActions.changeSetting({setting: "connection", value: e.target.value });
-                this.setState({
-                    connection: e.target.value
-                });
-                break;
+        case "apiServer":
+            SettingsActions.changeSetting({setting: "apiServer", value: e.target.value });
+            this.setState({
+                apiServer: e.target.value
+            });
+            break;
 
-            case "disableChat":
-                SettingsActions.changeSetting({setting: "disableChat", value: e.target.value === "yes" });
-                break;
+        case "disableChat":
+            SettingsActions.changeSetting({setting: "disableChat", value: e.target.value === "yes" });
+            break;
 
-            case "showSettles":
-                SettingsActions.changeSetting({setting: "showSettles", value: e.target.value === "yes" });
-                break;
+        case "showSettles":
+            SettingsActions.changeSetting({setting: "showSettles", value: e.target.value === "yes" });
+            break;
 
-            case "unit":
-                let index = findEntry(e.target.value, defaults[setting]);
-                SettingsActions.changeSetting({setting: setting, value: defaults[setting][index]});
-                break;
+        case "showAssetPercent":
+            SettingsActions.changeSetting({setting: "showAssetPercent", value: e.target.value === "yes" });
+            break;
 
-            default:
-                value = findEntry(e.target.value, defaults[setting]);
-                break;
+        case "unit":
+            let index = findEntry(e.target.value, defaults[setting]);
+            SettingsActions.changeSetting({setting: setting, value: defaults[setting][index]});
+            break;
+
+        default:
+            value = findEntry(e.target.value, defaults[setting]);
+            break;
         }
 
         if (value !== null) {
@@ -243,42 +128,86 @@ class Settings extends React.Component {
         SettingsActions.clearSettings();
     }
 
+    _onChangeMenu(entry) {
+        let index = this.state.menuEntries.indexOf(entry);
+        this.setState({
+            activeSetting: index
+        });
+
+        SettingsActions.changeViewSetting({activeSetting: index});
+    }
+
     render() {
         let {settings, defaults} = this.props;
+        let {menuEntries, activeSetting, settingEntries} = this.state;
+
+        let entries;
+        let activeEntry = menuEntries[activeSetting];
+        switch (activeEntry) {
+
+        case "accounts":
+            entries = <AccountsSettings />;
+            break;
+
+        case "wallet":
+            entries = <WalletSettings />;
+            break;
+
+        case "password":
+            entries = <PasswordSettings />;
+            break;
+
+        case "backup":
+            entries = <BackupSettings />;
+            break;
+
+        case "restore":
+            entries = <RestoreSettings />;
+            break;
+
+        default:
+            entries = settingEntries[activeEntry].map(setting => {
+                return (
+                    <SettingsEntry
+                        key={setting}
+                        setting={setting}
+                        settings={settings}
+                        defaults={defaults[setting]}
+                        onChange={this._onChangeSetting.bind(this)}
+                        locales={this.props.localesObject}
+                        triggerModal={this.triggerModal.bind(this)}
+                        {...this.state}
+                    />);
+            });
+            break;
+        }
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content small-12 medium-10 medium-offset-1 large-6 large-offset-3">
+                <div className="grid-block main-content wrap" style={{marginTop: "1rem"}}>
+                    <div className="grid-content large-offset-2 shrink" style={{paddingRight: "4rem"}}>
+                        <Translate style={{paddingBottom: 20}} className="bottom-border" component="h4" content="header.settings" />
+
+                        <ul className="settings-menu">
+                            {menuEntries.map((entry, index) => {
+                                return <li className={index === activeSetting ? "active" : ""} onClick={this._onChangeMenu.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
+                            })}
+                        </ul>
+                    </div>
+
                     <div className="grid-content">
-                        {settings.map((value, setting) => {
-                            return (
-                                <SettingsEntry
-                                    key={setting}
-                                    setting={setting}
-                                    settings={settings}
-                                    defaults={defaults[setting]}
-                                    onChange={this._onChangeSetting.bind(this)}
-                                    locales={this.props.localesObject}
-                                    triggerModal={this.triggerModal.bind(this)}
-                                    {...this.state}
-                                />);
-                        }).toArray()}
-                        <Link to="wallet">
-                            <div className="button outline">
-                                <Translate content="wallet.console" />
-                            </div>
-                        </Link>
-                        <br />
-                        <div onClick={this.onReset} className="button outline" style={{marginTop: 15}}>
-                                <Translate content="settings.reset" />
+                        <div className="grid-block small-10 no-padding no-margin vertical">
+                            <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
+                            <Translate style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
+                            {entries}
                         </div>
                     </div>
                 </div>
                 <WebsocketAddModal
                     ref="ws_modal"
-                    apis={defaults["connection"]}
-                    api={defaults["connection"].filter(a => {return a === this.state.connection})}
-                    changeConnection={(connection) => {this.setState({connection})}}
+                    apis={defaults["apiServer"]}
+                    api={defaults["apiServer"].filter(a => {return a === this.state.apiServer;})}
+                    changeConnection={(apiServer) => {this.setState({apiServer});}}
                 />
             </div>
         );
@@ -286,4 +215,3 @@ class Settings extends React.Component {
 }
 
 export default Settings;
-

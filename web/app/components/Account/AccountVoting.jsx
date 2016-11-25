@@ -9,11 +9,9 @@ import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import WalletApi from "rpc_api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
-import ChainStore from "api/ChainStore";
-import validation from "common/validation"
+import {ChainStore, FetchChainObjects} from "graphenejs-lib";
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
-import {FetchChainObjects} from "api/ChainStore";
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";
 import HelpContent from "../Utility/HelpContent";

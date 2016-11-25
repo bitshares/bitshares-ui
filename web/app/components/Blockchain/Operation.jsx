@@ -4,7 +4,6 @@ import {Link, PropTypes} from "react-router";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {operations} from "chain/chain_types";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
 import BlockTime from "./BlockTime";
@@ -14,9 +13,10 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
+let {operations} = require("graphenejs-lib").ChainTypes;
 
 require("./operations.scss");
 
@@ -88,7 +88,7 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td className="left-td">
+                        <td style={{width: "20%"}} className="left-td">
                             <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
                         </td>)}
                     <td style={{padding: "8px 5px"}}>
@@ -96,8 +96,8 @@ class Row extends React.Component {
                             <span>{this.props.info}</span>
                         </div>
                         <div style={{fontSize: 14, paddingTop: 5}}>
-                            <span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>
-                            <span> - <BlockTime  block_number={block}/></span>
+                            {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
+                            <BlockTime  block_number={block}/>
                             <span className="facolor-fee"> - <FormattedAsset amount={fee.amount} asset={fee.asset_id} /></span>
                             {pending ? <span> - {pending}</span> : null}
                         </div>
@@ -173,7 +173,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].from, arg: "from"},
                                 {type: "amount", value: op[1].amount, arg: "amount", decimalOffset: op[1].amount.asset_id === "1.3.0" ? 5 : null},
                                 {type: "account", value: op[1].to, arg: "to"}
-                            ]}                                    
+                            ]}
                         />
                         {memoComponent}
                     </span>
@@ -194,7 +194,7 @@ class Operation extends React.Component {
                                     {type: "account", value: op[1].seller, arg: "account"},
                                     {type: "amount", value: isAsk ? op[1].amount_to_sell : op[1].min_to_receive, arg: "amount"},
                                     {type: "price", value: {base: isAsk ? op[1].min_to_receive : op[1].amount_to_sell, quote: isAsk ? op[1].amount_to_sell : op[1].min_to_receive}, arg: "price"}
-                                ]}                                    
+                                ]}
                             />
                         </span>
                 );
@@ -212,7 +212,7 @@ class Operation extends React.Component {
                             ]}
                             params={{
                                 order: op[1].order.substring(4)
-                            }}                                
+                            }}
                         />
                     </span>
                 );
@@ -230,7 +230,7 @@ class Operation extends React.Component {
                                 {type: "asset", value: op[1].delta_debt.asset_id, arg: "debtSymbol"},
                                 {type: "amount", value: op[1].delta_debt, arg: "debt"},
                                 {type: "amount", value: op[1].delta_collateral, arg: "collateral"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -245,13 +245,13 @@ class Operation extends React.Component {
                 break;
 
             case "account_create":
-                column = 
+                column =
                     <TranslateWithLinks
                             string="operation.reg_account"
                             keys={[
                                 {type: "account", value: op[1].registrar, arg: "registrar"},
                                 {type: "account", value: op[1].name, arg: "new_account"}
-                            ]}                                    
+                            ]}
                     />
                 break;
 
@@ -262,7 +262,7 @@ class Operation extends React.Component {
                             string="operation.update_account"
                             keys={[
                                 {type: "account", value: op[1].account, arg: "account"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -281,7 +281,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].authorizing_account, arg: "lister"},
                                 {type: "account", value: op[1].account_to_list, arg: "listee"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 )
@@ -291,10 +291,10 @@ class Operation extends React.Component {
                    column = (
                        <span>
                             <TranslateWithLinks
-                                string={op[1].upgrade_to_lifetime_member ? "operation.lifetime_upgrade_account" : "operation.annual_upgrade_account"} 
+                                string={op[1].upgrade_to_lifetime_member ? "operation.lifetime_upgrade_account" : "operation.annual_upgrade_account"}
                                 keys={[
                                     {type: "account", value: op[1].account_to_upgrade, arg: "account"}
-                                ]}                                    
+                                ]}
                             />
                         </span>
                     );
@@ -308,7 +308,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].account_id, arg: "account"},
                                 {type: "account", value: op[1].new_owner, arg: "to"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -323,7 +323,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].issuer, arg: "account"},
                                 {type: "asset", value: op[1].symbol, arg: "asset"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -339,7 +339,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].issuer, arg: "account"},
                                 {type: "asset", value: op[1].asset_to_update, arg: "asset"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -355,15 +355,15 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].issuer, arg: "account"},
                                 {type: "asset", value: op[1].asset_to_update, arg: "asset"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
-                );               
+                );
                 break;
 
             case "asset_issue":
                 color = "warning";
-                
+
                 if(op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />
                 }
@@ -377,7 +377,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].issuer, arg: "account"},
                                 {type: "amount", value: op[1].asset_to_issue, arg: "amount"},
                                 {type: "account", value: op[1].issue_to_account, arg: "to"},
-                            ]}                                    
+                            ]}
                         />
                         {memoComponent}
                     </span>
@@ -395,7 +395,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].from_account, arg: "account"},
                                 {type: "asset", value: op[1].asset_id, arg: "asset"},
                                 {type: "amount", value: {amount: op[1].amount, asset_id: "1.3.0"}, arg: "amount"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -410,7 +410,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].account, arg: "account"},
                                 {type: "amount", value: op[1].amount, arg: "amount"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -426,7 +426,7 @@ class Operation extends React.Component {
                                 {type: "account", value: op[1].account, arg: "account"},
                                 {type: "asset", value: op[1].asset_to_settle, arg: "asset"},
                                 {type: "price", value: op[1].price, arg: "price"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -441,7 +441,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].publisher, arg: "account"},
                                 {type: "price", value: op[1].feed.settlement_price, arg: "price"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -454,7 +454,7 @@ class Operation extends React.Component {
                             string="operation.witness_create"
                             keys={[
                                 {type: "account", value: op[1].witness_account, arg: "account"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -468,7 +468,7 @@ class Operation extends React.Component {
                             string="operation.witness_update"
                             keys={[
                                 {type: "account", value: op[1].witness_account, arg: "account"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -505,7 +505,7 @@ class Operation extends React.Component {
                             string="operation.proposal_create"
                             keys={[
                                 {type: "account", value: op[1].fee_paying_account, arg: "account"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -518,7 +518,7 @@ class Operation extends React.Component {
                             string="operation.proposal_update"
                             keys={[
                                 {type: "account", value: op[1].fee_paying_account, arg: "account"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -590,7 +590,7 @@ class Operation extends React.Component {
                                     {type: "account", value: op[1].account_id, arg: "account"},
                                     {type: "amount", value: {amount: receivedAmount, asset_id: op[1].receives.asset_id}, arg: "received", decimalOffset: op[1].receives.asset_id === "1.3.0" ? 3 : null},
                                     {type: "price", value: {base: o.pays, quote: o.receives}, arg: "price"}
-                                ]}                                    
+                                ]}
                             />
                         </span>
                 );
@@ -623,7 +623,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].owner, arg: "account"},
                                 {type: "amount", value: op[1].amount, arg: "amount"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -640,7 +640,7 @@ class Operation extends React.Component {
                             ]}
                             params={{
                                 name: op[1].name
-                            }}                               
+                            }}
                         />
                     </span>
                 );
@@ -657,7 +657,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].deposit_to_account, arg: "account"},
                                 {type: "amount", value: op[1].total_claimed, arg: "amount"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 );
@@ -728,7 +728,7 @@ class Operation extends React.Component {
                             keys={[
                                 {type: "account", value: op[1].payer, arg: "account"},
                                 {type: "amount", value: op[1].amount_to_reserve, arg: "amount"}
-                            ]}                                    
+                            ]}
                         />
                     </span>
                 )
@@ -742,9 +742,23 @@ class Operation extends React.Component {
                             string="operation.committee_member_update_global_parameters"
                             keys={[
                                 {type: "account", value: "1.2.0", arg: "account"}
-                            ]}                                                    
+                            ]}
                         />
                     </span>
+                );
+                break;
+
+            case "override_transfer":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.override_transfer"
+                        keys={[
+                            {type: "account", value: op[1].issuer, arg: "issuer"},
+                            {type: "account", value: op[1].from, arg: "from"},
+                            {type: "account", value: op[1].to, arg: "to"},
+                            {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
                 );
                 break;
 

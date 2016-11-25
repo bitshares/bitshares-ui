@@ -3,7 +3,7 @@ var IntlActions = require("../actions/IntlActions");
 var SettingsActions = require("../actions/SettingsActions");
 var BaseStore = require("./BaseStore");
 var counterpart = require("counterpart-instance");
-var locale_en = require("assets/locales/locale-en");
+var locale_en = require("json!assets/locales/locale-en");
 var ls = require("common/localStorage");
 let ss = new ls("__graphene__");
 
@@ -32,6 +32,7 @@ class IntlStore extends BaseStore {
     constructor() {
         super();
         this.currentLocale = ss.has("settings_v3") ? ss.get("settings_v3").locale : "en";
+
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
 
@@ -52,19 +53,19 @@ class IntlStore extends BaseStore {
         return this.currentLocale;
     }
 
-    onSwitchLocale(locale) {
+    onSwitchLocale({locale, localeData}) {
         switch (locale) {
             case "en":
                 counterpart.registerTranslations("en", this.localesObject.en);
                 break;
 
             default:
-                let newLocale = this.localesObject[locale];
-                if (!newLocale) {
-                    newLocale = require("assets/locales/locale-" + locale);
-                    this.localesObject[locale] = newLocale;
-                }
-                counterpart.registerTranslations(locale, newLocale);
+                // let newLocale = this.localesObject[locale];
+                // if (!newLocale) {
+                    // newLocale = require("assets/locales/locale-" + locale);
+                //     this.localesObject[locale] = newLocale;
+                // }
+                counterpart.registerTranslations(locale, localeData);
                 break;
         }
 

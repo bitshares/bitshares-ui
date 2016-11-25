@@ -15,9 +15,9 @@ import AssetName from "./AssetName";
  *  Given an amount and an asset, render it with proper precision
  *
  *  Expected Properties:
- *     base_asset:  asset id, which will be fetched from the 
+ *     base_asset:  asset id, which will be fetched from the
  *     base_amount: the ammount of asset
- *     quote_asset:  
+ *     quote_asset:
  *     quote_amount: the ammount of asset
  *
  */
@@ -72,7 +72,7 @@ class FormattedPrice extends React.Component {
     goToMarket(e) {
       e.preventDefault();
       this.context.history.pushState(null, `/market/${this.props.base_asset.get("symbol")}_${this.props.quote_asset.get("symbol")}`);
-      
+
     }
 
     render() {
@@ -122,7 +122,7 @@ class FormattedPrice extends React.Component {
           </div>
         ) : null;
 
-        let popOver = (
+        let popOver = currency_popover_body ? (
           <Popover
               isOpen={this.state.isPopoverOpen}
               onOuterAction={this.closePopover}
@@ -130,7 +130,7 @@ class FormattedPrice extends React.Component {
           >
             <span className="currency click-for-help" onClick={this.togglePopover}>{symbols}</span>
           </Popover>
-        );
+      ) : null;
 
         return (
             <span>{formatted_value} {popOver ? popOver : symbols}</span>
@@ -144,7 +144,7 @@ export default class FormattedPriceWrapper extends React.Component {
     let marketId = this.props.quote_asset + "_" + this.props.base_asset;
 
     return (
-      <AltContainer 
+      <AltContainer
         stores={[SettingsStore]}
         inject={{
           marketDirections: () => {
@@ -157,4 +157,3 @@ export default class FormattedPriceWrapper extends React.Component {
     );
   }
 }
-

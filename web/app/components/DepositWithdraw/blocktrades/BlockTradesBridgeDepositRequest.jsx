@@ -46,15 +46,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             input_from_output: 1
         };
 
-        let urls = {
-            blocktrades: "https://api.blocktrades.us/v2",
-            openledger: "https://bitshares.openledger.info/depositwithdraw/api/v2"
-        }
-
         this.state =
         {
-            url: props.url || urls[props.gateway],
-
+			coin_symbol: 'btc',
+			supports_output_memos: '',
+            url: "https://api.blocktrades.us/v2",
+			
             // things that get displayed for deposits
             deposit_input_coin_type: null,
             deposit_output_coin_type: null,
@@ -63,7 +60,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             deposit_estimated_output_amount: null,
             deposit_limit: null,
             deposit_error: null,
-
+			
             // things that get displayed for deposits
             withdraw_input_coin_type: null,
             withdraw_output_coin_type: null,
@@ -88,27 +85,68 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null
         };
+		
+		// check api.blocktrades.us/v2
+		let checkUrl = "https://api.blocktrades.us/v2";
+		this.urlConnection(checkUrl, 0);
+		let coin_types_promisecheck = fetch(checkUrl + "/coins",
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());       
+        let trading_pairs_promisecheck = fetch(checkUrl + "/trading-pairs", 
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+        let active_wallets_promisecheck = fetch(checkUrl + "/active-wallets", 
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());								
+        Promise.all([coin_types_promisecheck,  trading_pairs_promisecheck, active_wallets_promisecheck])
+        .then((json_responses) => {
+            let [coin_types, trading_pairs, active_wallets] = json_responses;
+            let coins_by_type = {};
+            coin_types.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
+            trading_pairs.forEach(pair => {
+                let input_coin_info = coins_by_type[pair.inputCoinType];
+                let output_coin_info = coins_by_type[pair.outputCoinType];
+                if ((input_coin_info.backingCoinType != pair.outputCoinType) && (output_coin_info.backingCoinType != pair.inputCoinType)) {
+                    if ((active_wallets.indexOf(input_coin_info.walletType) != -1) && (active_wallets.indexOf(output_coin_info.walletType) != -1)) {
+                    }
+                }
+            });
+        }).catch((error) => {
+			this.urlConnection("https://api.blocktrades.info/v2", 2);	
+            this.setState( {
+                coin_info_request_state: 0,
+                coins_by_type: null,
+                allowed_mappings_for_deposit: null,
+                allowed_mappings_for_withdraw: null
+            });						
+		});													
+    }
+	
+	urlConnection(checkUrl, state_coin_info) 
+	{
+		this.setState({
+            url: checkUrl
+        });									
 
         // get basic data from blocktrades
-
-        let coin_types_url = this.state.url + "/coins";
-        let coin_types_promise = fetch(coin_types_url,
-                                       {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                 .then(response => response.json());
-        
-        let wallet_types_url = this.state.url + "/wallets";
+		let coin_types_url = checkUrl + "/coins";
+		let coin_types_promise = fetch(coin_types_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+								 
+        let wallet_types_url = checkUrl + "/wallets";
         let wallet_types_promise = fetch(wallet_types_url, 
-                                         {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                   .then(response => response.json());
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
         
-        let trading_pairs_url = this.state.url + "/trading-pairs";
+        let trading_pairs_url = checkUrl + "/trading-pairs";
         let trading_pairs_promise = fetch(trading_pairs_url, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
-        let active_wallets_url = this.state.url + "/active-wallets";
+        let active_wallets_url = checkUrl + "/active-wallets";
         let active_wallets_promise = fetch(active_wallets_url, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
         Promise.all([coin_types_promise, wallet_types_promise, trading_pairs_promise, active_wallets_promise])
@@ -215,19 +253,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_limit: withdraw_limit,
                 withdraw_estimated_output_amount: withdraw_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
+                supports_output_memos: coins_by_type['btc'].supportsOutputMemos
             });
-
         })
-        .catch((error) => {
+		.catch((error) => {
             this.setState( {
-                coin_info_request_state: this.coin_info_request_states.request_failed,
+                coin_info_request_state: state_coin_info,
                 coins_by_type: null,
                 allowed_mappings_for_deposit: null,
                 allowed_mappings_for_withdraw: null
-            });
-        });
-    }
-
+            });						
+		});
+	}
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
@@ -257,7 +294,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 new_withdraw_estimated_output_amount = this.getAndUpdateOutputEstimate("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type, new_withdraw_estimated_input_amount);
             else
                 new_withdraw_estimated_input_amount = this.getAndUpdateinputEstimate("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type, new_withdraw_estimated_output_amount);
-
 
             this.setState(
             {
@@ -538,6 +574,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
         let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
+		
+		if (deposit_or_withdraw == "withdraw") {
+			possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_input_coin_type + 'input',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});	
+				}
+			});
+		}
         
         this.setState(
         {
@@ -553,6 +600,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onOutputCoinTypeChanged(deposit_or_withdraw, event)
     {
         let new_output_coin_type = event.target.value;
+		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
+	
+		if (deposit_or_withdraw == "withdraw") {
+			withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_output_coin_type + 'output',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});	
+				}
+			});
+		}
+				
         let new_input_address_and_memo = this.state.input_address_and_memo;
         if (deposit_or_withdraw == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
@@ -796,12 +856,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <br/>
                         <div className="grid-block vertical">
                             <WithdrawModalBlocktrades
+								key={`${this.state.coin_symbol}`}
                                 account={this.props.account.get('name')}
                                 issuer={this.props.issuer_account.get('name')}
                                 asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol}
                                 output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                 output_coin_type={this.state.withdraw_output_coin_type}
+								output_supports_memos={this.state.supports_output_memos}
                                 modal_id={withdraw_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 

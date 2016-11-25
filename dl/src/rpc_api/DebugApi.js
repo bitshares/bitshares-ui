@@ -1,10 +1,5 @@
-//var helper = require('../chain/transaction_helper')
-//var ops = require('../chain/signed_transaction')
-var type = require('../chain/serializer_operation_types')
-var v = require('../chain/serializer_validation')
-var Serializer = require('../chain/serializer')
+var {PrivateKey, Serializer, SerializerValidation, types} = require("graphenejs-lib");
 var config = require('../chain/serializer_config')
-var PrivateKey = require('../ecc/key_private')
 var ApplicationApi = require('./ApplicationApi')
 
 class DebugApi {
@@ -14,9 +9,9 @@ class DebugApi {
     }
     
     type(operation_name) {
-        v.required(operation_name, "operation_name")
-        var operation_type = type[operation_name]
-        v.required(operation_type, "unknown operation name " + operation_name)
+        SerializerValidation.required(operation_name, "operation_name")
+        var operation_type = types[operation_name]
+        SerializerValidation.required(operation_type, "unknown operation name " + operation_name)
         return operation_type
     }
     
@@ -27,7 +22,7 @@ class DebugApi {
     
     hex_dump(operation_name, object) {
         var operation_type = this.type(operation_name)
-        v.required(object, "transaction json object")
+        SerializerValidation.required(object, "transaction json object")
         var operation = operation_type.fromObject(object)
         var hex_dump = config.hex_dump
         try {
