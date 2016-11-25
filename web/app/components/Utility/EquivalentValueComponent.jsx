@@ -47,12 +47,14 @@ class ValueComponent extends React.Component {
                 MarketsActions.getMarketStats(coreAsset, this.props.fromAsset);
                 this.fromStatsInterval = setInterval(MarketsActions.getMarketStats.bind(this, coreAsset, this.props.fromAsset), 5 * 60 * 1000);
             }
+
             if (this.props.toAsset.get("id") !== coreAsset.get("id")) {
                 // wrap this in a timeout to prevent dispatch in the middle of a dispatch
-                setTimeout(() => {
-                    MarketsActions.getMarketStats.bind(this, coreAsset, this.props.toAsset);
-                    this.toStatsInterval = setInterval(MarketsActions.getMarketStats.bind(this, coreAsset, this.props.toAsset), 5 * 60 * 1000);
-                }, 150);
+                // MarketsActions.getMarketStats.bind(this, this.props.toAsset, coreAsset);
+                MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
+                this.toStatsInterval = setInterval(() => {
+                    MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
+                }, 5 * 60 * 1000);
             }
         }
     }
@@ -102,21 +104,27 @@ class ValueComponent extends React.Component {
             amount = utils.get_asset_amount(amount, fromAsset);
         }
 
+        // console.log("marketStats:", marketStats.toJS());
         if (coreAsset && marketStats) {
             let coreSymbol = coreAsset.get("symbol");
-
             toStats = marketStats.get(toSymbol + "_" + coreSymbol);
             fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
         }
 
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromID === "1.3.0" ? fromAsset : null, toStats && toStats.close ? toStats.close : toID === "1.3.0" ? toAsset : null, fromID, toID);
+        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close :
+                                        fromID === "1.3.0" || fromAsset.has("bitasset") ? fromAsset : null,
+                                        toStats && toStats.close ? toStats.close :
+                                        (toID === "1.3.0" || toAsset.has("bitasset")) ? toAsset : null,
+                                        fromID,
+                                        toID);
 
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
+
         if (!eqValue) {
-            return <span style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>
+            return <span style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>;
         }
 
-        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={this.props.noDecimals ? toAsset.get("precision") : 0}/>;
+        return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
     }
 }
 
@@ -148,7 +156,7 @@ class BalanceValueComponent extends React.Component {
     render() {
         let amount = Number(this.props.balance.get("balance"));
         let fromAsset = this.props.balance.get("asset_type");
-            
+
         return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
