@@ -264,7 +264,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             let withdraw_estimated_output_amount = this.getAndUpdateOutputEstimate("withdraw", withdraw_input_coin_type, withdraw_output_coin_type, this.state.withdraw_estimated_input_amount);
             let withdraw_limit = this.getCachedOrFreshDepositLimit("withdraw", withdraw_input_coin_type, withdraw_output_coin_type);
 			
-			let conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", 'bts', 'bitbtc', '100000');
+			let conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", conversion_input_coin_type, conversion_output_coin_type, this.state.conversion_estimated_input_amount);
 
             this.setState({
                 coin_info_request_state: this.coin_info_request_states.request_complete,
@@ -286,6 +286,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 				conversion_output_coin_type: conversion_output_coin_type,
 				conversion_estimated_output_amount: conversion_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
+				conversion_estimate_direction: this.estimation_directions.output_from_input,
                 supports_output_memos: coins_by_type['btc'].supportsOutputMemos
             });
         })
@@ -329,6 +330,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             else
                 new_withdraw_estimated_input_amount = this.getAndUpdateinputEstimate("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type, new_withdraw_estimated_output_amount);
 
+            let new_conversion_estimated_input_amount = this.state.conversion_estimated_input_amount;
+            let new_conversion_estimated_output_amount = this.state.conversion_estimated_output_amount;
+			
+            if (this.state.conversion_estimate_direction == this.estimation_directions.output_from_input)
+                new_conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type, new_conversion_estimated_input_amount);
+            else
+                new_conversion_estimated_input_amount = this.getAndUpdateinputEstimate("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type, new_conversion_estimated_output_amount);
+			
             this.setState(
             {
                 input_address_and_memo: new_input_address_and_memo,
@@ -337,7 +346,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 deposit_estimated_output_amount: new_deposit_estimated_output_amount,
                 withdraw_limit: new_withdraw_limit,
                 withdraw_estimated_input_amount: new_withdraw_estimated_input_amount,
-                withdraw_estimated_output_amount: new_withdraw_estimated_output_amount
+                withdraw_estimated_output_amount: new_withdraw_estimated_output_amount,
+				conversion_estimated_input_amount: new_conversion_estimated_input_amount,
+				conversion_estimated_output_amount: new_conversion_estimated_output_amount
             });
         }
     }
