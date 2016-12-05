@@ -31,7 +31,7 @@ export default class BlockTradesGateway extends React.Component {
         super();
 
         this.state = {
-            activeCoin: this._getActiveCoin(props, {action: "deposit"}),
+            activeCoin: "BTC",
             action: "deposit"
         };
     }
@@ -64,6 +64,7 @@ export default class BlockTradesGateway extends React.Component {
         this.setState({
             activeCoin: e.target.value
         });
+        console.log("Wha is this:", e.target.value);
 
         let setting = {};
         setting[`activeCoin_${this.props.provider}_${this.state.action}`] = e.target.value;
