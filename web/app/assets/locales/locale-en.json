@@ -1030,6 +1030,7 @@
     "generate_new": "Get new address",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
+	"convert": "Internal convertion",
     "withdraw_now": "Withdraw now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",

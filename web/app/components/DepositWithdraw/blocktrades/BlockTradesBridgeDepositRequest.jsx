@@ -61,7 +61,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             deposit_limit: null,
             deposit_error: null,
 			
-            // things that get displayed for withdraws
+            // things that get displayed for withdrawals
             withdraw_input_coin_type: null,
             withdraw_output_coin_type: null,
             withdraw_estimated_input_amount: this.props.initial_withdraw_estimated_input_amount || "1.0",
@@ -919,7 +919,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 conversion_header =
                 <thead>
                     <tr>
-                        <th><Translate content="gateway.withdraw" /></th>
+                        <th><Translate content="gateway.convert" /></th>
                         <th ><Translate content="gateway.balance" /></th>
                         <th ></th>
                     </tr>
