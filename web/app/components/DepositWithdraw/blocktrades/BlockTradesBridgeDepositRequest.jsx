@@ -8,6 +8,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
+import ConvertModalBlocktrades from "./ConvertModalBlocktrades";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 import Post from "common/formPost";
 import utils from "common/utils";
@@ -270,6 +271,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             }
             
             let input_address_and_memo = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);
+
             let deposit_limit = this.getCachedOrFreshDepositLimit("deposit", deposit_input_coin_type, deposit_output_coin_type);
             let deposit_estimated_output_amount = this.getAndUpdateOutputEstimate("deposit", deposit_input_coin_type, deposit_output_coin_type, this.state.deposit_estimated_input_amount);
 
@@ -617,6 +619,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
+	
+    getConvertModalId() {
+        return "convert_asset_" + this.props.gateway + "_bridge";
+    }
+
+    onConvert() {
+        ZfApi.publish(this.getConvertModalId(), "open");
+    }
     
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
@@ -689,8 +699,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     render() {
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
-
-        let deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id;
+		
+        let deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
 
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
@@ -736,7 +746,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     </select>
 
                 let input_address_and_memo = this.state.input_address_and_memo ? this.state.input_address_and_memo: {"address": "unknown", "memo": null};
-
                     
                 let estimated_input_amount_text = this.state.deposit_estimated_input_amount;
                 let estimated_output_amount_text = this.state.deposit_estimated_output_amount;
@@ -898,8 +907,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_conversion).length > 0)
             {
-                withdraw_modal_id = this.getWithdrawModalId();
-                let withdraw_asset_symbol = this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol;
+                conversion_modal_id = this.getConvertModalId();
 
                 // conversion
                 let conversion_input_coin_type_options = [];
@@ -934,7 +942,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_output_amount_text || ""}
                            onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcText;
-
+						   
+                let conversion_button = 
+                    <span>
+                        <button className={"button"} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
+                    </span>;
+					
                 let conversion_error_element = null;
                 if (this.state.conversion_error)
                     conversion_error_element = <div>{this.state.conversion_error}</div>;
@@ -967,6 +980,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         </td>
                         <td>
                             <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} /> 
+                        </td>
+                        <td>
+                            {conversion_button}
                         </td>
                     </tr>
                 </tbody>
@@ -1003,6 +1019,25 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 modal_id={withdraw_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
+                        </div>
+                    </Modal>
+                    <Modal id={conversion_modal_id} overlay={true}>
+                        <Trigger close={conversion_modal_id}>
+                            <a href="#" className="close-button">&times;</a>
+                        </Trigger>
+                        <br/>
+                        <div className="grid-block vertical">
+                            <ConvertModalBlocktrades
+								key={`${this.state.coin_symbol}`}
+                                account={this.props.account.get('name')}
+                                issuer={this.props.issuer_account.get('name')}
+                                asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol}
+                                output_coin_name={this.state.coins_by_type[this.state.conversion_output_coin_type].name}
+                                output_coin_symbol={this.state.coins_by_type[this.state.conversion_output_coin_type].symbol}
+                                output_coin_type={this.state.conversion_output_coin_type}
+                                modal_id={conversion_modal_id} 
+                                url={this.state.url}
+                                output_wallet_type={this.state.coins_by_type[this.state.conversion_output_coin_type].walletType} /> 
                         </div>
                     </Modal>
                 </div>
