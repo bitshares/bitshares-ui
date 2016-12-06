@@ -24,7 +24,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         initial_deposit_estimated_input_amount: React.PropTypes.string,
         initial_withdraw_input_coin_type: React.PropTypes.string,
         initial_withdraw_output_coin_type: React.PropTypes.string,
-        initial_withdraw_estimated_input_amount: React.PropTypes.string
+        initial_withdraw_estimated_input_amount: React.PropTypes.string,
+        initial_conversion_input_coin_type: React.PropTypes.string,
+        initial_conversion_output_coin_type: React.PropTypes.string,
+        initial_conversion_estimated_input_amount: React.PropTypes.string
     };
 
     constructor(props) {
@@ -70,11 +73,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             withdraw_error: null,
 			
 			// things that get displayed for conversions
-			conversion_input_coin_type: 'bts',
+			conversion_input_coin_type: null,
             conversion_output_coin_type: null,
-            conversion_estimated_input_amount: this.props.initial_withdraw_estimated_input_amount || "1.0",
+            conversion_estimated_input_amount: this.props.initial_conversion_estimated_input_amount || "1.0",
             conversion_estimated_output_amount: null,
-            conversion_limit: null,
             conversion_error: null,
 
             // input address-related
@@ -229,7 +231,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             
             let withdraw_input_coin_type = null;
             let withdraw_output_coin_type = null;
-			let conversion_input_coin_type = 'bts';
+			let conversion_input_coin_type = null;
 			let conversion_output_coin_type = null;
             let allowed_withdraw_coin_types = Object.keys(allowed_mappings_for_withdraw);
             allowed_withdraw_coin_types.forEach(withdraw_coin_type => { allowed_mappings_for_withdraw[withdraw_coin_type].sort(); });
@@ -254,7 +256,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 			
             if (allowed_conversion_coin_types.length)
             {
-                conversion_output_coin_type = allowed_mappings_for_conversion[conversion_input_coin_type][0];
+                if (this.props.initial_conversion_input_coin_type &&
+                    this.props.initial_conversion_input_coin_type in allowed_mappings_for_conversion)
+                    conversion_input_coin_type = this.props.initial_conversion_input_coin_type;
+                else
+                    conversion_input_coin_type = allowed_conversion_coin_types[0];
+                let output_coin_types_for_this_input = allowed_mappings_for_conversion[conversion_input_coin_type];
+                if (this.props.initial_conversion_output_coin_type &&
+                    output_coin_types_for_this_input.indexOf(this.props.initial_conversion_output_coin_type) != -1)
+                    conversion_output_coin_type = this.props.initial_conversion_output_coin_type;
+                else
+                    conversion_output_coin_type = output_coin_types_for_this_input[0];
             }
             
             let input_address_and_memo = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);

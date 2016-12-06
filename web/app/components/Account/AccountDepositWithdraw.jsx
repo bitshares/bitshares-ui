@@ -240,6 +240,9 @@ class AccountDepositWithdraw extends React.Component {
                                 initial_withdraw_input_coin_type="bts"
                                 initial_withdraw_output_coin_type="btc"
                                 initial_withdraw_estimated_input_amount="100000"
+                                initial_conversion_input_coin_type="bts"
+                                initial_conversion_output_coin_type="bitbtc"
+                                initial_conversion_estimated_input_amount="1000"
                             /> : null}
 
                             {btService === "gateway" && blockTradesGatewayCoins.length ?
