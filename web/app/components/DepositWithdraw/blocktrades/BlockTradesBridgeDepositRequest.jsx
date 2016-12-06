@@ -451,7 +451,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.deposit_limit_cache[input_coin_type][output_coin_type] = deposit_limit_record;
     }
 
-    getCachedOrFreshDepositLimit(deposit_or_withdraw, input_coin_type, output_coin_type)
+    getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, input_coin_type, output_coin_type)
     {
         let deposit_limit_record = this.getCachedDepositLimit(input_coin_type, output_coin_type);
         if (deposit_limit_record)
@@ -479,16 +479,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             };
             this.cacheDepositLimit(input_coin_type, output_coin_type, new_deposit_limit_record);
             delete this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type];
-            if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type)
-                this.setState({[deposit_or_withdraw + "_limit"]: new_deposit_limit_record});
+            if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type && 
+                this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type)
+                this.setState({[deposit_withdraw_or_convert + "_limit"]: new_deposit_limit_record});
         }, error => {
             delete this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type];
         });
         return null;
     }
 
-    getAndUpdateOutputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, input_amount)
+    getAndUpdateOutputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, input_amount)
     {
         let estimate_output_url = this.state.url + 
                                 "/estimate-output-amount?inputAmount=" + encodeURIComponent(input_amount) +
@@ -501,17 +501,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // console.log("Reply: ", reply);
             if (reply.error)
             {
-                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
-                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type && 
+                    this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.output_from_input)
                 {
                     let user_message = reply.error.message;
                     let expected_prefix = "Internal Server Error: ";
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
 
-                    this.setState({[deposit_or_withdraw + "_error"]: user_message});
+                    this.setState({[deposit_withdraw_or_convert + "_error"]: user_message});
                 }
             }
             else
@@ -524,11 +524,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     reply.outputCoinType != output_coin_type || 
                     reply.inputAmount != input_amount)
                     throw Error("unexpected reply from estimate-output-amount");
-                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
-                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
-                    this.setState({[deposit_or_withdraw + "_estimated_output_amount"]: reply.outputAmount, [deposit_or_withdraw + "_error"]: null});
+                if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type && 
+                    this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                    this.setState({[deposit_withdraw_or_convert + "_estimated_output_amount"]: reply.outputAmount, [deposit_withdraw_or_convert + "_error"]: null});
             }
         }, error => {
         });
@@ -536,7 +536,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         return null;
     }
 
-    getAndUpdateInputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, output_amount)
+    getAndUpdateInputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, output_amount)
     {
         let estimate_input_url = this.state.url + 
                                 "/estimate-input-amount?outputAmount=" + encodeURIComponent(output_amount) +
@@ -554,46 +554,46 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 reply.outputCoinType != output_coin_type || 
                 reply.outputAmount != output_amount)
                 throw Error("unexpected reply from estimate-input-amount");
-            if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                this.state[deposit_or_withdraw + "_estimated_output_amount"] == output_amount &&
-                this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.input_from_output)
-                this.setState({[deposit_or_withdraw + "_estimated_input_amount"]: reply.inputAmount});
+            if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type && 
+                this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                this.state[deposit_withdraw_or_convert + "_estimated_output_amount"] == output_amount &&
+                this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.input_from_output)
+                this.setState({[deposit_withdraw_or_convert + "_estimated_input_amount"]: reply.inputAmount});
         }, error => {
         });
 
         return null;
     }
 
-    onInputAmountChanged(deposit_or_withdraw, event)
+    onInputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_input_amount = event.target.value;
-        let new_estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw,
-                                                                          this.state[deposit_or_withdraw + "_input_coin_type"], 
-                                                                          this.state[deposit_or_withdraw + "_output_coin_type"], 
+        let new_estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert,
+                                                                          this.state[deposit_withdraw_or_convert + "_input_coin_type"], 
+                                                                          this.state[deposit_withdraw_or_convert + "_output_coin_type"], 
                                                                           new_estimated_input_amount);
 
         this.setState(
         {
-            [deposit_or_withdraw + "_estimated_input_amount"]: new_estimated_input_amount,
-            [deposit_or_withdraw + "_estimated_output_amount"]: new_estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_estimated_input_amount"]: new_estimated_input_amount,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: new_estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
 
-    onOutputAmountChanged(deposit_or_withdraw, event)
+    onOutputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_output_amount = event.target.value;
-        let new_estimated_input_amount = this.getAndUpdateInputEstimate(deposit_or_withdraw, 
-                                                                        this.state[deposit_or_withdraw + "_input_coin_type"], 
-                                                                        this.state[deposit_or_withdraw + "_output_coin_type"], 
+        let new_estimated_input_amount = this.getAndUpdateInputEstimate(deposit_withdraw_or_convert, 
+                                                                        this.state[deposit_withdraw_or_convert + "_input_coin_type"], 
+                                                                        this.state[deposit_withdraw_or_convert + "_output_coin_type"], 
                                                                         new_estimated_output_amount);
 
         this.setState(
         {
-            [deposit_or_withdraw + "_estimated_output_amount"]: new_estimated_output_amount,
-            [deposit_or_withdraw + "_estimated_input_amount"]: new_estimated_input_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.input_from_output
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: new_estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimated_input_amount"]: new_estimated_input_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.input_from_output
         });
     }
 
@@ -606,21 +606,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
     
-    onInputCoinTypeChanged(deposit_or_withdraw, event)
+    onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
         let new_input_coin_type = event.target.value;
-        let possible_output_coin_types = this.state["allowed_mappings_for_" + deposit_or_withdraw][new_input_coin_type];
+        let possible_output_coin_types = this.state["allowed_mappings_for_" + deposit_withdraw_or_convert][new_input_coin_type];
         let new_output_coin_type = possible_output_coin_types[0];
-        if (possible_output_coin_types.indexOf(this.state[deposit_or_withdraw + "_output_coin_type"]) != -1)
-            new_output_coin_type = this.state[deposit_or_withdraw + "_output_coin_type"];
+        if (possible_output_coin_types.indexOf(this.state[deposit_withdraw_or_convert + "_output_coin_type"]) != -1)
+            new_output_coin_type = this.state[deposit_withdraw_or_convert + "_output_coin_type"];
 
         let new_input_address_and_memo = this.state.input_address_and_memo;
-        if (deposit_or_withdraw == "deposit")
+        if (deposit_withdraw_or_convert == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
-        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
-        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
+        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type);
+        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
 		
-		if (deposit_or_withdraw == "withdraw") {
+		if (deposit_withdraw_or_convert == "withdraw") {
 			possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 				if(new_output_coin_type===allowed_withdraw_output_coin_type){
 					this.setState({
@@ -633,21 +633,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         
         this.setState(
         {
-            [deposit_or_withdraw + "_input_coin_type"]: new_input_coin_type,
-            [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
+            [deposit_withdraw_or_convert + "_input_coin_type"]: new_input_coin_type,
+            [deposit_withdraw_or_convert + "_output_coin_type"]: new_output_coin_type,
             input_address_and_memo: new_input_address_and_memo,
-            [deposit_or_withdraw + "_limit"]: new_deposit_limit,
-            [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_limit"]: new_deposit_limit,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
     
-    onOutputCoinTypeChanged(deposit_or_withdraw, event)
+    onOutputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
         let new_output_coin_type = event.target.value;
 		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
 	
-		if (deposit_or_withdraw == "withdraw") {
+		if (deposit_withdraw_or_convert == "withdraw") {
 			withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
 				if(new_output_coin_type===allowed_withdraw_output_coin_type){
 					this.setState({
@@ -659,18 +659,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 		}
 				
         let new_input_address_and_memo = this.state.input_address_and_memo;
-        if (deposit_or_withdraw == "deposit")
-            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
-        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
-        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type, this.state[deposit_or_withdraw + "_estimated_input_amount"]);
+        if (deposit_withdraw_or_convert == "deposit")
+            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
+        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
+        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type, this.state[deposit_withdraw_or_convert + "_estimated_input_amount"]);
         
         this.setState(
         {
-            [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
+            [deposit_withdraw_or_convert + "_output_coin_type"]: new_output_coin_type,
             input_address_and_memo: new_input_address_and_memo,
-            [deposit_or_withdraw + "_limit"]: new_deposit_limit,
-            [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_limit"]: new_deposit_limit,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
 
