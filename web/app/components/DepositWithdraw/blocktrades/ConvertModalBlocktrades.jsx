@@ -6,19 +6,20 @@ import BindToChainState from "components/Utility/BindToChainState";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
+import AccountActions from "actions/AccountActions";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import utils from "common/utils";
 
 @BindToChainState({keep_updating:true})
 class ConvertModalBlocktrades extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired,
-        issuer: ChainTypes.ChainAccount.isRequired,
+        from_account: ChainTypes.ChainAccount.isRequired,
+		to_account: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired, 
         output_coin_name: React.PropTypes.string.isRequired,
         output_coin_symbol: React.PropTypes.string.isRequired,
-        output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
-        output_wallet_type: React.PropTypes.string,
 		conversion_memo: React.PropTypes.string
     };
 
@@ -26,22 +27,56 @@ class ConvertModalBlocktrades extends React.Component {
         super(props);
 		
         this.state = {
-        convert_amount: null
+        convert_amount: '',
+		error: null
         }
     }
 
     onConvertAmountChange( {amount, asset} ) {
         this.setState( {convert_amount: amount} );
     }
+	
+    onTrxIncluded(confirm_store_state) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+            // this.setState(Transfer.getInitialState());
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        } else if (confirm_store_state.closed) {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        }
+    }
 
-    onSubmit() {
+    onSubmit(e) {
+		e.preventDefault();
+		this.setState({error: null});
+        let asset = this.props.asset;
+        let precision = utils.get_asset_precision(asset.get("precision"));
+        let amount = this.state.convert_amount.replace( /,/g, "" );
+
+        AccountActions.transfer(
+            this.props.from_account.get("id"),
+            this.props.to_account.get("id"),
+            parseInt(amount * precision, 10),
+            asset.get("id"),
+            this.props.conversion_memo ? new Buffer(this.props.conversion_memo, "utf-8") : this.props.conversion_memo,
+            null,
+            "1.3.0"
+        ).then( () => {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.listen(this.onTrxIncluded);
+        }).catch( e => {
+            let msg = e.message ? e.message.split( '\n' )[1] : null;
+            console.log( "error: ", e, msg);
+            this.setState({error: msg})
+        } );
 
 	}
 
     render() {
 	
         let balance = null;
-        let account_balances = this.props.account.get("balances").toJS();
+        let account_balances = this.props.from_account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
 
         if (asset_types.length > 0) {

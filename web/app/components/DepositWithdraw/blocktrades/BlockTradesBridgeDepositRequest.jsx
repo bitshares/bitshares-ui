@@ -622,7 +622,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 	
     getConvertModalId() {
-        return "conversion_asset_" + this.props.gateway + "_bridge";
+        return "convert_asset_" + this.props.gateway + "_bridge";
     }
 
     onConvert() {
@@ -944,7 +944,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_conversion).length > 0)
             {
-                conversion_modal_id = this.getConvertModalId('proba');
+                conversion_modal_id = this.getConvertModalId();
 
                 // conversion
                 let conversion_input_coin_type_options = [];
@@ -1066,16 +1066,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <div className="grid-block vertical">
                             <ConvertModalBlocktrades
 								key={`${this.state.coin_symbol}`}
-                                account={this.props.account.get('name')}
-                                issuer={this.props.issuer_account.get('name')}
+                                from_account={this.props.account.get('name')}
+								to_account={'blocktrades'}
                                 asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol}
                                 output_coin_name={this.state.coins_by_type[this.state.conversion_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.conversion_output_coin_type].symbol}
-                                output_coin_type={this.state.conversion_output_coin_type}
 								conversion_memo={this.state.conversion_memo}
                                 modal_id={conversion_modal_id} 
-                                url={this.state.url}
-                                output_wallet_type={this.state.coins_by_type[this.state.conversion_output_coin_type].walletType} /> 
+                                url={this.state.url} /> 
                         </div>
                     </Modal>
                 </div>
