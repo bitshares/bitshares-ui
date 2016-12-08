@@ -95,7 +95,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             coins_by_type: null,
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null,
-			allowed_mappings_for_conversion: null
+			allowed_mappings_for_conversion: null,
+			conversion_memo: null
         };
 		
 		// check api.blocktrades.us/v2
@@ -621,11 +622,46 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 	
     getConvertModalId() {
-        return "convert_asset_" + this.props.gateway + "_bridge";
+        return "conversion_asset_" + this.props.gateway + "_bridge";
     }
 
     onConvert() {
-        ZfApi.publish(this.getConvertModalId(), "open");
+
+		let input_coin_type = this.state.conversion_input_coin_type;
+		let output_coin_type = this.state.conversion_output_coin_type;
+		
+        let body = JSON.stringify({ 
+            inputCoinType: input_coin_type,
+            outputCoinType: output_coin_type, 
+            outputAddress: this.props.account.get('name'),
+			inputMemo: "blocktrades conversion: " + input_coin_type + "to" + output_coin_type
+        });
+
+        fetch(this.state.url + '/simple-api/initiate-trade', {
+            method:'post',
+            headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
+            body: body
+        }).then(reply => { reply.json().then( json => {
+			
+                if (json.inputCoinType != input_coin_type || json.outputCoinType != output_coin_type) {
+                    throw Error("unexpected reply from initiate-trade");
+				}
+                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType) {
+					this.setState({conversion_memo: json.inputMemo});
+					ZfApi.publish(this.getConvertModalId(), "open");
+				}
+            }, error => {
+                if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
+                    this.setState({conversion_memo: null});
+				}
+            }
+        )
+        }, error => {
+            if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
+                this.setState({conversion_memo: null});
+			}
+        });
+		
     }
     
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
@@ -697,6 +733,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     render() {
+		
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
 		
@@ -907,7 +944,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_conversion).length > 0)
             {
-                conversion_modal_id = this.getConvertModalId();
+                conversion_modal_id = this.getConvertModalId('proba');
 
                 // conversion
                 let conversion_input_coin_type_options = [];
@@ -1035,6 +1072,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 output_coin_name={this.state.coins_by_type[this.state.conversion_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.conversion_output_coin_type].symbol}
                                 output_coin_type={this.state.conversion_output_coin_type}
+								conversion_memo={this.state.conversion_memo}
                                 modal_id={conversion_modal_id} 
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.conversion_output_coin_type].walletType} /> 

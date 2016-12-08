@@ -18,7 +18,8 @@ class ConvertModalBlocktrades extends React.Component {
         output_coin_symbol: React.PropTypes.string.isRequired,
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
-        output_wallet_type: React.PropTypes.string
+        output_wallet_type: React.PropTypes.string,
+		conversion_memo: React.PropTypes.string
     };
 
     constructor( props ) {
@@ -38,7 +39,7 @@ class ConvertModalBlocktrades extends React.Component {
 	}
 
     render() {
-
+	
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
