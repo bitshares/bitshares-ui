@@ -3,8 +3,6 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import utils from "common/utils";
-import SettingsActions from "actions/SettingsActions";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
@@ -26,30 +24,8 @@ class ConvertModalBlocktrades extends React.Component {
     constructor( props ) {
         super(props);
 		
-        fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : ''),
-            {
-            method: 'get',
-            headers: new Headers({"Accept": "application/json"})
-            }).then(reply => { reply.json().then( json =>
-            {
-                // only process it if the user hasn't changed the address
-                // since we initiated the request
-                if (this.state.convert_address === localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : '')
-                {
-                    this.setState(
-                    {
-                    convert_address_check_in_progress: false,
-                    convert_address_is_valid: json.isValid
-                    });
-                }
-            })});
-		
         this.state = {
-        convert_amount: null,
-        convert_address: localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : '',
-        convert_address_check_in_progress: true,
-		convert_address_is_valid: null,
-		convert_address_selected: localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : ''
+        convert_amount: null
         }
     }
 
@@ -57,44 +33,11 @@ class ConvertModalBlocktrades extends React.Component {
         this.setState( {convert_amount: amount} );
     }
 
-    onConvertAddressChanged( e ) {
-
-        let new_convert_address = e.target.value.trim();
-
-        fetch(this.props.url + '/wallets/' + this.props.output_wallet_type + '/address-validator?address=' + encodeURIComponent(new_convert_address),
-            {
-            method: 'get',
-            headers: new Headers({"Accept": "application/json"})
-            }).then(reply => { reply.json().then( json =>
-            {
-                // only process it if the user hasn't changed the address
-                // since we initiated the request
-                if (this.state.convert_address === new_convert_address)
-                {
-                this.setState(
-                    {
-                    convert_address_check_in_progress: false,
-                    convert_address_is_valid: json.isValid
-                    });
-                }
-            })});
-
-            this.setState( 
-            {
-            convert_address: new_convert_address,
-            convert_address_check_in_progress: true,
-			convert_address_selected: new_convert_address,
-            convert_address_is_valid: null
-            });
-    }
-
-    onSubmit() { 
+    onSubmit() {
 
 	}
 
-    render() {		
-	
-	    let {convert_address_selected} = this.state;
+    render() {
 
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
@@ -108,15 +51,6 @@ class ConvertModalBlocktrades extends React.Component {
                 balance = "No funds";
         } else {
             balance = "No funds";
-        }
-       
-        let invalid_address_message = null;
-	   
-        if (!this.state.convert_address_check_in_progress && this.state.convert_address && this.state.convert_address.length)
-        {
-            if (!this.state.convert_address_is_valid) {
-				invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_type} /></div>;
-		    }
         }
 	   
 	    let tabIndex = 1;
@@ -135,13 +69,6 @@ class ConvertModalBlocktrades extends React.Component {
                         onChange={this.onConvertAmountChange.bind(this)}
                         display_balance={balance}
                     />
-                </div>
-                <div className="content-block">
-                    <label><Translate component="span" content="modal.convert.address"/></label> 
-					<div className="inline-label">
-						<input type="text" value={convert_address_selected} tabIndex="4" onChange = {this.onConvertAddressChanged.bind(this)} autoComplete="off" />
-					</div>
-					{invalid_address_message}                
                 </div>
                 <div className="content-block">
                     <input type="submit" className="button" 

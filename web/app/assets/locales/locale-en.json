@@ -980,8 +980,7 @@
     },
     "convert": {
       "amount": "Amount to Convert",
-      "address": "Convert to Address",
-      "submit": "Get memo"
+      "submit": "Ok"
     },
     "settle": {
       "title": "Request settlement of %(asset)s",
@@ -1035,7 +1034,7 @@
     "generate_new": "Get new address",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
-	"convert": "Internal convertion",
+	"convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
 	"convert_now": "Convert now",
     "inventory": "Inventory",
