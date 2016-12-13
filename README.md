@@ -15,6 +15,11 @@ nvm install v5
 nvm use v5
 ```
 
+On windows NVM (support node version 4 and up) work from here: https://github.com/coreybutler/nvm-windows
+```
+nvm install v5.11.1 32
+nvm use v5.11.1
+```
 Once you have Node installed, you can clone the repo:
 ```
 git clone https://github.com/cryptonomex/graphene-ui.git
