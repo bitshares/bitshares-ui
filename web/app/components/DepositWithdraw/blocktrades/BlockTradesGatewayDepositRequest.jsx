@@ -247,12 +247,11 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
                             <table className="table">
                                 <tbody>
                                     <tr>
-                                        <td colSpan="2" style={{textAlign: "left"}}>{deposit_address_fragment}</td>
+                                        <td>{deposit_address_fragment}</td>
                                     </tr>
                                     {deposit_memo ? (
                                     <tr>
-                                        <td>memo:</td>
-                                        <td style={{textAlign: "left"}}>{deposit_memo}</td>
+                                        <td>memo: {deposit_memo}</td>
                                     </tr>) : null}
                                 </tbody>
                             </table>
