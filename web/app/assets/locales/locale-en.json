@@ -978,6 +978,10 @@
       "amount": "Amount to Deposit",
       "submit": "Deposit"
     },
+    "convert": {
+      "amount": "Amount to Convert",
+      "submit": "Ok"
+    },
     "settle": {
       "title": "Request settlement of %(asset)s",
       "amount": "Amount to settle",
@@ -1030,7 +1034,9 @@
     "generate_new": "Get new address",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
+	"convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
+	"convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1051,6 +1057,7 @@
     "support_block": "For support, please contact Blocktrades at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
+	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
     "gateway_text": "A gateway lets you move to and from Bitshares assets to the real asset, like OPEN.BTC to BTC.",

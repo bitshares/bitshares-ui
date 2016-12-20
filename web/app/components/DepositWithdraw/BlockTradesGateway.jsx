@@ -38,7 +38,20 @@ export default class BlockTradesGateway extends React.Component {
 
     _getActiveCoin(props, state) {
         let cachedCoin = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
-        let activeCoin = cachedCoin ? cachedCoin : props.coins.length ? props.coins[0][state.action === "withdraw" ? "symbol" : "backingCoinType"].toUpperCase() : null;
+		let firstTimeCoin = null;
+		if ((props.provider == 'blocktrades') && (state.action == 'deposit')) {
+			firstTimeCoin = 'BTC';
+		}
+		if ((props.provider == 'openledger') && (state.action == 'deposit')) {
+			firstTimeCoin = 'BTC';
+		}
+		if ((props.provider == 'blocktrades') && (state.action == 'withdraw')) {
+			firstTimeCoin = 'TRADE.BTC';
+		}
+		if ((props.provider == 'openledger') && (state.action == 'withdraw')) {
+			firstTimeCoin = 'OPEN.BTC';
+		}
+        let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
     }
 
