@@ -78,6 +78,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             conversion_output_coin_type: null,
             conversion_estimated_input_amount: this.props.initial_conversion_estimated_input_amount || "1.0",
             conversion_estimated_output_amount: null,
+			conversion_limit: null,
             conversion_error: null,
 
             // input address-related
@@ -280,6 +281,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             let withdraw_limit = this.getCachedOrFreshDepositLimit("withdraw", withdraw_input_coin_type, withdraw_output_coin_type);
 			
 			let conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", conversion_input_coin_type, conversion_output_coin_type, this.state.conversion_estimated_input_amount);
+			let conversion_limit = this.getCachedOrFreshDepositLimit("conversion", conversion_input_coin_type, conversion_output_coin_type);
 
             this.setState({
                 coin_info_request_state: this.coin_info_request_states.request_complete,
@@ -299,6 +301,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_estimated_output_amount: withdraw_estimated_output_amount,
 				conversion_input_coin_type: conversion_input_coin_type,
 				conversion_output_coin_type: conversion_output_coin_type,
+				conversion_limit: conversion_limit,
 				conversion_estimated_output_amount: conversion_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
 				conversion_estimate_direction: this.estimation_directions.output_from_input,
@@ -345,6 +348,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             else
                 new_withdraw_estimated_input_amount = this.getAndUpdateinputEstimate("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type, new_withdraw_estimated_output_amount);
 
+			let new_conversion_limit = this.getCachedOrFreshDepositLimit("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type);
             let new_conversion_estimated_input_amount = this.state.conversion_estimated_input_amount;
             let new_conversion_estimated_output_amount = this.state.conversion_estimated_output_amount;
 			
@@ -362,6 +366,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_limit: new_withdraw_limit,
                 withdraw_estimated_input_amount: new_withdraw_estimated_input_amount,
                 withdraw_estimated_output_amount: new_withdraw_estimated_output_amount,
+				conversion_limit: new_conversion_limit,
 				conversion_estimated_input_amount: new_conversion_estimated_input_amount,
 				conversion_estimated_output_amount: new_conversion_estimated_output_amount
             });
@@ -988,6 +993,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let conversion_error_element = null;
                 if (this.state.conversion_error)
                     conversion_error_element = <div>{this.state.conversion_error}</div>;
+				
+                let conversion_limit_element = <span>...</span>;
+                if (this.state.conversion_limit)
+                {
+                    if (this.state.conversion_limit.limit)
+                        conversion_limit_element = <span className="deposit-limit"><Translate content="gateway.limit" amount={utils.format_number(this.state.conversion_limit.limit, 8)} symbol={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} /></span>;
+                    else
+                        conversion_limit_element = <span>no limit</span>;
+                }
 
                 conversion_header =
                 <thead>
@@ -1019,7 +1033,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} /> 
                         </td>
                         <td>
-                            {conversion_button}
+                            {conversion_button}<br/>
+                            {conversion_limit_element}
                         </td>
                     </tr>
                 </tbody>
