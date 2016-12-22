@@ -6,11 +6,9 @@ var market_utils = require("../common/market_utils");
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
+import {LimitOrder, CallOrder, Asset, Price} from "common/MarketClasses";
 
 import {
-    LimitOrder,
-    ShortOrder,
-    CallOrder,
     SettleOrder
 }
 from "./tcomb_structs";
@@ -44,7 +42,7 @@ class MarketsStore {
         this.bucketSize = this._getBucketSize();
         this.priceHistory = [];
         this.lowestCallPrice = null;
-        this.marketBase = "CORE";
+        this.marketBase = "BTS";
         this.marketStats = Immutable.Map({
             change: 0,
             volumeBase: 0,
@@ -52,10 +50,11 @@ class MarketsStore {
         });
 
         this.allMarketStats = Immutable.Map();
+        this.lowVolumeMarkets = Immutable.Map();
 
         this.baseAsset = {
             id: "1.3.0",
-            symbol: "CORE",
+            symbol: "BTS",
             precision: 5
         };
 
@@ -148,7 +147,10 @@ class MarketsStore {
         this.quoteAsset = ChainStore.getAsset(result.quote.get("id"));
         this.baseAsset = ChainStore.getAsset(result.base.get("id"));
 
-
+        const assets = {
+            [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
+            [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
+        };
 
         if (result.market && (result.market !== this.activeMarket)) {
             // console.log("switch active market from", this.activeMarket, "to", result.market);
@@ -167,6 +169,7 @@ class MarketsStore {
             // Keep an eye on this as the number of orders increases, it might not scale well
             let limitStart = new Date();
             this.activeMarketLimits = this.activeMarketLimits.clear();
+            console.time("Create limit orders " + this.activeMarket);
             result.limits.forEach(order => {
                 ChainStore._updateObject(order, false, false);
                 if (typeof order.for_sale !== "number") {
@@ -175,7 +178,7 @@ class MarketsStore {
                 order.expiration = new Date(order.expiration);
                 this.activeMarketLimits = this.activeMarketLimits.set(
                     order.id,
-                    LimitOrder(order)
+                    new LimitOrder(order, assets, this.quoteAsset.get("id"))
                 );
             });
 
@@ -192,6 +195,8 @@ class MarketsStore {
                 }
             }
 
+            console.timeEnd("Create limit orders " + this.activeMarket);
+
             if (this.pendingCreateLimitOrders.length === 0) {
                 this.pendingCounter = 0;
             }
@@ -201,6 +206,24 @@ class MarketsStore {
 
         if (result.calls) {
             this.activeMarketCalls = this.activeMarketCalls.clear();
+
+            let settlePrice = this.invertedCalls ? this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]) :
+                this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]);
+
+            let for_sale = new Asset({
+                asset_id: settlePrice.getIn(["base", "asset_id"]),
+                amount: settlePrice.getIn(["base", "amount"]),
+                precision: assets[settlePrice.getIn(["base", "asset_id"])].precision
+            });
+            let to_receive = new Asset({
+                asset_id: settlePrice.getIn(["quote", "asset_id"]),
+                amount: settlePrice.getIn(["quote", "amount"]),
+                precision: assets[settlePrice.getIn(["quote", "asset_id"])].precision
+            });
+            let price = new Price({
+                base: for_sale.asset_id === this.quoteAsset.get("id") ? to_receive : to_receive,
+                quote: for_sale.asset_id === this.quoteAsset.get("id") ? for_sale : for_sale
+            });
 
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
@@ -212,7 +235,7 @@ class MarketsStore {
                 }
                 this.activeMarketCalls = this.activeMarketCalls.set(
                     call.id,
-                    CallOrder(call)
+                    new CallOrder(call, assets, this.quoteAsset.get("id"), price)
                 );
             });
 
@@ -246,6 +269,12 @@ class MarketsStore {
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
             this.marketStats = this.marketStats.set("volumeQuote", stats.volumeQuote);
+
+            if (stats.volumeBase) {
+                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(result.market);
+            }
+        } else if (result.recent && !result.recent.length) {
+            this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
         }
 
         // Update orderbook
@@ -467,92 +496,99 @@ class MarketsStore {
         let orderBookStart = new Date();
 
         // Loop over limit orders and return array containing bids with formatted values
+        let baseId = this.baseAsset.get("id");
         let constructBids = (orderArray) => {
             let bids = [];
             orderArray.filter(a => {
-                return a.sell_price.base.asset_id === this.baseAsset.get("id");
+                // return a.sell_price.base.asset_id === this.baseAsset.get("id");
+                return a.isBid(baseId);
             }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
-
-                return a_price.full - b_price.full;
-            }).map(order => {
+                // let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                // let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
+                //
+                // return a_price.full - b_price.full;
+                return a.getPrice() - b.getPrice();
+            }).forEach(order => {
                 // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
                 let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
-                // console.log("order:", order);
+                // console.log("order:", order.amountToReceive().getAmount(), order.amountToReceive().getAmount({real: true}), amount);
                 bids.push({
                     value: value,
                     price: price,
-                    price_full: price.full,
                     price_dec: price.dec,
                     price_int: price.int,
-                    amount: amount,
                     type: "bid",
                     sell_price: order.sell_price,
-                    for_sale: order.for_sale
+                    for_sale: order.for_sale,
+                    __tempOrder__: order
                 });
             });
 
             // Sum bids at same price
             if (bids.length > 1) {
                 for (let i = bids.length - 2; i >= 0; i--) {
-                    if (bids[i].price_full === bids[i + 1].price_full) {
+                    if (bids[i].__tempOrder__.getPrice() === bids[i + 1].__tempOrder__.getPrice()) {
                         bids[i].amount += bids[i + 1].amount;
                         bids[i].value += bids[i + 1].value;
                         bids[i].for_sale += bids[i + 1].for_sale;
+                        bids[i].__tempOrder__.sum(bids[i + 1].__tempOrder__);
                         bids.splice(i + 1, 1);
                     }
                 }
             }
 
             return bids;
-        }
+        };
 
         let constructAsks = (orderArray) => {
             let asks = [];
 
             orderArray.filter(a => {
-                return a.sell_price.base.asset_id !== this.baseAsset.get("id");
+                // return a.sell_price.base.asset_id !== this.baseAsset.get("id");
+                return !a.isBid(baseId);
             }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
-
-                return a_price.full - b_price.full;
+                // let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
+                // let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
+                //
+                // return a_price.full - b_price.full;
+                return a.getPrice() - b.getPrice();
             }).map(order => {
                 // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
                 let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
                 asks.push({
                     value: value,
                     price: price,
-                    price_full: price.full,
                     price_dec: price.dec,
                     price_int: price.int,
-                    amount: amount,
                     type: "ask",
                     sell_price: order.sell_price,
-                    for_sale: order.for_sale
+                    for_sale: order.for_sale,
+                    __tempOrder__: order
                 });
             });
 
             // Sum asks at same price
             if (asks.length > 1) {
                 for (let i = asks.length - 2; i >= 0; i--) {
-                    if (asks[i].price_full === asks[i + 1].price_full) {
+                    if (asks[i].__tempOrder__.getPrice() === asks[i + 1].__tempOrder__.getPrice()) {
                         asks[i].amount += asks[i + 1].amount;
                         asks[i].value += asks[i + 1].value;
                         asks[i].for_sale += asks[i + 1].for_sale;
+                        asks[i].__tempOrder__.sum(asks[i + 1].__tempOrder__);
                         asks.splice(i + 1, 1);
                     }
                 }
             }
 
             return asks;
-        }
+        };
 
         // Assign to store variables
         this.bids = constructBids(this.activeMarketLimits);
         this.asks = constructAsks(this.activeMarketLimits);
+        console.time("Construct calls " + this.activeMarket);
         this.calls = this.constructCalls(this.activeMarketCalls);
+        console.timeEnd("Construct calls " + this.activeMarket);
 
         // console.log("time to construct orderbook:", new Date() - orderBookStart, "ms");
     }
@@ -566,12 +602,12 @@ class MarketsStore {
         if (this.activeMarketLimits.size) {
 
             this.bids.forEach(order => {
-                bids.push([order.price_full, order.amount]);
+                bids.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
                 totalBids += order.value;
             });
 
             this.asks.forEach(order => {
-                asks.push([order.price_full, order.amount]);
+                asks.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountForSale().getAmount({real: true})]);
             });
 
             // Make sure the arrays are sorted properly
@@ -599,7 +635,8 @@ class MarketsStore {
         if (this.calls.length) {
 
             this.calls.forEach(order => {
-                calls.push([order.price_full, order.amount]);
+                console.log("order:", order.amount, order.__tempOrder__.amountToReceive().getAmount({real: true}), order.__tempOrder__.amountForSale().getAmount({real: true}));
+                calls.push([order.__tempOrder__.getFeedPrice(), order.amount]);
             });
 
             // Calculate total value of call orders
@@ -609,7 +646,7 @@ class MarketsStore {
                 } else {
                     totalCalls += call[1] * call[0];
                 }
-            })
+            });
 
             // Make sure the array is sorted properly
             calls.sort((a, b) => {
@@ -732,101 +769,87 @@ class MarketsStore {
         let calls = [];
 
         // Get feed price if market asset
-        let settlementPrice, squeezeRatio, maintenanceRatio;
-        if (this.activeMarketCalls.size) {
-
+        let settlementPrice, squeezeRatio, totalCalls;
+        if (callsArray.size) {
             if (this.invertedCalls) {
                 squeezeRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-                maintenanceRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     true
                 )
-                 this.lowestCallPrice = settlementPrice / 5;
             } else {
                 squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-                maintenanceRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
                 settlementPrice = market_utils.getFeedPrice(
                     this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
                     false
                 )
-                this.lowestCallPrice = settlementPrice * 5;
             }
-        }
 
-        callsArray.filter(a => {
-            let a_price;
-            if (this.invertedCalls) {
-                a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                this.lowestCallPrice = Math.max(this.lowestCallPrice, a_price.full);
-                return a_price.full >= settlementPrice // / squeezeRatio; // TODO verify this
-            } else {
-                a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
-                this.lowestCallPrice = Math.min(this.lowestCallPrice, a_price.full);
-                return a_price.full <= settlementPrice // * squeezeRatio; // TODO verify this
-            }
-        }).sort((a, b) => {
-            let a_price, b_price;
-            if (this.invertedCalls) {
-                a_price = market_utils.parseOrder(a, this.quoteAsset, this.baseAsset, true).price;
-                b_price = market_utils.parseOrder(b, this.quoteAsset, this.baseAsset, true).price;
-            } else {
-                a_price = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset, false).price;
-                b_price = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset, false).price;
-            }
-            return a_price.full - b_price.full;
-        }).forEach(order => {
-            let priceData;
-            let feed_price_order;
-            if (this.invertedCalls) {
-                let newQuote = this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS();
-                newQuote.amount /= squeezeRatio;
 
-                feed_price_order = {
-                    call_price: {
-                        base: this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS(),
-                        quote: newQuote
-                    },
-                    debt: order.debt,
-                    collateral: order.collateral
+            callsArray.filter(a => {
+                let a_price;
+                if (this.invertedCalls) {
+                    this.lowestCallPrice = !this.lowestCallPrice ? a.getPrice() : Math.max(this.lowestCallPrice, a.getPrice());
+                } else {
+                    this.lowestCallPrice = !this.lowestCallPrice ? a.getPrice() : Math.min(this.lowestCallPrice, a.getPrice());
                 }
-                // priceData = market_utils.parseOrder(order, this.quoteAsset, this.baseAsset, true, squeezeRatio);
-                priceData = market_utils.parseOrder(feed_price_order, this.quoteAsset, this.baseAsset, true);
-            } else {
-                let newQuote = this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS();
-                newQuote.amount *= squeezeRatio;
-                feed_price_order = {
-                    sell_price: {
-                        base: this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS(),
-                        quote: newQuote
-                    },
-                    debt: order.debt,
-                    collateral: order.collateral
-                }
-                // priceData = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset, false, squeezeRatio);
-                priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset, false);
-            }
+                return a.isMarginCalled();
 
-            let {value, price, amount} = priceData;
-            calls.push({
-                value: value,
-                price: price,
-                price_full: price.full,
-                price_dec: price.dec,
-                price_int: price.int,
-                amount: amount,
-                type: "call",
-                sell_price: order.call_price,
-                for_sale: !this.invertedCalls ? order.debt : order.collateral
+            }).sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            }).forEach(order => {
+                let priceData;
+                let feed_price_order;
+                if (this.invertedCalls) {
+                    let newQuote = this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS();
+                    newQuote.amount /= squeezeRatio;
+
+                    feed_price_order = {
+                        call_price: {
+                            base: this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS(),
+                            quote: newQuote
+                        },
+                        debt: order.debt,
+                        collateral: order.collateral
+                    }
+                    // priceData = market_utils.parseOrder(order, this.quoteAsset, this.baseAsset, true, squeezeRatio);
+                    priceData = market_utils.parseOrder(feed_price_order, this.quoteAsset, this.baseAsset, true);
+                } else {
+                    let newQuote = this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS();
+                    newQuote.amount *= squeezeRatio;
+                    feed_price_order = {
+                        sell_price: {
+                            base: this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS(),
+                            quote: newQuote
+                        },
+                        debt: order.debt,
+                        collateral: order.collateral
+                    }
+                    // priceData = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset, false, squeezeRatio);
+                    priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset, false);
+                }
+
+                let {value, price, amount} = priceData;
+                calls.push({
+                    __tempOrder__: order,
+                    value: value,
+                    price: price,
+                    amount,
+                    price_full: price.full,
+                    price_dec: price.dec,
+                    price_int: price.int,
+                    type: "call",
+                    sell_price: order.call_price,
+                    for_sale: !this.invertedCalls ? order.debt : order.collateral
+                });
             });
-        });
 
-        // Sum calls at same price
-        if (calls.length > 1) {
-            for (let i = calls.length - 2; i >= 0; i--) {
-                if (calls[i].price_full === calls[i + 1].price_full) {
+            // Sum calls at same price
+            if (calls.length > 1) {
+                for (let i = calls.length - 2; i >= 0; i--) {
                     calls[i].amount += calls[i + 1].amount;
                     calls[i].value += calls[i + 1].value;
+                    calls[i].__tempOrder__.sum(calls[i + 1].__tempOrder__);
                     calls.splice(i + 1, 1);
                 }
             }

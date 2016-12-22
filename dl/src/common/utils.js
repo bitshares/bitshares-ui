@@ -200,7 +200,7 @@ var Utils = {
                 };
             }
         }
-        
+
         let trailing = zeros ? dec.substr(Math.max(0, i + 1), dec.length) : null;
 
         if (trailing) {
@@ -267,6 +267,9 @@ var Utils = {
     },
 
     are_equal_shallow: function(a, b) {
+        if (!a && b || a && !b) {
+            return false;
+        }
         if (Array.isArray(a) && Array.isArray(a)) {
             if (a.length > b.length) {
                 return false;
@@ -450,13 +453,13 @@ var Utils = {
     get_translation_parts(str) {
         let result = [];
         let toReplace = {};
-        let re = /{(.*?)}/g; 
+        let re = /{(.*?)}/g;
         let interpolators = str.split(re);
-        // console.log("split:", str.split(re)); 
+        // console.log("split:", str.split(re));
         return str.split(re);
         // var str = '{{azazdaz}} {{azdazd}}';
         // var m;
-         
+
         // while ((m = re.exec(str)) !== null) {
         //     if (m.index === re.lastIndex) {
         //         re.lastIndex++;
@@ -464,7 +467,7 @@ var Utils = {
         //     console.log("m:", m);
         //     // View your result using the m-variable.
         //     // eg m[0] etc.
-        //     // 
+        //     //
         //     toReplace[m[1]] = m[0]
         //     result.push(m[1])
         // }

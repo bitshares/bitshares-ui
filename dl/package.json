@@ -15,12 +15,14 @@
   },
   "scripts": {
     "postinstall": "",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register"
+    "test": "NODE_ENV=test mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register",
+    "test:market": "NODE_ENV=test mocha --compilers js:babel-core/register ./test/marketTests --watch"
   },
   "dependencies": {
     "alt": "~0.17.8",
     "bigi": "1.1.0",
     "bs58": "2.0.0",
+    "fractional": "^1.0.0",
     "immutable": "^3.8.1",
     "lodash": "^3.10.1",
     "lzma": "2.1.6",
