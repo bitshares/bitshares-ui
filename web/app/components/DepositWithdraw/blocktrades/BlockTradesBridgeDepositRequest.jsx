@@ -588,6 +588,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onInputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_input_amount = event.target.value;
+		if (new_estimated_input_amount == '') {
+		    new_estimated_input_amount = '0';
+		}
+	
         let new_estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert,
                                                                           this.state[deposit_withdraw_or_convert + "_input_coin_type"], 
                                                                           this.state[deposit_withdraw_or_convert + "_output_coin_type"], 
@@ -604,6 +608,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onOutputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_output_amount = event.target.value;
+		if (new_estimated_output_amount == '') {
+		    new_estimated_output_amount = '0';
+		}
+		
         let new_estimated_input_amount = this.getAndUpdateInputEstimate(deposit_withdraw_or_convert, 
                                                                         this.state[deposit_withdraw_or_convert + "_input_coin_type"], 
                                                                         this.state[deposit_withdraw_or_convert + "_output_coin_type"], 
