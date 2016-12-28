@@ -82,7 +82,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 		console.log("height:", height);
         return (
             <ChartCanvas
-				className="ps-child Stockcharts__wrapper ps-must-propagate"
+				className="ps-child no-overflow Stockcharts__wrapper ps-must-propagate"
                 width={width - 20}
                 height={height}
                 margin={margin}
