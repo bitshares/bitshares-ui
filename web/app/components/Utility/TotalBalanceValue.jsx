@@ -76,10 +76,10 @@ class TotalValue extends React.Component {
             // To asset
             if (props.toAsset.get("id") !== coreAsset.get("id")) {
                 // wrap this in a timeout to prevent dispatch in the middle of a dispatch
-                setTimeout(() => {
-                    MarketsActions.getMarketStats.bind(this, coreAsset, props.toAsset);
-                    this.toStatsInterval = setInterval(MarketsActions.getMarketStats.bind(this, coreAsset, props.toAsset), 10 * 60 * 1000);
-                }, 150);
+                MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
+                this.toStatsInterval = setInterval(() => {
+                    MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
+                }, 5 * 60 * 1000);
             }
         }
     }
