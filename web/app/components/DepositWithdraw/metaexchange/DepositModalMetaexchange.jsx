@@ -6,10 +6,9 @@ import BindToChainState from "components/Utility/BindToChainState";
 import Post from "common/formPost";
 import utils from "common/utils";
 
-@BindToChainState()
 class DepositModalMetaexchange extends React.Component {
 
-	static propTypes =  
+	static propTypes =
 	{
 		api_root: React.PropTypes.string,
 		symbol_pair: React.PropTypes.string,
@@ -23,7 +22,7 @@ class DepositModalMetaexchange extends React.Component {
 
    constructor( props ) {
       super(props);
-	  
+
 		if (props.is_bts_deposit)
 		{
 			this.state = {limit:"fetching...", receive_asset_name:"Bitshares", receive_asset_symbol:"BTC"};
@@ -40,7 +39,7 @@ class DepositModalMetaexchange extends React.Component {
             .then(reply => {
                 // console.log(reply);
                 this.setState( {limit:reply.ask_max} );
-                
+
                 if (this.props.is_bts_deposit)
                 {
                     Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'buy',deposit_amount:1}).then( reply=>reply.json().then(reply=>
@@ -55,7 +54,7 @@ class DepositModalMetaexchange extends React.Component {
         });
    }
 
-   render() 
+   render()
    {
 		let memoName = null;
 		if (this.props.receive_asset_symbol == "ETH") {
@@ -64,7 +63,7 @@ class DepositModalMetaexchange extends React.Component {
 		else if (this.props.receive_asset_symbol == "NXT") {
 			memoName = "Message"
 		}
-		
+
 		let memoPart = (
             <div className="content-block full-width-content">
                <label>{memoName}</label>
@@ -72,7 +71,7 @@ class DepositModalMetaexchange extends React.Component {
 			   <div style={{marginTop: 15}}>Don't forget to include this {memoName} with the transaction you send, otherwise your deposit will not credit!</div>
 			</div>
         );
-					
+
 		let depositPart = null, quotePart = null;
 		if (this.props.is_bts_deposit)
 		{
@@ -84,12 +83,12 @@ class DepositModalMetaexchange extends React.Component {
 			depositPart = <h3>Deposit {this.state.receive_asset_name}({this.props.receive_asset_symbol})</h3>
 			quotePart = "";
 		}
-				   
+
 		if (!memoName)
 		{
 			memoPart="";
 		}
-   
+
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
                    <div className="content-block">
@@ -102,17 +101,17 @@ class DepositModalMetaexchange extends React.Component {
 					   <p style={{marginTop: 15}}>There is a deposit limit of {utils.format_number(this.state.limit, 8)} {this.state.receive_asset_symbol}</p>
 						{quotePart}
                    </div>
-				   
-				  {memoPart} 
+
+				  {memoPart}
 				   <div className="content-block">
                        <Trigger close={this.props.modal_id}>
                            <div className="button"><Translate content="modal.ok" /></div>
                        </Trigger>
                    </div>
-                 </div> 
-               </form>)
+                 </div>
+			</form>);
    }
-   
+
 };
 
-export default DepositModalMetaexchange
+export default BindToChainState(DepositModalMetaexchange);

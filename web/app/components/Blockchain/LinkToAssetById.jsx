@@ -3,7 +3,6 @@ import {Link} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
 class LinkToAssetById extends React.Component {
     static propTypes = {
         asset: ChainTypes.ChainObject.isRequired
@@ -14,4 +13,4 @@ class LinkToAssetById extends React.Component {
     }
 }
 
-export default LinkToAssetById;
+export default BindToChainState(LinkToAssetById);

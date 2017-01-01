@@ -5,7 +5,7 @@ import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "graphenejs-lib";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
 
@@ -19,7 +19,6 @@ import Translate from "react-translate-component";
  *  -'fullPrecision' boolean to tell if the amount uses the full precision of the asset
  */
 
-@BindToChainState({keep_updating: true})
 class ValueComponent extends React.Component {
 
     static propTypes = {
@@ -127,26 +126,25 @@ class ValueComponent extends React.Component {
         return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
     }
 }
+ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
 
-@connectToStores
-class ValueStoreWrapper extends React.Component {
-    static getStores() {
-        return [MarketsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats
-        }
-    };
-
+class EquivalentValueComponent extends React.Component {
     render() {
-        return <ValueComponent {...this.props} />
+        return <ValueComponent {...this.props} />;
     }
 }
 
+EquivalentValueComponent = connect(EquivalentValueComponent, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps() {
+        return {
+            marketStats: MarketsStore.getState().allMarketStats
+        };
+    }
+});
 
-@BindToChainState({keep_updating: true})
 class BalanceValueComponent extends React.Component {
 
     static propTypes = {
@@ -157,9 +155,8 @@ class BalanceValueComponent extends React.Component {
         let amount = Number(this.props.balance.get("balance"));
         let fromAsset = this.props.balance.get("asset_type");
 
-        return <ValueStoreWrapper amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
+        return <EquivalentValueComponent amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
-
-ValueStoreWrapper.BalanceValueComponent = BalanceValueComponent;
-export default ValueStoreWrapper
+BalanceValueComponent = BindToChainState(BalanceValueComponent, {keep_updating: true});
+export {EquivalentValueComponent, BalanceValueComponent};

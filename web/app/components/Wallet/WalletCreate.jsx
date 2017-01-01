@@ -1,45 +1,23 @@
-import React, {Component} from "react"
+import React, {Component} from "react";
 
 import Translate from "react-translate-component";
-import BrainkeyInput from "components/Wallet/BrainkeyInput"
-import PasswordConfirm from "components/Wallet/PasswordConfirm"
-import WalletDb from "stores/WalletDb"
-import WalletManagerStore from "stores/WalletManagerStore"
-import WalletActions from "actions/WalletActions"
-import connectToStores from "alt/utils/connectToStores"
-import cname from "classnames"
+import BrainkeyInput from "components/Wallet/BrainkeyInput";
+import PasswordConfirm from "components/Wallet/PasswordConfirm";
+import WalletDb from "stores/WalletDb";
+import WalletManagerStore from "stores/WalletManagerStore";
+import WalletActions from "actions/WalletActions";
+import { connect } from "alt-react";
+import cname from "classnames";
 
-@connectToStores
 class WalletCreate extends Component {
-
-    static getStores() {
-        return [WalletManagerStore];
-    }
-
-    static getPropsFromStores() {
-        return {}
-    }
-
     render() {
-        if(WalletDb.getWallet() && this.props.children)
-            return <div>{this.props.children}</div>
+        if(WalletDb.getWallet() && this.props.children) return <div>{this.props.children}</div>;
 
         return <CreateNewWallet {...this.props}/>;
     }
-
 }
 
-@connectToStores
 class CreateNewWallet extends Component {
-
-    static getStores() {
-        return [WalletManagerStore]
-    };
-
-    static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
-        return wallet
-    };
 
     static propTypes = {
         hideTitle: React.PropTypes.bool
@@ -58,28 +36,28 @@ class CreateNewWallet extends Component {
             create_submitted: false,
             custom_brainkey: props.restoreBrainkey || false,
             brnkey: null
-        }
+        };
+
+        this.validate = this.validate.bind(this);
     }
 
     onBack(e) {
-        e.preventDefault()
-        window.history.back()
+        e.preventDefault();
+        window.history.back();
     }
 
     onPassword(valid_password) {
-        this.state.valid_password = valid_password
-        this.setState({ valid_password })
-        this.validate()
+        this.state.valid_password = valid_password;
+        this.setState({ valid_password }, this.validate);
     }
 
     onCustomBrainkey() {
-        this.setState({ custom_brainkey: true })
+        this.setState({ custom_brainkey: true });
     }
 
     onBrainkey(brnkey) {
-        this.state.brnkey = brnkey
-        this.setState({ brnkey })
-        this.validate()
+        this.state.brnkey = brnkey;
+        this.setState({ brnkey }, this.validate);
     }
 
     onSubmit(e) {
@@ -90,49 +68,48 @@ class CreateNewWallet extends Component {
             return;
         }
 
-        WalletActions.setWallet(wallet_public_name, valid_password, this.state.brnkey)
-        this.setState({create_submitted: true})
+        WalletActions.setWallet(wallet_public_name, valid_password, this.state.brnkey);
+        this.setState({create_submitted: true});
     }
 
     formChange(event) {
-        let key_id = event.target.id
-        let value = event.target.value
+        let key_id = event.target.id;
+        let value = event.target.value;
         if(key_id === "wallet_public_name") {
             //case in-sensitive
-            value = value.toLowerCase()
+            value = value.toLowerCase();
             // Allow only valid file name characters
-            if( /[^a-z0-9_-]/.test(value) ) return
+            if( /[^a-z0-9_-]/.test(value) ) return;
         }
 
         // Set state is updated directly because validate is going to
         // require a merge of new and old state
-        this.state[key_id] = value
-        this.setState(this.state)
-        this.validate()
+        this.state[key_id] = value;
+        this.setState(this.state);
+        this.validate();
     }
 
-    validate() {
-        let state = this.state
-        let errors = state.errors
-        let wallet_names = WalletManagerStore.getState().wallet_names
+    validate(state = this.state) {
+        let errors = state.errors;
+        let {wallet_names} = this.props;
         errors.wallet_public_name =
             !wallet_names.has(state.wallet_public_name) ?
-            null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`
+            null : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`;
 
-        var isValid = errors.wallet_public_name === null && state.valid_password !== null
-        if(this.state.custom_brainkey && isValid)
-            isValid = this.state.brnkey !== null
-        this.setState({ isValid, errors })
+        var isValid = errors.wallet_public_name === null && state.valid_password !== null;
+        if(state.custom_brainkey && isValid)
+            isValid = state.brnkey !== null;
+        this.setState({ isValid, errors });
     }
 
     onDone() {
-        window.history.back()
+        window.history.back();
     }
 
     render() {
-        let state = this.state
-        let errors = state.errors
-        let has_wallet = !!this.props.current_wallet
+        let state = this.state;
+        let errors = state.errors;
+        let has_wallet = !!this.props.current_wallet;
 
         if(this.state.create_submitted &&
             this.state.wallet_public_name === this.props.current_wallet) {
@@ -140,7 +117,7 @@ class CreateNewWallet extends Component {
                 <h4><Translate content="wallet.wallet_created" /></h4>
                 <span onClick={this.onDone.bind(this)}
                     className="button success"><Translate content="wallet.done" /></span>
-            </div>
+            </div>;
         }
 
         return (
@@ -159,7 +136,7 @@ class CreateNewWallet extends Component {
                     }}
                 >
                     {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_importkeys_text" /> : null}
-                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_text" /> : null}                    
+                    {!this.props.restoreBrainkey ? <Translate component="p" content="wallet.create_text" /> : null}
                 </div>
                 <PasswordConfirm onValid={this.onPassword.bind(this)}/>
                 { has_wallet ? (
@@ -215,4 +192,13 @@ class CreateNewWallet extends Component {
 
 }
 
-export default WalletCreate
+CreateNewWallet = connect(CreateNewWallet, {
+    listenTo() {
+        return [WalletManagerStore];
+    },
+    getProps() {
+        return WalletManagerStore.getState();
+    }
+});
+
+export default WalletCreate;

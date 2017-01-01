@@ -1,5 +1,5 @@
 import React from "react";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -18,18 +18,9 @@ import Translate from "react-translate-component";
 // import RefcodeInput from "../Forms/RefcodeInput";
 import {ChainStore, FetchChain} from "graphenejs-lib";
 import {BackupCreate} from "../Wallet/Backup";
+import ReactTooltip from "react-tooltip";
 
-@connectToStores
 class CreateAccount extends React.Component {
-
-    static getStores() {
-        return [AccountStore];
-    };
-
-    static getPropsFromStores() {
-        return {};
-    };
-
     constructor() {
         super();
         this.state = {
@@ -45,6 +36,10 @@ class CreateAccount extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
         this.accountNameInput = null;
+    }
+
+    componentDidMount() {
+        ReactTooltip.rebuild();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -85,7 +80,7 @@ class CreateAccount extends React.Component {
 
             FetchChain("getAccount", this.state.accountName).then(() => {
                 console.log("onFinishConfirm");
-                this.props.history.pushState(null, `/wallet/backup/create?newAccount=true`);
+                this.props.router.push(`/wallet/backup/create?newAccount=true`);
             });
         }
     }
@@ -101,11 +96,11 @@ class CreateAccount extends React.Component {
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else { // Account registered by the faucet
                     console.log("account registed by faucet");
-                    // this.props.history.pushState(null, `/wallet/backup/create?newAccount=true`);
+                    // this.props.router.push(`/wallet/backup/create?newAccount=true`);
                     this.setState({
                         step: 2
                     });
-                    // this.props.history.pushState(null, `/account/${name}/overview`);
+                    // this.props.router.push(`/account/${name}/overview`);
 
                 }
             }).catch(error => {
@@ -390,4 +385,11 @@ class CreateAccount extends React.Component {
     }
 }
 
-export default CreateAccount;
+export default connect(CreateAccount, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {};
+    }
+});

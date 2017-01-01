@@ -5,7 +5,7 @@ import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "graphenejs-lib";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
 import Immutable from "immutable";
@@ -20,7 +20,6 @@ import Immutable from "immutable";
  *  -'fullPrecision' boolean to tell if the amount uses the full precision of the asset
  */
 
-@BindToChainState({keep_updating: true})
 class TotalValue extends React.Component {
 
     static propTypes = {
@@ -260,28 +259,28 @@ class TotalValue extends React.Component {
         }
     }
 }
+TotalValue = BindToChainState(TotalValue, {keep_updating: true});
 
-@connectToStores
 class ValueStoreWrapper extends React.Component {
-    static getStores() {
-        return [MarketsStore, SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats,
-            settings: SettingsStore.getState().settings
-        }
-    };
-
     render() {
-        let preferredUnit = this.props.settings.get("unit") || "1.3.0"
+        let preferredUnit = this.props.settings.get("unit") || "1.3.0";
 
-        return <TotalValue {...this.props} toAsset={preferredUnit}/>
+        return <TotalValue {...this.props} toAsset={preferredUnit}/>;
     }
 }
 
-@BindToChainState({keep_updating: true})
+ValueStoreWrapper = connect(ValueStoreWrapper, {
+    listenTo() {
+        return [MarketsStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            marketStats: MarketsStore.getState().allMarketStats,
+            settings: SettingsStore.getState().settings
+        };
+    }
+});
+
 class TotalBalanceValue extends React.Component {
 
     static propTypes = {
@@ -321,8 +320,8 @@ class TotalBalanceValue extends React.Component {
         return <ValueStoreWrapper inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
     }
 }
+TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});
 
-@BindToChainState({keep_updating: true})
 class AccountWrapper extends React.Component {
 
     static propTypes = {
@@ -375,11 +374,12 @@ class AccountWrapper extends React.Component {
                     balanceList = balanceList.push(balance);
                 });
             }
-        })
+        });
 
         return balanceList.size ? <TotalBalanceValue inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
     }
 }
+AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});
 
 TotalBalanceValue.AccountWrapper = AccountWrapper;
 export default TotalBalanceValue;

@@ -7,10 +7,9 @@ import AccountLeftPanel from "./AccountLeftPanel";
 import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import accountUtils from "common/account_utils";
 
-@BindToChainState({keep_updating: true, show_loader: true})
 class AccountPage extends React.Component {
 
     static propTypes = {
@@ -68,14 +67,21 @@ class AccountPage extends React.Component {
         );
     }
 }
+AccountPage = BindToChainState(AccountPage, {keep_updating: true, show_loader: true});
 
-@connectToStores
 class AccountPageStoreWrapper extends React.Component {
-    static getStores() {
-        return [AccountStore, SettingsStore, WalletUnlockStore]
-    }
+    render () {
+        let account_name = this.props.routeParams.account_name;
 
-    static getPropsFromStores() {
+        return <AccountPage {...this.props} account_name={account_name}/>;
+    }
+}
+
+export default connect(AccountPageStoreWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore, WalletUnlockStore];
+    },
+    getProps() {
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
@@ -84,14 +90,6 @@ class AccountPageStoreWrapper extends React.Component {
             wallet_locked: WalletUnlockStore.getState().locked,
             myAccounts:  AccountStore.getState().myAccounts,
             viewSettings: SettingsStore.getState().viewSettings
-        }
+        };
     }
-
-    render () {
-        let account_name = this.props.routeParams.account_name;
-
-        return <AccountPage {...this.props} account_name={account_name}/>
-    }
-}
-
-export default AccountPageStoreWrapper;
+});

@@ -1,11 +1,9 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -21,15 +19,13 @@ import counterpart from "counterpart";
 
 let lastLookup = new Date();
 
-@BindToChainState()
 class DashboardList extends React.Component {
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    }
 
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
-    };
-
-    static contextTypes = {
-        history: PropTypes.history
     };
 
     static defaultProps = {
@@ -39,7 +35,6 @@ class DashboardList extends React.Component {
 
     constructor(props) {
         super();
-
         let inputValue = props.viewSettings.get("marketLookupInput");
         let symbols = inputValue ? inputValue.split(":") : [null];
         let quote = symbols[0];
@@ -72,7 +67,7 @@ class DashboardList extends React.Component {
     }
 
     _goAccount(name) {
-        this.context.history.pushState(null, `/account/${name}`);
+        this.context.router.push(`/account/${name}`);
     }
 
     _onFilter(e) {
@@ -251,23 +246,10 @@ class DashboardList extends React.Component {
         )
 
     }
-
 }
+DashboardList = BindToChainState(DashboardList);
 
-
-@connectToStores
 class AccountsListWrapper extends React.Component {
-
-    static getStores() {
-        return [SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            starredAccounts: SettingsStore.getState().starredAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
 
     render () {
         return (
@@ -278,4 +260,14 @@ class AccountsListWrapper extends React.Component {
     }
 }
 
-export default AccountsListWrapper;
+export default connect(AccountsListWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            starredAccounts: SettingsStore.getState().starredAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

@@ -9,7 +9,7 @@ import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import AssetName from "../Utility/AssetName";
 import CollateralPosition from "../Blockchain/CollateralPosition";
-import RecentTransactions from "./RecentTransactions";
+import { RecentTransactions } from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "graphenejs-lib";
 import SettingsActions from "actions/SettingsActions";
@@ -35,7 +35,7 @@ class AccountOverview extends React.Component {
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
             nextState.settleAsset !== this.state.settleAsset ||
             nextState.showHidden !== this.state.showHidden
-        )
+        );
     }
 
     _onSettleAsset(id, e) {
@@ -48,7 +48,7 @@ class AccountOverview extends React.Component {
     }
 
     _hideAsset(asset, status) {
-        SettingsActions.hideAsset(asset, status)
+        SettingsActions.hideAsset(asset, status);
     }
 
     _renderBalances(balanceList) {
@@ -71,12 +71,13 @@ class AccountOverview extends React.Component {
                 let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
 
                 let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
-                marketLink = asset.get("id") !== "1.3.0" ? <a href={`#/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
-                settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}><Translate content="account.settle"/></a>;
+                marketLink = asset.get("id") !== "1.3.0" ? <a href={`/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
+                settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
+                    anslate content="account.settle"/></a>;
 
                 assetInfoLinks = (
                 <ul>
-                    <li><a href={`#/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                    <li><a href={`/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
                     <li>{marketLink}</li>
                     {isBitAsset ? <li>{settleLink}</li> : null}
                 </ul>);
@@ -170,9 +171,9 @@ class AccountOverview extends React.Component {
 
         if (hiddenBalances) {
             let hiddenTotal = <TotalBalanceValue balances={hiddenBalancesList} />;
-            hiddenBalances.unshift(<tr><td colSpan="4"></td></tr>)
+            hiddenBalances.unshift(<tr key="hidden"><td colSpan="4"></td></tr>);
             hiddenBalances.push(
-                <tr>
+                <tr key={"hidden_total"}>
                     <td colSpan="2" style={{textAlign: "right", fontWeight: "bold", paddingTop: 20}}>{hiddenTotal}</td>
                     <td></td>
                 </tr>
@@ -185,6 +186,7 @@ class AccountOverview extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
+                azdazd
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
                         <div className="block-content-header">

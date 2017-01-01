@@ -1,25 +1,25 @@
 import React, {PropTypes} from "react";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 
 /**
  *  Renders a tab layout, handling switching and optionally persists the currently open tab using the SettingsStore
  *
- *  props: 
+ *  props:
  *     setting: unique name to be used to remember the active tab of this tabs layout,
  *     tabsClass: optional classes for the tabs container div
  *     contentClass: optional classes for the content container div
  *
- *  Usage: 
- *  
+ *  Usage:
+ *
  *  <Tabs setting="mySetting">
  *      <Tab title="locale.string.title1">Tab 1 content</Tab>
  *      <Tab title="locale.string.title2">Tab 2 content</Tab>
  *  </Tabs>
- *     
+ *
  */
 
 class Tab extends React.Component {
@@ -48,7 +48,6 @@ class Tab extends React.Component {
     }
 }
 
-@connectToStores
 class Tabs extends React.Component {
 
     static propTypes = {
@@ -60,14 +59,6 @@ class Tabs extends React.Component {
         active: 0,
         defaultActiveTab: 0
     };
-
-    static getStores() {
-        return [SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {viewSettings: SettingsStore.getState().viewSettings}
-    }
 
     constructor(props) {
         super();
@@ -110,7 +101,7 @@ class Tabs extends React.Component {
                 activeContent = child.props.children;
             }
 
-            return React.cloneElement(child, {isActive: isActive, changeTab: this._changeTab.bind(this), index: index} )
+            return React.cloneElement(child, {isActive: isActive, changeTab: this._changeTab.bind(this), index: index} );
         }).filter(a => {
             if (a) {
                 tabIndex.push(a.props.index);
@@ -132,10 +123,17 @@ class Tabs extends React.Component {
                 </div>
 
             </div>
-        )
+        );
     }
 }
 
+Tabs = connect(Tabs, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {viewSettings: SettingsStore.getState().viewSettings};
+    }
+});
 
-Tabs.Tab = Tab;
-export default Tabs;
+export {Tabs, Tab};

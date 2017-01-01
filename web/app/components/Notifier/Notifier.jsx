@@ -10,9 +10,8 @@ let {operations} = require("graphenejs-lib").ChainTypes;
 
 let ops = Object.keys(operations);
 
-@BindToChainState({keep_updating: true})
 class Notifier extends React.Component {
-    
+
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
     }
@@ -72,7 +71,7 @@ class Notifier extends React.Component {
             </Notification.Static>
         );
     }
-
 }
+Notifier = BindToChainState(Notifier, {keep_updating: true});
 
 export default Notifier;

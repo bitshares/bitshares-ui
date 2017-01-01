@@ -11,10 +11,9 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import Post from "common/formPost";
 
-@BindToChainState({keep_updating:true})
 class WithdrawModalMetaexchange extends React.Component {
 
-	static propTypes = 
+	static propTypes =
 	{
 		gateway: React.PropTypes.string,
 		api_root: React.PropTypes.string,
@@ -30,11 +29,11 @@ class WithdrawModalMetaexchange extends React.Component {
 
    constructor( props ) {
       super(props);
-	  
+
 	  var withdrawAddress = this.updateWithdrawalAddress();
-	  
+
 	  let parts = props.symbol_pair.split('_');
-		
+
       this.state = {
 		base_symbol:parts[0],
 		quote_symbol:parts[1],
@@ -64,24 +63,24 @@ class WithdrawModalMetaexchange extends React.Component {
             });
         }
    }
-   
+
 	updateWithdrawalAddress()
 	{
 		var withdrawAddress = null
 		let wallet = WalletDb.getWallet();
 		try
 		{
-			withdrawAddress = wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'];				
+			withdrawAddress = wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'];
 			this.onWithdrawAddressChanged({target:{value:withdrawAddress}});
 		}
 		catch (Error){}
 		return withdrawAddress;
 	}
-   
+
    updateQuote(amount)
    {
 		this.setState( {quote:"fetching...", quote_amount:amount});
-		
+
 		Post.PostForm(this.props.api_root+"/2/getQuote", {symbol_pair:this.props.symbol_pair,order_type:'sell',deposit_amount:amount})
         .then( reply=> reply.json()
             .then(reply=> {
@@ -93,13 +92,13 @@ class WithdrawModalMetaexchange extends React.Component {
         });
    }
 
-	onWithdrawAmountChange( {amount, asset} ) 
+	onWithdrawAmountChange( {amount, asset} )
 	{
 		this.setState( {withdraw_amount:amount} );
 		this.updateQuote(amount);
 	}
 
-	onWithdrawAddressChanged( e ) 
+	onWithdrawAddressChanged( e )
 	{
 		this.setState({
 			withdraw_address: e.target.value
@@ -108,7 +107,7 @@ class WithdrawModalMetaexchange extends React.Component {
 		let wallet = WalletDb.getWallet();
 		wallet.deposit_keys[this.props.gateway][this.state.base_symbol]['withdraw_address'] = e.target.value;
 		WalletDb._updateWallet();
-		
+
 		// shoot off to metaexchange to request a memo/deposit address
 		Post.PostForm(	this.props.api_root+'/1/submitAddress',
 						{
@@ -134,16 +133,16 @@ class WithdrawModalMetaexchange extends React.Component {
 						});
 	}
 
-	onSubmit() 
+	onSubmit()
 	{
 		let amount = this.state.withdraw_amount.replace( /,/g, "" )
-		
+
 		if (this.state.memo)
 		{
 			let sendTo = ChainStore.getAccount(this.state.deposit_address);
 			let asset = this.props.asset;
 			let precision = utils.get_asset_precision(asset.get("precision"));
-			
+
 			// console.log( "withdraw_amount: ", amount );
 			AccountActions.transfer(
 				this.props.account.get("id"),
@@ -155,11 +154,11 @@ class WithdrawModalMetaexchange extends React.Component {
 		else if (amount > 0)
 		{
 			this.setState( {api_error:"Processing..."} );
-			
+
 			this.updateWithdrawalAddress();
 		}
 	}
-	
+
 	render() {
        let balance = null;
        // console.log( "account: ", this.props.account.toJS() );
@@ -197,7 +196,7 @@ class WithdrawModalMetaexchange extends React.Component {
                       {titlePart}
                    </div>
                    <div className="content-block">
-                     <AmountSelector label="modal.withdraw.amount" 
+                     <AmountSelector label="modal.withdraw.amount"
                                      amount={this.state.withdraw_amount}
                                      asset={this.props.asset.get('id')}
                                      assets={[this.props.asset.get('id')]}
@@ -219,22 +218,22 @@ class WithdrawModalMetaexchange extends React.Component {
                    		/>
 						<div className="has-error error-area">{this.state.api_error}</div>
                    </div>
-                                  
+
                    <div className="content-block">
-                     	<input 
+                     	<input
 	                     	type="submit"
-	                 		className="button" 
-	                        onClick={this.onSubmit.bind(this)} 
+	                 		className="button"
+	                        onClick={this.onSubmit.bind(this)}
 	                        value={counterpart.translate("modal.withdraw.submit")}
 	                    />
                        <Trigger close={this.props.modal_id}>
                            <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
-                 </div> 
+                 </div>
                </form>)
    }
-   
+
 };
 
-export default WithdrawModalMetaexchange
+export default BindToChainState(WithdrawModalMetaexchange, {keep_updating:true});

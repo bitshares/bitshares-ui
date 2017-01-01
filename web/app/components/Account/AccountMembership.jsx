@@ -15,7 +15,6 @@ import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
 import accountUtils from "common/account_utils";
 
-@BindToChainState()
 class FeeHelp extends React.Component {
        static propTypes = {
         dprops: ChainTypes.ChainObject.isRequired
@@ -37,8 +36,8 @@ class FeeHelp extends React.Component {
         );
     }
 }
+FeeHelp = BindToChainState(FeeHelp);
 
-@BindToChainState()
 class AccountMembership extends React.Component {
 
     static propTypes = {
@@ -72,7 +71,7 @@ class AccountMembership extends React.Component {
         if( ref ) account.referrer_name = ref.get('name');
         let reg = ChainStore.getAccount( account.registrar );
         if( reg ) account.registrar_name = reg.get('name');
-       
+
         let account_name = account.name;
 
         let network_fee  = account.network_fee_percentage/100;
@@ -186,5 +185,6 @@ class AccountMembership extends React.Component {
         );
     }
 }
+AccountMembership = BindToChainState(AccountMembership);
 
 export default AccountMembership;

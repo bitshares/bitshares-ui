@@ -43,8 +43,8 @@ class TransactionLabel extends React.Component {
 
 class Row extends React.Component {
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     constructor(props) {
         super(props);
@@ -53,7 +53,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.history.pushState(null, `/block/${this.props.block}`);
+        this.context.router.push(`/block/${this.props.block}`);
     }
 
     render() {
@@ -185,7 +185,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].fee_paying_account)}&nbsp;
-                        <Translate component="span" content="transaction.limit_order_cancel" />
+                        <Translate component="span" content="proposal.limit_order_cancel" />
                         &nbsp;#{op[1].order.substring(4)}
                     </span>
                 );
@@ -195,7 +195,7 @@ class ProposedOperation extends React.Component {
                 color = "cancel";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.short_order_cancel" />
+                        <Translate component="span" content="proposal.short_order_cancel" />
                         &nbsp;{op[1].order}
                     </span>
                 );
@@ -206,7 +206,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].funding_account)}&nbsp;
-                        <Translate component="span" content="transaction.call_order_update" />
+                        <Translate component="span" content="proposal.call_order_update" />
                         &nbsp;{this.linkToAsset(op[1].delta_debt.asset_id)}
                     </span>
                 );
@@ -215,7 +215,7 @@ class ProposedOperation extends React.Component {
             case "key_create":
                 column = (
                         <span>
-                            <Translate component="span" content="transaction.create_key" />
+                            <Translate component="span" content="proposal.create_key" />
                         </span>
                 );
                 break;
@@ -224,7 +224,7 @@ class ProposedOperation extends React.Component {
                 if (current === op[1].registrar) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.reg_account" />
+                            <Translate component="span" content="proposal.reg_account" />
                             &nbsp;{this.linkToAccount(op[1].name)}
                         </span>
                     );
@@ -232,7 +232,7 @@ class ProposedOperation extends React.Component {
                     column = (
                         <span>
                             {this.linkToAccount(op[1].name)}
-                            &nbsp;<Translate component="span" content="transaction.was_reg_account" />
+                            &nbsp;<Translate component="span" content="proposal.was_reg_account" />
                             &nbsp;{this.linkToAccount(op[1].registrar)}
                         </span>
                     );
@@ -277,14 +277,14 @@ class ProposedOperation extends React.Component {
                 // if (current === op[1].authorizing_account) {
                 //     column = (
                 //         <span>
-                //             <Translate component="span" content="transaction.whitelist_account" />
+                //             <Translate component="span" content="proposal.whitelist_account" />
                 //             &nbsp;{this.linkToAccount(op[1].account_to_list)}
                 //         </span>
                 //     );
                 // } else {
                 //     column = (
                 //         <span>
-                //             <Translate component="span" content="transaction.whitelisted_by" />
+                //             <Translate component="span" content="proposal.whitelisted_by" />
                 //             &nbsp;{this.linkToAccount(op[1].authorizing_account)}
                 //         </span>
                 //     );
@@ -296,14 +296,14 @@ class ProposedOperation extends React.Component {
                    column = (
                        <span>
                        {this.linkToAccount(op[1].account_to_upgrade) } &nbsp;
-                           <Translate component="span" content="transaction.lifetime_upgrade_account" />
+                           <Translate component="span" content="proposal.lifetime_upgrade_account" />
                        </span>
                    );
                 } else {
                    column = (
                        <span>
                        {this.linkToAccount(op[1].account_to_upgrade) } &nbsp;
-                           <Translate component="span" content="transaction.annual_upgrade_account" />
+                           <Translate component="span" content="proposal.annual_upgrade_account" />
                        </span>
                    );
 
@@ -313,9 +313,9 @@ class ProposedOperation extends React.Component {
             case "account_transfer":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.transfer_account" />
+                        <Translate component="span" content="proposal.transfer_account" />
                         &nbsp;{this.linkToAccount(op[1].account_id)}
-                        <Translate component="span" content="transaction.to" />
+                        <Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].new_owner)}
                     </span>
                 );
@@ -357,7 +357,7 @@ class ProposedOperation extends React.Component {
                     column = (
                         <span>
                             {this.linkToAccount(op[1].issuer)}&nbsp;
-                            <Translate component="span" content="transaction.update_feed_producers" />
+                            <Translate component="span" content="proposal.update_feed_producers" />
                             &nbsp;{this.linkToAsset(op[1].asset_to_update)}
                         </span>
                     );
@@ -365,7 +365,7 @@ class ProposedOperation extends React.Component {
                     column = (
                         <span>
                             {this.linkToAccount(op[1].issuer)}&nbsp;
-                            <Translate component="span" content="transaction.feed_producer" />
+                            <Translate component="span" content="proposal.feed_producer" />
                             &nbsp;{this.linkToAsset(op[1].asset_to_update)}
                         </span>
                     );
@@ -378,9 +378,9 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].issuer)}
-                        &nbsp;<Translate component="span" content="transaction.asset_issue" />
+                        &nbsp;<Translate component="span" content="proposal.asset_issue" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} />
-                        &nbsp;<Translate component="span" content="transaction.to" />
+                        &nbsp;<Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].issue_to_account)}
                     </span>
                 );
@@ -390,7 +390,7 @@ class ProposedOperation extends React.Component {
                 color = "cancel";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.burn_asset" />
+                        <Translate component="span" content="proposal.burn_asset" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} />
                     </span>
                 );
@@ -404,7 +404,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].from_account)} &nbsp;
-                        <Translate component="span" content="transaction.fund_pool"  asset={asset} />
+                        <Translate component="span" content="proposal.fund_pool"  asset={asset} />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset="1.3.0" />
                     </span>
                 );
@@ -414,7 +414,7 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.asset_settle" />
+                        <Translate component="span" content="proposal.asset_settle" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                     </span>
                 );
@@ -424,9 +424,9 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.asset_global_settle" />
+                        <Translate component="span" content="proposal.asset_global_settle" />
                         &nbsp;{this.linkToAsset(op[1].asset_to_settle)}
-                        &nbsp;<Translate component="span" content="transaction.at" />
+                        &nbsp;<Translate component="span" content="proposal.at" />
                         &nbsp;<FormattedPrice
                                 style={{fontWeight: "bold"}}
                                 quote_amount={op[1].price.quote.amount}
@@ -443,7 +443,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].publisher)}&nbsp;
-                        <Translate component="span" content="transaction.publish_feed" />
+                        <Translate component="span" content="proposal.publish_feed" />
                         &nbsp;<FormattedPrice
                             base_asset={op[1].feed.settlement_price.base.asset_id}
                             quote_asset={op[1].feed.settlement_price.quote.asset_id}
@@ -457,7 +457,7 @@ class ProposedOperation extends React.Component {
             case "witness_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.witness_create" />
+                        <Translate component="span" content="proposal.witness_create" />
                         &nbsp;{this.linkToAccount(op[1].witness_account)}
                     </span>
                 );
@@ -467,7 +467,7 @@ class ProposedOperation extends React.Component {
             case "witness_update":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.witness_update" />
+                        <Translate component="span" content="proposal.witness_update" />
                         &nbsp;{this.linkToAccount(op[1].witness_account)}
                     </span>
                 );
@@ -478,18 +478,18 @@ class ProposedOperation extends React.Component {
                 if (current === op[1].witness_account) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.witness_pay" />
+                            <Translate component="span" content="proposal.witness_pay" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
-                            <Translate component="span" content="transaction.to" />
+                            <Translate component="span" content="proposal.to" />
                             &nbsp;{this.linkToAccount(op[1].witness_account)}
                         </span>
                     );
                 } else {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.received" />
+                            <Translate component="span" content="proposal.received" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount} asset={"1.3.0"} />
-                            <Translate component="span" content="transaction.from" />
+                            <Translate component="span" content="proposal.from" />
                             &nbsp;{this.linkToAccount(op[1].witness_account)}
                         </span>
                     );
@@ -499,7 +499,7 @@ class ProposedOperation extends React.Component {
             case "proposal_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.proposal_create" />
+                        <Translate component="span" content="proposal.proposal_create" />
                     </span>
                 );
                 break;
@@ -507,7 +507,7 @@ class ProposedOperation extends React.Component {
             case "proposal_update":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.proposal_update" />
+                        <Translate component="span" content="proposal.proposal_update" />
                     </span>
                 );
                 break;
@@ -515,7 +515,7 @@ class ProposedOperation extends React.Component {
             case "proposal_delete":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.proposal_delete" />
+                        <Translate component="span" content="proposal.proposal_delete" />
                     </span>
                 );
                 break;
@@ -523,9 +523,9 @@ class ProposedOperation extends React.Component {
             case "withdraw_permission_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.withdraw_permission_create" />
+                        <Translate component="span" content="proposal.withdraw_permission_create" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="transaction.to" />
+                        <Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
@@ -534,9 +534,9 @@ class ProposedOperation extends React.Component {
             case "withdraw_permission_update":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.withdraw_permission_update" />
+                        <Translate component="span" content="proposal.withdraw_permission_update" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="transaction.to" />
+                        <Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
@@ -545,9 +545,9 @@ class ProposedOperation extends React.Component {
             case "withdraw_permission_claim":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.withdraw_permission_claim" />
+                        <Translate component="span" content="proposal.withdraw_permission_claim" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="transaction.to" />
+                        <Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_to_account)}
                     </span>
                 );
@@ -556,9 +556,9 @@ class ProposedOperation extends React.Component {
             case "withdraw_permission_delete":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.withdraw_permission_delete" />
+                        <Translate component="span" content="proposal.withdraw_permission_delete" />
                         &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="transaction.to" />
+                        <Translate component="span" content="proposal.to" />
                         &nbsp;{this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
@@ -570,11 +570,11 @@ class ProposedOperation extends React.Component {
                 column = (
                         <span>
                             {this.linkToAccount(op[1].account_id)}&nbsp;
-                            <Translate component="span" content="transaction.paid" />
+                            <Translate component="span" content="proposal.paid" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].pays.amount} asset={op[1].pays.asset_id} />
-                            &nbsp;<Translate component="span" content="transaction.obtain" />
+                            &nbsp;<Translate component="span" content="proposal.obtain" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].receives.amount} asset={op[1].receives.asset_id} />
-                            &nbsp;<Translate component="span" content="transaction.at" />
+                            &nbsp;<Translate component="span" content="proposal.at" />
                             &nbsp;<FormattedPrice base_asset={o.pays.asset_id} base_amount={o.pays.amount}
                                                   quote_asset={o.receives.asset_id} quote_amount={o.receives.amount}  />
                         </span>
@@ -584,7 +584,7 @@ class ProposedOperation extends React.Component {
             case "global_parameters_update":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.global_parameters_update" />
+                        <Translate component="span" content="proposal.global_parameters_update" />
                     </span>
                 );
                 break;
@@ -592,7 +592,7 @@ class ProposedOperation extends React.Component {
             case "file_write":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.file_write" />
+                        <Translate component="span" content="proposal.file_write" />
                     </span>
                 );
                 break;
@@ -601,7 +601,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         &nbsp;{this.linkToAccount(op[1].creator)}
-                        <Translate component="span" content="transaction.vesting_balance_create" />
+                        <Translate component="span" content="proposal.vesting_balance_create" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                         &nbsp;{this.linkToAccount(op[1].owner)}
                     </span>
@@ -612,7 +612,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].owner)}&nbsp;
-                        <Translate component="span" content="transaction.vesting_balance_withdraw" />
+                        <Translate component="span" content="proposal.vesting_balance_withdraw" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                     </span>
                 );
@@ -621,7 +621,7 @@ class ProposedOperation extends React.Component {
             case "bond_create_offer":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.bond_create_offer" />
+                        <Translate component="span" content="proposal.bond_create_offer" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                     </span>
                 );
@@ -630,7 +630,7 @@ class ProposedOperation extends React.Component {
             case "bond_cancel_offer":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.bond_cancel_offer" />
+                        <Translate component="span" content="proposal.bond_cancel_offer" />
                         &nbsp;{op[1].offer_id}
                     </span>
                 );
@@ -640,18 +640,18 @@ class ProposedOperation extends React.Component {
                 if (current === op[1].lender) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.bond_accept_offer" />
+                            <Translate component="span" content="proposal.bond_accept_offer" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
-                            <Translate component="span" content="transaction.to" />
+                            <Translate component="span" content="proposal.to" />
                             &nbsp;{this.linkToAccount(op[1].borrower)}
                         </span>
                     );
                 } else if (current === op[1].borrower) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.bond_accept_offer" />
+                            <Translate component="span" content="proposal.bond_accept_offer" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_borrowed.amount} asset={op[1].amount_borrowed.asset_id} />
-                            <Translate component="span" content="transaction.from" />
+                            <Translate component="span" content="proposal.from" />
                             &nbsp;{this.linkToAccount(op[1].lender)}
                         </span>
                     );
@@ -662,18 +662,18 @@ class ProposedOperation extends React.Component {
                 if (current === op[1].lender) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.bond_pay_collateral" />
+                            <Translate component="span" content="proposal.bond_pay_collateral" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
-                            <Translate component="span" content="transaction.to" />
+                            <Translate component="span" content="proposal.to" />
                             &nbsp;{this.linkToAccount(op[1].claimer)}
                         </span>
                     );
                 } else if (current === op[1].claimer) {
                     column = (
                         <span>
-                            <Translate component="span" content="transaction.bond_claim_collateral" />
+                            <Translate component="span" content="proposal.bond_claim_collateral" />
                             &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].collateral_claimed.amount} asset={op[1].collateral_claimed.asset_id} />
-                            <Translate component="span" content="transaction.from" />
+                            <Translate component="span" content="proposal.from" />
                             &nbsp;{this.linkToAccount(op[1].lender)}
                         </span>
                     );
@@ -683,7 +683,7 @@ class ProposedOperation extends React.Component {
             case "worker_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.create_worker" />
+                        <Translate component="span" content="proposal.create_worker" />
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].daily_pay} asset={"1.3.0"} />
                     </span>
                 );
@@ -700,7 +700,7 @@ class ProposedOperation extends React.Component {
                            { ({asset}) =>
                                    <Translate
                                        component="span"
-                                       content="transaction.balance_claim"
+                                       content="proposal.balance_claim"
                                        balance_amount={utils.format_asset(op[1].total_claimed.amount, asset)}
                                        balance_id={op[1].balance_to_claim.substring(5)}
                                    />
@@ -713,7 +713,7 @@ class ProposedOperation extends React.Component {
             case "committee_member_create":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.committee_member_create" />
+                        <Translate component="span" content="proposal.committee_member_create" />
                         &nbsp;{this.linkToAccount(op[1].committee_member_account)}
                     </span>
                 );
@@ -723,7 +723,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].from)}
-                        &nbsp;<Translate component="span" content="transaction.sent"/>
+                        &nbsp;<Translate component="span" content="proposal.sent"/>
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                     </span>
                 );
@@ -733,7 +733,7 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].to)}
-                        &nbsp;<Translate component="span" content="transaction.received"/>
+                        &nbsp;<Translate component="span" content="proposal.received"/>
                         &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
                     </span>
                 );
@@ -749,7 +749,7 @@ class ProposedOperation extends React.Component {
                            { ({asset}) =>
                                    <Translate
                                        component="span"
-                                       content="transaction.asset_claim_fees"
+                                       content="proposal.asset_claim_fees"
                                        balance_amount={utils.format_asset(op[1].amount_to_claim.amount, asset)}
                                        asset={asset.get("symbol")}
                                    />
@@ -775,7 +775,7 @@ class ProposedOperation extends React.Component {
             case "custom":
                 column = (
                     <span>
-                        <Translate component="span" content="transaction.custom" />
+                        <Translate component="span" content="proposal.custom" />
                     </span>
                 );
                 break;

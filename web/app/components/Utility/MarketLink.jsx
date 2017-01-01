@@ -10,11 +10,10 @@ import AssetName from "./AssetName";
  *
  *  Expected Properties:
  *     base:  asset id, which will be fetched from the ChainStore
- *     quote: either an asset id or a balance id 
+ *     quote: either an asset id or a balance id
  *
  */
 
-@BindToChainState()
 class MarketLink extends React.Component {
 
     static propTypes = {
@@ -39,7 +38,8 @@ class MarketLink extends React.Component {
     }
 }
 
-@BindToChainState()
+MarketLink = BindToChainState(MarketLink);
+
 class ObjectWrapper extends React.Component {
 
     static propTypes = {
@@ -50,9 +50,10 @@ class ObjectWrapper extends React.Component {
         let {object} = this.props;
         let quoteAsset = object.has("asset_type") ? object.get("asset_type") : object.get("id");
 
-        return <MarketLink quote={quoteAsset} />
+        return <MarketLink quote={quoteAsset} />;
     }
 }
+ObjectWrapper = BindToChainState(ObjectWrapper);
 
 MarketLink.ObjectWrapper = ObjectWrapper;
 

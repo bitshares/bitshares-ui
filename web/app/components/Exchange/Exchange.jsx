@@ -99,7 +99,6 @@ class PriceStat extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true, show_loader: true})
 class Exchange extends React.Component {
     constructor(props) {
         super();
@@ -1727,4 +1726,4 @@ class Exchange extends React.Component {
     }
 }
 
-export default Exchange;
+export default BindToChainState(Exchange, {keep_updating: true, show_loader: true});

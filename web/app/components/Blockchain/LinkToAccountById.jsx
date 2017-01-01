@@ -3,9 +3,8 @@ import {Link} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
 class LinkToAccountById extends React.Component {
-    
+
     static propTypes = {
         account: ChainTypes.ChainObject.isRequired,
         subpage: React.PropTypes.string.isRequired
@@ -32,8 +31,8 @@ class LinkToAccountById extends React.Component {
             // console.log( "account_name exists: ", this.props.account.get("id"), this.props.account.get("name") );
         }
 
-        return <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>
+        return <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>;
     }
 }
 
-export default LinkToAccountById;
+export default BindToChainState(LinkToAccountById);

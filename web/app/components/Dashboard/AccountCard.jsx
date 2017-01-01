@@ -15,27 +15,20 @@ import {ChainStore} from "graphenejs-lib";
  *  { account: ${name_or_id} }
  */
 
-@BindToChainState()
 class AccountCard extends React.Component {
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
     };
 
-
-    constructor(props) 
-    {
-       super(props)
-    }
-
     onCardClick(e) {
         e.preventDefault();
         let name = this.props.account.get('name');
-        this.context.history.pushState(null, `/account/${name}/overview/`);
+        this.context.router.push(`/account/${name}/overview/`);
     }
 
     render() {
@@ -76,4 +69,4 @@ class AccountCard extends React.Component {
     }
 }
 
-export default AccountCard;
+export default BindToChainState(AccountCard);

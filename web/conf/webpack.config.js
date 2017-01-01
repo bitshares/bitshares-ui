@@ -65,8 +65,10 @@ module.exports = function(options) {
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('development')}})),
+        plugins.push(new webpack.optimize.OccurenceOrderPlugin());
+        plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("development")}}));
         plugins.push(new webpack.HotModuleReplacementPlugin());
+        plugins.push(new webpack.NoErrorsPlugin());
     }
 
     var config = {
@@ -74,12 +76,13 @@ module.exports = function(options) {
             app: options.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [
-                "webpack-dev-server/client?http://localhost:8080",
-                "webpack/hot/only-dev-server",
+                "react-hot-loader/patch",
+                "webpack-hot-middleware/client",
                 path.resolve(root_dir, "app/Main-dev.js")
             ]
         },
         output: {
+            publicPath: "/",
             path: outputPath,
             filename: "app.js",
             pathinfo: !options.prod,
@@ -96,14 +99,14 @@ module.exports = function(options) {
                 },
                 {
                     test: /\.js$/,
-                    exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
+                    exclude: [/node_modules/],
                     loader: "babel-loader",
                     query: {compact: false, cacheDirectory: true}
                 },
                 {
                     test: /\.json/, loader: "json",
                     exclude: [
-                        path.resolve(root_dir, "../dl/src/common"),
+                        path.resolve(root_dir, "lib/common"),
                         path.resolve(root_dir, "app/assets/locales")
                     ]
                 },
@@ -126,7 +129,7 @@ module.exports = function(options) {
             }
         },
         resolve: {
-            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
+            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "./lib")],
             extensions: ["", ".js", ".jsx", ".coffee", ".json"],
             modulesDirectories: ["node_modules"],
             fallback: [path.resolve(root_dir, "./node_modules")]
@@ -151,5 +154,4 @@ module.exports = function(options) {
     // ];
 
     return config;
-
-}
+};

@@ -77,7 +77,6 @@ class AccountPermissionRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
 class AccountPermissionsList extends React.Component {
 
     static propTypes = {
@@ -219,4 +218,4 @@ class AccountPermissionsList extends React.Component {
 
 }
 
-export default AccountPermissionsList;
+export default BindToChainState(AccountPermissionsList, {keep_updating: true});

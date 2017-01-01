@@ -3,16 +3,15 @@ import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import CachedPropertyStore from "stores/CachedPropertyStore"
-import CachedPropertyActions from "actions/CachedPropertyActions"
+import CachedPropertyStore from "stores/CachedPropertyStore";
+import CachedPropertyActions from "actions/CachedPropertyActions";
 import BlockchainStore from "stores/BlockchainStore";
 import {ChainStore} from "graphenejs-lib";
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
-import ReactTooltip from "react-tooltip"
+import ReactTooltip from "react-tooltip";
 
-@BindToChainState({keep_updating: true})
 class Footer extends React.Component {
 
     static propTypes = {
@@ -91,15 +90,16 @@ class Footer extends React.Component {
         this.context.history.pushState(null, "/wallet/backup/brainkey");
     }
 }
+Footer = BindToChainState(Footer, {keep_updating: true});
 
 class AltFooter extends Component {
 
     render() {
-        var wallet = WalletDb.getWallet()
+        var wallet = WalletDb.getWallet();
         return <AltContainer
             stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
             inject ={{
-                backup_recommended: ()=> 
+                backup_recommended: ()=>
                     (wallet && ( ! wallet.backup_date || CachedPropertyStore.get("backup_recommended"))),
                 rpc_connection_status: ()=> BlockchainStore.getState().rpc_connection_status
                 // Disable notice for separate brainkey backup for now to keep things simple.  The binary wallet backup includes the brainkey...
@@ -110,7 +110,7 @@ class AltFooter extends Component {
                 // }
             }}
             ><Footer {...this.props}/>
-        </AltContainer>
+        </AltContainer>;
     }
 }
 

@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import ReactDOM from "react-dom";
 import alt from "alt-instance";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import cname from "classnames";
 import notify from "actions/NotificationActions";
 import {PrivateKey, Address, Aes, PublicKey, hash} from "graphenejs-lib";
@@ -25,24 +25,18 @@ require("./ImportKeys.scss");
 
 let import_keys_assert_checking = false;
 
-@connectToStores
-export default class ImportKeys extends Component {
+const KeyCount = ({key_count}) => {
+    if( !key_count) return <span/>;
+    return <span>Found {key_count} private keys</span>;
+};
+
+class ImportKeys extends Component {
 
     constructor() {
         super();
         this.state = this._getInitialState();
 
         this._renderBalanceClaims = this._renderBalanceClaims.bind(this);
-    }
-
-    static getStores() {
-        return [ImportKeysStore];
-    }
-
-    static getPropsFromStores() {
-        return {
-            importing: ImportKeysStore.getState().importing
-        };
     }
 
     static defaultProps = {
@@ -747,12 +741,17 @@ export default class ImportKeys extends Component {
             </div>
         );
     }
-
 }
 
-class KeyCount extends Component {
-    render() {
-        if( !this.props.key_count) return <span/>;
-        return <span>Found {this.props.key_count} private keys</span>;
+ImportKeys = connect(ImportKeys, {
+    listenTo() {
+        return [ImportKeysStore];
+    },
+    getProps() {
+        return {
+            importing: ImportKeysStore.getState().importing
+        };
     }
-}
+});
+
+export default ImportKeys;

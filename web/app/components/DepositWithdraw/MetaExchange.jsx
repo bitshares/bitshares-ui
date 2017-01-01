@@ -1,7 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import MetaexchangeDepositRequest from "../DepositWithdraw/metaexchange/MetaexchangeDepositRequest";
-import RecentTransactions, {TransactionWrapper} from "components/Account/RecentTransactions";
+import { RecentTransactions, TransactionWrapper } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 
 export default class MetaExchange extends React.Component {

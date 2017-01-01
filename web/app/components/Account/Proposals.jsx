@@ -9,8 +9,8 @@ import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import {ChainStore} from "graphenejs-lib";
 
-@BindToChainState({keep_updating: true})
-export default class Proposals extends Component {
+
+class Proposals extends Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
@@ -148,3 +148,5 @@ export default class Proposals extends Component {
         );
     }
 }
+
+export default BindToChainState(Proposals, {keep_updating: true});

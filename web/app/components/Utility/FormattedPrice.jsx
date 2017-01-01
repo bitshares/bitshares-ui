@@ -22,7 +22,6 @@ import AssetName from "./AssetName";
  *
  */
 
-@BindToChainState()
 class FormattedPrice extends React.Component {
 
     static propTypes = {
@@ -137,6 +136,8 @@ class FormattedPrice extends React.Component {
          )
     }
 }
+
+FormattedPrice = BindToChainState(FormattedPrice);
 
 export default class FormattedPriceWrapper extends React.Component {
 

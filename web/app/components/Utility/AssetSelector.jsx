@@ -17,7 +17,6 @@ import Icon from "../Icon/Icon";
  *
  */
 
-@BindToChainState()
 class AssetSelector extends React.Component {
 
     static propTypes = {
@@ -103,7 +102,7 @@ class AssetSelector extends React.Component {
                     </div>
                     <div className="input-area">
                       <span className="inline-label">
-                      <input 
+                      <input
                              disabled={this.props.disabled}
                              type="text"
                              value={this.props.assetInput || ""}
@@ -112,7 +111,7 @@ class AssetSelector extends React.Component {
                              onChange={this.onInputChanged.bind(this)}
                              onKeyDown={this.onKeyDown.bind(this)}
                              tabIndex={this.props.tabIndex}/>
-                          { this.props.children }                          
+                          { this.props.children }
                       </span>
                     </div>
                     <div className="error-area" style={{paddingBottom: "10px"}}>
@@ -120,9 +119,9 @@ class AssetSelector extends React.Component {
                     </div>
                 </div>
             </div>
-        )
+        );
 
     }
 
 }
-export default AssetSelector;
+export default BindToChainState(AssetSelector);

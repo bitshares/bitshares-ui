@@ -3,7 +3,8 @@ import {Apis} from "graphenejs-ws";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import {Router, Route, IndexRoute, Redirect} from "react-router";
+// import {Router, Route, IndexRoute, Redirect} from "react-router";
+import { Router, Route, Link, useRouterHistory, IndexRoute, browserHistory } from "react-router";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import Explorer from "./components/Explorer/Explorer";
@@ -45,7 +46,7 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import NotificationSystem from "react-notification-system";
 import NotificationStore from "stores/NotificationStore";
 import iDB from "idb-instance";
-import ExistingAccount, {ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
+import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
 import WalletCreate from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import WalletDb from "stores/WalletDb";
@@ -55,7 +56,7 @@ import Invoice from "./components/Transfer/Invoice";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword";
 import WalletManagerStore from "stores/WalletManagerStore";
-import WalletManager, {WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
+import {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
@@ -64,18 +65,18 @@ import Help from "./components/Help";
 import InitError from "./components/InitError";
 import SyncError from "./components/SyncError";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
-import createBrowserHistory from "history/lib/createHashHistory";
+import {createHistory} from "history";
 import {IntlProvider} from "react-intl";
 import intlData from "./components/Utility/intlData";
-import connectToStores from "alt/utils/connectToStores";
+import alt from "alt-instance";
+import { connect, supplyFluxContext } from "alt-react";
 import Chat from "./components/Chat/ChatWrapper";
 import Translate from "react-translate-component";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
 // require("dl_cli_index").init(window) // Adds some object refs to the global window object
-
-let history = createBrowserHistory({queryKey: false});
+const history = browserHistory; //useRouterHistory(browserHistory)({queryKey: false});
 ChainStore.setDispatchFrequency(20);
 
 class App extends React.Component {
@@ -92,6 +93,8 @@ class App extends React.Component {
             dockedChat: SettingsStore.getState().viewSettings.get("dockedChat", false),
             isMobile: false
         };
+
+        this._rebuildTooltips = this._rebuildTooltips.bind(this);
     }
 
     componentWillUnmount() {
@@ -137,8 +140,8 @@ class App extends React.Component {
             });
         }
 
-        this.props.history.listen(() => {
-            this._rebuildTooltips();
+        this.props.router.listen(() => {
+            setTimeout(this._rebuildTooltips, 1250);
         });
 
         this._rebuildTooltips();
@@ -247,24 +250,12 @@ class App extends React.Component {
     }
 }
 
-@connectToStores
 class RootIntl extends React.Component {
-    static getStores() {
-        return [IntlStore];
-    };
-
-    static getPropsFromStores() {
-        return {
-            locale: IntlStore.getState().currentLocale
-        };
-    };
-
     componentDidMount() {
         IntlActions.switchLocale(this.props.locale);
     }
 
     render() {
-
         return (
             <IntlProvider
                 locale={this.props.locale.replace(/cn/, "zh")}
@@ -277,12 +268,42 @@ class RootIntl extends React.Component {
     }
 }
 
+RootIntl = connect(RootIntl, {
+    listenTo() {
+        return [IntlStore];
+    },
+    getProps() {
+        return {
+            locale: IntlStore.getState().currentLocale
+        };
+    }
+});
+
+class Root extends React.Component {
+    static childContextTypes = {
+        router: React.PropTypes.object,
+        location: React.PropTypes.object
+    }
+
+    getChildContext() {
+        return {
+            router: this.props.router,
+            location: this.props.location
+        };
+    }
+
+    render() {
+        return <RootIntl {...this.props} />;
+    }
+}
+
+Root = supplyFluxContext(alt)(Root);
+
 class Auth extends React.Component {
     render() {return null; }
 }
 
 let willTransitionTo = (nextState, replaceState, callback) => {
-
     let connectionString = SettingsStore.getSetting("apiServer");
 
     if (nextState.location.pathname === "/init-error") {
@@ -315,10 +336,10 @@ let willTransitionTo = (nextState, replaceState, callback) => {
                 PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
                     if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
-                        replaceState(null, "/create-account");
+                        replaceState("/create-account");
                     }
                     if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                        replaceState(null, "/dashboard");
+                        replaceState("/dashboard");
                     }
                 }).catch((error) => {
                     console.error("----- WalletDb.willTransitionTo error ----->", error);
@@ -333,14 +354,14 @@ let willTransitionTo = (nextState, replaceState, callback) => {
         if(error.name === "InvalidStateError") {
             alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
         } else {
-            replaceState(null, "/init-error");
+            replaceState("/init-error");
             callback();
         }
     });
 };
 
 let routes = (
-    <Route path="/" component={RootIntl} onEnter={willTransitionTo}>
+    <Route path="/" component={Root} onEnter={willTransitionTo}>
         <IndexRoute component={DashboardContainer}/>
         <Route path="/auth/:data" component={Auth}/>
         <Route path="/dashboard" component={DashboardContainer}/>
@@ -410,6 +431,5 @@ let routes = (
         </Route>
     </Route>
 );
-
 
 ReactDOM.render(<Router history={history} routes={routes}/>, document.getElementById("content"));

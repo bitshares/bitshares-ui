@@ -1,5 +1,5 @@
 import React from "react";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import HelpContent from "./Utility/HelpContent";
 import BlockchainStore from "stores/BlockchainStore";
 import SettingsStore from "stores/SettingsStore";
@@ -8,21 +8,7 @@ import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
 import {Apis} from "graphenejs-ws";
 
-@connectToStores
 class InitError extends React.Component {
-
-    static getStores() {
-        return [BlockchainStore, SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {
-            rpc_connection_status: BlockchainStore.getState().rpc_connection_status,
-            apis: SettingsStore.getState().defaults.apiServer,
-            apiServer: SettingsStore.getState().settings.get("apiServer"),
-            defaultConnection: SettingsStore.getState().defaultSettings.get("apiServer"),
-        }
-    }
 
     triggerModal(e) {
         console.log("triggerModal:");
@@ -105,4 +91,16 @@ class InitError extends React.Component {
     }
 }
 
-export default InitError;
+export default connect(InitError, {
+    listenTo() {
+        return [BlockchainStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            rpc_connection_status: BlockchainStore.getState().rpc_connection_status,
+            apis: SettingsStore.getState().defaults.apiServer,
+            apiServer: SettingsStore.getState().settings.get("apiServer"),
+            defaultConnection: SettingsStore.getState().defaultSettings.get("apiServer"),
+        };
+    }
+});

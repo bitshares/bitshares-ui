@@ -7,7 +7,7 @@ import HelpContent from "../Utility/HelpContent";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
-import EquivalentValueComponent from "../Utility/EquivalentValueComponent";
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {ChainStore} from "graphenejs-lib";
 let {operations} = require("graphenejs-lib").ChainTypes;
 let ops = Object.keys(operations);
@@ -24,7 +24,6 @@ let fee_grouping = {
 // Operations that require LTM
 let ltm_required = [5, 7, 20, 21, 34];
 
-@BindToChainState({keep_updating:true})
 class FeeGroup extends React.Component {
 
     static propTypes = {
@@ -115,7 +114,7 @@ class FeeGroup extends React.Component {
             return (<tbody key={feeIdx}>{rows}</tbody>);
         })
 
-        return (   
+        return (
                    <div className="asset-card">
                     <div className="card-divider">{this.props.title}</div>
                     <table className="table">
@@ -133,13 +132,14 @@ class FeeGroup extends React.Component {
            );
     }
 }
+FeeGroup = BindToChainState(FeeGroup, {keep_updating:true});
 
 class Fees extends React.Component {
 
     render() {
 
         let FeeGroupsTitle  = counterpart.translate("transaction.feeGroups");
-        let feeGroups = []
+        let feeGroups = [];
 
         for (let groupName in fee_grouping) {
             let groupNameText = FeeGroupsTitle[groupName];
@@ -162,7 +162,6 @@ class Fees extends React.Component {
             </div>
         );
     }
-
 }
 
 export default Fees;

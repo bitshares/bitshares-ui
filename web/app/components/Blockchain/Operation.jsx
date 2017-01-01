@@ -41,10 +41,9 @@ class TransactionLabel extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
-        history: PropTypes.history
+        router: React.PropTypes.object.isRequired
     }
 
     static propTypes = {
@@ -62,7 +61,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.history.pushState(null, `/block/${this.props.block}`);
+        this.context.router.push(`/block/${this.props.block}`);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -106,6 +105,7 @@ class Row extends React.Component {
             );
     }
 }
+Row = BindToChainState(Row, {keep_updating:true});
 
 class Operation extends React.Component {
 

@@ -48,7 +48,6 @@ class BlockTimeAgo extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true, show_loader: true})
 class Blocks extends React.Component {
 
     static propTypes = {
@@ -60,7 +59,11 @@ class Blocks extends React.Component {
     static defaultProps = {
         globalObject: "2.0.0",
         dynGlobalObject: "2.1.0",
-        coreAsset: "1.3.0"
+        coreAsset: "1.3.0",
+        latestBlocks: {},
+        assets: {},
+        accounts: {},
+        height: 1
     };
 
     constructor(props) {
@@ -118,7 +121,7 @@ class Blocks extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.latestBlocks, this.props.latestBlocks) ||
-            !utils.are_equal_shallow(nextState, this.state)               
+            !utils.are_equal_shallow(nextState, this.state)
         );
     }
 
@@ -147,14 +150,14 @@ class Blocks extends React.Component {
     }
 
     _updateHeight() {
-            let containerHeight = this.refs.outerWrapper.offsetHeight;
-            let operationsTextHeight = this.refs.operationsText.offsetHeight;
-            let blocksTextHeight = this.refs.blocksText.offsetHeight;
+        let containerHeight = this.refs.outerWrapper.offsetHeight;
+        let operationsTextHeight = this.refs.operationsText.offsetHeight;
+        let blocksTextHeight = this.refs.blocksText.offsetHeight;
 
-            this.setState({
-                operationsHeight: containerHeight - operationsTextHeight,
-                blocksHeight: containerHeight - blocksTextHeight
-            }, this.psUpdate);
+        this.setState({
+            operationsHeight: containerHeight - operationsTextHeight,
+            blocksHeight: containerHeight - blocksTextHeight
+        }, this.psUpdate);
     }
 
     psUpdate() {
@@ -182,8 +185,8 @@ class Blocks extends React.Component {
             // Map out the block times for the latest blocks and count the number of transactions
             latestBlocks.filter((a, index) => {
                 // Only use consecutive blocks counting back from head block
-                return a.id === (dynGlobalObject.get("head_block_number") - index)})
-            .sort((a, b) => {
+                return a.id === (dynGlobalObject.get("head_block_number") - index);
+            }).sort((a, b) => {
                 return a.id - b.id;
             }).forEach((block, index) => {
                 trxCount += block.transactions.length;
@@ -217,7 +220,7 @@ class Blocks extends React.Component {
             }).toArray();
 
             let trxIndex = 0;
-            
+
             transactions = latestTransactions.take(20)
             .map((trx) => {
 
@@ -234,7 +237,7 @@ class Blocks extends React.Component {
                             current={"1.2.0"}
                         />
                     );
-                })
+                });
 
             }).toArray();
 
@@ -280,7 +283,7 @@ class Blocks extends React.Component {
                     </div>
                 </div>
 
-                {/* Second row of stats */ }
+                { /* Second row of stats */ }
                 <div  className="align-center grid-block shrink small-horizontal  blocks-row">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
@@ -316,7 +319,7 @@ class Blocks extends React.Component {
                     </div>
                 </div>
 
-            {/* Third row: graphs */ }
+            { /* Third row: graphs */ }
                 <div className="align-center grid-block shrink small-vertical medium-horizontal blocks-row">
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow clear-fix">
@@ -357,9 +360,9 @@ class Blocks extends React.Component {
 
                 </div>
 
-            {/* Fourth row: transactions and blocks */ }
+            { /* Fourth row: transactions and blocks */ }
                 <div ref ="transactionsBlock" className="grid-block no-overflow">
-                    
+
                     <div className="grid-block small-12 medium-6 vertical no-overflow" style={{paddingBottom: 0}}>
                         <div className="grid-block vertical no-overflow generic-bordered-box">
                             <div ref="operationsText">
@@ -391,7 +394,7 @@ class Blocks extends React.Component {
                                     </div>
                                 </div>
                                 <div className="grid-block vertical" style={{maxHeight: blocksHeight || "438px", overflow: "hidden", }} ref="blocks">
-                                
+
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -418,18 +421,4 @@ class Blocks extends React.Component {
     }
 }
 
-Blocks.defaultProps = {
-    latestBlocks: {},
-    assets: {},
-    accounts: {},
-    height: 1
-};
-
-Blocks.propTypes = {
-    latestBlocks: PropTypes.object.isRequired,
-    assets: PropTypes.object.isRequired,
-    accounts: PropTypes.object.isRequired,
-    height: PropTypes.number.isRequired
-};
-
-export default Blocks;
+export default BindToChainState(Blocks, {keep_updating: true, show_loader: true});

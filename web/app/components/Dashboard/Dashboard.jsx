@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Immutable from "immutable";
 import DashboardList from "./DashboardList";
-import RecentTransactions from "../Account/RecentTransactions";
+import { RecentTransactions } from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 import ps from "perfect-scrollbar";
 import AssetName from "../Utility/AssetName";
@@ -138,7 +138,7 @@ class Dashboard extends React.Component {
                                     <tbody>
                                         <tr>
                                             <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
-                                                <div onClick={this._onToggleIgnored.bind(this)}className="button outline">
+                                                <div onClick={this._onToggleIgnored.bind(this)} className="button outline">
                                                     <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
                                                 </div>
                                             </td>

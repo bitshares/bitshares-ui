@@ -1,5 +1,4 @@
 import React from "react";
-import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
@@ -7,11 +6,10 @@ import BindToChainState from "../Utility/BindToChainState";
 import {ChainStore} from "graphenejs-lib";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 
-@BindToChainState({keep_updating: true})
 class CommitteeMemberCard extends React.Component {
 
     static propTypes = {
@@ -19,12 +17,12 @@ class CommitteeMemberCard extends React.Component {
     };
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     _onCardClick(e) {
         e.preventDefault();
-        this.context.history.pushState(null, `/account/${this.props.committee_member.get("name")}`);
+        this.context.router.push(`/account/${this.props.committee_member.get("name")}`);
     }
 
     render() {
@@ -44,15 +42,15 @@ class CommitteeMemberCard extends React.Component {
                         </div>
                         <ul className="balances">
                             <li><Translate content="account.votes.votes" />: <FormattedAsset decimalOffset={5} amount={committee_member_data.get("total_votes")} asset={"1.3.0"}/></li>
-                        </ul>                        
+                        </ul>
                     </div>
                 </div>
             </div>
         );
     }
 }
+CommitteeMemberCard = BindToChainState(CommitteeMemberCard, {keep_updating: true});
 
-@BindToChainState({keep_updating: true})
 class CommitteeMemberRow extends React.Component {
 
     static propTypes = {
@@ -60,12 +58,12 @@ class CommitteeMemberRow extends React.Component {
     };
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     _onRowClick(e) {
         e.preventDefault();
-        this.context.history.pushState(null, `/account/${this.props.committee_member.get("name")}`);
+        this.context.router.push(`/account/${this.props.committee_member.get("name")}`);
     }
 
     render() {
@@ -88,8 +86,8 @@ class CommitteeMemberRow extends React.Component {
         )
     }
 }
+CommitteeMemberRow = BindToChainState(CommitteeMemberRow, {keep_updating: true});
 
-@BindToChainState({keep_updating: true, show_loader: true})
 class CommitteeMemberList extends React.Component {
     static propTypes = {
         committee_members: ChainTypes.ChainObjectsList.isRequired
@@ -142,9 +140,9 @@ class CommitteeMemberList extends React.Component {
                     if (!a) {return false; }
                     let account = ChainStore.getObject(a.get("committee_member_account"));
                     if (!account) { return false; }
-                    
+
                     return account.get("name").indexOf(this.props.filter) !== -1;
-                    
+
                 })
                 .sort((a, b) => {
                     let a_account = ChainStore.getObject(a.get("committee_member_account"));
@@ -213,8 +211,8 @@ class CommitteeMemberList extends React.Component {
         }
     }
 }
+CommitteeMemberList = BindToChainState(CommitteeMemberList, {keep_updating: true, show_loader: true});
 
-@BindToChainState({keep_updating: true})
 class CommitteeMembers extends React.Component {
 
     static propTypes = {
@@ -270,7 +268,7 @@ class CommitteeMembers extends React.Component {
                 activeCommitteeMembers.push(globalObject.active_committee_members[key]);
             }
         }
-      
+
         return (
             <div className="grid-block">
                 <div className="grid-block page-layout">
@@ -301,23 +299,24 @@ class CommitteeMembers extends React.Component {
         );
     }
 }
+CommitteeMembers = BindToChainState(CommitteeMembers, {keep_updating: true});
 
-@connectToStores
 class CommitteeMembersStoreWrapper extends React.Component {
-    static getStores() {
-        return [SettingsStore]
+    render () {
+        return <CommitteeMembers {...this.props}/>;
     }
+}
 
-    static getPropsFromStores() {
+CommitteeMembersStoreWrapper = connect(CommitteeMembersStoreWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
         return {
             cardView: SettingsStore.getState().viewSettings.get("cardViewCommittee"),
             filterCommitteeMember: SettingsStore.getState().viewSettings.get("filterCommitteeMember"),
-        }
+        };
     }
-
-    render () {
-        return <CommitteeMembers {...this.props}/>
-    }
-}
+});
 
 export default CommitteeMembersStoreWrapper;

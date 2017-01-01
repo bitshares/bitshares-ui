@@ -10,7 +10,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 
-@BindToChainState()
 class AccountRow extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
@@ -31,9 +30,10 @@ class AccountRow extends React.Component {
                 <td>{!balance? "n/a" : <BalanceComponent balance={balance} />}</td>
                 <td>{!balance ? "n/a" : <BalanceComponent balance={balance} asPercentage={true} />}</td>
             </tr>
-        )
+        );
     }
 }
+AccountRow = BindToChainState(AccountRow);
 
 class Accounts extends React.Component {
 

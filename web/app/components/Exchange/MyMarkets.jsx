@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {PropTypes} from "react-router";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import MarketRow from "./MarketRow";
 import SettingsStore from "stores/SettingsStore";
 import MarketsStore from "stores/MarketsStore";
@@ -222,7 +221,6 @@ class MarketGroup extends React.Component {
     }
 }
 
-@BindToChainState()
 class MyMarkets extends React.Component {
 
     static propTypes = {
@@ -236,8 +234,8 @@ class MyMarkets extends React.Component {
     };
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     constructor(props) {
         super();
@@ -351,7 +349,7 @@ class MyMarkets extends React.Component {
     }
 
     _goMarkets() {
-        this.context.history.pushState(null, "/markets");
+        this.context.router.push("/markets");
     }
 
     _changeTab(tab) {
@@ -635,23 +633,9 @@ class MyMarkets extends React.Component {
         );
     }
 }
+MyMarkets = BindToChainState(MyMarkets);
 
-@connectToStores
 class MyMarketsWrapper extends React.Component {
-    static getStores() {
-        return [SettingsStore, MarketsStore, AssetStore];
-    }
-
-    static getPropsFromStores() {
-        return {
-            starredMarkets: SettingsStore.getState().starredMarkets,
-            viewSettings: SettingsStore.getState().viewSettings,
-            preferredBases: SettingsStore.getState().preferredBases,
-            marketStats: MarketsStore.getState().allMarketStats,
-            searchAssets: AssetStore.getState().assets
-        };
-    }
-
     render () {
         return (
             <MyMarkets
@@ -661,4 +645,17 @@ class MyMarketsWrapper extends React.Component {
     }
 }
 
-export default MyMarketsWrapper;
+export default connect(MyMarketsWrapper, {
+    listenTo() {
+        return [SettingsStore, MarketsStore, AssetStore];
+    },
+    getProps() {
+        return {
+            starredMarkets: SettingsStore.getState().starredMarkets,
+            viewSettings: SettingsStore.getState().viewSettings,
+            preferredBases: SettingsStore.getState().preferredBases,
+            marketStats: MarketsStore.getState().allMarketStats,
+            searchAssets: AssetStore.getState().assets
+        };
+    }
+});

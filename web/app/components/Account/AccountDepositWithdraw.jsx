@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import accountUtils from "common/account_utils";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -13,7 +13,6 @@ import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/Blo
 import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
-import Tabs from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import Post from "common/formPost";
 import cnames from "classnames";
@@ -21,7 +20,6 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 
-@BindToChainState()
 class AccountDepositWithdraw extends React.Component {
 
     static propTypes = {
@@ -329,21 +327,22 @@ class AccountDepositWithdraw extends React.Component {
     );
     }
 };
+AccountDepositWithdraw = BindToChainState(AccountDepositWithdraw);
 
-@connectToStores
-export default class DepositStoreWrapper extends React.Component {
-    static getStores() {
-        return [AccountStore, SettingsStore]
-    };
+class DepositStoreWrapper extends React.Component {
+    render () {
+        return <AccountDepositWithdraw {...this.props}/>;
+    }
+}
 
-    static getPropsFromStores() {
+export default connect(DepositStoreWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore];
+    },
+    getProps() {
         return {
             account: AccountStore.getState().currentAccount,
             viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
-
-    render () {
-        return <AccountDepositWithdraw {...this.props}/>
+        };
     }
-}
+});

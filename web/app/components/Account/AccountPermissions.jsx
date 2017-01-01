@@ -7,16 +7,16 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
-import WalletApi from "rpc_api/WalletApi";
+import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js"
 import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
 import {FetchChainObjects, PublicKey, ChainStore} from "graphenejs-lib";;
 import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
-import Tabs, {Tab} from "../Utility/Tabs";
+import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
-import RecentTransactions from "./RecentTransactions";
+import { RecentTransactions } from "./RecentTransactions";
 
 let wallet_api = new WalletApi()
 

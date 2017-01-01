@@ -2,10 +2,10 @@ import React from "react";
 import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
 import Translate from "react-translate-component";
 import AccountBalance from "components/Account/AccountBalance";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import RecentTransactions, {TransactionWrapper} from "components/Account/RecentTransactions";
+import { RecentTransactions, TransactionWrapper } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 import cnames from "classnames";
 import AssetName from "components/Utility/AssetName";
@@ -14,19 +14,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import LoadingIndicator from "../LoadingIndicator";
 
-@connectToStores
-export default class BlockTradesGateway extends React.Component {
-
-    static getStores() {
-        return [SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
-
+class BlockTradesGateway extends React.Component {
     constructor(props) {
         super();
 
@@ -84,7 +72,7 @@ export default class BlockTradesGateway extends React.Component {
     }
 
     changeAction(type) {
-		
+
         let activeCoin = this._getActiveCoin(this.props, {action: type});
 
         this.setState({
@@ -215,3 +203,14 @@ export default class BlockTradesGateway extends React.Component {
         )
     }
 }
+
+export default connect(BlockTradesGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

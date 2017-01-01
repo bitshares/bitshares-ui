@@ -5,13 +5,12 @@ import {Link} from "react-router";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import AccountStore from "stores/AccountStore";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletManagerStore from "stores/WalletManagerStore";
 import SettingsStore from "stores/SettingsStore";
 import cnames from "classnames";
 
-@connectToStores
 class MobileMenu extends React.Component {
     constructor() {
         super();
@@ -19,23 +18,8 @@ class MobileMenu extends React.Component {
     }
 
     static contextTypes = {
-      history: React.PropTypes.object
+        history: React.PropTypes.object
     };
-
-    static getStores() {
-      return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore]
-    }
-
-    static getPropsFromStores() {
-      return {
-        linkedAccounts: AccountStore.getState().linkedAccounts,
-        currentAccount: AccountStore.getState().currentAccount,
-        locked: WalletUnlockStore.getState().locked,
-        current_wallet: WalletManagerStore.getState().current_wallet,
-        lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
-        myAccounts: AccountStore.getMyAccounts()
-      }
-    }
 
     onClick() {
         ZfApi.publish("mobile-menu", "close");
@@ -66,7 +50,7 @@ class MobileMenu extends React.Component {
 
         let tradeLink = this.props.lastMarket ?
             <a onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate content="header.exchange" /></a> :
-            <a onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate content="header.exchange" /></a>
+            <a onClick={this._onNavigate.bind(this, "/explorer/markets")}><Translate content="header.exchange" /></a>;
 
         return (
             <Panel id={id} position="left">
@@ -99,4 +83,18 @@ class MobileMenu extends React.Component {
     }
 }
 
-export default MobileMenu;
+export default connect(MobileMenu, {
+    listenTo() {
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            currentAccount: AccountStore.getState().currentAccount,
+            locked: WalletUnlockStore.getState().locked,
+            current_wallet: WalletManagerStore.getState().current_wallet,
+            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            myAccounts: AccountStore.getMyAccounts()
+        };
+    }
+});

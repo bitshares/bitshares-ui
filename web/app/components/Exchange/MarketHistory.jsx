@@ -11,24 +11,12 @@ import PriceText from "../Utility/PriceText";
 import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 let {operations} = require("graphenejs-lib").ChainTypes;
 
-@connectToStores
 class MarketHistory extends React.Component {
-
-    static getStores() {
-        return [SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    }
-
     constructor(props) {
         super();
         this.state = {
@@ -78,7 +66,7 @@ class MarketHistory extends React.Component {
             let index = 0;
             let keyIndex = -1;
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
-            historyRows = myHistory.filter(a => {            
+            historyRows = myHistory.filter(a => {
                 let opType = a.getIn(["op", 0]);
                 return (opType === operations.fill_order);
             }).filter(a => {
@@ -212,4 +200,13 @@ MarketHistory.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-export default MarketHistory;
+export default connect(MarketHistory, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

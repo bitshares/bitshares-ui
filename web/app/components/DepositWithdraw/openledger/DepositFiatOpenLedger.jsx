@@ -11,7 +11,6 @@ import AccountActions from "actions/AccountActions";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
-@BindToChainState({keep_updating:true})
 class DepositFiatOpenLedger extends React.Component {
 
    static propTypes = {
@@ -191,4 +190,4 @@ class DepositFiatOpenLedger extends React.Component {
 
 };
 
-export default DepositFiatOpenLedger
+export default BindToChainState(DepositFiatOpenLedger, {keep_updating:true});

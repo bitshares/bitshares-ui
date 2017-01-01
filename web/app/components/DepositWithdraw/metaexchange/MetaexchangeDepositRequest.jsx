@@ -11,8 +11,7 @@ import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
 import WalletDb from "stores/WalletDb";
 
-@BindToChainState({keep_updating:true})
-export default class MetaexchangeDepositRequest extends React.Component {
+class MetaexchangeDepositRequest extends React.Component {
     static propTypes = {
         gateway:                React.PropTypes.string,
         symbol_pair:            React.PropTypes.string,
@@ -180,3 +179,5 @@ export default class MetaexchangeDepositRequest extends React.Component {
         </tr>
     }
 };
+
+export default BindToChainState(MetaexchangeDepositRequest, {keep_updating:true});

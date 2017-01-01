@@ -10,7 +10,7 @@ import utils from "common/utils";
 import classNames from "classnames";
 import AmountSelector from "../Utility/AmountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
+import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
@@ -29,7 +29,6 @@ let wallet_api = new WalletApi();
  *
  */
 
-@BindToChainState({keep_updating: true})
 class BorrowModalContent extends React.Component {
 
     static propTypes = {
@@ -409,6 +408,7 @@ class BorrowModalContent extends React.Component {
         );
     }
 }
+BorrowModalContent = BindToChainState(BorrowModalContent, {keep_updating: true});
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {

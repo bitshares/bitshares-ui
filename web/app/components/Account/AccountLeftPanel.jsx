@@ -40,6 +40,10 @@ class AccountLeftPanel extends React.Component {
         );
     }
 
+    componentWillUnmount() {
+        ReactTooltip.hide();
+    }
+
     onLinkAccount(e) {
         e.preventDefault();
         AccountActions.linkAccount(this.props.account.get("name"));
@@ -48,12 +52,6 @@ class AccountLeftPanel extends React.Component {
     onUnlinkAccount(e) {
         e.preventDefault();
         AccountActions.unlinkAccount(this.props.account.get("name"));
-    }
-
-    onCreateAccountClick(e) {
-        e.preventDefault();
-        ReactTooltip.hide();
-        this.context.history.pushState(null, "/create-account");
     }
 
     _toggleAdvanced() {
@@ -120,7 +118,7 @@ class AccountLeftPanel extends React.Component {
                 {isMyAccount ?
                 <div className="grid-block shrink bottom">
                     <div className="center">
-                        <a href data-tip={counterpart.translate("account.create_new")} data-place="top" onClick={this.onCreateAccountClick.bind(this)}><Icon name="plus-circle"/></a>
+                        <span data-tip={counterpart.translate("account.create_new")} data-place="top"><Link to="/create-account"><Icon name="plus-circle"/></Link></span>
                     </div>
                 </div> : null}
             </div>

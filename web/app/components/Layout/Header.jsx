@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, PropTypes} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -19,27 +19,11 @@ import Immutable from "immutable";
 
 var logo = require("assets/logo-ico-blue.png");
 
-@connectToStores
 class Header extends React.Component {
 
-    static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
-    }
-
-    static getPropsFromStores() {
-        return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            currentAccount: AccountStore.getState().currentAccount,
-            locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
-            starredAccounts: SettingsStore.getState().starredAccounts
-        };
-    }
-
     static contextTypes = {
-        location: React.PropTypes.object,
-        history: PropTypes.history
+        location: React.PropTypes.object.isRequired,
+        router: React.PropTypes.object.isRequired
     };
 
     constructor(props, context) {
@@ -52,11 +36,11 @@ class Header extends React.Component {
     }
 
     componentWillMount() {
-        this.unlisten = this.context.history.listen((err, newState) => {
+        this.unlisten = this.context.router.listen((newState, err) => {
             if (!err) {
-                if (this.unlisten && this.state.active !== newState.location.pathname) {
+                if (this.unlisten && this.state.active !== newState.pathname) {
                     this.setState({
-                        active: newState.location.pathname
+                        active: newState.pathname
                     });
                 }
             }
@@ -99,7 +83,7 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
-        this.context.history.pushState(null, route);
+        this.context.router.push(route);
     }
 
     _onGoBack(e) {
@@ -122,7 +106,7 @@ class Header extends React.Component {
         e.stopPropagation();
         e.preventDefault();
 
-        this.context.history.pushState(null, `/account/${account}/overview`);
+        this.context.router.push(`/account/${account}/overview`);
     }
 
     render() {
@@ -297,4 +281,18 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default connect(Header, {
+    listenTo() {
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            currentAccount: AccountStore.getState().currentAccount,
+            locked: WalletUnlockStore.getState().locked,
+            current_wallet: WalletManagerStore.getState().current_wallet,
+            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            starredAccounts: SettingsStore.getState().starredAccounts
+        };
+    }
+});

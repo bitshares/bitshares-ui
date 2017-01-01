@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import ReactDOM from "react-dom";
 import {Apis} from "graphenejs-ws";
-import ApplicationApi from "rpc_api/ApplicationApi"
-import WalletApi from "rpc_api/WalletApi"
-import DebugApi from "rpc_api/DebugApi"
+import ApplicationApi from "api/ApplicationApi"
+import WalletApi from "api/WalletApi"
+import DebugApi from "api/DebugApi"
 
 function evalInContext(js) {
     

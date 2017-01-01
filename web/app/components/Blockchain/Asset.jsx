@@ -56,7 +56,6 @@ class AssetPermission extends React.Component {
 }
 
 
-@BindToChainState({keep_updating: true})
 class Asset extends React.Component {
 
     static propTypes = {
@@ -532,4 +531,4 @@ Asset.propTypes = {
 Asset.contextTypes = { router: React.PropTypes.func.isRequired };
 */
 
-export default Asset;
+export default BindToChainState(Asset, {keep_updating: true});
