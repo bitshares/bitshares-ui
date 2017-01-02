@@ -86,7 +86,6 @@ class App extends React.Component {
             this.refs.browser_modal.show();
         }
 
-        console.log("props:", this.props);
         this.props.router.listen(() => {
             setTimeout(this._rebuildTooltips, 1250);
         });
@@ -198,7 +197,7 @@ class App extends React.Component {
 }
 
 class RootIntl extends React.Component {
-    componentDidMount() {
+    componentWillMount() {
         IntlActions.switchLocale(this.props.locale);
     }
 

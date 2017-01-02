@@ -1,11 +1,9 @@
 import React from "react";
-import {Link} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
-import MarketLink from "../Utility/MarketLink";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import AssetName from "../Utility/AssetName";
 import CollateralPosition from "../Blockchain/CollateralPosition";
@@ -19,7 +17,7 @@ import Icon from "../Icon/Icon";
 
 class AccountOverview extends React.Component {
 
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             settleAsset: "1.3.0",
@@ -120,7 +118,7 @@ class AccountOverview extends React.Component {
                     </td>
                 </tr>
             );
-        })
+        });
 
         return balances;
     }
@@ -128,7 +126,7 @@ class AccountOverview extends React.Component {
     _toggleHiddenAssets() {
         this.setState({
             showHidden: !this.state.showHidden
-        })
+        });
     }
 
     render() {
@@ -147,7 +145,7 @@ class AccountOverview extends React.Component {
 
         if (account_balances) {
             // Filter out balance objects that have not yet been retrieved by ChainStore
-            account_balances = account_balances.filter((a, key) => {
+            account_balances = account_balances.filter((a) => {
                 let balanceObject = ChainStore.getObject(a);
                 if (!balanceObject.get("balance")) {
                     return false;

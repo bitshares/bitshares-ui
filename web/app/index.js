@@ -194,7 +194,7 @@ let routes = (
 const rootEl = document.getElementById("content");
 const render = () => {
     ReactDOM.render(
-        <AppContainer key="app_container">
+        <AppContainer>
             <Router history={history} routes={routes} />
         </AppContainer>,
         rootEl
