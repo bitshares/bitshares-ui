@@ -19,10 +19,7 @@ module.exports = function(options) {
             loader: "css-loader"
         },
         {
-            loader: "postcss-loader",
-            options: {
-                plugins: []
-            }
+            loader: "postcss-loader"
         }
     ];
 
@@ -34,15 +31,15 @@ module.exports = function(options) {
             loader: "css-loader"
         },
         {
-            loader: "sass-loader",
+            loader: "postcss-loader",
             options: {
-                outputStyle: "expanded"
+                plugins: [require("autoprefixer")]
             }
         },
         {
-            loader: "postcss-loader",
+            loader: "sass-loader",
             options: {
-                plugins: []
+                outputStyle: "expanded"
             }
         }
     ];
@@ -64,17 +61,22 @@ module.exports = function(options) {
 
     if (options.prod) {
         // WRAP INTO CSS FILE
-        cssLoaders = [{loader: ExtractTextPlugin.extract(
-            {loader: ["style-loader", "css-loader", "postcss-loader"]}
-        )}];
-        scssLoaders = [{loader: ExtractTextPlugin.extract(
-            {loader: ["style-loader", "css-loader", "postcss-loader", "sass-loader?outputStyle=expanded"]}
-        )}];
+        const extractCSS = new ExtractTextPlugin("app.css");
+        cssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
+            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+                plugins: [require("autoprefixer")]
+            }}]}
+        );
+        scssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
+            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+                plugins: [require("autoprefixer")]
+            }}, {loader: "sass-loader", options: {outputStyle: "expanded"}}]}
+        );
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("production")}}));
-        plugins.push(new ExtractTextPlugin("app.css"));
+        plugins.push(extractCSS);
         if (!options.noUgly) {
             plugins.push(new webpack.optimize.UglifyJsPlugin({
                 minimize: true,
@@ -88,10 +90,11 @@ module.exports = function(options) {
             }));
         }
 
-        // plugins.push(new webpack.optimize.CommonsChunkPlugin({
-        //     names: ["app", "vendors"],
-        //     filename: "vendors.js"
-        // }));
+        plugins.push(new webpack.optimize.CommonsChunkPlugin({
+            name: ["vendor"],
+            filename: "vendor.js",
+            minChunks: Infinity
+        }));
 
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
@@ -104,6 +107,7 @@ module.exports = function(options) {
 
     var config = {
         entry: {
+            vendor: ["react", "react-dom", "highcharts"],
             app: options.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [
@@ -115,7 +119,7 @@ module.exports = function(options) {
         output: {
             publicPath: "/",
             path: outputPath,
-            filename: "app.js",
+            filename: "[name].js",
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
@@ -151,7 +155,7 @@ module.exports = function(options) {
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
                 {
                     test: /\.css$/,
-                    use: cssLoaders
+                    loader: cssLoaders
                 },
 
                 // var cssLoaders = "style-loader!css-loader!postcss-loader",
@@ -159,7 +163,7 @@ module.exports = function(options) {
 
                 {
                     test: /\.scss$/,
-                    use: scssLoaders
+                    loader: scssLoaders
                 },
                 { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
                     path.resolve(root_dir, "app/assets/asset-symbols")
