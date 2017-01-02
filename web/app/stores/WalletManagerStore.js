@@ -1,20 +1,20 @@
-import alt from "alt-instance"
-import WalletDb from "stores/WalletDb"
-import AccountRefsStore from "stores/AccountRefsStore"
-import AccountStore from "stores/AccountStore"
-import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore"
-import CachedPropertyStore from "stores/CachedPropertyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
-import WalletActions from "actions/WalletActions"
+import alt from "alt-instance";
+import WalletDb from "stores/WalletDb";
+import AccountRefsStore from "stores/AccountRefsStore";
+import AccountStore from "stores/AccountStore";
+import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
+import CachedPropertyStore from "stores/CachedPropertyStore";
+import PrivateKeyActions from "actions/PrivateKeyActions";
+import WalletActions from "actions/WalletActions";
 import {ChainStore} from "graphenejs-lib";
-import BaseStore from "stores/BaseStore"
-import iDB from "idb-instance"
-import Immutable from "immutable"
+import BaseStore from "stores/BaseStore";
+import iDB from "idb-instance";
+import Immutable from "immutable";
 
 /**  High-level container for managing multiple wallets.
 */
 class WalletManagerStore extends BaseStore {
-    
+
     constructor() {
         super()
         this.state = this._getInitialState()
@@ -26,7 +26,7 @@ class WalletManagerStore extends BaseStore {
         })
         super._export("init", "setNewWallet", "onDeleteWallet", "onDeleteAllWallets")
     }
-    
+
     _getInitialState() {
         return {
             new_wallet: undefined,// pending restore
@@ -34,7 +34,7 @@ class WalletManagerStore extends BaseStore {
             wallet_names: Immutable.Set()
         }
     }
-    
+
     /** This will change the current wallet the newly restored wallet. */
     onRestore({wallet_name, wallet_object}) {
         iDB.restore(wallet_name, wallet_object).then( () => {
@@ -44,30 +44,30 @@ class WalletManagerStore extends BaseStore {
             return Promise.reject(error)
         })
     }
-    
+
     /** This may result in a new wallet name being added, only in this case
         should a <b>create_wallet_password</b> be provided.
     */
     onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
-            
+
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
-            
+
             if(this.state.current_wallet === wallet_name) {
                 resolve()
                 return
             }
-            
+
             var add
             if( ! this.state.wallet_names.has(wallet_name) ) {
                 var wallet_names = this.state.wallet_names.add(wallet_name)
                 add = iDB.root.setProperty("wallet_names", wallet_names)
                 this.setState({wallet_names})
             }
-            
+
             var current = iDB.root.setProperty("current_wallet", wallet_name)
-            
+
             resolve( Promise.all([ add, current ]).then(()=>{
                 // The database must be closed and re-opened first before the current
                 // application code can initialize its new state.
@@ -76,19 +76,19 @@ class WalletManagerStore extends BaseStore {
                 BalanceClaimActiveStore.reset()
                 // Stores may reset when loadDbData is called
                 return iDB.init_instance().init_promise.then(()=>{
-                    // Make sure the database is ready when calling CachedPropertyStore.reset() 
-                    CachedPropertyStore.reset() 
+                    // Make sure the database is ready when calling CachedPropertyStore.reset()
+                    CachedPropertyStore.reset()
                     return Promise.all([
                         WalletDb.loadDbData().then(()=>AccountStore.loadDbData()),
                         PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData())
                     ]).then(()=>{
                         // Update state here again to make sure listeners re-render
-                        
+
                         if( ! create_wallet_password) {
                             this.setState({current_wallet: wallet_name})
                             return
                         }
-                        
+
                         return WalletDb.onCreateWallet(
                             create_wallet_password,
                             brnkey, //brainkey,
@@ -105,12 +105,12 @@ class WalletManagerStore extends BaseStore {
         })
         if(resolve) resolve(p)
     }
-    
+
     /** Used by the components during a pending wallet create. */
     setNewWallet(new_wallet) {
         this.setState({new_wallet})
     }
-    
+
     init() {
         return iDB.root.getProperty("current_wallet").then(
             current_wallet => {
@@ -122,14 +122,14 @@ class WalletManagerStore extends BaseStore {
             })
         })
     }
-    
+
     onDeleteAllWallets() {
         var deletes = []
         this.state.wallet_names.forEach( wallet_name =>
             deletes.push(this.onDeleteWallet(wallet_name)))
         return Promise.all(deletes)
     }
-    
+
     onDeleteWallet(delete_wallet_name) {
         return new Promise( resolve => {
             var {current_wallet, wallet_names} = this.state
@@ -148,15 +148,15 @@ class WalletManagerStore extends BaseStore {
             resolve( database_name )
         })
     }
-    
+
     onSetBackupDate() {
         WalletDb.setBackupDate()
     }
-    
+
     onSetBrainkeyBackupDate() {
         WalletDb.setBrainkeyBackupDate()
     }
-    
+
 }
 
 export var WalletManagerStoreWrapped = alt.createStore(WalletManagerStore, "WalletManagerStore");

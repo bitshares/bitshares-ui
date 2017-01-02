@@ -1,7 +1,6 @@
 import React from "react";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountImage from "../Account/AccountImage";
-import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import AccountStore from "stores/AccountStore";

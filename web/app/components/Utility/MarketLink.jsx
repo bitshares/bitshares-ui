@@ -1,8 +1,7 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
-import utils from "common/utils";
 import AssetName from "./AssetName";
 
 /**

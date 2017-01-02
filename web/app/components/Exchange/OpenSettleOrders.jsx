@@ -1,18 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {PropTypes} from "react";
-import Immutable from "immutable";
-import classNames from "classnames";
-import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
-import SettingsActions from "actions/SettingsActions";
-import classnames from "classnames";
-import PriceText from "../Utility/PriceText";
 import AssetName from "../Utility/AssetName";
 
 class TableHeader extends React.Component {
@@ -78,7 +71,7 @@ class OpenSettleOrders extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.currentAccount !== this.props.currentAccount ||
-            nextProps.orders !== this.props.orders 
+            nextProps.orders !== this.props.orders
         );
     }
 
@@ -114,9 +107,9 @@ class OpenSettleOrders extends React.Component {
         }
 
         return (
-            <div                
+            <div
                 key="open_orders"
-                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"                
+                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"
             >
                 <div className="small-6 order-1" style={{paddingBottom: "1rem"}}>
                     <div className="exchange-bordered">

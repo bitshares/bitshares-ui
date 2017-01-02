@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "alt-react";
-import HelpContent from "./Utility/HelpContent";
 import BlockchainStore from "stores/BlockchainStore";
 import SettingsStore from "stores/SettingsStore";
 import Translate from "react-translate-component";

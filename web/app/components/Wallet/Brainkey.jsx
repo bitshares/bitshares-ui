@@ -1,9 +1,7 @@
-import React, {Component, Children} from "react";
-import { RouteHandler } from "react-router";
+import React, {Component} from "react";
 import { connect } from "alt-react";
 import Immutable from "immutable";
 import cname from "classnames";
-import {key} from "graphenejs-lib";
 import BrainkeyActions from "actions/BrainkeyActions";
 import BrainkeyStoreFactory from "stores/BrainkeyStore";
 import BindToChainState from "components/Utility/BindToChainState";

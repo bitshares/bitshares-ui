@@ -14,7 +14,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import AssetName from "../Utility/AssetName";
 import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
-import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import {debounce} from "lodash";
 

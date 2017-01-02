@@ -1,7 +1,7 @@
 import {ChainStore} from "graphenejs-lib";
 import {Apis} from "graphenejs-ws";
 import React from "react";
-// import {Router, Route, IndexRoute, Redirect} from "react-router";
+// import {Router, Route, IndexRoute, Redirect} from "react-router/es";
 import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";

@@ -1,6 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import AssetActions from "actions/AssetActions";
 import AssetStore from "stores/AssetStore";
@@ -11,14 +11,11 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import utils from "common/utils";
-import AutocompleteInput from "../Forms/AutocompleteInput";
 import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
-import classnames from "classnames";
-import counterpart from "counterpart";
 import PrivateKeyStore from "stores/PrivateKeyStore";
-import IssueModal from "../Modal/IssueModal"
-import ReserveAssetModal from "../Modal/ReserveAssetModal"
+import IssueModal from "../Modal/IssueModal";
+import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import { connect } from "alt-react";
 import assetUtils from "common/asset_utils";
 

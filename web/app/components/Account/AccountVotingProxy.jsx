@@ -5,7 +5,6 @@ import ChainTypes from "../Utility/ChainTypes";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import SettingsActions from "actions/SettingsActions";
 import {ChainStore} from "graphenejs-lib";
 
 class AccountVotingProxy extends React.Component {

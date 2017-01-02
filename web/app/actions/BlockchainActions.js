@@ -1,10 +1,6 @@
 var alt = require("alt-instance");
 import {Apis} from "graphenejs-ws";
 
-let subs = {
-    globals: false
-};
-
 let latestBlocks = {};
 
 class BlockchainActions {

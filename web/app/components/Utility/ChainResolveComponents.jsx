@@ -3,7 +3,6 @@ import React, {Component, Children} from "react";
 import { connect } from "alt-react";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import Immutable from "immutable";
 import AccountStore from "stores/AccountStore";
 import {pairs} from "lodash";
 
@@ -23,7 +22,7 @@ class ResolveLinkedAccountsChainState extends Component {
         let child = Children.only(this.props.children);
         if( ! child) return <span>{linkedAccounts.map(a => <br>{a.toJS()}</br>)}</span>;
         // Pass the list to a child reactjs component as this.props.resolvedLinkedAccounts
-        child = React.addons.cloneWithProps(child, { linkedAccounts });
+        child = React.cloneElement(child, { linkedAccounts });
         return <span>{child}</span>;
     }
 }

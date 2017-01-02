@@ -4,7 +4,6 @@ import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
-import utils from "common/utils";
 
 class AssetOption extends React.Component {
 

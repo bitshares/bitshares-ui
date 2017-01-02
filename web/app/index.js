@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import {Apis} from "graphenejs-ws";
 import { AppContainer } from "react-hot-loader";
-import { Router, Route, IndexRoute, browserHistory } from "react-router";
+import { Router, Route, IndexRoute, browserHistory } from "react-router/es";
 import App from "./App";
 
 // Stores

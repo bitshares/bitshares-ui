@@ -1,10 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {PropTypes} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
-import {FormattedDate, FormattedRelative,FormattedTime} from "react-intl";
+import {FormattedDate} from "react-intl";
 import Operation from "../Blockchain/Operation";
 import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
 import ChainTypes from "../Utility/ChainTypes";
@@ -16,7 +15,6 @@ import utils from "common/utils";
 import Immutable from "immutable";
 import TimeAgo from "../Utility/TimeAgo";
 import FormattedAsset from "../Utility/FormattedAsset";
-import Icon from "../Icon/Icon";
 import Ps from "perfect-scrollbar";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 

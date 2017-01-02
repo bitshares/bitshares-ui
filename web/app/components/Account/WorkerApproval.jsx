@@ -1,15 +1,7 @@
-import React, {PropTypes} from "react";
-import Immutable from "immutable";
+import React from "react";
 import Translate from "react-translate-component";
-import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
-import LoadingIndicator from "../LoadingIndicator";
-import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
-import WalletApi from "api/WalletApi";
-import WalletDb from "stores/WalletDb.js"
-import {ChainStore, FetchChainObjects} from "graphenejs-lib";
-import AccountImage from "./AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";

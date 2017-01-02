@@ -4,13 +4,11 @@ import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore";
-import CachedPropertyActions from "actions/CachedPropertyActions";
 import BlockchainStore from "stores/BlockchainStore";
 import {ChainStore} from "graphenejs-lib";
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
-import ReactTooltip from "react-tooltip";
 
 class Footer extends React.Component {
 

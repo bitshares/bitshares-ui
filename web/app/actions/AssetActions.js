@@ -6,7 +6,6 @@ import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
 import {ChainStore} from "graphenejs-lib";
 import big from "bignumber.js";
-import assetConstants from "chain/asset_constants";
 
 let wallet_api = new WalletApi();
 let application_api = new ApplicationApi();

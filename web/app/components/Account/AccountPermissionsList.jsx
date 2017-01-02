@@ -1,17 +1,15 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
-import PrivateKeyView from "components/PrivateKeyView"
+import PrivateKeyView from "components/PrivateKeyView";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import AddressIndex from "stores/AddressIndex"
+import AddressIndex from "stores/AddressIndex";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {

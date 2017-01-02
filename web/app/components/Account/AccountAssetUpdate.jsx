@@ -14,8 +14,6 @@ import AmountSelector from "../Utility/AmountSelector";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import AccountInfo from "./AccountInfo";
 import big from "bignumber.js";
 import cnames from "classnames";
 import assetUtils from "common/asset_utils";

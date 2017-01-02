@@ -1,7 +1,6 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
-import {PropTypes} from "react";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import AltContainer from "alt-container";

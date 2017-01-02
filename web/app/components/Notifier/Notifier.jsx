@@ -3,10 +3,10 @@ import Notification from "react-foundation-apps/src/notification";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Operation from "../Blockchain/Operation";
 import Immutable from "immutable";
-import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-let {operations} = require("graphenejs-lib").ChainTypes;
+import {ChainTypes as GraphChainTypes} from "graphenejs-lib";
+let {operations} = GraphChainTypes;
 
 let ops = Object.keys(operations);
 

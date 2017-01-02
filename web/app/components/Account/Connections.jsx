@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 
 class Connections extends React.Component {

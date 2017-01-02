@@ -1,15 +1,11 @@
 import React from "react";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import Immutable from "immutable";
-import BindToChainState from "../Utility/BindToChainState";
-import ChainTypes from "../Utility/ChainTypes";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
-
 
 /**
  *  Given a string and a list of interpolation parameters, this component
@@ -94,7 +90,7 @@ export default class TranslateWithLinks extends React.Component {
                         value = key.value;
                         break;
                 }
-                
+
                 splitText[splitText.indexOf(key.arg)] = value;
             }
         })

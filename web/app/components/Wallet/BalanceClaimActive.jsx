@@ -1,19 +1,17 @@
-
-import React, {Component, PropTypes} from "react";
-import alt from "alt-instance"
+import React, {Component} from "react";
 import { connect } from "alt-react";
-import Immutable from "immutable"
-import cname from "classnames"
-import notify from "actions/NotificationActions"
+import Immutable from "immutable";
+import cname from "classnames";
+import notify from "actions/NotificationActions";
 
 import LoadingIndicator from "components/LoadingIndicator";
 import PrivateKeyStore from "stores/PrivateKeyStore";
-import AccountRefsStore from "stores/AccountRefsStore"
+import AccountRefsStore from "stores/AccountRefsStore";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
-import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
-import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector"
-import WalletActions from "actions/WalletActions"
-import MyAccounts from "components/Forms/MyAccounts"
+import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions";
+import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector";
+import WalletActions from "actions/WalletActions";
+import MyAccounts from "components/Forms/MyAccounts";
 import Translate from "react-translate-component";
 
 class BalanceClaimActive extends Component {

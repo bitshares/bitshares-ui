@@ -1,14 +1,14 @@
-import alt from "alt-instance"
-import WalletUnlockActions from "actions/WalletUnlockActions"
-import SettingsActions from "actions/SettingsActions"
-import WalletDb from "stores/WalletDb"
+import alt from "alt-instance";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import SettingsActions from "actions/SettingsActions";
+import WalletDb from "stores/WalletDb";
 import ls from "common/localStorage";
 
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
 class WalletUnlockStore {
-    
+
     constructor() {
         this.bindActions(WalletUnlockActions)
         this.state = {locked: true}
@@ -27,11 +27,11 @@ class WalletUnlockStore {
         // }
 
     }
-    
+
     onUnlock({resolve, reject}) {
         //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
         //
-    
+
         this._setLockTimeout();
         if( ! WalletDb.isLocked()) {
             resolve()
@@ -40,7 +40,7 @@ class WalletUnlockStore {
 
         this.setState({resolve, reject, locked: WalletDb.isLocked()});
     }
-    
+
     onLock({resolve}) {
         //DEBUG console.log('... WalletUnlockStore\tprogramatic lock', WalletDb.isLocked())
         if(WalletDb.isLocked()) {
@@ -51,12 +51,12 @@ class WalletUnlockStore {
         this.setState({resolve:null, reject:null, locked: WalletDb.isLocked()})
         resolve()
     }
-    
+
     onCancel() {
         //this.state.reject();
         this.setState({resolve:null, reject:null});
     }
-    
+
     onChange() {
         this.setState({locked: WalletDb.isLocked()})
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {PropTypes} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";

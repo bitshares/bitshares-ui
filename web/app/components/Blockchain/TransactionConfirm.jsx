@@ -1,10 +1,8 @@
 import React from "react";
 import Modal from "react-foundation-apps/src/modal";
-import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { connect } from "alt-react";

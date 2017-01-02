@@ -3,11 +3,11 @@ import iDB from "idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
 import {ChainStore} from "graphenejs-lib";
-import PrivateKeyStore from "stores/PrivateKeyStore"
-import PrivateKeyActions from "actions/PrivateKeyActions"
+import PrivateKeyStore from "stores/PrivateKeyStore";
+import PrivateKeyActions from "actions/PrivateKeyActions";
 
 class AccountRefsStore extends BaseStore {
-    
+
     constructor() {
         super()
         this._export("loadDbData")
@@ -16,7 +16,7 @@ class AccountRefsStore extends BaseStore {
         this.no_account_refs = Immutable.Set() // Set of account ids
         ChainStore.subscribe(this.chainStoreUpdate.bind(this))
     }
-    
+
     _getInitialState() {
         this.chainstore_account_ids_by_key = null
         return {
@@ -24,12 +24,12 @@ class AccountRefsStore extends BaseStore {
             // loading_account_refs: false
         }
     }
-    
+
     onAddPrivateKey({private_key_object}) {
         if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
             this.chainStoreUpdate()
     }
-    
+
     loadDbData() {
         this.setState(this._getInitialState())
         return loadNoAccountRefs()
@@ -42,7 +42,7 @@ class AccountRefsStore extends BaseStore {
         this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
         this.checkPrivateKeyStore()
     }
-    
+
     checkPrivateKeyStore() {
         var no_account_refs = this.no_account_refs
         var account_refs = Immutable.Set()
@@ -51,7 +51,7 @@ class AccountRefsStore extends BaseStore {
             var refs = ChainStore.getAccountRefsOfKey(pubkey)
             if(refs === undefined) return
             if( ! refs.size) {
-                // Performance optimization... 
+                // Performance optimization...
                 // There are no references for this public key, this is going
                 // to block it.  There many be many TITAN keys that do not have
                 // accounts for example.
@@ -78,7 +78,7 @@ class AccountRefsStore extends BaseStore {
             saveNoAccountRefs(no_account_refs)
         }
     }
-    
+
 }
 
 export default alt.createStore(AccountRefsStore, "AccountRefsStore")

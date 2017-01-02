@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
 import { connect } from "alt-react";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import FormattedAsset from "components/Utility/FormattedAsset";

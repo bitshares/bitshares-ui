@@ -7,7 +7,6 @@ import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
-import FormattedFee from "../Utility/FormattedFee";
 import AssetName from "../Utility/AssetName";
 
 class BuySell extends React.Component {

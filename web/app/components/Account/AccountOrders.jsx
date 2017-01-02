@@ -1,12 +1,9 @@
 import React from "react";
-import {PropTypes} from "react";
-import {Link} from "react-router";
 import Translate from "react-translate-component";
 import {OrderRow, TableHeader} from "../Exchange/MyOpenOrders";
 import market_utils from "common/market_utils";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
-import LoadingIndicator from "../LoadingIndicator";
 import {ChainStore} from "graphenejs-lib";
 import MarketLink from "../Utility/MarketLink";
 
@@ -24,7 +21,7 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {assets, account} = this.props;
+        let {account} = this.props;
         let cancel = counterpart.translate("account.perm.cancel");
         let markets = {};
 

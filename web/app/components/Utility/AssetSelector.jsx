@@ -1,13 +1,9 @@
 import React from "react";
-import utils from "common/utils";
-import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
 import {ChainValidation} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import classnames from "classnames";
 import counterpart from "counterpart";
-import Icon from "../Icon/Icon";
 
 /**
  * @brief Allows the user to enter an account by name or #ID

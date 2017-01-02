@@ -1,5 +1,5 @@
-import alt from "alt-instance"
-import TransactionConfirmActions from "actions/TransactionConfirmActions"
+import alt from "alt-instance";
+import TransactionConfirmActions from "actions/TransactionConfirmActions";
 
 class TransactionConfirmStore {
 

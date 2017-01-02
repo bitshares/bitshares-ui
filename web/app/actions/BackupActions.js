@@ -1,13 +1,8 @@
 import alt from "alt-instance";
 import iDB from "idb-instance";
-
 import {compress, decompress} from "lzma";
-import {saveAs} from "common/filesaver.js";
-
 import {PrivateKey, PublicKey, Aes, key} from "graphenejs-lib";
-
 import WalletActions from "actions/WalletActions";
-import WalletDb from "stores/WalletDb";
 
 class BackupActions {
 

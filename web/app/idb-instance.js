@@ -1,14 +1,14 @@
 import {Apis} from "graphenejs-ws";
-import idb_helper from "idb-helper"
-import iDBRoot from "idb-root"
+import idb_helper from "idb-helper";
+import iDBRoot from "idb-root";
 
-const DB_VERSION = 2 // Initial value was 1
-const DB_PREFIX = "graphene_v2"
+const DB_VERSION = 2; // Initial value was 1
+const DB_PREFIX = "graphene_v2";
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
-]
+];
 
-var current_wallet_name = "default"
+var current_wallet_name = "default";
 
 var upgrade = function(db, oldVersion) {
     // DEBUG console.log('... upgrade oldVersion',oldVersion)
@@ -102,18 +102,18 @@ var iDB = (function () {
             var req = iDB.impl.deleteDatabase(this.database_name)
             return req.result
         },
-        
+
         set_impl: function(impl) {
             this.impl = impl
             this.root = new iDBRoot(this.impl)
         },
-        
+
         set_chain_id: function(chain_id) {
             this.chain_id = chain_id
             var chain_substring = chain_id ? chain_id.substring(0, 6) : ""
             this.root.setDbSuffix("_" + chain_substring)
         },
-        
+
         init_instance: function (
             indexedDBimpl,
             chain_id = Apis.instance().chain_id
@@ -130,20 +130,20 @@ var iDB = (function () {
             }
             return _instance;
         },
-        
+
         instance: function () {
             if (!_instance) {
                 throw new Error("Internal Database instance is not initialized");
             }
             return _instance;
         },
-        
+
         close: function () {
             if (_instance) _instance.db().close()
             idb_helper.set_graphene_db(null)
             _instance = undefined
         },
-        
+
         add_to_store: function (store_name, value) {
             return new Promise((resolve, reject) => {
                 let transaction = this.instance().db().transaction([store_name], "readwrite");
@@ -190,7 +190,7 @@ var iDB = (function () {
                 };
             });
         },
-        
+
         /** Persisted to disk but not backed up.
             @return promise
         */
@@ -203,7 +203,7 @@ var iDB = (function () {
                 return result ? result.value : default_value
             }).catch( error => { console.error(error); throw error })
         },
-        
+
         /** Persisted to disk but not backed up. */
         setCachedProperty: function(name, value) {
             var db = this.instance().db()
@@ -213,7 +213,7 @@ var iDB = (function () {
             return idb_helper.on_request_end( store.put({name, value}) )
                 .catch( error => { console.error(error); throw error })
         },
-        
+
         backup: function (store_names = WALLET_BACKUP_STORES) {
             var promises = []
             for (var store_name of store_names) {

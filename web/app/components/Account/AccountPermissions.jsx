@@ -1,24 +1,19 @@
 import React from "react";
 import Immutable from "immutable";
-import {PropTypes} from "react";
 import Translate from "react-translate-component";
-import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
-import LoadingIndicator from "../LoadingIndicator";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import WalletApi from "api/WalletApi";
-import WalletDb from "stores/WalletDb.js"
-import AccountImage from "./AccountImage";
-import WorkerApproval from "./WorkerApproval";
-import {FetchChainObjects, PublicKey, ChainStore} from "graphenejs-lib";;
+import WalletDb from "stores/WalletDb.js";
+import {PublicKey} from "graphenejs-lib";;
 import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import { RecentTransactions } from "./RecentTransactions";
 
-let wallet_api = new WalletApi()
+let wallet_api = new WalletApi();
 
 class AccountPermissions extends React.Component {
 
@@ -51,7 +46,7 @@ class AccountPermissions extends React.Component {
         let weights = account_auths.reduce( (res, a) => { res[a.get(0)] = a.get(1); return res;}, {});
         weights = key_auths.reduce( (res, a) => { res[a.get(0)] = a.get(1); return res;}, weights);
         weights = address_auths.reduce( (res, a) => { res[a.get(0)] = a.get(1); return res;}, weights);
-        
+
         return {threshold, accounts, keys, addresses, weights};
     }
 
@@ -110,8 +105,8 @@ class AccountPermissions extends React.Component {
     onPublish() {
         let s = this.state;
         let updated_account = this.props.account.toJS();
-        
-        // Set fee asset        
+
+        // Set fee asset
         updated_account.fee = {
             amount: 0,
             asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
@@ -214,7 +209,7 @@ class AccountPermissions extends React.Component {
             <div className="grid-content">
                 <div className="generic-bordered-box">
                     <Tabs setting="permissionsTabs" tabsClass="no-padding bordered-header" contentClass="grid-content no-overflow">
-                    
+
                     <Tab title="account.perm.active">
                             <HelpContent style={{maxWidth: "800px"}} path="components/AccountPermActive" />
                             <form className="threshold">
@@ -282,7 +277,7 @@ class AccountPermissions extends React.Component {
 
                     </Tab>
                 </Tabs>
-                
+
                     <div style={{padding: 15}}>
                     <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={8}>
                         <Translate content="account.perm.publish"/>

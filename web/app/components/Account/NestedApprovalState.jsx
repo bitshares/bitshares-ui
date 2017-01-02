@@ -1,7 +1,6 @@
 import React from "react";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import Immutable from "immutable";
 import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";

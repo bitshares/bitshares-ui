@@ -1,14 +1,11 @@
 var alt = require("alt-instance");
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore, ChainTypes} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib";
 import {Apis} from "graphenejs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
 import Immutable from "immutable";
-
-let {operations} = ChainTypes;
-let ops = Object.keys(operations);
 
 let subs = {};
 let currentBucketSize;

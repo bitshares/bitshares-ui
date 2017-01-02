@@ -1,10 +1,10 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {Component} from "react";
 import Translate from "react-translate-component";
-import ProposedOperation from "components/Blockchain/ProposedOperation"
-import BindToChainState from "components/Utility/BindToChainState"
-import ChainTypes from "components/Utility/ChainTypes"
-import utils from "common/utils"
+import ProposedOperation from "components/Blockchain/ProposedOperation";
+import BindToChainState from "components/Utility/BindToChainState";
+import ChainTypes from "components/Utility/ChainTypes";
+import utils from "common/utils";
 import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import {ChainStore} from "graphenejs-lib";

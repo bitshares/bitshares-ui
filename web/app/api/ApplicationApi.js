@@ -1,6 +1,6 @@
-import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletDb from "stores/WalletDb"
-import {Aes, ChainValidation, key, TransactionBuilder, TransactionHelper, FetchChain} from "graphenejs-lib";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import WalletDb from "stores/WalletDb";
+import {Aes, ChainValidation, TransactionBuilder, TransactionHelper, FetchChain} from "graphenejs-lib";
 
 class ApplicationApi {
 
@@ -14,8 +14,8 @@ class ApplicationApi {
         broadcast = false
     ) {
 
-        ChainValidation.required(registrar, "registrar_id")
-        ChainValidation.required(referrer, "referrer_id")
+        ChainValidation.required(registrar, "registrar_id");
+        ChainValidation.required(referrer, "referrer_id");
 
         return Promise.all([
             FetchChain("getAccount", registrar),

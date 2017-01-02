@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
 import WalletManagerStore from "stores/WalletManagerStore";

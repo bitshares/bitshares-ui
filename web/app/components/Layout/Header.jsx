@@ -1,5 +1,5 @@
 import React from "react";
-import {Link, PropTypes} from "react-router";
+import {Link} from "react-router/es";
 import { connect } from "alt-react";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
@@ -15,7 +15,6 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
-import Immutable from "immutable";
 
 var logo = require("assets/logo-ico-blue.png");
 

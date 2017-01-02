@@ -1,11 +1,9 @@
-import React, {Component, PropTypes} from "react";
-import ReactDOM from "react-dom";
-import alt from "alt-instance";
+import React, {Component} from "react";
 import { connect } from "alt-react";
 import cname from "classnames";
 import notify from "actions/NotificationActions";
-import {PrivateKey, Address, Aes, PublicKey, hash} from "graphenejs-lib";
-import {Apis, ChainConfig} from "graphenejs-ws";
+import {PrivateKey, Aes, PublicKey, hash} from "graphenejs-lib";
+import {ChainConfig} from "graphenejs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletCreate from "components/Wallet/WalletCreate";

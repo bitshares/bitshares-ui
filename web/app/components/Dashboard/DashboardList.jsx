@@ -1,6 +1,5 @@
 import React from "react";
 import Immutable from "immutable";
-import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import { connect } from "alt-react";
@@ -8,16 +7,11 @@ import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
-import AssetActions from "actions/AssetActions";
-import MarketsActions from "actions/MarketsActions";
-import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "graphenejs-lib";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
-
-let lastLookup = new Date();
 
 class DashboardList extends React.Component {
     static contextTypes = {

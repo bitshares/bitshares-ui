@@ -1,21 +1,20 @@
-import idb_helper from "idb-helper"
-import {Apis} from "graphenejs-ws";
+import idb_helper from "idb-helper";
 
-const DB_VERSION_MAIN = 1
-const DB_PREFIX = "graphene_db"
+const DB_VERSION_MAIN = 1;
+const DB_PREFIX = "graphene_db";
 
 /** Usage: openIndexDB.then( db => ... */
 export default class iDBRoot {
-    
+
     constructor(impl) {
         this.impl = impl
     }
-    
+
     setDbSuffix(db_suffix) {
         // "graphene_db_06f667"
         this.database_name = DB_PREFIX + db_suffix
     }
-    
+
     /** @return promise */
     openIndexedDB() {
         if(this.db) return Promise.resolve(this.db)
@@ -34,7 +33,7 @@ export default class iDBRoot {
             }
         })
     }
-    
+
     /** @return promise */
     getProperty(name, default_value) {
         return this.openIndexedDB().then( db => {
@@ -46,7 +45,7 @@ export default class iDBRoot {
             })
         }).catch( error => { console.error(error); throw error })
     }
-    
+
     /** @return promise */
     setProperty(name, value) {
         return this.openIndexedDB().then( db => {
@@ -56,17 +55,17 @@ export default class iDBRoot {
             return idb_helper.on_request_end( store.put({name, value}) )
         }).catch( error => { console.error(error); throw error })
     }
-    
+
     deleteDatabase(are_you_sure = false) {
         if( ! are_you_sure) return "Are you sure?"
         console.log("deleting", this.database_name)
         var req = iDB.impl.deleteDatabase(this.database_name)
         return req.result
     }
-    
+
     close() {
         this.db.close()
         this.db = null
     }
-    
+
 }

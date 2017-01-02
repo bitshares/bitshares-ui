@@ -1,7 +1,4 @@
-import {ChainTypes} from "graphenejs-lib";
 import {Apis} from "graphenejs-ws";
-
-let op_history = parseInt(ChainTypes.operation_history, 10);
 
 class Api {
 

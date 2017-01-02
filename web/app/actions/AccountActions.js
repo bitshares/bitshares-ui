@@ -1,5 +1,4 @@
 import alt from "alt-instance";
-import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import AccountApi from "api/accountApi";
 
@@ -8,12 +7,9 @@ import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
 import WalletActions from "actions/WalletActions";
 
-let accountSubs = {};
-let accountLookup = {};
 let accountSearch = {};
 let wallet_api = new WalletApi();
 let application_api = new ApplicationApi();
-let inProgress = {};
 
 /**
  *  @brief  Actions that modify linked accounts

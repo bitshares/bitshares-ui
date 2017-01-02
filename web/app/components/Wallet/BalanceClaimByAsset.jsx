@@ -1,11 +1,9 @@
-import alt from "alt-instance"
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
 import { connect } from "alt-react";
-import Immutable from "immutable"
-import LoadingIndicator from "components/LoadingIndicator"
+import LoadingIndicator from "components/LoadingIndicator";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
-import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions"
+import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions";
 import FormattedAsset from "components/Utility/FormattedAsset";
 import Translate from "react-translate-component";
 

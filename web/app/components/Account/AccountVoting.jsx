@@ -1,16 +1,11 @@
 import React from "react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
-import LoadingIndicator from "../LoadingIndicator";
-import AccountSelector from "./AccountSelector";
-import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js";
 import {ChainStore, FetchChainObjects} from "graphenejs-lib";
-import AccountImage from "./AccountImage";
 import WorkerApproval from "./WorkerApproval";
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";

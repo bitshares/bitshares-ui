@@ -1,22 +1,17 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import LoadingIndicator from "../LoadingIndicator";
 import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";
 import AccountActions from "actions/AccountActions";
-import Icon from "../Icon/Icon";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
-import utils from "common/utils";
-import WalletActions from "actions/WalletActions";
 import accountUtils from "common/account_utils";
 
 class FeeHelp extends React.Component {
-       static propTypes = {
+    static propTypes = {
         dprops: ChainTypes.ChainObject.isRequired
     };
     static defaultProps = {

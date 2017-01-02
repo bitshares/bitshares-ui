@@ -5,7 +5,6 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainStore} from "graphenejs-lib";
 
 class MarketCard extends React.Component {
 

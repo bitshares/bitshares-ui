@@ -1,5 +1,4 @@
-import alt from "alt-instance";
-import React, {Component, PropTypes} from "react";
+import React, {Component} from "react";
 import { connect } from "alt-react";
 import Immutable from "immutable";
 

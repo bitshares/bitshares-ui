@@ -5,20 +5,16 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
 import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import {ChainStore} from "graphenejs-lib";
+import AmountSelector from "../Utility/AmountSelector";
 
 let wallet_api = new WalletApi();
 
-import AccountSelector from "../Account/AccountSelector";
-import AmountSelector from "../Utility/AmountSelector";
 
 class ModalContent extends React.Component {
     static propTypes = {

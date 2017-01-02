@@ -1,31 +1,31 @@
-import React, {Component} from "react"
+import React, {Component} from "react";
 import ReactDOM from "react-dom";
-import Modal from "react-foundation-apps/src/modal"
-import ZfApi from "react-foundation-apps/src/utils/foundation-api"
-import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletDb from "stores/WalletDb"
+import Modal from "react-foundation-apps/src/modal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 
 export default class PrivateKeyView extends Component {
-    
+
     static propTypes = {
         pubkey: React.PropTypes.string.isRequired
     }
-    
+
     constructor() {
         super()
         this.state = this._getInitialState()
     }
-    
+
     _getInitialState() {
         return { wif: null }
     }
-    
+
     reset() {
         this.setState(this._getInitialState())
     }
-    
+
     componentDidMount() {
         var modalId = "key_view_modal" + this.props.pubkey
         let modal = ReactDOM.findDOMNode(this.refs[modalId])
@@ -34,7 +34,7 @@ export default class PrivateKeyView extends Component {
             if(msg === "close") this.reset()
         })
     }
-    
+
     render() {
         var modalId = "key_view_modal" + this.props.pubkey
         var keys = PrivateKeyStore.getState().keys
@@ -49,13 +49,13 @@ export default class PrivateKeyView extends Component {
                 <h3><Translate content="account.perm.key_viewer" /></h3>
                 <div className="grid-block vertical">
                     <div className="content-block">
-                    
+
                         <div className="grid-content">
                             <label><Translate content="account.perm.public" /></label>
                             {this.props.pubkey}
                         </div>
                         <br/>
-                        
+
                         <div className="grid-block grid-content">
                             <label><Translate content="account.perm.private" /></label>
                             <div>
@@ -91,27 +91,27 @@ export default class PrivateKeyView extends Component {
             </Modal>
         </span>
     }
-    
+
     onOpen() {
         var modalId = "key_view_modal" + this.props.pubkey
         ZfApi.publish(modalId, "open")
     }
-    
+
     onClose() {
         this.reset()
         var modalId = "key_view_modal" + this.props.pubkey
         ZfApi.publish(modalId, "close")
     }
-    
+
     onShow() {
         WalletUnlockActions.unlock().then( () => {
             var private_key = WalletDb.getPrivateKey(this.props.pubkey)
             this.setState({ wif: private_key.toWif() })
         })
     }
-    
+
     onHide() {
         this.setState({ wif: null })
     }
-    
+
 }

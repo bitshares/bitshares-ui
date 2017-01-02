@@ -2,17 +2,15 @@ import React from "react";
 import {PropTypes} from "react";
 import AssetActions from "actions/AssetActions";
 import SettingsActions from "actions/SettingsActions";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetName from "../Utility/AssetName";
 import {Tabs, Tab} from "../Utility/Tabs";
-import MarketLink from "../Utility/MarketLink";
 import {ChainStore} from "graphenejs-lib";
 
 class Assets extends React.Component {
@@ -21,7 +19,7 @@ class Assets extends React.Component {
         super();
         this.state = {
             foundLast: false,
-            lastAsset: "", 
+            lastAsset: "",
             assetsFetched: 0,
             filterUIA: props.filterUIA || "",
             filterMPA: props.filterMPA || "",
@@ -53,13 +51,13 @@ class Assets extends React.Component {
                 return 0;
             }
         }).last();
-       
+
         if (assets.size === 0 || force) {
             AssetActions.getAssetList("A", 100);
-            this.setState({assetsFetched: 100});  
+            this.setState({assetsFetched: 100});
         } else if (assets.size >= this.state.assetsFetched) {
-            AssetActions.getAssetList(lastAsset.symbol, 100);           
-            this.setState({assetsFetched: this.state.assetsFetched + 99}); 
+            AssetActions.getAssetList(lastAsset.symbol, 100);
+            this.setState({assetsFetched: this.state.assetsFetched + 99});
         }
     }
 
@@ -71,8 +69,8 @@ class Assets extends React.Component {
         if(!name_or_id) {
             return <span>-</span>;
         }
-        
-        return <LinkToAccountById account={name_or_id}/>         
+
+        return <LinkToAccountById account={name_or_id}/>
     }
 
     _onFilter(type, e) {
@@ -117,7 +115,7 @@ class Assets extends React.Component {
             return a.bitasset_data && !a.bitasset_data.is_prediction_market && a.symbol.indexOf(this.state.filterMPA) !== -1;
         }).map((asset) => {
             let description = assetUtils.parseDescription(asset.options.description);
-            
+
             let marketID = asset.symbol + "_" + (description.market ? description.market : coreAsset ? coreAsset.get("symbol") : "BTS");
 
             return (
@@ -138,7 +136,7 @@ class Assets extends React.Component {
             }
         }).toArray();
 
-        
+
 
         let pm = assets.filter(a => {
 
@@ -160,7 +158,7 @@ class Assets extends React.Component {
                             <Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link>
                             {description.condition ? <span> ({description.condition})</span> : null}
                         </div>
-                        {description ? 
+                        {description ?
                         <div style={{padding: "10px 20px 5px 0", lineHeight: "18px"}}>
                             {description.main}
                         </div> : null}
@@ -213,8 +211,8 @@ class Assets extends React.Component {
                                                 <tbody>
                                                     {mia}
                                                 </tbody>
-                                        </table> 
-                                    </div>  
+                                        </table>
+                                    </div>
                                 </Tab>
 
                                 <Tab title="explorer.assets.user">
@@ -251,8 +249,8 @@ class Assets extends React.Component {
                                         </table>
                                     </div>
                                 </Tab>
-                            </Tabs>       
-                        </div>              
+                            </Tabs>
+                        </div>
                     </div>
                 </div>
             </div>

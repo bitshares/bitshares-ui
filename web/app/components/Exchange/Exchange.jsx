@@ -16,7 +16,7 @@ import {cloneDeep} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
 import Translate from "react-translate-component";
 import notify from "actions/NotificationActions";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
 import ChainTypes from "../Utility/ChainTypes";

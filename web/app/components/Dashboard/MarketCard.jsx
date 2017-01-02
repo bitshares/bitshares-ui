@@ -1,8 +1,6 @@
 import React from "react";
-import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "graphenejs-lib";
 import AssetName from "../Utility/AssetName";
 import assetUtils from "common/asset_utils";
 import cnames from "classnames";
@@ -60,7 +58,6 @@ class MarketCard extends React.Component {
         let {base, quote, marketStats} = this.props;
 
         let desc = assetUtils.parseDescription(base.getIn(["options", "description"]));
-        let name = <AssetName name={base.get("symbol")} />;
         let imgName = base.get("symbol").split(".");
         imgName = imgName.length === 2 ? imgName[1] : imgName[0];
 

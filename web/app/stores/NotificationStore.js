@@ -1,8 +1,8 @@
-import alt from "alt-instance"
-import NotificationActions from "actions/NotificationActions"
+import alt from "alt-instance";
+import NotificationActions from "actions/NotificationActions";
 
 class NotificationStore {
-    
+
     constructor() {
         this.bindListeners({
             addNotification: [
@@ -13,7 +13,7 @@ class NotificationStore {
                 NotificationActions.info
             ]
         })
-        
+
         this.state = {
             notification: null
         }

@@ -1,7 +1,6 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import AccountImage from "./AccountImage";
 import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";

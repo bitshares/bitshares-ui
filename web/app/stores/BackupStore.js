@@ -1,6 +1,6 @@
-import alt from "alt-instance"
-import BackupActions from "actions/BackupActions"
-import BaseStore from "stores/BaseStore"
+import alt from "alt-instance";
+import BackupActions from "actions/BackupActions";
+import BaseStore from "stores/BaseStore";
 import {hash, PublicKey} from "graphenejs-lib";
 
 class BackupStore extends BaseStore {

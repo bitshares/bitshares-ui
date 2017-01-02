@@ -1,6 +1,4 @@
 import React from "react";
-import {IntlProvider} from "react-intl";
-import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
 import {saveAs} from "common/filesaver.js";
 import Operation from "../Blockchain/Operation";

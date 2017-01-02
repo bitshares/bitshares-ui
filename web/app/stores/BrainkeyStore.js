@@ -1,14 +1,13 @@
-import alt from "alt-instance"
-import { connect } from "alt-react";
-import Immutable from "immutable"
+import alt from "alt-instance";
+import Immutable from "immutable";
 import {ChainStore, key} from "graphenejs-lib";
-import BaseStore from "stores/BaseStore"
-import BrainkeyActions from "actions/BrainkeyActions"
+import BaseStore from "stores/BaseStore";
+import BrainkeyActions from "actions/BrainkeyActions";
 
 /** Each instance supports a single brainkey. */
 export default class BrainkeyStoreFactory {
     static instances = new Map()
-    /** This may be called multiple times for the same <b>name</b>.  When done, 
+    /** This may be called multiple times for the same <b>name</b>.  When done,
         (componentWillUnmount) make sure to call this.closeInstance()
     */
     static getInstance(name) {
@@ -42,7 +41,7 @@ export default class BrainkeyStoreFactory {
 var DERIVIED_BRAINKEY_POOL_SIZE = 10
 
 class BrainkeyStoreImpl extends BaseStore {
-    
+
     constructor() {
         super()
         this.clearCache()
@@ -51,7 +50,7 @@ class BrainkeyStoreImpl extends BaseStore {
         })
         this._export("inSync", "chainStoreUpdate", "clearCache")
     }
-    
+
     // chainStoreUnsubscribe() {
     //     try{
     //         ChainStore.unsubscribe(this.chainStoreUpdate)
@@ -61,7 +60,7 @@ class BrainkeyStoreImpl extends BaseStore {
     //         }catch(e2) {console.log("unsub 1 fail")}
     //     }
     // }
-    
+
     clearCache() {
         this.state = {
             brnkey: "",
@@ -71,7 +70,7 @@ class BrainkeyStoreImpl extends BaseStore {
         // Compared with ChainStore.account_ids_by_key
         this.account_ids_by_key = null
     }
-    
+
     /** Saves the brainkey and begins the lookup for derived account referneces */
     onSetBrainkey(brnkey) {
         this.clearCache()
@@ -79,7 +78,7 @@ class BrainkeyStoreImpl extends BaseStore {
         this.deriveKeys(brnkey)
         this.chainStoreUpdate()
     }
-    
+
     /** @return <b>true</b> when all derivied account references are either
         found or known not to exist.
     */
@@ -90,14 +89,14 @@ class BrainkeyStoreImpl extends BaseStore {
         })
         return true
     }
-    
+
     chainStoreUpdate() {
         if(! this.derived_keys.length) return
         if(this.account_ids_by_key === ChainStore.account_ids_by_key) return
         this.account_ids_by_key = ChainStore.account_ids_by_key
         this.updateAccountIds()
     }
-    
+
     deriveKeys(brnkey = this.state.brnkey) {
         var sequence = this.derived_keys.length // next sequence (starting with 0)
         var private_key = key.get_brainPrivateKey(brnkey, sequence)
@@ -106,7 +105,7 @@ class BrainkeyStoreImpl extends BaseStore {
         if(this.derived_keys.length < DERIVIED_BRAINKEY_POOL_SIZE)
             this.deriveKeys(brnkey)
     }
-    
+
     updateAccountIds() {
         var new_account_ids = Immutable.Set().withMutations( new_ids => {
             var updatePubkey = public_string => {
@@ -123,7 +122,7 @@ class BrainkeyStoreImpl extends BaseStore {
             this.setState({account_ids: new_account_ids})
         }
     }
-    
+
 }
 
 function derivedKeyStruct(private_key) {
