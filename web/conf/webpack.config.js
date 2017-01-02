@@ -77,9 +77,13 @@ module.exports = function(options) {
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("production")}}));
         plugins.push(extractCSS);
+        plugins.push(new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false
+        }));
         if (!options.noUgly) {
+
             plugins.push(new webpack.optimize.UglifyJsPlugin({
-                minimize: true,
                 sourceMap: true,
                 compress: {
                     warnings: true

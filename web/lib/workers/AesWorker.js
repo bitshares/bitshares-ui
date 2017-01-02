@@ -1,4 +1,4 @@
-require("babel/polyfill");
+require("babel-polyfill");
 var {key, Aes} = require("graphenejs-lib");
 
 onmessage = function(event) { try {
