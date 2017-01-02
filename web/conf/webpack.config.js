@@ -90,11 +90,11 @@ module.exports = function(options) {
             }));
         }
 
-        plugins.push(new webpack.optimize.CommonsChunkPlugin({
-            name: ["vendor"],
-            filename: "vendor.js",
-            minChunks: Infinity
-        }));
+        // plugins.push(new webpack.optimize.CommonsChunkPlugin({
+        //     name: ["vendor"],
+        //     filename: "vendor.js",
+        //     minChunks: Infinity
+        // }));
 
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
@@ -107,7 +107,7 @@ module.exports = function(options) {
 
     var config = {
         entry: {
-            vendor: ["react", "react-dom", "highcharts"],
+            // vendor: ["react", "react-dom", "highcharts/highstock", "graphenejs-lib", "lodash"],
             app: options.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [

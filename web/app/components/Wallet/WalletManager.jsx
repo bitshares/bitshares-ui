@@ -3,7 +3,6 @@ import {Link} from "react-router";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
 import WalletManagerStore from "stores/WalletManagerStore";
-import BalanceClaimByAsset from "components/Wallet/BalanceClaimByAsset";
 import Translate from "react-translate-component";
 import cname from "classnames";
 import counterpart from "counterpart";
@@ -345,18 +344,5 @@ class WalletDelete extends Component {
     }
 }
 WalletDelete = connect(WalletDelete, connectObject);
-
-class Cancel extends Component {
-
-    render() {
-        let label = <Translate content="wallet.cancel" />;
-        return  <span className="button cancel"
-            onClick={this.onReset.bind(this)}>{label}</span>;
-    }
-
-    onReset() {
-        window.history.back();
-    }
-}
 
 export {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete};

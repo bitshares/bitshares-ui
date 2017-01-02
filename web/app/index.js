@@ -1,62 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import {ChainStore} from "graphenejs-lib";
 import {Apis} from "graphenejs-ws";
 import { AppContainer } from "react-hot-loader";
 import { Router, Route, IndexRoute, browserHistory } from "react-router";
-import DashboardContainer from "./components/Dashboard/DashboardContainer";
-import Explorer from "./components/Explorer/Explorer";
-import Blocks from "./components/Explorer/BlocksContainer";
-import Assets from "./components/Explorer/AssetsContainer";
-import AccountsContainer from "./components/Explorer/AccountsContainer";
-import Witnesses from "./components/Explorer/Witnesses";
-import CommitteeMembers from "./components/Explorer/CommitteeMembers";
-import AccountPage from "./components/Account/AccountPage";
-import AccountOverview from "./components/Account/AccountOverview";
-import AccountAssets from "./components/Account/AccountAssets";
-import {AccountAssetCreate} from "./components/Account/AccountAssetCreate";
-import AccountAssetUpdate from "./components/Account/AccountAssetUpdate";
-import AccountMembership from "./components/Account/AccountMembership";
-import AccountVesting from "./components/Account/AccountVesting";
-import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
-import AccountPermissions from "./components/Account/AccountPermissions";
-import AccountWhitelist from "./components/Account/AccountWhitelist";
-import AccountVoting from "./components/Account/AccountVoting";
-import AccountOrders from "./components/Account/AccountOrders";
-import Exchange from "./components/Exchange/ExchangeContainer";
-import Markets from "./components/Exchange/MarketsContainer";
-import Transfer from "./components/Transfer/Transfer";
-import Settings from "./components/Settings/SettingsContainer";
-import FeesContainer from "./components/Blockchain/FeesContainer";
-import BlockContainer from "./components/Blockchain/BlockContainer";
-import AssetContainer from "./components/Blockchain/AssetContainer";
-import CreateAccount from "./components/Account/CreateAccount";
-import SettingsStore from "stores/SettingsStore";
-import iDB from "idb-instance";
-import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
-import WalletCreate from "./components/Wallet/WalletCreate";
-import ImportKeys from "./components/Wallet/ImportKeys";
-import WalletDb from "stores/WalletDb";
-import PrivateKeyActions from "actions/PrivateKeyActions";
-import Invoice from "./components/Transfer/Invoice";
-import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
-import WalletChangePassword from "./components/Wallet/WalletChangePassword";
-import WalletManagerStore from "stores/WalletManagerStore";
-import {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
-import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
-import BackupBrainkey from "./components/Wallet/BackupBrainkey";
-import Brainkey from "./components/Wallet/Brainkey";
-import AccountRefsStore from "stores/AccountRefsStore";
-import Help from "./components/Help";
-import InitError from "./components/InitError";
 import App from "./App";
+
+// Stores
+import iDB from "idb-instance";
+import AccountRefsStore from "stores/AccountRefsStore";
+import WalletManagerStore from "stores/WalletManagerStore";
+import WalletDb from "stores/WalletDb";
+import SettingsStore from "stores/SettingsStore";
+
+// Actions
+import PrivateKeyActions from "actions/PrivateKeyActions";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
 // require("dl_cli_index").init(window) // Adds some object refs to the global window object
 const history = browserHistory; //useRouterHistory(browserHistory)({queryKey: false});
-ChainStore.setDispatchFrequency(20);
 
 class Auth extends React.Component {
     render() {return null; }
@@ -119,72 +82,191 @@ let willTransitionTo = (nextState, replaceState, callback) => {
     });
 };
 
+function loadRoute(cb, moduleName = "default") {
+    return (module) => cb(null, module[moduleName]);
+}
+
+function errorLoading(err) {
+    console.error("Dynamic page loading failed", err);
+}
+
 let routes = (
     <Route path="/" component={App} onEnter={willTransitionTo}>
-        <IndexRoute component={DashboardContainer}/>
+        <IndexRoute getComponent={(location, cb) => {
+            System.import("components/Dashboard/DashboardContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
         <Route path="/auth/:data" component={Auth}/>
-        <Route path="/dashboard" component={DashboardContainer}/>
-        <Route path="explorer" component={Explorer}/>
-        <Route path="/explorer/fees" component={FeesContainer}/>
-        <Route path="/explorer/blocks" component={Blocks}/>
-        <Route path="/explorer/assets" component={Assets}/>
-        <Route path="/explorer/accounts" component={AccountsContainer}/>
-        <Route path="/explorer/witnesses" component={Witnesses}>
-            <IndexRoute component={Witnesses}/>
-        </Route>
-        <Route path="/explorer/committee-members" component={CommitteeMembers}>
-            <IndexRoute component={CommitteeMembers}/>
-        </Route>
-        <Route path="wallet" component={WalletManager}>
+        <Route path="/dashboard" getComponent={(location, cb) => {
+            System.import("components/Dashboard/DashboardContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="explorer" getComponent={(location, cb) => {
+            System.import("components/Explorer/Explorer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/fees" getComponent={(location, cb) => {
+            System.import("components/Blockchain/FeesContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/blocks" getComponent={(location, cb) => {
+            System.import("components/Explorer/BlocksContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/assets" getComponent={(location, cb) => {
+            System.import("components/Explorer/AssetsContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/accounts" getComponent={(location, cb) => {
+            System.import("components/Explorer/AccountsContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/witnesses" getComponent={(location, cb) => {
+            System.import("components/Explorer/Witnesses").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/explorer/committee-members" getComponent={(location, cb) => {
+            System.import("components/Explorer/CommitteeMembers").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+
+        <Route path="wallet" getComponent={(location, cb) => {
+            System.import("components/Wallet/WalletManager").then(loadRoute(cb, "WalletManager")).catch(errorLoading);
+        }}>
             {/* wallet management console */}
-            <IndexRoute component={WalletOptions}/>
-            <Route path="change" component={ChangeActiveWallet}/>
-            <Route path="change-password" component={WalletChangePassword}/>
-            <Route path="import-keys" component={ImportKeys}/>
-            <Route path="brainkey" component={Brainkey}/>
-            <Route path="create" component={WalletCreate}/>
-            <Route path="delete" component={WalletDelete}/>
-            <Route path="backup/restore" component={BackupRestore}/>
-            <Route path="backup/create" component={BackupCreate}/>
-            <Route path="backup/brainkey" component={BackupBrainkey}/>
-            <Route path="balance-claims" component={BalanceClaimActive}/>
+            <IndexRoute getComponent={(location, cb) => {
+                System.import("components/Wallet/WalletManager").then(loadRoute(cb, "WalletOptions")).catch(errorLoading);
+            }}/>
+            <Route path="change" getComponent={(location, cb) => {
+                System.import("components/Wallet/WalletManager").then(loadRoute(cb, "ChangeActiveWallet")).catch(errorLoading);
+            }}/>
+            <Route path="change-password" getComponent={(location, cb) => {
+                System.import("components/Wallet/WalletChangePassword").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="import-keys" getComponent={(location, cb) => {
+                System.import("components/Wallet/ImportKeys").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
+            }}/>
+            <Route path="brainkey" getComponent={(location, cb) => {
+                System.import("components/Wallet/Brainkey").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
+            }}/>
+            <Route path="create" getComponent={(location, cb) => {
+                System.import("components/Wallet/WalletCreate").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="delete" getComponent={(location, cb) => {
+                System.import("components/Wallet/WalletManager").then(loadRoute(cb, "WalletDelete")).catch(errorLoading);
+            }}/>
+            <Route path="backup/restore" getComponent={(location, cb) => {
+                System.import("components/Wallet/Backup").then(loadRoute(cb, "BackupRestore")).catch(errorLoading);
+            }}/>
+            <Route path="backup/create" getComponent={(location, cb) => {
+                System.import("components/Wallet/Backup").then(loadRoute(cb, "BackupCreate")).catch(errorLoading);
+            }}/>
+            <Route path="backup/brainkey" getComponent={(location, cb) => {
+                System.import("components/Wallet/BackupBrainkey").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="balance-claims" getComponent={(location, cb) => {
+                System.import("components/Wallet/BalanceClaimActive").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
         </Route>
-        <Route path="create-wallet" component={WalletCreate}/>
-        <Route path="transfer" component={Transfer}/>
-        <Route path="invoice/:data" component={Invoice}/>
-        <Route path="explorer/markets" component={Markets}/>
-        <Route path="market/:marketID" component={Exchange}/>
-        <Route path="settings" component={Settings}/>
-        <Route path="block/:height" component={BlockContainer}/>
-        <Route path="asset/:symbol" component={AssetContainer}/>
-        <Route path="create-account" component={CreateAccount}/>
-        <Route path="existing-account" component={ExistingAccount}>
-            <IndexRoute component={BackupRestore}/>
-            <Route path="import-backup" component={ExistingAccountOptions}/>
-            <Route path="import-keys" component={ImportKeys}/>
-            <Route path="brainkey" component={Brainkey}/>
-            <Route path="balance-claim" component={BalanceClaimActive}/>
+        <Route path="create-wallet" getComponent={(location, cb) => {
+            System.import("components/Wallet/WalletCreate").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+
+        <Route path="transfer" getComponent={(location, cb) => {
+            System.import("components/Transfer/Transfer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+
+        <Route path="invoice/:data" getComponent={(location, cb) => {
+            System.import("components/Transfer/Invoice").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="explorer/markets" getComponent={(location, cb) => {
+            System.import("components/Exchange/MarketsContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="market/:marketID" getComponent={(location, cb) => {
+            System.import("components/Exchange/ExchangeContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="settings" getComponent={(location, cb) => {
+            System.import("components/Settings/SettingsContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="block/:height" getComponent={(location, cb) => {
+            System.import("components/Blockchain/BlockContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="asset/:symbol" getComponent={(location, cb) => {
+            System.import("components/Blockchain/AssetContainer").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="create-account" getComponent={(location, cb) => {
+            System.import("components/Account/CreateAccount").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+
+        <Route path="existing-account" getComponent={(location, cb) => {
+            System.import("components/Wallet/ExistingAccount").then(loadRoute(cb, "ExistingAccount")).catch(errorLoading);
+        }}>
+            <IndexRoute getComponent={(location, cb) => {
+                System.import("components/Wallet/Backup").then(loadRoute(cb, "BackupRestore")).catch(errorLoading);
+            }}/>
+            <Route path="import-backup" getComponent={(location, cb) => {
+                System.import("components/Wallet/ExistingAccount").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
+            }}/>
+            <Route path="import-keys" getComponent={(location, cb) => {
+                System.import("components/Wallet/ImportKeys").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
+            }}/>
+            <Route path="brainkey" getComponent={(location, cb) => {
+                System.import("components/Wallet/Brainkey").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
+            }}/>
+            <Route path="balance-claim" getComponent={(location, cb) => {
+                System.import("components/Wallet/BalanceClaimActive").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
         </Route>
-        <Route path="/account/:account_name" component={AccountPage}>
-            <IndexRoute component={AccountOverview}/>
-            <Route path="overview" component={AccountOverview}/>
-            <Route path="assets" component={AccountAssets}/>
-            <Route path="create-asset" component={AccountAssetCreate}/>
-            <Route path="update-asset/:asset" component={AccountAssetUpdate}/>
-            <Route path="member-stats" component={AccountMembership}/>
-            <Route path="vesting" component={AccountVesting}/>
-            <Route path="permissions" component={AccountPermissions}/>
-            <Route path="voting" component={AccountVoting}/>
-            <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
-            <Route path="orders" component={AccountOrders}/>
-            <Route path="whitelist" component={AccountWhitelist}/>
+
+        <Route path="/account/:account_name" getComponent={(location, cb) => {
+            System.import("components/Account/AccountPage").then(loadRoute(cb)).catch(errorLoading);
+        }}>
+            <IndexRoute getComponent={(location, cb) => {
+                System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="overview" getComponent={(location, cb) => {
+                System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="assets" getComponent={(location, cb) => {
+                System.import("components/Account/AccountAssets").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="create-asset" getComponent={(location, cb) => {
+                System.import("components/Account/AccountAssetCreate").then(loadRoute(cb, "AccountAssetCreate")).catch(errorLoading);
+            }}/>
+            <Route path="update-asset/:asset" getComponent={(location, cb) => {
+                System.import("components/Account/AccountAssetUpdate").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="member-stats" getComponent={(location, cb) => {
+                System.import("components/Account/AccountMembership").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="vesting" getComponent={(location, cb) => {
+                System.import("components/Account/AccountVesting").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="permissions" getComponent={(location, cb) => {
+                System.import("components/Account/AccountPermissions").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="voting" getComponent={(location, cb) => {
+                System.import("components/Account/AccountVoting").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="deposit-withdraw" getComponent={(location, cb) => {
+                System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="orders" getComponent={(location, cb) => {
+                System.import("components/Account/AccountOrders").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="whitelist" getComponent={(location, cb) => {
+                System.import("components/Account/AccountWhitelist").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
         </Route>
-        <Route path="deposit-withdraw" component={AccountDepositWithdraw}/>
-        <Route path="/init-error" component={InitError}/>
-        <Route path="/help" component={Help}>
-            <Route path=":path1" component={Help}>
-                <Route path=":path2" component={Help}>
-                    <Route path=":path3" component={Help}/>
+        <Route path="deposit-withdraw" getComponent={(location, cb) => {
+            System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/init-error" getComponent={(location, cb) => {
+            System.import("components/InitError").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/help" getComponent={(location, cb) => {
+            System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
+        }}>
+            <Route path=":path1" getComponent={(location, cb) => {
+                System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
+            }}>
+                <Route path=":path2" getComponent={(location, cb) => {
+                    System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
+                }}>
+                    <Route path=":path3" getComponent={(location, cb) => {
+                        System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
+                    }} />
                 </Route>
             </Route>
         </Route>

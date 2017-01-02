@@ -73,7 +73,6 @@ class HelpContent extends React.Component {
 
     onClickLink(e) {
         e.preventDefault();
-        console.dir(e.target);
         let path = e.target.hash.split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
