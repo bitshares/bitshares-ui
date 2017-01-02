@@ -265,8 +265,7 @@ class Exchange extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
-            // console.log("this.props:", this.props);
-            this.props.history.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
+            this.props.router.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
         }
 
         if (nextProps.quoteAsset.toJS && nextProps.baseAsset.toJS) {

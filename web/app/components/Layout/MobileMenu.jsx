@@ -17,7 +17,7 @@ class MobileMenu extends React.Component {
     }
 
     static contextTypes = {
-        history: React.PropTypes.object
+        router: React.PropTypes.object
     };
 
     onClick() {
@@ -26,7 +26,7 @@ class MobileMenu extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
-        this.context.history.pushState(null, route);
+        this.context.router.push(route);
         ZfApi.publish("mobile-menu", "close");
     }
 

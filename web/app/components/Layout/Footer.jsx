@@ -22,10 +22,10 @@ class Footer extends React.Component {
     };
 
     static contextTypes = {
-        history: React.PropTypes.object
+        router: React.PropTypes.object
     };
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
@@ -81,11 +81,11 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.history.pushState(null, "/wallet/backup/create");
+        this.context.router.push("/wallet/backup/create");
     }
 
     onBackupBrainkey() {
-        this.context.history.pushState(null, "/wallet/backup/brainkey");
+        this.context.router.push("/wallet/backup/brainkey");
     }
 }
 Footer = BindToChainState(Footer, {keep_updating: true});
