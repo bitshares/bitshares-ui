@@ -2,7 +2,7 @@ import {hash, key} from "graphenejs-lib";
 
 var bts_genesiskeys_bloom_url = undefined
 try {
-    var url = require("file?name=bts_genesiskeys_bloom_[sha1:hash:hex:7].dat!assets/bts_genesiskeys_bloom.dat")
+    var url = require("file-loader?name=bts_genesiskeys_bloom_[sha1:hash:hex:7].dat!assets/bts_genesiskeys_bloom.dat")
     if(url.indexOf("3cee441") === -1)
         throw new Error("Incorrect hash: bts_genesiskeys_bloom.dat")
     bts_genesiskeys_bloom_url = url

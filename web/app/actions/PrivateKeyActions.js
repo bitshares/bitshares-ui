@@ -23,4 +23,4 @@ class PrivateKeyActions {
 
 }
 
-module.exports = alt.createActions(PrivateKeyActions);
+export default alt.createActions(PrivateKeyActions);

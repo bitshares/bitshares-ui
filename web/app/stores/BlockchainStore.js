@@ -1,7 +1,6 @@
 var Immutable = require("immutable");
-var alt = require("alt-instance");
-var BlockchainActions = require("actions/BlockchainActions");
-// import BaseStore from "./BaseStore";
+import alt from "alt-instance";
+import BlockchainActions from "actions/BlockchainActions";
 import {ChainStore} from "graphenejs-lib";
 
 import {
@@ -54,7 +53,7 @@ class BlockchainStore {
                 block.transactions.forEach(trx => {
                     trx.block_num = block.id;
                     this.latestTransactions = this.latestTransactions.unshift(trx);
-                })
+                });
             }
 
             if (this.latestTransactions.size > this.maxBlocks) {
@@ -76,4 +75,4 @@ class BlockchainStore {
 
 }
 
-module.exports = alt.createStore(BlockchainStore, "BlockchainStore");
+export default alt.createStore(BlockchainStore, "BlockchainStore");

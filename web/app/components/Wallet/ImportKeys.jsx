@@ -167,7 +167,7 @@ class ImportKeys extends Component {
                 let filter_status = this.state.genesis_filter_status;
 
                 // FF < version 41 does not support worker threads internals (like blob urls)
-                // let GenesisFilterWorker = require("worker!workers/GenesisFilterWorker")
+                // let GenesisFilterWorker = require("worker-loader!workers/GenesisFilterWorker")
                 // let worker = new GenesisFilterWorker
                 // worker.postMessage({
                 //     account_keys: unfiltered_account_keys,

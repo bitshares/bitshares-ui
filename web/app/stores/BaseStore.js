@@ -13,4 +13,4 @@ class BaseStore {
     }
 }
 
-module.exports = BaseStore;
+export default BaseStore;

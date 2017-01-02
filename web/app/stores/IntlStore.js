@@ -1,10 +1,9 @@
 var alt = require("alt-instance");
-var IntlActions = require("actions/IntlActions");
-var SettingsActions = require("actions/SettingsActions");
-var BaseStore = require("./BaseStore");
+import IntlActions from "actions/IntlActions";
+import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
-var locale_en = require("json!assets/locales/locale-en");
-var ls = require("common/localStorage");
+var locale_en = require("json-loader!assets/locales/locale-en");
+import ls from "common/localStorage";
 let ss = new ls("__graphene__");
 
 counterpart.registerTranslations("en", locale_en);
@@ -83,4 +82,4 @@ class IntlStore {
     }
 }
 
-module.exports = alt.createStore(IntlStore, "IntlStore");
+export default alt.createStore(IntlStore, "IntlStore");

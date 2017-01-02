@@ -1,9 +1,9 @@
-var BaseStore = require("./BaseStore");
+import BaseStore from "./BaseStore";
 var Immutable = require("immutable");
 import alt from "alt-instance";
-var VoteActions = require("actions/VoteActions");
-var AccountActions = require("actions/AccountActions");
-var AccountStore = require("stores/AccountStore");
+import VoteActions from "actions/VoteActions";
+import AccountActions from "actions/AccountActions";
+import AccountStore from "stores/AccountStore";
 var Utils = require("common/utils");
 
 const COMMITTEE_MEMBER = 0;
@@ -146,4 +146,4 @@ class VoteStore extends BaseStore {
 
 }
 
-module.exports = alt.createStore(VoteStore, "VoteStore");
+export default alt.createStore(VoteStore, "VoteStore");

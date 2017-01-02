@@ -40,4 +40,4 @@ class VoteActions {
 
 }
 
-module.exports = alt.createActions(VoteActions);
+export default alt.createActions(VoteActions);

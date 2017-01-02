@@ -432,4 +432,4 @@ class MarketsActions {
 
 }
 
-module.exports = alt.createActions(MarketsActions);
+export default alt.createActions(MarketsActions);

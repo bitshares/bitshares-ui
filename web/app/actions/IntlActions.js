@@ -3,7 +3,7 @@ var alt = require("alt-instance");
 var locales = {};
 if (__ELECTRON__) {
     ["cn", "de", "es", "fr", "ko", "tr"].forEach(locale => {
-        locales[locale] = require("json!assets/locales/locale-" + locale + ".json");
+        locales[locale] = require("json-loader!assets/locales/locale-" + locale + ".json");
     });
 }
 
@@ -43,4 +43,4 @@ class IntlActions {
     }
 }
 
-module.exports = alt.createActions(IntlActions);
+export default alt.createActions(IntlActions);

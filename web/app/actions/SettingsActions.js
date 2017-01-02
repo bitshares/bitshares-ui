@@ -51,4 +51,4 @@ class SettingsActions {
     // }
 }
 
-module.exports = alt.createActions(SettingsActions);
+export default alt.createActions(SettingsActions);

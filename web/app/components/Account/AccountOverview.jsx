@@ -186,7 +186,6 @@ class AccountOverview extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
-                azdazd
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
                         <div className="block-content-header">

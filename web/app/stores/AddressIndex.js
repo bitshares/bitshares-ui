@@ -51,7 +51,7 @@ class AddressIndex extends BaseStore {
         return new Promise( (resolve, reject) => {
             this.saving()
             this.loadAddyMap().then( () => {
-                var AddressIndexWorker = require("worker!workers/AddressIndexWorker")
+                var AddressIndexWorker = require("worker-loader!workers/AddressIndexWorker")
                 var worker = new AddressIndexWorker
                 worker.postMessage({ pubkeys, address_prefix: ChainConfig.address_prefix })
                 var _this = this

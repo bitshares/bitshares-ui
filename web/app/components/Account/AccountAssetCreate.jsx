@@ -771,6 +771,4 @@ class AccountAssetCreate extends React.Component {
 
 AccountAssetCreate = BindToChainState(AccountAssetCreate);
 
-AccountAssetCreate.BitAssetOptions = BitAssetOptions;
-
-export default AccountAssetCreate;
+export {AccountAssetCreate, BitAssetOptions};

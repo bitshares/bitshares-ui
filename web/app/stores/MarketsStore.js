@@ -1,7 +1,7 @@
 var Immutable = require("immutable");
 var alt = require("alt-instance");
-var MarketsActions = require("actions/MarketsActions");
-var SettingsActions = require("actions/SettingsActions");
+import MarketsActions from "actions/MarketsActions";
+import SettingsActions from "actions/SettingsActions";
 import market_utils from "common/market_utils";
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
@@ -854,4 +854,4 @@ class MarketsStore {
     }
 }
 
-module.exports = alt.createStore(MarketsStore, "MarketsStore");
+export default alt.createStore(MarketsStore, "MarketsStore");

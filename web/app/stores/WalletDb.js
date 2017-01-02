@@ -21,7 +21,7 @@ var TRACE = false;
 
 let dictJson;
 if (__ELECTRON__) {
-    dictJson = require("json!common/dictionary_en.json");
+    dictJson = require("json-loader!common/dictionary_en.json");
 }
 
 /** Represents a single wallet and related indexedDb database operations. */
@@ -364,7 +364,7 @@ class WalletDb extends BaseStore {
             var private_plainhex_array = []
             for(let private_key_obj of private_key_objs)
                 private_plainhex_array.push( private_key_obj.private_plainhex )
-            var AesWorker = require("worker!workers/AesWorker")
+            var AesWorker = require("worker-loader!workers/AesWorker")
             var worker = new AesWorker
             worker.postMessage({
                 private_plainhex_array,

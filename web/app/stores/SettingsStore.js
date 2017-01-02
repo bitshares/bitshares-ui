@@ -1,6 +1,6 @@
 var alt = require("alt-instance");
-var SettingsActions = require("actions/SettingsActions");
-var IntlActions = require("actions/IntlActions");
+import SettingsActions from "actions/SettingsActions";
+import IntlActions from "actions/IntlActions";
 var Immutable = require("immutable");
 import {merge} from "lodash";
 import ls from "common/localStorage";
@@ -295,4 +295,4 @@ class SettingsStore {
     }
 }
 
-module.exports = alt.createStore(SettingsStore, "SettingsStore");
+export default alt.createStore(SettingsStore, "SettingsStore");
