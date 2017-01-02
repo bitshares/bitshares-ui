@@ -1,22 +1,30 @@
 {
-  "parser": "babel-eslint",
-  "env": {
-    "browser": true,
-    "node": true,
-    "es6": true
-  },
-  "ecmaFeatures": {
-    "blockBindings": true,
-    "forOf": true,
-    "jsx": true
-  },
-  "rules": {
-    "comma-dangle": 0,
-    "indent": [2,4],
-    "quotes": [2, "double", "avoid-escape"],
-    "semi": [2, "always"],
-    "camelcase": [0],
-    "no-console": [0],
-    "object-curly-spacing": [0]
+    "plugins": [
+        "react"
+    ],
+    "extends": ["plugin:react/recommended"],
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "blockBindings": true,
+            "forOf": true,
+            "jsx": true
+        }
+    },
+    "rules": {
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used" }],
+        "comma-dangle": 0,
+        "indent": [2,4],
+        "quotes": [2, "double", "avoid-escape"],
+        "semi": [2, "always"],
+        "camelcase": [0],
+        "no-console": [0],
+        "object-curly-spacing": [0],
+        "react/prop-types": [0]
     }
 }
