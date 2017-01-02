@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import {Link} from "react-router/es";
 import Immutable from "immutable";
@@ -21,7 +20,7 @@ class MarketHistory extends React.Component {
         super();
         this.state = {
             activeTab: props.viewSettings.get("historyTab", "history")
-        }
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -35,12 +34,12 @@ class MarketHistory extends React.Component {
     }
 
     componentDidMount() {
-        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
+        let historyContainer = this.refs.history;
         Ps.initialize(historyContainer);
     }
 
     componentDidUpdate() {
-        let historyContainer = ReactDOM.findDOMNode(this.refs.history);
+        let historyContainer = this.refs.history;
         Ps.update(historyContainer);
     }
 

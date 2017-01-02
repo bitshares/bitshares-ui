@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import ReactDOM from "react-dom";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -14,34 +13,33 @@ export default class PrivateKeyView extends Component {
     }
 
     constructor() {
-        super()
-        this.state = this._getInitialState()
+        super();
+        this.state = this._getInitialState();
     }
 
     _getInitialState() {
-        return { wif: null }
+        return { wif: null };
     }
 
     reset() {
-        this.setState(this._getInitialState())
+        this.setState(this._getInitialState());
     }
 
     componentDidMount() {
-        var modalId = "key_view_modal" + this.props.pubkey
-        let modal = ReactDOM.findDOMNode(this.refs[modalId])
+        var modalId = "key_view_modal" + this.props.pubkey;
         ZfApi.subscribe(modalId, (name, msg) => {
-            if(name !== modalId) return
-            if(msg === "close") this.reset()
-        })
+            if(name !== modalId) return;
+            if(msg === "close") this.reset();
+        });
     }
 
     render() {
-        var modalId = "key_view_modal" + this.props.pubkey
-        var keys = PrivateKeyStore.getState().keys
+        var modalId = "key_view_modal" + this.props.pubkey;
+        var keys = PrivateKeyStore.getState().keys;
 
-        var has_private = keys.has(this.props.pubkey)
-        if( ! has_private) return <span>{this.props.children}</span>
-        var key = keys.get(this.props.pubkey)
+        var has_private = keys.has(this.props.pubkey);
+        if( ! has_private) return <span>{this.props.children}</span>;
+        var key = keys.get(this.props.pubkey);
         return <span>
             <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
             <Modal ref={modalId} id={modalId} overlay={true} overlayClose={false}>

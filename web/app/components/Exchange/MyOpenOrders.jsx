@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
@@ -101,12 +100,12 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+        let asksContainer = this.refs.asks;
         Ps.initialize(asksContainer);
     }
 
-    componentDidUpdate(prevProps) {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+    componentDidUpdate() {
+        let asksContainer = this.refs.asks;
         Ps.update(asksContainer);
     }
 

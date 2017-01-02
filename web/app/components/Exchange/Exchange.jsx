@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
@@ -234,7 +233,7 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = ReactDOM.findDOMNode(this.refs.center);
+        let centerContainer = this.refs.center;
         if (centerContainer) {
             Ps.initialize(centerContainer);
         }

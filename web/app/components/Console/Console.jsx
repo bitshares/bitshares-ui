@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import ReactDOM from "react-dom";
 import {Apis} from "graphenejs-ws";
 import ApplicationApi from "api/ApplicationApi";
 import WalletApi from "api/WalletApi";
@@ -61,9 +60,9 @@ export default class Console extends Component {
     }
 
     componentDidUpdate() {
-        ReactDOM.findDOMNode(this.refs.console_input).focus()
-        var node = ReactDOM.findDOMNode(this.refs.console_div)
-        node.scrollTop = node.scrollHeight
+        this.refs.console_input.focus();
+        var node = this.refs.console_div;
+        node.scrollTop = node.scrollHeight;
     }
 
     clear() {

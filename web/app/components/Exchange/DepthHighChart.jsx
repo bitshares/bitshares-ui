@@ -37,9 +37,6 @@ class DepthHighChart extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // let height = ReactDOM.findDOMNode(this).offsetHeight;
-        // this.setState({offsetHeight: height - 10});
-        //
         if (this.refs.depthChart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
             this.reflowChart(100);
         }

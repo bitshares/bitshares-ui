@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import sha256 from "js-sha256";
 import jdenticon from "jdenticon";
@@ -29,7 +28,7 @@ class Identicon extends Component {
   repaint() {
       if(this.props.account) jdenticon.updateById(this.canvas_id);
       else {
-          let ctx = ReactDOM.findDOMNode(this.refs.canvas).getContext('2d');
+          let ctx = this.refs.canvas.getContext('2d');
           ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
           let size = ctx.canvas.width;
           ctx.clearRect(0, 0, size, size);

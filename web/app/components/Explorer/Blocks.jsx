@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {Link} from "react-router/es";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
@@ -109,9 +108,9 @@ class Blocks extends React.Component {
 
     componentDidMount() {
         this._getInitialBlocks();
-        let oc = ReactDOM.findDOMNode(this.refs.operations);
+        let oc = this.refs.operations;
         Ps.initialize(oc);
-        let blocks = ReactDOM.findDOMNode(this.refs.blocks);
+        let blocks = this.refs.blocks;
         Ps.initialize(blocks);
         this._updateHeight();
     }
@@ -159,9 +158,9 @@ class Blocks extends React.Component {
     }
 
     psUpdate() {
-        let oc = ReactDOM.findDOMNode(this.refs.operations);
+        let oc = this.refs.operations;
         Ps.update(oc);
-        let blocks = ReactDOM.findDOMNode(this.refs.blocks);
+        let blocks = this.refs.blocks;
         Ps.update(blocks);
     }
 

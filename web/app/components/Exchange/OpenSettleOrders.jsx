@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import {FormattedDate} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -76,7 +75,7 @@ class OpenSettleOrders extends React.Component {
     }
 
     componentDidMount() {
-        let orderContainer = ReactDOM.findDOMNode(this.refs.orders);
+        let orderContainer = this.refs.orders;
         Ps.initialize(orderContainer);
     }
 

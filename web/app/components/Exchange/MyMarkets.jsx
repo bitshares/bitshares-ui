@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -284,7 +283,7 @@ class MyMarkets extends React.Component {
     }
 
     componentDidMount() {
-        let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
+        let historyContainer = this.refs.favorites;
         Ps.initialize(historyContainer);
 
         this._setMinWidth();
@@ -320,7 +319,7 @@ class MyMarkets extends React.Component {
 
     componentDidUpdate() {
         if (this.refs.favorites) {
-            let historyContainer = ReactDOM.findDOMNode(this.refs.favorites);
+            let historyContainer = this.refs.favorites;
             Ps.update(historyContainer);
         }
     }

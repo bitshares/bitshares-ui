@@ -19,9 +19,6 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        // let c = ReactDOM.findDOMNode(this.refs.container);
-        // ps.initialize(c);
-
         this._setDimensions();
 
         window.addEventListener("resize", this._setDimensions, false);
@@ -35,11 +32,6 @@ class Dashboard extends React.Component {
             nextState.showIgnored !== this.state.showIgnored
         );
     }
-
-    // componentDidUpdate() {
-    //     let c = ReactDOM.findDOMNode(this.refs.container);
-    //     ps.update(c);
-    // }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this._setDimensions, false);
