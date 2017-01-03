@@ -64,7 +64,7 @@ class InitError extends React.Component {
                 </div>
                 <div className="grid-container text-center" style={{paddingTop: "1rem", maxWidth: "40rem"}}>
                 <section className="block-list">
-                    <header><Translate component="span" content={`settings.connection`} /></header>
+                    <header><Translate component="span" content={`settings.apiServer`} /></header>
                     <ul>
                         <li className="with-dropdown">
 

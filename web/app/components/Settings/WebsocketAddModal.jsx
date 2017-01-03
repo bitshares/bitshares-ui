@@ -47,7 +47,6 @@ class WebsocketAddModal extends React.Component {
 
     onAddSubmit(e) {
         e.preventDefault();
-        debugger;
         SettingsActions.addWS(this.state.ws);
 
         this.setState({
@@ -59,7 +58,6 @@ class WebsocketAddModal extends React.Component {
     onRemoveSubmit(e) {
         e.preventDefault();
         let removeIndex;
-        debugger;
         this.props.apis.forEach((api, index) => {
             if (api.url === this.refs.select.value) {
                 removeIndex = index;
@@ -125,7 +123,7 @@ class WebsocketAddModal extends React.Component {
                 <div className="grid-content no-overflow">
                     <Translate component="h3" content="settings.remove_ws" />
                     <section className="block-list">
-                        <header><Translate component="span" content={"settings.connection"} /></header>
+                        <header><Translate component="span" content={"settings.apiServer"} /></header>
                         <ul>
                             <li className="with-dropdown">
                                 <select ref="select">
