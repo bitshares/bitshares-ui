@@ -1,8 +1,6 @@
 import React from "react";
-import {IntlProvider} from "react-intl";
-import intlData from "../Utility/intlData";
 import Translate from "react-translate-component";
-import {saveAs} from "common/filesaver.js";
+import {saveAs} from "file-saver";
 import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -24,7 +22,6 @@ function textContent(n) {
     return n ? `"${n.textContent.replace(/[\s\t\r\n]/gi, " ")}"` : "";
 }
 
-@BindToChainState({keep_updating: true})
 class RecentTransactions extends React.Component {
 
     static propTypes = {
@@ -299,8 +296,8 @@ class RecentTransactions extends React.Component {
         );
     }
 }
+RecentTransactions = BindToChainState(RecentTransactions, {keep_updating: true});
 
-@BindToChainState()
 class TransactionWrapper extends React.Component {
 
     static propTypes = {
@@ -316,9 +313,7 @@ class TransactionWrapper extends React.Component {
     render() {
         return <span className="wrapper">{this.props.children(this.props)}</span>;
     }
-
 }
+TransactionWrapper = BindToChainState(TransactionWrapper);
 
-RecentTransactions.TransactionWrapper = TransactionWrapper;
-
-export default RecentTransactions;
+export {RecentTransactions, TransactionWrapper};

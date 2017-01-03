@@ -4,7 +4,6 @@ import Utils from "common/utils.js";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
 class AccountInfo extends React.Component {
 
     static propTypes = {
@@ -36,4 +35,4 @@ class AccountInfo extends React.Component {
     }
 }
 
-export default AccountInfo;
+export default BindToChainState(AccountInfo);

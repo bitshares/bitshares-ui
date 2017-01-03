@@ -1,18 +1,15 @@
-import React from 'react'
-import ReactDOM from "react-dom";
-import cname from "classnames"
-import Trigger from "react-foundation-apps/src/trigger"
-import Modal from "react-foundation-apps/src/modal"
-import ZfApi from "react-foundation-apps/src/utils/foundation-api"
-import PasswordInput from "../Forms/PasswordInput"
-import notify from "actions/NotificationActions"
+import React from "react";
+import Trigger from "react-foundation-apps/src/trigger";
+import Modal from "react-foundation-apps/src/modal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import PasswordInput from "../Forms/PasswordInput";
+import notify from "actions/NotificationActions";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 
 import AltContainer from "alt-container";
-import WalletDb from "stores/WalletDb"
-import WalletUnlockStore from "stores/WalletUnlockStore"
-import WalletUnlockActions from "actions/WalletUnlockActions"
+import WalletDb from "stores/WalletDb";
+import WalletUnlockStore from "stores/WalletUnlockStore";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 import {Apis} from "graphenejs-ws";
 
 class WalletUnlockModal extends React.Component {
@@ -35,25 +32,24 @@ class WalletUnlockModal extends React.Component {
     }
 
     componentDidMount() {
-        let modal = ReactDOM.findDOMNode(this.refs.modal)
         ZfApi.subscribe(this.props.modalId, (name, msg) => {
             if(name !== this.props.modalId)
-                return
+                return;
             if(msg === "close") {
                 //if(this.props.reject) this.props.reject()
-                WalletUnlockActions.cancel()
+                WalletUnlockActions.cancel();
             } else if (msg === "open") {
-                this.refs.password_input.clear()
+                this.refs.password_input.clear();
+                this.refs.password_input.focus();
                 if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
                     notify.error("This wallet was intended for a different block-chain; expecting " +
                         WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
-                        Apis.instance().chain_id.substring(0,4).toUpperCase())
-                    ZfApi.publish(this.props.modalId, "close")
-                    return
+                        Apis.instance().chain_id.substring(0,4).toUpperCase());
+                    ZfApi.publish(this.props.modalId, "close");
+                    return;
                 }
-                modal.querySelector('[name="password"]').focus()
             }
-        })
+        });
     }
 
     componentDidUpdate() {
@@ -115,14 +111,14 @@ class WalletUnlockModal extends React.Component {
                     </div>
                 </form>
             </Modal>
-        )
+        );
     }
 
 }
 
 WalletUnlockModal.defaultProps = {
     modalId: "unlock_wallet_modal2"
-}
+};
 
 class WalletUnlockModalContainer extends React.Component {
     render() {

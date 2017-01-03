@@ -134,12 +134,6 @@ form.order-form {
     border-top: 1px solid #777;
     border-bottom: 1px solid #777;
   }
-  // .top-header {
-  //   border-top: 1px solid #777;
-  // }
-  // .bottom-header {
-  //   border-bottom: 1px solid #777;
-  // }
 }
 
 .final-row > td {
@@ -356,16 +350,6 @@ div.bucket-option {
       color: white;
       font-size: 12px;
     }
-}
-
-.account-drop-down {
-  a.button {
-    background-color: transparent;
-    text-transform: none;
-  }
-  a:active.button, a:hover.button {
-    background-color: transparent !important;
-  }
 }
 
 .borrow-button {

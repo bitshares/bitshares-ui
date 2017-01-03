@@ -1,7 +1,6 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import AccountImage from "./AccountImage";
 import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
@@ -11,20 +10,20 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import counterpart from "counterpart";
 
 function getWitnessOrCommittee(type, acct) {
-    let url = "", votes = 0, account
+    let url = "", votes = 0, account;
     if (type === "witness") {
         account = ChainStore.getWitnessById(acct.get("id"));
     } else if (type === "committee") {
         account = ChainStore.getCommitteeMemberById(acct.get("id"));
     }
-    
+
     url = account ? account.get("url") : url;
     votes = account ? account.get("total_votes") : votes;
 
     return {
         url,
         votes
-    }
+    };
 }
 
 class AccountItemRow extends React.Component {
@@ -67,7 +66,6 @@ class AccountItemRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
 class AccountsList extends React.Component {
 
     static propTypes = {
@@ -126,7 +124,7 @@ class AccountsList extends React.Component {
 
     render() {
         if(!this.props.items) return null;
-        
+
         let item_rows = this.props.items.filter(i => {
             if (!i) return false;
             //if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
@@ -137,7 +135,7 @@ class AccountsList extends React.Component {
             let {votes: b_votes} = getWitnessOrCommittee(this.props.type, b);
             if (a_votes !== b_votes) {
                 return b_votes - a_votes;
-            } 
+            }
             else if( a.get("name") > b.get("name") ) {
                 return 1;
             }
@@ -169,7 +167,7 @@ class AccountsList extends React.Component {
 
         return (
             <div>
-                {this.props.withSelector ? 
+                {this.props.withSelector ?
                 <AccountSelector
                     style={{maxWidth: "600px"}}
                     label={this.props.label}
@@ -205,4 +203,4 @@ class AccountsList extends React.Component {
 
 }
 
-export default AccountsList;
+export default BindToChainState(AccountsList, {keep_updating: true});

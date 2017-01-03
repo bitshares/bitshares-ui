@@ -1,23 +1,20 @@
 import React from "react";
-import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "graphenejs-lib";
 import AssetName from "../Utility/AssetName";
 import assetUtils from "common/asset_utils";
 import cnames from "classnames";
 import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 
-@BindToChainState()
 class MarketCard extends React.Component {
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
@@ -53,15 +50,14 @@ class MarketCard extends React.Component {
     }
 
     goToMarket(e) {
-      e.preventDefault();
-      this.context.history.pushState(null, `/market/${this.props.base.get("symbol")}_${this.props.quote.get("symbol")}`);
+        e.preventDefault();
+        this.context.router.push(`/market/${this.props.base.get("symbol")}_${this.props.quote.get("symbol")}`);
     }
 
     render() {
         let {base, quote, marketStats} = this.props;
 
         let desc = assetUtils.parseDescription(base.getIn(["options", "description"]));
-        let name = <AssetName name={base.get("symbol")} />;
         let imgName = base.get("symbol").split(".");
         imgName = imgName.length === 2 ? imgName[1] : imgName[0];
 
@@ -82,7 +78,7 @@ class MarketCard extends React.Component {
         return (
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
-                    <img style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+                    <img ref={imgName.toLowerCase()} onError={() => {this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";}} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
                 </div>
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
@@ -103,23 +99,23 @@ class MarketCard extends React.Component {
     }
 }
 
-@connectToStores
-export default class MarketCardWrapper extends React.Component {
+MarketCard = BindToChainState(MarketCard);
 
-    static getStores() {
-        return [MarketsStore]
-    };
+class MarketCardWrapper extends React.Component {
+    render() {
+        return (
+            <MarketCard {...this.props} />
+        );
+    }
+}
 
-    static getPropsFromStores() {
+export default connect(MarketCardWrapper, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps() {
         return {
             marketStats: MarketsStore.getState().allMarketStats
-        }
-    };
-
-  render() {
-
-    return (
-        <MarketCard {...this.props} />
-    );
-  }
-}
+        };
+    }
+});

@@ -1,8 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
-import Highcharts from "highcharts/highstock";
+// import Highcharts from "highcharts/highstock";
 let ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import counterpart from "counterpart";
@@ -38,9 +37,6 @@ class DepthHighChart extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        // let height = ReactDOM.findDOMNode(this).offsetHeight;
-        // this.setState({offsetHeight: height - 10});
-        //
         if (this.refs.depthChart && nextProps.verticalOrderbook !== this.props.verticalOrderbook) {
             this.reflowChart(100);
         }

@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -13,7 +13,7 @@ export default class BrowserSupportModal extends React.Component {
     _openLink() {
         window.open("https://www.google.com/chrome/browser/desktop/", "_blank");
     }
-        
+
     render() {
         return (
             <Modal id="browser_modal" overlay={true} ref="browser_modal">

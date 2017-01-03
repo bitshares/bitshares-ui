@@ -6,7 +6,6 @@ Graphene-UI
 Graphene-UI depends on Node.js. While it should work using versions as old as 0.12.x, it is recommended to use v5.x.
 
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
-For Windows users there is [NVM-Windows](https://github.com/coreybutler/nvm-windows).
 
 To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 ```
@@ -15,6 +14,11 @@ nvm install v5
 nvm use v5
 ```
 
+On windows NVM (support node version 4 and up) work from here: https://github.com/coreybutler/nvm-windows
+```
+nvm install 5.11.1 32
+nvm use 5.11.1
+```
 Once you have Node installed, you can clone the repo:
 ```
 git clone https://github.com/cryptonomex/graphene-ui.git

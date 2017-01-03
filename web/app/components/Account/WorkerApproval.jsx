@@ -1,22 +1,13 @@
-import React, {PropTypes} from "react";
-import Immutable from "immutable";
+import React from "react";
 import Translate from "react-translate-component";
-import AutocompleteInput from "../Forms/AutocompleteInput";
 import counterpart from "counterpart";
-import LoadingIndicator from "../LoadingIndicator";
-import AccountSelector from "./AccountSelector";
 import utils from "common/utils";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb.js"
-import {ChainStore, FetchChainObjects} from "graphenejs-lib";
-import AccountImage from "./AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
 
-@BindToChainState()
 class WorkerApproval extends React.Component{
 
    static propTypes = {
@@ -41,7 +32,7 @@ class WorkerApproval extends React.Component{
          removeVotes.push(this.props.worker.get("vote_against"));
       }
 
-      if( !this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) { 
+      if( !this.props.vote_ids.has( this.props.worker.get("vote_for") ) ) {
          addVotes.push(this.props.worker.get("vote_for"));
       }
 
@@ -66,7 +57,7 @@ class WorkerApproval extends React.Component{
       let {rank} = this.props;
       let worker = this.props.worker.toJS();
       // console.log( "render...", worker);
-      let total_votes = worker.total_votes_for - worker.total_votes_against; 
+      let total_votes = worker.total_votes_for - worker.total_votes_against;
       let total_days = 1;
 
       let approvalState = this.props.vote_ids.has(worker.vote_for) ? true :
@@ -84,7 +75,7 @@ class WorkerApproval extends React.Component{
 
       let displayURL = worker.url ? worker.url.replace(/http:\/\/|https:\/\//, "") : "";
 
-      if (displayURL.length > 25) { 
+      if (displayURL.length > 25) {
          displayURL = displayURL.substr(0, 25) + "...";
       }
 
@@ -98,7 +89,7 @@ class WorkerApproval extends React.Component{
 
       let startDate = counterpart.localize(new Date(worker.work_begin_date), { type: 'date' });
       let endDate = counterpart.localize(new Date(worker.work_end_date), { type: 'date' });
-      
+
       let now = new Date();
       let isExpired = new Date(worker.work_end_date) <= now;
 
@@ -133,7 +124,7 @@ class WorkerApproval extends React.Component{
                      {approval}
                   </td>
                   <td style={{textAlign: "right"}}>
-                     {approvalState !== true ? 
+                     {approvalState !== true ?
                         <button className="button outline success" onClick={this.onApprove.bind(this)}>
                            <Translate content="account.votes.approve_worker"/>
                         </button> :
@@ -141,16 +132,16 @@ class WorkerApproval extends React.Component{
                            <Translate content="account.votes.reject_worker"/>
                         </button>}
                   </td>
-                 
-               {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
-                  
 
-                 
+               {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
+
+
+
                </div>*/}
             </tr>
-      )
+      );
    }
 
 }
 
-export default WorkerApproval
+export default BindToChainState(WorkerApproval);

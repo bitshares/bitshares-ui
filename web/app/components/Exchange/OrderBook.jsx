@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
@@ -160,31 +159,31 @@ class OrderBook extends React.Component {
         if (!this.props.horizontal) {
             this._updateHeight();
 
-            let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
+            let asksContainer = this.refs.vert_asks;
             Ps.initialize(asksContainer);
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.vert_bids);
+            let bidsContainer = this.refs.vert_bids;
             Ps.initialize(bidsContainer);
         } else {
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            let bidsContainer = this.refs.hor_bids;
             Ps.initialize(bidsContainer);
-            let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
+            let asksContainer = this.refs.hor_asks;
             Ps.initialize(asksContainer);
         }
     }
 
     psUpdate() {
         if (!this.props.horizontal) {
-            let asksContainer = ReactDOM.findDOMNode(this.refs.vert_asks);
+            let asksContainer = this.refs.vert_asks;
             Ps.update(asksContainer);
             if (this.state.scrollToBottom) {
                 asksContainer.scrollTop = asksContainer.scrollHeight;
             };
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.vert_bids);
+            let bidsContainer = this.refs.vert_bids;
             Ps.update(bidsContainer);
         } else {
-            let bidsContainer = ReactDOM.findDOMNode(this.refs.hor_bids);
+            let bidsContainer = this.refs.hor_bids;
             Ps.update(bidsContainer);
-            let asksContainer = ReactDOM.findDOMNode(this.refs.hor_asks);
+            let asksContainer = this.refs.hor_asks;
             Ps.update(asksContainer);
         }
     }
@@ -347,7 +346,7 @@ class OrderBook extends React.Component {
                 totalAskReceive.plus(order.__tempOrder__.amountToReceive());
                 order.totalAskReceive = totalAskReceive.clone();
                 order.totalAskSell = totalAskSell.clone();
-                console.log("ask:", order);
+                // console.log("ask:", order);
                 return (horizontal ?
 
                     <OrderBookRowHorizontal

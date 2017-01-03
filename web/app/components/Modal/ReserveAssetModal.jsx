@@ -1,11 +1,8 @@
 import React from "react";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
-import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 import AssetActions from "actions/AssetActions";
 
@@ -32,13 +29,13 @@ export default class ReserveAssetModal extends React.Component {
 
     render() {
         let assetId = this.props.assetId;
-       
+
         return (
             <form className="grid-block vertical full-width-content">
                 <Translate component="h3" content="modal.reserve.title" />
                 <div className="grid-container " style={{paddingTop: "2rem"}}>
                     <div className="content-block">
-                        <AmountSelector 
+                        <AmountSelector
                             label="modal.reserve.amount"
                             amount={this.state.amount}
                             onChange={this.onAmountChanged.bind(this)}

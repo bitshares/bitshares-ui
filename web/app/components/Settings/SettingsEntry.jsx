@@ -64,7 +64,7 @@ export default class SettingsEntry extends React.Component {
                 return <option value={option.url} key={key.url}>{option.location || option.url} {option.location ? `(${option.url})` : null}</option>;
             });
 
-            let confirmButton = (
+            confirmButton = (
                 <div className="button-group" style={{padding: "10px"}}>
                     <div onClick={this._onConfirm.bind(this)} className="button outline">
                         <Translate content="transfer.confirm" />

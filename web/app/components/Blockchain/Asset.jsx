@@ -1,9 +1,7 @@
 import React from "react";
-import {PropTypes} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import LinkToAccountById from "./LinkToAccountById";
-import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -56,7 +54,6 @@ class AssetPermission extends React.Component {
 }
 
 
-@BindToChainState({keep_updating: true})
 class Asset extends React.Component {
 
     static propTypes = {
@@ -532,4 +529,4 @@ Asset.propTypes = {
 Asset.contextTypes = { router: React.PropTypes.func.isRequired };
 */
 
-export default Asset;
+export default BindToChainState(Asset, {keep_updating: true});

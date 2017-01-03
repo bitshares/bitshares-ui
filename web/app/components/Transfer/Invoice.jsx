@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
 import FormattedAsset from "../Utility/FormattedAsset";
-import ConfirmModal from "../Modal/ConfirmModal";
 import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import AccountInfo from "../Account/AccountInfo";
