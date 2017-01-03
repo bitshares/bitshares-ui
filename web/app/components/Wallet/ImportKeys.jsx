@@ -1,11 +1,9 @@
-import React, {Component, PropTypes} from "react";
-import ReactDOM from "react-dom";
-import alt from "alt-instance";
-import connectToStores from "alt/utils/connectToStores";
+import React, {Component} from "react";
+import { connect } from "alt-react";
 import cname from "classnames";
 import notify from "actions/NotificationActions";
-import {PrivateKey, Address, Aes, PublicKey, hash} from "graphenejs-lib";
-import {Apis, ChainConfig} from "graphenejs-ws";
+import {PrivateKey, Aes, PublicKey, hash} from "graphenejs-lib";
+import {ChainConfig} from "graphenejs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletCreate from "components/Wallet/WalletCreate";
@@ -25,24 +23,18 @@ require("./ImportKeys.scss");
 
 let import_keys_assert_checking = false;
 
-@connectToStores
-export default class ImportKeys extends Component {
+const KeyCount = ({key_count}) => {
+    if( !key_count) return <span/>;
+    return <span>Found {key_count} private keys</span>;
+};
+
+class ImportKeys extends Component {
 
     constructor() {
         super();
         this.state = this._getInitialState();
 
         this._renderBalanceClaims = this._renderBalanceClaims.bind(this);
-    }
-
-    static getStores() {
-        return [ImportKeysStore];
-    }
-
-    static getPropsFromStores() {
-        return {
-            importing: ImportKeysStore.getState().importing
-        };
     }
 
     static defaultProps = {
@@ -173,7 +165,7 @@ export default class ImportKeys extends Component {
                 let filter_status = this.state.genesis_filter_status;
 
                 // FF < version 41 does not support worker threads internals (like blob urls)
-                // let GenesisFilterWorker = require("worker!workers/GenesisFilterWorker")
+                // let GenesisFilterWorker = require("worker-loader!workers/GenesisFilterWorker")
                 // let worker = new GenesisFilterWorker
                 // worker.postMessage({
                 //     account_keys: unfiltered_account_keys,
@@ -747,12 +739,17 @@ export default class ImportKeys extends Component {
             </div>
         );
     }
-
 }
 
-class KeyCount extends Component {
-    render() {
-        if( !this.props.key_count) return <span/>;
-        return <span>Found {this.props.key_count} private keys</span>;
+ImportKeys = connect(ImportKeys, {
+    listenTo() {
+        return [ImportKeysStore];
+    },
+    getProps() {
+        return {
+            importing: ImportKeysStore.getState().importing
+        };
     }
-}
+});
+
+export default ImportKeys;

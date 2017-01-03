@@ -7,10 +7,8 @@ import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
-import FormattedFee from "../Utility/FormattedFee";
 import AssetName from "../Utility/AssetName";
 
-@BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
 
     static propTypes = {
@@ -237,4 +235,4 @@ class BuySell extends React.Component {
     }
 }
 
-export default BuySell;
+export default BindToChainState(BuySell, {keep_updating: true});

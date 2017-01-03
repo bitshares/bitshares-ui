@@ -10,7 +10,6 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
-@BindToChainState({keep_updating:true})
 class TranswiserWithdrawModal extends React.Component {
 
    static propTypes = {
@@ -122,7 +121,7 @@ class TranswiserWithdrawModal extends React.Component {
                    </div>
                    <div className="content-block full-width-content">
                        <label><Translate component="span" content="gateway.transwiser.alipay"/></label>
-                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
+                       <input type="text" value={this.state.withdraw_address || ""} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
                    </div>
 
                    <div className="content-block">
@@ -138,4 +137,4 @@ class TranswiserWithdrawModal extends React.Component {
    }
 };
 
-export default TranswiserWithdrawModal
+export default BindToChainState(TranswiserWithdrawModal, {keep_updating:true});

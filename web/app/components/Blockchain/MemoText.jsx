@@ -3,7 +3,7 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
 
@@ -59,26 +59,23 @@ class MemoText extends React.Component {
             );
         } else {
             return null;
-        } 
-    }
-}
-
-@connectToStores
-class MemoTextStoreWrapper extends React.Component {
-
-    static getStores() {
-        return [WalletUnlockStore]
-    }
-
-    static getPropsFromStores() {
-        return {
-            wallet_locked: WalletUnlockStore.getState().locked
         }
     }
+}
 
+class MemoTextStoreWrapper extends React.Component {
     render () {
-        return <MemoText {...this.props}/>
+        return <MemoText {...this.props}/>;
     }
 }
 
-export default MemoTextStoreWrapper;
+export default connect(MemoTextStoreWrapper, {
+    listenTo() {
+        return [WalletUnlockStore];
+    },
+    getProps() {
+        return {
+            wallet_locked: WalletUnlockStore.getState().locked
+        };
+    }
+});

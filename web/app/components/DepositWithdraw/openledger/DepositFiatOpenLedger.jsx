@@ -1,35 +1,29 @@
 import React from "react";
-import Trigger from "react-foundation-apps/src/trigger";
-import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
-import AccountActions from "actions/AccountActions";
-import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
-@BindToChainState({keep_updating:true})
 class DepositFiatOpenLedger extends React.Component {
 
-   static propTypes = {
-       account: ChainTypes.ChainAccount.isRequired,
-       issuer_account: ChainTypes.ChainAccount.isRequired,
-       deposit_asset: React.PropTypes.string,
-       receive_asset: ChainTypes.ChainAsset.isRequired,
-       rpc_url: React.PropTypes.string
-   }
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired,
+        issuer_account: ChainTypes.ChainAccount.isRequired,
+        deposit_asset: React.PropTypes.string,
+        receive_asset: ChainTypes.ChainAsset.isRequired,
+        rpc_url: React.PropTypes.string
+    }
 
-   constructor( props ) {
-      super(props);
-      this.state = {
-         deposit_amount: null,
-         deposit_info: null,
-         deposit_error: null
-      }
-   }
+    constructor( props ) {
+        super(props);
+        this.state = {
+            deposit_amount: null,
+            deposit_info: null,
+            deposit_error: null
+        };
+    }
 
    onDepositAmountChange( {amount, asset} ) {
       this.setState( {deposit_amount:amount} );
@@ -191,4 +185,4 @@ class DepositFiatOpenLedger extends React.Component {
 
 };
 
-export default DepositFiatOpenLedger
+export default BindToChainState(DepositFiatOpenLedger, {keep_updating:true});

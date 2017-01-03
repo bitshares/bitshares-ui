@@ -1,13 +1,11 @@
 import React from "react";
 import Modal from "react-foundation-apps/src/modal";
-import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
@@ -16,17 +14,7 @@ import AccountSelect from "components/Forms/AccountSelect";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
 
-@connectToStores
 class TransactionConfirm extends React.Component {
-    
-    static getStores() {
-        return [TransactionConfirmStore]
-    };
-
-    static getPropsFromStores() {
-        return TransactionConfirmStore.getState();
-    };
-
     shouldComponentUpdate(nextProps) {
         if (!nextProps.transaction) {
             return false;
@@ -133,7 +121,7 @@ class TransactionConfirm extends React.Component {
                 <div className="button-group">
                     <div className="grid-block full-width-content">
                         <div className={confirmButtonClass} onClick={this.onConfirmClick.bind(this)}>
-                            {this.props.propose ? 
+                            {this.props.propose ?
                                 <Translate content="propose" />:
                                 <Translate content="transfer.confirm" />
                             }
@@ -159,7 +147,7 @@ class TransactionConfirm extends React.Component {
                             index={0}
                             no_links={true}/>
                     </div>
-                    
+
                     {/* P R O P O S E   F R O M */}
                     {this.props.propose ?
                     <div className="full-width-content form-group">
@@ -169,7 +157,7 @@ class TransactionConfirm extends React.Component {
                             onChange={this.onProposeAccount.bind(this)}
                         />
                     </div> : null}
-                    
+
                     <div className="grid-block shrink" style={{paddingTop: "1rem"}}>
                         {button_group}
 
@@ -192,5 +180,13 @@ class TransactionConfirm extends React.Component {
     }
 }
 
-export default TransactionConfirm;
+TransactionConfirm = connect(TransactionConfirm, {
+    listenTo() {
+        return [TransactionConfirmStore];
+    },
+    getProps() {
+        return TransactionConfirmStore.getState();
+    }
+});
 
+export default TransactionConfirm;

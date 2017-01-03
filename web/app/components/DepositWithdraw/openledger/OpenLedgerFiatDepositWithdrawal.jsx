@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
@@ -12,7 +11,6 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import DepositFiatOpenLedger from "./DepositFiatOpenLedger";
 import WithdrawFiatOpenLedger from "./WithdrawFiatOpenLedger";
 
-@BindToChainState({keep_updating:true})
 class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
     static propTypes = {
         url:               React.PropTypes.string,
@@ -45,7 +43,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
-    
+
     onDeposit() {
         ZfApi.publish(this.getDepositModalId(), "open");
     }
@@ -58,7 +56,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
         let account_balances_object = this.props.account.get("balances");
 
         let balance = "0 " + this.props.receive_asset.get('symbol');
-        
+
         let account_balances = account_balances_object.toJS();
         let asset_types = Object.keys(account_balances);
         if (asset_types.length > 0) {
@@ -73,7 +71,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
         let deposit_fragment = null;
         if (this.props.deposit_allowed)
         {
-            deposit_fragment = 
+            deposit_fragment =
                             <td>
                                 <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
                                 <Modal id={deposit_modal_id} overlay={true}>
@@ -99,7 +97,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
         let withdraw_fragment = null;
         if (this.props.withdraw_allowed)
         {
-            withdraw_fragment = 
+            withdraw_fragment =
                             <td>
                                 <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
                                 <Modal id={withdraw_modal_id} overlay={true}>
@@ -130,8 +128,8 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                 </tr>;
     }
 }; // OpenLedgerFiatDepositWithdrawCurrency
+OpenLedgerFiatDepositWithdrawCurrency = BindToChainState(OpenLedgerFiatDepositWithdrawCurrency, {keep_updating:true});
 
-@BindToChainState({keep_updating:true})
 class OpenLedgerFiatDepositWithdrawal extends React.Component {
     static propTypes = {
         rpc_url:           React.PropTypes.string,
@@ -153,12 +151,12 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
         // get approval status from openledger
         let json_rpc_request = { "jsonrpc": "2.0", "id": 1, "method": "isValidatedForFiat", "params": {"bitsharesAccountName": this.props.account.get('name')}};
         let is_validated_promise = fetch(this.props.rpc_url,
-                                                {method: 'POST', 
-                                                 headers: new Headers({"Accept": "application/json", 
-                                                 "content-type":"application/x-www-form-urlencoded"}), 
+                                                {method: 'POST',
+                                                 headers: new Headers({"Accept": "application/json",
+                                                 "content-type":"application/x-www-form-urlencoded"}),
                                                  body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                  .then(response => response.json());
-        
+
         is_validated_promise.then((json_response) => {
             if ('result' in json_response)
                 this.setState( { allowedFiatCurrencies : json_response.result } );
@@ -178,7 +176,7 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
     {
         clearInterval(this.update_timer);
     }
-    
+
     render() {
         if (!this.props.account || !this.props.issuer_account)
             return  <div></div>;
@@ -193,33 +191,34 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                            <OpenLedgerFiatDepositWithdrawCurrency 
+                            <OpenLedgerFiatDepositWithdrawCurrency
                                 rpc_url={this.props.rpc_url}
                                 account={this.props.account}
                                 issuer_account={this.props.issuer_account}
                                 deposit_asset="USD"
-                                receive_asset="OPEN.USD" 
-                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("USD") > -1} 
+                                receive_asset="OPEN.USD"
+                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("USD") > -1}
                                 withdraw_allowed={this.state.allowedFiatCurrencies.withdraw.indexOf("USD") > -1}/>
-                            <OpenLedgerFiatDepositWithdrawCurrency 
+                            <OpenLedgerFiatDepositWithdrawCurrency
                                 rpc_url={this.props.rpc_url}
                                 account={this.props.account}
                                 issuer_account={this.props.issuer_account}
                                 deposit_asset="EUR"
-                                receive_asset="OPEN.EUR" 
-                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("EUR") > -1} 
+                                receive_asset="OPEN.EUR"
+                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("EUR") > -1}
                                 withdraw_allowed={this.state.allowedFiatCurrencies.withdraw.indexOf("EUR") > -1}/>
-                            <OpenLedgerFiatDepositWithdrawCurrency 
+                            <OpenLedgerFiatDepositWithdrawCurrency
                                 rpc_url={this.props.rpc_url}
                                 account={this.props.account}
                                 issuer_account={this.props.issuer_account}
                                 deposit_asset="CNY"
-                                receive_asset="OPEN.CNY" 
-                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("CNY") > -1} 
+                                receive_asset="OPEN.CNY"
+                                deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("CNY") > -1}
                                 withdraw_allowed={this.state.allowedFiatCurrencies.withdraw.indexOf("CNY") > -1}/>
                         </tbody>
                     </table>;
     }
 }; // OpenLedgerFiatDepositWithdrawal
+OpenLedgerFiatDepositWithdrawal = BindToChainState(OpenLedgerFiatDepositWithdrawal, {keep_updating:true});
 
 export default OpenLedgerFiatDepositWithdrawal;

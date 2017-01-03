@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
@@ -9,8 +8,6 @@ import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import SettingsActions from "actions/SettingsActions";
-import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
@@ -103,12 +100,12 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+        let asksContainer = this.refs.asks;
         Ps.initialize(asksContainer);
     }
 
-    componentDidUpdate(prevProps) {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+    componentDidUpdate() {
+        let asksContainer = this.refs.asks;
         Ps.update(asksContainer);
     }
 

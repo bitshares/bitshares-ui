@@ -10,13 +10,12 @@ import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import utils from "common/utils";
 
-@BindToChainState({keep_updating:true})
 class ConvertModalBlocktrades extends React.Component {
 
     static propTypes = {
         from_account: ChainTypes.ChainAccount.isRequired,
 		to_account: ChainTypes.ChainAccount.isRequired,
-        asset: ChainTypes.ChainAsset.isRequired, 
+        asset: ChainTypes.ChainAsset.isRequired,
         output_coin_name: React.PropTypes.string.isRequired,
         output_coin_symbol: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
@@ -25,7 +24,7 @@ class ConvertModalBlocktrades extends React.Component {
 
     constructor( props ) {
         super(props);
-		
+
         this.state = {
         convert_amount: '',
 		error: null
@@ -35,7 +34,7 @@ class ConvertModalBlocktrades extends React.Component {
     onConvertAmountChange( {amount, asset} ) {
         this.setState( {convert_amount: amount} );
     }
-	
+
     onTrxIncluded(confirm_store_state) {
         if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
             // this.setState(Transfer.getInitialState());
@@ -74,7 +73,7 @@ class ConvertModalBlocktrades extends React.Component {
 	}
 
     render() {
-	
+
         let balance = null;
         let account_balances = this.props.from_account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
@@ -88,7 +87,7 @@ class ConvertModalBlocktrades extends React.Component {
         } else {
             balance = "No funds";
         }
-	   
+
 	    let tabIndex = 1;
 
         return (<form className="grid-block vertical full-width-content">
@@ -97,7 +96,7 @@ class ConvertModalBlocktrades extends React.Component {
                     <h3><Translate content="gateway.convert_coin" coin={this.props.output_coin_name} symbol={this.props.output_coin_symbol} /></h3>
                 </div>
                 <div className="content-block">
-                    <AmountSelector label="modal.convert.amount" 
+                    <AmountSelector label="modal.convert.amount"
                         amount={this.state.convert_amount}
                         asset={this.props.asset.get('id')}
                         assets={[this.props.asset.get('id')]}
@@ -107,17 +106,17 @@ class ConvertModalBlocktrades extends React.Component {
                     />
                 </div>
                 <div className="content-block">
-                    <input type="submit" className="button" 
-                    onClick={this.onSubmit.bind(this)} 
+                    <input type="submit" className="button"
+                    onClick={this.onSubmit.bind(this)}
                     value={counterpart.translate("modal.convert.submit")} />
                     <Trigger close={this.props.modal_id}>
                         <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
                     </Trigger>
                 </div>
-            </div> 
+            </div>
             </form>
 	    )
-    }  
+    }
 };
 
-export default ConvertModalBlocktrades;
+export default BindToChainState(ConvertModalBlocktrades, {keep_updating:true});

@@ -9,12 +9,10 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
-import Post from "common/formPost";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Blockchain/LinkToAccountById";
 
-@BindToChainState({keep_updating:true})
-export default class BlockTradesGatewayDepositRequest extends React.Component {
+class BlockTradesGatewayDepositRequest extends React.Component {
     static propTypes = {
         url:               React.PropTypes.string,
         gateway:           React.PropTypes.string,
@@ -332,3 +330,5 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
         }
     }
 };
+
+export default BindToChainState(BlockTradesGatewayDepositRequest, {keep_updating:true});

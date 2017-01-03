@@ -2,22 +2,47 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
-var git = require('git-rev-sync');
-require('es6-promise').polyfill();
+var git = require("git-rev-sync");
+require("es6-promise").polyfill();
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname, "..");
 
-// FUNCTION TO EXTRACT CSS FOR PRODUCTION
-function extractForProduction(loaders) {
-  return ExtractTextPlugin.extract("style", loaders.substr(loaders.indexOf("!")));
-}
-
 module.exports = function(options) {
     // console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
-    var cssLoaders = "style-loader!css-loader!postcss-loader",
-      scssLoaders = "style!css!postcss-loader!sass?outputStyle=expanded";
+    var cssLoaders = [
+        {
+            loader: "style-loader"
+        },
+        {
+            loader: "css-loader"
+        },
+        {
+            loader: "postcss-loader"
+        }
+    ];
+
+    var scssLoaders =  [
+        {
+            loader: "style-loader"
+        },
+        {
+            loader: "css-loader"
+        },
+        {
+            loader: "postcss-loader",
+            options: {
+                plugins: [require("autoprefixer")]
+            }
+        },
+        {
+            loader: "sass-loader",
+            options: {
+                outputStyle: "expanded"
+            }
+        }
+    ];
 
     // DIRECTORY CLEANER
     var cleanDirectories = ["dist"];
@@ -27,7 +52,6 @@ module.exports = function(options) {
 
     // COMMON PLUGINS
     var plugins = [
-        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(git.tag()),
@@ -37,16 +61,29 @@ module.exports = function(options) {
 
     if (options.prod) {
         // WRAP INTO CSS FILE
-        cssLoaders = extractForProduction(cssLoaders);
-        scssLoaders = extractForProduction(scssLoaders);
+        const extractCSS = new ExtractTextPlugin("app.css");
+        cssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
+            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+                plugins: [require("autoprefixer")]
+            }}]}
+        );
+        scssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
+            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+                plugins: [require("autoprefixer")]
+            }}, {loader: "sass-loader", options: {outputStyle: "expanded"}}]}
+        );
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}));
-        plugins.push(new ExtractTextPlugin("app.css"));
+        plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("production")}}));
+        plugins.push(extractCSS);
+        plugins.push(new webpack.LoaderOptionsPlugin({
+            minimize: true,
+            debug: false
+        }));
         if (!options.noUgly) {
+
             plugins.push(new webpack.optimize.UglifyJsPlugin({
-                minimize: true,
                 sourceMap: true,
                 compress: {
                     warnings: true
@@ -58,58 +95,76 @@ module.exports = function(options) {
         }
 
         // plugins.push(new webpack.optimize.CommonsChunkPlugin({
-        //     names: ["app", "vendors"],
-        //     filename: "vendors.js"
+        //     name: ["vendor"],
+        //     filename: "vendor.js",
+        //     minChunks: Infinity
         // }));
 
         // PROD OUTPUT PATH
         outputPath = path.join(root_dir, "dist");
     } else {
-        plugins.push(new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('development')}})),
+        // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
+        plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("development")}}));
         plugins.push(new webpack.HotModuleReplacementPlugin());
+        plugins.push(new webpack.NoErrorsPlugin());
     }
 
     var config = {
         entry: {
+            // vendor: ["react", "react-dom", "highcharts/highstock", "graphenejs-lib", "lodash"],
             app: options.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [
-                "webpack-dev-server/client?http://localhost:8080",
-                "webpack/hot/only-dev-server",
+                "react-hot-loader/patch",
+                "webpack-hot-middleware/client",
                 path.resolve(root_dir, "app/Main-dev.js")
             ]
         },
         output: {
+            publicPath: "/",
             path: outputPath,
-            filename: "app.js",
+            filename: "[name].js",
             pathinfo: !options.prod,
             sourceMapFilename: "[name].js.map"
         },
         devtool: options.prod ? "cheap-module-source-map" : "eval",
-        debug: options.prod ? false : true,
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.jsx$/,
                     include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps"), "/home/sigve/Dev/graphene/react-foundation-apps"],
-                    loaders: options.prod ? ["babel-loader"] : ["babel-loader?cacheDirectory"]
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                cacheDirectory: options.prod ? false : true
+                            }
+                        }
+                    ]
                 },
                 {
                     test: /\.js$/,
-                    exclude: [/node_modules/, path.resolve(root_dir, "../dl/node_modules")],
+                    exclude: [/node_modules/],
                     loader: "babel-loader",
-                    query: {compact: false, cacheDirectory: true}
+                    options: {compact: false, cacheDirectory: true}
                 },
                 {
-                    test: /\.json/, loader: "json",
+                    test: /\.json/, loader: "json-loader",
                     exclude: [
-                        path.resolve(root_dir, "../dl/src/common"),
+                        path.resolve(root_dir, "lib/common"),
                         path.resolve(root_dir, "app/assets/locales")
                     ]
                 },
                 { test: /\.coffee$/, loader: "coffee-loader" },
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
-                { test: /\.css$/, loader: cssLoaders },
+                {
+                    test: /\.css$/,
+                    loader: cssLoaders
+                },
+
+                // var cssLoaders = "style-loader!css-loader!postcss-loader",
+                //   scssLoaders =  "style-loader!css-loader!postcss-loader!sass-loader?outputStyle=expanded";
+
                 {
                     test: /\.scss$/,
                     loader: scssLoaders
@@ -119,28 +174,40 @@ module.exports = function(options) {
                 ] },
                 { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
-                { test: /\.md/, loader: 'html?removeAttributeQuotes=false!remarkable' }
-            ],
-            postcss: function () {
-                return [precss, autoprefixer];
-            }
+                {
+                    test: /\.md/,
+                    use: [
+                        {
+                            loader: "html-loader",
+                            options: {
+                                removeAttributeQuotes: false
+                            }
+                        },
+                        {
+                            loader: "remarkable-loader",
+                            options: {
+                                preset: "full",
+                                typographer: true
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         resolve: {
-            root: [path.resolve(root_dir, "./app"), path.resolve(root_dir, "../dl/src")],
-            extensions: ["", ".js", ".jsx", ".coffee", ".json"],
-            modulesDirectories: ["node_modules"],
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            modules: [
+                path.resolve(root_dir, "./app"),
+                path.resolve(root_dir, "./lib"),
+                "node_modules"
+            ],
+            extensions: [".js", ".jsx", ".coffee", ".json"],
+            // fallback: [path.resolve(root_dir, "./node_modules")]
         },
         resolveLoader: {
-            root: path.join(root_dir, "node_modules"),
-            fallback: [path.resolve(root_dir, "./node_modules")]
+            modules: [path.join(root_dir, "node_modules")],
+            // fallback: [path.resolve(root_dir, "./node_modules")]
         },
-        plugins: plugins,
-        root: outputPath,
-        remarkable: {
-            preset: "full",
-            typographer: true
-        }
+        plugins: plugins
     };
 
     // if(options.prod) config.entry.vendors = [
@@ -151,5 +218,4 @@ module.exports = function(options) {
     // ];
 
     return config;
-
-}
+};

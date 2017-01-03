@@ -1,17 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import sha256 from "js-sha256";
 import jdenticon from "jdenticon";
 
-var canvas_id_count = 0
+var canvas_id_count = 0;
 
 class Identicon extends Component {
 
-  constructor(props) {
-      super(props);
-      this.canvas_id = "identicon_" + (this.props.account||"") + (++canvas_id_count);
-  }
+    constructor(props) {
+        super(props);
+        this.canvas_id = "identicon_" + (this.props.account||"") + (++canvas_id_count);
+    }
 
   shouldComponentUpdate(nextProps) {
       return nextProps.size.height !== this.props.size.height || nextProps.size.width !== this.props.size.width || nextProps.account !== this.props.account;
@@ -29,7 +28,7 @@ class Identicon extends Component {
   repaint() {
       if(this.props.account) jdenticon.updateById(this.canvas_id);
       else {
-          let ctx = ReactDOM.findDOMNode(this.refs.canvas).getContext('2d');
+          let ctx = this.refs.canvas.getContext('2d');
           ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
           let size = ctx.canvas.width;
           ctx.clearRect(0, 0, size, size);

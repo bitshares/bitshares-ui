@@ -11,7 +11,7 @@ class ExchangeContainer extends React.Component {
     //     let currentAccount = AccountStore.getState().currentAccount;
 
     //     if (!currentAccount) {
-    //         this.props.history.pushState(null, "create-account");
+    //         this.props.router.push("create-account");
     //     }
     // }
 

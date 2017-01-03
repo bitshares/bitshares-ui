@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link, PropTypes} from "react-router";
+import {Link} from "react-router/es";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -10,7 +10,6 @@ import BlockTime from "./BlockTime";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {ChainStore} from "graphenejs-lib";
@@ -41,10 +40,9 @@ class TransactionLabel extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating:true})
 class Row extends React.Component {
     static contextTypes = {
-        history: PropTypes.history
+        router: React.PropTypes.object.isRequired
     }
 
     static propTypes = {
@@ -62,7 +60,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.history.pushState(null, `/block/${this.props.block}`);
+        this.context.router.push(`/block/${this.props.block}`);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -106,6 +104,7 @@ class Row extends React.Component {
             );
     }
 }
+Row = BindToChainState(Row, {keep_updating:true});
 
 class Operation extends React.Component {
 

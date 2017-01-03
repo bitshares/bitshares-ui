@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {ChainStore} from "graphenejs-lib";
