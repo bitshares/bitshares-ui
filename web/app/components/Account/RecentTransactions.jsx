@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {saveAs} from "common/filesaver.js";
+import {saveAs} from "file-saver";
 import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";

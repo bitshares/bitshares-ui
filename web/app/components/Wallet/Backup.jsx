@@ -7,7 +7,7 @@ import BackupStore from "stores/BackupStore";
 import WalletDb from "stores/WalletDb";
 import BackupActions, {backup, decryptWalletBackup} from "actions/BackupActions";
 import notify from "actions/NotificationActions";
-import {saveAs} from "common/filesaver.js";
+import {saveAs} from "file-saver";
 import cname from "classnames";
 import Translate from "react-translate-component";
 import {ChainConfig} from "graphenejs-ws";

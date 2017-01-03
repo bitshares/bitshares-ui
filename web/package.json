@@ -34,6 +34,7 @@
     "cookies-js": "^1.2.1",
     "counterpart": "^0.17.1",
     "event-emitter": "^0.3.4",
+    "file-saver": "^1.3.3",
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
     "git-rev-sync": "^1.4.0",
     "graphenejs-lib": "^0.4.10",
