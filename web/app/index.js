@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import {Apis} from "graphenejs-ws";
 import { AppContainer } from "react-hot-loader";
-import { Router, Route, IndexRoute, browserHistory } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory, hashHistory } from "react-router/es";
 import App from "./App";
 
 // Stores
@@ -16,10 +16,20 @@ import SettingsStore from "stores/SettingsStore";
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
 
+/*
+* Electron does not support async loading of components via System.import,
+* so we make sure they're bundled already by including them here
+*/
+if (__ELECTRON__) {
+    require("./electron_imports");
+}
+
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
-// require("dl_cli_index").init(window) // Adds some object refs to the global window object
-const history = browserHistory; //useRouterHistory(browserHistory)({queryKey: false});
+/*
+* Electron does not support browserHistory, so we need to use hashHistory
+*/
+const history = __ELECTRON__ ? hashHistory : browserHistory;
 
 class Auth extends React.Component {
     render() {return null; }

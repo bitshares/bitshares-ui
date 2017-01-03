@@ -1,8 +1,7 @@
 import {ChainStore} from "graphenejs-lib";
 import {Apis} from "graphenejs-ws";
 import React from "react";
-// import {Router, Route, IndexRoute, Redirect} from "react-router/es";
-import IntlStore from "stores/IntlStore"; // This needs to be initalized here even though IntlStore is never used
+import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
@@ -23,9 +22,6 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 
-require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
-
-// require("dl_cli_index").init(window) // Adds some object refs to the global window object
 ChainStore.setDispatchFrequency(20);
 
 class App extends React.Component {
