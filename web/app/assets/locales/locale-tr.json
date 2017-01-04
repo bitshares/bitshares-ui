@@ -27,6 +27,9 @@
     "locked_tip": "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
     "unlocked_tip": "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
   },
+  "tooltip": {
+      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
+  },
   "propose": "Teklif Et",
   "cancel": "İptal",
   "account": {
@@ -187,7 +190,8 @@
       "private": "Özel Anahtar (WIF - Cüzdan İçine Aktarma Formatı)",
       "show": "Göster",
       "brain": "TekAnahtar konumu",
-      "from": "Hesaptan içeri aktarıldı"
+      "from": "Hesaptan içeri aktarıldı",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "Vekil",

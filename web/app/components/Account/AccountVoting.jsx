@@ -48,8 +48,8 @@ class AccountVoting extends React.Component {
     }
 
     updateAccountData(account) {
-        let options = account.get('options');
-        let proxy_account_id = options.get('voting_account');
+        let options = account.get("options");
+        let proxy_account_id = options.get("voting_account");
         let proxyAccount = ChainStore.getAccount(proxy_account_id);
         let proxy_account_name = proxyAccount ? proxyAccount.get("name") : "";
         if (proxy_account_id === "1.2.5" ) {
@@ -57,7 +57,7 @@ class AccountVoting extends React.Component {
             proxy_account_name = "";
         }
 
-        let votes = options.get('votes');
+        let votes = options.get("votes");
         let vote_ids = votes.toArray();
         let vids = Immutable.Set( vote_ids );
         ChainStore.getObjectsByVoteIds(vote_ids);
@@ -121,15 +121,17 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         let updated_account = this.props.account.toJS();
-        updated_account.account = updated_account.id;
-        updated_account.new_options = updated_account.options;
+        let updateObject = {account: updated_account.id};
+        let new_options = {memo_key: updated_account.options.memo_key};
+        // updated_account.new_options = updated_account.options;
         let new_proxy_id = this.state.proxy_account_id;
-        updated_account.new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
-        updated_account.new_options.num_witness = this.state.witnesses.size;
-        updated_account.new_options.num_committee = this.state.committee.size;
+        new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
+        new_options.num_witness = this.state.witnesses.size;
+        new_options.num_committee = this.state.committee.size;
 
+        updateObject.new_options = new_options;
         // Set fee asset
-        updated_account.fee = {
+        updateObject.fee = {
             amount: 0,
             asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
         };
@@ -163,19 +165,19 @@ class AccountVoting extends React.Component {
             let witnesses_vote_ids = res.map(o => o.get("vote_id"));
             return Promise.all([Promise.resolve(witnesses_vote_ids), FetchChainObjects(ChainStore.getCommitteeMemberById, this.state.committee.toArray(), 4000)]);
         }).then( res => {
-            updated_account.new_options.votes = res[0]
+            updateObject.new_options.votes = res[0]
                 .concat(res[1].map(o => o.get("vote_id")))
                 .concat(vote_ids.filter( id => {
                     return id.split(":")[0] === "2";
                 }).toArray())
                 .sort((a, b) => {
-                    let a_split = a.split(':');
-                    let b_split = b.split(':');
+                    let a_split = a.split(":");
+                    let b_split = b.split(":");
 
                     return parseInt(a_split[1], 10) - parseInt(b_split[1], 10);
                 });
             var tr = wallet_api.new_transaction();
-            tr.add_type_operation("account_update", updated_account);
+            tr.add_type_operation("account_update", updateObject);
             WalletDb.process_transaction(tr, null, true);
         });
     }

@@ -8,8 +8,14 @@
     "es": "Español",
     "tr": "Turkish"
   },
+  "sync_fail": {
+    "title": "Failed to sync with the API server",
+    "sub_text_1" : "Please verify that your computer clock is correct.",
+    "sub_text_2" : "Once you've synchronized your clock, please refresh this page. If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
+  },
   "header": {
     "title": "Graphene (石墨烯)钱包",
+    "account": "账户",
     "dashboard": "概览",
     "explorer": "浏览",
     "exchange": "交易",
@@ -19,13 +25,15 @@
     "current": "当前账户",
     "create_account": "创建账户",
     "create_asset": "创建资产",
+    "update_asset": "更新资产",
     "lock": "锁定钱包",
     "unlock": "解锁",
-    "account": "账户",
     "help": "帮助",
     "locked_tip": "钱包已锁定，点击解锁。",
     "unlocked_tip": "钱包已解锁，点击锁定。",
-    "update_asset": "更新资产"
+  },
+  "tooltip": {
+      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
   },
   "account": {
     "welcome": "欢迎使用 Graphene (石墨烯)系统",
@@ -161,7 +169,8 @@
       "private": "私钥(WIF - 钱包导入格式)",
       "show": "显示",
       "brain": "脑钱包位置",
-      "from": "已从账户导入"
+      "from": "已从账户导入",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "代理投票",

@@ -32,6 +32,9 @@
     "locked_tip": "Wallet is locked.<br/>Click to unlock.",
     "unlocked_tip": "Wallet is unlocked.<br/>Click to lock."
   },
+  "tooltip": {
+      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
+  },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
@@ -196,7 +199,8 @@
       "private": "Private key (WIF - Wallet Import Format)",
       "show": "show",
       "brain": "Brainkey position",
-      "from": "Imported from account"
+      "from": "Imported from account",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "Proxy",

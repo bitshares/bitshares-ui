@@ -83,7 +83,7 @@ class WalletDb extends BaseStore {
         return this.decryptTcomb_PrivateKey(private_key_tcomb)
     }
 
-    process_transaction(tr, signer_pubkeys, broadcast) {
+    process_transaction(tr, signer_pubkeys, broadcast, extra_keys = []) {
         if(Apis.instance().chain_id !== this.state.wallet.chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.state.wallet.chain_id + ", but got " +
@@ -108,7 +108,7 @@ class WalletDb extends BaseStore {
                 }
 
                 return tr.get_potential_signatures().then( ({pubkeys, addys})=> {
-                    let my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys, addys)
+                    let my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(pubkeys.concat(extra_keys), addys);
 
                     //{//Testing only, don't send All public keys!
                     //    let pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
@@ -117,7 +117,6 @@ class WalletDb extends BaseStore {
                     //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
                     //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
                     //}
-
                     return tr.get_required_signatures(my_pubkeys).then( required_pubkeys => {
                         for(let pubkey_string of required_pubkeys) {
                             if(signer_pubkeys_added[pubkey_string]) continue
