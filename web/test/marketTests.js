@@ -1,8 +1,12 @@
-import {LimitOrderCreate, Price, Asset, limitByPrecision,
-    precisionToRatio, LimitOrder} from "../lib/common/MarketClasses";
+import {LimitOrderCreate, Price, FeedPrice, Asset, limitByPrecision,
+    precisionToRatio, LimitOrder, SettleOrder, CallOrder} from "../lib/common/MarketClasses";
 import assert from "assert";
 
 console.log("**** Starting market tests here ****");
+const asset1 = {asset_id: "1.3.0", precision: 5};
+const asset2 = {asset_id: "1.3.121", precision: 4}; // bitUSD
+const asset3 = {asset_id: "1.3.113", precision: 4}; // bitCNY
+const assets = {"1.3.0": asset1, "1.3.121": asset2, "1.3.113": asset3};
 
 describe("Utility functions", function() {
 
@@ -407,6 +411,38 @@ describe("Price", function() {
         assert.equal(price2.gte(price1), true, "Price2 is greater than price1");
         assert.equal(price2.gte(price3), true, "Price2 is equal to price3");
     });
+
+    it("Can be inverted", function() {
+        let price1 = new Price({
+            base: new Asset({asset_id: "1.3.0", amount: 10000}),
+            quote: new Asset({asset_id: "1.3.121", precision: 4, amount: 500}),
+        });
+
+        price1 = price1.invert();
+
+        let price2 = new Price({
+            base: new Asset({asset_id: "1.3.121", precision: 4, amount: 500}),
+            quote: new Asset({asset_id: "1.3.0", amount: 10000}),
+        });
+
+        assert(price1.equals(price2));
+    });
+});
+
+describe("FeedPrice", function() {
+
+    let base = new Asset({asset_id: "1.3.0", amount: 50});
+    let quote = new Asset({asset_id: "1.3.121", amount: 250, precision: 4});
+
+    it("Instantiates", function() {
+        let price = new FeedPrice({priceObject: {base, quote}, assets});
+
+        assert.equal(price.base.asset_id, "1.3.0", "Base asset should be 1.3.0");
+        assert.equal(price.base.amount, 50, "Base amount should be 50");
+        assert.equal(price.quote.asset_id, "1.3.121", "Quote asset should be 1.3.121");
+        assert.equal(price.quote.amount, 250, "Quote amount should be 250");
+        assert.equal(price.toReal(), 0.02, "Real price should be 0.02");
+    });
 });
 
 describe("LimitOrderCreate", function() {
@@ -425,6 +461,8 @@ describe("LimitOrderCreate", function() {
             to_receive: USD,
             for_sale: BTS
         });
+
+        assert(order !== null);
     });
 
     it("Can be converted to object", function() {
@@ -475,10 +513,9 @@ describe("LimitOrderCreate", function() {
 });
 
 
+/* Order types */
 describe("LimitOrder", function() {
-    const asset1 = {asset_id: "1.3.0", precision: 5};
-    const asset2 = {asset_id: "1.3.121", precision: 4};
-    const assets = {"1.3.0": asset1, "1.3.121": asset2};
+
     const o = {
         "id":"1.7.937674",
         "expiration":"2017-12-13T14:14:09",
@@ -524,5 +561,134 @@ describe("LimitOrder", function() {
         let toReceive = order.amountToReceive();
         assert.equal(toReceive.getAmount(), 239, "Satoshi amount to receive should equal 239");
         assert.equal(toReceive.getAmount({real: true}), 0.0239, "Real amount for sale should equal 0.0239");
+    });
+
+    it("Returns the order type", function() {
+        let order = new LimitOrder(o, assets, "1.3.0");
+        assert.equal(order.isBid(), false, "Order type should be ASK");
+    });
+
+    it("Can be summed with another order", function() {
+        let o1 = new LimitOrder(o, assets, "1.3.0");
+        let o2 = new LimitOrder(o, assets, "1.3.0");
+
+        o1.sum(o2);
+
+        assert.equal(o1.amountForSale().getAmount(), 600548*2, "The amount should equal 1201096");
+    });
+
+    it("Can be compared to another order with equals / ne", function() {
+        let o1 = new LimitOrder(o, assets, "1.3.0");
+        let o2 = new LimitOrder(o, assets, "1.3.0");
+
+        assert.equal(o1.ne(o2), false, "Orders are the same");
+        assert.equal(o1.equals(o2), true, "Orders are the same");
+    });
+});
+
+describe("CallOrder", function() {
+
+    let settleBase = new Asset({
+        asset_id: "1.3.113", precision: 4, amount: 31
+    });
+
+    let settleQuote = new Asset({
+        asset_id: "1.3.0", precision: 5, amount: 10624
+    });
+
+    // let settlePrice = new Price({
+    //
+    // })
+
+    const o = {
+        "id":"1.7.937674",
+        "expiration":"2017-12-13T14:14:09",
+        "seller":"1.2.132823",
+        "for_sale":600548,
+        "sell_price": {
+            "base": {
+                "amount":40652748,
+                "asset_id":"1.3.0"
+            },
+            "quote":{
+                "amount":16186,
+                "asset_id":"1.3.121"
+            }
+        }
+        ,"deferred_fee":14676
+    };
+
+    it("Instantiates", function() {
+        let order = new CallOrder(o, assets, "1.3.0");
+        assert(order.id === o.id);
+        assert(order.seller === o.seller);
+        assert(order.for_sale === o.for_sale);
+        assert(order.fee === o.deferred_fee);
+    });
+
+    it("Returns the price of the order", function() {
+        let order = new CallOrder(o, assets, "1.3.121");
+        assert.equal(order.getPrice(), 251.15994069, "Price should equal 251.15994069");
+        let order2 = new CallOrder(o, assets, "1.3.0");
+        assert.equal(order2.getPrice(), 0.00398153, "Price should equal 0.00398153");
+    });
+
+    it("Returns the amount for sale as an asset", function() {
+        let order = new CallOrder(o, assets, "1.3.0");
+        let forSale = order.amountForSale();
+        assert.equal(forSale.getAmount(), 600548, "Satoshi amount for sale should equal 600548");
+        assert.equal(forSale.getAmount({real: true}), 6.00548, "Real amount for sale should equal 6.00548");
+    });
+
+    it("Returns the amount to receive as an asset", function() {
+        let order = new CallOrder(o, assets, "1.3.0");
+        let toReceive = order.amountToReceive();
+        assert.equal(toReceive.getAmount(), 239, "Satoshi amount to receive should equal 239");
+        assert.equal(toReceive.getAmount({real: true}), 0.0239, "Real amount for sale should equal 0.0239");
+    });
+
+    it("Returns the order type", function() {
+        let order = new CallOrder(o, assets, "1.3.0");
+        assert.equal(order.isBid(), false, "Order type should be ASK");
+    });
+
+    it("Can be summed with another order", function() {
+        let o1 = new CallOrder(o, assets, "1.3.0");
+        let o2 = new CallOrder(o, assets, "1.3.0");
+
+        o1.sum(o2);
+
+        assert.equal(o1.amountForSale().getAmount(), 600548*2, "The amount should equal 1201096");
+    });
+
+    it("Can be compared to another order with equals / ne", function() {
+        let o1 = new CallOrder(o, assets, "1.3.0");
+        let o2 = new CallOrder(o, assets, "1.3.0");
+
+        assert.equal(o1.ne(o2), false, "Orders are the same");
+        assert.equal(o1.equals(o2), true, "Orders are the same");
+    });
+});
+
+describe("Settle Order", function() {
+    let so = {
+        "id": "1.8.2475",
+        "borrower":"1.2.36589",
+        "collateral":"101306249319",
+        "debt": 32024314,
+        "call_price": {
+            "base": {
+                "amount": "128000000000",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 266935809,
+                "asset_id": "1.3.113"
+            }
+        }
+    };
+
+    it("Instantiates", function() {
+        let order = new SettleOrder(so, assets, "1.3.0");
     });
 });

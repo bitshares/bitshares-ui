@@ -1,4 +1,4 @@
-import {merge, clone} from "lodash";
+import {clone} from "lodash";
 import {Fraction} from "fractional";
 
 function limitByPrecision(value, p = 8) {
@@ -120,7 +120,7 @@ class Asset {
     * that the base asset is the asset being sold, and the quote asset is the asset being purchased, where the price is
     * represented as base/quote, so in the example price above the seller is looking to sell CORE asset and get USD in
     * return.
-    */
+*/
 
 class Price {
     constructor({base, quote, real = false} = {}) {
@@ -182,6 +182,13 @@ class Price {
         return this[key] = parseFloat(real.toFixed(8)); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
 
+    invert() {
+        return new Price({
+            base: this.quote,
+            quote: this.base
+        });
+    }
+
     equals(b) {
         if (this.base.asset_id !== b.base.asset_id || this.quote.asset_id !== b.quote.asset_id) {
             throw new Error("Cannot compare prices for different assets");
@@ -216,6 +223,47 @@ class Price {
 
     gte(b) {
         return !(this.lt(b));
+    }
+}
+
+class FeedPrice extends Price {
+    constructor({priceObject, assets, real = false}) {
+        if (!priceObject || typeof priceObject !== "object") {
+            throw new Error("Invalid inputs, priceObject must be an object");
+        }
+
+        if (priceObject.toJS) {
+            priceObject = priceObject.toJS();
+        }
+
+        const base = new Asset({
+            asset_id: priceObject.base.asset_id,
+            amount: priceObject.base.amount,
+            precision: assets[priceObject.base.asset_id].precision
+        });
+
+        const quote = new Asset({
+            asset_id: priceObject.quote.asset_id,
+            amount: priceObject.quote.amount,
+            precision: assets[priceObject.quote.asset_id].precision
+        });
+
+        super({base, quote, real});
+
+        // this.base =
+        //
+        // console.log("this.base:", this.base);
+        //
+        // this.quote = new Asset({
+        //     asset_id: priceObject.quote.asset_id,
+        //     amount: priceObject.quote.amount,
+        //     precision: assets[priceObject.quote.asset_id].precision
+        // });
+        // console.log("this.quote:", this.quote);
+        // this.price = new Price({
+        //     base: this.base,
+        //     quote: this.quote
+        // });
     }
 }
 
@@ -290,11 +338,6 @@ class LimitOrder {
         return this._real_price = p.toReal(p.base.asset_id === this.base_id);
     }
 
-    getFormattedPrice() {
-        let p = this.getPrice();
-
-    }
-
     isBid(base) {
         return this.sell_price.base.asset_id === base;
     }
@@ -330,15 +373,12 @@ class LimitOrder {
     ne(order) {
         return (
             this.sell_price.ne(order.sell_price) ||
-            this.for_sale !== order.for_sale ||
-            this.id !== order.id
+            this.for_sale !== order.for_sale
         );
     }
-}
 
-class OrderBook {
-    constructor({limitOrders, callOrders, marketBase}) {
-
+    equals(order) {
+        return !this.ne(order);
     }
 }
 
@@ -388,10 +428,6 @@ class CallOrder {
         return this.call_price.lte(this.feed_price);
     }
 
-    getFormattedPrice() {
-        let p = this.getPrice();
-    }
-
     isBid(base) {
         return this.call_price.base.asset_id === base;
     }
@@ -429,18 +465,25 @@ class CallOrder {
     ne(order) {
         return (
             this.call_price.ne(order.call_price) ||
-            this.debt !== order.debt ||
-            this.id !== order.id
+            this.debt !== order.debt
         );
+    }
+}
+
+class SettleOrder {
+    constructor() {
+
     }
 }
 
 export {
     Asset,
     Price,
+    FeedPrice,
     LimitOrderCreate,
     limitByPrecision,
     precisionToRatio,
     LimitOrder,
-    CallOrder
+    CallOrder,
+    SettleOrder
 };

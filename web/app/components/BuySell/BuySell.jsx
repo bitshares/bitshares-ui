@@ -405,7 +405,7 @@ class StateWrapper extends React.Component {
     render() {
         let {quoteAsset, baseAsset} = this.props;
         let quoteBalance, baseBalance;
-        this.props.account.get("balances").forEach((balance, key) => {
+        this.props.account.get("balances", []).forEach((balance, key) => {
             if (key === quoteAsset.get("id")) {
                 quoteBalance = balance;
             }
