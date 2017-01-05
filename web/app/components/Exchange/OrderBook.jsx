@@ -56,9 +56,7 @@ class OrderBookRowHorizontal extends React.Component {
 
         const isBid = order.__tempOrder__.isBid();
         const isCall = order.__tempOrder__.isCall();
-        if (isCall) {
-            console.log("render call:", order.__tempOrder__.getSqueezePrice());
-        }
+
         let integerClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
 
         let price = <PriceText price={order.__tempOrder__.getPrice()} quote={quote} base={base} />;
@@ -247,6 +245,7 @@ class OrderBook extends React.Component {
     render() {
         let {combinedBids, combinedAsks, quote, base, quoteSymbol, baseSymbol, horizontal} = this.props;
         let {showAllAsks, showAllBids} = this.state;
+        console.log("Render Orderbook");
 
         let bidRows = null, askRows = null;
         let high = 0, low = 0;

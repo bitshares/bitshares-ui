@@ -77,6 +77,10 @@ class MarketsActions {
         };
     }
 
+    switchMarket() {
+        return true;
+    }
+
     subscribeMarket(base, quote, bucketSize) {
         clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
@@ -88,7 +92,6 @@ class MarketsActions {
         return (dispatch) => {
 
             let subscription = (subResult) => {
-                console.log("subResult", subResult);
                 if (!dispatchSubTimeout) {
                     subBatchResults = subBatchResults.concat(subResult);
 

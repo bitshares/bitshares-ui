@@ -30,7 +30,11 @@ class MarketRow extends React.Component {
     }
 
     _onClick(marketID) {
-        this.context.router.push(`/market/${marketID}`);
+        const newPath = `/market/${marketID}`;
+        if (newPath !== this.context.router.location.pathname) {
+            MarketsActions.switchMarket();
+            this.context.router.push(`/market/${marketID}`);
+        }
     }
 
     componentDidMount() {

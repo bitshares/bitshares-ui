@@ -48,6 +48,7 @@ class MarketsStore {
             volumeBase: 0,
             volumeQuote: 0
         });
+        this.marketReady = false;
 
         this.allMarketStats = Immutable.Map();
         this.lowVolumeMarkets = Immutable.Map();
@@ -75,7 +76,8 @@ class MarketsStore {
             onClearMarket: MarketsActions.clearMarket,
             onGetMarketStats: MarketsActions.getMarketStats,
             onFeedUpdate: MarketsActions.feedUpdate,
-            onSettleOrderUpdate: MarketsActions.settleOrderUpdate
+            onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
+            onSwitchMarket: MarketsActions.switchMarket
         });
     }
 
@@ -113,9 +115,13 @@ class MarketsStore {
         }
     }
 
+    onSwitchMarket() {
+        console.log("onSwitchMarket:", false);
+        this.marketReady = false;
+    }
+
     onClearMarket() {
         this.activeMarket = null;
-        this.marketReady = false;
         this.activeMarketLimits = this.activeMarketLimits.clear();
         this.activeMarketCalls = this.activeMarketCalls.clear();
         this.feedPrice = null;
@@ -140,7 +146,7 @@ class MarketsStore {
     onSubscribeMarket(result) {
         if (result.switchMarket) {
             this.marketReady = false;
-            return true;
+            return this.emitChange();
         }
 
         let limitsChanged = false, callsChanged = false;
@@ -281,8 +287,7 @@ class MarketsStore {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
         }
 
-        console.log("*** Limits changed:", limitsChanged, "*** Calls changed:", callsChanged);
-
+        // console.log("*** Limits changed:", limitsChanged, "*** Calls changed:", callsChanged);
         if (callsChanged || limitsChanged) {
             // Update orderbook
             this._orderBook(limitsChanged, callsChanged);
@@ -297,7 +302,9 @@ class MarketsStore {
             this._priceChart();
         }
 
+        console.log("setting marketReady to true");
         this.marketReady = true;
+        this.emitChange();
     }
 
     onCancelLimitOrderSuccess(cancellations) {

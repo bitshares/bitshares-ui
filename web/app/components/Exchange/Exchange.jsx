@@ -18,26 +18,22 @@ import notify from "actions/NotificationActions";
 import {Link} from "react-router/es";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
-import ChainTypes from "../Utility/ChainTypes";
-import { ChainStore, EmitterInstance } from "graphenejs-lib";
-import BindToChainState from "../Utility/BindToChainState";
+import { ChainStore } from "graphenejs-lib";
 import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
-import LoadingIndicator from "../LoadingIndicator";
 import ConfirmOrderModal from "./ConfirmOrderModal";
 import IndicatorModal from "./IndicatorModal";
 import OpenSettleOrders from "./OpenSettleOrders";
 import counterpart from "counterpart";
 import AssetName from "../Utility/AssetName";
 import Highcharts from "highcharts/highstock";
+import PriceStat from "./PriceStat";
 
 require("./exchange.scss");
 
-let emitter = EmitterInstance.emitter();
-let callListener, limitListener, newCallListener, feedUpdateListener, settleOrderListener;
 let SATOSHI = 8;
 
 Highcharts.setOptions({
@@ -45,56 +41,6 @@ Highcharts.setOptions({
         useUTC: false
     }
 });
-
-class PriceStat extends React.Component {
-
-    constructor() {
-        super();
-        this.state = {
-            change: null
-        };
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.price !== this.props.price ||
-            nextProps.ready !== this.props.ready
-        );
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.ready && this.props.ready) {
-            this.setState({ change: parseFloat(nextProps.price) - parseFloat(this.props.price) });
-        } else {
-            this.setState({ change: 0 });
-        }
-    }
-
-    render() {
-        let {base, quote, price, content, ready, volume} = this.props;
-        let {change} = this.state;
-        let changeClass = null;
-        if (change && change !== null) {
-            changeClass = change > 0 ? "change-up" : "change-down";
-        }
-
-        let value = !volume ? utils.price_text(price, quote, base) :
-            utils.format_volume(price);
-
-        return (
-            <li className={cnames("stat", this.props.className)}>
-                <span>
-                    {content ? <Translate content={content} /> : null}
-                    <b className="value stat-primary">
-                        {!ready ? 0 : value}&nbsp;
-                        {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
-                    </b>
-                    <span><AssetName name={base.get("symbol")} />{quote ? <span>/<AssetName name={quote.get("symbol")} /></span> : null}</span>
-                </span>
-            </li>
-        );
-    }
-}
 
 class Exchange extends React.Component {
     constructor(props) {
@@ -104,7 +50,6 @@ class Exchange extends React.Component {
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
     }
-
 
     _initialState(props) {
         let ws = props.viewSettings;
@@ -168,7 +113,6 @@ class Exchange extends React.Component {
             buyTotal: 0,
             sellAmount: 0,
             sellTotal: 0,
-            sub: null,
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
             showDepthChart: ws.get("showDepthChart", false),
@@ -209,9 +153,6 @@ class Exchange extends React.Component {
     }
 
     static propTypes = {
-        currentAccount: ChainTypes.ChainAccount.isRequired,
-        quoteAsset: ChainTypes.ChainAsset.isRequired,
-        baseAsset: ChainTypes.ChainAsset.isRequired,
         limit_orders: PropTypes.object.isRequired,
         flat_asks: PropTypes.array.isRequired,
         flat_bids: PropTypes.array.isRequired,
@@ -224,7 +165,6 @@ class Exchange extends React.Component {
     };
 
     static defaultProps = {
-        currentAccount: "1.2.3",
         limit_orders: [],
         flat_asks: [],
         flat_bids: [],
@@ -236,28 +176,6 @@ class Exchange extends React.Component {
         volumeData: []
     };
 
-    componentWillMount() {
-        if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
-            this._subToMarket(this.props);
-            // this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
-        }
-
-        emitter.on("cancel-order", limitListener = MarketsActions.cancelLimitOrderSuccess);
-        emitter.on("close-call", callListener = MarketsActions.closeCallOrderSuccess);
-        emitter.on("call-order-update", newCallListener = MarketsActions.callOrderUpdate);
-        emitter.on("bitasset-update", feedUpdateListener = MarketsActions.feedUpdate);
-        emitter.on("settle-order-update", settleOrderListener = (object) => {
-            let {isMarketAsset, marketAsset} = market_utils.isMarketAsset(this.props.quoteAsset, this.props.baseAsset);
-            console.log("settle-order-update:", object, "isMarketAsset:", isMarketAsset, "marketAsset:", marketAsset);
-
-            if (isMarketAsset && marketAsset.id === object.balance.asset_id) {
-                MarketsActions.settleOrderUpdate(marketAsset.id);
-            }
-        });
-
-        window.addEventListener("resize", this._getWindowSize, false);
-    }
-
     componentDidMount() {
         let centerContainer = this.refs.center;
         if (centerContainer) {
@@ -267,6 +185,7 @@ class Exchange extends React.Component {
             lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
 
+        window.addEventListener("resize", this._getWindowSize, false);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -274,7 +193,7 @@ class Exchange extends React.Component {
             return false;
         }
         return true;
-    }
+    };
 
     _getWindowSize() {
         let { innerHeight, innerWidth } = window;
@@ -296,44 +215,21 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
-            this.props.router.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
-        }
-
-        if (nextProps.quoteAsset && nextProps.baseAsset) {
-            if (!this.state.sub) {
-                return this._subToMarket(nextProps);
-            }
-        }
-
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
             this.setState(this._initialState(nextProps));
 
-            let currentSub = this.state.sub.split("_");
-            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
-            SettingsActions.changeViewSetting({
+            return SettingsActions.changeViewSetting({
                 lastMarket: nextProps.quoteAsset.get("symbol") + "_" + nextProps.baseAsset.get("symbol")
             });
-            return this._subToMarket(nextProps);
         }
 
-        if (this.state.sub && nextProps.bucketSize !== this.props.bucketSize) {
+        if (this.props.sub && nextProps.bucketSize !== this.props.bucketSize) {
             return this._changeBucketSize(nextProps.bucketSize);
         }
     }
 
     componentWillUnmount() {
-        let { quoteAsset, baseAsset } = this.props;
-        MarketsActions.unSubscribeMarket(quoteAsset.get("id"), baseAsset.get("id"));
-        if (emitter) {
-            emitter.off("cancel-order", limitListener);
-            emitter.off("close-call", callListener);
-            emitter.off("call-order-update", newCallListener);
-            emitter.off("bitasset-update", feedUpdateListener);
-            emitter.off("settle-order-update", settleOrderListener);
-        }
         window.removeEventListener("resize", this._getWindowSize, false);
-
     }
 
     _createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
@@ -554,7 +450,7 @@ class Exchange extends React.Component {
             MarketsActions.changeBucketSize.defer(size);
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket.defer(currentSub[0], currentSub[1]);
-            this._subToMarket(this.props, size);
+            this.props.subToMarket(this.props, size);
         }
     }
 
@@ -567,17 +463,6 @@ class Exchange extends React.Component {
             SettingsActions.changeViewSetting({
                 currentPeriod: size
             });
-        }
-    }
-
-    _subToMarket(props, newBucketSize) {
-        let { quoteAsset, baseAsset, bucketSize } = props;
-        if (newBucketSize) {
-            bucketSize = newBucketSize;
-        }
-        if (quoteAsset.get("id") && baseAsset.get("id")) {
-            MarketsActions.subscribeMarket.defer(baseAsset, quoteAsset, bucketSize);
-            this.setState({ sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}` });
         }
     }
 
@@ -610,92 +495,6 @@ class Exchange extends React.Component {
 
         return value;
     }
-
-    _
-
-    // _buyPriceChanged(base, quote, e) {
-    //
-    //     let split = e.target.value.split(".");
-    //     if (split.length === 2 && split[1].length === SATOSHI + 1) {
-    //         return;
-    //     }
-    //
-    //     let amount = market_utils.limitByPrecision(e.target.value, { precision: SATOSHI });
-    //     let price = this._getBuyPrice(amount);
-    //
-    //     this.setState({
-    //         buyPrice: price,
-    //         displayBuyPrice: amount,
-    //         buyTotal: market_utils.limitByPrecision(this.getBuyTotal(price, this.state.buyAmount), base),
-    //         depthLine: amount
-    //     });
-    // }
-
-    // _sellPriceChanged(base, quote, e) {
-    //     let split = e.target.value.split(".");
-    //     if (split.length === 2 && split[1].length === SATOSHI + 1) {
-    //         return;
-    //     }
-    //     let amount = market_utils.limitByPrecision(e.target.value, { precision: SATOSHI });
-    //     let price = this._getSellPrice(amount);
-    //
-    //     this.setState({
-    //         sellPrice: price,
-    //         displaySellPrice: amount,
-    //         sellTotal: market_utils.limitByPrecision(this.getSellTotal(price, this.state.sellAmount), base),
-    //         depthLine: amount
-    //     });
-    // }
-
-    // _buyAmountChanged(base, quote, e) {
-    //     let value = e.target.value;
-    //     if (e.target.value.indexOf(".") !== e.target.value.length - 1) {
-    //         value = market_utils.limitByPrecision(e.target.value, quote);
-    //     }
-    //
-    //     this.setState({
-    //         buyAmount: this._addZero(value),
-    //         buyTotal: market_utils.limitByPrecision(this.getBuyTotal(this.state.buyPrice, value), base)
-    //     });
-    // }
-
-    // _buyTotalChanged(base, quote, e) {
-    //     let value = e.target.value;
-    //     if (e.target.value.indexOf(".") !== e.target.value.length - 1) {
-    //         value = market_utils.limitByPrecision(e.target.value, base);
-    //     }
-    //
-    //
-    //     let amount = this.getBuyAmount(this.state.buyPrice, value);
-    //
-    //     this.setState({
-    //         buyAmount: market_utils.limitByPrecision(amount, quote),
-    //         buyTotal: this._addZero(value)
-    //     });
-    // }
-
-    // _sellAmountChanged(base, quote, e) {
-    //     let value = e.target.value;
-    //     if (e.target.value.indexOf(".") !== e.target.value.length - 1) {
-    //         value = market_utils.limitByPrecision(e.target.value, quote);
-    //     }
-    //     this.setState({
-    //         sellAmount: this._addZero(value),
-    //         sellTotal: market_utils.limitByPrecision(this.getSellTotal(this.state.sellPrice, value), base)
-    //     });
-    // }
-
-    // _sellTotalChanged(base, quote, e) {
-    //     let value = e.target.value;
-    //     if (e.target.value.indexOf(".") !== e.target.value.length - 1) {
-    //         value = market_utils.limitByPrecision(e.target.value, base);
-    //     }
-    //
-    //     this.setState({
-    //         sellAmount: market_utils.limitByPrecision(this.getSellAmount(this.state.sellPrice, value), quote),
-    //         sellTotal: this._addZero(value)
-    //     });
-    // }
 
     _flipBuySell() {
         SettingsActions.changeViewSetting({
@@ -1449,7 +1248,6 @@ class Exchange extends React.Component {
         return (
             <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
-                    {!marketReady ? <LoadingIndicator /> : null}
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
@@ -1773,4 +1571,4 @@ class Exchange extends React.Component {
     }
 }
 
-export default BindToChainState(Exchange, {keep_updating: true, show_loader: true});
+export default Exchange;

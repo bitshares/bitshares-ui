@@ -273,7 +273,6 @@ class DepthHighChart extends React.Component {
 
 
         if (settlementPrice) {
-            console.log("settlementPrice", settlementPrice);
             config.xAxis.plotLines.push({
                 color: "#7B1616",
                 id: "plot_line",
@@ -297,7 +296,7 @@ class DepthHighChart extends React.Component {
                     name: `Call ${quoteSymbol}`,
                     data: flatCalls,
                     color: colors[theme].callColor
-                })
+                });
                 if (this.props.invertedCalls) {
                     totalAsks += totalCalls;
                 } else {
