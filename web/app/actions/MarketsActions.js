@@ -88,7 +88,7 @@ class MarketsActions {
         return (dispatch) => {
 
             let subscription = (subResult) => {
-
+                console.log("subResult", subResult);
                 if (!dispatchSubTimeout) {
                     subBatchResults = subBatchResults.concat(subResult);
 
@@ -185,6 +185,7 @@ class MarketsActions {
             };
 
             if (!subs[subID] || currentBucketSize !== bucketSize) {
+                dispatch({switchMarket: true});
                 currentBucketSize = bucketSize;
                 let callPromise = null,
                     settlePromise = null;
@@ -224,9 +225,7 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
-
                     dispatch({
-                        switchMarket: true,
                         limits: results[1],
                         calls: results[2],
                         settles: results[3],

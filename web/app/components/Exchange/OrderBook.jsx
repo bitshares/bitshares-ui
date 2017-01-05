@@ -3,7 +3,6 @@ import {PropTypes} from "react";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
-import market_utils from "common/market_utils";
 import {Asset} from "common/MarketClasses";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
@@ -22,16 +21,19 @@ class OrderBookRowVertical extends React.Component {
     }
 
     render() {
-        let {order, quote, base, type, final} = this.props;
-        let isBid = type === "bid";
-        let integerClass = isBid ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall";
+        let {order, quote, base, final} = this.props;
+        const isBid = order.__tempOrder__.isBid();
+        const isCall = order.__tempOrder__.isCall();
+        let integerClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let price = <PriceText price={order.__tempOrder__.getPrice()} quote={quote} base={base} />;
 
         return (
             <tr onClick={this.props.onClick} className={classnames({"final-row": final})}>
                 <td>{utils.format_number(order.__tempOrder__[isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), base.get("precision"))}</td>
                 <td>{utils.format_number(order.__tempOrder__[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), quote.get("precision"))}</td>
                 <td className={integerClass}>
-                    <PriceText price={order.__tempOrder__["getFeedPrice" in order.__tempOrder__ ? "getFeedPrice" :"getPrice"]()} quote={quote} base={base} />;
+                    {price}
                 </td>
             </tr>
         );
@@ -50,18 +52,23 @@ class OrderBookRowHorizontal extends React.Component {
     }
 
     render() {
-        let {order, quote, base, type, position} = this.props;
+        let {order, quote, base, position} = this.props;
 
-        let integerClass = type === "bid" ? "orderHistoryBid" : type === "ask" ? "orderHistoryAsk" : "orderHistoryCall" ;
+        const isBid = order.__tempOrder__.isBid();
+        const isCall = order.__tempOrder__.isCall();
+        if (isCall) {
+            console.log("render call:", order.__tempOrder__.getSqueezePrice());
+        }
+        let integerClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
 
-        let price = <PriceText price={order.__tempOrder__["getFeedPrice" in order.__tempOrder__ ? "getFeedPrice" :"getPrice"]()} quote={quote} base={base} />;
-        let amount = "totalBidSell" in order ?
+        let price = <PriceText price={order.__tempOrder__.getPrice()} quote={quote} base={base} />;
+        let amount = isBid ?
             utils.format_number(order.__tempOrder__.amountToReceive().getAmount({real: true}), quote.get("precision")) :
             utils.format_number(order.__tempOrder__.amountForSale().getAmount({real: true}), quote.get("precision"));
-        let value = "totalBidSell" in order ?
+        let value = isBid ?
             utils.format_number(order.__tempOrder__.amountForSale().getAmount({real: true}), base.get("precision")) :
             utils.format_number(order.__tempOrder__.amountToReceive().getAmount({real: true}), base.get("precision"));
-        let total = "totalBidSell" in order ?
+        let total = isBid ?
             utils.format_number(order.totalBidSell.getAmount({real: true}), base.get("precision")) :
             utils.format_number(order.totalAskReceive.getAmount({real: true}), base.get("precision"));
 
@@ -106,6 +113,7 @@ class OrderBook extends React.Component {
             nextProps.horizontal !== this.props.horizontal ||
             !utils.are_equal_shallow(nextProps.latest, this.props.latest) ||
             nextProps.smallScreen !== this.props.smallScreen ||
+            nextProps.wrapperClass !== this.props.wrapperClass ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }
@@ -243,19 +251,15 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
         let high = 0, low = 0;
 
-        let totalBidValue = 0;
-        let totalAskAmount = 0;
 
-        let totalAsks = 0, totalBids = 0, totalBidForSale = 0;
+        let totalAsks = 0, totalBids = 0;
 
         if(base && quote) {
-            let totalBidAmount = 0;
-            high = combinedBids.length > 0 ? combinedBids.reduce((total, a) => {
-                totalBids += a.value;
-                return total < a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : total;
+            high = combinedBids.length > 0 ? combinedBids.reduce((final, a) => {
+                // totalBids += a.value;
+                totalBids += a.__tempOrder__.amountForSale().getAmount({real: true});
+                return final < a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : final;
             }, 0) : 0;
-
-            let bidCount = combinedBids.length - 1;
 
             let totalBidReceive = new Asset({
                 asset_id: quote.get("id"),
@@ -271,17 +275,20 @@ class OrderBook extends React.Component {
                 return b.__tempOrder__.getPrice() - a.__tempOrder__.getPrice();
             })
             .filter(a => {
+                if (a.__tempOrder__.amountToReceive().asset_id !== totalBidReceive.asset_id) {
+                    return false;
+                }
                 if (this.state.showAllBids) {
                     return true;
                 }
                 return a.__tempOrder__.getPrice() >= high / 5;
             })
             .map((order, index) => {
-                // if (order.type === "call") {
-                //     console.log("amountToReceive()", order.__tempOrder__.amountToReceive().getAmount(), order.amount);
-                //     console.log("amountForSale()", order.__tempOrder__.amountForSale().getAmount(), order.for_sale);
-                // }
-                totalBidReceive.plus(order.__tempOrder__.amountToReceive());
+                try {
+                    totalBidReceive.plus(order.__tempOrder__.amountToReceive());
+                } catch(err) {
+                    console.log("err:", err);
+                }
                 totalBidSell.plus(order.__tempOrder__.amountForSale());
                 order.totalBidSell = totalBidSell.clone();
                 order.totalBidReceive = totalBidReceive.clone();
@@ -293,7 +300,6 @@ class OrderBook extends React.Component {
                         onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
                         quote={quote}
-                        type={order.type}
                         position={!this.state.flip ? "left" : "right"}
                     /> :
                     <OrderBookRowVertical
@@ -303,10 +309,9 @@ class OrderBook extends React.Component {
                         onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
                         quote={quote}
-                        type={order.type}
                         final={index === 0}
                     />
-                )
+                );
             }).filter(a => {
                 return a !== null;
             })
@@ -314,12 +319,12 @@ class OrderBook extends React.Component {
                 return parseFloat(b.key) - parseFloat(a.key);
             });
 
-            low = combinedAsks.length > 0 ? combinedAsks.reduce((total, a) => {
+            low = combinedAsks.length > 0 ? combinedAsks.reduce((final, a) => {
                 totalAsks += a.__tempOrder__.amountForSale().getAmount({real: true});
-                if (!total) {
+                if (!final) {
                     return a.__tempOrder__.getPrice();
                 }
-                return total > a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : total;
+                return final > a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : final;
             }, null) : 0;
 
             let totalAskValue = 0, _totalAskValue = 0, totalAskForSale = 0, _totalAskForSale = 0;
@@ -337,6 +342,9 @@ class OrderBook extends React.Component {
             askRows = combinedAsks.sort((a, b) => {
                 return a.__tempOrder__.getPrice() - b.__tempOrder__.getPrice();
             }).filter(a => {
+                if (a.__tempOrder__.amountForSale().asset_id !== totalAskSell.asset_id) {
+                    return false;
+                }
                 if (this.state.showAllAsks) {
                     return true;
                 }
@@ -382,8 +390,6 @@ class OrderBook extends React.Component {
             });
         }
 
-        let spread = high > 0 && low > 0 ? utils.format_number(low - high, base.get("precision")) : "0";
-
         if (this.props.horizontal) {
 
             let totalBidsLength = bidRows.length;
@@ -424,7 +430,7 @@ class OrderBook extends React.Component {
             );
 
             return (
-                    <div className={classnames("grid-block orderbook no-padding small-vertical medium-horizontal align-spaced no-overflow small-12 xlarge-8")}>
+                    <div className={classnames(this.props.wrapperClass, "grid-block orderbook no-padding small-vertical medium-horizontal align-spaced no-overflow small-12 xlarge-8")}>
                         <div className={classnames("small-12 medium-6 middle-content", this.state.flip ? "order-1" : "order-2")}>
                             <div className="exchange-bordered">
                                 <div className="exchange-content-header ask">

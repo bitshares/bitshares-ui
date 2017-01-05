@@ -71,7 +71,7 @@ class AccountOverview extends React.Component {
                 let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
                 marketLink = asset.get("id") !== "1.3.0" ? <a href={`/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
                 settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
-                    anslate content="account.settle"/></a>;
+                    <Translate content="account.settle"/></a>;
 
                 assetInfoLinks = (
                 <ul>

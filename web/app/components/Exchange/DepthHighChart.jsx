@@ -20,10 +20,11 @@ class DepthHighChart extends React.Component {
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
-            nextProps.SQP !== this.props.SQP ||
+            // nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||
-            nextProps.hasPrediction !== this.props.hasPrediction
+            nextProps.hasPrediction !== this.props.hasPrediction ||
+            nextProps.settlementPrice !== this.props.settlementPrice
         );
     }
 
@@ -53,9 +54,8 @@ class DepthHighChart extends React.Component {
 
     render() {
 
-        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol, totalBids, totalCalls, spread, base, quote, theme} = this.props;
-
-        let priceSymbol = `${baseSymbol}/${quoteSymbol}`;
+        let {flat_bids, flat_asks, flat_calls, settles, quoteSymbol, baseSymbol,
+            totalBids, totalCalls, base, quote, theme, settlementPrice} = this.props;
 
         let totalAsks = 0;
 
@@ -206,9 +206,9 @@ class DepthHighChart extends React.Component {
         // Center the charts between bids and asks
         if (flatBids.length > 0 && flatAsks.length > 0) {
             let middleValue = (flatAsks[0][0] + flatBids[flatBids.length - 1][0]) / 2;
-            let adjustedSpread = spread * power;
+            // let adjustedSpread = spread * power;
 
-            config.xAxis.min = middleValue * 0.4 // middleValue * (this.props.noFrame ? 0.8 : 0.50);
+            config.xAxis.min = middleValue * 0.4; // middleValue * (this.props.noFrame ? 0.8 : 0.50);
             config.xAxis.max = middleValue * 1.6; //(this.props.noFrame ? 1.2 : 1.50);
 
             // if (adjustedSpread > 0 && adjustedSpread > middleValue) {
@@ -272,12 +272,13 @@ class DepthHighChart extends React.Component {
         // }
 
 
-        if (this.props.settlementPrice) {
+        if (settlementPrice) {
+            console.log("settlementPrice", settlementPrice);
             config.xAxis.plotLines.push({
                 color: "#7B1616",
                 id: "plot_line",
                 dashStyle: "solid",
-                value: this.props.settlementPrice * power,
+                value: settlementPrice * power,
                 label: {
                     text: counterpart.translate("explorer.block.settlement_price"),
                     style: {
@@ -306,10 +307,10 @@ class DepthHighChart extends React.Component {
         }
 
         // Add settle orders
-        if (this.props.settlementPrice && this.props.settles.size) {
+        if (settlementPrice && settles.size) {
             let settleAsset, amountRatio, inverted;
             if (quote.get("id") === "1.3.0") {
-                amountRatio = this.props.settlementPrice;
+                amountRatio = settlementPrice;
                 settleAsset = base;
                 inverted = true;
             } else {
@@ -320,7 +321,7 @@ class DepthHighChart extends React.Component {
 
             let flat_settles = this.props.settles.reduce((final, a) => {
                 if (!final) {
-                    return [[this.props.settlementPrice * power, utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio]];
+                    return [[settlementPrice * power, utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio]];
                 } else {
                     final[0][1] = final[0][1] + utils.get_asset_amount(a.balance.amount, settleAsset) / amountRatio;
                     return final;

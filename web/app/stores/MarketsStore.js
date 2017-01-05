@@ -1,12 +1,11 @@
 var Immutable = require("immutable");
 var alt = require("alt-instance");
 import MarketsActions from "actions/MarketsActions";
-import SettingsActions from "actions/SettingsActions";
 import market_utils from "common/market_utils";
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
-import {LimitOrder, CallOrder, Asset, Price} from "common/MarketClasses";
+import {LimitOrder, CallOrder, FeedPrice, Asset, Price} from "common/MarketClasses";
 
 import {
     SettleOrder
@@ -22,6 +21,7 @@ class MarketsStore {
         this.pendingOrders = Immutable.Map();
         this.activeMarketLimits = Immutable.Map();
         this.activeMarketCalls = Immutable.Map();
+        this.feedPrice = null;
         this.activeMarketSettles = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
         this.bids = [];
@@ -114,13 +114,17 @@ class MarketsStore {
     }
 
     onClearMarket() {
+        this.activeMarket = null;
+        this.marketReady = false;
         this.activeMarketLimits = this.activeMarketLimits.clear();
         this.activeMarketCalls = this.activeMarketCalls.clear();
+        this.feedPrice = null;
         this.activeMarketSettles = this.activeMarketSettles.clear();
         this.activeMarketHistory = this.activeMarketHistory.clear();
         this.bids = [];
         this.asks = [];
         this.calls = [];
+        this.lowestCallPrice = null;
         this.pendingCreateLimitOrders = [];
         this.flat_bids = [];
         this.flat_asks = [];
@@ -136,6 +140,23 @@ class MarketsStore {
     onSubscribeMarket(result) {
         if (result.switchMarket) {
             this.marketReady = false;
+            return true;
+        }
+
+        let limitsChanged = false, callsChanged = false;
+        function didOrdersChange(newOrders, oldOrders) {
+            let changed = oldOrders && (oldOrders.size !== newOrders.size);
+            if (changed) return changed;
+
+            newOrders.forEach((a, key) => {
+                let oldOrder = oldOrders.get(key);
+                if (!oldOrder) {
+                    changed = true;
+                } else {
+                    changed = changed || a.ne(oldOrder);
+                }
+            });
+            return changed;
         }
 
         // console.log("onSubscribeMarket:", result, this.activeMarket);
@@ -151,9 +172,9 @@ class MarketsStore {
         };
 
         if (result.market && (result.market !== this.activeMarket)) {
-            // console.log("switch active market from", this.activeMarket, "to", result.market);
-            this.activeMarket = result.market;
+            console.log("switch active market from", this.activeMarket, "to", result.market);
             this.onClearMarket();
+            this.activeMarket = result.market;
         }
 
         if (result.buckets) {
@@ -165,9 +186,9 @@ class MarketsStore {
 
         if (result.limits) {
             // Keep an eye on this as the number of orders increases, it might not scale well
-            let limitStart = new Date();
+            const oldActiveMarketLimits = this.activeMarketLimits;
             this.activeMarketLimits = this.activeMarketLimits.clear();
-            console.time("Create limit orders " + this.activeMarket);
+            // console.time("Create limit orders " + this.activeMarket);
             result.limits.forEach(order => {
                 ChainStore._updateObject(order, false, false);
                 if (typeof order.for_sale !== "number") {
@@ -180,10 +201,12 @@ class MarketsStore {
                 );
             });
 
+            limitsChanged = didOrdersChange(this.activeMarketLimits, oldActiveMarketLimits);
+
             // Loop over pending orders to remove temp order from orders map and remove from pending
             for (let i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
                 let myOrder = this.pendingCreateLimitOrders[i];
-                let order = this.activeMarketLimits.find((order, key) => {
+                let order = this.activeMarketLimits.find(order => {
                     return myOrder.seller === order.seller && myOrder.expiration === order.expiration;
                 });
 
@@ -193,7 +216,7 @@ class MarketsStore {
                 }
             }
 
-            console.timeEnd("Create limit orders " + this.activeMarket);
+            // console.timeEnd("Create limit orders " + this.activeMarket);
 
             if (this.pendingCreateLimitOrders.length === 0) {
                 this.pendingCounter = 0;
@@ -203,40 +226,23 @@ class MarketsStore {
         }
 
         if (result.calls) {
+            const oldActiveMarketCalls = this.activeMarketCalls;
             this.activeMarketCalls = this.activeMarketCalls.clear();
+            this._setFeed();
 
-            let settlePrice = this.invertedCalls ? this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]) :
-                this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]);
-
-            let for_sale = new Asset({
-                asset_id: settlePrice.getIn(["base", "asset_id"]),
-                amount: settlePrice.getIn(["base", "amount"]),
-                precision: assets[settlePrice.getIn(["base", "asset_id"])].precision
-            });
-            let to_receive = new Asset({
-                asset_id: settlePrice.getIn(["quote", "asset_id"]),
-                amount: settlePrice.getIn(["quote", "amount"]),
-                precision: assets[settlePrice.getIn(["quote", "asset_id"])].precision
-            });
-            let price = new Price({
-                base: for_sale.asset_id === this.quoteAsset.get("id") ? to_receive : to_receive,
-                quote: for_sale.asset_id === this.quoteAsset.get("id") ? for_sale : for_sale
-            });
-
+            // console.log("feed price: ", this.feedPrice.toReal(), "squeeze price: ", this.feedPrice.getSqueezePrice({real: true}));
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
-                if (typeof call.collateral !== "number") {
-                    call.collateral = parseInt(call.collateral, 10);
+                let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice);
+                if (callOrder.isMarginCalled()) {
+                    this.activeMarketCalls = this.activeMarketCalls.set(
+                        call.id,
+                        new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                    );
                 }
-                if (typeof call.debt !== "number") {
-                    call.debt = parseInt(call.debt, 10);
-                }
-                this.activeMarketCalls = this.activeMarketCalls.set(
-                    call.id,
-                    new CallOrder(call, assets, this.quoteAsset.get("id"), price)
-                );
             });
 
+            callsChanged = didOrdersChange(this.activeMarketCalls, oldActiveMarketCalls);
         }
 
         this.updateSettleOrders(result);
@@ -275,11 +281,15 @@ class MarketsStore {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
         }
 
-        // Update orderbook
-        this._orderBook();
+        console.log("*** Limits changed:", limitsChanged, "*** Calls changed:", callsChanged);
 
-        // Update depth chart data
-        this._depthChart();
+        if (callsChanged || limitsChanged) {
+            // Update orderbook
+            this._orderBook(limitsChanged, callsChanged);
+
+            // Update depth chart data
+            this._depthChart();
+        }
 
         // Update pricechart data
         if (result.price) {
@@ -300,7 +310,7 @@ class MarketsStore {
                     didUpdate = true;
                     this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
                 }
-            })
+            });
 
             if (this.activeMarketLimits.size === 0) {
                 this.bids = [];
@@ -311,7 +321,7 @@ class MarketsStore {
 
             if (didUpdate) {
                 // Update orderbook
-                this._orderBook();
+                this._orderBook(true, false);
 
                 // Update depth chart data
                 this._depthChart();
@@ -329,7 +339,7 @@ class MarketsStore {
                 this.flat_calls = [];
             }
             // Update orderbook
-            this._orderBook();
+            this._orderBook(false, true);
 
             // Update depth chart data
             this._depthChart();
@@ -341,18 +351,27 @@ class MarketsStore {
     onCallOrderUpdate(call_order) {
         if (call_order && this.quoteAsset && this.baseAsset) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
-                if (typeof call_order.collateral !== "number") {
-                    call_order.collateral = parseInt(call_order.collateral, 10);
-                }
-                this.activeMarketCalls = this.activeMarketCalls.set(
-                    call_order.id,
-                    CallOrder(call_order)
-                );
-                // Update orderbook
-                this._orderBook();
 
-                // Update depth chart data
-                this._depthChart();
+                const assets = {
+                    [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
+                    [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
+                };
+                let callOrder = new CallOrder(call_order, assets, this.quoteAsset.get("id"), this.feedPrice);
+                console.log("**** onCallOrderUpdate ****", call_order, "isMarginCalled:", callOrder.isMarginCalled());
+
+                if (callOrder.isMarginCalled()) {
+                    this.activeMarketCalls = this.activeMarketCalls.set(
+                        call_order.id,
+                        callOrder
+                    );
+
+                    // Update orderbook
+                    this._orderBook(false, true);
+
+                    // Update depth chart data
+                    this._depthChart();
+                }
+
             }
 
         } else {
@@ -376,12 +395,28 @@ class MarketsStore {
         if (needsUpdate) {
             // console.log("onFeedUpdate asset", asset.get("symbol"), "quote:", this.quoteAsset.get("symbol"), "base:", this.baseAsset.get("symbol"));
             // Update orderbook
-            this.calls = this.constructCalls(this.activeMarketCalls);
+            // this.calls = this.constructCalls(this.activeMarketCalls);
             // Update depth chart data
-            this._depthChart();
+            // this._depthChart();
+            this._setFeed();
         } else {
             return false;
         }
+    }
+
+    _setFeed() {
+        const assets = {
+            [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
+            [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
+        };
+        const settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
+        const sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
+        this.feedPrice = new FeedPrice({
+            priceObject: settlePrice,
+            market_base: this.quoteAsset.get("id"),
+            sqr,
+            assets
+        });
     }
 
     _priceChart() {
@@ -452,7 +487,6 @@ class MarketsStore {
         let priceLength = prices.length;
         if (priceLength > 0 && priceLength < 200) {
             let now = (new Date()).getTime();
-            let firstDate = prices[0][0];
 
             // ensure there's a final entry close to the current time
             let i = 1;
@@ -486,38 +520,18 @@ class MarketsStore {
 
         this.priceData = prices;
         this.volumeData = volumeData;
-
     }
 
-    _orderBook() {
-
-        let orderBookStart = new Date();
-
-        // Loop over limit orders and return array containing bids with formatted values
-        let baseId = this.baseAsset.get("id");
+    _orderBook(limitsChanged = true, callsChanged = false) {
+        // Loop over limit orders and return array containing bids
         let constructBids = (orderArray) => {
             let bids = [];
             orderArray.filter(a => {
-                // return a.sell_price.base.asset_id === this.baseAsset.get("id");
-                return a.isBid(baseId);
+                return a.isBid();
             }).sort((a, b) => {
-                // let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                // let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
-                //
-                // return a_price.full - b_price.full;
                 return a.getPrice() - b.getPrice();
             }).forEach(order => {
-                // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
-                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
-                // console.log("order:", order.amountToReceive().getAmount(), order.amountToReceive().getAmount({real: true}), amount);
                 bids.push({
-                    value: value,
-                    price: price,
-                    price_dec: price.dec,
-                    price_int: price.int,
-                    type: "bid",
-                    sell_price: order.sell_price,
-                    for_sale: order.for_sale,
                     __tempOrder__: order
                 });
             });
@@ -526,9 +540,6 @@ class MarketsStore {
             if (bids.length > 1) {
                 for (let i = bids.length - 2; i >= 0; i--) {
                     if (bids[i].__tempOrder__.getPrice() === bids[i + 1].__tempOrder__.getPrice()) {
-                        bids[i].amount += bids[i + 1].amount;
-                        bids[i].value += bids[i + 1].value;
-                        bids[i].for_sale += bids[i + 1].for_sale;
                         bids[i].__tempOrder__.sum(bids[i + 1].__tempOrder__);
                         bids.splice(i + 1, 1);
                     }
@@ -537,30 +548,16 @@ class MarketsStore {
 
             return bids;
         };
-
+        // Loop over limit orders and return array containing asks
         let constructAsks = (orderArray) => {
             let asks = [];
 
             orderArray.filter(a => {
-                // return a.sell_price.base.asset_id !== this.baseAsset.get("id");
-                return !a.isBid(baseId);
+                return !a.isBid();
             }).sort((a, b) => {
-                // let {price: a_price} = market_utils.parseOrder(a, this.baseAsset, this.quoteAsset);
-                // let {price: b_price} = market_utils.parseOrder(b, this.baseAsset, this.quoteAsset);
-                //
-                // return a_price.full - b_price.full;
                 return a.getPrice() - b.getPrice();
             }).map(order => {
-                // let isAskOrder = market_utils.isAsk(order, this.baseAsset);
-                let {value, price, amount} = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset);
                 asks.push({
-                    value: value,
-                    price: price,
-                    price_dec: price.dec,
-                    price_int: price.int,
-                    type: "ask",
-                    sell_price: order.sell_price,
-                    for_sale: order.for_sale,
                     __tempOrder__: order
                 });
             });
@@ -569,9 +566,6 @@ class MarketsStore {
             if (asks.length > 1) {
                 for (let i = asks.length - 2; i >= 0; i--) {
                     if (asks[i].__tempOrder__.getPrice() === asks[i + 1].__tempOrder__.getPrice()) {
-                        asks[i].amount += asks[i + 1].amount;
-                        asks[i].value += asks[i + 1].value;
-                        asks[i].for_sale += asks[i + 1].for_sale;
                         asks[i].__tempOrder__.sum(asks[i + 1].__tempOrder__);
                         asks.splice(i + 1, 1);
                     }
@@ -582,18 +576,54 @@ class MarketsStore {
         };
 
         // Assign to store variables
-        this.bids = constructBids(this.activeMarketLimits);
-        this.asks = constructAsks(this.activeMarketLimits);
-        console.time("Construct calls " + this.activeMarket);
-        this.calls = this.constructCalls(this.activeMarketCalls);
-        console.timeEnd("Construct calls " + this.activeMarket);
+        if (limitsChanged) {
+            console.time("Construct limits " + this.activeMarket);
+            this.bids = constructBids(this.activeMarketLimits);
+            this.asks = constructAsks(this.activeMarketLimits);
+            console.timeEnd("Construct limits " + this.activeMarket);
+        }
+
+        if (callsChanged) {
+            console.time("Construct calls " + this.activeMarket);
+            this.calls = this.constructCalls(this.activeMarketCalls);
+            console.timeEnd("Construct calls " + this.activeMarket);
+        }
 
         // console.log("time to construct orderbook:", new Date() - orderBookStart, "ms");
     }
 
-    _depthChart() {
-        // let depthStart = new Date();
+    constructCalls (callsArray) {
+        let calls = [];
 
+        if (callsArray.size) {
+            callsArray
+            .sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            }).forEach(order => {
+                if (this.invertedCalls) {
+                    this.lowestCallPrice = !this.lowestCallPrice ? order.getPrice(false) : Math.max(this.lowestCallPrice, order.getPrice(false));
+                } else {
+                    this.lowestCallPrice = !this.lowestCallPrice ? order.getPrice(false) : Math.min(this.lowestCallPrice, order.getPrice(false));
+                }
+
+                calls.push({
+                    __tempOrder__: order
+                });
+            });
+
+            // Sum calls at same price
+            if (calls.length > 1) {
+                for (let i = calls.length - 2; i >= 0; i--) {
+                    calls[i].__tempOrder__ = calls[i].__tempOrder__.sum(calls[i + 1].__tempOrder__);
+                    calls.splice(i + 1, 1);
+                }
+            }
+        }
+
+        return calls;
+    }
+
+    _depthChart() {
         let bids = [], asks = [], calls= [], totalBids = 0, totalCalls = 0;
         let flat_bids = [], flat_asks = [], flat_calls = [];
 
@@ -633,8 +663,7 @@ class MarketsStore {
         if (this.calls.length) {
 
             this.calls.forEach(order => {
-                console.log("order:", order.amount, order.__tempOrder__.amountToReceive().getAmount({real: true}), order.__tempOrder__.amountForSale().getAmount({real: true}));
-                calls.push([order.__tempOrder__.getFeedPrice(), order.amount]);
+                calls.push([order.__tempOrder__.getSqueezePrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
             });
 
             // Calculate total value of call orders
@@ -761,99 +790,6 @@ class MarketsStore {
             let stats = this._calcMarketStats(payload.history, payload.base, payload.quote, payload.last);
             this.allMarketStats = this.allMarketStats.set(payload.market, stats);
         }
-    }
-
-    constructCalls (callsArray) {
-        let calls = [];
-
-        // Get feed price if market asset
-        let settlementPrice, squeezeRatio, totalCalls;
-        if (callsArray.size) {
-            if (this.invertedCalls) {
-                squeezeRatio = this.baseAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-                settlementPrice = market_utils.getFeedPrice(
-                    this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    true
-                )
-            } else {
-                squeezeRatio = this.quoteAsset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-                settlementPrice = market_utils.getFeedPrice(
-                    this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price"]),
-                    false
-                )
-            }
-
-
-            callsArray.filter(a => {
-                let a_price;
-                if (this.invertedCalls) {
-                    this.lowestCallPrice = !this.lowestCallPrice ? a.getPrice() : Math.max(this.lowestCallPrice, a.getPrice());
-                } else {
-                    this.lowestCallPrice = !this.lowestCallPrice ? a.getPrice() : Math.min(this.lowestCallPrice, a.getPrice());
-                }
-                return a.isMarginCalled();
-
-            }).sort((a, b) => {
-                return a.getPrice() - b.getPrice();
-            }).forEach(order => {
-                let priceData;
-                let feed_price_order;
-                if (this.invertedCalls) {
-                    let newQuote = this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS();
-                    newQuote.amount /= squeezeRatio;
-
-                    feed_price_order = {
-                        call_price: {
-                            base: this.baseAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS(),
-                            quote: newQuote
-                        },
-                        debt: order.debt,
-                        collateral: order.collateral
-                    }
-                    // priceData = market_utils.parseOrder(order, this.quoteAsset, this.baseAsset, true, squeezeRatio);
-                    priceData = market_utils.parseOrder(feed_price_order, this.quoteAsset, this.baseAsset, true);
-                } else {
-                    let newQuote = this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote"]).toJS();
-                    newQuote.amount *= squeezeRatio;
-                    feed_price_order = {
-                        sell_price: {
-                            base: this.quoteAsset.getIn(["bitasset", "current_feed", "settlement_price", "base"]).toJS(),
-                            quote: newQuote
-                        },
-                        debt: order.debt,
-                        collateral: order.collateral
-                    }
-                    // priceData = market_utils.parseOrder(order, this.baseAsset, this.quoteAsset, false, squeezeRatio);
-                    priceData = market_utils.parseOrder(feed_price_order, this.baseAsset, this.quoteAsset, false);
-                }
-
-                let {value, price, amount} = priceData;
-                calls.push({
-                    __tempOrder__: order,
-                    value: value,
-                    price: price,
-                    amount,
-                    price_full: price.full,
-                    price_dec: price.dec,
-                    price_int: price.int,
-                    type: "call",
-                    sell_price: order.call_price,
-                    for_sale: !this.invertedCalls ? order.debt : order.collateral
-                });
-            });
-
-            // Sum calls at same price
-            if (calls.length > 1) {
-                for (let i = calls.length - 2; i >= 0; i--) {
-                    calls[i].amount += calls[i + 1].amount;
-                    calls[i].value += calls[i + 1].value;
-                    calls[i].__tempOrder__.sum(calls[i + 1].__tempOrder__);
-                    calls.splice(i + 1, 1);
-                }
-            }
-        }
-
-        return calls;
     }
 
     onSettleOrderUpdate(result) {

@@ -84,8 +84,11 @@ class PriceStat extends React.Component {
         return (
             <li className={cnames("stat", this.props.className)}>
                 <span>
-                    {!ready ? 0 : value}&nbsp;
-                    {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                    {content ? <Translate content={content} /> : null}
+                    <b className="value stat-primary">
+                        {!ready ? 0 : value}&nbsp;
+                        {!change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null}
+                    </b>
                     <span><AssetName name={base.get("symbol")} />{quote ? <span>/<AssetName name={quote.get("symbol")} /></span> : null}</span>
                 </span>
             </li>
@@ -210,8 +213,6 @@ class Exchange extends React.Component {
         quoteAsset: ChainTypes.ChainAsset.isRequired,
         baseAsset: ChainTypes.ChainAsset.isRequired,
         limit_orders: PropTypes.object.isRequired,
-        balances: PropTypes.array.isRequired,
-        totalBids: PropTypes.number.isRequired,
         flat_asks: PropTypes.array.isRequired,
         flat_bids: PropTypes.array.isRequired,
         bids: PropTypes.array.isRequired,
@@ -225,13 +226,10 @@ class Exchange extends React.Component {
     static defaultProps = {
         currentAccount: "1.2.3",
         limit_orders: [],
-        balances: [],
-        totalBids: 0,
         flat_asks: [],
         flat_bids: [],
         bids: [],
         asks: [],
-        setting: null,
         activeMarketHistory: {},
         viewSettings: {},
         priceData: [],
@@ -271,6 +269,12 @@ class Exchange extends React.Component {
 
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (!nextProps.marketReady && !this.props.marketReady) {
+            return false;
+        }
+        return true;
+    }
 
     _getWindowSize() {
         let { innerHeight, innerWidth } = window;
@@ -431,12 +435,12 @@ class Exchange extends React.Component {
         });
 
         console.log("order:", order);
-        MarketsActions.createLimitOrder2(order).then(() => {
+        return MarketsActions.createLimitOrder2(order).then(() => {
             console.log("order succeess");
         }).catch(e => {
             console.log("order failed:", e);
         });
-        return;
+
 
         let { lowestAsk, highestBid } = this._parseMarket();
         if (type === "buy") {
@@ -908,7 +912,7 @@ class Exchange extends React.Component {
     _parseMarket() {
         let { bids, asks, calls, invertedCalls } = this.props;
 
-        let { showCallLimit } = this._getSettlementInfo();
+        let showCallLimit = this._getSettlementInfo();
         let combinedAsks, combinedBids, highestBid, lowestAsk;
 
         if (calls.length && invertedCalls) {
@@ -954,41 +958,18 @@ class Exchange extends React.Component {
     }
 
     _getSettlementInfo() {
-        let {quoteAsset: quote, baseAsset: base, lowestCallPrice} = this.props;
+        let {lowestCallPrice, feedPrice} = this.props;
 
-        let settlement_price, short_squeeze, flipped,
-            settlementPrice, squeezePrice, showCallLimit;
-
-        let { isMarketAsset } = market_utils.isMarketAsset(quote, base);
-
-        if (isMarketAsset && quote && base) {
-            if (quote.get("bitasset") && quote.getIn(["bitasset", "current_feed"]) && base.get("id") === quote.getIn(["bitasset", "options", "short_backing_asset"])) {
-                settlement_price = quote.getIn(["bitasset", "current_feed", "settlement_price"]);
-                short_squeeze = quote.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-
-            } else if (base.get("bitasset") && base.getIn(["bitasset", "current_feed"]) && quote.get("id") === base.getIn(["bitasset", "options", "short_backing_asset"])) {
-                settlement_price = base.getIn(["bitasset", "current_feed", "settlement_price"]);
-                short_squeeze = base.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-            }
-
-            if (settlement_price) {
-                settlementPrice = market_utils.getFeedPrice(settlement_price, flipped);
-
-                if (flipped) {
-                    squeezePrice = settlementPrice / short_squeeze;
-                    showCallLimit = lowestCallPrice > settlementPrice;
-                } else {
-                    squeezePrice = settlementPrice * short_squeeze;
-                    showCallLimit = lowestCallPrice < settlementPrice;
-                }
+        let showCallLimit = false;
+        if (feedPrice) {
+            if (feedPrice.inverted) {
+                showCallLimit = lowestCallPrice <= feedPrice.toReal();
+            } else {
+                showCallLimit = lowestCallPrice >= feedPrice.toReal();
             }
         }
 
-        return {
-            squeezePrice,
-            settlementPrice,
-            showCallLimit
-        };
+        return !!(showCallLimit && lowestCallPrice);
     }
 
     _changeIndicator(key) {
@@ -1071,7 +1052,7 @@ class Exchange extends React.Component {
 
         let balances = {};
 
-        currentAccount.get("balances").filter((balance, id) => {
+        currentAccount.get("balances", []).filter((balance, id) => {
             return (["1.3.0", quote.get("id"), base.get("id")].indexOf(id) >= 0);
         }).forEach((balance, id) => {
             let balanceObject = ChainStore.getObject(balance);
@@ -1212,17 +1193,17 @@ class Exchange extends React.Component {
 
     render() {
         let { currentAccount, limit_orders, call_orders, totalCalls, activeMarketHistory,
-            totalBids, flat_asks, flat_bids, flat_calls, invertedCalls, starredMarkets,
+            flat_asks, flat_bids, flat_calls, invertedCalls, starredMarkets,
             quoteAsset, baseAsset, lowestCallPrice, buckets, marketStats,
             marketReady, settle_orders, bucketSize } = this.props;
 
         let {bid, ask, buyAmount, buyTotal, sellAmount, sellTotal, leftOrderBook,
             buyDiff, sellDiff, indicators, indicatorSettings, width, buySellTop} = this.state;
 
-        console.log("bid:", bid.price.base.asset_id + "_" + bid.price.quote.asset_id, bid.price.toReal(), "ask:", ask.price.base.asset_id + "_" + ask.price.quote.asset_id, ask.price.toReal());
-        let base = null, quote = null, accountBalance = null, quoteBalance = null, baseBalance = null, coreBalance = null,
-            quoteSymbol, baseSymbol, settlementPrice = null, squeezePrice = null,
-            showCallLimit = false, latestPrice, changeClass;
+        // console.log("bid:", bid.price.base.asset_id + "_" + bid.price.quote.asset_id, bid.price.toReal(), "ask:", ask.price.base.asset_id + "_" + ask.price.quote.asset_id, ask.price.toReal());
+        let base = null, quote = null, accountBalance = null, quoteBalance = null,
+            baseBalance = null, coreBalance = null, quoteSymbol, baseSymbol,
+            showCallLimit = false, latestPrice, changeClass, totalBids = 0;
 
 
         let isNullAccount = currentAccount.get("id") === "1.2.3";
@@ -1249,7 +1230,7 @@ class Exchange extends React.Component {
                 }
             }
 
-            ({ showCallLimit, settlementPrice, squeezePrice } = this._getSettlementInfo());
+            showCallLimit = this._getSettlementInfo();
         }
 
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
@@ -1378,9 +1359,9 @@ class Exchange extends React.Component {
                     this.state.flipBuySell ? `order-${buySellTop ? 2 : 5} sell-form` : `order-${buySellTop ? 1 : 4} buy-form`
                 )}
                 type="bid"
-                amount={this.state.bid.toReceiveText}
-                price={this.state.bid.priceText}
-                total={this.state.bid.forSaleText}
+                amount={bid.toReceiveText}
+                price={bid.priceText}
+                total={bid.forSaleText}
                 quote={quote}
                 base={base}
                 amountChange={this._onInputReceive.bind(this, "bid")}
@@ -1417,9 +1398,9 @@ class Exchange extends React.Component {
                     this.state.flipBuySell ? `order-${buySellTop ? 1 : 4} buy-form` : `order-${buySellTop ? 2 : 4} sell-form`
                 )}
                 type="ask"
-                amount={this.state.ask.forSaleText}
-                price={this.state.ask.priceText}
-                total={this.state.ask.toReceiveText}
+                amount={ask.forSaleText}
+                price={ask.priceText}
+                total={ask.toReceiveText}
                 quote={quote}
                 base={base}
                 amountChange={this._onInputSell.bind(this, "ask")}
@@ -1461,7 +1442,7 @@ class Exchange extends React.Component {
                 moveOrderBook={this._moveOrderBook.bind(this)}
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                 marketReady={marketReady}
-                className={`order-1`}
+                wrapperClass={`order-${buySellTop ? 3 : 1} xlarge-order-${buySellTop ? 4 : 1}`}
             />
         );
 
@@ -1481,78 +1462,66 @@ class Exchange extends React.Component {
                     <div className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
-                        <div className="grid-block shrink overflow-visible top-bar market-right-padding">
+                        <div className="grid-block shrink no-padding overflow-visible top-bar">
                             <div className="grid-block no-overflow">
-                                <div className="grid-block shrink market-symbol" >
-                                    <span onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} >
+                                <div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
+                                    <span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteAsset.get("symbol"), baseAsset.get("symbol"))} className="market-symbol">
                                         <Icon className={starClass} name="fi-star"/>
                                     </span>
                                     {!hasPrediction ? (
-                                        <Link to={`/market/${baseSymbol}_${quoteSymbol}`}>
-                                            <span><AssetName name={quoteSymbol} replace={true} /> &#8660; <AssetName name={baseSymbol} replace={true} /></span>
-                                        </Link>) : (
-                                        <a >
-                                            <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
-                                        </a>
-                                        )}
-
+                                    <Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}>
+                                        <span><AssetName name={quoteSymbol} replace={true} /> : <AssetName name={baseSymbol} replace={true} /></span>
+                                    </Link>) : (
+                                    <a className="market-symbol">
+                                        <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                    </a>
+                                    )}
                                 </div>
                                 <div className="grid-block vertical">
-                                    <div className="grid-block show-for-medium wrap" >
+                                    <div className="grid-block show-for-medium wrap" style={{borderBottom: "1px solid grey"}}>
                                         <ul className="market-stats stats top-stats">
-                                            {settlementPrice &&false ? <PriceStat ready={marketReady} price={settlementPrice} quote={quote} base={base} content="exchange.settle"/> : null}
-                                            {lowestCallPrice &&false&& showCallLimit ?
+                                            {this.props.feedPrice ? <PriceStat ready={marketReady} price={this.props.feedPrice.toReal()} quote={quote} base={base} content="exchange.settle"/> : null}
+                                            {lowestCallPrice && showCallLimit ?
                                                 (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="explorer.block.call_limit" />
-                                                        {utils.price_text(lowestCallPrice, quote, base)}
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(lowestCallPrice, quote, base)}</b>
                                                         <span>{baseSymbol}/{quoteSymbol}</span>
                                                     </span>
                                                 </li>) : null}
-                                            {squeezePrice &&false&& showCallLimit ?
-                                                (<li className="stat" >
+                                            {this.props.feedPrice && showCallLimit ?
+                                                (<li className="stat">
                                                     <span>
                                                         <Translate component="span" content="exchange.squeeze" />
-                                                        {utils.price_text(squeezePrice, quote, base)}
+                                                        <b className="value" style={{color: "#BBBF2B"}}>{utils.price_text(this.props.feedPrice.getSqueezePrice({real: true}), quote, base)}</b>
                                                         <span><AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span>
                                                     </span>
                                                 </li>) : null}
                                             {latestPrice ?
-                                                <li className="stat" style={{margin:"0 0 0 30px"}}>
+                                                <li className="stat">
                                                     <span>
-                                                        <Translate component="span" content="exchange.latest" />:&nbsp;
-                                                        {utils.price_text(!marketReady ? 0 : latestPrice.full, quote, base)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span >{/*&#8593;*/}</span> : <span>{/*&#8595;*/}</span>}</span>
+                                                        <Translate component="span" content="exchange.latest" />
+                                                        <b className={"value"}>{utils.price_text(!marketReady ? 0 : latestPrice.full, quote, base)}<span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
                                                         <span><AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span>
                                                     </span>
                                                 </li> : null}
-                                                <li className="stat" style={{margin:"0 0 0 40px"}} >
-                                                    <span>
-                                                        <Translate component="span" content="account.hour_24" />:&nbsp;
-                                                        {marketReady ? dayChange : 0}%<span className={dayChangeArrow}> {dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ?<span>&#8593;</span> : <span>&#8595;</span>}</span>
 
-                                                    </span>
-                                                </li>
+                                            {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} content="exchange.volume_24"/> : null}
 
-                                                <li className="stat" style={{margin:"0 0 0 40px"}}>
-                                                    <span>
-                                                        <Translate component="span" content="exchange.volume_24" />:&nbsp;
-                                                         <span>
-                                                        </span>
-                                                    </span>
-                                                </li>
-                                                {/*volumeBase >= 0 ?  <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} base={base} /> : null*/}
-                                                {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} /> : null}
+                                            {volumeQuote >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeQuote} base={quote} content="exchange.volume_24"/> : null}
 
+                                            <li className="stat">
+                                                <span>
+                                                    <Translate component="span" content="account.hour_24" />
+                                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}<span className={dayChangeArrow}>&nbsp;{dayChangeArrow === "" ? null : dayChangeArrow === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span></b>
+                                                    <span>%</span>
+                                                </span>
+                                            </li>
                                         </ul>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid-block vertical no-padding market-right-padding" id="CenterContent" ref="center">
-                        {!this.state.showDepthChart ? (
-                            <div className="grid-block shrink" id="market-charts" >
-                                    <div className="grid-block wrap">
-                                        <ul className="market-stats stats bottom-stats stats-left">
+
+                                    <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
+                                        <ul className="market-stats stats bottom-stats">
                                             {!this.state.showDepthChart ? (
                                                 <li className="stat">
                                                     <span>
@@ -1567,47 +1536,44 @@ class Exchange extends React.Component {
                                                         <span>{bucketOptions}</span>
                                                     </span>
                                                 </li>) : null}
-                                            {!this.state.showDepthChart ? (
-                                                <li className="stat">
-                                                    <Translate content="exchange.price_history" />
-                                                    <div className="label bucket-option" onClick={this.onChangeChartHeight.bind(this, false)}>-</div>
-                                                    <div className="label bucket-option" onClick={this.onChangeChartHeight.bind(this, true)}>+</div>
-                                                </li>) : null}
-                                        </ul>
-                                        <ul className="market-stats stats bottom-stats stats-right">
-                                            {!isNullAccount && quoteIsBitAsset ?
-                                                (<li className="stat clickable" onClick={this._borrowQuote.bind(this)}>
-                                                    <div className="label bucket-option">
-                                                       <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
-                                                    </div>
-                                                </li>) : null}
-
-                                            {!isNullAccount && baseIsBitAsset ?
-                                                (<li className="stat clickable" onClick={this._borrowBase.bind(this)}>
-                                                    <div className="label bucket-option">
-                                                       <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
-                                                    </div>
-                                                </li>) : null}
-
-                                                {!this.state.showDepthChart && this.props.priceData.length ? (
-                                                <li className="stat" onClick={this._onSelectIndicators.bind(this)}>
-                                                    <div className="label bucket-option">
+                                            {!this.state.showDepthChart && this.props.priceData.length ? (
+                                                <li className="stat clickable" onClick={this._onSelectIndicators.bind(this)}>
+                                                    <div className="indicators">
                                                         <Translate content="exchange.settings" />
                                                     </div>
                                                 </li>) : null}
-
-                                                <li className="stat" onClick={this._toggleCharts.bind(this)}>
-                                                    <div className="label bucket-option">
-                                                       {!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
-                                                    </div>
-                                                </li>
                                         </ul>
+                                        <ul className="market-stats stats bottom-stats">
+                                            {!isNullAccount && quoteIsBitAsset ?
+                                            (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowQuote.bind(this)}>
+                                                <div className="indicators">
+                                                   <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
+                                                </div>
+                                            </li>) : null}
 
+                                            {!isNullAccount && baseIsBitAsset ?
+                                            (<li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={this._borrowBase.bind(this)}>
+                                                <div className="indicators">
+                                                   <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
+                                                </div>
+                                            </li>) : null}
+
+                                            <li className="stat float-right clickable" style={{borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this._toggleCharts.bind(this)}>
+                                                <div className="indicators">
+                                                   {!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
-
-
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
+                        {!this.state.showDepthChart ? (
+                            <div className="grid-block shrink" id="market-charts" >
                                 {/* Price history chart */}
                                 <PriceChart
+                                    onChangeSize={this.onChangeChartHeight.bind(this)}
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
                                     base={base}
@@ -1634,14 +1600,6 @@ class Exchange extends React.Component {
                                 />
                             </div>) : (
                             <div className="grid-block vertical no-padding shrink" >
-                                <ul className="market-stats stats bottom-stats">
-                                    <li className="stat float-right no-margin" onClick={this._toggleCharts.bind(this)}>
-                                        <div className="label bucket-option">
-                                           {!this.state.showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
-                                        </div>
-                                    </li>
-                                </ul>
-
                                 <DepthHighChart
                                     orders={limit_orders}
                                     showCallLimit={showCallLimit}
@@ -1659,10 +1617,8 @@ class Exchange extends React.Component {
                                     quoteSymbol={quoteSymbol}
                                     height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    plotLine={this.state.depthLine}
-                                    settlementPrice={settlementPrice}
+                                    settlementPrice={this.props.feedPrice && this.props.feedPrice.toReal()}
                                     spread={spread}
-                                    SQP={showCallLimit ? null : null}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
@@ -1786,10 +1742,8 @@ class Exchange extends React.Component {
                                     quoteSymbol={quoteSymbol}
                                     height={200}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    plotLine={this.state.depthLine}
-                                    settlementPrice={settlementPrice}
+                                    settlementPrice={this.props.feedPrice && this.props.feedPrice.getSqueezePrice({real: true})}
                                     spread={spread}
-                                    SQP={showCallLimit ? squeezePrice : null}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
                                     hasPrediction={hasPrediction}
