@@ -2,6 +2,7 @@ import {clone} from "lodash";
 import {Fraction} from "fractional";
 
 function limitByPrecision(value, p = 8) {
+    if (typeof p !== "number") throw new Error("Input must be a number");
     let valueString = value.toString();
     let splitString = valueString.split(".");
     if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= p) {
@@ -12,6 +13,7 @@ function limitByPrecision(value, p = 8) {
 }
 
 function precisionToRatio(p) {
+    if (typeof p !== "number") throw new Error("Input must be a number");
     return Math.pow(10, p);
 }
 
@@ -164,6 +166,10 @@ class Price {
         this.quote = quote;
     }
 
+    getUnits() {
+        return this.base.asset_id + "_" + this.quote.asset_id;
+    }
+
     isValid() {
         return (
             this.base.amount !== 0 && this.quote.amount !== 0) &&
@@ -186,6 +192,13 @@ class Price {
         return new Price({
             base: this.quote,
             quote: this.base
+        });
+    }
+
+    clone() {
+        return new Price({
+            base: this.base,
+            quote: this.quote
         });
     }
 
@@ -227,14 +240,16 @@ class Price {
 }
 
 class FeedPrice extends Price {
-    constructor({priceObject, assets, real = false}) {
-        if (!priceObject || typeof priceObject !== "object") {
-            throw new Error("Invalid inputs, priceObject must be an object");
+    constructor({priceObject, assets, market_base, sqr, real = false}) {
+        if (!priceObject || typeof priceObject !== "object" || !market_base || !assets || !sqr) {
+            throw new Error("Invalid FeedPrice inputs");
         }
 
         if (priceObject.toJS) {
             priceObject = priceObject.toJS();
         }
+
+        const inverted = market_base === priceObject.base.asset_id;
 
         const base = new Asset({
             asset_id: priceObject.base.asset_id,
@@ -248,22 +263,27 @@ class FeedPrice extends Price {
             precision: assets[priceObject.quote.asset_id].precision
         });
 
-        super({base, quote, real});
+        super({
+            base: inverted ? quote : base,
+            quote: inverted ? base : quote,
+            real
+        });
 
-        // this.base =
-        //
-        // console.log("this.base:", this.base);
-        //
-        // this.quote = new Asset({
-        //     asset_id: priceObject.quote.asset_id,
-        //     amount: priceObject.quote.amount,
-        //     precision: assets[priceObject.quote.asset_id].precision
-        // });
-        // console.log("this.quote:", this.quote);
-        // this.price = new Price({
-        //     base: this.base,
-        //     quote: this.quote
-        // });
+        this.sqr = parseInt(sqr, 10) / 1000;
+        this.inverted = inverted;
+    }
+
+    getSqueezePrice({real = false} = {}) {
+        if (!this._squeeze_price) {
+            this._squeeze_price = this.clone();
+            if (this.inverted) this._squeeze_price.base.amount = Math.floor(this._squeeze_price.base.amount * this.sqr);
+            if (!this.inverted) this._squeeze_price.quote.amount = Math.floor(this._squeeze_price.quote.amount * this.sqr);
+        }
+
+        if (real) {
+            return this._squeeze_price.toReal();
+        }
+        return this._squeeze_price;
     }
 }
 
@@ -305,9 +325,12 @@ class LimitOrderCreate {
 }
 
 class LimitOrder {
-    constructor(order, assets, base_id) {
+    constructor(order, assets, market_base) {
+        if (!market_base) {
+            throw new Error("LimitOrder requires a market_base id");
+        }
         this.assets = assets;
-        this.base_id = base_id;
+        this.market_base = market_base;
         this.id = order.id;
         this.expiration = new Date(order.expiration);
         this.seller = order.seller;
@@ -335,11 +358,15 @@ class LimitOrder {
         if (this._real_price) {
             return this._real_price;
         }
-        return this._real_price = p.toReal(p.base.asset_id === this.base_id);
+        return this._real_price = p.toReal(p.base.asset_id === this.market_base);
     }
 
-    isBid(base) {
-        return this.sell_price.base.asset_id === base;
+    isBid() {
+        return !(this.sell_price.base.asset_id === this.market_base);
+    }
+
+    isCall() {
+        return false;
     }
 
     sellPrice() {
@@ -383,14 +410,25 @@ class LimitOrder {
 }
 
 class CallOrder {
-    constructor(order, assets, base_id, feed) {
+    constructor(order, assets, market_base, feed) {
+        if (!order || !assets ||!market_base || !feed) {
+            throw new Error("CallOrder missing inputs");
+        }
 
+        this.order = order;
         this.assets = assets;
-        this.base_id = base_id;
+        this.market_base = market_base;
+        this.inverted = market_base === order.call_price.base.asset_id;
         this.id = order.id;
         this.borrower = order.borrower;
-        this.collateral = parseInt(order.collateral, 10);
-        this.debt = parseInt(order.debt, 10);
+        /* Collateral asset type is call_price.base.asset_id */
+        this.for_sale = parseInt(order.collateral, 10);
+        this.for_sale_id = order.call_price.base.asset_id;
+        /* Debt asset type is call_price.quote.asset_id */
+        this.to_receive = parseInt(order.debt, 10);
+        this.to_receive_id = order.call_price.quote.asset_id;
+
+        // console.log(market_base, this.for_sale_id, this.for_sale, order.call_price);
         let base = new Asset({
             asset_id: order.call_price.base.asset_id,
             amount: parseInt(order.call_price.base.amount, 10),
@@ -402,71 +440,106 @@ class CallOrder {
             precision: assets[order.call_price.quote.asset_id].precision
         });
 
-        this.for_sale = 0;
+        // this.for_sale = 0;
         this.call_price = new Price({
-            base, quote
+            base: this.inverted ? quote : base, quote: this.inverted ? base : quote
         });
 
-        this.feed_price = feed;
+        if (feed.base.asset_id !== this.call_price.base.asset_id) {
+            throw new Error("Feed price and call price must be the same");
+        }
+
+        this.feed_price = feed; //feed.base.asset_id === this.call_price.base.asset_id ? feed : feed.invert();
     }
 
-    getPrice(p = this.call_price, f = this.feed_price) {
+    clone() {
+        return new CallOrder(this.order, this.assets, this.market_base, this.feed_price);
+    }
+
+    getPrice(squeeze = true, p = this.call_price) {
+        if (squeeze) {
+            return this.getSqueezePrice();
+        }
         if (this._real_price) {
             return this._real_price;
         }
-        return this._real_price = p.toReal(p.base.asset_id === this.base_id);
+        return this._real_price = p.toReal(p.base.asset_id === this.market_base);
     }
 
     getFeedPrice(f = this.feed_price) {
         if (this._feed_price) {
             return this._feed_price;
         }
-        return this._feed_price = f.toReal(f.base.asset_id === this.base_id);
+        return this._feed_price = f.toReal(f.base.asset_id === this.market_base);
+    }
+
+    getSqueezePrice(f = this.feed_price) {
+        if (this._squeeze_price) {
+            return this._squeeze_price;
+        }
+        return this._squeeze_price = f.getSqueezePrice().toReal();
     }
 
     isMarginCalled() {
-        return this.call_price.lte(this.feed_price);
+        return this.isBid() ? this.call_price.lte(this.feed_price) : this.call_price.gte(this.feed_price);
     }
 
-    isBid(base) {
-        return this.call_price.base.asset_id === base;
+    isBid() {
+        return !this.inverted;
+    }
+
+    isCall() {
+        return true;
     }
 
     sellPrice() {
         return this.call_price;
     }
 
+    /*
+    * Assume a USD:BTS market
+    * The call order will always be selling BTS in order to buy USD
+    * The asset being sold is always the collateral, which is call_price.base.asset_id
+    */
     amountForSale() {
         if (this._for_sale) return this._for_sale;
-        return this._for_sale = this.amountToReceive().times(this[this.isMarginCalled() ? "feed_price" : "call_price"]);
-    }
-
-    amountToReceive() {
-        if (this._debt) return this._debt;
-        return this._debt = new Asset({
-            asset_id: this.call_price.quote.asset_id,
-            amount: this.debt,
-            precision: this.assets[this.call_price.quote.asset_id].precision
+        return this._for_sale = new Asset({
+            asset_id: this.for_sale_id,
+            amount: this.for_sale,
+            precision: this.assets[this.for_sale_id].precision
         });
     }
 
+    amountToReceive() {
+        if (this._to_receive) return this._to_receive;
+        return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice());
+    }
+
     sum(order) {
-        this.debt += order.debt;
-        this.collateral += order.collateral;
-        this._clearCache();
+        let newOrder = this.clone();
+        newOrder.to_receive += order.to_receive;
+        newOrder.for_sale += order.for_sale;
+        newOrder._clearCache();
+        return newOrder;
     }
 
     _clearCache() {
         this._for_sale = null;
-        this._debt = null;
+        this._to_receive = null;
         this._feed_price = null;
     }
 
     ne(order) {
         return (
             this.call_price.ne(order.call_price) ||
-            this.debt !== order.debt
+            this.feed_price.ne(order.feed_price) ||
+            this.to_receive !== order.to_receive ||
+            this.for_sale !== order.for_sale
         );
+    }
+
+    equals(order) {
+        return !this.ne(order);
     }
 }
 
