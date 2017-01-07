@@ -5,12 +5,16 @@ import market_utils from "common/market_utils";
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
-import {LimitOrder, CallOrder, FeedPrice, Asset, Price} from "common/MarketClasses";
+import {LimitOrder, CallOrder, FeedPrice, SettleOrder} from "common/MarketClasses";
 
-import {
-    SettleOrder
-}
-from "./tcomb_structs";
+// import {
+//     SettleOrder
+// }
+// from "./tcomb_structs";
+
+const nullPrice = {
+    getPrice: () => {return 0;}
+};
 
 let marketStorage = new ls("__graphene__");
 
@@ -24,14 +28,31 @@ class MarketsStore {
         this.feedPrice = null;
         this.activeMarketSettles = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
-        this.bids = [];
-        this.asks = [];
-        this.calls = [];
-        this.flat_bids = [];
-        this.flat_asks = [];
-        this.flat_calls = [];
-        this.totalBids = 0;
-        this.totalCalls = 0;
+        // this.bids = [];
+        // this.asks = [];
+        // this.calls = [];
+        // this.flat_bids = [];
+        // this.flat_asks = [];
+        // this.flat_calls = [];
+        // this.flat_settles = [];
+        this.marketData = {
+            bids: [],
+            asks: [],
+            calls: [],
+            combinedBids: [],
+            highestBid: nullPrice,
+            combinedAsks: [],
+            lowestAsk: nullPrice,
+            flatBids: [],
+            flatAsks: [],
+            flatCalls: [],
+            flatSettles: []
+        };
+        this.totals = {
+            bid: 0,
+            ask: 0,
+            call: 0
+        };
         this.priceData = [];
         this.volumeData = [];
         this.pendingCreateLimitOrders = [];
@@ -127,14 +148,34 @@ class MarketsStore {
         this.feedPrice = null;
         this.activeMarketSettles = this.activeMarketSettles.clear();
         this.activeMarketHistory = this.activeMarketHistory.clear();
-        this.bids = [];
-        this.asks = [];
-        this.calls = [];
+        this.marketData = {
+            bids: [],
+            asks: [],
+            calls: [],
+            combinedBids: [],
+            highestBid: nullPrice,
+            combinedAsks: [],
+            lowestAsk: nullPrice,
+            flatBids: [],
+            flatAsks: [],
+            flatCalls: [],
+            flatSettles: []
+        };
+        //
+        // this.bids = [];
+        // this.asks = [];
+        // this.calls = [];
+        this.totals = {
+            bid: 0,
+            ask: 0,
+            call: 0
+        };
         this.lowestCallPrice = null;
         this.pendingCreateLimitOrders = [];
-        this.flat_bids = [];
-        this.flat_asks = [];
-        this.flat_calls = [];
+        // this.flat_bids = [];
+        // this.flat_asks = [];
+        // this.flat_calls = [];
+        // this.flat_settles = [];
         this.priceHistory =[];
         this.marketStats = Immutable.Map({
             change: 0,
@@ -302,7 +343,6 @@ class MarketsStore {
             this._priceChart();
         }
 
-        console.log("setting marketReady to true");
         this.marketReady = true;
         this.emitChange();
     }
@@ -320,10 +360,10 @@ class MarketsStore {
             });
 
             if (this.activeMarketLimits.size === 0) {
-                this.bids = [];
-                this.flat_bids = [];
-                this.asks = [];
-                this.flat_asks = [];
+                this.marketData.bids = [];
+                this.marketData.flatBids = [];
+                this.marketData.asks = [];
+                this.marketData.flatAsks = [];
             }
 
             if (didUpdate) {
@@ -342,8 +382,8 @@ class MarketsStore {
         if (orderID && this.activeMarketCalls.has(orderID)) {
             this.activeMarketCalls = this.activeMarketCalls.delete(orderID);
             if (this.activeMarketCalls.size === 0) {
-                this.calls = [];
-                this.flat_calls = [];
+                this.marketData.calls = [];
+                this.marketData.flatCalls = [];
             }
             // Update orderbook
             this._orderBook(false, true);
@@ -424,6 +464,10 @@ class MarketsStore {
             sqr,
             assets
         });
+
+        this.bitasset_options = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "options"]).toJS();
+
+
     }
 
     _priceChart() {
@@ -585,14 +629,18 @@ class MarketsStore {
         // Assign to store variables
         if (limitsChanged) {
             console.time("Construct limits " + this.activeMarket);
-            this.bids = constructBids(this.activeMarketLimits);
-            this.asks = constructAsks(this.activeMarketLimits);
+            this.marketData.bids = constructBids(this.activeMarketLimits);
+            this.marketData.asks = constructAsks(this.activeMarketLimits);
             console.timeEnd("Construct limits " + this.activeMarket);
+            if (!callsChanged) {
+                this._combineOrders();
+            }
         }
 
         if (callsChanged) {
             console.time("Construct calls " + this.activeMarket);
-            this.calls = this.constructCalls(this.activeMarketCalls);
+            this.marketData.calls = this.constructCalls(this.activeMarketCalls);
+            this._combineOrders();
             console.timeEnd("Construct calls " + this.activeMarket);
         }
 
@@ -601,8 +649,9 @@ class MarketsStore {
 
     constructCalls (callsArray) {
         let calls = [];
-
+        let isBid = false;
         if (callsArray.size) {
+            isBid = callsArray.first().isBid();
             callsArray
             .sort((a, b) => {
                 return a.getPrice() - b.getPrice();
@@ -626,22 +675,46 @@ class MarketsStore {
                 }
             }
         }
-
         return calls;
     }
 
+    _combineOrders() {
+        const isBid = this.activeMarketCalls.size && this.activeMarketCalls.first().isBid();
+        if (isBid) {
+            this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
+            this.marketData.combinedAsks = this.marketData.asks.concat([]);
+        } else {
+            this.marketData.combinedBids = this.marketData.bids.concat([]);
+            this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
+        }
+
+        this.marketData.combinedBids = this.marketData.combinedBids.sort((a, b) => {
+            return b.__tempOrder__.getPrice() - a.__tempOrder__.getPrice();
+        });
+
+        this.marketData.combinedAsks = this.marketData.combinedAsks.sort((a, b) => {
+            return a.__tempOrder__.getPrice() - b.__tempOrder__.getPrice();
+        });
+
+        this.marketData.lowestAsk = !this.marketData.combinedAsks.length ? nullPrice :
+            this.marketData.combinedAsks[0].__tempOrder__;
+
+        this.marketData.highestBid = !this.marketData.combinedBids.length ? nullPrice :
+            this.marketData.combinedBids[0].__tempOrder__;
+    }
+
     _depthChart() {
-        let bids = [], asks = [], calls= [], totalBids = 0, totalCalls = 0;
-        let flat_bids = [], flat_asks = [], flat_calls = [];
+        let bids = [], asks = [], calls= [], totalBids = 0, totalAsks = 0, totalCalls = 0;
+        let flat_bids = [], flat_asks = [], flat_calls = [], flat_settles = [];
 
         if (this.activeMarketLimits.size) {
 
-            this.bids.forEach(order => {
+            this.marketData.bids.forEach(order => {
                 bids.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
-                totalBids += order.value;
+                totalBids += order.__tempOrder__.amountForSale().getAmount({real: true});
             });
 
-            this.asks.forEach(order => {
+            this.marketData.asks.forEach(order => {
                 asks.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountForSale().getAmount({real: true})]);
             });
 
@@ -657,20 +730,23 @@ class MarketsStore {
             // Flatten the arrays to get the step plot look
             flat_bids = market_utils.flatten_orderbookchart_highcharts(bids, true, true, 1000);
 
-            if (flat_bids.length > 0) {
+            if (flat_bids.length) {
                 flat_bids.unshift([0, flat_bids[0][1]]);
             }
 
             flat_asks = market_utils.flatten_orderbookchart_highcharts(asks, true, false, 1000);
-            if (flat_asks.length > 0) {
+            if (flat_asks.length) {
                 flat_asks.push([flat_asks[flat_asks.length - 1][0] * 1.5, flat_asks[flat_asks.length - 1][1]]);
+                totalAsks = flat_asks[flat_asks.length - 1][1];
             }
         }
 
-        if (this.calls.length) {
+        /* Flatten call orders if there any */
+        if (this.marketData.calls.length) {
 
-            this.calls.forEach(order => {
-                calls.push([order.__tempOrder__.getSqueezePrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
+            let callsAsBids = this.marketData.calls[0].__tempOrder__.isBid();
+            this.marketData.calls.forEach(order => {
+                calls.push([order.__tempOrder__.getSqueezePrice(), order.__tempOrder__[order.__tempOrder__.isBid() ? "amountToReceive" : "amountForSale"]().getAmount({real: true})]);
             });
 
             // Calculate total value of call orders
@@ -681,6 +757,12 @@ class MarketsStore {
                     totalCalls += call[1] * call[0];
                 }
             });
+
+            if (callsAsBids) {
+                totalBids += totalCalls;
+            } else {
+                totalAsks += totalCalls;
+            }
 
             // Make sure the array is sorted properly
             calls.sort((a, b) => {
@@ -701,12 +783,34 @@ class MarketsStore {
             }
         }
 
+        /* Flatten settle orders if there are any */
+        if (this.activeMarketSettles.size) {
+            flat_settles = this.activeMarketSettles.reduce((final, a) => {
+                if (!final) {
+                    return [[a.getPrice(), a[!a.isBid() ? "amountForSale" : "amountToReceive"]().getAmount({real: true})]];
+                } else {
+                    final[0][1] = final[0][1] + a[!a.isBid() ? "amountForSale" : "amountToReceive"]().getAmount({real: true});
+                    return final;
+                }
+            }, null);
+
+            if (!this.feedPrice.inverted) {
+                flat_settles.unshift([0, flat_settles[0][1]]);
+            } else {
+                flat_settles.push([flat_asks[flat_asks.length-1][0], flat_settles[0][1]]);
+            }
+        }
+
         // Assign to store variables
-        this.flat_asks = flat_asks;
-        this.flat_bids = flat_bids;
-        this.totalBids = totalBids;
-        this.totalCalls = totalCalls;
-        this.flat_calls = flat_calls;
+        this.marketData.flatAsks = flat_asks;
+        this.marketData.flatBids = flat_bids;
+        this.marketData.flatCalls = flat_calls;
+        this.marketData.flatSettles = flat_settles;
+        this.totals = {
+            bid: totalBids,
+            ask: totalAsks,
+            call: totalCalls
+        };
     }
 
     _calcMarketStats(history, baseAsset, quoteAsset, recent) {
@@ -805,6 +909,10 @@ class MarketsStore {
 
     updateSettleOrders(result) {
         if (result.settles && result.settles.length) {
+            const assets = {
+                [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
+                [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
+            };
             this.activeMarketSettles = this.activeMarketSettles.clear();
 
             result.settles.forEach(settle => {
@@ -813,7 +921,7 @@ class MarketsStore {
                 settle.settlement_date = new Date(settle.settlement_date);
 
                 this.activeMarketSettles = this.activeMarketSettles.add(
-                    SettleOrder(settle)
+                    new SettleOrder(settle, assets, this.quoteAsset.get("id"), this.feedPrice, this.bitasset_options)
                 );
             });
         }

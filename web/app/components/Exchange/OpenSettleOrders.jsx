@@ -2,15 +2,16 @@ import React from "react";
 import {PropTypes} from "react";
 import {FormattedDate} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
-import Ps from "perfect-scrollbar";
+// import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
+import TimeAgo from "../Utility/TimeAgo";
 
 class TableHeader extends React.Component {
 
     render() {
-        let {buy, baseSymbol, quoteSymbol} = this.props;
+        let {baseSymbol, quoteSymbol} = this.props;
 
         return (
             <thead>
@@ -18,7 +19,7 @@ class TableHeader extends React.Component {
                     <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">(<AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} />)</span> : null}</th>
                     <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{quoteSymbol ? <span className="header-sub-title">(<AssetName name={quoteSymbol} />)</span> : null}</th>
                     <th style={{textAlign: "right"}}><Translate content="transaction.settlement_date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-                </tr>
+            </tr>
             </thead>
         );
     }
@@ -39,20 +40,16 @@ class SettleOrderRow extends React.Component {
     // }
 
     render() {
-        let {base, quote, order, showSymbols, invert, settlementPrice} = this.props;
+        let {quote, order, showSymbols} = this.props;
 
-        let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
-        let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
         return (
             <tr>
-                <td>{utils.format_number(settlementPrice, quote.get("precision"))} {amountSymbol}</td>
-                <td><FormattedAsset amount={order.balance.amount} asset={order.balance.asset_id} /></td>
-                <td><FormattedDate
-                    value={order.settlement_date}
-                    format="short"
-                    />
+                <td>{utils.format_number(order.getPrice(), quote.get("precision"))} {amountSymbol}</td>
+                <td><FormattedAsset amount={order[!order.isBid() ? "amountForSale" : "amountToReceive"]().getAmount()} asset={order[!order.isBid() ? "amountForSale" : "amountToReceive"]().asset_id} /></td>
+                <td>
+                    <TimeAgo time={order.settlement_date} />
                 </td>
             </tr>
         );
@@ -67,38 +64,31 @@ SettleOrderRow.defaultProps = {
 
 class OpenSettleOrders extends React.Component {
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return (
             nextProps.currentAccount !== this.props.currentAccount ||
             nextProps.orders !== this.props.orders
         );
     }
 
-    componentDidMount() {
-        let orderContainer = this.refs.orders;
-        Ps.initialize(orderContainer);
-    }
+    // componentDidMount() {
+    //     let orderContainer = this.refs.orders;
+    //     Ps.initialize(orderContainer);
+    // }
 
     render() {
-        let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol, settlementPrice} = this.props;
+        let {orders, base, quote, quoteSymbol, baseSymbol} = this.props;
 
         let activeOrders = null;
 
         if(orders.size > 0 && base && quote) {
             let index = 0;
 
-            let offset_percent = 100;
-            if (orders.first().balance.asset_id === quote.get("id")) {
-                offset_percent -= quote.getIn(["bitasset", "options", "force_settlement_offset_percent"]) / 100;
-            } else {
-                offset_percent -= base.getIn(["bitasset", "options", "force_settlement_offset_percent"]) / 100;
-            }
-
             activeOrders = orders
             .sort((a, b) => {
-                return a.settlement_date > b.settlement_date;
-            }).map((order, key) => {
-                return <SettleOrderRow key={index++} settlementPrice={settlementPrice * offset_percent / 100} order={order} base={base} quote={quote}/>;
+                return a.isBefore(b) ? -1 : 1;
+            }).map(order => {
+                return <SettleOrderRow key={index++} order={order} base={base} quote={quote}/>;
             }).toArray();
 
         } else {
@@ -119,7 +109,7 @@ class OpenSettleOrders extends React.Component {
                         <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="orders">
                             <table className="table order-table text-right table-hover">
                                 <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                                <tbody>
+                                <tbody ref="orders">
                                     {activeOrders}
                                 </tbody>
                             </table>

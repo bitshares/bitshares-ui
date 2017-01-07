@@ -194,7 +194,7 @@ class OrderBook extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate() {
         this._updateHeight();
     }
 
@@ -243,22 +243,13 @@ class OrderBook extends React.Component {
     }
 
     render() {
-        let {combinedBids, combinedAsks, quote, base, quoteSymbol, baseSymbol, horizontal} = this.props;
+        let {combinedBids, combinedAsks, highestBid, lowestAsk, quote, base,
+            totalAsks, totalBids, quoteSymbol, baseSymbol, horizontal} = this.props;
         let {showAllAsks, showAllBids} = this.state;
-        console.log("Render Orderbook");
 
         let bidRows = null, askRows = null;
-        let high = 0, low = 0;
-
-
-        let totalAsks = 0, totalBids = 0;
 
         if(base && quote) {
-            high = combinedBids.length > 0 ? combinedBids.reduce((final, a) => {
-                // totalBids += a.value;
-                totalBids += a.__tempOrder__.amountForSale().getAmount({real: true});
-                return final < a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : final;
-            }, 0) : 0;
 
             let totalBidReceive = new Asset({
                 asset_id: quote.get("id"),
@@ -270,9 +261,7 @@ class OrderBook extends React.Component {
                 precision: base.get("precision")
             });
 
-            bidRows = combinedBids.sort((a, b) => {
-                return b.__tempOrder__.getPrice() - a.__tempOrder__.getPrice();
-            })
+            bidRows = combinedBids
             .filter(a => {
                 if (a.__tempOrder__.amountToReceive().asset_id !== totalBidReceive.asset_id) {
                     return false;
@@ -280,7 +269,7 @@ class OrderBook extends React.Component {
                 if (this.state.showAllBids) {
                     return true;
                 }
-                return a.__tempOrder__.getPrice() >= high / 5;
+                return a.__tempOrder__.getPrice() >= highestBid.getPrice() / 5;
             })
             .map((order, index) => {
                 try {
@@ -291,10 +280,11 @@ class OrderBook extends React.Component {
                 totalBidSell.plus(order.__tempOrder__.amountForSale());
                 order.totalBidSell = totalBidSell.clone();
                 order.totalBidReceive = totalBidReceive.clone();
+
                 return (horizontal ?
                     <OrderBookRowHorizontal
                         index={index}
-                        key={order.__tempOrder__.getPrice()}
+                        key={order.__tempOrder__.getPrice() + (order.__tempOrder__.isCall() ? "_call" : "")}
                         order={order}
                         onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
@@ -303,7 +293,7 @@ class OrderBook extends React.Component {
                     /> :
                     <OrderBookRowVertical
                         index={index}
-                        key={order.__tempOrder__.getPrice()}
+                        key={order.__tempOrder__.getPrice() + (order.__tempOrder__.isCall() ? "_call" : "")}
                         order={order}
                         onClick={this.props.onClick.bind(this, "bid", order)}
                         base={base}
@@ -311,22 +301,7 @@ class OrderBook extends React.Component {
                         final={index === 0}
                     />
                 );
-            }).filter(a => {
-                return a !== null;
-            })
-            .sort((a, b) => {
-                return parseFloat(b.key) - parseFloat(a.key);
             });
-
-            low = combinedAsks.length > 0 ? combinedAsks.reduce((final, a) => {
-                totalAsks += a.__tempOrder__.amountForSale().getAmount({real: true});
-                if (!final) {
-                    return a.__tempOrder__.getPrice();
-                }
-                return final > a.__tempOrder__.getPrice() ? a.__tempOrder__.getPrice() : final;
-            }, null) : 0;
-
-            let totalAskValue = 0, _totalAskValue = 0, totalAskForSale = 0, _totalAskForSale = 0;
 
             let totalAskReceive = new Asset({
                 asset_id: base.get("id"),
@@ -338,27 +313,25 @@ class OrderBook extends React.Component {
                 precision: quote.get("precision")
             });
 
-            askRows = combinedAsks.sort((a, b) => {
-                return a.__tempOrder__.getPrice() - b.__tempOrder__.getPrice();
-            }).filter(a => {
+            askRows = combinedAsks
+            .filter(a => {
                 if (a.__tempOrder__.amountForSale().asset_id !== totalAskSell.asset_id) {
                     return false;
                 }
                 if (this.state.showAllAsks) {
                     return true;
                 }
-                return a.__tempOrder__.getPrice() <= low * 5;
+                return a.__tempOrder__.getPrice() <= lowestAsk.getPrice() * 5;
             }).map((order, index) => {
                 totalAskSell.plus(order.__tempOrder__.amountForSale());
                 totalAskReceive.plus(order.__tempOrder__.amountToReceive());
                 order.totalAskReceive = totalAskReceive.clone();
                 order.totalAskSell = totalAskSell.clone();
-                // console.log("ask:", order);
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
                         index={index}
-                        key={order.__tempOrder__.getPrice()}
+                        key={order.__tempOrder__.getPrice() + (order.__tempOrder__.isCall() ? "_call" : "")}
                         order={order}
                         onClick={this.props.onClick.bind(this, "ask", order)}
                         base={base}
@@ -368,7 +341,7 @@ class OrderBook extends React.Component {
                     /> :
                     <OrderBookRowVertical
                         index={index}
-                        key={order.__tempOrder__.getPrice()}
+                        key={order.__tempOrder__.getPrice() + (order.__tempOrder__.isCall() ? "_call" : "")}
                         order={order}
                         onClick={this.props.onClick.bind(this, "ask", order)}
                         base={base}
@@ -378,14 +351,6 @@ class OrderBook extends React.Component {
 
                     />
                     );
-            }).filter(a => {
-                return a !== null;
-            }).sort((a, b) => {
-                if (horizontal) {
-                    return parseFloat(a.key) - parseFloat(b.key);
-                } else {
-                    return parseFloat(b.key) - parseFloat(a.key);
-                }
             });
         }
 

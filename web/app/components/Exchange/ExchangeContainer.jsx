@@ -22,15 +22,6 @@ class ExchangeContainer extends React.Component {
                         limit_orders: () => {
                             return MarketsStore.getState().activeMarketLimits;
                         },
-                        bids: () => {
-                            return MarketsStore.getState().bids;
-                        },
-                        calls: () => {
-                            return MarketsStore.getState().calls;
-                        },
-                        asks: () => {
-                            return MarketsStore.getState().asks;
-                        },
                         call_orders: () => {
                             return MarketsStore.getState().activeMarketCalls;
                         },
@@ -40,17 +31,11 @@ class ExchangeContainer extends React.Component {
                         settle_orders: () => {
                             return MarketsStore.getState().activeMarketSettles;
                         },
-                        flat_bids: () => {
-                            return MarketsStore.getState().flat_bids;
+                        marketData: () => {
+                            return MarketsStore.getState().marketData;
                         },
-                        flat_calls: () => {
-                            return MarketsStore.getState().flat_calls;
-                        },
-                        totalCalls: () => {
-                            return MarketsStore.getState().totalCalls;
-                        },
-                        flat_asks: () => {
-                            return MarketsStore.getState().flat_asks;
+                        totals: () => {
+                            return MarketsStore.getState().totals;
                         },
                         priceData: () => {
                             return MarketsStore.getState().priceData;

@@ -154,10 +154,6 @@ class Exchange extends React.Component {
 
     static propTypes = {
         limit_orders: PropTypes.object.isRequired,
-        flat_asks: PropTypes.array.isRequired,
-        flat_bids: PropTypes.array.isRequired,
-        bids: PropTypes.array.isRequired,
-        asks: PropTypes.array.isRequired,
         activeMarketHistory: PropTypes.object.isRequired,
         viewSettings: PropTypes.object.isRequired,
         priceData: PropTypes.array.isRequired,
@@ -166,10 +162,6 @@ class Exchange extends React.Component {
 
     static defaultProps = {
         limit_orders: [],
-        flat_asks: [],
-        flat_bids: [],
-        bids: [],
-        asks: [],
         activeMarketHistory: {},
         viewSettings: {},
         priceData: [],
@@ -338,7 +330,6 @@ class Exchange extends React.Component {
         });
 
 
-        let { lowestAsk, highestBid } = this._parseMarket();
         if (type === "buy") {
             let diff = (100 * (this.state.displayBuyPrice - lowestAsk) / lowestAsk);
             if (Math.abs(diff) > 25) {
@@ -708,54 +699,6 @@ class Exchange extends React.Component {
         };
     }
 
-    _parseMarket() {
-        let { bids, asks, calls, invertedCalls } = this.props;
-
-        let showCallLimit = this._getSettlementInfo();
-        let combinedAsks, combinedBids, highestBid, lowestAsk;
-
-        if (calls.length && invertedCalls) {
-            combinedAsks = showCallLimit ? asks.concat(calls) : asks;
-            combinedBids = bids;
-        } else if (calls.length && !invertedCalls) {
-            combinedBids = showCallLimit ? bids.concat(calls) : bids;
-            combinedAsks = asks;
-        } else {
-            combinedAsks = asks;
-            combinedBids = bids;
-        }
-
-        const nullPrice = {
-            getPrice: () => {return 0;}
-        };
-
-        lowestAsk = !combinedAsks.length ? nullPrice :
-            combinedAsks.length === 1 ?
-            combinedAsks[0].__tempOrder__ :
-            combinedAsks.reduce((a, b) => {
-                if (!a) return b.__tempOrder__;
-                return a.getPrice() <= b.__tempOrder__.getPrice() ? a : b.__tempOrder__;
-            }, null);
-
-        highestBid = !combinedBids.length ? nullPrice :
-            combinedBids.length === 1 ?
-            combinedBids[0].__tempOrder__ :
-            combinedBids.reduce((a, b) => {
-                if (!a) return b.__tempOrder__;
-                return a.getPrice() >= b.__tempOrder__.getPrice() ? a : b.__tempOrder__;
-            }, null);
-
-        let spread = (lowestAsk && highestBid) ? lowestAsk.getPrice() - highestBid.getPrice() : 0;
-
-        return {
-            spread,
-            combinedAsks,
-            combinedBids,
-            highestBid,
-            lowestAsk
-        };
-    }
-
     _getSettlementInfo() {
         let {lowestCallPrice, feedPrice} = this.props;
 
@@ -991,10 +934,12 @@ class Exchange extends React.Component {
     }
 
     render() {
-        let { currentAccount, limit_orders, call_orders, totalCalls, activeMarketHistory,
-            flat_asks, flat_bids, flat_calls, invertedCalls, starredMarkets,
-            quoteAsset, baseAsset, lowestCallPrice, buckets, marketStats,
-            marketReady, settle_orders, bucketSize } = this.props;
+        let { currentAccount, limit_orders, call_orders, marketData, activeMarketHistory,
+            invertedCalls, starredMarkets, quoteAsset, baseAsset, lowestCallPrice,
+            buckets, marketStats, marketReady, settle_orders, bucketSize, totals } = this.props;
+
+        const {combinedBids, combinedAsks, lowestAsk, highestBid,
+            flatBids, flatAsks, flatCalls, flatSettles} = marketData;
 
         let {bid, ask, buyAmount, buyTotal, sellAmount, sellTotal, leftOrderBook,
             buyDiff, sellDiff, indicators, indicatorSettings, width, buySellTop} = this.state;
@@ -1002,7 +947,7 @@ class Exchange extends React.Component {
         // console.log("bid:", bid.price.base.asset_id + "_" + bid.price.quote.asset_id, bid.price.toReal(), "ask:", ask.price.base.asset_id + "_" + ask.price.quote.asset_id, ask.price.toReal());
         let base = null, quote = null, accountBalance = null, quoteBalance = null,
             baseBalance = null, coreBalance = null, quoteSymbol, baseSymbol,
-            showCallLimit = false, latestPrice, changeClass, totalBids = 0;
+            showCallLimit = false, latestPrice, changeClass;
 
 
         let isNullAccount = currentAccount.get("id") === "1.2.3";
@@ -1035,7 +980,7 @@ class Exchange extends React.Component {
         let quoteIsBitAsset = quoteAsset.get("bitasset_data_id") ? true : false;
         let baseIsBitAsset = baseAsset.get("bitasset_data_id") ? true : false;
 
-        let { combinedAsks, combinedBids, spread, lowestAsk, highestBid } = this._parseMarket();
+        let spread = (lowestAsk && highestBid) ? lowestAsk.getPrice() - highestBid.getPrice() : 0;
 
         // Latest price
         if (activeMarketHistory.size) {
@@ -1232,6 +1177,10 @@ class Exchange extends React.Component {
                 invertedCalls={invertedCalls}
                 combinedBids={combinedBids}
                 combinedAsks={combinedAsks}
+                highestBid={highestBid}
+                lowestAsk={lowestAsk}
+                totalBids={totals.bid}
+                totalAsks={totals.ask}
                 base={base}
                 quote={quote}
                 baseSymbol={baseSymbol}
@@ -1267,7 +1216,7 @@ class Exchange extends React.Component {
                                         <Icon className={starClass} name="fi-star"/>
                                     </span>
                                     {!hasPrediction ? (
-                                    <Link className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}>
+                                    <Link onClick={() => {MarketsActions.switchMarket();}}className="market-symbol" to={`/market/${baseSymbol}_${quoteSymbol}`}>
                                         <span><AssetName name={quoteSymbol} replace={true} /> : <AssetName name={baseSymbol} replace={true} /></span>
                                     </Link>) : (
                                     <a className="market-symbol">
@@ -1402,17 +1351,16 @@ class Exchange extends React.Component {
                                     orders={limit_orders}
                                     showCallLimit={showCallLimit}
                                     call_orders={call_orders}
-                                    flat_asks={flat_asks}
-                                    flat_bids={flat_bids}
-                                    flat_calls={ showCallLimit ? flat_calls : []}
+                                    flat_asks={flatAsks}
+                                    flat_bids={flatBids}
+                                    flat_calls={ showCallLimit ? flatCalls : []}
+                                    flat_settles={this.props.settings.get("showSettles") && flatSettles}
                                     settles={settle_orders}
                                     invertedCalls={invertedCalls}
-                                    totalBids={totalBids}
-                                    totalCalls={showCallLimit ? totalCalls : 0}
+                                    totalBids={totals.bid}
+                                    totalAsks={totals.ask}
                                     base={base}
                                     quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
                                     height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     settlementPrice={this.props.feedPrice && this.props.feedPrice.toReal()}
@@ -1478,25 +1426,24 @@ class Exchange extends React.Component {
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                 />) : null}
-
-                                {/* Settle Orders */}
-
-                                {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? null/*(
-                                <OpenSettleOrders
-                                    key="settle_orders"
-                                    className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-7" : "",
-                                        `small-12 medium-6 no-padding align-spaced ps-container middle-content order-7`
-                                    )}
-                                    orders={settle_orders}
-                                    currentAccount={currentAccount.get("id")}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    settlementPrice={settlementPrice}
-                                />)*/ : null}
-
                             </div>
+
+
+                            {/* Settle Orders */}
+
+                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
+                            <OpenSettleOrders
+                                key="settle_orders"
+                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-7" : "",
+                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-7`
+                                )}
+                                orders={settle_orders}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                            />) : null}
+
 
                         </div>{ /* end CenterContent */}
 
@@ -1527,17 +1474,16 @@ class Exchange extends React.Component {
                                     orders={limit_orders}
                                     showCallLimit={showCallLimit}
                                     call_orders={call_orders}
-                                    flat_asks={flat_asks}
-                                    flat_bids={flat_bids}
-                                    flat_calls={ showCallLimit ? flat_calls : []}
+                                    flat_asks={flatAsks}
+                                    flat_bids={flatBids}
+                                    flat_calls={ showCallLimit ? flatCalls : []}
+                                    flat_settles={this.props.settings.get("showSettles") && flatSettles}
                                     settles={settle_orders}
                                     invertedCalls={invertedCalls}
-                                    totalBids={totalBids}
-                                    totalCalls={showCallLimit ? totalCalls : 0}
+                                    totalBids={totals.bid}
+                                    totalAsks={totals.ask}
                                     base={base}
                                     quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
                                     height={200}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     settlementPrice={this.props.feedPrice && this.props.feedPrice.getSqueezePrice({real: true})}
