@@ -1,6 +1,8 @@
 import {clone} from "lodash";
 import {Fraction} from "fractional";
 
+const GRAPHENE_100_PERCENT = 10000;
+
 function limitByPrecision(value, p = 8) {
     if (typeof p !== "number") throw new Error("Input must be a number");
     let valueString = value.toString();
@@ -44,7 +46,7 @@ class Asset {
             this.amount = this.toSats(real);
             this._clearCache();
         } else if(typeof sats === "number") {
-            this.amount = sats;
+            this.amount = Math.floor(sats);
             this._clearCache();
         } else {
             throw new Error("Invalid setAmount input");
@@ -55,7 +57,7 @@ class Asset {
         this._real_amount = null;
     }
 
-    getAmount({real} = {}) {
+    getAmount({real = false} = {}) {
         if (real) {
             if (this._real_amount) return this._real_amount;
             return this._real_amount = limitByPrecision(this.amount / this.toSats(), this.precision);
@@ -238,6 +240,13 @@ class Price {
     gte(b) {
         return !(this.lt(b));
     }
+
+    toObject() {
+        return {
+            base: this.base.toObject(),
+            quote: this.quote.toObject()
+        };
+    }
 }
 
 class FeedPrice extends Price {
@@ -333,7 +342,7 @@ class LimitOrder {
         this.assets = assets;
         this.market_base = market_base;
         this.id = order.id;
-        this.expiration = new Date(order.expiration);
+        this.expiration = order.expiration && new Date(order.expiration);
         this.seller = order.seller;
         this.for_sale = parseInt(order.for_sale, 10); // asset id is sell_price.base.asset_id
 
@@ -429,7 +438,6 @@ class CallOrder {
         this.to_receive = parseInt(order.debt, 10);
         this.to_receive_id = order.call_price.quote.asset_id;
 
-        // console.log(market_base, this.for_sale_id, this.for_sale, order.call_price);
         let base = new Asset({
             asset_id: order.call_price.base.asset_id,
             amount: parseInt(order.call_price.base.amount, 10),
@@ -441,16 +449,20 @@ class CallOrder {
             precision: assets[order.call_price.quote.asset_id].precision
         });
 
-        // this.for_sale = 0;
+        /*
+        * The call price is DEBT * MCR / COLLATERAL. This calculation is already
+        * done by the witness_node before returning the orders so it is not necessary
+        * to deal with the MCR (maintenance collateral ratio) here.
+        */
         this.call_price = new Price({
             base: this.inverted ? quote : base, quote: this.inverted ? base : quote
         });
 
         if (feed.base.asset_id !== this.call_price.base.asset_id) {
-            throw new Error("Feed price and call price must be the same");
+            throw new Error("Feed price assets and call price assets must be the same");
         }
 
-        this.feed_price = feed; //feed.base.asset_id === this.call_price.base.asset_id ? feed : feed.invert();
+        this.feed_price = feed;
     }
 
     clone() {
@@ -482,7 +494,7 @@ class CallOrder {
     }
 
     isMarginCalled() {
-        return this.isBid() ? this.call_price.lte(this.feed_price) : this.call_price.gte(this.feed_price);
+        return this.isBid() ? this.call_price.lt(this.feed_price) : this.call_price.gt(this.feed_price);
     }
 
     isBid() {
@@ -544,9 +556,45 @@ class CallOrder {
     }
 }
 
-class SettleOrder {
-    constructor() {
+class SettleOrder extends LimitOrder {
+    constructor(order, assets, market_base, feed_price, bitasset_options) {
+        if (!feed_price || !bitasset_options) {
+            throw new Error("SettleOrder needs feed_price and bitasset_options inputs");
+        }
 
+        order.sell_price = feed_price.toObject();
+        order.seller = order.owner;
+        super(order, assets, market_base);
+
+        this.offset_percent = bitasset_options.force_settlement_offset_percent;
+        this.settlement_date = new Date(order.settlement_date);
+
+        this.for_sale = new Asset({
+            amount: order.balance.amount,
+            asset_id: order.balance.asset_id,
+            precision: assets[order.balance.asset_id].precision
+        });
+
+        this.inverted = this.for_sale.asset_id === market_base;
+        this.feed_price = feed_price[this.inverted ? "invert" : "clone"]();
+    }
+
+    isBefore(order) {
+        return this.settlement_date < order.settlement_date;
+    }
+
+    amountForSale() {
+        return this.for_sale;
+    }
+
+    amountToReceive() {
+        let to_receive = this.for_sale.times(this.feed_price);
+        to_receive.setAmount({sats: to_receive.getAmount() * ((GRAPHENE_100_PERCENT - this.offset_percent) / GRAPHENE_100_PERCENT) });
+        return this._to_receive = to_receive;
+    }
+
+    isBid() {
+        return !this.inverted;
     }
 }
 

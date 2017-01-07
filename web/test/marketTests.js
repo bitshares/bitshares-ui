@@ -763,24 +763,98 @@ describe("CallOrder", function() {
 });
 
 describe("Settle Order", function() {
-    let so = {
-        "id": "1.8.2475",
-        "borrower":"1.2.36589",
-        "collateral":"101306249319",
-        "debt": 32024314,
-        "call_price": {
-            "base": {
-                "amount": "128000000000",
-                "asset_id": "1.3.0"
-            },
-            "quote": {
-                "amount": 266935809,
-                "asset_id": "1.3.113"
-            }
-        }
+    let base = {
+        amount: 31,
+        asset_id: "1.3.113"
     };
 
-    it("Instantiates", function() {
-        let order = new SettleOrder(so, assets, "1.3.0");
+    let quote = {
+        amount: 10624,
+        asset_id: "1.3.0"
+    };
+
+    let settlePrice_0 = new FeedPrice({
+        priceObject: {
+            base,
+            quote
+        },
+        market_base: "1.3.0",
+        sqr: 1100,
+        assets
     });
+
+    let settlePrice_113 = new FeedPrice({
+        priceObject: {
+            base,
+            quote
+        },
+        market_base: "1.3.113",
+        sqr: 1100,
+        assets
+    });
+
+    const so = {
+        "id": "1.4.625",
+        "owner":"1.2.117444",
+        "balance": {
+            "amount": 50000000,
+            "asset_id": "1.3.113"
+        },
+        "settlement_date": "2017-01-06T13:41:36"
+    };
+
+    const so2 = {
+        "id": "1.4.625",
+        "owner":"1.2.117444",
+        "balance": {
+            "amount": 50000000,
+            "asset_id": "1.3.113"
+        },
+        "settlement_date": "2017-01-04T13:41:36"
+    };
+
+    const bitasset_options = {force_settlement_offset_percent:  150};
+
+    it("Instantiates", function() {
+        new SettleOrder(so, assets, "1.3.0", settlePrice_0, bitasset_options);
+    });
+
+    it("Can be compared by date with isBefore", function() {
+        let order = new SettleOrder(so, assets, "1.3.0", settlePrice_0, bitasset_options);
+        let order2 = new SettleOrder(so2, assets, "1.3.0", settlePrice_0, bitasset_options);
+
+        assert.equal(order.isBefore(order2), false, "Order 1 settles after order 2");
+        assert.equal(order2.isBefore(order), true, "Order 2 settles before order 1");
+    });
+
+    it("Returns the settle order price", function() {
+        let order = new SettleOrder(so, assets, "1.3.0", settlePrice_0, bitasset_options);
+        let order2 = new SettleOrder(so, assets, "1.3.113", settlePrice_113, bitasset_options);
+
+        assert.equal(order.getPrice(), 0.02917922, "Price should be 0.02917922");
+        assert.equal(order2.getPrice(), 34.27096774, "Price should be 34.27096774");
+    });
+
+    it("Returns the amount for sale", function() {
+        let order = new SettleOrder(so, assets, "1.3.113", settlePrice_113, bitasset_options);
+        assert.equal(order.amountForSale().asset_id, "1.3.113", "Asset for sale should be 1.3.113");
+        assert.equal(order.amountForSale().getAmount(), 50000000, "Amount should be 50000000")
+        assert.equal(order.amountForSale().getAmount({real: true}), 5000, "Amount should be 5000")
+    });
+
+    it("Returns the amount to receive using offset percent", function() {
+        let order = new SettleOrder(so, assets, "1.3.113", settlePrice_113, bitasset_options);
+        assert.equal(order.amountToReceive().asset_id, "1.3.0", "Asset to receive should be 1.3.0");
+        assert.equal(order.amountToReceive().getAmount(), 16878451611, "Amount should be 16878451611")
+        assert.equal(order.amountToReceive().getAmount({real: true}), 168784.51611, "Amount should be 168784.51611")
+    });
+
+    it("Returns the order type", function() {
+        let order = new SettleOrder(so, assets, "1.3.113", settlePrice_113, bitasset_options);
+
+        let order2 = new SettleOrder(so, assets, "1.3.0", settlePrice_0, bitasset_options);
+        console.log("Order price:", order.getPrice(), "Order2 price:", order2.getPrice());
+        assert.equal(order.isBid(), false, "Order is not a a bid");
+        assert.equal(order2.isBid(), true, "Order is a bid");
+    })
 });
