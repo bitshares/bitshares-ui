@@ -459,21 +459,31 @@ class Exchange extends React.Component {
 
     _depthChartClick(base, quote, power, e) {
         e.preventDefault();
-        let value = market_utils.limitByPrecision(e.xAxis[0].value / power, quote);
-        let buyPrice = this._getBuyPrice(e.xAxis[0].value / power);
-        let sellPrice = this._getSellPrice(e.xAxis[0].value / power);
-        let displayBuyPrice = this._getDisplayPrice("bid", buyPrice);
-        let displaySellPrice = this._getDisplayPrice("ask", sellPrice);
+        let {bid, ask} = this.state;
 
-        this.setState({
-            depthLine: value,
-            buyPrice: buyPrice,
-            displayBuyPrice: displayBuyPrice,
-            buyTotal: market_utils.limitByPrecision(this.getBuyTotal(buyPrice, this.state.buyAmount), base),
-            sellPrice: sellPrice,
-            displaySellPrice: displaySellPrice,
-            sellTotal: market_utils.limitByPrecision(this.getSellTotal(sellPrice, this.state.sellAmount), base)
+        bid.price = new Price({
+            base: this.state.bid.for_sale,
+            quote: this.state.bid.to_receive,
+            real: e.xAxis[0].value / power
         });
+        bid.priceText = bid.price.toReal();
+
+        ask.price = new Price({
+            base: this.state.ask.to_receive,
+            quote: this.state.ask.for_sale,
+            real: e.xAxis[0].value / power
+        });
+        ask.priceText = ask.price.toReal();
+        let newState = {
+            bid,
+            ask,
+            depthLine: bid.price.toReal()
+        };
+
+        this._setForSale(bid) || this._setReceive(bid);
+        this._setReceive(ask) || this._setForSale(ask);
+
+        this.setState(newState);
     }
 
     _addZero(value) {
@@ -553,45 +563,21 @@ class Exchange extends React.Component {
         this.setState({ leftOrderBook: !this.state.leftOrderBook });
     }
 
-    _currentPriceClick(base, quote, type, price) {
-        if (type === "bid") {
-            let displayBuyPrice = this._getDisplayPrice("bid", price);
-            let { buyTotal, buyAmount } = this.state;
-
-            if (buyAmount) {
-                buyTotal = market_utils.limitByPrecision(this.getBuyTotal(price, this.state.buyAmount), base);
-            } else if (buyTotal) {
-                buyAmount = market_utils.limitByPrecision(this.getBuyAmount(price, buyTotal), quote);
-            }
-
-            this.setState({
-                buyPrice: price,
-                displayBuyPrice,
-                buyTotal,
-                buyAmount,
-                depthLine: displayBuyPrice
-            });
-        } else if (type === "ask") {
-            let displaySellPrice = this._getDisplayPrice("ask", price);
-            let { sellTotal, sellAmount } = this.state;
-
-            if (sellAmount) {
-                sellTotal = market_utils.limitByPrecision(this.getSellTotal(price, this.state.sellAmount), base);
-            } else if (sellTotal) {
-                sellAmount = market_utils.limitByPrecision(this.getSellAmount(price, sellTotal), quote);
-            }
-            this.setState({
-                sellPrice: price,
-                displaySellPrice,
-                sellTotal,
-                sellAmount,
-                depthLine: displaySellPrice
-            });
-
+    _currentPriceClick(type, price) {
+        const isBid = type === "bid";
+        let current = this.state[type];
+        current.price = price[isBid ? "invert" : "clone"]();
+        current.priceText = current.price.toReal();
+        if (isBid) {
+            this._setForSale(current) || this._setReceive(current);
+        } else {
+            this._setReceive(current) || this._setForSale(current);
         }
+        this.forceUpdate();
     }
 
-    _orderbookClick(base, quote, type, order) {
+    _orderbookClick(type, order) {
+        const isBid = order.__tempOrder__.isBid();
         let toReceive = order.totalBidReceive || order.totalAskSell;
         let forSale = order.totalBidSell || order.totalAskReceive;
 
@@ -600,15 +586,10 @@ class Exchange extends React.Component {
             quote: toReceive
         });
 
-        console.log("forSale:", order, forSale, forSale.getAmount({real: true}));
-
-        // let askPrice = new Price({});
-
-        let current = this.state[type];
+        let current = this.state[isBid ? "bid" : "ask"];
         current.price = newPrice;
         current.priceText = newPrice.toReal();
 
-        const isBid = type === "bid";
         let newState = {
             [isBid ? "ask" : "bid"]: {
                 for_sale: isBid ? toReceive : forSale,
@@ -1110,7 +1091,7 @@ class Exchange extends React.Component {
                 base={base}
                 amountChange={this._onInputReceive.bind(this, "bid")}
                 priceChange={this._onInputPrice.bind(this, "bid")}
-                setPrice={this._currentPriceClick.bind(this, base, quote)}
+                setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputSell.bind(this, "bid")}
                 balance={baseBalance}
                 onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, buyAmount, buyTotal, baseBalance, coreBalance, buyFeeAsset, "buy")}
@@ -1185,7 +1166,7 @@ class Exchange extends React.Component {
                 quote={quote}
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
-                onClick={this._orderbookClick.bind(this, base, quote)}
+                onClick={this._orderbookClick.bind(this)}
                 horizontal={!leftOrderBook}
                 moveOrderBook={this._moveOrderBook.bind(this)}
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
