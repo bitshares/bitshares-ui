@@ -27,6 +27,11 @@
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
     "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute."
+  },
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {

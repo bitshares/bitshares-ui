@@ -96,7 +96,6 @@ export default class ExchangeHeader extends React.Component {
                                 {latestPrice ?
                                     <PriceStat ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} content="exchange.latest"/> : null}
 
-                                {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} volume2={volumeQuote} base={baseAsset} quote={quoteAsset} content="exchange.volume_24"/> : null}
                                 <li className="stat">
                                     <span>
                                         <Translate component="span" content="account.hour_24" />
@@ -105,12 +104,17 @@ export default class ExchangeHeader extends React.Component {
                                         <span>%</span>
                                     </span>
                                 </li>
+
+                                {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} className="column-hide-small" volume2={volumeQuote} base={baseAsset} quote={quoteAsset} content="exchange.volume_24"/> : null}
+
                                 {feedPrice ?
-                                    <PriceStat ready={marketReady} price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} content="exchange.settle"/> : null}
+                                    <PriceStat toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="column-hide-small" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} content="exchange.settle"/> : null}
+
                                 {lowestCallPrice && showCallLimit ?
-                                    <PriceStat ready={marketReady} className="is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} content="explorer.block.call_limit"/> : null}
+                                    <PriceStat toolTip={counterpart.translate("tooltip.call_limit")} ready={marketReady} className="column-hide-medium is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} content="explorer.block.call_limit"/> : null}
+
                                 {feedPrice && showCallLimit ?
-                                    <PriceStat ready={marketReady} className="is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} content="exchange.squeeze"/> : null}
+                                    <PriceStat toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="column-hide-medium is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} content="exchange.squeeze"/> : null}
                             </ul>
                         </div>
                         <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>

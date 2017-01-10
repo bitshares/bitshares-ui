@@ -348,7 +348,13 @@ select.bts-select {
 
 @media screen and (max-width: 900px) {
     .column-hide-small {
-        display: none;
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .column-hide-medium {
+        display: none !important;
     }
 }
 

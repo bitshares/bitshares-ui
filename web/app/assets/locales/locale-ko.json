@@ -26,6 +26,11 @@
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
     "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute."
+  },
   "account": {
     "welcome": "비트쉐어 2.0 이용을 환영합니다",
     "asset": "자산",

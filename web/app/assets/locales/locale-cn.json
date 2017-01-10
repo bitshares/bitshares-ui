@@ -27,6 +27,11 @@
     "unlocked_tip": "钱包已解锁，点击锁定。",
     "update_asset": "更新资产"
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute."
+  },
   "account": {
     "welcome": "欢迎使用 Graphene (石墨烯)系统",
     "assets": "资产",

@@ -27,6 +27,11 @@
     "locked_tip": "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
     "unlocked_tip": "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute."
+  },
   "propose": "Teklif Et",
   "cancel": "İptal",
   "account": {
