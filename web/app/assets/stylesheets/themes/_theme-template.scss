@@ -751,10 +751,15 @@
         color: $primary-text-color;
       }
 
-      > span:last-of-type {
+      > span.symbol-text {
         color: #468EDE;
       }
     }
+    &.is-call {
+        >span > b {
+            color: $call-color;
+        }
+}
   }
 
   .buy-sell-box {

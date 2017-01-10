@@ -19,17 +19,17 @@ class ExchangeContainer extends React.Component {
                 <AltContainer
                     stores={[MarketsStore, AccountStore, SettingsStore]}
                     inject={{
-                        limit_orders: () => {
-                            return MarketsStore.getState().activeMarketLimits;
+                        marketLimitOrders: () => {
+                            return MarketsStore.getState().marketLimitOrders;
                         },
-                        call_orders: () => {
-                            return MarketsStore.getState().activeMarketCalls;
+                        marketCallOrders: () => {
+                            return MarketsStore.getState().marketCallOrders;
                         },
                         invertedCalls: () => {
                             return MarketsStore.getState().invertedCalls;
                         },
-                        settle_orders: () => {
-                            return MarketsStore.getState().activeMarketSettles;
+                        marketSettleOrders: () => {
+                            return MarketsStore.getState().marketSettleOrders;
                         },
                         marketData: () => {
                             return MarketsStore.getState().marketData;

@@ -41,8 +41,6 @@ class OrderBookRowVertical extends React.Component {
 }
 
 class OrderBookRowHorizontal extends React.Component {
-
-
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.order.__tempOrder__.ne(this.props.order.__tempOrder__) ||
@@ -104,17 +102,21 @@ class OrderBook extends React.Component {
         this._updateHeight = this._updateHeight.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            !Immutable.is(nextProps.orders, this.props.orders) ||
-            !Immutable.is(nextProps.calls, this.props.calls) ||
-            nextProps.horizontal !== this.props.horizontal ||
-            !utils.are_equal_shallow(nextProps.latest, this.props.latest) ||
-            nextProps.smallScreen !== this.props.smallScreen ||
-            nextProps.wrapperClass !== this.props.wrapperClass ||
-            !utils.are_equal_shallow(nextState, this.state)
-        );
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log("calls changed:", !Immutable.is(nextProps.calls, this.props.calls), nextProps.calls && nextProps.calls.toJS(), this.props.calls && this.props.calls.toJS());
+    //     const callsChanged = didOrdersChange(nextProps.calls, this.props.calls);
+    //     const limitsChanged = didOrdersChange(nextProps.orders, this.props.orders);
+    //     console.log("callsChanged:", callsChanged, "limitsChanged", limitsChanged);
+    //     return (
+    //         !Immutable.is(nextProps.orders, this.props.orders) ||
+    //         !Immutable.is(nextProps.calls, this.props.calls) ||
+    //         nextProps.horizontal !== this.props.horizontal ||
+    //         !utils.are_equal_shallow(nextProps.latest, this.props.latest) ||
+    //         nextProps.smallScreen !== this.props.smallScreen ||
+    //         nextProps.wrapperClass !== this.props.wrapperClass ||
+    //         !utils.are_equal_shallow(nextState, this.state)
+    //     );
+    // }
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.marketReady) {

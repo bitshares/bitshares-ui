@@ -19,6 +19,21 @@ function precisionToRatio(p) {
     return Math.pow(10, p);
 }
 
+function didOrdersChange(newOrders, oldOrders) {
+    let changed = oldOrders && (oldOrders.size !== newOrders.size);
+    if (changed) return changed;
+
+    newOrders.forEach((a, key) => {
+        let oldOrder = oldOrders.get(key);
+        if (!oldOrder) {
+            changed = true;
+        } else {
+            changed = changed || a.ne(oldOrder);
+        }
+    });
+    return changed;
+}
+
 class Asset {
     constructor({asset_id = "1.3.0", amount = 0, precision = 5, real = null} = {}) {
         this.satoshi = precisionToRatio(precision);
@@ -197,10 +212,11 @@ class Price {
         });
     }
 
-    clone() {
+    clone(real = null) {
         return new Price({
             base: this.base,
-            quote: this.quote
+            quote: this.quote,
+            real
         });
     }
 
@@ -465,8 +481,13 @@ class CallOrder {
         this.feed_price = feed;
     }
 
-    clone() {
-        return new CallOrder(this.order, this.assets, this.market_base, this.feed_price);
+    clone(f = this.feed_price) {
+        return new CallOrder(this.order, this.assets, this.market_base, f);
+    }
+
+    setFeed(f) {
+        this.feed_price = f;
+        this._clearCache();
     }
 
     getPrice(squeeze = true, p = this.call_price) {
@@ -540,6 +561,7 @@ class CallOrder {
         this._for_sale = null;
         this._to_receive = null;
         this._feed_price = null;
+        this._squeeze_price = null;
     }
 
     ne(order) {
@@ -607,5 +629,6 @@ export {
     precisionToRatio,
     LimitOrder,
     CallOrder,
-    SettleOrder
+    SettleOrder,
+    didOrdersChange
 };

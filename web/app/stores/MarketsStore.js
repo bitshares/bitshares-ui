@@ -5,7 +5,7 @@ import market_utils from "common/market_utils";
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
-import {LimitOrder, CallOrder, FeedPrice, SettleOrder} from "common/MarketClasses";
+import {LimitOrder, CallOrder, FeedPrice, SettleOrder, didOrdersChange} from "common/MarketClasses";
 
 // import {
 //     SettleOrder
@@ -23,10 +23,10 @@ class MarketsStore {
         this.markets = Immutable.Map();
         this.asset_symbol_to_id = {};
         this.pendingOrders = Immutable.Map();
-        this.activeMarketLimits = Immutable.Map();
-        this.activeMarketCalls = Immutable.Map();
+        this.marketLimitOrders = Immutable.Map();
+        this.marketCallOrders = Immutable.Map();
         this.feedPrice = null;
-        this.activeMarketSettles = Immutable.OrderedSet();
+        this.marketSettleOrders = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
         // this.bids = [];
         // this.asks = [];
@@ -96,9 +96,9 @@ class MarketsStore {
             onCallOrderUpdate: MarketsActions.callOrderUpdate,
             onClearMarket: MarketsActions.clearMarket,
             onGetMarketStats: MarketsActions.getMarketStats,
-            onFeedUpdate: MarketsActions.feedUpdate,
             onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
-            onSwitchMarket: MarketsActions.switchMarket
+            onSwitchMarket: MarketsActions.switchMarket,
+            onFeedUpdate: MarketsActions.feedUpdate
         });
     }
 
@@ -143,10 +143,10 @@ class MarketsStore {
 
     onClearMarket() {
         this.activeMarket = null;
-        this.activeMarketLimits = this.activeMarketLimits.clear();
-        this.activeMarketCalls = this.activeMarketCalls.clear();
+        this.marketLimitOrders = this.marketLimitOrders.clear();
+        this.marketCallOrders = this.marketCallOrders.clear();
         this.feedPrice = null;
-        this.activeMarketSettles = this.activeMarketSettles.clear();
+        this.marketSettleOrders = this.marketSettleOrders.clear();
         this.activeMarketHistory = this.activeMarketHistory.clear();
         this.marketData = {
             bids: [],
@@ -191,22 +191,7 @@ class MarketsStore {
         }
 
         let limitsChanged = false, callsChanged = false;
-        function didOrdersChange(newOrders, oldOrders) {
-            let changed = oldOrders && (oldOrders.size !== newOrders.size);
-            if (changed) return changed;
 
-            newOrders.forEach((a, key) => {
-                let oldOrder = oldOrders.get(key);
-                if (!oldOrder) {
-                    changed = true;
-                } else {
-                    changed = changed || a.ne(oldOrder);
-                }
-            });
-            return changed;
-        }
-
-        // console.log("onSubscribeMarket:", result, this.activeMarket);
         this.invertedCalls = result.inverted;
 
         // Get updated assets every time for updated feed data
@@ -224,6 +209,9 @@ class MarketsStore {
             this.activeMarket = result.market;
         }
 
+        /* Set the feed price (null if not a bitasset market) */
+        this.feedPrice = this._getFeed();
+
         if (result.buckets) {
             this.buckets = result.buckets;
             if (result.buckets.indexOf(this.bucketSize) === -1) {
@@ -233,8 +221,8 @@ class MarketsStore {
 
         if (result.limits) {
             // Keep an eye on this as the number of orders increases, it might not scale well
-            const oldActiveMarketLimits = this.activeMarketLimits;
-            this.activeMarketLimits = this.activeMarketLimits.clear();
+            const oldmarketLimitOrders = this.marketLimitOrders;
+            this.marketLimitOrders = this.marketLimitOrders.clear();
             // console.time("Create limit orders " + this.activeMarket);
             result.limits.forEach(order => {
                 ChainStore._updateObject(order, false, false);
@@ -242,18 +230,18 @@ class MarketsStore {
                     order.for_sale = parseInt(order.for_sale, 10);
                 }
                 order.expiration = new Date(order.expiration);
-                this.activeMarketLimits = this.activeMarketLimits.set(
+                this.marketLimitOrders = this.marketLimitOrders.set(
                     order.id,
                     new LimitOrder(order, assets, this.quoteAsset.get("id"))
                 );
             });
 
-            limitsChanged = didOrdersChange(this.activeMarketLimits, oldActiveMarketLimits);
+            limitsChanged = didOrdersChange(this.marketLimitOrders, oldmarketLimitOrders);
 
             // Loop over pending orders to remove temp order from orders map and remove from pending
             for (let i = this.pendingCreateLimitOrders.length - 1; i >= 0; i--) {
                 let myOrder = this.pendingCreateLimitOrders[i];
-                let order = this.activeMarketLimits.find(order => {
+                let order = this.marketLimitOrders.find(order => {
                     return myOrder.seller === order.seller && myOrder.expiration === order.expiration;
                 });
 
@@ -273,23 +261,21 @@ class MarketsStore {
         }
 
         if (result.calls) {
-            const oldActiveMarketCalls = this.activeMarketCalls;
-            this.activeMarketCalls = this.activeMarketCalls.clear();
-            this._setFeed();
+            const oldmarketCallOrders = this.marketCallOrders;
+            this.marketCallOrders = this.marketCallOrders.clear();
 
-            // console.log("feed price: ", this.feedPrice.toReal(), "squeeze price: ", this.feedPrice.getSqueezePrice({real: true}));
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
                 let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice);
                 if (callOrder.isMarginCalled()) {
-                    this.activeMarketCalls = this.activeMarketCalls.set(
+                    this.marketCallOrders = this.marketCallOrders.set(
                         call.id,
                         new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
                     );
                 }
             });
 
-            callsChanged = didOrdersChange(this.activeMarketCalls, oldActiveMarketCalls);
+            callsChanged = didOrdersChange(this.marketCallOrders, oldmarketCallOrders);
         }
 
         this.updateSettleOrders(result);
@@ -328,7 +314,6 @@ class MarketsStore {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
         }
 
-        // console.log("*** Limits changed:", limitsChanged, "*** Calls changed:", callsChanged);
         if (callsChanged || limitsChanged) {
             // Update orderbook
             this._orderBook(limitsChanged, callsChanged);
@@ -353,13 +338,13 @@ class MarketsStore {
 
             let didUpdate = false;
             cancellations.forEach(orderID => {
-                if (orderID && this.activeMarketLimits.has(orderID)) {
+                if (orderID && this.marketLimitOrders.has(orderID)) {
                     didUpdate = true;
-                    this.activeMarketLimits = this.activeMarketLimits.delete(orderID);
+                    this.marketLimitOrders = this.marketLimitOrders.delete(orderID);
                 }
             });
 
-            if (this.activeMarketLimits.size === 0) {
+            if (this.marketLimitOrders.size === 0) {
                 this.marketData.bids = [];
                 this.marketData.flatBids = [];
                 this.marketData.asks = [];
@@ -379,9 +364,9 @@ class MarketsStore {
     }
 
     onCloseCallOrderSuccess(orderID) {
-        if (orderID && this.activeMarketCalls.has(orderID)) {
-            this.activeMarketCalls = this.activeMarketCalls.delete(orderID);
-            if (this.activeMarketCalls.size === 0) {
+        if (orderID && this.marketCallOrders.has(orderID)) {
+            this.marketCallOrders = this.marketCallOrders.delete(orderID);
+            if (this.marketCallOrders.size === 0) {
                 this.marketData.calls = [];
                 this.marketData.flatCalls = [];
             }
@@ -407,7 +392,7 @@ class MarketsStore {
                 console.log("**** onCallOrderUpdate ****", call_order, "isMarginCalled:", callOrder.isMarginCalled());
 
                 if (callOrder.isMarginCalled()) {
-                    this.activeMarketCalls = this.activeMarketCalls.set(
+                    this.marketCallOrders = this.marketCallOrders.set(
                         call_order.id,
                         callOrder
                     );
@@ -425,40 +410,52 @@ class MarketsStore {
             return false;
         }
     }
-
+    //
     onFeedUpdate(asset) {
         if (!this.quoteAsset || !this.baseAsset) {
-            return;
+            return false;
         }
-        let needsUpdate = false;
-        if (asset.get("id") === this.quoteAsset.get("id")) {
-            this.quoteAsset = asset;
-            needsUpdate = true;
-        } else if (asset.get("id") === this.baseAsset.get("id")) {
-            this.baseAsset = asset;
-            needsUpdate = true;
-        }
-
-        if (needsUpdate) {
-            // console.log("onFeedUpdate asset", asset.get("symbol"), "quote:", this.quoteAsset.get("symbol"), "base:", this.baseAsset.get("symbol"));
-            // Update orderbook
-            // this.calls = this.constructCalls(this.activeMarketCalls);
-            // Update depth chart data
-            // this._depthChart();
-            this._setFeed();
+        if (asset.get("id") === this[this.invertedCalls ? "baseAsset" : "quoteAsset"].get("id")) {
+            this[this.invertedCalls ? "baseAsset" : "quoteAsset"] = asset;
         } else {
             return false;
         }
+
+        let feedChanged = false;
+        let newFeed = this._getFeed();
+        if ((newFeed && !this.feedPrice) || (this.feedPrice) && this.feedPrice.ne(newFeed)) {
+            feedChanged = true;
+        }
+
+        if (feedChanged) {
+            this.feedPrice = newFeed;
+
+            this.marketCallOrders = this.marketCallOrders.withMutations(callOrder => {
+                if (callOrder && callOrder.first()) {
+                    callOrder.first().setFeed(this.feedPrice);
+                }
+            });
+
+            // Update orderbook
+            this._orderBook(true, true);
+
+            // Update depth chart data
+            this._depthChart();
+        }
     }
 
-    _setFeed() {
+    _getFeed() {
         const assets = {
             [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
             [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
         };
         const settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
+        if (!settlePrice) {
+            this.bitasset_options = null;
+            return null;
+        }
         const sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
-        this.feedPrice = new FeedPrice({
+        const feedPrice = new FeedPrice({
             priceObject: settlePrice,
             market_base: this.quoteAsset.get("id"),
             sqr,
@@ -466,8 +463,7 @@ class MarketsStore {
         });
 
         this.bitasset_options = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "options"]).toJS();
-
-
+        return feedPrice;
     }
 
     _priceChart() {
@@ -628,18 +624,18 @@ class MarketsStore {
 
         // Assign to store variables
         if (limitsChanged) {
-            console.time("Construct limits " + this.activeMarket);
-            this.marketData.bids = constructBids(this.activeMarketLimits);
-            this.marketData.asks = constructAsks(this.activeMarketLimits);
-            console.timeEnd("Construct limits " + this.activeMarket);
+            console.time("Construct limit orders " + this.activeMarket);
+            this.marketData.bids = constructBids(this.marketLimitOrders);
+            this.marketData.asks = constructAsks(this.marketLimitOrders);
             if (!callsChanged) {
                 this._combineOrders();
             }
+            console.timeEnd("Construct limit orders " + this.activeMarket);
         }
 
         if (callsChanged) {
             console.time("Construct calls " + this.activeMarket);
-            this.marketData.calls = this.constructCalls(this.activeMarketCalls);
+            this.marketData.calls = this.constructCalls(this.marketCallOrders);
             this._combineOrders();
             console.timeEnd("Construct calls " + this.activeMarket);
         }
@@ -649,9 +645,7 @@ class MarketsStore {
 
     constructCalls (callsArray) {
         let calls = [];
-        let isBid = false;
         if (callsArray.size) {
-            isBid = callsArray.first().isBid();
             callsArray
             .sort((a, b) => {
                 return a.getPrice() - b.getPrice();
@@ -679,7 +673,7 @@ class MarketsStore {
     }
 
     _combineOrders() {
-        const isBid = this.activeMarketCalls.size && this.activeMarketCalls.first().isBid();
+        const isBid = this.marketCallOrders.size && this.marketCallOrders.first().isBid();
         if (isBid) {
             this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
             this.marketData.combinedAsks = this.marketData.asks.concat([]);
@@ -707,7 +701,7 @@ class MarketsStore {
         let bids = [], asks = [], calls= [], totalBids = 0, totalAsks = 0, totalCalls = 0;
         let flat_bids = [], flat_asks = [], flat_calls = [], flat_settles = [];
 
-        if (this.activeMarketLimits.size) {
+        if (this.marketLimitOrders.size) {
 
             this.marketData.bids.forEach(order => {
                 bids.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
@@ -784,8 +778,8 @@ class MarketsStore {
         }
 
         /* Flatten settle orders if there are any */
-        if (this.activeMarketSettles.size) {
-            flat_settles = this.activeMarketSettles.reduce((final, a) => {
+        if (this.marketSettleOrders.size) {
+            flat_settles = this.marketSettleOrders.reduce((final, a) => {
                 if (!final) {
                     return [[a.getPrice(), a[!a.isBid() ? "amountForSale" : "amountToReceive"]().getAmount({real: true})]];
                 } else {
@@ -913,14 +907,14 @@ class MarketsStore {
                 [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
                 [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
             };
-            this.activeMarketSettles = this.activeMarketSettles.clear();
+            this.marketSettleOrders = this.marketSettleOrders.clear();
 
             result.settles.forEach(settle => {
                 // let key = settle.owner + "_" + settle.balance.asset_id;
 
                 settle.settlement_date = new Date(settle.settlement_date);
 
-                this.activeMarketSettles = this.activeMarketSettles.add(
+                this.marketSettleOrders = this.marketSettleOrders.add(
                     new SettleOrder(settle, assets, this.quoteAsset.get("id"), this.feedPrice, this.bitasset_options)
                 );
             });

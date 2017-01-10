@@ -53,8 +53,8 @@ class BuySell extends React.Component {
 
     render() {
         let {type, quote, base, amountChange, fee, isPredictionMarket,
-            priceChange, onSubmit, balance, totalPrecision, totalChange,
-            balancePrecision, quotePrecision, currentPrice, currentPriceObject,
+            priceChange, onSubmit, balance, totalChange,
+            balancePrecision, currentPrice, currentPriceObject,
             feeAsset, feeAssets} = this.props;
         let amount = 0, price = 0, total = 0;
 

@@ -1,7 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import Immutable from "immutable";
-// import Highcharts from "highcharts/highstock";
 let ReactHighstock = require("react-highcharts/dist/ReactHighstock");
 import utils from "common/utils";
 import counterpart from "counterpart";
@@ -9,14 +7,16 @@ import {cloneDeep} from "lodash";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 import AssetName from "../Utility/AssetName";
+import {didOrdersChange} from "common/MarketClasses";
 
 class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         let settleCheck = isNaN(nextProps.settlementPrice) ? false : nextProps.settlementPrice !== this.props.settlementPrice;
+
         return (
-            !Immutable.is(nextProps.orders, this.props.orders) ||
-            !Immutable.is(nextProps.call_orders, this.props.call_orders) ||
+            didOrdersChange(nextProps.orders, this.props.orders) ||
+            didOrdersChange(nextProps.call_orders, this.props.call_orders) ||
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
