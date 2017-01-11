@@ -106,7 +106,7 @@ module.exports = function(options) {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("development")}}));
         plugins.push(new webpack.HotModuleReplacementPlugin());
-        plugins.push(new webpack.NoErrorsPlugin());
+        plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
 
     var config = {

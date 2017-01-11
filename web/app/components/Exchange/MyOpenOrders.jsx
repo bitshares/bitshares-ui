@@ -225,6 +225,4 @@ MyOpenOrders.propTypes = {
     baseSymbol: PropTypes.string.isRequired
 };
 
-exports.OrderRow = OrderRow;
-exports.TableHeader = TableHeader;
-exports.MyOpenOrders = MyOpenOrders;
+export { OrderRow, TableHeader, MyOpenOrders };
