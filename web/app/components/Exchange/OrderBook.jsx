@@ -251,37 +251,14 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
 
         if(base && quote) {
-
-            // let totalBidReceive = new Asset({
-            //     asset_id: quote.get("id"),
-            //     precision: quote.get("precision")
-            // });
-            //
-            // let totalBidSell = new Asset({
-            //     asset_id: base.get("id"),
-            //     precision: base.get("precision")
-            // });
-
             bidRows = combinedBids
             .filter(a => {
-                // if (a.amountToReceive().asset_id !== a.totalToReceive().asset_id) {
-                //     return false;
-                // }
                 if (this.state.showAllBids) {
                     return true;
                 }
                 return a.getPrice() >= highestBid.getPrice() / 5;
             })
             .map((order, index) => {
-                // try {
-                //     totalBidReceive.plus(order.amountToReceive());
-                // } catch(err) {
-                //     console.log("err:", err);
-                // }
-                // totalBidSell.plus(order.amountForSale());
-                // order.totalBidSell = totalBidSell.clone();
-                // order.totalBidReceive = totalBidReceive.clone();
-
                 return (horizontal ?
                     <OrderBookRowHorizontal
                         index={index}
@@ -304,30 +281,13 @@ class OrderBook extends React.Component {
                 );
             });
 
-            // let totalAskReceive = new Asset({
-            //     asset_id: base.get("id"),
-            //     precision: base.get("precision")
-            // });
-            //
-            // let totalAskSell = new Asset({
-            //     asset_id: quote.get("id"),
-            //     precision: quote.get("precision")
-            // });
-
             askRows = combinedAsks
             .filter(a => {
-                // if (a.amountForSale().asset_id !== totalAskSell.asset_id) {
-                //     return false;
-                // }
                 if (this.state.showAllAsks) {
                     return true;
                 }
                 return a.getPrice() <= lowestAsk.getPrice() * 5;
             }).map((order, index) => {
-                // totalAskSell.plus(order.amountForSale());
-                // totalAskReceive.plus(order.amountToReceive());
-                // order.totalAskReceive = totalAskReceive.clone();
-                // order.totalAskSell = totalAskSell.clone();
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
@@ -349,7 +309,6 @@ class OrderBook extends React.Component {
                         quote={quote}
                         type={order.type}
                         final={0 === index}
-
                     />
                     );
             });

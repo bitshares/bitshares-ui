@@ -81,7 +81,7 @@ class ExchangeContainer extends React.Component {
                         }
                     }}
                   >
-                    <ExchangeSubscriber quoteAsset={symbols[0]} baseAsset={symbols[1]} />
+                    <ExchangeSubscriber router={this.props.router} quoteAsset={symbols[0]} baseAsset={symbols[1]} />
                 </AltContainer>
         );
     }
@@ -129,8 +129,9 @@ class ExchangeSubscriber extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        /* Prediction markets should only be shown in one direction, if the link goes to the wrong one we flip it */ 
         if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
-            this.props.router.push(`market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
+            this.props.router.push(`/market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
         }
 
         if (nextProps.quoteAsset && nextProps.baseAsset) {

@@ -16,7 +16,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
-import { ChainStore } from "graphenejs-lib";
+import { ChainStore, FetchChain } from "graphenejs-lib";
 import SettingsActions from "actions/SettingsActions";
 import cnames from "classnames";
 import market_utils from "common/market_utils";
@@ -204,33 +204,6 @@ class Exchange extends React.Component {
         window.removeEventListener("resize", this._getWindowSize, false);
     }
 
-    _createPredictionShort(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
-        console.log("createPredictionShort:", buyAssetAmount, sellAssetAmount);
-        let coreAsset = ChainStore.getAsset("1.3.0");
-        let expiration = new Date();
-        // TODO: Add selector for expiry
-        expiration.setYear(expiration.getFullYear() + 5);
-        MarketsActions.createPredictionShort(
-            this.props.currentAccount.get("id"),
-            utils.get_satoshi_amount(sellAssetAmount, sellAsset),
-            sellAsset,
-            utils.get_satoshi_amount(buyAssetAmount, buyAsset),
-            utils.get_satoshi_amount(sellAssetAmount, coreAsset),
-            buyAsset,
-            expiration,
-            false, // fill or kill TODO: add fill or kill switch
-            feeID
-        ).then(result => {
-            if (result.error) {
-                if (result.error.message !== "wallet locked")
-                    notify.addNotification({
-                        message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
-                        level: "error"
-                    });
-            }
-        });
-    }
-
     _getFee(asset) {
         let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
         const coreFee = new Asset({
@@ -349,9 +322,9 @@ class Exchange extends React.Component {
             });
         }
         //
-        // if (type === "sell" && isPredictionMarket && short) {
-        //     return this._createPredictionShort(buyAsset, sellAsset, buyAssetAmount, order.for_sale.getAmount(), feeID);
-        // }
+        if (type === "sell" && isPredictionMarket && short) {
+            return this._createPredictionShort(feeID);
+        }
 
 
 
@@ -383,28 +356,43 @@ class Exchange extends React.Component {
         }).catch(e => {
             console.log("order failed:", e);
         });
+    }
 
-        // let expiration = new Date();
-        // // TODO: Add selector for expiry
-        // expiration.setYear(expiration.getFullYear() + 5);
-        // MarketsActions.createLimitOrder(
-        //     this.props.currentAccount.get("id"),
-        //     utils.get_satoshi_amount(sellAssetAmount, sellAsset),
-        //     sellAsset,
-        //     utils.get_satoshi_amount(buyAssetAmount, buyAsset),
-        //     buyAsset,
-        //     expiration,
-        //     false, // fill or kill TODO: add fill or kill switch
-        //     feeID
-        // ).then(result => {
-        //     if (result.error) {
-        //         if (result.error.message !== "wallet locked")
-        //             notify.addNotification({
-        //                 message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
-        //                 level: "error"
-        //             });
-        //     }
-        // });
+    _createPredictionShort(feeID) {
+        let current = this.state.ask;
+        const order = new LimitOrderCreate({
+            for_sale: current.for_sale,
+            to_receive: current.to_receive,
+            seller: this.props.currentAccount.get("id"),
+            fee: {
+                asset_id: feeID,
+                amount: 0
+            }
+        });
+
+        Promise.all([
+            FetchChain("getAsset", this.props.quoteAsset.getIn(["bitasset", "options", "short_backing_asset"]))
+        ]).then(assets => {
+            let [backingAsset] = assets;
+            let collateral = new Asset({
+                amount: order.amount_for_sale.getAmount(),
+                asset_id: backingAsset.get("id"),
+                precision: backingAsset.get("precision")
+            });
+
+            MarketsActions.createPredictionShort(
+                order,
+                collateral
+            ).then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        notify.addNotification({
+                            message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
+                            level: "error"
+                        });
+                }
+            });
+        });
     }
 
     _forceBuy(type, feeAsset, sellBalance, coreBalance) {
@@ -703,7 +691,7 @@ class Exchange extends React.Component {
     }
 
     _getSettlementInfo() {
-        let {lowestCallPrice, feedPrice} = this.props;
+        let {lowestCallPrice, feedPrice, quoteAsset} = this.props;
 
         let showCallLimit = false;
         if (feedPrice) {
@@ -713,8 +701,7 @@ class Exchange extends React.Component {
                 showCallLimit = lowestCallPrice >= feedPrice.toReal();
             }
         }
-
-        return !!(showCallLimit && lowestCallPrice);
+        return !!(showCallLimit && lowestCallPrice && !quoteAsset.getIn(["bitasset", "is_prediction_market"]));
     }
 
     _changeIndicator(key) {
@@ -1238,7 +1225,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={feedPrice && feedPrice.toReal()}
+                                    settlementPrice={(showCallLimit && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
@@ -1250,7 +1237,7 @@ class Exchange extends React.Component {
                             </div>)}
 
                             <div className="grid-block no-overflow wrap shrink" >
-                                {hasPrediction ? <div className="grid-content no-overflow" style={{lineHeight: "1.2rem", paddingTop: 10}}>{description}</div> : null}
+                                {hasPrediction ? <div className="small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><p>{description}</p></div> : null}
 
                                 {buyForm}
                                 {sellForm}

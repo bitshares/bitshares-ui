@@ -105,9 +105,9 @@ export default class ExchangeHeader extends React.Component {
                                     </span>
                                 </li>
 
-                                {volumeBase >= 0 ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} className="column-hide-small" volume2={volumeQuote} base={baseAsset} quote={quoteAsset} content="exchange.volume_24"/> : null}
+                                {(volumeBase >= 0) ? <PriceStat ready={marketReady} decimals={0} volume={true} price={volumeBase} className="column-hide-small" volume2={volumeQuote} base={baseAsset} quote={quoteAsset} content="exchange.volume_24"/> : null}
 
-                                {feedPrice ?
+                                {!hasPrediction && feedPrice ?
                                     <PriceStat toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="column-hide-small" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} content="exchange.settle"/> : null}
 
                                 {lowestCallPrice && showCallLimit ?

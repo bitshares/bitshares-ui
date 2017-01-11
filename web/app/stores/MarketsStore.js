@@ -268,13 +268,18 @@ class MarketsStore {
 
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
-                let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice);
-                if (callOrder.isMarginCalled()) {
-                    this.marketCallOrders = this.marketCallOrders.set(
-                        call.id,
-                        new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
-                    );
+                try {
+                    let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice, "short_backing_asset" in this.bitasset_options);
+                    if (callOrder.isMarginCalled()) {
+                        this.marketCallOrders = this.marketCallOrders.set(
+                            call.id,
+                            new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                        );
+                    }
+                } catch(err) {
+                    console.error("Unable to construct calls array, invalid feed price or prediction market?");
                 }
+
             });
 
             callsChanged = didOrdersChange(this.marketCallOrders, oldmarketCallOrders);
@@ -390,20 +395,24 @@ class MarketsStore {
                     [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
                     [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
                 };
-                let callOrder = new CallOrder(call_order, assets, this.quoteAsset.get("id"), this.feedPrice);
-                console.log("**** onCallOrderUpdate ****", call_order, "isMarginCalled:", callOrder.isMarginCalled());
+                try {
+                    let callOrder = new CallOrder(call_order, assets, this.quoteAsset.get("id"), this.feedPrice);
+                    console.log("**** onCallOrderUpdate ****", call_order, "isMarginCalled:", callOrder.isMarginCalled());
 
-                if (callOrder.isMarginCalled()) {
-                    this.marketCallOrders = this.marketCallOrders.set(
-                        call_order.id,
-                        callOrder
-                    );
+                    if (callOrder.isMarginCalled()) {
+                        this.marketCallOrders = this.marketCallOrders.set(
+                            call_order.id,
+                            callOrder
+                        );
 
-                    // Update orderbook
-                    this._orderBook(false, true);
+                        // Update orderbook
+                        this._orderBook(false, true);
 
-                    // Update depth chart data
-                    this._depthChart();
+                        // Update depth chart data
+                        this._depthChart();
+                    }
+                } catch(err) {
+                    console.error("Unable to construct calls array, invalid feed price or prediction market?");
                 }
 
             }
@@ -451,21 +460,37 @@ class MarketsStore {
             [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
             [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
         };
-        const settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
+        let settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
         if (!settlePrice) {
             this.bitasset_options = null;
             return null;
         }
-        const sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
-        const feedPrice = new FeedPrice({
-            priceObject: settlePrice,
-            market_base: this.quoteAsset.get("id"),
-            sqr,
-            assets
-        });
+        let sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
+        try {
+            this.bitasset_options = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "options"]).toJS();
+            /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
+            if ("short_backing_asset" in this.bitasset_options && settlePrice.getIn(["base", "asset_id"]) === settlePrice.getIn(["quote", "asset_id"])) {
+                const backingAsset = this.bitasset_options.short_backing_asset;
+                if (!assets[backingAsset]) assets[backingAsset] = {precision: this.quoteAsset.get("precision")};
+                settlePrice = settlePrice.setIn(["base", "amount"], 1);
+                settlePrice = settlePrice.setIn(["base", "asset_id"], backingAsset);
+                settlePrice = settlePrice.setIn(["quote", "amount"], 1);
+                settlePrice = settlePrice.setIn(["quote", "asset_id"], this.quoteAsset.get("id"));
+                sqr = 1000;
+            }
+            const feedPrice = new FeedPrice({
+                priceObject: settlePrice,
+                market_base: this.quoteAsset.get("id"),
+                sqr,
+                assets
+            });
 
-        this.bitasset_options = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "options"]).toJS();
-        return feedPrice;
+            return feedPrice;
+        } catch(err) {
+            console.error(this.activeMarket, "does not have a properly configured feed price");
+            return null;
+        }
+
     }
 
     _priceChart() {
@@ -670,14 +695,12 @@ class MarketsStore {
     _combineOrders() {
         const hasCalls = !!this.marketCallOrders.size;
         const isBid = hasCalls && this.marketCallOrders.first().isBid();
-        if (hasCalls) {
-            if (isBid) {
-                this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
-                this.marketData.combinedAsks = this.marketData.asks.concat([]);
-            } else {
-                this.marketData.combinedBids = this.marketData.bids.concat([]);
-                this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
-            }
+        if (isBid) {
+            this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
+            this.marketData.combinedAsks = this.marketData.asks.concat([]);
+        } else {
+            this.marketData.combinedBids = this.marketData.bids.concat([]);
+            this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
         }
 
         let totalToReceive = new Asset({

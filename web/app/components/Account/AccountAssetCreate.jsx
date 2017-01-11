@@ -48,7 +48,7 @@ class BitAssetOptions extends React.Component {
     _onFoundBackingAsset(asset) {
         if (asset) {
             if (asset.get("id") === "1.3.0" || (asset.get("bitasset_data_id") && !asset.getIn(["bitasset", "is_prediction_market"]))) {
-                if (asset.get("precision") !== this.props.assetPrecision) {
+                if (asset.get("precision") !== parseInt(this.props.assetPrecision, 10)) {
                     this.setState({
                         error: counterpart.translate("account.user_issued_assets.error_precision", {asset: this.props.assetSymbol})
                     });

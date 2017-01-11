@@ -354,6 +354,10 @@ class LimitOrderCreate {
         this.expiration = expiration;
     }
 
+    getExpiration() {
+        return this.expiration;
+    }
+
     toObject() {
         return {
             seller: this.seller,
@@ -474,7 +478,7 @@ class LimitOrder {
 }
 
 class CallOrder {
-    constructor(order, assets, market_base, feed) {
+    constructor(order, assets, market_base, feed, is_prediction_market = false) {
         if (!order || !assets ||!market_base || !feed) {
             throw new Error("CallOrder missing inputs");
         }
@@ -482,6 +486,7 @@ class CallOrder {
         this.order = order;
         this.assets = assets;
         this.market_base = market_base;
+        this.is_prediction_market = is_prediction_market;
         this.inverted = market_base === order.call_price.base.asset_id;
         this.id = order.id;
         this.borrower = order.borrower;
@@ -553,6 +558,7 @@ class CallOrder {
     }
 
     isMarginCalled() {
+        if (this.is_prediction_market) return false;
         return this.isBid() ? this.call_price.lt(this.feed_price) : this.call_price.gt(this.feed_price);
     }
 
