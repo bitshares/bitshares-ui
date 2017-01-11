@@ -32,7 +32,7 @@ class BuySell extends React.Component {
                 nextProps.balance !== this.props.balance ||
                 nextProps.account !== this.props.account ||
                 nextProps.className !== this.props.className ||
-                nextProps.fee !== this.props.fee ||
+                (nextProps.fee && this.props.fee ? nextProps.fee.ne(this.props.fee) : false) ||
                 nextProps.isPredictionMarket !== this.props.isPredictionMarket ||
                 nextProps.feeAsset !== this.props.feeAsset ||
                 nextProps.isOpen !== this.props.isOpen
@@ -103,7 +103,7 @@ class BuySell extends React.Component {
         let balanceToAdd;
 
         if (this.props.feeAsset.get("symbol") === balanceSymbol) {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;
+            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee.getAmount();
         } else {
             balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
         }
@@ -162,7 +162,7 @@ class BuySell extends React.Component {
                                         <Translate content="transfer.fee" />:
                                     </div>
                                     <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                        <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
+                                        <input disabled type="text" id="fee" value={fee.getAmount({real: true})} autoComplete="off"/>
                                     </div>
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
                                         <select
@@ -197,7 +197,7 @@ class BuySell extends React.Component {
                                                 <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
                                                 <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
-                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject.sellPrice(), currentPriceObject.isCall())}>
                                                     <PriceText price={currentPrice} quote={quote} base={base} /> <AssetName name={base.get("symbol")} />
                                                     </span>
                                                 </td>) : null}

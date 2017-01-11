@@ -490,7 +490,7 @@ describe("LimitOrderCreate", function() {
             for_sale: BTS
         });
         let obj = order.toObject();
-        assert.equal(Object.keys(obj).length, 5, "Object should have 5 keys");
+        assert.equal(Object.keys(obj).length, 6, "Object should have 6 keys");
         assert.equal("min_to_receive" in obj, true, "Object should have min_to_receive key");
         assert.equal("amount_to_sell" in obj, true, "Object should have amount_to_sell key");
         assert.equal("expiration" in obj, true, "Object should have expiration key");
@@ -571,6 +571,42 @@ describe("LimitOrder", function() {
         ,"deferred_fee":14676
     };
 
+    const o3 = {
+        "id":"1.7.937674",
+        "expiration":"2017-12-13T14:14:09",
+        "seller":"1.2.132823",
+        "for_sale":1,
+        "sell_price": {
+            "base": {
+                "amount":47554,
+                "asset_id":"1.3.121"
+            },
+            "quote":{
+                "amount": 150000000,
+                "asset_id":"1.3.0"
+            }
+        }
+        ,"deferred_fee":14676
+    };
+
+    const o4 = {
+        "id":"1.7.937674",
+        "expiration":"2017-12-13T14:14:09",
+        "seller":"1.2.132823",
+        "for_sale":3154,
+        "sell_price": {
+            "base":{
+                "amount": 150000000,
+                "asset_id":"1.3.0"
+            },
+            "quote": {
+                "amount":47554,
+                "asset_id":"1.3.121"
+            },
+        }
+        ,"deferred_fee":14676
+    };
+
     it("Instantiates", function() {
         let order = new LimitOrder(o, assets, "1.3.0");
         assert(order.id === o.id);
@@ -598,6 +634,17 @@ describe("LimitOrder", function() {
         let toReceive = order.amountToReceive();
         assert.equal(toReceive.getAmount(), 239, "Satoshi amount to receive should equal 239");
         assert.equal(toReceive.getAmount({real: true}), 0.0239, "Real amount for sale should equal 0.0239");
+
+        let order3 = new LimitOrder(o3, assets, "1.3.121");
+        let order4 = new LimitOrder(o4, assets, "1.3.121");
+        let order5 = new LimitOrder(o3, assets, "1.3.0");
+        let order6 = new LimitOrder(o4, assets, "1.3.0");
+
+        assert.equal(order3.amountToReceive().getAmount(), 3154);
+        assert.equal(order4.amountToReceive().getAmount(), 1, "Order4 should equal 1");
+        assert.equal(order5.amountToReceive().getAmount(), 3154);
+        assert.equal(order6.amountToReceive().getAmount(), 1, "Order6 should equal 1");
+
     });
 
     it("Returns the order type", function() {
@@ -853,7 +900,6 @@ describe("Settle Order", function() {
         let order = new SettleOrder(so, assets, "1.3.113", settlePrice_113, bitasset_options);
 
         let order2 = new SettleOrder(so, assets, "1.3.0", settlePrice_0, bitasset_options);
-        console.log("Order price:", order.getPrice(), "Order2 price:", order2.getPrice());
         assert.equal(order.isBid(), false, "Order is not a a bid");
         assert.equal(order2.isBid(), true, "Order is a bid");
     })

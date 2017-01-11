@@ -28,7 +28,9 @@ function didOrdersChange(newOrders, oldOrders) {
         if (!oldOrder) {
             changed = true;
         } else {
-            changed = changed || a.ne(oldOrder);
+            if (a.market_base === oldOrder.market_base) {
+                changed = changed || a.ne(oldOrder);
+            }
         }
     });
     return changed;
@@ -77,7 +79,7 @@ class Asset {
             if (this._real_amount) return this._real_amount;
             return this._real_amount = limitByPrecision(this.amount / this.toSats(), this.precision);
         } else {
-            return this.amount;
+            return Math.floor(this.amount);
         }
     }
 
@@ -94,15 +96,29 @@ class Asset {
     }
 
     equals(asset) {
-        return (this.asset_id === asset.asset_id && this.amount === asset.amount);
+        return (this.asset_id === asset.asset_id && this.getAmount() === asset.getAmount());
+    }
+
+    ne(asset) {
+        return !this.equals(asset);
+    }
+
+    gt(asset) {
+        return this.getAmount() > asset.getAmount();
+    }
+
+    lt(asset) {
+        return this.getAmount() < asset.getAmount();
     }
 
     times(p) { // asset amount times a price p
         if (this.asset_id === p.base.asset_id) {
             let amount = Math.floor((this.amount * p.quote.amount) / p.base.amount);
+            if (amount === 0) amount = 1;
             return new Asset({asset_id: p.quote.asset_id, amount, precision: p.quote.precision});
         } else if (this.asset_id === p.quote.asset_id) {
             let amount = Math.floor((this.amount * p.base.amount) / p.quote.amount);
+            if (amount === 0) amount = 1;
             return new Asset({asset_id: p.base.asset_id, amount, precision: p.base.precision});
         }
         throw new Error("Invalid asset types for price multiplication");
@@ -222,8 +238,7 @@ class Price {
 
     equals(b) {
         if (this.base.asset_id !== b.base.asset_id || this.quote.asset_id !== b.quote.asset_id) {
-            console.error("Cannot compare prices for different assets");
-            return false;
+            throw new Error("Cannot compare prices for different assets");
         }
         const amult = b.quote.amount * this.base.amount;
         const bmult = this.quote.amount * b.base.amount;
@@ -345,7 +360,8 @@ class LimitOrderCreate {
             min_to_receive: this.min_to_receive.toObject(),
             amount_to_sell: this.amount_for_sale.toObject(),
             expiration: this.expiration,
-            fill_or_kill: this.fill_or_kill
+            fill_or_kill: this.fill_or_kill,
+            fee: this.fee
         };
     }
 }
@@ -410,7 +426,8 @@ class LimitOrder {
 
     amountToReceive() {
         if (this._to_receive) return this._to_receive;
-        return this._to_receive = this.amountForSale().times(this.sell_price);
+        this._to_receive = this.amountForSale().times(this.sell_price);
+        return this._to_receive;
     }
 
     sum(order) {
@@ -421,6 +438,8 @@ class LimitOrder {
     _clearCache() {
         this._to_receive = null;
         this._for_sale = null;
+        this._total_to_receive = null;
+        this._total_for_sale = null;
     }
 
     ne(order) {
@@ -432,6 +451,25 @@ class LimitOrder {
 
     equals(order) {
         return !this.ne(order);
+    }
+
+    setTotalToReceive(total) {
+        this.total_to_receive = total;
+    }
+
+    setTotalForSale(total) {
+        this.total_for_sale = total;
+    }
+
+    totalToReceive({noCache = false} = {}) {
+        if (!noCache && this._total_to_receive) return this._total_to_receive;
+        this._total_to_receive = (this.total_to_receive || this.amountToReceive()).clone();
+        return this._total_to_receive;
+    }
+
+    totalForSale({noCache = false} = {}) {
+        if (!noCache && this._total_for_sale) return this._total_for_sale;
+        return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
     }
 }
 
@@ -526,7 +564,11 @@ class CallOrder {
         return true;
     }
 
-    sellPrice() {
+    sellPrice(squeeze = true) {
+        if (squeeze) {
+            console.log("this.feed_price,", this.feed_price, this.feed_price.getSqueezePrice(), this.feed_price.getSqueezePrice().toReal())
+            return this.feed_price.getSqueezePrice();
+        }
         return this.call_price;
     }
 
@@ -562,6 +604,8 @@ class CallOrder {
         this._to_receive = null;
         this._feed_price = null;
         this._squeeze_price = null;
+        this._total_to_receive = null;
+        this._total_for_sale = null;
     }
 
     ne(order) {
@@ -575,6 +619,25 @@ class CallOrder {
 
     equals(order) {
         return !this.ne(order);
+    }
+
+    setTotalToReceive(total) {
+        this.total_to_receive = total;
+    }
+
+    setTotalForSale(total) {
+        this.total_for_sale = total;
+    }
+
+    totalToReceive({noCache = false} = {}) {
+        if (!noCache && this._total_to_receive) return this._total_to_receive;
+        this._total_to_receive = (this.total_to_receive || this.amountToReceive()).clone();
+        return this._total_to_receive;
+    }
+
+    totalForSale({noCache = false} = {}) {
+        if (!noCache && this._total_for_sale) return this._total_for_sale;
+        return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
     }
 }
 

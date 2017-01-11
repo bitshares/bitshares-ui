@@ -5,7 +5,8 @@ import market_utils from "common/market_utils";
 import ls from "common/localStorage";
 import {ChainStore} from "graphenejs-lib";
 import utils from "common/utils";
-import {LimitOrder, CallOrder, FeedPrice, SettleOrder, didOrdersChange} from "common/MarketClasses";
+import {LimitOrder, CallOrder, FeedPrice, SettleOrder, Asset,
+    didOrdersChange} from "common/MarketClasses";
 
 // import {
 //     SettleOrder
@@ -13,7 +14,8 @@ import {LimitOrder, CallOrder, FeedPrice, SettleOrder, didOrdersChange} from "co
 // from "./tcomb_structs";
 
 const nullPrice = {
-    getPrice: () => {return 0;}
+    getPrice: () => {return 0;},
+    sellPrice: () => {return 0;},
 };
 
 let marketStorage = new ls("__graphene__");
@@ -333,7 +335,6 @@ class MarketsStore {
     }
 
     onCancelLimitOrderSuccess(cancellations) {
-
         if (cancellations && cancellations.length) {
 
             let didUpdate = false;
@@ -352,6 +353,7 @@ class MarketsStore {
             }
 
             if (didUpdate) {
+                console.log("removed order");
                 // Update orderbook
                 this._orderBook(true, false);
 
@@ -572,22 +574,19 @@ class MarketsStore {
     _orderBook(limitsChanged = true, callsChanged = false) {
         // Loop over limit orders and return array containing bids
         let constructBids = (orderArray) => {
-            let bids = [];
-            orderArray.filter(a => {
+            let bids = orderArray.filter(a => {
                 return a.isBid();
             }).sort((a, b) => {
                 return a.getPrice() - b.getPrice();
-            }).forEach(order => {
-                bids.push({
-                    __tempOrder__: order
-                });
-            });
+            }).map(order => {
+                return order;
+            }).toArray();
 
             // Sum bids at same price
             if (bids.length > 1) {
                 for (let i = bids.length - 2; i >= 0; i--) {
-                    if (bids[i].__tempOrder__.getPrice() === bids[i + 1].__tempOrder__.getPrice()) {
-                        bids[i].__tempOrder__.sum(bids[i + 1].__tempOrder__);
+                    if (bids[i].getPrice() === bids[i + 1].getPrice()) {
+                        bids[i].sum(bids[i + 1]);
                         bids.splice(i + 1, 1);
                     }
                 }
@@ -597,23 +596,19 @@ class MarketsStore {
         };
         // Loop over limit orders and return array containing asks
         let constructAsks = (orderArray) => {
-            let asks = [];
-
-            orderArray.filter(a => {
+            let asks = orderArray.filter(a => {
                 return !a.isBid();
             }).sort((a, b) => {
                 return a.getPrice() - b.getPrice();
             }).map(order => {
-                asks.push({
-                    __tempOrder__: order
-                });
-            });
+                return order;
+            }).toArray();
 
             // Sum asks at same price
             if (asks.length > 1) {
                 for (let i = asks.length - 2; i >= 0; i--) {
-                    if (asks[i].__tempOrder__.getPrice() === asks[i + 1].__tempOrder__.getPrice()) {
-                        asks[i].__tempOrder__.sum(asks[i + 1].__tempOrder__);
+                    if (asks[i].getPrice() === asks[i + 1].getPrice()) {
+                        asks[i].sum(asks[i + 1]);
                         asks.splice(i + 1, 1);
                     }
                 }
@@ -644,57 +639,91 @@ class MarketsStore {
     }
 
     constructCalls (callsArray) {
-        let calls = [];
+        let calls;
         if (callsArray.size) {
-            callsArray
+            calls = callsArray
             .sort((a, b) => {
                 return a.getPrice() - b.getPrice();
-            }).forEach(order => {
+            }).map(order => {
                 if (this.invertedCalls) {
                     this.lowestCallPrice = !this.lowestCallPrice ? order.getPrice(false) : Math.max(this.lowestCallPrice, order.getPrice(false));
                 } else {
                     this.lowestCallPrice = !this.lowestCallPrice ? order.getPrice(false) : Math.min(this.lowestCallPrice, order.getPrice(false));
                 }
 
-                calls.push({
-                    __tempOrder__: order
-                });
-            });
+                return order;
+            }).toArray();
 
             // Sum calls at same price
             if (calls.length > 1) {
                 for (let i = calls.length - 2; i >= 0; i--) {
-                    calls[i].__tempOrder__ = calls[i].__tempOrder__.sum(calls[i + 1].__tempOrder__);
+                    calls[i] = calls[i].sum(calls[i + 1]);
                     calls.splice(i + 1, 1);
                 }
             }
+        } else {
+            calls = Immutable.Map();
         }
         return calls;
     }
 
     _combineOrders() {
-        const isBid = this.marketCallOrders.size && this.marketCallOrders.first().isBid();
-        if (isBid) {
-            this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
-            this.marketData.combinedAsks = this.marketData.asks.concat([]);
-        } else {
-            this.marketData.combinedBids = this.marketData.bids.concat([]);
-            this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
+        const hasCalls = !!this.marketCallOrders.size;
+        const isBid = hasCalls && this.marketCallOrders.first().isBid();
+        if (hasCalls) {
+            if (isBid) {
+                this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
+                this.marketData.combinedAsks = this.marketData.asks.concat([]);
+            } else {
+                this.marketData.combinedBids = this.marketData.bids.concat([]);
+                this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
+            }
         }
 
-        this.marketData.combinedBids = this.marketData.combinedBids.sort((a, b) => {
-            return b.__tempOrder__.getPrice() - a.__tempOrder__.getPrice();
+        let totalToReceive = new Asset({
+            asset_id: this.quoteAsset.get("id"),
+            precision: this.quoteAsset.get("precision")
         });
 
-        this.marketData.combinedAsks = this.marketData.combinedAsks.sort((a, b) => {
-            return a.__tempOrder__.getPrice() - b.__tempOrder__.getPrice();
+        let totalForSale = new Asset({
+            asset_id: this.baseAsset.get("id"),
+            precision: this.baseAsset.get("precision")
+        });
+
+        this.marketData.combinedBids.sort((a, b) => {
+            return b.getPrice() - a.getPrice();
+        }).forEach(a => {
+            totalToReceive.plus(a.amountToReceive());
+
+            totalForSale.plus(a.amountForSale());
+            a.setTotalForSale(totalForSale.clone());
+            a.setTotalToReceive(totalToReceive.clone());
+        });
+
+        totalToReceive = new Asset({
+            asset_id: this.baseAsset.get("id"),
+            precision: this.baseAsset.get("precision")
+        });
+
+        totalForSale = new Asset({
+            asset_id: this.quoteAsset.get("id"),
+            precision: this.quoteAsset.get("precision")
+        });
+
+        this.marketData.combinedAsks.sort((a, b) => {
+            return a.getPrice() - b.getPrice();
+        }).forEach(a => {
+            totalForSale.plus(a.amountForSale());
+            totalToReceive.plus(a.amountToReceive());
+            a.setTotalForSale(totalForSale.clone());
+            a.setTotalToReceive(totalToReceive.clone());
         });
 
         this.marketData.lowestAsk = !this.marketData.combinedAsks.length ? nullPrice :
-            this.marketData.combinedAsks[0].__tempOrder__;
+            this.marketData.combinedAsks[0];
 
         this.marketData.highestBid = !this.marketData.combinedBids.length ? nullPrice :
-            this.marketData.combinedBids[0].__tempOrder__;
+            this.marketData.combinedBids[0];
     }
 
     _depthChart() {
@@ -704,12 +733,12 @@ class MarketsStore {
         if (this.marketLimitOrders.size) {
 
             this.marketData.bids.forEach(order => {
-                bids.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountToReceive().getAmount({real: true})]);
-                totalBids += order.__tempOrder__.amountForSale().getAmount({real: true});
+                bids.push([order.getPrice(), order.amountToReceive().getAmount({real: true})]);
+                totalBids += order.amountForSale().getAmount({real: true});
             });
 
             this.marketData.asks.forEach(order => {
-                asks.push([order.__tempOrder__.getPrice(), order.__tempOrder__.amountForSale().getAmount({real: true})]);
+                asks.push([order.getPrice(), order.amountForSale().getAmount({real: true})]);
             });
 
             // Make sure the arrays are sorted properly
@@ -738,9 +767,9 @@ class MarketsStore {
         /* Flatten call orders if there any */
         if (this.marketData.calls.length) {
 
-            let callsAsBids = this.marketData.calls[0].__tempOrder__.isBid();
+            let callsAsBids = this.marketData.calls[0].isBid();
             this.marketData.calls.forEach(order => {
-                calls.push([order.__tempOrder__.getSqueezePrice(), order.__tempOrder__[order.__tempOrder__.isBid() ? "amountToReceive" : "amountForSale"]().getAmount({real: true})]);
+                calls.push([order.getSqueezePrice(), order[order.isBid() ? "amountToReceive" : "amountForSale"]().getAmount({real: true})]);
             });
 
             // Calculate total value of call orders

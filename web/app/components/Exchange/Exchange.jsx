@@ -13,7 +13,6 @@ import DepthHighChart from "./DepthHighChart";
 import { debounce } from "lodash";
 import { cloneDeep } from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
-import Translate from "react-translate-component";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
@@ -234,33 +233,59 @@ class Exchange extends React.Component {
 
     _getFee(asset) {
         let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
+        const coreFee = new Asset({
+            amount: fee
+        });
+        if (!asset || asset.get("id") === "1.3.0") return coreFee;
 
-        if (!asset || asset.get("id") === "1.3.0") return fee;
-        let cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
-        let coreAsset = ChainStore.getAsset("1.3.0");
-        if (!coreAsset) return 0;
-        let price = utils.convertPrice(coreAsset, cer, null, asset.get("id"));
+        const cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
 
-        let eqValue = utils.convertValue(price, fee, coreAsset, asset);
+        const cerBase = new Asset({
+            asset_id: cer.base.asset_id,
+            amount: cer.base.amount,
+            precision: ChainStore.getAsset(cer.base.asset_id).get("precision")
+        });
+        const cerQuote = new Asset({
+            asset_id: cer.quote.asset_id,
+            amount: cer.quote.amount,
+            precision: ChainStore.getAsset(cer.quote.asset_id).get("precision")
+        });
+        const cerPrice = new Price({
+            base: cerBase, quote: cerQuote
+        });
+        const convertedFee = coreFee.times(cerPrice);
 
-        return Math.floor(eqValue + 0.5);
+        return convertedFee;
+        // let coreAsset = ChainStore.getAsset("1.3.0");
+        // if (!coreAsset) return 0;
+        // let price = utils.convertPrice(coreAsset, cer, null, asset.get("id"));
+        //
+        // let eqValue = utils.convertValue(price, fee, coreAsset, asset)
+        // let feeAsset = new Asset({
+        //     asset_id: asset.get("id"),
+        //     precision: asset.get("precision")
+        // });
+        // let satValue = feeAsset.toSats(1) * eqValue + 0.5;
+        // feeAsset.setAmount({sats: satValue});
+        // console.log("eqValue:", eqValue, "satValue:", satValue, "getAmount:", feeAsset.getAmount({real: true}))
+        // return feeAsset;
     }
 
-    _verifyFee(fee, feeAsset, sellAsset, sellAmount, sellBalance, coreBalance) {
+    _verifyFee(fee, sellAmount, sellBalance, coreBalance) {
         let coreFee = this._getFee();
 
-        let sellPrecision = utils.get_asset_precision(sellAsset);
-        let sellSum = fee + parseInt(sellAmount * sellPrecision, 10);
-        if (feeAsset.get("id") === "1.3.0") {
-            if (coreFee <= coreBalance) {
+        let sellSum = fee.getAmount() + sellAmount;
+        console.log("sellSum:", sellSum, "sellAmount", sellAmount, sellBalance);
+        if (fee.asset_id === "1.3.0") {
+            if (coreFee.getAmount() <= coreBalance) {
                 return "1.3.0";
             } else {
                 return null;
             }
         } else {
             if (sellSum <= sellBalance) { // Sufficient balance in asset to pay fee
-                return feeAsset.get("id");
-            } else if (coreFee <= coreBalance && feeAsset.get("id") !== "1.3.0") { // Sufficient balance in core asset to pay fee
+                return fee.asset_id;
+            } else if (coreFee.getAmount() <= coreBalance && fee.asset_id !== "1.3.0") { // Sufficient balance in core asset to pay fee
                 return "1.3.0";
             } else {
                 return null; // Unable to pay fee in either asset
@@ -270,29 +295,18 @@ class Exchange extends React.Component {
 
     _createLimitOrderConfirm(buyAsset, sellAsset, sellBalance, coreBalance, feeAsset, type, short = true, e) {
         e.preventDefault();
-        let {highestBid, lowestAsk} = this.props;
+        let {highestBid, lowestAsk} = this.props.marketData;
         let current = this.state[type === "sell" ? "ask" : "bid"];
 
         sellBalance = current.for_sale.clone(sellBalance ? parseInt(ChainStore.getObject(sellBalance).toJS().balance, 10) : 0);
         coreBalance = new Asset({
-            asset_id: "1.3.0",
             amount: coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0
         });
 
-        console.log(current, "sellAsset:", sellAsset.get("id"), "sellBalance:", sellBalance, coreBalance);
+        let fee = this._getFee(feeAsset);
 
-        let sellPrecision = utils.get_asset_precision(sellAsset);
-
-        // Convert fee to relevant asset fee and check if user has sufficient balance
-        let feeAmount;
-        // if (sellAsset.get("id") !== "1.3.0") {
-        //     feeAmount = this._getFee(sellAsset);
-        // } else {
-        feeAmount = this._getFee(feeAsset);
-        // }
-
-        let feeID = this._verifyFee(feeAmount, feeAsset, sellAsset, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
-
+        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+        console.log("feeAsset:", feeAsset.toJS(), "fee", fee, "feeID", feeID);
         if (!feeID) {
             return notify.addNotification({
                 message: "Insufficient funds to pay fees",
@@ -301,16 +315,17 @@ class Exchange extends React.Component {
         }
 
         if (type === "buy" && lowestAsk) {
-            let diff = (100 * (this.state.bid.price.toReal() - lowestAsk.getPrice() / lowestAsk.getPrice()));
-            if (Math.abs(diff) > 25) {
+            let diff = this.state.bid.price.toReal() / lowestAsk.getPrice();
+            console.log("diff:", diff);
+            if (diff > 1.20) {
                 this.refs.buy.show();
                 return this.setState({
                     buyDiff: diff
                 });
             }
         } else if (type === "sell" && highestBid) {
-            let diff = (100 * (this.state.ask.price.toReal() - highestBid.getPrice() / highestBid.getPrice()));
-            if (Math.abs(diff) > 25) {
+            let diff = 1 / (this.state.ask.price.toReal() / highestBid.getPrice());
+            if (diff > 1.20) {
                 this.refs.sell.show();
                 return this.setState({
                     sellDiff: diff
@@ -320,24 +335,31 @@ class Exchange extends React.Component {
 
         let isPredictionMarket = sellAsset.getIn(["bitasset", "is_prediction_market"]);
 
-        // if ((current.for_sale.getAmount() * sellPrecision) > sellBalance && !isPredictionMarket) {
-        //     return notify.addNotification({
-        //         message: "Insufficient funds to place current. Required: " + current.for_sale.getAmount() + " " + sellAsset.get("symbol"),
-        //         level: "error"
-        //     });
-        // }
+        if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
+            return notify.addNotification({
+                message: "Insufficient funds to place current. Required: " + current.for_sale.getAmount() + " " + sellAsset.get("symbol"),
+                level: "error"
+            });
+        }
         //
-        // if (!(current.for_sale.getAmount() > 0 && buyAssetAmount > 0)) {
-        //     return notify.addNotification({
-        //         message: "Please enter a valid amount and price",
-        //         level: "error"
-        //     });
-        // }
+        if (!(current.for_sale.getAmount() > 0 && current.to_receive.getAmount() > 0)) {
+            return notify.addNotification({
+                message: "Please enter a valid amount and price",
+                level: "error"
+            });
+        }
         //
         // if (type === "sell" && isPredictionMarket && short) {
         //     return this._createPredictionShort(buyAsset, sellAsset, buyAssetAmount, order.for_sale.getAmount(), feeID);
         // }
 
+
+
+        this._createLimitOrder(type, feeID);
+    }
+
+    _createLimitOrder(type, feeID) {
+        let current = this.state[type === "sell" ? "ask" : "bid"];
         const order = new LimitOrderCreate({
             for_sale: current.for_sale,
             to_receive: current.to_receive,
@@ -348,69 +370,74 @@ class Exchange extends React.Component {
             }
         });
 
-        console.log("order:", order);
-        return MarketsActions.createLimitOrder2(order).then(() => {
-            console.log("order succeess");
+        console.log("order:", order.toObject());
+        return MarketsActions.createLimitOrder2(order).then((result) => {
+            if (result.error) {
+                if (result.error.message !== "wallet locked")
+                    notify.addNotification({
+                        message: "Unknown error. Failed to place order for " + current.to_receive.getAmount({real: true}) + " " + current.to_receive.asset_id,
+                        level: "error"
+                    });
+            }
+            // console.log("order success");
         }).catch(e => {
             console.log("order failed:", e);
         });
 
-        // this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
+        // let expiration = new Date();
+        // // TODO: Add selector for expiry
+        // expiration.setYear(expiration.getFullYear() + 5);
+        // MarketsActions.createLimitOrder(
+        //     this.props.currentAccount.get("id"),
+        //     utils.get_satoshi_amount(sellAssetAmount, sellAsset),
+        //     sellAsset,
+        //     utils.get_satoshi_amount(buyAssetAmount, buyAsset),
+        //     buyAsset,
+        //     expiration,
+        //     false, // fill or kill TODO: add fill or kill switch
+        //     feeID
+        // ).then(result => {
+        //     if (result.error) {
+        //         if (result.error.message !== "wallet locked")
+        //             notify.addNotification({
+        //                 message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
+        //                 level: "error"
+        //             });
+        //     }
+        // });
     }
 
-    _createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID) {
-        console.log("createLimitOrder:", buyAssetAmount, sellAssetAmount);
-        let expiration = new Date();
-        // TODO: Add selector for expiry
-        expiration.setYear(expiration.getFullYear() + 5);
-        MarketsActions.createLimitOrder(
-            this.props.currentAccount.get("id"),
-            utils.get_satoshi_amount(sellAssetAmount, sellAsset),
-            sellAsset,
-            utils.get_satoshi_amount(buyAssetAmount, buyAsset),
-            buyAsset,
-            expiration,
-            false, // fill or kill TODO: add fill or kill switch
-            feeID
-        ).then(result => {
-            if (result.error) {
-                if (result.error.message !== "wallet locked")
-                    notify.addNotification({
-                        message: "Unknown error. Failed to place order for " + buyAssetAmount + " " + buyAsset.symbol,
-                        level: "error"
-                    });
-            }
-        });
-    }
-
-    _forceBuy(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, value, sellBalance, coreBalance) {
+    _forceBuy(type, feeAsset, sellBalance, coreBalance) {
+        let current = this.state[type === "sell" ? "ask" : "bid"];
         // Convert fee to relevant asset fee and check if user has sufficient balance
-        let feeAmount;
-        if (sellAsset.get("id") !== "1.3.0") {
-            feeAmount = this._getFee(sellAsset);
+        sellBalance = current.for_sale.clone(sellBalance ? parseInt(ChainStore.getObject(sellBalance).get("balance"), 10) : 0);
+        coreBalance = new Asset({
+            amount: coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0
+        });
+        let fee = this._getFee(feeAsset);
+        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+
+        if (feeID) {
+            this._createLimitOrder(type, feeID);
         } else {
-            feeAmount = this._getFee();
-        }
-
-        let feeID = this._verifyFee(feeAmount, sellAsset, sellAssetAmount, sellBalance, coreBalance);
-
-        if (value && feeID) {
-            this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
+            console.error("Unable to pay fees, aborting limit order creation");
         }
     }
 
-    _forceSell(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, value, sellBalance, coreBalance) {
-        let feeAmount;
-        if (sellAsset.get("id") !== "1.3.0") {
-            feeAmount = this._getFee(sellAsset);
+    _forceSell(type, feeAsset, sellBalance, coreBalance) {
+        let current = this.state[type === "sell" ? "ask" : "bid"];
+        // Convert fee to relevant asset fee and check if user has sufficient balance
+        sellBalance = current.for_sale.clone(sellBalance ? parseInt(ChainStore.getObject(sellBalance).get("balance"), 10) : 0);
+        coreBalance = new Asset({
+            amount: coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0
+        });
+        let fee = this._getFee(feeAsset);
+        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+
+        if (feeID) {
+            this._createLimitOrder(type, feeID);
         } else {
-            feeAmount = this._getFee();
-        }
-
-        let feeID = this._verifyFee(feeAmount, sellAsset, sellAssetAmount, sellBalance, coreBalance);
-
-        if (value && feeID) {
-            this._createLimitOrder(buyAsset, sellAsset, buyAssetAmount, sellAssetAmount, feeID);
+            console.error("Unable to pay fees, aborting limit order creation");
         }
     }
 
@@ -551,10 +578,10 @@ class Exchange extends React.Component {
         this.setState({ leftOrderBook: !this.state.leftOrderBook });
     }
 
-    _currentPriceClick(type, price) {
+    _currentPriceClick(type, price, isCall) {
         const isBid = type === "bid";
         let current = this.state[type];
-        current.price = price[isBid ? "invert" : "clone"]();
+        current.price = price[(isBid && !isCall) ? "invert" : "clone"]();
         current.priceText = current.price.toReal();
         if (isBid) {
             this._setForSale(current) || this._setReceive(current);
@@ -564,30 +591,37 @@ class Exchange extends React.Component {
         this.forceUpdate();
     }
 
-    _orderbookClick(type, order) {
-        const isBid = order.__tempOrder__.isBid();
-        let toReceive = order.totalBidReceive || order.totalAskSell;
-        let forSale = order.totalBidSell || order.totalAskReceive;
+    _orderbookClick(order) {
+        const isBid = order.isBid();
 
+        /*
+        * Because we are using a bid order to construct an ask and vice versa,
+        * totalToReceive becomes forSale, and totalForSale becomes toReceive
+        */
+        let forSale = order.totalToReceive({noCache: true});
+        let toReceive = order.totalForSale({noCache: true});
+        console.log(isBid ? "bid" : "ask", "toReceive:", toReceive, "forSale", forSale);
         let newPrice = new Price({
-            base: forSale,
-            quote: toReceive
+            base: isBid ? toReceive : forSale,
+            quote: isBid ? forSale : toReceive
         });
 
         let current = this.state[isBid ? "bid" : "ask"];
         current.price = newPrice;
         current.priceText = newPrice.toReal();
 
-        let newState = {
+        let newState = { // If isBid is true, newState defines a new ask order and vice versa
             [isBid ? "ask" : "bid"]: {
-                for_sale: isBid ? toReceive : forSale,
-                forSaleText: isBid ? toReceive.getAmount({real: true}) : forSale.getAmount({real: true}),
-                to_receive: (isBid ? toReceive : forSale).times(order.__tempOrder__.sellPrice()),
-                toReceiveText: (isBid ? toReceive : forSale).times(order.__tempOrder__.sellPrice()).getAmount({real: true}),
+                for_sale: forSale,
+                forSaleText: forSale.getAmount({real: true}),
+                to_receive: forSale.times(order.sellPrice()),
+                toReceiveText: forSale.times(order.sellPrice()).getAmount({real: true}),
                 price: newPrice,
                 priceText: newPrice.toReal()
             }
         };
+
+        console.log(order.isBid() ? "bid" : "ask", order, "newState:", newState[isBid ? "ask" : "bid"]);
 
         if (isBid) {
             this._setForSale(current) || this._setReceive(current);
@@ -778,7 +812,7 @@ class Exchange extends React.Component {
             if (!balances[a.get("id")]) {
                 return false;
             };
-            return balances[a.get("id")].balance > balances[a.get("id")].fee;
+            return balances[a.get("id")].balance > balances[a.get("id")].fee.getAmount();
         });
 
         if (!sellFeeAssets.length) {
@@ -793,7 +827,7 @@ class Exchange extends React.Component {
             if (!balances[a.get("id")]) {
                 return false;
             };
-            return balances[a.get("id")].balance > balances[a.get("id")].fee;
+            return balances[a.get("id")].balance > balances[a.get("id")].fee.getAmount();
         });
 
         if (!buyFeeAssets.length) {
@@ -803,8 +837,8 @@ class Exchange extends React.Component {
             buyFeeAsset = buyFeeAssets[Math.min(buyFeeAssets.length - 1, this.state.buyFeeAssetIdx)];
         }
 
-        let sellFee = utils.round_number(utils.get_asset_amount(this._getFee(sellFeeAsset), sellFeeAsset), sellFeeAsset);
-        let buyFee = utils.round_number(utils.get_asset_amount(this._getFee(buyFeeAsset), buyFeeAsset), buyFeeAsset);
+        let sellFee = this._getFee(sellFeeAsset);
+        let buyFee = this._getFee(buyFeeAsset);
 
         return {
             sellFeeAsset,
@@ -1044,7 +1078,7 @@ class Exchange extends React.Component {
                 quotePrecision={quote.get("precision")}
                 totalPrecision={base.get("precision")}
                 currentPrice={lowestAsk.getPrice()}
-                currentPriceObject={lowestAsk.sell_price}
+                currentPriceObject={lowestAsk}
                 account={currentAccount.get("name")}
                 fee={buyFee}
                 feeAssets={buyFeeAssets}
@@ -1075,7 +1109,7 @@ class Exchange extends React.Component {
                 base={base}
                 amountChange={this._onInputSell.bind(this, "ask")}
                 priceChange={this._onInputPrice.bind(this, "ask")}
-                setPrice={this._currentPriceClick.bind(this, base, quote)}
+                setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputReceive.bind(this, "ask")}
                 balance={quoteBalance}
                 onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, quoteBalance, coreBalance, sellFeeAsset, "sell")}
@@ -1083,7 +1117,7 @@ class Exchange extends React.Component {
                 quotePrecision={quote.get("precision")}
                 totalPrecision={base.get("precision")}
                 currentPrice={highestBid.getPrice()}
-                currentPriceObject={highestBid.sell_price}
+                currentPriceObject={highestBid}
                 account={currentAccount.get("name")}
                 fee={sellFee}
                 feeAssets={sellFeeAssets}
@@ -1238,14 +1272,14 @@ class Exchange extends React.Component {
                                 <ConfirmOrderModal
                                     type="buy"
                                     ref="buy"
-                                    onForce={this._forceBuy.bind(this, quote, base, baseBalance, coreBalance)}
+                                    onForce={this._forceBuy.bind(this, "buy", buyFeeAsset, baseBalance, coreBalance)}
                                     diff={buyDiff}
                                 />
 
                                 <ConfirmOrderModal
                                     type="sell"
                                     ref="sell"
-                                    onForce={this._forceSell.bind(this, base, quote, quoteBalance, coreBalance)}
+                                    onForce={this._forceSell.bind(this, "sell", sellFeeAsset, quoteBalance, coreBalance)}
                                     diff={sellDiff}
                                 />
 

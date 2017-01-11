@@ -35,7 +35,7 @@
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
-    "settle_price": "This is the price at which settle orders will execute."  
+    "settle_price": "This is the price at which settle orders will execute."
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -781,7 +781,8 @@
     "more": "Find markets",
     "volume_24": "24hr Volume",
     "change": "Change",
-    "confirm": "Your order is %(diff)s% away from the current price, are you sure?",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "indicators": "Indicators",
     "rsi": "Relative Strength Index",
     "ema": "Exponential Moving Average",

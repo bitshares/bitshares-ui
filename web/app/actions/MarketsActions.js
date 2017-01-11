@@ -92,6 +92,10 @@ class MarketsActions {
         return (dispatch) => {
 
             let subscription = (subResult) => {
+                /* In the case of many market notifications arriving at the same time,
+                * we queue them in a batch here and dispatch them all at once at a frequency
+                * defined by "subBatchTime"
+                */
                 if (!dispatchSubTimeout) {
                     subBatchResults = subBatchResults.concat(subResult);
 
@@ -228,6 +232,7 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
+                    console.log("limit orders:", results[1]);
                     dispatch({
                         limits: results[1],
                         calls: results[2],
@@ -316,20 +321,16 @@ class MarketsActions {
         };
     }
 
-    createLimitOrder2(order, fee_asset_id = "1.3.0") {
+    createLimitOrder2(order) {
         var tr = wallet_api.new_transaction();
 
-        let feeAsset = ChainStore.getAsset(fee_asset_id);
-        if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
-            fee_asset_id = "1.3.0";
-        }
+        // let feeAsset = ChainStore.getAsset(fee_asset_id);
+        // if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
+        //     fee_asset_id = "1.3.0";
+        // }
 
         order.setExpiration();
         order = order.toObject();
-        order.fee = {
-            amount: 0,
-            asset_id: fee_asset_id
-        };
 
         tr.add_type_operation("limit_order_create", order);
 
@@ -418,12 +419,16 @@ class MarketsActions {
 
     cancelLimitOrderSuccess(orderID) {
         return (dispatch) => {
+            /* In the case of many cancel orders being issued at the same time,
+            * we batch them here and dispatch them all at once at a frequency
+            * defined by "dispatchCancelTimeout"
+            */
             if (!dispatchCancelTimeout) {
                 cancelBatchIDs = cancelBatchIDs.push(orderID);
                 dispatchCancelTimeout = setTimeout(() => {
-                    cancelBatchIDs = cancelBatchIDs.clear();
-                    dispatchCancelTimeout = null;
                     dispatch(cancelBatchIDs.toJS());
+                    dispatchCancelTimeout = null;
+                    cancelBatchIDs = cancelBatchIDs.clear();
                 }, cancelBatchTime);
             } else {
                 cancelBatchIDs = cancelBatchIDs.push(orderID);
