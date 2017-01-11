@@ -35,7 +35,8 @@
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
-    "settle_price": "This is the price at which settle orders will execute."
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -201,7 +202,8 @@
       "private": "Private key (WIF - Wallet Import Format)",
       "show": "show",
       "brain": "Brainkey position",
-      "from": "Imported from account"
+      "from": "Imported from account",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "Proxy",

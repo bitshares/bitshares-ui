@@ -29,7 +29,8 @@
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
-    "settle_price": "This is the price at which settle orders will execute."
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
   },
   "account": {
     "welcome": "Bienvenido a Graphene",
@@ -99,7 +100,8 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy": "Convertir en Apoderado de sus Votos a",

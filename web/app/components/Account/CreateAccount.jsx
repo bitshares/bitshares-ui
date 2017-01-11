@@ -79,7 +79,7 @@ class CreateAccount extends React.Component {
 
             FetchChain("getAccount", this.state.accountName).then(() => {
                 console.log("onFinishConfirm");
-                this.props.router.push(`/wallet/backup/create?newAccount=true`);
+                this.props.router.push("/wallet/backup/create?newAccount=true");
             });
         }
     }
@@ -96,8 +96,10 @@ class CreateAccount extends React.Component {
                 } else { // Account registered by the faucet
                     console.log("account registed by faucet");
                     // this.props.router.push(`/wallet/backup/create?newAccount=true`);
-                    this.setState({
-                        step: 2
+                    FetchChain("getAccount", name).then(() => {
+                        this.setState({
+                            step: 2
+                        });
                     });
                     // this.props.router.push(`/account/${name}/overview`);
 

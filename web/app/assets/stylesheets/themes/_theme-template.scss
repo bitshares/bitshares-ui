@@ -775,6 +775,10 @@
           background-size: 8px 8px;
           background-color: $header-color;
           font-size: 12px;
+
+          > option {
+              color: $chat-text-color;
+          }
       }
   }
 

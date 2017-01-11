@@ -110,7 +110,7 @@
     "webpack": "^2.2.0-rc.3",
     "webpack-dev-middleware": "^1.9.0",
     "webpack-hot-middleware": "^2.14.0",
-    "worker-loader": "^0.6.0"
+    "worker-loader": "^0.7.1"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",

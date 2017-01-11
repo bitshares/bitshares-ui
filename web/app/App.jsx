@@ -82,17 +82,19 @@ class App extends React.Component {
             this.refs.browser_modal.show();
         }
 
-        this.props.router.listen(() => {
-            setTimeout(this._rebuildTooltips, 1250);
-        });
+        this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
     }
 
     _rebuildTooltips() {
-        if (this.refs.tooltip) {
-            this.refs.tooltip.globalRebuild();
-        }
+        ReactTooltip.hide();
+
+        setTimeout(() => {
+            if (this.refs.tooltip) {
+                this.refs.tooltip.globalRebuild();
+            }
+        }, 1500);
     }
 
     /** Usage: NotificationActions.[success,error,warning,info] */

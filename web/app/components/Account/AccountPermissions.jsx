@@ -19,7 +19,7 @@ class AccountPermissions extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {isOwner: false};
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
     }
@@ -102,6 +102,20 @@ class AccountPermissions extends React.Component {
             s.memo_key !== s.prev_memo_key;
     }
 
+    didChange(type, s = this.state) {
+        if (type === "memo") {
+            return s.memo_key !== s.prev_memo_key;
+        }
+        let didChange = false;
+        ["_keys", "_active_addresses", "_accounts", "_threshold"].forEach(key => {
+            let current = type + key;
+            if (s[current] !== s["prev_" + current]) {
+                didChange = true;
+            }
+        });
+        return didChange;
+    }
+
     onPublish() {
         let s = this.state;
         let updated_account = this.props.account.toJS();
@@ -110,20 +124,27 @@ class AccountPermissions extends React.Component {
         updated_account.fee = {
             amount: 0,
             asset_id: accountUtils.getFinalFeeAsset(updated_account.id, "account_update")
+        };
+
+        let updateObject = {
+            account: updated_account.id
+        };
+
+        if (this.didChange("active")) {
+            updateObject.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_addresses, s.active_weights);
+        }
+        /* Also include owner keys if the user has indicated it is necessary using the checkbox */ 
+        if (this.didChange("owner") || this.state.isOwner) {
+            updateObject.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_addresses, s.owner_weights);
+        }
+        if (s.memo_key && this.didChange("memo") && this.isValidPubKey(s.memo_key)) {
+            updateObject.new_options = {memo_key: s.memo_key};
         }
 
-        updated_account.new_options = updated_account.options;
-        delete updated_account.options;
-        updated_account.account = updated_account.id;
-        updated_account.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_addresses, s.active_weights);
-        updated_account.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_addresses, s.owner_weights);
-        if (s.memo_key && s.memo_key !== s.prev_memo_key && this.isValidPubKey(s.memo_key)) {
-            updated_account.new_options.memo_key = s.memo_key;
-        }
-        //console.log("-- AccountPermissions.onPublish -->", updated_account);
+        // console.log("-- AccountPermissions.onPublish -->", updateObject, s.memo_key);
         var tr = wallet_api.new_transaction();
-        tr.add_type_operation("account_update", updated_account);
-        WalletDb.process_transaction(tr, null, true);
+        tr.add_type_operation("account_update", updateObject);
+        WalletDb.process_transaction(tr, null ,true);
     }
 
     isValidPubKey(value) {
@@ -235,6 +256,24 @@ class AccountPermissions extends React.Component {
                             />
                             <br/>
                             {error1 ? <div className="content-block has-error">{error1}</div> : null}
+
+                            <div>
+                                <label
+                                    style={{
+                                        display: "inline-block",
+                                        position: "relative",
+                                        top: -10,
+                                        margin: 0
+                                    }}
+                                    data-place="bottom"
+                                    data-tip={counterpart.translate("tooltip.sign_owner")}
+                                ><span ><Translate content="account.perm.sign_owner" />:&nbsp;&nbsp;</span>
+                                </label>
+                                <div className="switch" onClick={() => {this.setState({isOwner: !this.state.isOwner});}}>
+                                    <input type="checkbox" checked={this.state.isOwner} />
+                                    <label />
+                                </div>
+                            </div>
 
                     </Tab>
 

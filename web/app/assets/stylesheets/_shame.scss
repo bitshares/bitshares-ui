@@ -324,6 +324,7 @@ label.inline {
 .__react_component_tooltip {
   z-index: 2000 !important;
   border: 1px solid grey;
+  max-width: 20rem;
 }
 
 .asset-prefix-replaced {
@@ -379,4 +380,8 @@ input[type=number] {
   a:active.button, a:hover.button {
     background-color: transparent !important;
   }
+}
+
+.clickable {
+    cursor: pointer;
 }

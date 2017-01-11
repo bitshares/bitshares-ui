@@ -48,7 +48,7 @@ class ProposalApproveModal extends React.Component {
 
    }
 
-   _onProposalAction(oldProposal) {
+    _onProposalAction(oldProposal) {
         let proposalObject = oldProposal.toJS();
         let {active, key, owner, payee} = this.state;
 
@@ -65,6 +65,8 @@ class ProposalApproveModal extends React.Component {
 
         let isAdd = this.props.action === "approve";
 
+        let neededKeys = [];
+
         ["active", "owner", "key"].forEach(auth_type => {
             let value = this.state[auth_type];
             if (value) {
@@ -72,17 +74,19 @@ class ProposalApproveModal extends React.Component {
                 if ((isAdd && !hasValue) || (!isAdd && hasValue)) {
                     if (this.props.action === "approve") {
                         proposal[`${auth_type}_approvals_to_add`] = [value];
+                        if (auth_type === "key") neededKeys.push(value);
                     } else if (this.props.action === "reject") {
                         proposal[`${auth_type}_approvals_to_remove`] = [value];
+                        if (auth_type === "key") neededKeys.push(value);
                     }
                 }
 
             }
-        })
+        });
 
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("proposal_update", proposal);
-        WalletDb.process_transaction(tr, null, true);
+        WalletDb.process_transaction(tr, null, true, neededKeys);
 
         ZfApi.publish(this.props.modalId, "close");
     }
