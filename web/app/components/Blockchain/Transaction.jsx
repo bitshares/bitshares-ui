@@ -16,7 +16,6 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import MemoText from "./MemoText";
 import {ChainTypes} from "graphenejs-lib";
 let {operations} = ChainTypes;
 
@@ -184,7 +183,9 @@ class Transaction extends React.Component {
                                     base_asset={op[1].amount_to_sell.asset_id}
                                     quote_asset={op[1].min_to_receive.asset_id}
                                     base_amount={op[1].amount_to_sell.amount}
-                                    quote_amount={op[1].min_to_receive.amount} />
+                                    quote_amount={op[1].min_to_receive.amount}
+                                    noPopOver
+                                />
                             </td>
                         </tr>
                     );
@@ -536,6 +537,7 @@ class Transaction extends React.Component {
                                         quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
                                         base_amount={op[1].new_options.core_exchange_rate.base.amount}
                                         quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
+                                        noPopOver
                                     />
                                 </td>
                             </tr>
@@ -735,6 +737,7 @@ class Transaction extends React.Component {
                                     quote_asset={feed.core_exchange_rate.quote.asset_id}
                                     base_amount={feed.core_exchange_rate.base.amount}
                                     quote_amount={feed.core_exchange_rate.quote.amount}
+                                    noPopOver
                                 />
                             </td>
                         </tr>
@@ -749,6 +752,7 @@ class Transaction extends React.Component {
                                     quote_asset={feed.settlement_price.quote.asset_id}
                                     base_amount={feed.settlement_price.base.amount}
                                     quote_amount={feed.settlement_price.quote.amount}
+                                    noPopOver
                                 />
                             </td>
                         </tr>

@@ -75,7 +75,7 @@ class FormattedPrice extends React.Component {
     render() {
 
         let {base_asset, quote_asset, base_amount, quote_amount,
-          marketDirections, marketId, hide_symbols} = this.props;
+          marketDirections, marketId, hide_symbols, noPopOver} = this.props;
 
         let invertPrice = marketDirections.get(marketId);
 
@@ -109,10 +109,10 @@ class FormattedPrice extends React.Component {
                 />
             );
         }
-        let symbols = hide_symbols ? '' :
-                      (<span><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+        let symbols = hide_symbols ? "" :
+                      (<span className={noPopOver ? "clickable" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
 
-        const currency_popover_body = !hide_symbols ? (
+        const currency_popover_body = !noPopOver && !hide_symbols ? (
           <div>
             <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div>
             <div className="button" onClick={this.goToMarket.bind(this)}><Translate content="exchange.to_market" /></div>
