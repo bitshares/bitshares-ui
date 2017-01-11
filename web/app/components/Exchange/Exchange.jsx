@@ -1225,7 +1225,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(showCallLimit && feedPrice) && feedPrice.toReal()}
+                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
@@ -1348,7 +1348,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={200}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={feedPrice && feedPrice.getSqueezePrice({real: true})}
+                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.getSqueezePrice({real: true})}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}

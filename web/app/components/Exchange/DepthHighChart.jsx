@@ -301,14 +301,14 @@ class DepthHighChart extends React.Component {
         }
 
         // Add settle orders
-        if (settlementPrice && (flat_settles && flat_settles.length)) {
-            flat_settles.forEach(settle => {
-                settle[0] *= power;
-            });
+        if (settlementPrice && (flatSettles && flatSettles.length)) {
+            // flat_settles.forEach(settle => {
+            //     settle[0] *= power;
+            // });
 
             config.series.push({
                 name: `Settle ${quoteSymbol}`,
-                data: flat_settles,
+                data: flatSettles,
                 color: colors[theme].settleColor,
                 fillColor: colors[theme].settleFillColor
             });
