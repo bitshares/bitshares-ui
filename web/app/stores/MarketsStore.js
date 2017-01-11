@@ -145,6 +145,7 @@ class MarketsStore {
 
     onClearMarket() {
         this.activeMarket = null;
+        this.is_prediction_market = false;
         this.marketLimitOrders = this.marketLimitOrders.clear();
         this.marketCallOrders = this.marketCallOrders.clear();
         this.feedPrice = null;
@@ -269,7 +270,7 @@ class MarketsStore {
             result.calls.forEach(call => {
                 ChainStore._updateObject(call, false, false);
                 try {
-                    let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice, "short_backing_asset" in this.bitasset_options);
+                    let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice, this.is_prediction_market);
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
@@ -463,13 +464,17 @@ class MarketsStore {
         let settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
         if (!settlePrice) {
             this.bitasset_options = null;
+            this.is_prediction_market = false;
             return null;
         }
-        let sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
+
         try {
+            let sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
+
+            this.is_prediction_market = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "is_prediction_market"], false);
             this.bitasset_options = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "options"]).toJS();
             /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
-            if ("short_backing_asset" in this.bitasset_options && settlePrice.getIn(["base", "asset_id"]) === settlePrice.getIn(["quote", "asset_id"])) {
+            if (this.is_prediction_market && settlePrice.getIn(["base", "asset_id"]) === settlePrice.getIn(["quote", "asset_id"])) {
                 const backingAsset = this.bitasset_options.short_backing_asset;
                 if (!assets[backingAsset]) assets[backingAsset] = {precision: this.quoteAsset.get("precision")};
                 settlePrice = settlePrice.setIn(["base", "amount"], 1);
