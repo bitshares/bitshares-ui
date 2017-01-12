@@ -64,8 +64,8 @@ class OrderRow extends React.Component {
                     <PriceText preFormattedPrice={price} />
                     {priceSymbol}
                 </td>
-                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
-                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision"))} {amountSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision"))} {valueSymbol}</td>
                 <td style={{width: "28%"}}><FormattedDate
                     value={order.expiration}
                     format="short"

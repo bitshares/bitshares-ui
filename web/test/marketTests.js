@@ -159,6 +159,20 @@ describe("Asset", function() {
         assert.equal(asset2.times(price3).getAmount({real: true}), 13750, "Asset amount should equal 13750");
     });
 
+    it("Rounds up when multiplying for bid orders", function() {
+        let forSale = new Asset({
+            amount: 40000,
+            asset_id: "1.3.22",
+            precision: 4
+        });
+        let price = new Price({
+            base: new Asset({asset_id: "1.3.22", amount: 150000, precision: 4}),
+            quote: new Asset({amount: 535406800})
+        });
+        let toReceive = forSale.times(price, true);
+        assert.equal(toReceive.getAmount(), 142775147);
+    });
+
     it("Throws when multiplied with an incorrect price", function() {
         let asset = new Asset({asset_id: "1.3.0", amount: 100});
         let price = new Price({
@@ -640,9 +654,9 @@ describe("LimitOrder", function() {
         let order5 = new LimitOrder(o3, assets, "1.3.0");
         let order6 = new LimitOrder(o4, assets, "1.3.0");
 
-        assert.equal(order3.amountToReceive().getAmount(), 3154);
+        assert.equal(order3.amountToReceive().getAmount(), 3154, "As an ask, amountToReceive should equal 3154");
         assert.equal(order4.amountToReceive().getAmount(), 1, "Order4 should equal 1");
-        assert.equal(order5.amountToReceive().getAmount(), 3154);
+        assert.equal(order5.amountToReceive().getAmount(), 3155, "As a bid, amountToReceive should equal 3155");
         assert.equal(order6.amountToReceive().getAmount(), 1, "Order6 should equal 1");
 
     });

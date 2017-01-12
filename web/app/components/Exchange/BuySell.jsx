@@ -197,7 +197,7 @@ class BuySell extends React.Component {
                                                 <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
                                                 <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
-                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject.sellPrice(), currentPriceObject.isCall())}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject.sellPrice())}>
                                                     <PriceText price={currentPrice} quote={quote} base={base} /> <AssetName name={base.get("symbol")} />
                                                     </span>
                                                 </td>) : null}

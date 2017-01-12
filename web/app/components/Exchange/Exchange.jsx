@@ -82,26 +82,6 @@ class Exchange extends React.Component {
             buySellOpen: ws.get("buySellOpen", true),
             bid,
             ask,
-            buyPrice: {
-                quote: {
-                    asset_id: props.quoteAsset.get("id"),
-                    amount: 0
-                },
-                base: {
-                    asset_id: props.baseAsset.get("id"),
-                    amount: 0
-                }
-            },
-            sellPrice: {
-                quote: {
-                    asset_id: props.baseAsset.get("id"),
-                    amount: 0
-                },
-                base: {
-                    asset_id: props.quoteAsset.get("id"),
-                    amount: 0
-                }
-            },
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
             showDepthChart: ws.get("showDepthChart", false),
@@ -229,26 +209,12 @@ class Exchange extends React.Component {
         const convertedFee = coreFee.times(cerPrice);
 
         return convertedFee;
-        // let coreAsset = ChainStore.getAsset("1.3.0");
-        // if (!coreAsset) return 0;
-        // let price = utils.convertPrice(coreAsset, cer, null, asset.get("id"));
-        //
-        // let eqValue = utils.convertValue(price, fee, coreAsset, asset)
-        // let feeAsset = new Asset({
-        //     asset_id: asset.get("id"),
-        //     precision: asset.get("precision")
-        // });
-        // let satValue = feeAsset.toSats(1) * eqValue + 0.5;
-        // feeAsset.setAmount({sats: satValue});
-        // console.log("eqValue:", eqValue, "satValue:", satValue, "getAmount:", feeAsset.getAmount({real: true}))
-        // return feeAsset;
     }
 
     _verifyFee(fee, sellAmount, sellBalance, coreBalance) {
         let coreFee = this._getFee();
 
         let sellSum = fee.getAmount() + sellAmount;
-        console.log("sellSum:", sellSum, "sellAmount", sellAmount, sellBalance);
         if (fee.asset_id === "1.3.0") {
             if (coreFee.getAmount() <= coreBalance) {
                 return "1.3.0";
@@ -279,7 +245,6 @@ class Exchange extends React.Component {
         let fee = this._getFee(feeAsset);
 
         let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
-        console.log("feeAsset:", feeAsset.toJS(), "fee", fee, "feeID", feeID);
         if (!feeID) {
             return notify.addNotification({
                 message: "Insufficient funds to pay fees",
@@ -289,7 +254,6 @@ class Exchange extends React.Component {
 
         if (type === "buy" && lowestAsk) {
             let diff = this.state.bid.price.toReal() / lowestAsk.getPrice();
-            console.log("diff:", diff);
             if (diff > 1.20) {
                 this.refs.buy.show();
                 return this.setState({
@@ -343,7 +307,7 @@ class Exchange extends React.Component {
             }
         });
 
-        console.log("order:", order.toObject());
+        console.log("order:", JSON.stringify(order.toObject()));
         return MarketsActions.createLimitOrder2(order).then((result) => {
             if (result.error) {
                 if (result.error.message !== "wallet locked")
@@ -483,21 +447,10 @@ class Exchange extends React.Component {
             depthLine: bid.price.toReal()
         };
 
-        this._setForSale(bid) || this._setReceive(bid);
+        this._setForSale(bid, true) || this._setReceive(bid, true);
         this._setReceive(ask) || this._setForSale(ask);
 
         this.setState(newState);
-    }
-
-    _addZero(value) {
-        if (typeof value === "number") {
-            value = value.toString();
-        }
-        if (value.length === 1 && value === ".") {
-            return "0.";
-        }
-
-        return value;
     }
 
     _flipBuySell() {
@@ -514,40 +467,6 @@ class Exchange extends React.Component {
         });
 
         this.setState({ buySellOpen: !this.state.buySellOpen });
-    }
-
-    getSellAmount(price, total = 0, satAmount) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        if (!satAmount) {
-            satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);
-        }
-        return ((satAmount / price.base.amount) * price.quote.amount) / amountPrecision;
-    }
-
-    getSellTotal(price, amount = 0, satAmount) {
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        if (!satAmount) {
-            satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
-        }
-        return ((satAmount / price.quote.amount) * price.base.amount) / totalPrecision;
-    }
-
-    getBuyAmount(price, total = 0, satAmount) {
-        let amountPrecision = utils.get_asset_precision(this.props.quoteAsset.get("precision"));
-        if (!satAmount) {
-            satAmount = utils.get_satoshi_amount(total, this.props.baseAsset);
-        }
-
-        return ((satAmount / price.quote.amount) * price.base.amount) / amountPrecision;
-    }
-
-    getBuyTotal(price, amount = 0, satAmount) {
-        let totalPrecision = utils.get_asset_precision(this.props.baseAsset.get("precision"));
-        if (!satAmount) {
-            satAmount = utils.get_satoshi_amount(amount, this.props.quoteAsset);
-        }
-
-        return (Math.floor(0.5 + (satAmount / price.base.amount) * price.quote.amount)) / totalPrecision;
     }
 
     _toggleCharts() {
@@ -569,12 +488,12 @@ class Exchange extends React.Component {
     _currentPriceClick(type, price, isCall) {
         const isBid = type === "bid";
         let current = this.state[type];
-        current.price = price[(isBid && !isCall) ? "invert" : "clone"]();
+        current.price = price[(isBid) ? "invert" : "clone"]();
         current.priceText = current.price.toReal();
         if (isBid) {
-            this._setForSale(current) || this._setReceive(current);
+            this._setForSale(current, isBid) || this._setReceive(current, isBid);
         } else {
-            this._setReceive(current) || this._setForSale(current);
+            this._setReceive(current, isBid) || this._setForSale(current, isBid);
         }
         this.forceUpdate();
     }
@@ -588,7 +507,6 @@ class Exchange extends React.Component {
         */
         let forSale = order.totalToReceive({noCache: true});
         let toReceive = order.totalForSale({noCache: true});
-        console.log(isBid ? "bid" : "ask", "toReceive:", toReceive, "forSale", forSale);
         let newPrice = new Price({
             base: isBid ? toReceive : forSale,
             quote: isBid ? forSale : toReceive
@@ -609,12 +527,10 @@ class Exchange extends React.Component {
             }
         };
 
-        console.log(order.isBid() ? "bid" : "ask", order, "newState:", newState[isBid ? "ask" : "bid"]);
-
         if (isBid) {
-            this._setForSale(current) || this._setReceive(current);
+            this._setForSale(current, isBid) || this._setReceive(current, isBid);
         } else {
-            this._setReceive(current) || this._setForSale(current);
+            this._setReceive(current, isBid) || this._setForSale(current, isBid);
         }
         this.setState(newState);
     }
@@ -629,65 +545,6 @@ class Exchange extends React.Component {
 
     _onSelectIndicators() {
         this.refs.indicators.show();
-    }
-
-    _getBuyPrice(price) {
-        let integerRatio = market_utils.priceToObject(price, "ask");
-        let { baseAsset, quoteAsset } = this.props;
-        let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
-        let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
-
-        return {
-            quote: {
-                asset_id: baseAsset.get("id"),
-                amount: integerRatio.base * basePrecision
-            },
-            base: {
-                asset_id: quoteAsset.get("id"),
-                amount: integerRatio.quote * quotePrecision
-            }
-        };
-    }
-
-    _getDisplayPrice(type, priceObject) {
-        let { quoteAsset, baseAsset } = this.props;
-        let price;
-
-        switch (type) {
-        case "bid":
-            price = utils.get_asset_price(priceObject.quote.amount, baseAsset, priceObject.base.amount, quoteAsset);
-            price = market_utils.limitByPrecision(this._addZero(price), {precision: SATOSHI}, false);
-            return isNaN(price) ? 0 : price;
-
-        case "ask":
-            price = utils.get_asset_price(priceObject.base.amount, baseAsset, priceObject.quote.amount, quoteAsset);
-            price = market_utils.limitByPrecision(this._addZero(price), {precision: SATOSHI}, false);
-            return isNaN(price) ? 0 : price;
-
-        default:
-            break;
-        }
-
-        return price;
-    }
-
-    _getSellPrice(price) {
-        let integerRatio = market_utils.priceToObject(price, "bid");
-        let { baseAsset, quoteAsset } = this.props;
-
-        let quotePrecision = utils.get_asset_precision(quoteAsset.get("precision"));
-        let basePrecision = utils.get_asset_precision(baseAsset.get("precision"));
-
-        return {
-            quote: {
-                asset_id: baseAsset.get("id"),
-                amount: integerRatio.base * quotePrecision
-            },
-            base: {
-                asset_id: quoteAsset.get("id"),
-                amount: integerRatio.quote * basePrecision
-            }
-        };
     }
 
     _getSettlementInfo() {
@@ -847,18 +704,18 @@ class Exchange extends React.Component {
         });
     }
 
-    _setReceive(state) {
+    _setReceive(state, isBid) {
         if (state.price.isValid() && state.for_sale.hasAmount()) {
-            state.to_receive = state.for_sale.times(state.price);
+            state.to_receive = state.for_sale.times(state.price, isBid);
             state.toReceiveText = state.to_receive.getAmount({real: true}).toString();
             return true;
         }
         return false;
     }
 
-    _setForSale(state) {
+    _setForSale(state, isBid) {
         if (state.price.isValid() && state.to_receive.hasAmount()) {
-            state.for_sale = state.to_receive.times(state.price);
+            state.for_sale = state.to_receive.times(state.price, isBid);
             state.forSaleText = state.for_sale.getAmount({real: true}).toString();
             return true;
         }
@@ -879,16 +736,17 @@ class Exchange extends React.Component {
 
     _onInputPrice(type, e) {
         let current = this.state[type];
+        const isBid = type === "bid";
         current.price = new Price({
-            base: current[type === "bid" ? "for_sale" : "to_receive"],
-            quote: current[type === "bid" ? "to_receive" : "for_sale"],
+            base: current[isBid ? "for_sale" : "to_receive"],
+            quote: current[isBid ? "to_receive" : "for_sale"],
             real: parseFloat(e.target.value) || 0
         });
 
-        if (type === "bid") {
-            this._setForSale(current) || this._setReceive(current);
+        if (isBid) {
+            this._setForSale(current, isBid) || this._setReceive(current, isBid);
         } else {
-            this._setReceive(current) || this._setForSale(current);
+            this._setReceive(current, isBid) || this._setForSale(current, isBid);
         }
 
         current.priceText = e.target.value;
@@ -897,10 +755,11 @@ class Exchange extends React.Component {
 
     _onInputSell(type, e) {
         let current = this.state[type];
+        const isBid = type === "bid";
         current.for_sale.setAmount({real: parseFloat(e.target.value) || 0});
 
         if (current.price.isValid()) {
-            this._setReceive(current);
+            this._setReceive(current, isBid);
         } else {
             this._setPrice(current);
         }
@@ -911,10 +770,11 @@ class Exchange extends React.Component {
 
     _onInputReceive(type, e) {
         let current = this.state[type];
+        const isBid = type === "bid";
         current.to_receive.setAmount({real: parseFloat(e.target.value) || 0});
 
         if (current.price.isValid()) {
-            this._setForSale(current);
+            this._setForSale(current, isBid);
         } else {
             this._setPrice(current);
         }

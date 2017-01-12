@@ -42,7 +42,7 @@ class Asset {
         if (real && typeof real === "number") {
             amount = this.toSats(real);
         }
-        this.amount = amount;
+        this.amount = Math.floor(amount);
         this.precision = precision;
     }
 
@@ -51,11 +51,11 @@ class Asset {
     }
 
     toSats(amount = 1) { // Return the full integer amount in 'satoshis'
-        return amount * this.satoshi;
+        return Math.floor(amount * this.satoshi);
     }
 
     setAmount({sats, real}) {
-        if (!sats && !real) {
+        if (typeof sats !== "number" && typeof real !== "number") {
             throw new Error("Invalid arguments for setAmount");
         }
         if (typeof real !== "undefined" && typeof real === "number") {
@@ -110,13 +110,32 @@ class Asset {
         return this.getAmount() < asset.getAmount();
     }
 
-    times(p) { // asset amount times a price p
+    times(p, isBid = false) { // asset amount times a price p
+        let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            let amount = Math.floor((this.amount * p.quote.amount) / p.base.amount);
+            temp = (this.amount * p.quote.amount) / p.base.amount;
+            amount = Math.floor(temp);
+            /*
+            * Sometimes prices are inexact for the relevant amounts, in the case
+            * of bids this means we need to round up in order to pay 1 sat more
+            * than the floored price, if we don't do this the orders don't match
+            */
+            if (isBid && temp !== amount) {
+                amount += 1;
+            }
             if (amount === 0) amount = 1;
             return new Asset({asset_id: p.quote.asset_id, amount, precision: p.quote.precision});
         } else if (this.asset_id === p.quote.asset_id) {
-            let amount = Math.floor((this.amount * p.base.amount) / p.quote.amount);
+            temp = (this.amount * p.base.amount) / p.quote.amount;
+            amount = Math.floor(temp);
+            /*
+            * Sometimes prices are inexact for the relevant amounts, in the case
+            * of bids this means we need to round up in order to pay 1 sat more
+            * than the floored price, if we don't do this the orders don't match
+            */
+            if (isBid && temp !== amount) {
+                amount += 1;
+            }
             if (amount === 0) amount = 1;
             return new Asset({asset_id: p.base.asset_id, amount, precision: p.base.precision});
         }
@@ -427,19 +446,14 @@ class LimitOrder {
         });
     }
 
-    amountToReceive() {
+    amountToReceive(isBid = this.isBid()) {
         if (this._to_receive) return this._to_receive;
-        this._to_receive = this.amountForSale().times(this.sell_price);
+        this._to_receive = this.amountForSale().times(this.sell_price, isBid);
         return this._to_receive;
     }
 
     sum(order) {
         this.for_sale += order.for_sale;
-        this._clearCache();
-    }
-
-    _clearCache() {
-        this._to_receive = null;
         this._for_sale = null;
         this._total_to_receive = null;
         this._total_for_sale = null;
@@ -462,6 +476,7 @@ class LimitOrder {
 
     setTotalForSale(total) {
         this.total_for_sale = total;
+        this._total_to_receive = null;
     }
 
     totalToReceive({noCache = false} = {}) {
@@ -571,8 +586,8 @@ class CallOrder {
 
     sellPrice(squeeze = true) {
         if (squeeze) {
-            console.log("this.feed_price,", this.feed_price, this.feed_price.getSqueezePrice(), this.feed_price.getSqueezePrice().toReal())
-            return this.feed_price.getSqueezePrice();
+            return this.isBid() ? this.feed_price.getSqueezePrice() :
+                this.feed_price.getSqueezePrice().invert();
         }
         return this.call_price;
     }
@@ -591,9 +606,9 @@ class CallOrder {
         });
     }
 
-    amountToReceive() {
+    amountToReceive(isBid = this.isBid()) {
         if (this._to_receive) return this._to_receive;
-        return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice());
+        return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice(), isBid);
     }
 
     sum(order) {
@@ -678,7 +693,7 @@ class SettleOrder extends LimitOrder {
     }
 
     amountToReceive() {
-        let to_receive = this.for_sale.times(this.feed_price);
+        let to_receive = this.for_sale.times(this.feed_price, this.isBid());
         to_receive.setAmount({sats: to_receive.getAmount() * ((GRAPHENE_100_PERCENT - this.offset_percent) / GRAPHENE_100_PERCENT) });
         return this._to_receive = to_receive;
     }

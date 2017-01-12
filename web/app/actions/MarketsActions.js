@@ -212,6 +212,7 @@ class MarketsActions {
                 startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
                 startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
                 endDate.setDate(endDate.getDate() + 1);
+                console.time("Fetch market data");
                 return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, base.get("id"), quote.get("id")
@@ -232,6 +233,7 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
+                    console.timeEnd("Fetch market data");
                     dispatch({
                         limits: results[1],
                         calls: results[2],

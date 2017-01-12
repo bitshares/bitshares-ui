@@ -139,7 +139,6 @@ class MarketsStore {
     }
 
     onSwitchMarket() {
-        console.log("onSwitchMarket:", false);
         this.marketReady = false;
     }
 
@@ -207,7 +206,7 @@ class MarketsStore {
         };
 
         if (result.market && (result.market !== this.activeMarket)) {
-            console.log("switch active market from", this.activeMarket, "to", result.market);
+            // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.onClearMarket();
             this.activeMarket = result.market;
         }
@@ -398,7 +397,7 @@ class MarketsStore {
                 };
                 try {
                     let callOrder = new CallOrder(call_order, assets, this.quoteAsset.get("id"), this.feedPrice);
-                    console.log("**** onCallOrderUpdate ****", call_order, "isMarginCalled:", callOrder.isMarginCalled());
+                    // console.log("**** onCallOrderUpdate **", call_order, "isMarginCalled:", callOrder.isMarginCalled());
 
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
@@ -721,7 +720,7 @@ class MarketsStore {
         this.marketData.combinedBids.sort((a, b) => {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
-            totalToReceive.plus(a.amountToReceive());
+            totalToReceive.plus(a.amountToReceive(false));
 
             totalForSale.plus(a.amountForSale());
             a.setTotalForSale(totalForSale.clone());
@@ -742,7 +741,7 @@ class MarketsStore {
             return a.getPrice() - b.getPrice();
         }).forEach(a => {
             totalForSale.plus(a.amountForSale());
-            totalToReceive.plus(a.amountToReceive());
+            totalToReceive.plus(a.amountToReceive(true));
             a.setTotalForSale(totalForSale.clone());
             a.setTotalToReceive(totalToReceive.clone());
         });
