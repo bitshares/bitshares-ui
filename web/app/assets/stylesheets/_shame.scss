@@ -385,3 +385,9 @@ input[type=number] {
 .clickable {
     cursor: pointer;
 }
+
+@include breakpoint(xlarge) {
+    form.hide-container {
+        display: inherit !important;
+    }
+}
