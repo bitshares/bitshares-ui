@@ -1,4 +1,3 @@
-import {clone} from "lodash";
 import {Fraction} from "fractional";
 
 const GRAPHENE_100_PERCENT = 10000;
@@ -166,8 +165,8 @@ class Price {
             throw new Error("Base and Quote assets must be different");
         }
 
-        base = new Asset(clone(base));
-        quote = new Asset(clone(quote));
+        base = base.clone();
+        quote = quote.clone();
         if (real && typeof real === "number") {
             /*
             * In order to make large numbers work properly, we assume numbers
