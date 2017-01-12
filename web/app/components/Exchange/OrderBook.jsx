@@ -287,19 +287,19 @@ class OrderBook extends React.Component {
                 );
             });
 
-            askRows = combinedAsks
+            let tempAsks = combinedAsks
             .filter(a => {
                 if (this.state.showAllAsks) {
                     return true;
                 }
                 return a.getPrice() <= lowestAsk.getPrice() * 5;
-            })
-            .sort((a,b) => {
-                if (!horizontal) {
+            });
+            if (!horizontal) {
+                tempAsks.sort((a,b) => {
                     return b.getPrice() - a.getPrice();
-                }
-            })
-            .map((order, index) => {
+                });
+            }
+            askRows = tempAsks.map((order, index) => {
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
@@ -324,6 +324,8 @@ class OrderBook extends React.Component {
                     />
                     );
             });
+
+
         }
 
         if (this.props.horizontal) {
