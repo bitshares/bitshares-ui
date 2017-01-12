@@ -8,6 +8,7 @@ import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
+import counterpart from "counterpart";
 
 class OrderBookRowVertical extends React.Component {
 
@@ -146,10 +147,15 @@ class OrderBook extends React.Component {
             let priceHeight = this.refs.center_text.offsetHeight;
             let asksHeight = this.refs.asksWrapper.offsetHeight;
 
-            this.setState({
-                vertAsksHeight: Math.floor((containerHeight - priceHeight) / 2),
-                vertBidsHeight: containerHeight - priceHeight - asksHeight - 2
-            }, this.psUpdate);
+            let newAsksHeight = Math.floor((containerHeight - priceHeight) / 2);
+            let newBidsHeight = containerHeight - priceHeight - asksHeight - 2;
+            if (newAsksHeight !== this.state.vertAsksHeight || newBidsHeight !== this.state.vertBidsHeight) {
+                this.setState({
+                    vertAsksHeight: newAsksHeight,
+                    vertBidsHeight: newBidsHeight
+                }, this.psUpdate);
+            }
+
         }
     }
 
@@ -287,7 +293,13 @@ class OrderBook extends React.Component {
                     return true;
                 }
                 return a.getPrice() <= lowestAsk.getPrice() * 5;
-            }).map((order, index) => {
+            })
+            .sort((a,b) => {
+                if (!horizontal) {
+                    return b.getPrice() - a.getPrice();
+                }
+            })
+            .map((order, index) => {
                 return (horizontal ?
 
                     <OrderBookRowHorizontal
@@ -478,7 +490,7 @@ class OrderBook extends React.Component {
                             </div>
                             <div ref="center_text" style={{minHeight: 35}}>
                                     <div key="spread" className="orderbook-latest-price" ref="centerRow">
-                                        <div className="text-center spread">
+                                        <div className="text-center spread" data-place="right" data-tip={counterpart.translate("tooltip.latest_price")}>
                                             {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> <AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span> : null}
                                         </div>
                                     </div>

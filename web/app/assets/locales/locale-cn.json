@@ -36,7 +36,8 @@
       "call_limit": "This is the call price of the least collateralized margin position in the market.",
       "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
       "settle_price": "This is the price at which settle orders will execute.",
-      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions."
+      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+      "latest_price": "This is the latest price seen in this market."
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",

@@ -485,7 +485,7 @@ class Exchange extends React.Component {
         this.setState({ leftOrderBook: !this.state.leftOrderBook });
     }
 
-    _currentPriceClick(type, price, isCall) {
+    _currentPriceClick(type, price) {
         const isBid = type === "bid";
         let current = this.state[type];
         current.price = price[(isBid) ? "invert" : "clone"]();
@@ -898,6 +898,8 @@ class Exchange extends React.Component {
             leftOrderBook = false;
         }
 
+        let orderMultiplier = leftOrderBook ? 2 : 1;
+
         let buyForm = (
             <BuySell
                 smallScreen={smallScreen}
@@ -907,7 +909,7 @@ class Exchange extends React.Component {
                     "small-12 no-padding middle-content",
                     {disabled: isNullAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
-                    this.state.flipBuySell ? `order-${buySellTop ? 2 : 5} sell-form` : `order-${buySellTop ? 1 : 4} buy-form`
+                    this.state.flipBuySell ? `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form` : `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form`
                 )}
                 type="bid"
                 amount={bid.toReceiveText}
@@ -946,7 +948,7 @@ class Exchange extends React.Component {
                     "small-12 no-padding middle-content",
                     {disabled: isNullAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
-                    this.state.flipBuySell ? `order-${buySellTop ? 1 : 4} buy-form` : `order-${buySellTop ? 2 : 4} sell-form`
+                    this.state.flipBuySell ? `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form` : `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form`
                 )}
                 type="ask"
                 amount={ask.forSaleText}
@@ -1103,7 +1105,10 @@ class Exchange extends React.Component {
                                 {sellForm}
 
                                 <MarketHistory
-                                    className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "", "no-padding no-overflow middle-content order-4 xlarge-order-3 small-12 medium-6")}
+                                    className={cnames(
+                                        !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
+                                        "no-padding no-overflow middle-content small-12 medium-6 order-4 xlarge-order-3"
+                                    )}
                                     headerStyle={{paddingTop: 0}}
                                     history={activeMarketHistory}
                                     myHistory={currentAccount.get("history")}
