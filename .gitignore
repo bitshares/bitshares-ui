@@ -7,9 +7,8 @@ cli/bundle
 *.log
 cli/examples.txt
 dist
-
+electron
 web/app/components/Exchange/exchange.css
 cli/bundle.js
 web/dist-prod
-plasma
 web/stats*

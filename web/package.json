@@ -24,7 +24,7 @@
     "start": "NODE_ENV=development node server.js",
     "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --display-error-details --colors",
     "electron": "NODE_ENV=production webpack --config conf/webpack-electron.js --progress --display-error-details --colors;",
-    "postelectron": " echo 'copying to electron/build..'; cp -r dist/* ../electron/build/; echo 'done.'",
+    "postelectron": " echo 'copying to electron/build..'; cp -r electron/* ../electron/build/; echo 'done.'",
     "build-win32": "set NODE_ENV=production && webpack --config conf/webpack-prod.js --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'"
   },
   "dependencies": {

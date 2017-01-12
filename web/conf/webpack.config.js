@@ -44,9 +44,6 @@ module.exports = function(options) {
         }
     ];
 
-    // DIRECTORY CLEANER
-    var cleanDirectories = ["dist"];
-
     // OUTPUT PATH
     var outputPath = path.join(root_dir, "assets");
 
@@ -60,6 +57,13 @@ module.exports = function(options) {
     ];
 
     if (options.prod) {
+        // PROD OUTPUT PATH
+        let outputDir = options.electron ? "electron" : "dist";
+        outputPath = path.join(root_dir, outputDir);
+
+        // DIRECTORY CLEANER
+        var cleanDirectories = [outputDir];
+
         // WRAP INTO CSS FILE
         const extractCSS = new ExtractTextPlugin("app.css");
         cssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
@@ -93,15 +97,6 @@ module.exports = function(options) {
                 }
             }));
         }
-
-        // plugins.push(new webpack.optimize.CommonsChunkPlugin({
-        //     name: ["vendor"],
-        //     filename: "vendor.js",
-        //     minChunks: Infinity
-        // }));
-
-        // PROD OUTPUT PATH
-        outputPath = path.join(root_dir, "dist");
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(new webpack.DefinePlugin({"process.env": {NODE_ENV: JSON.stringify("development")}}));
