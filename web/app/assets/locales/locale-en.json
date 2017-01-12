@@ -776,8 +776,6 @@
     "receive": "Receive",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
     "market_name": "My Markets",
     "quote_supply": "Quote supply",
     "base_supply": "Base supply",

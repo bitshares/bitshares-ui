@@ -523,8 +523,8 @@
     "receive": "Recibir",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Confimar orden: Comprar %(buy_amount)s %(buy_symbol)s al precio de %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirmar orden: Vender %(sell_amount)s %(sell_symbol)s al precio de %(price_amount)s %(price_symbol)s"
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?"
   },
   "markets": {
     "base": "Activo base",

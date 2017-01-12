@@ -383,8 +383,8 @@
     "quantity": "Quantité",
     "buy": "Acheter",
     "sell": "Vendre",
-    "confirm_buy": "Confirmation d'ordre: Acheter %(buy_amount)s %(buy_symbol)s au prix de %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirmation d'ordre: Vendre %(sell_amount)s %(sell_symbol)s au prix de %(price_amount)s %(price_symbol)s"
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?"
   },
   "markets": {
     "choose_base": "Selectionner l'actif de base",

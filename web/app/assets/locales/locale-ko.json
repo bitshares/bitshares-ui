@@ -524,8 +524,8 @@
     "receive": "Receive",
     "vertical": "수직시세",
     "horizontal": "수평시세",
-    "confirm_buy": "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
-    "confirm_sell": "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "종목명",
     "quote_supply": "유통량",
     "base_supply": "유통량"
