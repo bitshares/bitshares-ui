@@ -1,6 +1,6 @@
 {
     "plugins": [
-        "react"
+        "react", "json"
     ],
     "extends": ["plugin:react/recommended"],
     "parser": "babel-eslint",

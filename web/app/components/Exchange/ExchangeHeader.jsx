@@ -116,9 +116,18 @@ export default class ExchangeHeader extends React.Component {
                                 {feedPrice && showCallLimit ?
                                     <PriceStat toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="column-hide-medium is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} content="exchange.squeeze"/> : null}
                             </ul>
+                            <div className="grid-block" style={{minHeight: 39, justifyContent: "flex-end"}}>
+                                <ul className="float-right market-stats stats top-stats">
+                                    <li className="stat float-right clickable" style={{height: "100%", borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this.props.onToggleCharts}>
+                                        <div className="indicators">
+                                           {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
                         </div>
                         <div className="grid-block wrap no-overflow" style={{justifyContent: "space-between"}}>
-
                             <ul className="market-stats stats bottom-stats">
                                 {/* Chart controls */}
                                 {!showDepthChart ? (
@@ -155,12 +164,6 @@ export default class ExchangeHeader extends React.Component {
                                        <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
                                     </div>
                                 </li> : null}
-
-                                <li className="stat float-right clickable" style={{borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this.props.onToggleCharts}>
-                                    <div className="indicators">
-                                       {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
