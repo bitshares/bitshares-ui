@@ -67,7 +67,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
-                    if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
+                    if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
                         replaceState("/create-account");
                     }
                     if (nextState.location.pathname.indexOf("/auth/") === 0) {
