@@ -13,7 +13,8 @@ class AssetName extends React.Component {
 	};
 
 	static defaultProps = {
-		replace: true
+		replace: true,
+		noPrefix: false
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -24,7 +25,7 @@ class AssetName extends React.Component {
 	}
 
 	render() {
-		let {name, replace, asset} = this.props;
+		let {name, replace, asset, noPrefix} = this.props;
 		let isBitAsset = asset.has("bitasset");
 		let isPredMarket = isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
@@ -47,7 +48,7 @@ class AssetName extends React.Component {
 				</span>
 			);
 		} else {
-			return <span>{name}</span>;
+			return <span>{!noPrefix ? prefix : null}{name}</span>;
 		}
 
 	}

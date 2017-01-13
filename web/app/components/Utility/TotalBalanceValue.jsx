@@ -244,15 +244,15 @@ class TotalValue extends React.Component {
         if (missingData)
             totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
-        totalsTip += "</tbody></table>"
+        totalsTip += "</tbody></table>";
 
         // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
         if (!inHeader) {
-            return <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>;
+            return <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>;
         } else {
             return (
                 <div data-tip={totalsTip} data-place="bottom" data-type="light" data-html={true} >
-                    <FormattedAsset amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                    <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
 
             );
