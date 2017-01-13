@@ -8,6 +8,8 @@ import {ChainStore} from "graphenejs-lib";
 import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
+import ReactTooltip from "react-tooltip";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -61,6 +63,10 @@ class ValueComponent extends React.Component {
     componentWillUnmount() {
         clearInterval(this.fromStatsInterval);
         clearInterval(this.toStatsInterval);
+    }
+
+    componentDidMount() {
+        ReactTooltip.rebuild();
     }
 
     getValue() {
@@ -120,7 +126,7 @@ class ValueComponent extends React.Component {
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
 
         if (!eqValue) {
-            return <span style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>;
+            return <span data-place="left" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>;
         }
 
         return <FormattedAsset amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
