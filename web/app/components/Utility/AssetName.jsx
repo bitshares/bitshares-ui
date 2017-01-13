@@ -25,7 +25,6 @@ class AssetName extends React.Component {
 
 	render() {
 		let {name, replace, asset} = this.props;
-
 		let isBitAsset = asset.has("bitasset");
 		let isPredMarket = isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
@@ -48,7 +47,7 @@ class AssetName extends React.Component {
 				</span>
 			);
 		} else {
-			return <span>{prefix}<span>{name}</span></span>
+			return <span>{name}</span>;
 		}
 
 	}

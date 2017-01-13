@@ -39,7 +39,8 @@ class FormattedAsset extends React.Component {
         hide_asset: false,
         hide_amount: false,
         asPercentage: false,
-        assetInfo: null
+        assetInfo: null,
+        replace: true
     };
 
     constructor(props) {
@@ -118,7 +119,7 @@ class FormattedAsset extends React.Component {
                     >
                         <span className="currency click-for-help" onClick={this.togglePopover}><AssetName name={asset.symbol} /></span>
                     </Popover></span>) :
-                    <span className="currency" onClick={this.togglePopover}> <AssetName name={asset.symbol} /></span>)}
+                    <span className="currency" onClick={this.togglePopover}> <AssetName replace={this.props.replace} name={asset.symbol} /></span>)}
                 </span>
         );
     }

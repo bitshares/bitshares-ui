@@ -31,18 +31,6 @@ class AccountVotingProxy extends React.Component {
         this._onUpdate = this._onUpdate.bind(this);
     }
 
-    componentWillMount() {
-        ChainStore.subscribe(this._onUpdate);
-    }
-
-    componentWillUnmount() {
-        ChainStore.unsubscribe(this._onUpdate);
-    }
-
-    _onUpdate() {
-        this.forceUpdate();
-    }
-
     componentWillReceiveProps(nextProps) {
         if(!this.state.current_proxy_input) {
             this.setState({

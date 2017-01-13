@@ -15,6 +15,7 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 
 let wallet_api = new WalletApi();
 
@@ -45,6 +46,15 @@ class AccountVoting extends React.Component {
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
+        this._onUpdate = this._onUpdate.bind(this);
+    }
+
+    componentWillUnmount() {
+        ChainStore.unsubscribe(this._onUpdate);
+    }
+
+    _onUpdate() {
+        this.forceUpdate();
     }
 
     updateAccountData(account) {
@@ -106,6 +116,7 @@ class AccountVoting extends React.Component {
         this.updateAccountData(this.props.account);
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
         this.getBudgetObject();
+        ChainStore.subscribe(this._onUpdate);
     }
 
     componentDidMount() {
@@ -308,6 +319,7 @@ class AccountVoting extends React.Component {
     }
 
     render() {
+        let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let proxy_is_set = !!this.state.proxy_account_id;
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
@@ -355,6 +367,7 @@ class AccountVoting extends React.Component {
 
             return (
                 <WorkerApproval
+                    preferredUnit={preferredUnit}
                     rest={workerBudget + dailyPay}
                     rank={index + 1}
                     key={worker.get("id")}
@@ -387,6 +400,7 @@ class AccountVoting extends React.Component {
 
             return (
                 <WorkerApproval
+                    preferredUnit={preferredUnit}
                     rest={workerBudget + dailyPay}
                     rank={index + 1}
                     key={worker.get("id")}
@@ -417,6 +431,7 @@ class AccountVoting extends React.Component {
 
             return (
                 <WorkerApproval
+                    preferredUnit={preferredUnit}
                     rest={workerBudget + dailyPay}
                     rank={index + 1}
                     key={worker.get("id")}
@@ -471,7 +486,6 @@ class AccountVoting extends React.Component {
                             <Translate content="account.votes.clear_proxy"/>
                         </button>) : null}
                 </div>
-
 
                 <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content">
 
@@ -553,7 +567,13 @@ class AccountVoting extends React.Component {
                                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
                                 <table>
                                     <tbody>
-                                        <tr><td><Translate content="account.votes.total_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                        <tr>
+                                            <td>
+                                                <Translate content="account.votes.total_budget" />:</td>
+                                            <td style={{paddingLeft: 20, textAlign: "right"}}>
+                                                &nbsp;{globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}
+                                                <span>&nbsp;({globalObject ? <EquivalentValueComponent fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null})</span>
+                                            </td></tr>
                                         <tr><td><Translate content="account.votes.unused_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
                                     </tbody>
                                 </table>
@@ -562,20 +582,19 @@ class AccountVoting extends React.Component {
                                     <tr>
                                         <th></th>
                                         <th><Translate content="account.user_issued_assets.description" /></th>
-                                        <th><Translate content="account.votes.creator" /></th>
-                                        <th><Translate content="account.votes.total_votes" /></th>
+                                        <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
+                                        <th className="hide-column-small"><Translate content="account.votes.total_votes" /></th>
                                         <th className="hide-column-small">
                                             <Translate content="account.votes.daily_pay" />
                                             <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
                                         </th>
-                                        <th className="hide-column-small">
+                                        <th className="hide-column-large">
                                             <div><Translate content="account.votes.unclaimed" /></div>
                                             <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
                                             </th>
                                         <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                        <th></th>
                                         <th><Translate content="account.votes.status.title" /> </th>
-                                        <th></th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 {newWorkers.length ? (
