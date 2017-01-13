@@ -50,7 +50,7 @@ class WalletManagerStore extends BaseStore {
     */
     onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
-
+            debugger;
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
 

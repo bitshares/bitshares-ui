@@ -46,24 +46,18 @@ class PasswordInput extends Component {
         return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= 8;
     }
 
-    checkPasswordConfirmation() {
-        let confirmation = this.refs.confirm_password.value;
-        let password = this.refs.password.value;
-        const doesnt_match = confirmation && password !== confirmation;
-        this.setState({doesnt_match});
-    }
-
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        let confirmation = this.props.confirmation ? this.refs.confirm_password.value : true;
-        let password = this.refs.password.value;
-        if(this.props.confirmation) this.checkPasswordConfirmation();
+        const confirmation = this.props.confirmation ? this.refs.confirm_password.value : true;
+        const password = this.refs.password.value;
+        const doesnt_match = this.props.confirmation ? confirmation && password !== confirmation : false;
         let state = {
             valid: !this.state.error && !this.state.wrong
-            && !(this.props.confirmation && this.state.doesnt_match)
+            && !(this.props.confirmation && doesnt_match)
             && confirmation && password.length >= 8,
-            value: password
+            value: password,
+            doesnt_match
         };
         if (this.props.onChange) this.props.onChange(state);
         this.setState(state);

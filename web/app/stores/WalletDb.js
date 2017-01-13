@@ -22,6 +22,7 @@ let TRACE = false;
 let dictJson;
 if (__ELECTRON__) {
     dictJson = require("json-loader!common/dictionary_en.json");
+    console.log("dictJson:", dictJson);
 }
 
 /** Represents a single wallet and related indexedDb database operations. */
@@ -243,12 +244,15 @@ class WalletDb extends BaseStore {
         if (__ELECTRON__) {
             return walletCreateFct(dictJson);
         } else {
-            let dictionaryPromise = brainkey_plaintext ? null : fetch("dictionary.json");
+            let dictionaryPromise = brainkey_plaintext ? null : fetch("/dictionary.json");
             return Promise.all([
                 dictionaryPromise
             ]).then(res => {
+                debugger;
                 return brainkey_plaintext ? walletCreateFct(null) :
                     res[0].json().then(walletCreateFct);
+            }).catch(err => {
+                console.log("unable to fetch dictionary.json", err);
             });
         }
     }
