@@ -6,12 +6,16 @@ import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
 import PriceStat from "./PriceStat";
 import Translate from "react-translate-component";
-import utils from "common/utils";
 import counterpart from "counterpart";
 import cnames from "classnames";
 
 export default class ExchangeHeader extends React.Component {
 
+    shouldComponentUpdate(nextProps) {
+        if (!nextProps.marketReady) return false;
+        return true;
+    }
+    
     _addMarket(quote, base) {
         let marketID = `${quote}_${base}`;
         if (!this.props.starredMarkets.has(marketID)) {
