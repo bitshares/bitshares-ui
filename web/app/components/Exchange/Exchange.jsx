@@ -1056,7 +1056,7 @@ class Exchange extends React.Component {
                             currentPeriod={this.state.currentPeriod}
                             changeBucketSize={this._changeBucketSize.bind(this)}
                             changeZoomPeriod={this._changeZoomPeriod.bind(this)}
-                            onSelectIndicator={this._onSelectIndicators.bind(this)}
+                            onSelectIndicators={this._onSelectIndicators.bind(this)}
                             marketStats={marketStats}
                             onBorrowQuote={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                             onBorrowBase={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
