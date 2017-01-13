@@ -1,31 +1,33 @@
-#!/usr/bin/env node
+/* eslint-disable */
 
 // Filter BTS 0.9.2+ import keys export file so that it will include only private keys
 // that may be found in the BTS 2.0 genesis block.
-
 // Dependencies:
-// ./bloom.dat (1,048,576 bytes) sha1 3cee441d8d28ab3b26aea149630fa2a96a91845c
-// nodejs, npm, and: npm install coffee-script
+// ./bloom_bitshares.dat (1,048,576 bytes) sha1 4d80faa41a5e868899febdc9dab48d1f2d567487992810cf0532f3c0ee2b266c
+// nodejs, npm, and: npm install
 
-// ./bloom.dat is from bitshares/graphene/programs/genesis_util/create_bloom_filter.py
-// The bloom filter was created with a genesis containing BTS prefixed keys.  Create
-// or dowload this file first.
+/*
+* ./bloom.dat is from bitshares/graphene/programs/genesis_util/create_bloom_filter.py
+* The bloom filter was created with a genesis containing BTS prefixed keys.  Create
+* or dowload this file first.
+*/
 
-// Usage: cat large_import_keys.json | node ./bloom_filter_wallet.js > filtered_import_keys.json
+// Automatic usage: name your wallet file wallet.json and run "npm start".
+// Output is called "filtered_wallet.json"
+
+// Manual usage: cat large_import_keys.json | node ./bloom_filter_wallet.js > filtered_import_keys.json
 
 var fs = require('fs')
 
 require('coffee-script/register') // npm install coffee-script
 
-var h = require('../web/lib/common/hash')
-var key_utils = require('../web/lib/common/key_utils')
-var chain_config = require('../web/lib/chain/config')
-
-chain_config.address_prefix = "BTS"
+var graphenejs = require("graphenejs-lib");
+var h = graphenejs.hash;
+var key_utils = graphenejs.key;
 
 fs.readFile('bloom.dat', function (err, data) {
     if (err) throw err
-    console.error('bloom.dat (' + data.length + ' bytes)','sha1',h.sha1(data).toString('hex'),'\n')
+    console.error('bloom_bitshares.dat (' + data.length + ' bytes)','sha1',h.sha1(data).toString('hex'),'\n')
 
     var bits_in_filter = data.length * 8 // 8388608 (test data)
     function in_bloom(str) {
