@@ -772,7 +772,8 @@
     "zoom_all": "Tümü",
     "settings": "Çizelge tercihleri",
     "featured": "Öne Çıkan Piyasalar",
-    "new": "Yeni"
+    "new": "Yeni",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Ücret Tarifesi"

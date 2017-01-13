@@ -26,10 +26,9 @@ import IndicatorModal from "./IndicatorModal";
 import OpenSettleOrders from "./OpenSettleOrders";
 import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
+import Translate from "react-translate-component";
 
 require("./exchange.scss");
-
-let SATOSHI = 8;
 
 Highcharts.setOptions({
     global: {
@@ -783,6 +782,31 @@ class Exchange extends React.Component {
         this.forceUpdate();
     }
 
+    isMarketFrozen() {
+        let {baseAsset, quoteAsset} = this.props;
+
+        let baseWhiteList = baseAsset.getIn(["options", "whitelist_markets"]).toJS();
+        let quoteWhiteList = quoteAsset.getIn(["options", "whitelist_markets"]).toJS();
+        let baseBlackList = baseAsset.getIn(["options", "blacklist_markets"]).toJS();
+        let quoteBlackList = quoteAsset.getIn(["options", "blacklist_markets"]).toJS();
+
+        if (quoteWhiteList.length && quoteWhiteList.indexOf(baseAsset.get("id") === -1)) {
+            return {isFrozen: true, frozenAsset: quoteAsset.get("symbol")};
+        }
+        if (baseWhiteList.length && baseWhiteList.indexOf(quoteAsset.get("id") === -1)) {
+            return {isFrozen: true, frozenAsset: baseAsset.get("symbol")};
+        }
+
+        if (quoteBlackList.length && quoteBlackList.indexOf(baseAsset.get("id") !== -1)) {
+            return {isFrozen: true, frozenAsset: quoteAsset.get("symbol")};
+        }
+        if (baseBlackList.length && baseBlackList.indexOf(quoteAsset.get("id") !== -1)) {
+            return {isFrozen: true, frozenAsset: baseAsset.get("symbol")};
+        }
+
+        return {isFrozen: false};
+    }
+
     render() {
         let { currentAccount, marketLimitOrders, marketCallOrders, marketData, activeMarketHistory,
             invertedCalls, starredMarkets, quoteAsset, baseAsset, lowestCallPrice,
@@ -795,7 +819,8 @@ class Exchange extends React.Component {
         let {bid, ask, leftOrderBook, showDepthChart,
             buyDiff, sellDiff, indicators, indicatorSettings, width, buySellTop} = this.state;
 
-        // console.log("bid:", bid.price.base.asset_id + "_" + bid.price.quote.asset_id, bid.price.toReal(), "ask:", ask.price.base.asset_id + "_" + ask.price.quote.asset_id, ask.price.toReal());
+        const {isFrozen, frozenAsset} = this.isMarketFrozen();
+
         let base = null, quote = null, accountBalance = null, quoteBalance = null,
             baseBalance = null, coreBalance = null, quoteSymbol, baseSymbol,
             showCallLimit = false, latestPrice, changeClass;
@@ -900,7 +925,7 @@ class Exchange extends React.Component {
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
 
-        let buyForm = (
+        let buyForm = isFrozen ? null : (
             <BuySell
                 smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
@@ -939,7 +964,7 @@ class Exchange extends React.Component {
             />
         );
 
-        let sellForm = (
+        let sellForm = isFrozen ? null : (
             <BuySell
                 smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
@@ -1101,6 +1126,7 @@ class Exchange extends React.Component {
                             <div className="grid-block no-overflow wrap shrink" >
                                 {hasPrediction ? <div className="small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><p>{description}</p></div> : null}
 
+                                {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
                                 {buyForm}
                                 {sellForm}
 

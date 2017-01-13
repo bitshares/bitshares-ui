@@ -832,7 +832,8 @@
     "zoom_all": "显示全部",
     "settings": "图表选项",
     "featured": "热门市场",
-    "new": "新增"
+    "new": "新增",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "title": "交易所",

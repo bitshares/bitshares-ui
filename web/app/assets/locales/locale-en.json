@@ -816,7 +816,8 @@
     "zoom_all": "All",
     "settings": "Chart options",
     "featured": "Featured Markets",
-    "new": "New"
+    "new": "New",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Fee Schedule"

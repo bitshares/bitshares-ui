@@ -674,7 +674,8 @@
     "borrow": "Leihen",
     "no_balance": "Ungenügendes Guthaben",
     "invalid_amount": "Ungültiger Betrag",
-    "invalid_price": "Ungültiger Preis"
+    "invalid_price": "Ungültiger Preis",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Gebühren"

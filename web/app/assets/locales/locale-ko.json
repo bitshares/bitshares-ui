@@ -528,7 +528,8 @@
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "종목명",
     "quote_supply": "유통량",
-    "base_supply": "유통량"
+    "base_supply": "유통량",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "base": "기초 자산",
