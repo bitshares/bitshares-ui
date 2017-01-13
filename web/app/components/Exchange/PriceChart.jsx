@@ -18,6 +18,9 @@ require("./highcharts-plugins/highstock-current-price-indicator.js");
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.baseSymbol !== this.props.baseSymbol || nextProps.quoteSymbol !== this.props.quoteSymbol) {
+            return true;
+        }
         let chart = this.refs.chart ? this.refs.chart.chart : null;
         if (chart && (!utils.are_equal_shallow(nextProps.indicators, this.props.indicators))) {
             let changed, added;
