@@ -28,7 +28,6 @@ class AccountVotingProxy extends React.Component {
         };
         this.onProxyChange = this.onProxyChange.bind(this);
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
-        this._onUpdate = this._onUpdate.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
