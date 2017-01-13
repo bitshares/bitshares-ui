@@ -14,10 +14,10 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
-// import RefcodeInput from "../Forms/RefcodeInput";
 import {ChainStore, FetchChain} from "graphenejs-lib";
 import {BackupCreate} from "../Wallet/Backup";
 import ReactTooltip from "react-tooltip";
+import utils from "common/utils";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -42,21 +42,18 @@ class CreateAccount extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.validAccountName !== this.state.validAccountName ||
-            nextState.accountName !== this.state.accountName ||
-            nextState.validPassword !== this.state.validPassword ||
-            nextState.registrar_account !== this.state.registrar_account ||
-            nextState.loading !== this.state.loading ||
-            nextState.hide_refcode !== this.state.hide_refcode ||
-            nextState.show_identicon !== this.state.show_identicon ||
-            nextState.step !== this.state.step;
+        return !utils.are_equal_shallow(nextState, this.state);
     }
 
     isValid() {
         let firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
-        if (!WalletDb.getWallet()) valid = valid && this.state.validPassword;
-        if (!firstAccount) valid = valid && this.state.registrar_account;
+        if (!WalletDb.getWallet()) {
+            valid = valid && this.state.validPassword;
+        }
+        if (!firstAccount) {
+            valid = valid && this.state.registrar_account;
+        }
         return valid;
     }
 
@@ -94,7 +91,6 @@ class CreateAccount extends React.Component {
                     this.setState({loading: false});
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else { // Account registered by the faucet
-                    console.log("account registed by faucet");
                     // this.props.router.push(`/wallet/backup/create?newAccount=true`);
                     FetchChain("getAccount", name).then(() => {
                         this.setState({
@@ -163,7 +159,6 @@ class CreateAccount extends React.Component {
         let firstAccount = my_accounts.length === 0;
         let hasWallet = WalletDb.getWallet();
         let valid = this.isValid();
-
         let isLTM = false;
         let registrar = registrar_account ? ChainStore.getAccount(registrar_account) : null;
         if (registrar) {

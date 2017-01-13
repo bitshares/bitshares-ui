@@ -67,7 +67,7 @@ let willTransitionTo = (nextState, replaceState, callback) => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
-                    if (!WalletDb.getWallet() && nextState.location.pathname !== "/create-account") {
+                    if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
                         replaceState("/create-account");
                     }
                     if (nextState.location.pathname.indexOf("/auth/") === 0) {
@@ -84,7 +84,11 @@ let willTransitionTo = (nextState, replaceState, callback) => {
     }).catch( error => {
         console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
         if(error.name === "InvalidStateError") {
-            alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
+            if (__ELECTRON__) {
+                replaceState("/dashboard");
+            } else {
+                alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
+            }
         } else {
             replaceState("/init-error");
             callback();
