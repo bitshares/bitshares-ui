@@ -620,7 +620,6 @@ class MarketsStore {
                     }
                 }
             }
-
             return bids;
         };
         // Loop over limit orders and return array containing asks
@@ -642,7 +641,6 @@ class MarketsStore {
                     }
                 }
             }
-
             return asks;
         };
 
@@ -668,7 +666,7 @@ class MarketsStore {
     }
 
     constructCalls (callsArray) {
-        let calls;
+        let calls = [];
         if (callsArray.size) {
             calls = callsArray
             .sort((a, b) => {
@@ -690,8 +688,6 @@ class MarketsStore {
                     calls.splice(i + 1, 1);
                 }
             }
-        } else {
-            calls = Immutable.Map();
         }
         return calls;
     }
@@ -716,7 +712,6 @@ class MarketsStore {
             asset_id: this.baseAsset.get("id"),
             precision: this.baseAsset.get("precision")
         });
-
         this.marketData.combinedBids.sort((a, b) => {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
