@@ -426,6 +426,10 @@ class Asset extends React.Component {
             return new Date(feed2[1][0]) - new Date(feed1[1][0])
         });
 
+        if (!feeds.length) {
+            return null;
+        }
+
         var rows = [];
         var settlement_price_header = feeds[0][1][1].settlement_price;
         var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
