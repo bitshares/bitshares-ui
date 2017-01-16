@@ -58,21 +58,30 @@ class MarketCard extends React.Component {
         let {base, quote, marketStats} = this.props;
 
         let desc = assetUtils.parseDescription(base.getIn(["options", "description"]));
-        let imgName = base.get("symbol").split(".");
-        imgName = imgName.length === 2 ? imgName[1] : imgName[0];
+        function getImageName(asset) {
+            let symbol = asset.get("symbol");
+            if (symbol === "OPEN.BTC") return symbol;
+            let imgName = asset.get("symbol").split(".");
+            return imgName.length === 2 ? imgName[1] : imgName[0];
+        }
+        let imgName = getImageName(base);
 
         let marketID = base.get("symbol") + "_" + quote.get("symbol");
         let stats = marketStats.get(marketID);
         let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";
 
-        if ((base.get("issuer") === "1.2.0" ||
-             base.get("issuer") === "1.2.3") &&
-           !(base.get("symbol") != "GOLD" ||
-             base.get("symbol") != "BTC" ||
-             base.get("symbol") != "EUR" ||
-             base.get("symbol") != "USD" ||
-             base.get("symbol") != "CNY")) {
-            imgName = "bts";
+        // if ((base.get("issuer") === "1.2.0" ||
+        //      base.get("issuer") === "1.2.3") &&
+        //    !(base.get("symbol") != "GOLD" ||
+        //      base.get("symbol") != "BTC" ||
+        //      base.get("symbol") != "EUR" ||
+        //      base.get("symbol") != "USD" ||
+        //      base.get("symbol") != "CNY")) {
+        //     imgName = "bts";
+        // }
+        console.log("imgName:", imgName);
+        if (imgName === "BTS") {
+            imgName = getImageName(quote);
         }
 
         return (
