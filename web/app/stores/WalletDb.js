@@ -10,7 +10,7 @@ import {WalletTcomb} from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import PrivateKeyActions from "actions/PrivateKeyActions";
-import {ChainStore, PrivateKey, key, Aes} from "graphenejs-lib";
+import {ChainStore, PrivateKey, key, Aes} from "graphenejs-lib/es";
 import {Apis, ChainConfig} from "graphenejs-ws";
 import AddressIndex from "stores/AddressIndex";
 
@@ -22,7 +22,6 @@ let TRACE = false;
 let dictJson;
 if (__ELECTRON__) {
     dictJson = require("json-loader!common/dictionary_en.json");
-    console.log("dictJson:", dictJson);
 }
 
 /** Represents a single wallet and related indexedDb database operations. */
@@ -91,7 +90,10 @@ class WalletDb extends BaseStore {
                 Apis.instance().chain_id)
 
         return WalletUnlockActions.unlock().then( () => {
-            return tr.set_required_fees().then(()=> {
+            return Promise.all([
+                tr.set_required_fees(),
+                tr.update_head_block()
+            ]).then(()=> {
                 let signer_pubkeys_added = {}
                 if(signer_pubkeys) {
                     // Balance claims are by address, only the private
@@ -527,8 +529,8 @@ class WalletDb extends BaseStore {
 
 }
 
-export let WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
-export default WalletDbWrapped
+const WalletDbWrapped = alt.createStore(WalletDb, "WalletDb");
+export default WalletDbWrapped;
 
 function reject(error) {
     console.error( "----- WalletDb reject error -----", error)

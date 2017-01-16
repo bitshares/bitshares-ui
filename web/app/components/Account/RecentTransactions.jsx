@@ -5,10 +5,12 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-let {operations} = require("graphenejs-lib").ChainTypes;
+import {ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
+
+const {operations} = grapheneChainTypes;
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {

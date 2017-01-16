@@ -2,7 +2,7 @@ import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import CachedPropertyActions from "actions/CachedPropertyActions";
 import ApplicationApi from "api/ApplicationApi";
-import {TransactionBuilder, FetchChain} from "graphenejs-lib";
+import {TransactionBuilder, FetchChain} from "graphenejs-lib/es";
 import {Apis} from "graphenejs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";

@@ -10,11 +10,11 @@ import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-let {operations} = require("graphenejs-lib").ChainTypes;
+const {operations} = grapheneChainTypes;
 
 require("./operations.scss");
 
@@ -372,26 +372,39 @@ class ProposedOperation extends React.Component {
 
             case "asset_issue":
                 color = "warning";
+
+                if(op[1].memo) {
+                    memoComponent = <MemoText memo={op[1].memo} />
+                }
+
                 op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].issuer)}
-                        &nbsp;<Translate component="span" content="proposal.asset_issue" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].asset_to_issue.amount} asset={op[1].asset_to_issue.asset_id} />
-                        &nbsp;<Translate component="span" content="proposal.to" />
-                        &nbsp;{this.linkToAccount(op[1].issue_to_account)}
+                        <TranslateWithLinks
+                            string="proposal.asset_issue"
+                            keys={[
+                                {type: "account", value: op[1].issuer, arg: "account"},
+                                {type: "amount", value: op[1].asset_to_issue, arg: "amount"},
+                                {type: "account", value: op[1].issue_to_account, arg: "to"},
+                            ]}
+                        />
+                        {memoComponent}
                     </span>
                 );
                 break;
 
-            case "asset_burn":
-                color = "cancel";
+            case "asset_reserve":
                 column = (
                     <span>
-                        <Translate component="span" content="proposal.burn_asset" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount_to_burn.amount} asset={op[1].amount_to_burn.asset_id} />
+                        <TranslateWithLinks
+                            string="proposal.asset_reserve"
+                            keys={[
+                                {type: "account", value: op[1].payer, arg: "account"},
+                                {type: "amount", value: op[1].amount_to_reserve, arg: "amount"}
+                            ]}
+                        />
                     </span>
-                );
+                )
                 break;
 
             case "asset_fund_fee_pool":

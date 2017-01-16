@@ -3,7 +3,7 @@ var alt = require("alt-instance");
 import MarketsActions from "actions/MarketsActions";
 import market_utils from "common/market_utils";
 import ls from "common/localStorage";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import utils from "common/utils";
 import {LimitOrder, CallOrder, FeedPrice, SettleOrder, Asset,
     didOrdersChange} from "common/MarketClasses";

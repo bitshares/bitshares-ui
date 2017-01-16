@@ -356,7 +356,7 @@
     "limit_order_buy": "{account} placed an order to buy {amount} at {price}",
     "limit_order_cancel": "{account} cancelled order #%(order)s",
     "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
-    "asset_reserve": "{account} reserved {amount}",
+    "asset_reserve": "{account} reserved (burnt) {amount}",
     "asset_issue": "{account} issued {amount} to {to}",
     "asset_fund_fee_pool": "{account} funded {asset} fee pool with {amount}",
     "asset_create": "{account} created the asset {asset}",
@@ -401,7 +401,9 @@
     },
     "approve": "Approve",
     "reject": "Reject",
-    "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}"
+    "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+    "asset_issue": "Issue {amount} to {to} using {account}",
+    "asset_reserve": "Reserve (burn) {amount} using {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",

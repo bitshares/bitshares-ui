@@ -6,7 +6,7 @@ import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js";
-import {PublicKey} from "graphenejs-lib";;
+import {PublicKey} from "graphenejs-lib/es";;
 import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
@@ -133,7 +133,7 @@ class AccountPermissions extends React.Component {
         if (this.didChange("active")) {
             updateObject.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_addresses, s.active_weights);
         }
-        /* Also include owner keys if the user has indicated it is necessary using the checkbox */ 
+        /* Also include owner keys if the user has indicated it is necessary using the checkbox */
         if (this.didChange("owner") || this.state.isOwner) {
             updateObject.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_addresses, s.owner_weights);
         }
@@ -213,12 +213,12 @@ class AccountPermissions extends React.Component {
 
         let threshold = this.state.active_threshold > 0 ? this.state.active_threshold : 0;
         let weights_total = this.sumUpWeights(active_accounts, active_keys, active_addresses, active_weights);
-        if (weights_total < threshold)
+        if (this.didChange("active") && weights_total < threshold)
             error1 = counterpart.translate("account.perm.warning1", {weights_total, threshold});
 
         threshold = this.state.owner_threshold > 0 ? this.state.owner_threshold : 0;
         weights_total = this.sumUpWeights(owner_accounts, owner_keys, owner_addresses, owner_weights);
-        if (weights_total < threshold)
+        if (this.didChange("owner") && weights_total < threshold)
             error2 = counterpart.translate("account.perm.warning2", {weights_total, threshold});
 
         let publish_buttons_class = "button" + (!(error1 || error2) && this.isChanged() && this.isValidPubKey(this.state.memo_key) ? "" : " disabled");

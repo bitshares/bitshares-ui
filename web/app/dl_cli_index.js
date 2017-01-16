@@ -3,7 +3,7 @@ import WalletManagerStore from 'stores/WalletManagerStore'
 import AccountStore from 'stores/AccountStore'
 import PrivateKeyStore from 'stores/PrivateKeyStore'
 
-import {ChainStore, PrivateKey, PublicKey, Aes, key} from "graphenejs-lib";
+import {ChainStore, PrivateKey, PublicKey, Aes, key} from "graphenejs-lib/es";
 import {Apis, ChainConfig} from "graphenejs-ws";
 import BackupActions from "actions/BackupActions"
 import WalletActions from "actions/WalletActions"

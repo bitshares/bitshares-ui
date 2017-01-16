@@ -6,7 +6,7 @@ import AltContainer from "alt-container";
 import Exchange from "./Exchange";
 import ChainTypes from "../Utility/ChainTypes";
 import LoadingIndicator from "../LoadingIndicator";
-import { EmitterInstance } from "graphenejs-lib";
+import { EmitterInstance } from "graphenejs-lib/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
 
@@ -87,7 +87,7 @@ class ExchangeContainer extends React.Component {
     }
 }
 
-let emitter = EmitterInstance.emitter();
+let emitter = EmitterInstance();
 let callListener, limitListener, newCallListener, feedUpdateListener, settleOrderListener;
 
 class ExchangeSubscriber extends React.Component {
@@ -129,7 +129,7 @@ class ExchangeSubscriber extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        /* Prediction markets should only be shown in one direction, if the link goes to the wrong one we flip it */ 
+        /* Prediction markets should only be shown in one direction, if the link goes to the wrong one we flip it */
         if (nextProps.baseAsset && nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
             this.props.router.push(`/market/${nextProps.baseAsset.get("symbol")}_${nextProps.quoteAsset.get("symbol")}`);
         }

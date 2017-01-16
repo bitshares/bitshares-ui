@@ -3,7 +3,7 @@ import {FormattedDate} from "react-intl";
 import Translate from "react-translate-component";
 import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
-import {hash} from "graphenejs-lib";
+import {hash} from "graphenejs-lib/es";
 
 export default class BackupBrainkey extends Component {
 

@@ -16,7 +16,7 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import {ChainTypes} from "graphenejs-lib";
+import {ChainTypes} from "graphenejs-lib/es";
 let {operations} = ChainTypes;
 
 require("./operations.scss");

@@ -2,7 +2,7 @@ import React from "react";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import AccountImage from "./AccountImage";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";

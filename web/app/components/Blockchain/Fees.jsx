@@ -8,8 +8,8 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
-import {ChainStore} from "graphenejs-lib";
-let {operations} = require("graphenejs-lib").ChainTypes;
+import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
+const {operations} = grapheneChainTypes;
 let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids

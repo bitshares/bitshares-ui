@@ -164,10 +164,31 @@ module.exports = function(options) {
                     test: /\.scss$/,
                     loader: scssLoaders
                 },
-                { test: /\.png$/, loader: "url-loader?limit=100000", exclude:[
-                    path.resolve(root_dir, "app/assets/asset-symbols")
-                ] },
-                { test: /\.woff$/, loader: "url-loader?limit=100000&mimetype=application/font-woff" },
+                {
+                    test: /\.png$/,
+                    exclude:[path.resolve(root_dir, "app/assets/asset-symbols")],
+                    use: [
+                        {
+                            loader: "url-loader",
+                            options: {
+                                limit: 100000
+                            }
+                        }
+                    ]
+                },
+
+                {
+                    test: /\.woff$/,
+                    use: [
+                        {
+                            loader: "url-loader",
+                            options: {
+                                limit: 100000,
+                                mimetype: "application/font-woff"
+                            }
+                        }
+                    ]
+                },
                 { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
                 {
                     test: /\.md/,

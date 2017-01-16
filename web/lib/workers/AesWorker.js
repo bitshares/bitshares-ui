@@ -1,15 +1,15 @@
 require("babel-polyfill");
-var {key, Aes} = require("graphenejs-lib");
+import {Aes} from "graphenejs-lib/es";
 
 onmessage = function(event) { try {
     console.log("AesWorker start");
-    var {private_plainhex_array, iv, key} = event.data
-    var aes = new Aes(iv, key)
-    var private_cipherhex_array = []
+    var {private_plainhex_array, iv, key} = event.data;
+    var aes = new Aes(iv, key);
+    var private_cipherhex_array = [];
     for(let private_plainhex of private_plainhex_array) {
-        var private_cipherhex = aes.encryptHex( private_plainhex )
-        private_cipherhex_array.push( private_cipherhex )
+        var private_cipherhex = aes.encryptHex( private_plainhex );
+        private_cipherhex_array.push( private_cipherhex );
     }
-    postMessage( private_cipherhex_array )
+    postMessage( private_cipherhex_array );
     console.log("AesWorker done");
-} catch( e ) { console.error("AesWorker", e) } }
+} catch( e ) { console.error("AesWorker", e); } };

@@ -6,7 +6,7 @@ import Icon from "../Icon/Icon";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
 import pu from "common/permission_utils";
 import {cloneDeep} from "lodash";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
 class AccountPermissionTree extends React.Component {
 

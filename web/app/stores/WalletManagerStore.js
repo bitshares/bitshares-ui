@@ -6,7 +6,7 @@ import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import WalletActions from "actions/WalletActions";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import BaseStore from "stores/BaseStore";
 import iDB from "idb-instance";
 import Immutable from "immutable";
@@ -50,7 +50,6 @@ class WalletManagerStore extends BaseStore {
     */
     onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
         var p = new Promise( resolve => {
-            debugger;
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
 

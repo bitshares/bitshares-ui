@@ -72,16 +72,14 @@ var iDB = (function () {
        needing an upgrade...
     */
     function openIndexedDB(chain_id) {
-        return iDB.root.getProperty("current_wallet", "default").then(
-            current_wallet => {
-            current_wallet_name = current_wallet
-            var database_name = getDatabaseName(current_wallet, chain_id)
-            return openDatabase(database_name)
-        })
+        return iDB.root.getProperty("current_wallet", "default").then(current_wallet => {
+            current_wallet_name = current_wallet;
+            var database_name = getDatabaseName(current_wallet, chain_id);
+            return openDatabase(database_name);
+        });
     }
 
     function init(chain_id) {
-        let instance;
         let promise = openIndexedDB(chain_id);
         promise.then(db => {
             idb = db;

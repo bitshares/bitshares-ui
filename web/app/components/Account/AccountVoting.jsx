@@ -5,7 +5,7 @@ import counterpart from "counterpart";
 import accountUtils from "common/account_utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js";
-import {ChainStore, FetchChainObjects} from "graphenejs-lib";
+import {ChainStore, FetchChainObjects} from "graphenejs-lib/es";
 import WorkerApproval from "./WorkerApproval";
 import AccountVotingProxy from "./AccountVotingProxy";
 import AccountsList from "./AccountsList";

@@ -1,6 +1,6 @@
 import alt from "alt-instance";
 import iDB from "idb-instance";
-import {key} from "graphenejs-lib";
+import {key} from "graphenejs-lib/es";
 import {ChainConfig} from "graphenejs-ws";
 import Immutable from "immutable";
 import BaseStore from "stores/BaseStore";

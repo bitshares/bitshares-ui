@@ -2,7 +2,7 @@ import React from "react";
 import utils from "common/utils";
 import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation} from "graphenejs-lib";
+import {ChainStore, PublicKey, ChainValidation} from "graphenejs-lib/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";

@@ -4,7 +4,7 @@ import alt from "alt-instance";
 import AccountActions from "actions/AccountActions";
 import iDB from "idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore";
-import {ChainStore, ChainValidation, FetchChain} from "graphenejs-lib";
+import {ChainStore, ChainValidation, FetchChain} from "graphenejs-lib/es";
 import {Apis} from "graphenejs-ws";
 import AccountRefsStore from "stores/AccountRefsStore";
 import AddressIndex from "stores/AddressIndex";

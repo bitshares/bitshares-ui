@@ -1,4 +1,4 @@
-import {SerializerValidation, TransactionBuilder, TransactionHelper} from "graphenejs-lib";
+import {SerializerValidation, TransactionBuilder, TransactionHelper} from "graphenejs-lib/es";
 import ApplicationApi from "./ApplicationApi";
 
 class WalletApi {

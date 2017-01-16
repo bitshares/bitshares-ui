@@ -13,7 +13,8 @@ import SettingsStore from "stores/SettingsStore";
 import { connect } from "alt-react";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
-let {operations} = require("graphenejs-lib").ChainTypes;
+import { ChainTypes as grapheneChainTypes } from "graphenejs-lib/es";
+const {operations} = grapheneChainTypes;
 
 class MarketHistory extends React.Component {
     constructor(props) {

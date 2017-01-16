@@ -1,4 +1,4 @@
-var {key} = require("graphenejs-lib");
+import {key} from "graphenejs-lib/es";
 
 onmessage = function(event) {
     try {
@@ -10,7 +10,7 @@ onmessage = function(event) {
         }
         postMessage( results )
         console.log("AddressIndexWorker done");
-    } catch( e ) { 
-        console.error("AddressIndexWorker", e) 
-    } 
+    } catch( e ) {
+        console.error("AddressIndexWorker", e)
+    }
 }

@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from "react";
 import cname from "classnames";
-import {hash, key} from "graphenejs-lib";
+import {hash, key} from "graphenejs-lib/es";
 
 var dictionary_set;
 

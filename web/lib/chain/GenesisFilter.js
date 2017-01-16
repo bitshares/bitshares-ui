@@ -1,4 +1,4 @@
-import {hash, key} from "graphenejs-lib";
+import {hash, key} from "graphenejs-lib/es";
 
 var bts_genesiskeys_bloom_url = undefined
 try {

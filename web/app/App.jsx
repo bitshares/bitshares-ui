@@ -1,4 +1,4 @@
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import {Apis} from "graphenejs-ws";
 import React from "react";
 import IntlStore from "stores/IntlStore";

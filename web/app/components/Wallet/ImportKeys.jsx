@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { connect } from "alt-react";
 import cname from "classnames";
 import notify from "actions/NotificationActions";
-import {PrivateKey, Aes, PublicKey, hash} from "graphenejs-lib";
+import {PrivateKey, Aes, PublicKey, hash} from "graphenejs-lib/es";
 import {ChainConfig} from "graphenejs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";

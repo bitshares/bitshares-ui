@@ -11,7 +11,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import utils from "common/utils";
 
 class TransactionConfirm extends React.Component {
@@ -38,10 +38,12 @@ class TransactionConfirm extends React.Component {
 
         if(this.props.propose) {
             TransactionConfirmActions.close();
-            var propose_options = {
+            const propose_options = {
                 fee_paying_account: ChainStore.getAccount(this.props.fee_paying_account).get("id")
-            }
-            WalletDb.process_transaction(this.props.transaction.propose(propose_options), null, true)
+            };
+            this.props.transaction.update_head_block().then(() => {
+                WalletDb.process_transaction(this.props.transaction.propose(propose_options), null, true);
+            });
         } else
             TransactionConfirmActions.broadcast(this.props.transaction);
     }

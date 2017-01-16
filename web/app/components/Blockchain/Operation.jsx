@@ -12,11 +12,10 @@ import LinkToAssetById from "../Blockchain/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
-let {operations} = require("graphenejs-lib").ChainTypes;
-
+const {operations} = grapheneChainTypes;
 require("./operations.scss");
 
 let ops = Object.keys(operations);

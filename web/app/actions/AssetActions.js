@@ -4,7 +4,7 @@ import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import big from "bignumber.js";
 
 let wallet_api = new WalletApi();

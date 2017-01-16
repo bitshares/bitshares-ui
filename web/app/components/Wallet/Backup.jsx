@@ -11,7 +11,7 @@ import {saveAs} from "file-saver";
 import cname from "classnames";
 import Translate from "react-translate-component";
 import {ChainConfig} from "graphenejs-ws";
-import {PrivateKey} from "graphenejs-lib";
+import {PrivateKey} from "graphenejs-lib/es";
 
 const connectObject = {
     listenTo() {

@@ -1,7 +1,7 @@
 var Immutable = require("immutable");
 import alt from "alt-instance";
 import BlockchainActions from "actions/BlockchainActions";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
 import {
     Block
