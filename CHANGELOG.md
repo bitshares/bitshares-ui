@@ -1,4 +1,35 @@
 ---------------------------------------------------------------------
+Release 2.0.170116-rc1
+---------------------------------------------------------------------
+
+New features
+--------
+- Major refactor of market handling: improved order matching and market data processing
+- Upgrade to Webpack 2, add ES6 code splitting and dynamic route loading
+- [Blocktrades] Add internal conversion
+- Major package upgrades: react, react-router, alt, file-saver ++
+- Use Roboto font everywhere by default
+- Add Equivalent values to Worker table, improve layout
+- Add a warning for disabled markets and disable buy/sell
+- Only redirect to account creation on direct navigation to "/"
+- Update default markets and add some asset symbols
+
+Bug fixes
+--------
+- [Blocktrades] Fix 'Calculating Internal Server Error'
+- [Blocktrades] Fix displaying 'Deposit limit' for 'Internal conversion'
+- [Blocktrades] Fix copy/paste for memo
+- Fix dropdown font colors
+- Fix missing connection translation key
+- Improve multi-sig signing handling, exclude owner keys if not needed
+- Hide tooltips on navigation
+- Fix Account active state in Header
+- Change 'No price available' to 'Unknown', and add a tooltip
+- Fix account creation and dictionary loading
+- Fix orderbook show more button
+- Fix some invalid JSON
+
+---------------------------------------------------------------------
 Release 2.0.161031
 ---------------------------------------------------------------------
 
