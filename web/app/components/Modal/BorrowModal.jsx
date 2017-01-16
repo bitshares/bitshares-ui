@@ -188,7 +188,7 @@ class BorrowModalContent extends React.Component {
 
         let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
         let mcr = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000
-        if (parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : sqp * mcr)) {
+        if (parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : mcr)) {
             errors.below_maintenance = counterpart.translate("borrow.errors.below");
             isValid = false;
         }
