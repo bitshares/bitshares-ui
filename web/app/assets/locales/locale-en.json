@@ -32,6 +32,14 @@
     "locked_tip": "Wallet is locked.<br/>Click to unlock.",
     "unlocked_tip": "Wallet is unlocked.<br/>Click to lock."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value."
+  },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
@@ -196,7 +204,8 @@
       "private": "Private key (WIF - Wallet Import Format)",
       "show": "show",
       "brain": "Brainkey position",
-      "from": "Imported from account"
+      "from": "Imported from account",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "Proxy",
@@ -238,8 +247,8 @@
       "creator": "Creator",
       "recycled": "Recycled",
       "funding": "Funding",
-      "total_budget": "Total available worker budget",
-      "unused_budget": "Unused worker budget",
+      "total_budget": "Total available daily worker budget",
+      "unused_budget": "Unused daily worker budget",
       "new": "Proposed workers",
       "active": "Active workers",
       "w_approved_by": "Witnesses approved by %(account)s",
@@ -276,7 +285,7 @@
     },
     "collaterals": "Collateral Positions",
     "eq_value": "Equivalent Value",
-    "no_price": "No price available",
+    "no_price": "Unknown",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",
@@ -347,7 +356,7 @@
     "limit_order_buy": "{account} placed an order to buy {amount} at {price}",
     "limit_order_cancel": "{account} cancelled order #%(order)s",
     "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
-    "asset_reserve": "{account} reserved {amount}",
+    "asset_reserve": "{account} reserved (burnt) {amount}",
     "asset_issue": "{account} issued {amount} to {to}",
     "asset_fund_fee_pool": "{account} funded {asset} fee pool with {amount}",
     "asset_create": "{account} created the asset {asset}",
@@ -381,6 +390,7 @@
     "status": "Status",
     "asset_create": "Create the asset %(asset)s using the account {account}",
     "asset_update": "Update the asset {asset} using the account {account}",
+    "asset_settle": "Request a settlement of",
     "update": {
       "active_approvals_to_add": "Active approvals to add",
       "active_approvals_to_remove": "Active approvals to remove",
@@ -391,7 +401,9 @@
     },
     "approve": "Approve",
     "reject": "Reject",
-    "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}"
+    "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+    "asset_issue": "Issue {amount} to {to} using {account}",
+    "asset_reserve": "Reserve (burn) {amount} using {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -767,15 +779,14 @@
     "receive": "Receive",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Confirm order: Buy %(buy_amount)s %(buy_symbol)s at a price of %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirm order: Sell %(sell_amount)s %(sell_symbol)s at a price of %(price_amount)s %(price_symbol)s",
     "market_name": "My Markets",
     "quote_supply": "Quote supply",
     "base_supply": "Base supply",
     "more": "Find markets",
     "volume_24": "24hr Volume",
     "change": "Change",
-    "confirm": "Your order is %(diff)s% away from the current price, are you sure?",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "indicators": "Indicators",
     "rsi": "Relative Strength Index",
     "ema": "Exponential Moving Average",
@@ -808,7 +819,8 @@
     "zoom_all": "All",
     "settings": "Chart options",
     "featured": "Featured Markets",
-    "new": "New"
+    "new": "New",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Fee Schedule"
@@ -978,6 +990,10 @@
       "amount": "Amount to Deposit",
       "submit": "Deposit"
     },
+    "convert": {
+      "amount": "Amount to Convert",
+      "submit": "Ok"
+    },
     "settle": {
       "title": "Request settlement of %(asset)s",
       "amount": "Amount to settle",
@@ -1030,7 +1046,9 @@
     "generate_new": "Get new address",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
+	"convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
+	"convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1051,6 +1069,7 @@
     "support_block": "For support, please contact Blocktrades at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
+	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
     "gateway_text": "A gateway lets you move to and from Bitshares assets to the real asset, like OPEN.BTC to BTC.",

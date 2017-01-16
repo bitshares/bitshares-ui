@@ -4,11 +4,11 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import BorrowModal from "../Modal/BorrowModal";
-import WalletApi from "rpc_api/WalletApi";
+import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import Icon from "../Icon/Icon";
 
@@ -19,7 +19,6 @@ let wallet_api = new WalletApi();
  *  Expects one property, 'object' which should be a call order id
  */
 
-@BindToChainState({keep_updating: true})
 class CollateralPosition extends React.Component {
 
     static propTypes = {
@@ -131,9 +130,9 @@ class CollateralPosition extends React.Component {
         );
     }
 }
+CollateralPosition = BindToChainState(CollateralPosition, {keep_updating: true});
 
-@BindToChainState({keep_updating: true})
-export default class CollateralPositionWrapper extends React.Component {
+class CollateralPositionWrapper extends React.Component {
     static propTypes = {
         object: ChainTypes.ChainObject.isRequired
     };
@@ -145,7 +144,6 @@ export default class CollateralPositionWrapper extends React.Component {
 
         return <CollateralPosition debtAsset={debtAsset} collateralAsset={collateralAsset} {...this.props} />;
     }
-
-
-
 }
+
+export default BindToChainState(CollateralPositionWrapper, {keep_updating: true});

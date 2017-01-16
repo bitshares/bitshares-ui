@@ -22,6 +22,14 @@
     "lock": "Vérouiller",
     "unlock": "Dévérouiller"
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value."
+  },
   "account": {
     "asset": "Actif",
     "market_value": "Valeur",
@@ -80,7 +88,8 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy": "Proxy Voting Account",
@@ -375,8 +384,9 @@
     "quantity": "Quantité",
     "buy": "Acheter",
     "sell": "Vendre",
-    "confirm_buy": "Confirmation d'ordre: Acheter %(buy_amount)s %(buy_symbol)s au prix de %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirmation d'ordre: Vendre %(sell_amount)s %(sell_symbol)s au prix de %(price_amount)s %(price_symbol)s"
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "choose_base": "Selectionner l'actif de base",

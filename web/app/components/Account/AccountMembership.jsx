@@ -1,23 +1,17 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
-import LoadingIndicator from "../LoadingIndicator";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";
 import AccountActions from "actions/AccountActions";
-import Icon from "../Icon/Icon";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
-import utils from "common/utils";
-import WalletActions from "actions/WalletActions";
 import accountUtils from "common/account_utils";
 
-@BindToChainState()
 class FeeHelp extends React.Component {
-       static propTypes = {
+    static propTypes = {
         dprops: ChainTypes.ChainObject.isRequired
     };
     static defaultProps = {
@@ -37,8 +31,8 @@ class FeeHelp extends React.Component {
         );
     }
 }
+FeeHelp = BindToChainState(FeeHelp);
 
-@BindToChainState()
 class AccountMembership extends React.Component {
 
     static propTypes = {
@@ -72,7 +66,7 @@ class AccountMembership extends React.Component {
         if( ref ) account.referrer_name = ref.get('name');
         let reg = ChainStore.getAccount( account.registrar );
         if( reg ) account.registrar_name = reg.get('name');
-       
+
         let account_name = account.name;
 
         let network_fee  = account.network_fee_percentage/100;
@@ -186,5 +180,6 @@ class AccountMembership extends React.Component {
         );
     }
 }
+AccountMembership = BindToChainState(AccountMembership);
 
 export default AccountMembership;

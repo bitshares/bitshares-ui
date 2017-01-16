@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Immutable from "immutable";
 import classNames from "classnames";
@@ -9,8 +8,6 @@ import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import SettingsActions from "actions/SettingsActions";
-import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
@@ -52,7 +49,7 @@ class OrderRow extends React.Component {
     }
 
     render() {
-        let {base, quote, order, cancel_text, showSymbols, invert} = this.props;
+        let {base, quote, order, showSymbols} = this.props;
         let {value, price, amount} = market_utils.parseOrder(order, base, quote);
         let isAskOrder = market_utils.isAsk(order, base);
         let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
@@ -67,8 +64,8 @@ class OrderRow extends React.Component {
                     <PriceText preFormattedPrice={price} />
                     {priceSymbol}
                 </td>
-                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision") - 2)} {amountSymbol}</td>
-                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision") - 2)} {valueSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision"))} {amountSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision"))} {valueSymbol}</td>
                 <td style={{width: "28%"}}><FormattedDate
                     value={order.expiration}
                     format="short"
@@ -86,29 +83,28 @@ class OrderRow extends React.Component {
 }
 
 OrderRow.defaultProps = {
-    showSymbols: false,
-    invert: false
+    showSymbols: false
 };
 
 
 class MyOpenOrders extends React.Component {
 
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-                nextProps.currentAccount !== this.props.currentAccount ||
-                nextProps.className !== this.props.className ||
-                !Immutable.is(nextProps.orders, this.props.orders)
-            );
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     return (
+    //             nextProps.currentAccount !== this.props.currentAccount ||
+    //             nextProps.className !== this.props.className ||
+    //             !Immutable.is(nextProps.orders, this.props.orders)
+    //         );
+    // }
 
     componentDidMount() {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+        let asksContainer = this.refs.asks;
         Ps.initialize(asksContainer);
     }
 
-    componentDidUpdate(prevProps) {
-        let asksContainer = ReactDOM.findDOMNode(this.refs.asks);
+    componentDidUpdate() {
+        let asksContainer = this.refs.asks;
         Ps.update(asksContainer);
     }
 
@@ -119,7 +115,6 @@ class MyOpenOrders extends React.Component {
         let emptyRow = <tr><td style={{textAlign: "center"}} colSpan="5"><Translate content="account.no_orders" /></td></tr>;
 
         if(orders.size > 0 && base && quote) {
-            let cancel = counterpart.translate("account.perm.cancel");
 
             bids = orders.filter(a => {
                 return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.get("id"));
@@ -128,9 +123,9 @@ class MyOpenOrders extends React.Component {
                 let {price: b_price} = market_utils.parseOrder(b, base, quote);
 
                 return b_price.full - a_price.full;
-            }).map((order, index) => {
+            }).map(order => {
                 let {price} = market_utils.parseOrder(order, base, quote);
-                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -142,7 +137,7 @@ class MyOpenOrders extends React.Component {
                 return a_price.full - b_price.full;
             }).map(order => {
                 let {price} = market_utils.parseOrder(order, base, quote);
-                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} cancel_text={cancel} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
         } else {
@@ -175,7 +170,7 @@ class MyOpenOrders extends React.Component {
 
         rows.sort((a, b) => {
             return a.props.price - b.props.price;
-        })
+        });
 
         // if (bids.length === 0 && asks.length ===0) {
         //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
@@ -228,6 +223,4 @@ MyOpenOrders.propTypes = {
     baseSymbol: PropTypes.string.isRequired
 };
 
-exports.OrderRow = OrderRow;
-exports.TableHeader = TableHeader;
-exports.MyOpenOrders = MyOpenOrders;
+export { OrderRow, TableHeader, MyOpenOrders };

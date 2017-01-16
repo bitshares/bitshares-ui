@@ -1,7 +1,6 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
-import {PropTypes} from "react";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import AltContainer from "alt-container";
@@ -22,7 +21,6 @@ import AssetName from "./AssetName";
  *
  */
 
-@BindToChainState()
 class FormattedPrice extends React.Component {
 
     static propTypes = {
@@ -34,14 +32,14 @@ class FormattedPrice extends React.Component {
     };
 
     static contextTypes = {
-        history: React.PropTypes.object
+        router: React.PropTypes.object
     };
 
     constructor(props) {
-      super(props);
-      this.state = {isPopoverOpen: false};
-      this.togglePopover = this.togglePopover.bind(this);
-      this.closePopover = this.closePopover.bind(this);
+        super(props);
+        this.state = {isPopoverOpen: false};
+        this.togglePopover = this.togglePopover.bind(this);
+        this.closePopover = this.closePopover.bind(this);
     }
 
     togglePopover(e) {
@@ -54,31 +52,30 @@ class FormattedPrice extends React.Component {
     }
 
     onFlip() {
-      let setting = {};
-      setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
-      SettingsActions.changeMarketDirection(setting);
+        let setting = {};
+        setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
+        SettingsActions.changeMarketDirection(setting);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      return (
-        nextProps.marketDirections !== this.props.marketDirections ||
-        nextProps.base_amount !== this.props.base_amount ||
-        nextProps.quote_amount !== this.props.quote_amount ||
-        nextProps.decimals !== this.props.decimals ||
-        !utils.are_equal_shallow(nextState, this.state)
-      );
+        return (
+            nextProps.marketDirections !== this.props.marketDirections ||
+            nextProps.base_amount !== this.props.base_amount ||
+            nextProps.quote_amount !== this.props.quote_amount ||
+            nextProps.decimals !== this.props.decimals ||
+            !utils.are_equal_shallow(nextState, this.state)
+        );
     }
 
     goToMarket(e) {
-      e.preventDefault();
-      this.context.history.pushState(null, `/market/${this.props.base_asset.get("symbol")}_${this.props.quote_asset.get("symbol")}`);
-
+        e.preventDefault();
+        this.context.router.push(`/market/${this.props.base_asset.get("symbol")}_${this.props.quote_asset.get("symbol")}`);
     }
 
     render() {
 
         let {base_asset, quote_asset, base_amount, quote_amount,
-          marketDirections, marketId, hide_symbols} = this.props;
+          marketDirections, marketId, hide_symbols, noPopOver} = this.props;
 
         let invertPrice = marketDirections.get(marketId);
 
@@ -112,10 +109,10 @@ class FormattedPrice extends React.Component {
                 />
             );
         }
-        let symbols = hide_symbols ? '' :
-                      (<span><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+        let symbols = hide_symbols ? "" :
+                      (<span className={noPopOver ? "clickable" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
 
-        const currency_popover_body = !hide_symbols ? (
+        const currency_popover_body = !noPopOver && !hide_symbols ? (
           <div>
             <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div>
             <div className="button" onClick={this.goToMarket.bind(this)}><Translate content="exchange.to_market" /></div>
@@ -137,6 +134,8 @@ class FormattedPrice extends React.Component {
          )
     }
 }
+
+FormattedPrice = BindToChainState(FormattedPrice);
 
 export default class FormattedPriceWrapper extends React.Component {
 

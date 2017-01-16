@@ -1,17 +1,5 @@
 import React from "react";
-import MarketCard from "./MarketCard";
-import MarketRow from "./MarketRow";
 import MyMarkets from "./MyMarkets";
-import Translate from "react-translate-component";
-import {Link} from "react-router";
-import SettingsActions from "actions/SettingsActions";
-import MarketsActions from "actions/MarketsActions";
-import Immutable from "immutable";
-import AssetActions from "actions/AssetActions";
-import {debounce} from "lodash";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
-import LoadingIndicator from "../LoadingIndicator";
 
 class Markets extends React.Component {
 
@@ -47,9 +35,6 @@ class Markets extends React.Component {
     }
 
     render() {
-        let {starredMarkets} = this.props;
-        let assets = [];
-
         return (
             <div
                 ref="wrapper"

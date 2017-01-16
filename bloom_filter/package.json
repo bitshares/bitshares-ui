@@ -1,0 +1,16 @@
+{
+  "name": "bitshares-keys-bloom-filter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bloom_filter_wallet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cat wallet.json | node bloom_filter_wallet.js > filtered_wallet.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "coffee-script": "^1.12.2",
+    "graphenejs-lib": "^0.4.10"
+  }
+}

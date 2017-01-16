@@ -27,6 +27,14 @@
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
     "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value."
+  },
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
@@ -154,7 +162,8 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "Proxy",
@@ -638,8 +647,8 @@
     "receive": "Empfangen",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Bestätigen Sie die Anweisung: Kauf von %(buy_amount)s %(buy_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "Meine Märkte",
     "quote_supply": "Quote Verfügbarkeit",
     "base_supply": "Base Verfügbarkeit",
@@ -666,7 +675,8 @@
     "borrow": "Leihen",
     "no_balance": "Ungenügendes Guthaben",
     "invalid_amount": "Ungültiger Betrag",
-    "invalid_price": "Ungültiger Preis"
+    "invalid_price": "Ungültiger Preis",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Gebühren"

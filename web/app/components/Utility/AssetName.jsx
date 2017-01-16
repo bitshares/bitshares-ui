@@ -4,7 +4,6 @@ import asset_utils from "common/asset_utils";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 
-@BindToChainState()
 class AssetName extends React.Component {
 
 	static propTypes = {
@@ -14,7 +13,8 @@ class AssetName extends React.Component {
 	};
 
 	static defaultProps = {
-		replace: true
+		replace: true,
+		noPrefix: false
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -25,8 +25,7 @@ class AssetName extends React.Component {
 	}
 
 	render() {
-		let {name, replace, asset} = this.props;
-
+		let {name, replace, asset, noPrefix} = this.props;
 		let isBitAsset = asset.has("bitasset");
 		let isPredMarket = isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
@@ -49,11 +48,13 @@ class AssetName extends React.Component {
 				</span>
 			);
 		} else {
-			return <span>{prefix}<span>{name}</span></span>
+			return <span>{!noPrefix ? prefix : null}{name}</span>;
 		}
 
 	}
 }
+
+AssetName = BindToChainState(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
 

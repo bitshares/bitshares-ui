@@ -9,7 +9,6 @@ import BindToChainState from "./BindToChainState";
  *  Expects one property, 'balance' which should be a balance_object id
  */
 
-@BindToChainState({keep_updating: true})
 class BalanceComponent extends React.Component {
 
     static propTypes = {
@@ -24,4 +23,4 @@ class BalanceComponent extends React.Component {
     }
 }
 
-export default BalanceComponent;
+export default BindToChainState(BalanceComponent, {keep_updating: true});

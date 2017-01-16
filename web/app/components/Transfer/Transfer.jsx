@@ -9,9 +9,9 @@ import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import RecentTransactions from "../Account/RecentTransactions";
+import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
 class Transfer extends React.Component {
 

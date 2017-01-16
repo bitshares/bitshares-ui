@@ -8,8 +8,14 @@
     "es": "Español",
     "tr": "Turkish"
   },
+  "sync_fail": {
+    "title": "无法与API服务器同步连接",
+    "sub_text_1": "请确认你的计算机系统时钟正确。",
+    "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
+},
   "header": {
     "title": "Graphene (石墨烯)钱包",
+    "account": "账户",
     "dashboard": "概览",
     "explorer": "浏览",
     "exchange": "交易",
@@ -19,13 +25,20 @@
     "current": "当前账户",
     "create_account": "创建账户",
     "create_asset": "创建资产",
+    "update_asset": "更新资产",
     "lock": "锁定钱包",
     "unlock": "解锁",
-    "account": "账户",
     "help": "帮助",
     "locked_tip": "钱包已锁定，点击解锁。",
-    "unlocked_tip": "钱包已解锁，点击锁定。",
-    "update_asset": "更新资产"
+    "unlocked_tip": "钱包已解锁，点击锁定。"
+  },
+  "tooltip": {
+      "call_limit": "This is the call price of the least collateralized margin position in the market.",
+      "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+      "settle_price": "This is the price at which settle orders will execute.",
+      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+      "latest_price": "This is the latest price seen in this market.",
+      "no_price": "There's no recent price available for this asset that can be used to estimate its value."
   },
   "account": {
     "welcome": "欢迎使用 Graphene (石墨烯)系统",
@@ -161,7 +174,8 @@
       "private": "私钥(WIF - 钱包导入格式)",
       "show": "显示",
       "brain": "脑钱包位置",
-      "from": "已从账户导入"
+      "from": "已从账户导入",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy_short": "代理投票",
@@ -766,8 +780,8 @@
     "quantity": "数量",
     "buy": "买入",
     "sell": "卖出",
-    "confirm_buy": "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
-    "confirm_sell": "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "settle": "喂价",
     "core_rate": "转账手续费汇率",
     "squeeze": "强制平仓价",
@@ -819,7 +833,8 @@
     "zoom_all": "显示全部",
     "settings": "图表选项",
     "featured": "热门市场",
-    "new": "新增"
+    "new": "新增",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "title": "交易所",
@@ -1120,10 +1135,5 @@
     "users": "%(count)s 用户在线",
     "disabled": "聊天室禁用",
     "enable": "启用聊天室"
-  },
-  "sync_fail": {
-    "title": "无法与API服务器同步连接",
-    "sub_text_1": "请确认你的计算机系统时钟正确。",
-    "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
   }
 }

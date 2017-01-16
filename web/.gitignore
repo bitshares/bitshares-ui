@@ -4,3 +4,4 @@ bower_components
 bundle
 stats-dev.json
 stats-prod.json
+test/MarketClasses.js

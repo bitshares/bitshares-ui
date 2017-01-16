@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
 const ReactHighstock = require("react-highcharts/dist/ReactHighstock");
@@ -19,6 +18,9 @@ require("./highcharts-plugins/highstock-current-price-indicator.js");
 class PriceChart extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.baseSymbol !== this.props.baseSymbol || nextProps.quoteSymbol !== this.props.quoteSymbol) {
+            return true;
+        }
         let chart = this.refs.chart ? this.refs.chart.chart : null;
         if (chart && (!utils.are_equal_shallow(nextProps.indicators, this.props.indicators))) {
             let changed, added;
@@ -108,7 +110,7 @@ class PriceChart extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let height = ReactDOM.findDOMNode(this).offsetHeight;
+        let height = this.offsetHeight;
         this.setState({offsetHeight: height - 10});
 
         if (this.refs.chart &&

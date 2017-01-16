@@ -26,6 +26,14 @@
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
     "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value."
+  },
   "account": {
     "welcome": "비트쉐어 2.0 이용을 환영합니다",
     "asset": "자산",
@@ -94,7 +102,8 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy": "대리투표 계정",
@@ -516,11 +525,12 @@
     "receive": "Receive",
     "vertical": "수직시세",
     "horizontal": "수평시세",
-    "confirm_buy": "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
-    "confirm_sell": "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "종목명",
     "quote_supply": "유통량",
-    "base_supply": "유통량"
+    "base_supply": "유통량",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "base": "기초 자산",

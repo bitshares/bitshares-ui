@@ -9,7 +9,6 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
-@BindToChainState({keep_updating:true})
 class WithdrawFiatOpenLedger extends React.Component {
 
    static propTypes = {
@@ -118,4 +117,4 @@ class WithdrawFiatOpenLedger extends React.Component {
 
 };
 
-export default WithdrawFiatOpenLedger
+export default BindToChainState(WithdrawFiatOpenLedger, {keep_updating:true});

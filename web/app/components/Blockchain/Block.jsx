@@ -21,9 +21,9 @@ class TransactionList extends React.Component {
     render() {
         let {block} = this.props;
         let transactions = null;
-        
+
         transactions = [];
-        
+
         if (block.transactions.length > 0) {
             transactions = [];
 
@@ -46,7 +46,6 @@ class TransactionList extends React.Component {
 }
 
 
-@BindToChainState({keep_updating: true})
 class Block extends BaseComponent {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
@@ -78,7 +77,7 @@ class Block extends BaseComponent {
             height = parseInt(height, 10);
             if (!this.props.blocks.get(height)) {
                 BlockchainActions.getBlock(height);
-            } 
+            }
         }
     }
 
@@ -91,13 +90,13 @@ class Block extends BaseComponent {
     _nextBlock() {
         let height = this.props.params.height;
         let nextBlock = Math.min(this.props.dynGlobalObject.get("head_block_number"), parseInt(height, 10) + 1);
-        this.props.history.pushState(null, `/block/${nextBlock}`);
+        this.props.router.push(`/block/${nextBlock}`);
     }
 
     _previousBlock() {
         let height = this.props.params.height;
         let previousBlock = Math.max(1, parseInt(height, 10) - 1);
-        this.props.history.pushState(null, `/block/${previousBlock}`);
+        this.props.router.push(`/block/${previousBlock}`);
     }
 
     componentDidMount() {
@@ -128,9 +127,9 @@ class Block extends BaseComponent {
                         <div className="clearfix" style={{marginBottom: "1rem"}}>
                             <div className="button float-left outline" onClick={this._previousBlock.bind(this)}>&#8592;</div>
                             <div className="button float-right outline" onClick={this._nextBlock.bind(this)}>&#8594;</div>
-                        </div> 
+                        </div>
                         {block ? <TransactionList
-                            block={block} 
+                            block={block}
                         /> : null}
                     </div>
                 </div>
@@ -139,4 +138,4 @@ class Block extends BaseComponent {
     }
 }
 
-export default Block;
+export default BindToChainState(Block, {keep_updating: true});

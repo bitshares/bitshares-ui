@@ -643,7 +643,7 @@
     }
   }
 
-  .block-content-header {    
+  .block-content-header {
     //text-transform: uppercase;
     @include RobotoLight;
   }
@@ -751,10 +751,15 @@
         color: $primary-text-color;
       }
 
-      > span:last-of-type {
+      > span.symbol-text {
         color: #468EDE;
       }
     }
+    &.is-call {
+        >span > b {
+            color: $call-color;
+        }
+}
   }
 
   .buy-sell-box {
@@ -770,6 +775,10 @@
           background-size: 8px 8px;
           background-color: $header-color;
           font-size: 12px;
+
+          > option {
+              color: $chat-text-color;
+          }
       }
   }
 
@@ -846,6 +855,10 @@
 
   select.bts-select {
       color: $secondary-text-color;
+
+      > option {
+          color: $chat-text-color;
+      }
   }
 
 

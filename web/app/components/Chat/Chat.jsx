@@ -1,9 +1,9 @@
 import React from "react";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import AccountStore from "stores/AccountStore";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
@@ -13,8 +13,7 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import {FetchChainObjects} from "graphenejs-lib";;
-
+import {FetchChainObjects} from "graphenejs-lib/es";;
 
 const PROD = true;
 const hostConfig = PROD ? { // Prod config
@@ -56,21 +55,7 @@ class Comment extends React.Component {
     }
 }
 
-
-@connectToStores
-export default class Chat extends React.Component {
-    static getStores() {
-        return [AccountStore, SettingsStore];
-    };
-
-    static getPropsFromStores() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
-        };
-    };
-
+class Chat extends React.Component {
     constructor(props) {
         super(props);
 
@@ -218,7 +203,8 @@ export default class Chat extends React.Component {
             this.setState({
                 fetchingHistory: true
             });
-            return this.connections.get(data.id).send({requestHistory: this._myID});
+            let c = this.connections.get(data.id);
+            return c ? c.send({requestHistory: this._myID}) : null;
         }
 
         if ("history" in data && data.history.length) {
@@ -667,3 +653,16 @@ export default class Chat extends React.Component {
         );
     }
 }
+
+export default connect(Chat, {
+    listenTo() {
+        return [AccountStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});
