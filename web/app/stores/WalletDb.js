@@ -250,7 +250,6 @@ class WalletDb extends BaseStore {
             return Promise.all([
                 dictionaryPromise
             ]).then(res => {
-                debugger;
                 return brainkey_plaintext ? walletCreateFct(null) :
                     res[0].json().then(walletCreateFct);
             }).catch(err => {
