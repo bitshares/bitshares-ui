@@ -853,7 +853,7 @@
       border-top: 2px solid $panel-bg-color;
   }
 
-  select.bts-select {
+  select.bts-select, select.native-coin-types, , select.external-coin-types {
       color: $secondary-text-color;
 
       > option {
