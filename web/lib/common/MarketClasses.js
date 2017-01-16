@@ -595,20 +595,28 @@ class CallOrder {
     /*
     * Assume a USD:BTS market
     * The call order will always be selling BTS in order to buy USD
-    * The asset being sold is always the collateral, which is call_price.base.asset_id
+    * The asset being sold is always the collateral, which is call_price.base.asset_id.
+    * The amount being sold depends on how big the debt is, only enough
+    * collateral will be sold to cover the debt
     */
-    amountForSale() {
+    amountForSale(isBid = this.isBid()) {
         if (this._for_sale) return this._for_sale;
-        return this._for_sale = new Asset({
-            asset_id: this.for_sale_id,
-            amount: this.for_sale,
-            precision: this.assets[this.for_sale_id].precision
-        });
+        // return this._for_sale = new Asset({
+        //     asset_id: this.for_sale_id,
+        //     amount: this.for_sale,
+        //     precision: this.assets[this.for_sale_id].precision
+        // });
+        return this._for_sale = this.amountToReceive().times(this.feed_price.getSqueezePrice(), isBid);
     }
 
-    amountToReceive(isBid = this.isBid()) {
+    amountToReceive() {
         if (this._to_receive) return this._to_receive;
-        return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice(), isBid);
+        // return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice(), isBid);
+        return this._to_receive = new Asset({
+            asset_id: this.to_receive_id,
+            amount: this.to_receive,
+            precision: this.assets[this.to_receive_id].precision
+        });
     }
 
     sum(order) {

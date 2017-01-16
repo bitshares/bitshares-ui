@@ -794,16 +794,16 @@ describe("CallOrder", function() {
         let order = new CallOrder(o, assets, "1.3.0", settlePrice_0);
         let forSale = order.amountForSale();
 
-        assert.equal(forSale.getAmount(), 338894366025, "Satoshi amount for sale should equal 338894366025");
-        assert.equal(forSale.getAmount({real: true}), 3388943.66025, "Real amount for sale should equal 3388943.66025");
+        assert.equal(forSale.getAmount(), 188039049032, "Satoshi amount for sale should equal 188039049032");
+        assert.equal(forSale.getAmount({real: true}), 1880390.49032, "Real amount for sale should equal 1880390.49032");
     });
 
     it("Returns the amount to receive as an asset based on squeeze price", function() {
         let order = new CallOrder(o, assets, "1.3.0", settlePrice_0);
         let toReceive = order.amountToReceive();
 
-        assert.equal(toReceive.getAmount(), 899000970, "Satoshi amount to receive should equal 899000970");
-        assert.equal(toReceive.getAmount({real: true}), 89900.097, "Real amount for sale should equal 89900.097");
+        assert.equal(toReceive.getAmount(), 498820000, "Satoshi amount to receive should equal 498820000");
+        assert.equal(toReceive.getAmount({real: true}), 49882.0000, "Real amount for sale should equal 49882.0000");
     });
 
     it("Can be summed with another order", function() {
@@ -811,7 +811,7 @@ describe("CallOrder", function() {
         let o2 = new CallOrder(o, assets, "1.3.0", settlePrice_0);
         const o3 = o1.sum(o2);
 
-        assert.equal(o3.amountForSale().getAmount(), 338894366025*2, "The amount should equal 677788732050");
+        assert.equal(o3.amountForSale().getAmount(), 188039049032*2, "The amount should equal 376078098064");
     });
 
     it("Can be compared to another order with equals / ne", function() {
