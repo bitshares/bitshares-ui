@@ -4,22 +4,19 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import BorrowModal from "../Modal/BorrowModal";
-import WalletApi from "rpc_api/WalletApi";
+import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
-import {ChainStore} from "graphenejs-lib";
-import ActionSheet from "react-foundation-apps/src/action-sheet";
-import Icon from "../Icon/Icon";
+import counterpart from "counterpart";
 
-let wallet_api = new WalletApi();
+const wallet_api = new WalletApi();
 /**
  *  Given a collateral position object (call order), displays it in a pretty way
  *
  *  Expects one property, 'object' which should be a call order id
  */
 
-@BindToChainState({keep_updating: true})
 class CollateralPosition extends React.Component {
 
     static propTypes = {
@@ -73,67 +70,107 @@ class CollateralPosition extends React.Component {
         );
     }
 
-    _getCollateralRatio(debt, collateral) {
-        let c = utils.get_asset_amount(collateral, this.props.collateralAsset);
-        let d = utils.get_asset_amount(debt, this.props.debtAsset);
+    _getCollateralRatio() {
+        const co = this.props.object.toJS();
+        const c = utils.get_asset_amount(co.collateral, this.props.collateralAsset);
+        const d = utils.get_asset_amount(co.debt, this.props.debtAsset);
         return c / (d / this._getFeedPrice());
     }
 
-    render() {
-        let co = this.props.object.toJS();
-        let cr = this._getCollateralRatio(co.debt, co.collateral);
+    _getMR() {
+        return this.props.debtAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
+    }
 
-        let quoteAssetID = co.call_price.quote.asset_id;
-        let quoteAsset = ChainStore.getAsset(quoteAssetID);
+    _getStatusClass() {
+        let cr = this._getCollateralRatio();
+        const mr = this._getMR();
+
+        if (isNaN(cr)) return null;
+        if (cr < mr) {
+            return "danger";
+        } else if (cr < (mr + 0.5)) {
+            return "warning";
+        } else {
+            return "";
+        }
+    }
+
+    _getCRTip() {
+        const statusClass = this._getStatusClass();
+        const mr = this._getMR();
+        if (!statusClass || statusClass === "") return null;
+
+        if (statusClass === "danger") {
+            return counterpart.translate("tooltip.cr_danger", {mr});
+        } else if (statusClass === "warning") {
+            return counterpart.translate("tooltip.cr_warning", {mr});
+        } else {
+            return null;
+        }
+    }
+
+    render() {
+        let {debtAsset, object} = this.props;
+        const co = object.toJS();
+        const cr = this._getCollateralRatio();
+        const d = utils.get_asset_amount(co.debt, this.props.debtAsset);
+
+        const statusClass = this._getStatusClass();
 
         return (
-            <tr>
+            <tr className="margin-row">
                 <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
-                <td>{<FormattedAsset amount={co.collateral} asset={co.call_price.base.asset_id}/>}</td>
-                <td>{utils.format_number(cr, 2)}</td>
-                <td className="column-hide-small">{<FormattedPrice
-                    base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
-                    quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}/>}
+                <td className="column-hide-medium">
+                    <FormattedAsset
+                        decimalOffset={5}
+                        amount={co.collateral}
+                        asset={co.call_price.base.asset_id}
+                    />
+                </td>
+                <td data-place="bottom" data-tip={this._getCRTip()} className={"center-content "+ statusClass} >{utils.format_number(cr, 2)}</td>
+                <td className={"center-content column-hide-small"}>
+                    <FormattedPrice
+                        callPrice
+                        decimals={2}
+                        base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
+                        quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                    />
                 </td>
 
-                <td>
-                    <ActionSheet>
-                        <ActionSheet.Button title="">
-                            <a className="action-button">
-                                &nbsp;<Translate content="account.perm.action" /> &nbsp;
-                                <Icon className="icon-14px" name="chevron-down"/>
-                            </a>
-                        </ActionSheet.Button>
-                        <ActionSheet.Content >
-                            <ul className="no-first-element-top-border">
-                                <li className="dropdown-options">
-                                        <a onClick={this._onUpdatePosition.bind(this)}>
-                                            <Translate content="borrow.adjust" />
-                                        </a>
-                                </li>
-                                <li className="dropdown-options">
-                                    <a onClick={this._onClosePosition.bind(this)}>
-                                        <Translate content="borrow.close" />
-                                    </a>
-                                </li>
-                            </ul>
-                        </ActionSheet.Content>
-                    </ActionSheet>
-                    {quoteAsset ? (
-                    <BorrowModal
-                        ref={"cp_modal_" + co.call_price.quote.asset_id}
-                        quote_asset={co.call_price.quote.asset_id}
-                        backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
-                        account={this.props.account}
-                    />) : null}
+                <td className="center-content">
+                    <div
+                        data-place="left"
+                        data-tip={counterpart.translate("tooltip.update_position")}
+                        style={{paddingBottom: 5}}
+                    >
+                        <a onClick={this._onUpdatePosition.bind(this)}>
+                            <Translate content="borrow.adjust" />
+                        </a>
+                    </div>
+                    <div
+                        data-place="left"
+                        data-tip={counterpart.translate("tooltip.close_position", {amount: d, asset: debtAsset.get("symbol")})}
+                        style={{paddingBottom: 5}}
+                    >
+                        <a onClick={this._onClosePosition.bind(this)}>
+                            <Translate content="borrow.close" />
+                        </a>
+                    </div>
                 </td>
+                {debtAsset ? (
+                <BorrowModal
+                    ref={"cp_modal_" + co.call_price.quote.asset_id}
+                    quote_asset={co.call_price.quote.asset_id}
+                    backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                    account={this.props.account}
+                />) : null}
             </tr>
         );
     }
 }
+CollateralPosition = BindToChainState(CollateralPosition, {keep_updating: true});
 
-@BindToChainState({keep_updating: true})
-export default class CollateralPositionWrapper extends React.Component {
+class CollateralPositionWrapper extends React.Component {
     static propTypes = {
         object: ChainTypes.ChainObject.isRequired
     };
@@ -145,7 +182,36 @@ export default class CollateralPositionWrapper extends React.Component {
 
         return <CollateralPosition debtAsset={debtAsset} collateralAsset={collateralAsset} {...this.props} />;
     }
-
-
-
 }
+
+CollateralPositionWrapper = BindToChainState(CollateralPositionWrapper, {keep_updating: true});
+
+const CollateralTable = ({callOrders, account}) => {
+
+    return (
+        <table className="table">
+            <thead>
+            <tr>
+                <th><Translate content="transaction.borrow_amount" /></th>
+                <th className="column-hide-medium"><Translate content="transaction.collateral" /></th>
+                <th style={{textAlign: "center"}}>
+                    <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.coll_ratio")}>
+                        <Translate content="borrow.coll_ratio" />
+                    </div>
+                </th>
+                <th style={{textAlign: "center"}} className="column-hide-small">
+                    <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
+                        <Translate content="exchange.call" />
+                    </div>
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                { callOrders.map(id => <CollateralPositionWrapper key={id} object={id} account={account}/>) }
+            </tbody>
+        </table>
+    );
+};
+
+export default CollateralTable;

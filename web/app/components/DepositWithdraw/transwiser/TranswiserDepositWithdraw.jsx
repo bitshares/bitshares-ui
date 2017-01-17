@@ -9,7 +9,6 @@ import AccountBalance from "../../Account/AccountBalance";
 import TranswiserDepositModal from "./TranswiserDepositModal";
 import TranswiserWithdrawModal from "./TranswiserWithdrawModal";
 
-@BindToChainState({keep_updating: true})
 class TranswiserDepositWithdraw extends React.Component {
 
     static propTypes = {
@@ -129,4 +128,4 @@ class TranswiserDepositWithdraw extends React.Component {
     }
 }
 
-export default TranswiserDepositWithdraw;
+export default BindToChainState(TranswiserDepositWithdraw, {keep_updating: true});

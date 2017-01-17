@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
@@ -9,12 +9,10 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
-import Post from "common/formPost";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Blockchain/LinkToAccountById";
 
-@BindToChainState({keep_updating:true})
-export default class BlockTradesGatewayDepositRequest extends React.Component {
+class BlockTradesGatewayDepositRequest extends React.Component {
     static propTypes = {
         url:               React.PropTypes.string,
         gateway:           React.PropTypes.string,
@@ -39,7 +37,7 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
 
         let urls = {
             blocktrades: "https://api.blocktrades.us/v2",
-            openledger: "https://bitshares.openledger.info/depositwithdraw/api/v2"
+            openledger: "https://api.blocktrades.us/ol/v2"
         }
 
         this.state = {
@@ -247,12 +245,11 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
                             <table className="table">
                                 <tbody>
                                     <tr>
-                                        <td colSpan="2" style={{textAlign: "left"}}>{deposit_address_fragment}</td>
+                                        <td>{deposit_address_fragment}</td>
                                     </tr>
                                     {deposit_memo ? (
                                     <tr>
-                                        <td>memo:</td>
-                                        <td style={{textAlign: "left"}}>{deposit_memo}</td>
+                                        <td>memo: {deposit_memo}</td>
                                     </tr>) : null}
                                 </tbody>
                             </table>
@@ -333,3 +330,5 @@ export default class BlockTradesGatewayDepositRequest extends React.Component {
         }
     }
 };
+
+export default BindToChainState(BlockTradesGatewayDepositRequest, {keep_updating:true});

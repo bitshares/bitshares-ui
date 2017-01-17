@@ -5,19 +5,16 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import utils from "common/utils";
 import AccountSelect from "components/Forms/AccountSelect";
 import AccountStore from "stores/AccountStore";
 import WalletDb from "stores/WalletDb";
-import WalletApi from "rpc_api/WalletApi";
-import Immutable from "immutable";
+import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
 let wallet_api = new WalletApi();
 
-@BindToChainState()
 class ProposalApproveModal extends React.Component {
 
    static propTypes = {
@@ -51,7 +48,7 @@ class ProposalApproveModal extends React.Component {
 
    }
 
-   _onProposalAction(oldProposal) {
+    _onProposalAction(oldProposal) {
         let proposalObject = oldProposal.toJS();
         let {active, key, owner, payee} = this.state;
 
@@ -68,6 +65,8 @@ class ProposalApproveModal extends React.Component {
 
         let isAdd = this.props.action === "approve";
 
+        let neededKeys = [];
+
         ["active", "owner", "key"].forEach(auth_type => {
             let value = this.state[auth_type];
             if (value) {
@@ -75,17 +74,19 @@ class ProposalApproveModal extends React.Component {
                 if ((isAdd && !hasValue) || (!isAdd && hasValue)) {
                     if (this.props.action === "approve") {
                         proposal[`${auth_type}_approvals_to_add`] = [value];
+                        if (auth_type === "key") neededKeys.push(value);
                     } else if (this.props.action === "reject") {
                         proposal[`${auth_type}_approvals_to_remove`] = [value];
+                        if (auth_type === "key") neededKeys.push(value);
                     }
                 }
 
             }
-        })
+        });
 
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("proposal_update", proposal);
-        WalletDb.process_transaction(tr, null, true);
+        WalletDb.process_transaction(tr, null, true, neededKeys);
 
         ZfApi.publish(this.props.modalId, "close");
     }
@@ -124,11 +125,11 @@ class ProposalApproveModal extends React.Component {
 
         let keyNames = [];
         let keyMap = {};
-      
+
         if (this.props.keys.length) {
             this.props.keys.forEach(key => {
                 let isMine = AccountStore.isMyKey(key);
-               
+
                 if (isMine && !proposal.get("available_key_approvals").includes(key)) {
                     keyMap[key] = true;
                     keyNames.push(key);
@@ -145,7 +146,7 @@ class ProposalApproveModal extends React.Component {
                         <h4>{isAdd ? "Add approval" : "Remove approval"}</h4>
                     </div>
                     <div className="content-block" style={{paddingRight: "20%"}}>
-                        
+
                         <NestedApprovalState
                             proposal={proposal.get("id")}
                             type={type}
@@ -153,7 +154,7 @@ class ProposalApproveModal extends React.Component {
                             removed={!isAdd ? this.state.key ? this.state.key : this.state[type] || null : null}
                         />
                     </div>
-                    
+
                     <div className="content-block full-width-content">
                        <div className="full-width-content form-group">
                             <label>Pay with account</label>
@@ -183,23 +184,23 @@ class ProposalApproveModal extends React.Component {
                     </div>
 
                     <div className="content-block">
-                        <input 
+                        <input
                             type="submit"
-                            className="button" 
+                            className="button"
                             onClick={this._onProposalAction.bind(this, proposal)}
-                            value={isAdd ? "Approve" : "Remove"} 
+                            value={isAdd ? "Approve" : "Remove"}
                         />
                         <div onClick={this.onCancel.bind(this)} className=" button">
                             <Translate content="account.perm.cancel" />
                         </div>
                     </div>
-                </div> 
+                </div>
             </form>
         )
-    }   
+    }
 };
+ProposalApproveModal = BindToChainState(ProposalApproveModal);
 
-@BindToChainState()
 class FirstLevel extends React.Component {
 
     static propTypes = {
@@ -230,13 +231,13 @@ class FirstLevel extends React.Component {
         let required = pu.listToIDs(proposal.get(`required_${type}_approvals`));
         let available = pu.listToIDs(proposal.get(`available_${type}_approvals`));
         let availableKeys = pu.listToIDs(proposal.get(`available_key_approvals`));
-        
+
         this.setState({
             requiredPermissions: pu.unnest(required, type),
             available,
             availableKeys,
             type
-        }); 
+        });
     }
 
     render() {
@@ -266,6 +267,7 @@ class FirstLevel extends React.Component {
         );
     }
 }
+FirstLevel = BindToChainState(FirstLevel);
 
 export default class ModalWrapper extends React.Component {
 
@@ -274,14 +276,14 @@ export default class ModalWrapper extends React.Component {
 
         this.state = {
             open: false
-        }
+        };
     }
 
     componentDidMount() {
         ZfApi.subscribe(this.props.modalId, (msg, data) => {
             this.setState({
                 open: data === "open"
-            })
+            });
         });
     }
 

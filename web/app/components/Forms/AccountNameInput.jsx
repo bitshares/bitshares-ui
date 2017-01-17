@@ -1,9 +1,9 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {PropTypes} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import {ChainValidation} from "graphenejs-lib";
+import {ChainValidation} from "graphenejs-lib/es";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";

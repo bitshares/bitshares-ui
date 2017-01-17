@@ -10,7 +10,6 @@ import utils from "common/utils";
  *
  */
 
-@BindToChainState({keep_updating: true})
 class FormattedFee extends React.Component {
 
     static propTypes = {
@@ -41,4 +40,4 @@ class FormattedFee extends React.Component {
     }
 }
 
-export default FormattedFee;
+export default BindToChainState(FormattedFee, {keep_updating: true});

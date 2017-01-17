@@ -3,7 +3,6 @@ import counterpart from "counterpart";
 import IntlActions from "actions/IntlActions";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
-import {Link} from "react-router";
 import WebsocketAddModal from "./WebsocketAddModal";
 import SettingsEntry from "./SettingsEntry";
 import AccountsSettings from "./AccountsSettings";

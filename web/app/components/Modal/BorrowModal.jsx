@@ -10,13 +10,13 @@ import utils from "common/utils";
 import classNames from "classnames";
 import AmountSelector from "../Utility/AmountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
+import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
 let wallet_api = new WalletApi();
 
@@ -29,7 +29,6 @@ let wallet_api = new WalletApi();
  *
  */
 
-@BindToChainState({keep_updating: true})
 class BorrowModalContent extends React.Component {
 
     static propTypes = {
@@ -187,11 +186,14 @@ class BorrowModalContent extends React.Component {
         }
         let isValid = (newState.short_amount >= 0 && newState.collateral >= 0) && (newState.short_amount != original_position.debt || newState.collateral != original_position.collateral);
 
-        let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-        let mcr = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000
-        if (parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : sqp * mcr)) {
-            errors.below_maintenance = counterpart.translate("borrow.errors.below");
+        // let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
+        let mcr = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
+        if (parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : mcr)) {
+            errors.below_maintenance = counterpart.translate("borrow.errors.below", {mr: mcr});
             isValid = false;
+        } else if (parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : (mcr + 0.5))) {
+            errors.close_maintenance = counterpart.translate("borrow.errors.close", {mr: mcr});
+            isValid = true;
         }
 
         this.setState({errors, isValid});
@@ -270,16 +272,6 @@ class BorrowModalContent extends React.Component {
         return props.quote_asset.getIn(["bitasset", "is_prediction_market"]);
     }
 
-
-    _calculateCallPrice() {
-        let CALL_PRICE = 0;
-        let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
-        if (this.props.quote_asset) {
-             CALL_PRICE = (1 / maintenanceRatio) * (1 / utils.get_asset_price(this.props.short_amount, this.props.quote_asset, this.props.collateral, this.props.backing_asset));
-        }
-        return CALL_PRICE;
-    }
-
     render() {
         let {quote_asset, bitasset_balance, backing_asset, backing_balance} = this.props;
         let {short_amount, collateral, collateral_ratio, errors, isValid} = this.state;
@@ -291,7 +283,7 @@ class BorrowModalContent extends React.Component {
         backing_balance = !backing_balance ? {balance: 0, id: null} : backing_balance.toJS();
 
         let collateralClass = classNames("form-group", {"has-error": errors.collateral_balance});
-        let collateralRatioClass = classNames("form-group", {"has-error": errors.below_maintenance});
+        let collateralRatioClass = classNames("form-group", {"has-error": errors.below_maintenance}, {"has-warning": errors.close_maintenance});
         let buttonClass = classNames("button", {disabled: errors.collateral_balance || !isValid}, {success: isValid});
 
         // Dynamically update user's remaining collateral
@@ -309,8 +301,6 @@ class BorrowModalContent extends React.Component {
         let maintenanceRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
         let squeezeRatio = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
 
-        let CALL_PRICE = this._calculateCallPrice();
-
         let isPredictionMarket = this._isPredictionMarket(this.props);
 
         if (!isPredictionMarket && isNaN(feed_price)) {
@@ -324,7 +314,8 @@ class BorrowModalContent extends React.Component {
                             <div className=" button warning"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
-                </div>)
+                </div>
+            );
         }
 
 
@@ -333,13 +324,22 @@ class BorrowModalContent extends React.Component {
             <div>
                 <form className="grid-container small-10 small-offset-1 no-overflow" noValidate>
                     <Translate component="h3" content="borrow.title" asset_symbol={quote_asset.get("symbol")} />
-                    {this.props.hide_help ? null : <HelpContent path="components/BorrowModal" debt={quote_asset.get('symbol')} collateral={backing_asset.get('symbol')} borrower={this.props.account.get('name')} />}
+                    {this.props.hide_help ? null :
+                        <HelpContent
+                            path={"components/" +(isPredictionMarket ? "BorrowModalPrediction" : "BorrowModal")}
+                            debt={quote_asset.get("symbol")}
+                            collateral={backing_asset.get("symbol")}
+                            borrower={this.props.account.get("name")}
+                            mr={maintenanceRatio}
+                        />}
                     {!isPredictionMarket ? (
                         <div style={{paddingBottom: "1rem"}} >
                             <div className="borrow-price-feeds">
                                 <span className="borrow-price-label"><Translate content="transaction.feed_price" />:&nbsp;</span>
                                 <FormattedPrice
-                                    style={{fontWeight: "bold"}}
+                                    decimals={2}
+                                    callPrice
+                                    noPopOver
                                     quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
                                     quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
                                     base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
@@ -347,9 +347,15 @@ class BorrowModalContent extends React.Component {
                                     />
                             </div>
                             <div className="borrow-price-feeds">
-                                <span className="borrow-price-label"><Translate content="exchange.squeeze" />:&nbsp;</span>
+                                <span
+                                    className="inline-block tooltip borrow-price-label"
+                                    data-place="bottom"
+                                    data-tip={counterpart.translate("tooltip.margin_price")}
+                                ><Translate content="exchange.squeeze" />:&nbsp;</span>
                                 <FormattedPrice
-                                    style={{fontWeight: "bold"}}
+                                    decimals={2}
+                                    callPrice
+                                    noPopOver
                                     quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
                                     quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
                                     base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
@@ -357,11 +363,13 @@ class BorrowModalContent extends React.Component {
                                     />
                             </div>
                             <b/>
-                            <div className="borrow-price-final">
+                            <div className={"borrow-price-final " + (errors.below_maintenance ? "has-error" : errors.close_maintenance ? "has-warning" : "")}>
                                 <span className="borrow-price-label"><Translate content="exchange.your_price" />:&nbsp;</span>
                                 {this.state.newPosition ?
                                     <FormattedPrice
-                                        style={{fontWeight: "bold"}}
+                                        decimals={2}
+                                        callPrice
+                                        noPopOver
                                         quote_amount={maintenanceRatio * this.state.short_amount * quotePrecision}
                                         quote_asset={quote_asset.get("id")}
                                         base_asset={backing_asset.get("id")}
@@ -394,10 +402,10 @@ class BorrowModalContent extends React.Component {
                         <div className={collateralRatioClass}>
                             <Translate component="label" content="borrow.coll_ratio" />
                             <input min="0" max="6" step="0.05" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
-                            {errors.below_maintenance ? <div className="float-right">{errors.below_maintenance}</div> : null}
-                            <div>{utils.format_number(collateral_ratio, 2)}</div>
+                            <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
+                            {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
                         </div>) : null}
-                    <div className="grid-content button-group no-overflow">
+                    <div className="no-padding grid-content button-group no-overflow">
                         <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
                         <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props))}} href className="button info"><Translate content="wallet.reset" /></div>
                         {/*<Trigger close={this.props.modalId}>
@@ -409,6 +417,7 @@ class BorrowModalContent extends React.Component {
         );
     }
 }
+BorrowModalContent = BindToChainState(BorrowModalContent, {keep_updating: true});
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {

@@ -26,7 +26,29 @@
     "locked_tip": "Billetera bloqueada. Click para desbloquear.",
     "unlocked_tip": "Billetera desbloqueada. Click para bloquear"
   },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
+    "hide_asset": "Click here to hide this asset from this list.",
+    "show_asset": "Click here to show this asset in the main list.",
+    "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
+    "filter_ops": "Use this list to filter your history by operation type.",
+    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+    "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+    "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+    "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position is close to being margin called, and if the ratio drops below %(mr)s, the position will be margin called. Consider adding collateral or closing the position.",
+    "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+    "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out."
+  },
   "account": {
+    "trade": "Trade",
     "welcome": "Bienvenido a Graphene",
     "asset": "Activo",
     "market_value": "Valor de Mercado",
@@ -94,7 +116,8 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner"
     },
     "votes": {
       "proxy": "Convertir en Apoderado de sus Votos a",
@@ -515,8 +538,9 @@
     "receive": "Recibir",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Confimar orden: Comprar %(buy_amount)s %(buy_symbol)s al precio de %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Confirmar orden: Vender %(sell_amount)s %(sell_symbol)s al precio de %(price_amount)s %(price_symbol)s"
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "base": "Activo base",
@@ -606,7 +630,8 @@
     "close": "Cerrar Posición",
     "update": "Actualizar",
     "errors": {
-      "below": "Collateral ratio is too low, this position will be margin called instantly",
+      "below": "Your collateral ratio is below %(mr)s which is not allowed.",
+      "close": "Your collateral ratio close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Balance colateral insuficiente"
     }
   },

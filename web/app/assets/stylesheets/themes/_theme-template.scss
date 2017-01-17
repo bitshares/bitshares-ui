@@ -355,6 +355,10 @@
     color: $error-text-color;
   }
 
+  .has-warning, div.has-warning > label, div.has-warning > label > span {
+    color: $warning-color;
+  }
+
   div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
     border-color: $error-text-color;
   }
@@ -643,7 +647,7 @@
     }
   }
 
-  .block-content-header {    
+  .block-content-header {
     //text-transform: uppercase;
     @include RobotoLight;
   }
@@ -751,10 +755,15 @@
         color: $primary-text-color;
       }
 
-      > span:last-of-type {
+      > span.symbol-text {
         color: #468EDE;
       }
     }
+    &.is-call {
+        >span > b {
+            color: $call-color;
+        }
+}
   }
 
   .buy-sell-box {
@@ -770,6 +779,10 @@
           background-size: 8px 8px;
           background-color: $header-color;
           font-size: 12px;
+
+          > option {
+              color: $chat-text-color;
+          }
       }
   }
 
@@ -844,8 +857,12 @@
       border-top: 2px solid $panel-bg-color;
   }
 
-  select.bts-select {
+  select.bts-select, select.native-coin-types, , select.external-coin-types {
       color: $secondary-text-color;
+
+      > option {
+          color: $chat-text-color;
+      }
   }
 
 
@@ -885,6 +902,34 @@
                 color: $link-text-color;
           }
 
+      }
+  }
+
+  a {
+      &.order-cancel > .icon > svg {
+        > path {
+          fill : $negative-color;
+        }
+      }
+
+      &.action-plus > .icon > svg {
+        > path {
+          fill : $positive-color;
+        }
+      }
+  }
+
+  tr.margin-row {
+      > td.danger {
+          background-color: darken($alert-color, 15%) !important;
+          color: $dark-text-color;
+          font-weight: bold;
+      }
+
+      > td.warning {
+          background-color: darken($warning-color, 15%) !important;
+          color: $dark-text-color;
+          font-weight: bold;
       }
   }
 

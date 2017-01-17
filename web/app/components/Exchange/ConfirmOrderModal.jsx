@@ -1,5 +1,5 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";        
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import utils from "common/utils";
@@ -30,7 +30,7 @@ export default class ConfirmModal extends React.Component {
                 </Trigger>
                 <Translate component="h3" content="transaction.confirm" />
                 <div className="grid-block vertical">
-                    <Translate content="exchange.confirm" diff={utils.format_number(diff, 2)} />
+                    <Translate content={"exchange.confirm_" + type} diff={utils.format_number(diff, 2)} />
                     <div className="button-group" style={{paddingTop: "2rem"}}>
                         <input onClick={this._onForce.bind(this, false)} className="button info" type="submit" value="No" />
                         <input onClick={this._onForce.bind(this, true)} className="button success" type="submit" value="Yes" />

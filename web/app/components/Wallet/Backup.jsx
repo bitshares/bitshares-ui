@@ -1,40 +1,31 @@
-import React, {PropTypes, Component} from "react"
-import {FormattedDate} from "react-intl"
-import {Link} from "react-router";
-import Inspector from "react-json-inspector";
-import connectToStores from "alt/utils/connectToStores"
-import WalletUnlockActions from "actions/WalletUnlockActions"
-import WalletActions from "actions/WalletActions"
-import CachedPropertyActions from "actions/CachedPropertyActions"
-import WalletManagerStore from "stores/WalletManagerStore"
-import BackupStore from "stores/BackupStore"
-import WalletDb from "stores/WalletDb"
-import BackupActions, {backup, restore, decryptWalletBackup} from "actions/BackupActions"
-import notify from "actions/NotificationActions"
-import {saveAs} from "common/filesaver.js"
-import cname from "classnames"
+import React, {PropTypes, Component} from "react";
+import {FormattedDate} from "react-intl";
+import { connect } from "alt-react";
+import WalletActions from "actions/WalletActions";
+import WalletManagerStore from "stores/WalletManagerStore";
+import BackupStore from "stores/BackupStore";
+import WalletDb from "stores/WalletDb";
+import BackupActions, {backup, decryptWalletBackup} from "actions/BackupActions";
+import notify from "actions/NotificationActions";
+import {saveAs} from "file-saver";
+import cname from "classnames";
 import Translate from "react-translate-component";
 import {ChainConfig} from "graphenejs-ws";
-import {PrivateKey} from "graphenejs-lib";
+import {PrivateKey} from "graphenejs-lib/es";
 
-class BackupBaseComponent extends Component {
-
-    static getStores() {
-        return [WalletManagerStore, BackupStore]
+const connectObject = {
+    listenTo() {
+        return [WalletManagerStore, BackupStore];
+    },
+    getProps() {
+        let wallet = WalletManagerStore.getState();
+        let backup = BackupStore.getState();
+        return { wallet, backup };
     }
-
-    static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
-        var backup = BackupStore.getState()
-        return { wallet, backup }
-    }
-
-}
+};
 
 //The default component is WalletManager.jsx
-
-@connectToStores
-export class BackupCreate extends BackupBaseComponent {
+class BackupCreate extends Component {
     render() {
         return (
             <div style={{maxWidth: "40rem"}}>
@@ -48,9 +39,9 @@ export class BackupCreate extends BackupBaseComponent {
     );
     }
 }
+BackupCreate = connect(BackupCreate, connectObject);
 
-@connectToStores
-export class BackupVerify extends BackupBaseComponent {
+class BackupVerify extends Component {
     render() {
         return (
             <div style={{maxWidth: "40rem"}}>
@@ -69,6 +60,7 @@ export class BackupVerify extends BackupBaseComponent {
         );
     }
 }
+BackupVerify = connect(BackupVerify, connectObject);
 
 // layout is a small project
 // class WalletObjectInspector extends Component {
@@ -82,8 +74,7 @@ export class BackupVerify extends BackupBaseComponent {
 //     }
 // }
 
-@connectToStores
-export class BackupRestore extends BackupBaseComponent {
+class BackupRestore extends Component {
 
     constructor() {
         super()
@@ -97,9 +88,9 @@ export class BackupRestore extends BackupBaseComponent {
     }
 
     render() {
-        var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
-        var restored = has_new_wallet
+        let new_wallet = this.props.wallet.new_wallet
+        let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+        let restored = has_new_wallet
 
         return (
             <div>
@@ -116,11 +107,11 @@ export class BackupRestore extends BackupBaseComponent {
             </div>
         );
     }
-
 }
 
-@connectToStores
-class Restore extends BackupBaseComponent {
+BackupRestore = connect(BackupRestore, connectObject);
+
+class Restore extends Component {
 
     constructor() {
         super()
@@ -128,14 +119,14 @@ class Restore extends BackupBaseComponent {
     }
 
     isRestored() {
-        var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
+        let new_wallet = this.props.wallet.new_wallet
+        let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
         return has_new_wallet
     }
 
     render() {
-        var new_wallet = this.props.wallet.new_wallet
-        var has_new_wallet = this.isRestored()
+        let new_wallet = this.props.wallet.new_wallet
+        let has_new_wallet = this.isRestored()
 
         if(has_new_wallet)
             return <span>
@@ -158,9 +149,9 @@ class Restore extends BackupBaseComponent {
     }
 
 }
+Restore = connect(Restore, connectObject);
 
-@connectToStores
-class NewWalletName extends BackupBaseComponent {
+class NewWalletName extends Component {
 
     constructor() {
         super()
@@ -171,14 +162,14 @@ class NewWalletName extends BackupBaseComponent {
     }
 
     componentWillMount() {
-        var has_current_wallet = !!this.props.wallet.current_wallet
+        let has_current_wallet = !!this.props.wallet.current_wallet
         if( ! has_current_wallet) {
             WalletManagerStore.setNewWallet("default")
             this.setState({accept: true})
         }
         if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
             // begning of the file name might make a good wallet name
-            var new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
+            let new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
             if( new_wallet )
                 this.setState({new_wallet})
         }
@@ -188,10 +179,10 @@ class NewWalletName extends BackupBaseComponent {
         if(this.state.accept)
             return <span>{this.props.children}</span>
 
-        var has_wallet_name = !!this.state.new_wallet
-        var has_wallet_name_conflict = has_wallet_name ?
+        let has_wallet_name = !!this.state.new_wallet
+        let has_wallet_name_conflict = has_wallet_name ?
             this.props.wallet.wallet_names.has(this.state.new_wallet) : false
-        var name_ready = ! has_wallet_name_conflict && has_wallet_name
+        let name_ready = ! has_wallet_name_conflict && has_wallet_name
 
         return (
         <form onSubmit={this.onAccept.bind(this)}>
@@ -216,23 +207,22 @@ class NewWalletName extends BackupBaseComponent {
     }
 
     formChange(event) {
-        var key_id = event.target.id
-        var value = event.target.value
+        let key_id = event.target.id
+        let value = event.target.value
         if(key_id === "new_wallet") {
             //case in-sensitive
             value = value.toLowerCase()
             // Allow only valid file name characters
             if( /[^a-z0-9_-]/.test(value) ) return
         }
-        var state = {}
+        let state = {}
         state[key_id] = value
         this.setState(state)
     }
-
 }
+NewWalletName = connect(NewWalletName, connectObject);
 
-@connectToStores
-class Download extends BackupBaseComponent {
+class Download extends Component {
 
     componentWillMount() {
         try { this.isFileSaverSupported = !!new Blob; } catch (e) {}
@@ -249,7 +239,7 @@ class Download extends BackupBaseComponent {
     }
 
     onDownload() {
-        var blob = new Blob([ this.props.backup.contents ], {
+        let blob = new Blob([ this.props.backup.contents ], {
             type: "application/octet-stream; charset=us-ascii"})
 
         if(blob.size !== this.props.backup.size)
@@ -262,13 +252,13 @@ class Download extends BackupBaseComponent {
         }
     }
 }
+Download = connect(Download, connectObject);
 
-@connectToStores
-class Create extends BackupBaseComponent {
+class Create extends Component {
 
     getBackupName() {
-        var name = this.props.wallet.current_wallet
-        var address_prefix = ChainConfig.address_prefix.toLowerCase()
+        let name = this.props.wallet.current_wallet
+        let address_prefix = ChainConfig.address_prefix.toLowerCase()
         if(name.indexOf(address_prefix) !== 0)
             name = address_prefix + "_" + name
 
@@ -284,10 +274,10 @@ class Create extends BackupBaseComponent {
 
     render() {
 
-        var has_backup = !!this.props.backup.contents
+        let has_backup = !!this.props.backup.contents
         if( has_backup ) return <div>{this.props.children}</div>
 
-        var ready = WalletDb.getWallet() != null
+        let ready = WalletDb.getWallet() != null
 
         return (
             <div>
@@ -309,26 +299,26 @@ class Create extends BackupBaseComponent {
     }
 
     onCreateBackup() {
-        var backup_pubkey = WalletDb.getWallet().password_pubkey
+        let backup_pubkey = WalletDb.getWallet().password_pubkey
         backup(backup_pubkey).then( contents => {
             let name = this.getBackupName();
             BackupActions.incommingBuffer({name, contents})
         })
     }
-
 }
+Create = connect(Create, connectObject);
 
 class LastBackupDate extends Component {
     render() {
         if (!WalletDb.getWallet()) {
             return null;
         }
-        var backup_date = WalletDb.getWallet().backup_date
-        var last_modified = WalletDb.getWallet().last_modified
-        var backup_time = backup_date ?
+        let backup_date = WalletDb.getWallet().backup_date
+        let last_modified = WalletDb.getWallet().last_modified
+        let backup_time = backup_date ?
             <h4><Translate content="wallet.last_backup" /> <FormattedDate value={backup_date}/></h4>:
             <Translate style={{paddingTop: 20}} className="facolor-error" component="p" content="wallet.never_backed_up" />
-        var needs_backup = null
+        let needs_backup = null
         if( backup_date ) {
             needs_backup = last_modified.getTime() > backup_date.getTime() ?
                 <h4 className="facolor-error"><Translate content="wallet.need_backup" /></h4>:
@@ -341,8 +331,7 @@ class LastBackupDate extends Component {
     }
 }
 
-@connectToStores
-class Upload extends BackupBaseComponent {
+class Upload extends Component {
 
     reset() {
         // debugger;
@@ -366,11 +355,11 @@ class Upload extends BackupBaseComponent {
             this.props.backup.contents &&
             this.props.backup.public_key
         )
-            return <span>{this.props.children}{resetButton}</span>
+            return <span>{this.props.children}{resetButton}</span>;
 
-        var is_invalid =
+        let is_invalid =
             this.props.backup.contents &&
-            ! this.props.backup.public_key
+            ! this.props.backup.public_key;
 
         return (
             <div>
@@ -383,15 +372,14 @@ class Upload extends BackupBaseComponent {
     }
 
     onFileUpload(evt) {
-        var file = evt.target.files[0]
-        BackupActions.incommingWebFile(file)
-        this.forceUpdate()
+        let file = evt.target.files[0];
+        BackupActions.incommingWebFile(file);
+        this.forceUpdate();
     }
 }
+Upload = connect(Upload, connectObject);
 
-
-@connectToStores
-class NameSizeModified extends BackupBaseComponent {
+class NameSizeModified extends Component {
     render() {
         return <span>
             <h5><b>{this.props.backup.name}</b> ({this.props.backup.size} bytes)</h5>
@@ -401,9 +389,9 @@ class NameSizeModified extends BackupBaseComponent {
         </span>
     }
 }
+NameSizeModified = connect(NameSizeModified, connectObject);
 
-@connectToStores
-class DecryptBackup extends BackupBaseComponent {
+class DecryptBackup extends Component {
 
     static propTypes = {
         saveWalletObject: PropTypes.bool
@@ -442,8 +430,8 @@ class DecryptBackup extends BackupBaseComponent {
 
     onPassword(e) {
         if (e) e.preventDefault();
-        var private_key = PrivateKey.fromSeed(this.state.backup_password || "")
-        var contents = this.props.backup.contents
+        let private_key = PrivateKey.fromSeed(this.state.backup_password || "")
+        let contents = this.props.backup.contents
         decryptWalletBackup(private_key.toWif(), contents).then( wallet_object => {
             this.setState({verified: true})
             if(this.props.saveWalletObject)
@@ -460,30 +448,30 @@ class DecryptBackup extends BackupBaseComponent {
     }
 
     formChange(event) {
-        var state = {}
+        let state = {}
         state[event.target.id] = event.target.value
         this.setState(state)
     }
 
 }
+DecryptBackup = connect(DecryptBackup, connectObject);
 
-@connectToStores
-export class Sha1 extends BackupBaseComponent {
+class Sha1 extends Component {
     render() {
         return <div>
             <pre className="no-overflow">{this.props.backup.sha1} * SHA1</pre>
             <br/>
-        </div>
+        </div>;
     }
 }
+Sha1 = connect(Sha1, connectObject);
 
-@connectToStores
-class Reset extends BackupBaseComponent {
+class Reset extends Component {
 
     // static contextTypes = {router: React.PropTypes.func.isRequired}
 
     render() {
-        var label = this.props.label || <Translate content="wallet.reset" />
+        let label = this.props.label || <Translate content="wallet.reset" />
         return  <span className="button cancel"
             onClick={this.onReset.bind(this)}>{label}</span>
     }
@@ -493,3 +481,7 @@ class Reset extends BackupBaseComponent {
         window.history.back()
     }
 }
+// Reset = connect(Reset, connectObject);
+
+export {BackupCreate, BackupVerify, BackupRestore, Restore, NewWalletName,
+    Download, Create, Upload, NameSizeModified, DecryptBackup, Sha1};

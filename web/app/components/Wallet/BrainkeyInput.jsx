@@ -1,12 +1,11 @@
-import React, {PropTypes, Component} from "react"
-import cname from "classnames"
-import {hash, key} from "graphenejs-lib";
-import Translate from "react-translate-component";
+import React, {PropTypes, Component} from "react";
+import cname from "classnames";
+import {hash, key} from "graphenejs-lib/es";
 
 var dictionary_set;
 
 if (__ELECTRON__) {
-    dictionary_set = new Set(require("json!common/dictionary_en.json").en.split(","));
+    dictionary_set = new Set(require("json-loader!common/dictionary_en.json").en.split(","));
 }
 
 export default class BrainkeyInput extends Component {

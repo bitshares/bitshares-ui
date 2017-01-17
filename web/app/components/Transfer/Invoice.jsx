@@ -1,12 +1,11 @@
 import React from "react";
 import classNames from "classnames";
 import FormattedAsset from "../Utility/FormattedAsset";
-import ConfirmModal from "../Modal/ConfirmModal";
 import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import AccountInfo from "../Account/AccountInfo";
 import BalanceComponent from "../Utility/BalanceComponent";
-import {ChainStore, FetchChainObjects} from "graphenejs-lib";;
+import {ChainStore, FetchChainObjects} from "graphenejs-lib/es";;
 import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {decompress} from "lzma";

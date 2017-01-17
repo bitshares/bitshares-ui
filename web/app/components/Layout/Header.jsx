@@ -1,6 +1,6 @@
 import React from "react";
-import {Link, PropTypes} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
+import {Link} from "react-router/es";
+import { connect } from "alt-react";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -15,31 +15,15 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
-import Immutable from "immutable";
+import ReactTooltip from "react-tooltip";
 
 var logo = require("assets/logo-ico-blue.png");
 
-@connectToStores
 class Header extends React.Component {
 
-    static getStores() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
-    }
-
-    static getPropsFromStores() {
-        return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            currentAccount: AccountStore.getState().currentAccount,
-            locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
-            starredAccounts: SettingsStore.getState().starredAccounts
-        };
-    }
-
     static contextTypes = {
-        location: React.PropTypes.object,
-        history: PropTypes.history
+        location: React.PropTypes.object.isRequired,
+        router: React.PropTypes.object.isRequired
     };
 
     constructor(props, context) {
@@ -52,15 +36,21 @@ class Header extends React.Component {
     }
 
     componentWillMount() {
-        this.unlisten = this.context.history.listen((err, newState) => {
+        this.unlisten = this.context.router.listen((newState, err) => {
             if (!err) {
-                if (this.unlisten && this.state.active !== newState.location.pathname) {
+                if (this.unlisten && this.state.active !== newState.pathname) {
                     this.setState({
-                        active: newState.location.pathname
+                        active: newState.pathname
                     });
                 }
             }
         });
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            ReactTooltip.rebuild();
+        }, 1250);
     }
 
     componentWillUnmount() {
@@ -99,7 +89,7 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
-        this.context.history.pushState(null, route);
+        this.context.router.push(route);
     }
 
     _onGoBack(e) {
@@ -122,12 +112,12 @@ class Header extends React.Component {
         e.stopPropagation();
         e.preventDefault();
 
-        this.context.history.pushState(null, `/account/${account}/overview`);
+        this.context.router.push(`/account/${account}/overview`);
     }
 
     render() {
         let {active} = this.state;
-        let {linkedAccounts, currentAccount, starredAccounts} = this.props;
+        let {currentAccount, starredAccounts} = this.props;
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
@@ -181,8 +171,8 @@ class Header extends React.Component {
         let lock_unlock = (this.props.current_wallet && myAccountCount) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
-                <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-type="light" data-html><Icon className="icon-14px" name="locked"/></a>
-                : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-type="light" data-html><Icon className="icon-14px" name="unlocked"/></a> }
+                <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
+                : <a href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
             </div>
         ) : null;
 
@@ -218,7 +208,6 @@ class Header extends React.Component {
                     });
 
                 let options = [
-                    {to: "/settings", text: "header.settings"},
                     {to: "/help", text: "header.help"},
                     {to: "/explorer", text: "header.explorer"}
                 ].map(entry => {
@@ -270,8 +259,9 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{dashboard}</li>
-                        {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} activeClassName="active"><Translate content="header.account" /></Link></li>}
-                        <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li>
+                        {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}><Translate content="header.account" /></Link></li>}
+                        {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
+                        {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
                         <li>{tradeLink}</li>
                         {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                     </ul>
@@ -283,12 +273,10 @@ class Header extends React.Component {
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
+                        <div className="grp-menu-item" >
+                            <Link style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link>
+                        </div>
                         {lock_unlock}
-                        {myAccountCount === 0 && !tradingAccounts.length ? (
-                            <div className="grp-menu-item" >
-                                <Link style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom" data-type="light"><Icon className="icon-14px" name="cog"/></Link>
-                            </div>
-                        ) : null}
                         {createAccountLink}
                     </div>
                 </div>
@@ -297,4 +285,18 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default connect(Header, {
+    listenTo() {
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            currentAccount: AccountStore.getState().currentAccount,
+            locked: WalletUnlockStore.getState().locked,
+            current_wallet: WalletManagerStore.getState().current_wallet,
+            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            starredAccounts: SettingsStore.getState().starredAccounts
+        };
+    }
+});

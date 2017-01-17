@@ -30,5 +30,5 @@ module.exports.getEnvName = function () {
 
 module.exports.getElectronVersion = function () {
     var manifest = JSON.parse(fs.readFileSync(__dirname + '/../package.json'));
-    return manifest.devDependencies['electron-prebuilt'].substring(1);
+    return manifest.devDependencies['electron'].substring(1);
 };

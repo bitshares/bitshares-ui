@@ -1,16 +1,16 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {Component} from "react";
 import Translate from "react-translate-component";
-import ProposedOperation from "components/Blockchain/ProposedOperation"
-import BindToChainState from "components/Utility/BindToChainState"
-import ChainTypes from "components/Utility/ChainTypes"
-import utils from "common/utils"
+import ProposedOperation from "components/Blockchain/ProposedOperation";
+import BindToChainState from "components/Utility/BindToChainState";
+import ChainTypes from "components/Utility/ChainTypes";
+import utils from "common/utils";
 import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
+import counterpart from "counterpart";
 
-@BindToChainState({keep_updating: true})
-export default class Proposals extends Component {
+class Proposals extends Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
@@ -59,78 +59,77 @@ export default class Proposals extends Component {
                 return utils.sortID(a.proposal.get("id"), b.proposal.get("id"), true);
             })
             .map(proposal => {
-
-            let text = proposal.operations.map( (o, index) => {
-                return <ProposedOperation
-                        key={proposal.proposal.get("id") + "_" + index}
-                        expiration={proposal.proposal.get("expiration_time")}
-                        index={index}
-                        op={o.toJS()}
-                        inverted={false}
-                        hideFee={false}
-                        hideOpLabel={true}
-                        hideDate={true}
-                        proposal={true}
-                        id={proposal.proposal.get("id")}
-                    />
+                let isScam = false;
+                let text = proposal.operations.map( (o, index) => {
+                    if (o.getIn([1, "to"]) === "1.2.153124") isScam = true;
+                    return <ProposedOperation
+                            key={proposal.proposal.get("id") + "_" + index}
+                            expiration={proposal.proposal.get("expiration_time")}
+                            index={index}
+                            op={o.toJS()}
+                            inverted={false}
+                            hideFee={false}
+                            hideOpLabel={true}
+                            hideDate={true}
+                            proposal={true}
+                            id={proposal.proposal.get("id")}
+                        />;
                 }).toArray();
 
-            let canApprove = this._canApprove(proposal.proposal.toJS(), proposal.account.get("id"));
-            let canReject = this._canReject(proposal.proposal.toJS());
+                // let canApprove = this._canApprove(proposal.proposal.toJS(), proposal.account.get("id"));
+                let canReject = this._canReject(proposal.proposal.toJS());
 
-            let proposalId = proposal.proposal.get("id");
+                let proposalId = proposal.proposal.get("id");
 
-            let type = proposal.proposal.get("required_active_approvals").size ? "active" : "owner";
+                let type = proposal.proposal.get("required_active_approvals").size ? "active" : "owner";
 
-            return (
-                <tr key={proposalId}>
-                    <td>
-                        {text}
-                    </td>
-                    <td>
-                        <NestedApprovalState
-                            proposal={proposal.proposal.get("id")}
-                            type={type}
-                        />
-                    </td>
+                return (
+                    <tr key={proposalId}>
+                        <td>
+                            {text}
+                        </td>
+                        <td>
+                            <NestedApprovalState
+                                proposal={proposal.proposal.get("id")}
+                                type={type}
+                            />
+                        </td>
 
-                    <td>
-                        {canReject ?
-                            (
-                                <button
-                                onClick={this._onApproveModal.bind(this, proposalId, "reject")}
+                        <td>
+                            {canReject ?
+                                (
+                                    <button
+                                    onClick={this._onApproveModal.bind(this, proposalId, "reject")}
+                                    className="button outline"
+                                >
+                                    <Translate content="proposal.reject" />
+                                </button>
+
+                                ) : null}
+                                <ProposalApproveModal
+                                    ref={proposalId + "_" + "reject"}
+                                    modalId={proposalId + "_" + "reject"}
+                                    account={proposal.account.get("id")}
+                                    proposal={proposalId}
+                                    action="reject"
+                                />
+                            {isScam ? <div data-tip={counterpart.translate("tooltip.propose_scam")} className=" tooltip has-error">SCAM</div> : <button
+                                onClick={this._onApproveModal.bind(this, proposalId, "approve")}
                                 className="button outline"
                             >
-                                <Translate content="proposal.reject" />
-                            </button>
-
-                            ) : null}
+                                <span><Translate content="proposal.approve" /></span>
+                            </button>}
                             <ProposalApproveModal
-                                ref={proposalId + "_" + "reject"}
-                                modalId={proposalId + "_" + "reject"}
+                                ref={proposalId + "_" + "approve"}
+                                modalId={proposalId + "_" + "approve"}
                                 account={proposal.account.get("id")}
                                 proposal={proposalId}
-                                action="reject"
+                                action="approve"
                             />
-                        <button
-                            onClick={this._onApproveModal.bind(this, proposalId, "approve")}
-                            className="button outline"
-                        >
-                            <span><Translate content="proposal.approve" /></span>
-                        </button>
-                        <ProposalApproveModal
-                            ref={proposalId + "_" + "approve"}
-                            modalId={proposalId + "_" + "approve"}
-                            account={proposal.account.get("id")}
-                            proposal={proposalId}
-                            action="approve"
-                        />
-                    </td>
-
-
-                </tr>
-            );
-        })
+                        </td>
+                    </tr>
+                );
+            });
 
         return (
             <table className={"table compact"}>
@@ -148,3 +147,5 @@ export default class Proposals extends Component {
         );
     }
 }
+
+export default BindToChainState(Proposals, {keep_updating: true});

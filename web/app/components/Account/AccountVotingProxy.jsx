@@ -1,15 +1,12 @@
 import React from "react";
-import {PropTypes} from "react-router";
 import AccountSelector from "./AccountSelector";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import SettingsActions from "actions/SettingsActions";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "graphenejs-lib/es";
 
-@BindToChainState()
 class AccountVotingProxy extends React.Component {
 
     static propTypes = {
@@ -20,30 +17,17 @@ class AccountVotingProxy extends React.Component {
 
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     constructor(props){
         super(props);
         this.state = {
             current_proxy_input: props.currentProxy,
             new_proxy_account: null
-        }
+        };
         this.onProxyChange = this.onProxyChange.bind(this);
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
-        this._onUpdate = this._onUpdate.bind(this);
-    }
-
-    componentWillMount() {
-        ChainStore.subscribe(this._onUpdate);
-    }
-
-    componentWillUnmount() {
-        ChainStore.unsubscribe(this._onUpdate);
-    }
-
-    _onUpdate() {
-        this.forceUpdate();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,7 +46,7 @@ class AccountVotingProxy extends React.Component {
 
     onProxyChange(current_proxy_input) {
         //console.log("-- AccountVotingProxy.onProxyChange -->", current_proxy_input);
-        this.setState({current_proxy_input})
+        this.setState({current_proxy_input});
     }
 
     onProxyAccountChange(new_proxy_account) {
@@ -74,8 +58,8 @@ class AccountVotingProxy extends React.Component {
         this.setState({new_proxy_account});
     }
 
-    _onNavigate(route) {        
-        this.context.history.pushState(null, route);
+    _onNavigate(route) {
+        this.context.router.push(route);
         // this._changeTab();
     }
 
@@ -91,7 +75,7 @@ class AccountVotingProxy extends React.Component {
         if(this.state.new_proxy_account && this.props.currentAccount.get("id") === this.state.new_proxy_account.get("id")) {
             error = "cannot proxy to yourself";
         }
-        
+
         let core = ChainStore.getObject("1.3.0");
         let knownProxies = [];
         if (core && core.get("symbol")) {
@@ -110,7 +94,7 @@ class AccountVotingProxy extends React.Component {
                         <td>
                             <AccountImage
                                 size={{height: 30, width: 30}}
-                                account={account.get('name')}
+                                account={account.get("name")}
                                 custom_image={null}
                             />
                         </td>
@@ -128,7 +112,7 @@ class AccountVotingProxy extends React.Component {
         return (
             <div className="content-block" style={{maxWidth: "600px"}}>
                 <Translate component="h3" content="account.votes.proxy_short" />
-                <AccountSelector 
+                <AccountSelector
                     label="account.votes.proxy"
                      error={error}
                      account={this.state.current_proxy_input}
@@ -154,4 +138,4 @@ class AccountVotingProxy extends React.Component {
 
 }
 
-export default AccountVotingProxy;
+export default BindToChainState(AccountVotingProxy);
