@@ -33,7 +33,13 @@
     "show_asset": "Click here to show this asset in the main list.",
     "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
     "filter_ops": "Use this list to filter your history by operation type.",
-    "show_block": "Click here to show block #%(block)s where this transaction occured."
+    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+    "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+    "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+    "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position is close to being margin called, and if the ratio drops below %(mr)s, the position will be margin called. Consider adding collateral or closing the position."
   },
   "account": {
     "trade": "Trade",

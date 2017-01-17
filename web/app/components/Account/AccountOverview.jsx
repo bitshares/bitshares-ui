@@ -214,20 +214,7 @@ class AccountOverview extends React.Component {
                         <div className="block-content-header">
                             <Translate content="account.collaterals" />
                         </div>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th><Translate content="transaction.borrow_amount" /></th>
-                                <th className="column-hide-medium"><Translate content="transaction.collateral" /></th>
-                                <th><Translate content="borrow.coll_ratio" /></th>
-                                <th className="column-hide-small"><Translate content="exchange.call" /></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            { call_orders.map(id =><CollateralPosition key={id} object={id} account={account}/>) }
-                            </tbody>
-                        </table>
+                        <CollateralPosition callOrders={call_orders} account={account} />
                     </div>
                 </div>) : null}
 

@@ -74,18 +74,18 @@ class FormattedPrice extends React.Component {
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount,
+        let {base_asset, quote_asset, base_amount, quote_amount, callPrice,
           marketDirections, marketId, hide_symbols, noPopOver} = this.props;
 
         let invertPrice = marketDirections.get(marketId);
 
-        if( invertPrice ) {
-           let tmp = base_asset;
-           base_asset = quote_asset;
-           quote_asset = tmp;
-           let tmp_amount = base_amount;
-           base_amount = quote_amount;
-           quote_amount = tmp_amount;
+        if( invertPrice && !callPrice ) {
+            let tmp = base_asset;
+            base_asset = quote_asset;
+            quote_asset = tmp;
+            let tmp_amount = base_amount;
+            base_amount = quote_amount;
+            quote_amount = tmp_amount;
         }
 
         let formatted_value = "";
@@ -94,12 +94,12 @@ class FormattedPrice extends React.Component {
             let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
             let value = base_amount / base_precision / (quote_amount / quote_precision);
             if (isNaN(value) || !isFinite(value)) {
-              return <span>n/a</span>;
+                return <span>n/a</span>;
             }
             let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
             decimals = Math.min(8, decimals);
             if (base_asset.get("id") === "1.3.0") {
-              base_asset.get("precision");
+                base_asset.get("precision");
             }
             formatted_value = (
                 <FormattedNumber
@@ -110,11 +110,11 @@ class FormattedPrice extends React.Component {
             );
         }
         let symbols = hide_symbols ? "" :
-                      (<span className={noPopOver ? "clickable" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+                      (<span data-place="bottom" data-tip={noPopOver && !callPrice ? "Click to invert the price" : null} className={noPopOver && !callPrice ? "clickable inline-block" : ""} onClick={noPopOver && !callPrice ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
 
         const currency_popover_body = !noPopOver && !hide_symbols ? (
           <div>
-            <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div>
+            {!callPrice ? <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div> : null}
             <div className="button" onClick={this.goToMarket.bind(this)}><Translate content="exchange.to_market" /></div>
           </div>
         ) : null;
@@ -131,7 +131,7 @@ class FormattedPrice extends React.Component {
 
         return (
             <span>{formatted_value} {popOver ? popOver : symbols}</span>
-         )
+        );
     }
 }
 
@@ -139,20 +139,20 @@ FormattedPrice = BindToChainState(FormattedPrice);
 
 export default class FormattedPriceWrapper extends React.Component {
 
-  render() {
-    let marketId = this.props.quote_asset + "_" + this.props.base_asset;
+    render() {
+        let marketId = this.props.quote_asset + "_" + this.props.base_asset;
 
-    return (
-      <AltContainer
-        stores={[SettingsStore]}
-        inject={{
-          marketDirections: () => {
-              return SettingsStore.getState().marketDirections;
-          }
-        }}
-      >
-        <FormattedPrice {...this.props} marketId={marketId}/>
-      </AltContainer>
-    );
-  }
+        return (
+          <AltContainer
+            stores={[SettingsStore]}
+            inject={{
+                marketDirections: () => {
+                    return SettingsStore.getState().marketDirections;
+                }
+            }}
+          >
+            <FormattedPrice {...this.props} marketId={marketId}/>
+          </AltContainer>
+        );
+    }
 }
