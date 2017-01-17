@@ -45,7 +45,8 @@
     "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
     "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the ratio above %(mr)s or closing the position.",
     "cr_warning": "This position is close to being margin called, and if the ratio drops below %(mr)s, the position will be margin called. Consider adding collateral or closing the position.",
-    "propose_scam": "This proposal was created by a known scammer, do not approve it!"
+    "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+    "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out."
   },
   "propose": "Teklif Et",
   "cancel": "İptal",

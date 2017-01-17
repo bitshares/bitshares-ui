@@ -15,6 +15,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
+import ReactTooltip from "react-tooltip";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -44,6 +45,12 @@ class Header extends React.Component {
                 }
             }
         });
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            ReactTooltip.rebuild();
+        }, 1250);
     }
 
     componentWillUnmount() {
@@ -110,7 +117,7 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {linkedAccounts, currentAccount, starredAccounts} = this.props;
+        let {currentAccount, starredAccounts} = this.props;
         let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
@@ -164,8 +171,8 @@ class Header extends React.Component {
         let lock_unlock = (this.props.current_wallet && myAccountCount) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
-                <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
-                : <a href onClick={this._toggleLock.bind(this)} data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
+                <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
+                : <a href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
             </div>
         ) : null;
 
@@ -201,7 +208,6 @@ class Header extends React.Component {
                     });
 
                 let options = [
-                    {to: "/settings", text: "header.settings"},
                     {to: "/help", text: "header.help"},
                     {to: "/explorer", text: "header.explorer"}
                 ].map(entry => {
@@ -267,12 +273,10 @@ class Header extends React.Component {
                         <div className="grid-block shrink overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
+                        <div className="grp-menu-item" >
+                            <Link style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link>
+                        </div>
                         {lock_unlock}
-                        {myAccountCount === 0 && !tradingAccounts.length ? (
-                            <div className="grp-menu-item" >
-                                <Link style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link>
-                            </div>
-                        ) : null}
                         {createAccountLink}
                     </div>
                 </div>
