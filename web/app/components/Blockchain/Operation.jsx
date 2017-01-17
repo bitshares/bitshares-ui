@@ -85,7 +85,7 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td style={{width: "20%"}} className="left-td">
+                        <td style={{width: "20%"}} className="left-td column-hide-tiny">
                             <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
                         </td>)}
                     <td style={{padding: "8px 5px"}}>

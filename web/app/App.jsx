@@ -175,7 +175,7 @@ class App extends React.Component {
                         </div>
                     </div>
                     {showFooter ? <Footer synced={this.state.synced}/> : null}
-                    <ReactTooltip ref="tooltip" place="top" type="dark" effect="solid"/>
+                    <ReactTooltip ref="tooltip" place="top" type="light" effect="solid"/>
                 </div>
             );
         }

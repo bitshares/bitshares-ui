@@ -611,7 +611,7 @@ class AccountVoting extends React.Component {
                                 <tbody>
                                     <tr>
                                         <td colSpan="3">
-                                            <div style={{display: "inline-block"}}><Translate component="h4" content="account.votes.expired" /></div>
+                                            <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
                                             <span>&nbsp;&nbsp;
                                                 <button onClick={this._toggleExpired.bind(this)} className="button outline">
                                                     {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}

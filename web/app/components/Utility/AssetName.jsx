@@ -37,15 +37,15 @@ class AssetName extends React.Component {
 			let desc = asset_utils.parseDescription(asset.getIn(["options", "description"]));
 			let tooltip = `<div><strong>${this.props.name}</strong><br />${desc.short ? desc.short : desc.main}</div>`;
 			return (
-				<span
-					className="tooltip"
+				<div
+					className="tooltip inline-block"
 					data-tip={tooltip}
 					data-place="bottom"
 					data-type="light"
 					data-html={true}
 				>
 					<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>
-				</span>
+				</div>
 			);
 		} else {
 			return <span>{!noPrefix ? prefix : null}{name}</span>;

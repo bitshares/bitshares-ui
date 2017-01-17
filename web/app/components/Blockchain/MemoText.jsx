@@ -52,7 +52,7 @@ class MemoText extends React.Component {
         if (text) {
             return (
                 <div className="memo" style={{paddingTop: 5}}>
-                    <span data-tip={full_memo !== text ? full_memo : null} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>
+                    <span className="inline-block" data-tip={full_memo !== text ? full_memo : null} data-place="bottom" data-offset="{'bottom': 10}" data-type="light" data-html>
                         {text}
                     </span>
                 </div>

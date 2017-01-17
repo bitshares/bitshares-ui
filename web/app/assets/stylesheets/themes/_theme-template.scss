@@ -901,4 +901,18 @@
       }
   }
 
+  a {
+      &.order-cancel > .icon > svg {
+        > path {
+          fill : $negative-color;
+        }
+      }
+
+      &.action-plus > .icon > svg {
+        > path {
+          fill : $positive-color;
+        }
+      }
+  }
+
 }

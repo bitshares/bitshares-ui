@@ -118,7 +118,7 @@ class AccountLeftPanel extends React.Component {
                 {isMyAccount ?
                 <div className="grid-block shrink bottom">
                     <div className="center">
-                        <span data-tip={counterpart.translate("account.create_new")} data-place="top"><Link to="/create-account"><Icon name="plus-circle"/></Link></span>
+                        <div className="inline-block" data-tip={counterpart.translate("account.create_new")} data-place="top"><Link to="/create-account"><Icon name="plus-circle"/></Link></div>
                     </div>
                 </div> : null}
             </div>

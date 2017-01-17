@@ -88,7 +88,7 @@ class CollateralPosition extends React.Component {
         return (
             <tr>
                 <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
-                <td>{<FormattedAsset amount={co.collateral} asset={co.call_price.base.asset_id}/>}</td>
+                <td className="column-hide-medium">{<FormattedAsset amount={co.collateral} asset={co.call_price.base.asset_id}/>}</td>
                 <td>{utils.format_number(cr, 2)}</td>
                 <td className="column-hide-small">{<FormattedPrice
                     base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
@@ -117,7 +117,7 @@ class CollateralPosition extends React.Component {
                                 </li>
                             </ul>
                         </ActionSheet.Content>
-                    </ActionSheet>
+                </ActionSheet>
                     {quoteAsset ? (
                     <BorrowModal
                         ref={"cp_modal_" + co.call_price.quote.asset_id}

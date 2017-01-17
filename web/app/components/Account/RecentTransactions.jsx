@@ -219,7 +219,8 @@ class RecentTransactions extends React.Component {
                             {historyCount > 0 ?
                             <span style={{fontSize: "60%", textTransform: "lowercase"}}>
                                 &nbsp;(
-                                    <a
+                                <a
+                                    className="inline-block"
                                     onClick={this._downloadCSV.bind(this)}
                                     data-tip={counterpart.translate("transaction.csv_tip")}
                                     data-place="bottom"
@@ -232,16 +233,16 @@ class RecentTransactions extends React.Component {
 
                             {this.props.showFilters ? (
                             <div className="float-right">
-                                <select className="bts-select" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 0}} className="bts-select" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
                             </div>) : null}
                         </div>
 
                         <table className={"table" + (compactView ? " compact" : "")}>
                             <thead>
-                            <tr>
-                                {compactView ? null : <th style={{width: "20%"}}><Translate content="explorer.block.op" /></th>}
-                                <th><Translate content="account.votes.info" /></th>
-                            </tr>
+                                <tr>
+                                    {compactView ? null : <th className="column-hide-tiny" style={{width: "20%"}}><Translate content="explorer.block.op" /></th>}
+                                    <th><Translate content="account.votes.info" /></th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
