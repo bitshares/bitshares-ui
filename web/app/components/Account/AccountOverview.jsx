@@ -183,12 +183,12 @@ class AccountOverview extends React.Component {
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
                                     {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                     <th style={{textAlign: "right"}} colSpan="2">
-                                        <div
+                                        {hiddenBalances.length - 1 > 0 ? <div
                                             className="button outline column-hide-small"
                                             onClick={this._toggleHiddenAssets.bind(this)}
                                         >
                                             <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 1})</span>
-                                        </div>
+                                        </div> : null}
                                     </th>
                                 </tr>
                             </thead>
