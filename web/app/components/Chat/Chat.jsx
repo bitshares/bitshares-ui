@@ -1,9 +1,9 @@
 import React from "react";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import AccountStore from "stores/AccountStore";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib/es";
 import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
@@ -13,23 +13,22 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import {FetchChainObjects} from "api/ChainStore";
-
+import {FetchChainObjects} from "graphenejs-lib/es";;
 
 const PROD = true;
 const hostConfig = PROD ? { // Prod config
-    host: 'bitshares.openledger.info',
-    path: '/trollbox',
+    host: "bitshares.openledger.info",
+    path: "/trollbox",
     secure: true,
     port: 443
 } : { // Dev config
-    host: 'localhost',
-    path: '/trollbox',
+    host: "localhost",
+    path: "/trollbox",
     port: 9000
 };
 
 class Comment extends React.Component {
-    
+
     shouldComponentUpdate(nextProps) {
         return (
             !utils.are_equal_shallow(nextProps, this.props)
@@ -37,38 +36,26 @@ class Comment extends React.Component {
     }
 
     render() {
+        let {comment, user, color} = this.props;
+        let systemUsers = [counterpart.translate("chat.welcome_user"), "SYSTEM"];
         return (
             <div style={{padding: "3px 1px"}}>
                 <span
                     className="clickable"
-                    onClick={this.props.onSelectUser.bind(this, this.props.user)}
+                    onClick={this.props.onSelectUser.bind(this, user)}
                     style={{
                         fontWeight: "bold",
-                        color: this.props.color
+                        color: color
                     }}>
-                        {this.props.user}:&nbsp;
+                        {user}:&nbsp;
                 </span>
-                <span className="chat-text">{this.props.comment}</span>
+                <span className="chat-text">{systemUsers.indexOf(user) !== -1 ? comment : comment.substr(0, 140)}</span>
             </div>
         );
     }
 }
 
-
-@connectToStores
-export default class Chat extends React.Component {
-    static getStores() {
-        return [AccountStore, SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            linkedAccounts: AccountStore.getState().linkedAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
-
+class Chat extends React.Component {
     constructor(props) {
         super(props);
 
@@ -110,6 +97,12 @@ export default class Chat extends React.Component {
         );
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.footerVisible !== prevProps.footerVisible) {
+            this._scrollToBottom();
+        }
+    }
+
     componentWillMount() {
         this._connectToServer();
     }
@@ -123,8 +116,8 @@ export default class Chat extends React.Component {
     _connectToServer() {
         this._peer = new Peer(hostConfig);
 
-        this._peer.on('open', id => {
-            console.log("open, my ID is:", id);
+        this._peer.on("open", id => {
+            // console.log("open, my ID is:", id);
             this._myID = id;
             this.setState({
                 connected: true,
@@ -135,10 +128,10 @@ export default class Chat extends React.Component {
             this._peer.listAllPeers(this._connectToPeers.bind(this, true));
         });
 
-        this._peer.on('connection', this.onConnection.bind(this));
+        this._peer.on("connection", this.onConnection.bind(this));
         // this._peer.on('disconnect', this.onDisconnect.bind(this));
 
-        this._peer.on('error', err => {
+        this._peer.on("error", err => {
             console.log(err);
             if (err.message.indexOf("Lost connection to server") !== -1) {
                 this.setState({
@@ -167,7 +160,7 @@ export default class Chat extends React.Component {
         this._broadCastMessage({
             peers: peersArray
         }, false);
-    }    
+    }
 
     _connectToPeers(broadcast = false, peers) {
         let shouldUpdate = false;
@@ -181,8 +174,8 @@ export default class Chat extends React.Component {
                 shouldUpdate = true;
                 let conn = this._peer.connect(peer);
 
-                conn.on('data', this._handleMessage);
-                conn.on('close', this.onDisconnect.bind(this, peer));
+                conn.on("data", this._handleMessage);
+                conn.on("close", this.onDisconnect.bind(this, peer));
                 this.connections.set(peer, conn);
             }
         });
@@ -211,7 +204,8 @@ export default class Chat extends React.Component {
             this.setState({
                 fetchingHistory: true
             });
-            return this.connections.get(data.id).send({requestHistory: this._myID});
+            let c = this.connections.get(data.id);
+            return c ? c.send({requestHistory: this._myID}) : null;
         }
 
         if ("history" in data && data.history.length) {
@@ -219,8 +213,13 @@ export default class Chat extends React.Component {
                 fetchingHistory: false,
                 hasFetchedHistory: true
             });
-            
-            data.history.forEach(msg => {
+
+            data.history.filter(a => {
+                return (
+                    a.user !== "Welcome to Bitshares" &&
+                    a.user !== "Welcome to Openledger"
+                );
+            }).forEach(msg => {
                 this.state.messages.push(msg);
             });
             this.forceUpdate();
@@ -235,7 +234,7 @@ export default class Chat extends React.Component {
 
             this.forceUpdate(this._scrollToBottom.bind(this));
         }
-        
+
     }
 
     _scrollToBottom() {
@@ -256,16 +255,16 @@ export default class Chat extends React.Component {
     }
 
     sendHistory(c) {
-        c.send({history: this.state.messages.filter((msg) => {return msg.user !== "SYSTEM" && msg.user !== "Welcome to Bitshares"})});
+        c.send({history: this.state.messages.filter((msg) => {return msg.user !== "SYSTEM" && msg.user !== "Welcome to Bitshares";})});
     }
 
     onConnection(c) {
         this.connections.set(c.peer, c);
-        c.on('data', this._handleMessage);
-        c.on('close', this.onDisconnect.bind(this, c.peer));
+        c.on("data", this._handleMessage);
+        c.on("close", this.onDisconnect.bind(this, c.peer));
         setTimeout(() => {c.send({
             id: this._myID,
-            historyCount: this.state.messages.reduce((value, msg) => {return value + (msg.user !== "SYSTEM" ? 1 : 0)}, 0)})
+            historyCount: this.state.messages.reduce((value, msg) => {return value + (msg.user !== "SYSTEM" ? 1 : 0);}, 0)});
         }, 200);
         this.forceUpdate();
     }
@@ -308,11 +307,11 @@ export default class Chat extends React.Component {
                 TransactionConfirmStore.unlisten(this.onTrxIncluded);
                 TransactionConfirmStore.listen(this.onTrxIncluded);
             }).catch( e => {
-                let msg = e.message ? e.message.split( '\n' )[1] : null;
-                console.log( "error: ", e, msg)
-                this.setState({error: msg})
+                let msg = e.message ? e.message.split( "\n" )[1] : null;
+                console.log( "error: ", e, msg);
+                this.setState({error: msg});
             });
-        })
+        });
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -351,7 +350,7 @@ export default class Chat extends React.Component {
                 memo += parsed[i] + " ";
             }
         }
-        
+
         return {
             to: parsed[1].toLowerCase(),
             amount: parseFloat(parsed[2]),
@@ -404,7 +403,7 @@ export default class Chat extends React.Component {
 
         let message = {
             user: this.state.userName,
-            message: this.refs.input.value,
+            message: this.refs.input.value.substr(0, 140),
             color: this.state.myColor || "#ffffff"
         };
 
@@ -425,7 +424,7 @@ export default class Chat extends React.Component {
         if (this.connections.size) {
             this.connections.forEach(c => {
                 c.send(message);
-            });            
+            });
         }
     }
 
@@ -433,11 +432,13 @@ export default class Chat extends React.Component {
         e.preventDefault();
         let showChat = !this.state.showChat;
         this.setState({
-            showChat: showChat
+            showChat: showChat,
+            docked: (!showChat && this.state.docked) ? false : this.state.docked
         });
 
         SettingsActions.changeViewSetting({
-            showChat: showChat
+            showChat: showChat,
+            dockedChat: (!showChat && this.state.docked) ? false : this.state.docked
         });
     }
 
@@ -445,6 +446,10 @@ export default class Chat extends React.Component {
         let newValue = !this.state.showSettings;
         this.setState({
             showSettings: newValue
+        }, () => {
+            if (!newValue) {
+                this._scrollToBottom();
+            }
         });
     }
 
@@ -488,6 +493,17 @@ export default class Chat extends React.Component {
 
         SettingsActions.changeViewSetting({
             dockedChat: !this.state.docked
+        });
+    }
+
+    disableChat(e) {
+        e.preventDefault();
+        SettingsActions.changeViewSetting({
+            showChat: false
+        });
+        SettingsActions.changeSetting({
+            setting: "disableChat",
+            value: true
         });
     }
 
@@ -539,7 +555,7 @@ export default class Chat extends React.Component {
             return <option key={account} value={account}>{account}</option>;
         }).toArray();
 
-        accountOptions.push(<option key="default" value={this.state.anonName}>{this.state.anonName}</option>)
+        accountOptions.push(<option key="default" value={this.state.anonName}>{this.state.anonName}</option>);
 
 
         let settings = (
@@ -564,7 +580,11 @@ export default class Chat extends React.Component {
                     onChange={this.onChangeColor.bind(this)}
                     type="color"
                 />
-                
+
+                <div onClick={this.disableChat.bind(this)} className="button">
+                    <Translate content="settings.disableChat" />
+                </div>
+
                 {/* Done button */}
                 <div style={{position: "absolute", bottom: 5, right: 0}}>
                     <div onClick={this.onToggleSettings.bind(this)} className="button">
@@ -583,23 +603,23 @@ export default class Chat extends React.Component {
                     height: !docked ? 35 : null
                 }}
             >
-                {!showChat ? 
+                {!showChat ?
                 <a className="toggle-controlbox" onClick={this.onToggleChat.bind(this)}>
                     <span className="chat-toggle"><Translate content="chat.button" /></span>
                 </a> : null}
-                
+
                 <div style={chatStyle} className={"chatbox"}>
                     <div className={"grid-block main-content vertical " + (docked ? "docked" : "flyout")} >
                         <div className="chatbox-title grid-block shrink">
                             <Translate content="chat.title" />
                             <span>&nbsp;- <Translate content="chat.users" count={this.connections.size + 1} /></span>
                             <div className="chatbox-pin" onClick={this._onToggleDock.bind(this)}>
-                                {docked ? <Icon className="rotate" name="thumb-tack"/> : <Icon name="thumb-tack"/>}
+                                {docked ? <Icon className="icon-14px rotate" name="thumb-tack"/> : <Icon className="icon-14px" name="thumb-tack"/>}
                             </div>
                             <div className="chatbox-settings" onClick={this.onToggleSettings.bind(this)}>
-                                <Icon name="cog"/>
+                                <Icon className="icon-14px" name="cog"/>
                             </div>
-                            {docked ? null : <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>}
+                            <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
                         </div>
 
                         {loading ? <div><LoadingIndicator /></div> : !connected ? (
@@ -632,3 +652,16 @@ export default class Chat extends React.Component {
         );
     }
 }
+
+export default connect(Chat, {
+    listenTo() {
+        return [AccountStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            linkedAccounts: AccountStore.getState().linkedAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

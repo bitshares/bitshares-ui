@@ -5,7 +5,6 @@ import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import AccountBalance from "../../Account/AccountBalance";
 
-@BindToChainState({keep_updating:true})
 class TranswiserDepositModal extends React.Component {
 
     static propTypes =
@@ -54,7 +53,7 @@ class TranswiserDepositModal extends React.Component {
                    */}
                     <div className="content-block">
                        <Trigger close={this.props.modalId}>
-                           <a href className="secondary button"><Translate content="modal.ok" /></a>
+                           <div className="button"><Translate content="modal.ok" /></div>
                        </Trigger>
                     </div>
                </div>
@@ -64,4 +63,4 @@ class TranswiserDepositModal extends React.Component {
 
 };
 
-export default TranswiserDepositModal
+export default BindToChainState(TranswiserDepositModal, {keep_updating:true});

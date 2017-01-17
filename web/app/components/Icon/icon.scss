@@ -3,9 +3,16 @@
   top: 1px;
 }
 
+
+
 .icon > svg, span.icon {
   width: 1.12rem;
   height: 1.12rem;
+}
+
+.icon-14px > svg, span.icon-14px {
+  width: 14px;
+  height: 14px;
 }
 
 .icon-2x > svg, span.icon-2x {

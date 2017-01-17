@@ -7,10 +7,9 @@ import HelpContent from "../Utility/HelpContent";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
-import EquivalentValueComponent from "../Utility/EquivalentValueComponent";
-import {operations} from "chain/chain_types";
-import ChainStore from "api/ChainStore";
-
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
+const {operations} = grapheneChainTypes;
 let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids
@@ -25,7 +24,6 @@ let fee_grouping = {
 // Operations that require LTM
 let ltm_required = [5, 7, 20, 21, 34];
 
-@BindToChainState({keep_updating:true})
 class FeeGroup extends React.Component {
 
     static propTypes = {
@@ -47,7 +45,7 @@ class FeeGroup extends React.Component {
     }
 
     render() {
-        let {globalObject, settings, opIds} = this.props;
+        let {globalObject, settings, opIds, title} = this.props;
         globalObject = globalObject.toJSON();
         const core_asset = ChainStore.getAsset("1.3.0");
 
@@ -72,7 +70,7 @@ class FeeGroup extends React.Component {
             let feename        = trxTypes[ operation_name ];
 
             let rows = []
-            let headInlucded = false
+            let headIncluded = false
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
@@ -84,8 +82,8 @@ class FeeGroup extends React.Component {
                 let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit}/> : feeTypes["_none"];
                 let title = null;
 
-                if (!headInlucded) {
-                    headInlucded = true
+                if (!headIncluded) {
+                    headIncluded = true
                     title = (<td rowSpan="6" style={{width:"15em"}}>
                                <span className={labelClass}>
                                 {feename}
@@ -113,15 +111,15 @@ class FeeGroup extends React.Component {
                            );
                 }
             }
-            return (<tbody>{rows}</tbody>);
+            return (<tbody key={feeIdx}>{rows}</tbody>);
         })
 
-        return (   
+        return (
                    <div className="asset-card">
                     <div className="card-divider">{this.props.title}</div>
                     <table className="table">
                      <thead>
-                      <tr key={this.props.title}>
+                      <tr>
                        <th><Translate content={"explorer.block.op"} /></th>
                        <th><Translate content={"explorer.fees.type"} /></th>
                        <th style={{textAlign: "right"}}><Translate content={"explorer.fees.fee"} /></th>
@@ -134,18 +132,19 @@ class FeeGroup extends React.Component {
            );
     }
 }
+FeeGroup = BindToChainState(FeeGroup, {keep_updating:true});
 
 class Fees extends React.Component {
 
     render() {
 
         let FeeGroupsTitle  = counterpart.translate("transaction.feeGroups");
-        let feeGroups = []
+        let feeGroups = [];
 
         for (let groupName in fee_grouping) {
             let groupNameText = FeeGroupsTitle[groupName];
             let feeIds = fee_grouping[groupName];
-            feeGroups.push(<FeeGroup settings={this.props.settings} opIds={feeIds} title={groupNameText}/>);
+            feeGroups.push(<FeeGroup key={groupName} settings={this.props.settings} opIds={feeIds} title={groupNameText}/>);
         }
 
         return(
@@ -163,7 +162,6 @@ class Fees extends React.Component {
             </div>
         );
     }
-
 }
 
 export default Fees;

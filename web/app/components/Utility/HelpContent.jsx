@@ -1,5 +1,4 @@
 import React from "react";
-import {PropTypes} from "react-router";
 import {reduce, zipObject} from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
@@ -34,27 +33,17 @@ function adjust_links(str) {
     });
 }
 
-req.keys().forEach(function(filename) {
-    var res = filename.match(/\/(.+?)\/(.+)\./);
-    let locale = res[1];
-    let key = res[2];
-    let help_locale = HelpData[locale];
-    if (!help_locale) HelpData[locale] = help_locale = {};
-    let content = req(filename);
-    help_locale[key] = split_into_sections(adjust_links(content));
-});
-
-//console.log("-- HelpData -->", HelpData);
+// console.log("-- HelpData -->", HelpData);
 
 class HelpContent extends React.Component {
 
     static propTypes = {
         path: React.PropTypes.string.isRequired,
         section: React.PropTypes.string
-    }
+    };
 
     static contextTypes = {
-        history: PropTypes.history
+        router: React.PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -62,13 +51,32 @@ class HelpContent extends React.Component {
         window._onClickLink = this.onClickLink.bind(this);
     }
 
+    componentWillMount() {
+        let locale = this.props.locale || counterpart.getLocale() || "en";
+
+        // Only load helpData for the current locale as well as the fallback 'en'
+        req.keys().filter(a => {
+            return (
+                a.indexOf(`/${locale}/`) !== -1 ||
+                a.indexOf("/en/") !== -1
+            );
+        }).forEach(function(filename) {
+            var res = filename.match(/\/(.+?)\/(.+)\./);
+            let locale = res[1];
+            let key = res[2];
+            let help_locale = HelpData[locale];
+            if (!help_locale) HelpData[locale] = help_locale = {};
+            let content = req(filename);
+            help_locale[key] = split_into_sections(adjust_links(content));
+        });
+    }
+
     onClickLink(e) {
         e.preventDefault();
-        console.dir(e.target);
         let path = e.target.hash.split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.context.history.pushState(null, route);
+        this.context.router.push(route);
         return false;
     }
 
@@ -92,7 +100,7 @@ class HelpContent extends React.Component {
         }
         let value = HelpData[locale][this.props.path];
 
-        if (!value && locale != 'en') {
+        if (!value && locale !== "en") {
             console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`);
             value = HelpData['en'][this.props.path];
         }

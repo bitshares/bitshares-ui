@@ -1,9 +1,8 @@
 import React from "react";
-import utils from "common/utils";
 import classnames from "classnames";
 import Translate from "react-translate-component";
 import PrivateKeyView from "components/PrivateKeyView";
-import PublicKey from "ecc/key_public";
+import {PublicKey} from "graphenejs-lib/es";
 import Icon from "../Icon/Icon";
 
 /**

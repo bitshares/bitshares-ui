@@ -1,35 +1,25 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import {PropTypes} from "react-router";
 import Immutable from "immutable";
-import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
-import AssetActions from "actions/AssetActions";
-import MarketsActions from "actions/MarketsActions";
-import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
 
-let lastLookup = new Date();
-
-@BindToChainState()
 class DashboardList extends React.Component {
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    }
 
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
-    };
-
-    static contextTypes = {
-        history: PropTypes.history
     };
 
     static defaultProps = {
@@ -39,7 +29,6 @@ class DashboardList extends React.Component {
 
     constructor(props) {
         super();
-
         let inputValue = props.viewSettings.get("marketLookupInput");
         let symbols = inputValue ? inputValue.split(":") : [null];
         let quote = symbols[0];
@@ -48,7 +37,7 @@ class DashboardList extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("dashboardSortInverse", true),
             sortBy: props.viewSettings.get("dashboardSort", "star"),
-            dashboardFilter: props.viewSettings.get("dashboardFilter", "") 
+            dashboardFilter: props.viewSettings.get("dashboardFilter", "")
         };
 
     }
@@ -72,14 +61,14 @@ class DashboardList extends React.Component {
     }
 
     _goAccount(name) {
-        this.context.history.pushState(null, `/account/${name}`);
+        this.context.router.push(`/account/${name}`);
     }
 
     _onFilter(e) {
-        this.setState({dashboardFilter: e.target.value.toUpperCase()});
+        this.setState({dashboardFilter: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
-            dashboardFilter: e.target.value.toUpperCase()
+            dashboardFilter: e.target.value.toLowerCase()
         });
     }
 
@@ -121,11 +110,11 @@ class DashboardList extends React.Component {
                 }
             }
         }
-        
+
         let accounts = this.props.accounts
         .filter(a => {
             if (!a) return false;
-            return a.get("name").toUpperCase().indexOf(dashboardFilter) !== -1;
+            return a.get("name").toLowerCase().indexOf(dashboardFilter) !== -1;
         })
         .sort((a, b) => {
             switch (sortBy) {
@@ -147,6 +136,7 @@ class DashboardList extends React.Component {
                 balanceList = balanceList.clear();
 
                 let accountName = account.get("name");
+                let isLTM = account.get("lifetime_referrer_name") === accountName;
 
                 if (account.get("orders")) {
                     account.get("orders").forEach( (orderID, key) => {
@@ -201,8 +191,8 @@ class DashboardList extends React.Component {
                         <td onClick={this._onStar.bind(this, accountName, isStarred)}>
                             <Icon className={starClass} name="fi-star"/>
                         </td>
-                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""} style={{textTransform: "uppercase"}}>
-                            {accountName}
+                        <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
+                            <span className={isLTM ? "lifetime" : ""}>{accountName}</span>
                         </td>
                         <td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
                             <TotalBalanceValue balances={[]} openOrders={openOrders}/>
@@ -222,14 +212,14 @@ class DashboardList extends React.Component {
             }
         });
 
-        let filterText = counterpart.translate("markets.filter").toUpperCase();
+        let filterText = counterpart.translate("explorer.accounts.filter") + "...";
 
         return (
             <div style={this.props.style}>
                 {!this.props.compact ? (
-                    <div style={{paddingLeft: "5px", maxWidth: "20rem"}}>
+                    <section style={{paddingLeft: "5px", maxWidth: "20rem"}}>
                         <input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                    </div>) : null}
+                    </section>) : null}
                 <table className="table table-hover" style={{fontSize: "0.85rem"}}>
                     {!this.props.compact ? (
                     <thead>
@@ -246,27 +236,14 @@ class DashboardList extends React.Component {
                         {accounts}
                     </tbody>
                 </table>
-            </div>          
+            </div>
         )
 
     }
-
 }
+DashboardList = BindToChainState(DashboardList);
 
-
-@connectToStores
 class AccountsListWrapper extends React.Component {
-    
-    static getStores() {
-        return [SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            starredAccounts: SettingsStore.getState().starredAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
 
     render () {
         return (
@@ -277,4 +254,14 @@ class AccountsListWrapper extends React.Component {
     }
 }
 
-export default AccountsListWrapper;
+export default connect(AccountsListWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            starredAccounts: SettingsStore.getState().starredAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

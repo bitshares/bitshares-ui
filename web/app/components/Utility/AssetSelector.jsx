@@ -1,14 +1,9 @@
 import React from "react";
-import utils from "common/utils";
-import validation from "common/validation";
-import AccountImage from "../Account/AccountImage";
 import Translate from "react-translate-component";
-import ChainStore from "api/ChainStore";
+import {ChainValidation} from "graphenejs-lib/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import classnames from "classnames";
 import counterpart from "counterpart";
-import Icon from "../Icon/Icon";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -18,7 +13,6 @@ import Icon from "../Icon/Icon";
  *
  */
 
-@BindToChainState()
 class AssetSelector extends React.Component {
 
     static propTypes = {
@@ -52,7 +46,7 @@ class AssetSelector extends React.Component {
     getNameType(value) {
         if(!value) return null;
         // if(value[0] === "#" && utils.is_object_id("1.2." + value.substring(1))) return "id";
-        if(!validation.is_valid_symbol_error(value, true)) return "symbol";
+        if(!ChainValidation.is_valid_symbol_error(value, true)) return "symbol";
         return null;
     }
 
@@ -104,7 +98,7 @@ class AssetSelector extends React.Component {
                     </div>
                     <div className="input-area">
                       <span className="inline-label">
-                      <input 
+                      <input
                              disabled={this.props.disabled}
                              type="text"
                              value={this.props.assetInput || ""}
@@ -113,7 +107,7 @@ class AssetSelector extends React.Component {
                              onChange={this.onInputChanged.bind(this)}
                              onKeyDown={this.onKeyDown.bind(this)}
                              tabIndex={this.props.tabIndex}/>
-                          { this.props.children }                          
+                          { this.props.children }
                       </span>
                     </div>
                     <div className="error-area" style={{paddingBottom: "10px"}}>
@@ -121,9 +115,9 @@ class AssetSelector extends React.Component {
                     </div>
                 </div>
             </div>
-        )
+        );
 
     }
 
 }
-export default AssetSelector;
+export default BindToChainState(AssetSelector);

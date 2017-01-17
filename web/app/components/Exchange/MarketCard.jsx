@@ -5,9 +5,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import ChainStore from "api/ChainStore";
 
-@BindToChainState({show_loader: true})
 class MarketCard extends React.Component {
 
     static propTypes = {
@@ -21,11 +19,11 @@ class MarketCard extends React.Component {
     }
 
     static contextTypes = {
-        history: React.PropTypes.object
+        router: React.PropTypes.object.isRequired
     }
 
     _onClick(marketID) {
-        this.context.history.pushState(null, `/market/${marketID}`);
+        this.context.router.push(`/market/${marketID}`);
     }
 
     render() {
@@ -85,4 +83,4 @@ class MarketCard extends React.Component {
     }
 }
 
-export default MarketCard;
+export default BindToChainState(MarketCard, {show_loader: true});

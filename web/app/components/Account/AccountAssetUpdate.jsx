@@ -1,11 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
 import classnames from "classnames";
-import validation from "common/validation";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedFee from "../Utility/FormattedFee";
 import counterpart from "counterpart";
@@ -15,18 +14,15 @@ import AmountSelector from "../Utility/AmountSelector";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import AccountInfo from "./AccountInfo";
 import big from "bignumber.js";
 import cnames from "classnames";
 import assetUtils from "common/asset_utils";
-import Tabs, {Tab} from "../Utility/Tabs";
+import {Tabs, Tab} from "../Utility/Tabs";
 import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
-@BindToChainState()
 class AccountAssetUpdate extends React.Component {
 
     static propTypes = {
@@ -114,7 +110,7 @@ class AccountAssetUpdate extends React.Component {
             permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
-        
+
         // Handle incorrect flag from genesis
         if (this.props.asset.getIn(["options", "flags"]) & 128 && !(this.props.asset.getIn(["options", "issuer_permissions"]) & 128)) {
             flags += 128;
@@ -324,7 +320,7 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onInputCoreAsset(type, asset) {
-       
+
         if (type === "quote") {
             this.setState({
                 quoteAssetInput: asset
@@ -353,7 +349,7 @@ class AccountAssetUpdate extends React.Component {
     }
 
     _onInputMarket(asset) {
-       
+
         this.setState({
             marketInput: asset
         });
@@ -363,7 +359,7 @@ class AccountAssetUpdate extends React.Component {
         if (asset) {
             this._onUpdateDescription("market", asset.get("symbol"));
         }
-    }    
+    }
 
     _onFlagChange(key) {
         let booleans = this.state.flagBooleans;
@@ -422,8 +418,8 @@ class AccountAssetUpdate extends React.Component {
         let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
 
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
-        
-        // Loop over flags        
+
+        // Loop over flags
         let flags = [];
         for (let key in originalPermissions) {
             if (originalPermissions[key] && key !== "charge_market_fee") {
@@ -485,7 +481,7 @@ class AccountAssetUpdate extends React.Component {
         let balance = 0;
         if (account) {
             let coreBalanceID = account.getIn(["balances", "1.3.0"]);
-            
+
             if (coreBalanceID) {
                 let balanceObject = ChainStore.getObject(coreBalanceID);
                 if (balanceObject) {
@@ -548,7 +544,7 @@ class AccountAssetUpdate extends React.Component {
                                     { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
 
                                     <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
-                                    <label>                                    
+                                    <label>
                                         <div className="grid-block no-margin">
                                             {cerValid ? null : (<div className="grid-block no-margin small-12 medium-6">
                                                 <AssetSelector
@@ -588,7 +584,7 @@ class AccountAssetUpdate extends React.Component {
                                             </div>
                                             <div className="grid-block no-margin small-12 medium-6">
                                                 <AmountSelector
-                                                    label="account.user_issued_assets.base" 
+                                                    label="account.user_issued_assets.base"
                                                     amount={core_exchange_rate.base.amount}
                                                     onChange={this._onCoreRateChange.bind(this, "base")}
                                                     asset={core_exchange_rate.base.asset_id}
@@ -602,17 +598,17 @@ class AccountAssetUpdate extends React.Component {
                                         <div>
                                             <h5><Translate content="exchange.price" />: <FormattedPrice
                                                 style={{fontWeight: "bold"}}
-                                                quote_amount={cr_quote_amount} 
+                                                quote_amount={cr_quote_amount}
                                                 quote_asset={core_exchange_rate.quote.asset_id}
                                                 base_asset={core_exchange_rate.base.asset_id}
                                                 base_amount={cr_base_amount}
-                                            /></h5> 
+                                            /></h5>
                                         </div>
                                     </label>
 
                                     {confirmButtons}
                                 </div>
-                                
+
                             </Tab>
 
                             <Tab title="account.user_issued_assets.description">
@@ -673,7 +669,7 @@ class AccountAssetUpdate extends React.Component {
 
 
                                     {confirmButtons}
-                                </div>                                
+                                </div>
                             </Tab>
 
 
@@ -713,7 +709,7 @@ class AccountAssetUpdate extends React.Component {
                                         tabIndex={1}
                                      />
                                     {confirmButtons}
-                                </div>                                
+                                </div>
                             </Tab>
 
                             <Tab title="account.permissions">
@@ -728,8 +724,8 @@ class AccountAssetUpdate extends React.Component {
 
                                 </div>
                             </Tab>
-                            
-                            <Tab title="account.user_issued_assets.flags">                                
+
+                            <Tab title="account.user_issued_assets.flags">
                                 <div className="small-12 large-8 grid-content">
                                     <HelpContent
                                         path = {"components/AccountAssetCreate"}
@@ -779,7 +775,7 @@ class AccountAssetUpdate extends React.Component {
 
                             <Tab title="explorer.asset.fee_pool.title">
                                 <div className="small-12 large-8 grid-content">
-                                    
+
                                     {/* Fund fee pool */}
                                     <Translate component="h3" content="transaction.trxTypes.asset_fund_fee_pool" />
                                     <Translate component="p" content="explorer.asset.fee_pool.fund_text" asset={asset.get("symbol")} core={core.get("symbol")} />
@@ -788,7 +784,7 @@ class AccountAssetUpdate extends React.Component {
                                         <Translate content="explorer.asset.fee_pool.pool_balance" /><span>: </span>
                                         <FormattedAsset amount={asset.getIn(["dynamic", "fee_pool"])} asset={"1.3.0"} />
                                     </div>
-                                        
+
                                     <AccountSelector
                                         label="transaction.funding_account"
                                         accountName={this.state.funder_account_name}
@@ -801,7 +797,7 @@ class AccountAssetUpdate extends React.Component {
 
                                     <AmountSelector
                                         label="transfer.amount"
-                                        display_balance={balanceText} 
+                                        display_balance={balanceText}
                                         amount={fundPoolAmount}
                                         onChange={this._onPoolInput.bind(this)}
                                         asset={"1.3.0"}
@@ -810,7 +806,7 @@ class AccountAssetUpdate extends React.Component {
                                         tabIndex={2}
                                         style={{width: "100%", paddingLeft: "10px"}}
                                     />
-                                
+
                                     <div style={{paddingTop: "0.5rem"}}>
                                         <hr/>
                                         <button className={classnames("button", {disabled: fundPoolAmount <= 0})} onClick={this._onFundPool.bind(this)}>
@@ -825,17 +821,17 @@ class AccountAssetUpdate extends React.Component {
                                     </div>
 
                                     {/* Claim fees, disabled until witness node update gets pushed to openledger*/}
-                                    
+
                                     <Translate component="h3" content="transaction.trxTypes.asset_claim_fees" />
                                     <Translate component="p" content="explorer.asset.fee_pool.claim_text" asset={asset.get("symbol")} />
                                     <div style={{paddingBottom: "1rem"}}>
                                         <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />:&nbsp;
                                         <FormattedAsset amount={asset.getIn(["dynamic", "accumulated_fees"])} asset={asset.get("id")} />
                                     </div>
-                                    
+
                                     <AmountSelector
                                         label="transfer.amount"
-                                        display_balance={unclaimedBalanceText} 
+                                        display_balance={unclaimedBalanceText}
                                         amount={claimFeesAmount}
                                         onChange={this._onClaimInput.bind(this)}
                                         asset={asset.get("id")}
@@ -844,7 +840,7 @@ class AccountAssetUpdate extends React.Component {
                                         tabIndex={1}
                                         style={{width: "100%", paddingLeft: "10px"}}
                                     />
-                                
+
                                     <div style={{paddingTop: "0.5rem"}}>
                                         <hr/>
                                         <button className={classnames("button", {disabled: !validClaim})} onClick={this._onClaimFees.bind(this)}>
@@ -857,13 +853,13 @@ class AccountAssetUpdate extends React.Component {
                                         <br/>
                                         {/*<p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_claim_fees" /></p>*/}
                                     </div>
-                                     
+
                                 </div>
                             </Tab>
                         </Tabs>
 
-                    
-                    
+
+
 
                 </div>
             </div>
@@ -871,13 +867,14 @@ class AccountAssetUpdate extends React.Component {
     }
 
 }
+AccountAssetUpdate = BindToChainState(AccountAssetUpdate);
 
 class AssetUpdateWrapper extends React.Component {
 
     render() {
         let asset = this.props.params.asset;;
         return <AccountAssetUpdate asset={asset} {...this.props}/>;
-    }   
+    }
 }
 
 export default AssetUpdateWrapper;

@@ -296,7 +296,7 @@ label.inline {
 
 .click-for-help {
   border-bottom: 1px dotted #777;
-  cursor: help;
+  cursor: pointer;
 }
 
 .asset-flag .label {
@@ -317,15 +317,91 @@ label.inline {
 }
 
 .tooltip:hover {
-  font-weight: bold;
   cursor: help;
+}
+
+.inline-block {
+    display: inline-block;
 }
 
 .__react_component_tooltip {
   z-index: 2000 !important;
   border: 1px solid grey;
+  max-width: 20rem;
 }
 
 .asset-prefix-replaced {
   font-variant: small-caps;
+}
+
+select {
+    line-height: normal !important;
+}
+
+select.bts-select {
+    cursor:pointer;
+    border: none;
+    background: none;
+    background-color: transparent;
+    max-width: 500px;
+    border-bottom: 1px solid #444;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+    height: inherit;
+}
+
+@media screen and (max-width: 600px) {
+    .column-hide-tiny {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .column-hide-small {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .column-hide-medium {
+        display: none !important;
+    }
+}
+
+.block-content-header {
+  font-size: 1.4375rem;
+  padding: 0.5rem 0;
+
+  @include breakpoint(small only) {
+      font-size: 1.125rem;
+  }
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.account-drop-down {
+  a.button {
+    background-color: transparent;
+    text-transform: none;
+  }
+  a:active.button, a:hover.button {
+    background-color: transparent !important;
+  }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+@include breakpoint(xlarge) {
+    form.hide-container {
+        display: inherit !important;
+    }
+}
+
+.unlock-tooltip {
+    min-width: 150px;
 }

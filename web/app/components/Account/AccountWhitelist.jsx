@@ -1,5 +1,5 @@
 import React from "react";
-import Tabs, {Tab} from "../Utility/Tabs";
+import {Tabs, Tab} from "../Utility/Tabs";
 import constants from "chain/account_constants.js";
 import AccountSelector from "../Account/AccountSelector";
 import Immutable from "immutable";
@@ -7,12 +7,11 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb.js"
+import WalletApi from "api/WalletApi";
+import WalletDb from "stores/WalletDb.js";
 
 let wallet_api = new WalletApi();
 
-@BindToChainState()
 class AccountRow extends React.Component {
 
     static propTypes = {
@@ -36,6 +35,7 @@ class AccountRow extends React.Component {
         );
     }
 }
+AccountRow = BindToChainState(AccountRow);
 
 class AccountList extends React.Component {
 

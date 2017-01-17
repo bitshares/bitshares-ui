@@ -23,7 +23,7 @@ var init = function () {
 };
 
 var copyRuntime = function () {
-    return projectDir.copyAsync('node_modules/electron-prebuilt/dist/Electron.app', finalAppDir.path());
+    return projectDir.copyAsync('node_modules/electron/dist/Electron.app', finalAppDir.path());
 };
 
 var cleanupRuntime = function() {
@@ -97,6 +97,9 @@ var packToDmgFile = function () {
 
     // Delete DMG file with this name if already exists
     releasesDir.remove(dmgName);
+
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {osx: dmgName});
 
     gulpUtil.log('Packaging to DMG file...');
 

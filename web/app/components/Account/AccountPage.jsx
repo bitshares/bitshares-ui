@@ -4,13 +4,11 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import AccountLeftPanel from "./AccountLeftPanel";
-import LoadingIndicator from "../LoadingIndicator";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import accountUtils from "common/account_utils";
 
-@BindToChainState({keep_updating: true, show_loader: true})
 class AccountPage extends React.Component {
 
     static propTypes = {
@@ -37,15 +35,16 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block medium-2 left-column no-padding">
+                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 250}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
                         linkedAccounts={linkedAccounts}
                         myAccounts={myAccounts}
+                        viewSettings={this.props.viewSettings}
                     />
                 </div>
-                <div className="grid-block small-12 medium-10 main-content">
+                <div className="grid-block main-content">
                     <div className="grid-container" style={{paddingTop: 15}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
@@ -67,29 +66,29 @@ class AccountPage extends React.Component {
         );
     }
 }
+AccountPage = BindToChainState(AccountPage, {keep_updating: true, show_loader: true});
 
-@connectToStores
 class AccountPageStoreWrapper extends React.Component {
-    static getStores() {
-        return [AccountStore, SettingsStore, WalletUnlockStore]
-    }
+    render () {
+        let account_name = this.props.routeParams.account_name;
 
-    static getPropsFromStores() {
+        return <AccountPage {...this.props} account_name={account_name}/>;
+    }
+}
+
+export default connect(AccountPageStoreWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore, WalletUnlockStore];
+    },
+    getProps() {
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
-            myAccounts:  AccountStore.getState().myAccounts
-        }
+            myAccounts:  AccountStore.getState().myAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
     }
-
-    render () {
-        let account_name = this.props.routeParams.account_name;
-
-        return <AccountPage {...this.props} account_name={account_name}/>
-    }
-}
-
-export default AccountPageStoreWrapper;
+});

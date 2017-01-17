@@ -1,22 +1,14 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import FormattedAsset from "components/Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
 import BalanceComponent from "components/Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import FormattedPrice from "components/Utility/FormattedPrice";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
-@BindToChainState({keep_updating:true})
 class WithdrawModal extends React.Component {
 
    static propTypes = {
@@ -82,7 +74,7 @@ class WithdrawModal extends React.Component {
                       <h3>Withdraw {this.props.receive_asset_name}({this.props.receive_asset_symbol})</h3>
                    </div>
                    <div className="content-block">
-                     <AmountSelector label="modal.withdraw.amount" 
+                     <AmountSelector label="modal.withdraw.amount"
                                      amount={this.state.withdraw_amount}
                                      asset={this.props.asset.get('id')}
                                      assets={[this.props.asset.get('id')]}
@@ -96,19 +88,19 @@ class WithdrawModal extends React.Component {
                        <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
                        {/*<div>{memo_error}</div>*/}
                    </div>
-                                  
+
                    <div className="content-block">
-                     <input type="submit" className="button" 
-                            onClick={this.onSubmit.bind(this)} 
+                     <input type="submit" className="button"
+                            onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
-                 </div> 
+                 </div>
                </form>)
    }
-   
+
 };
 
-export default WithdrawModal
+export default BindToChainState(WithdrawModal, {keep_updating:true});

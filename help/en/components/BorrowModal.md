@@ -1,6 +1,3 @@
-This dialog allows you to set your desired debt and collateral.
+Update your {debt} margin position by adjusting the debt and collateral levels.
 
-If {debt} debt is reduced it will be deducted from {borrower}'s account.
-If {debt} debt is increased it will be credited to {borrower} provided there is sufficient {collateral} collateral.   
-
-Collateral may be added or removed so long as the minimal maintenance collateral is maintained. [Read more.](dex/shorting)
+Collateral and debt levels can be adjusted in any way you desire, as long as your collateral ratio stays above the maintenance collateral ratio of {mr}. [Read more.](dex/shorting)

@@ -4,7 +4,7 @@
 
 'use strict';
 
-var app = require('app');
+var app = require('electron').app;
 var fs = require('fs');
 
 function guid() {

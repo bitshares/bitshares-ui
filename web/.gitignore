@@ -2,6 +2,6 @@
 node_modules
 bower_components
 bundle
-app/assets/bts_genesiskeys_bloom.dat
 stats-dev.json
 stats-prod.json
+test/MarketClasses.js

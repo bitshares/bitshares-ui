@@ -1,18 +1,17 @@
-import React, {Component} from 'react'
-import ReactDOM from "react-dom";
-import Apis from "rpc_api/ApiInstances"
-import ApplicationApi from "rpc_api/ApplicationApi"
-import WalletApi from "rpc_api/WalletApi"
-import DebugApi from "rpc_api/DebugApi"
+import React, {Component} from "react";
+import {Apis} from "graphenejs-ws";
+import ApplicationApi from "api/ApplicationApi";
+import WalletApi from "api/WalletApi";
+import DebugApi from "api/DebugApi";
 
 function evalInContext(js) {
-    
+
     var db = Apis.instance().db_api(),
         net = Apis.instance().network_api(),
         app = new ApplicationApi(),
         wallet = new WalletApi(),
         debug = new DebugApi()
-    
+
     var $g = {
         db, net, app, wallet, debug
     }
@@ -35,7 +34,7 @@ export default class Console extends Component {
             cmd_console: []
         }
     }
-    
+
     render() {
         return <div className="grid-content" ref="console_div">
             <form ref="console_form" onSubmit={this.on_cmd_submit.bind(this)} >
@@ -59,28 +58,28 @@ export default class Console extends Component {
             </form>
         </div>
     }
-    
+
     componentDidUpdate() {
-        ReactDOM.findDOMNode(this.refs.console_input).focus()
-        var node = ReactDOM.findDOMNode(this.refs.console_div)
-        node.scrollTop = node.scrollHeight
+        this.refs.console_input.focus();
+        var node = this.refs.console_div;
+        node.scrollTop = node.scrollHeight;
     }
-    
+
     clear() {
         this.setState({cmd_console:[]})
     }
-    
+
     clear_history() {
         cmd_history = [""]
         cmd_history_position = 0
         this.forceUpdate()
     }
-    
+
     on_cmd_change(evt) {
         var cmd = evt.target.value
         this.setState({cmd})
     }
-    
+
     on_cmd_keydown(evt) {
         // DEBUG console.log('... on_cmd_keydown', evt.type, evt.which, evt)
         switch(evt.which) {
@@ -118,26 +117,26 @@ export default class Console extends Component {
         evt.preventDefault();
         evt.stopPropagation();
     }
-    
+
     on_cmd_keyup() {
         cmd_history[cmd_history_position] =
             this.refs.console_input.props.value
     }
-    
+
     on_cmd_submit(evt) {
         evt.preventDefault()
         this.run()
     }
-    
+
     run() {
         if(this.state.cmd.trim() == "")
             return
-        
-        
+
+
         // if pasted, it will not be in history via 'on_cmd_keyup'
         cmd_history[cmd_history_position] =
             this.refs.console_input.props.value
-        
+
         var cmd_console = this.state.cmd_console
         cmd_console.push(
             <div>
@@ -162,19 +161,19 @@ export default class Console extends Component {
         }
         // prevent immediate duplicats in history
         if(
-            cmd_history_position && 
+            cmd_history_position &&
             cmd_history[cmd_history_position - 1] == this.state.cmd
         )
             cmd_history.pop()
-        
+
         while(cmd_history[cmd_history.length - 1] == "")
             cmd_history.pop()
-        
+
         cmd_history_position = cmd_history.length
         cmd_history.pushState("")
         this.setState({cmd_console, cmd:""})
     }
-    
+
     cmd_console_result(result) {
         // DEBUG console.log('... cmd_console_result result',result)
         var cmd_console = this.state.cmd_console
@@ -184,7 +183,7 @@ export default class Console extends Component {
         )
         this.forceUpdate()
     }
-    
+
     cmd_console_error(error) {
         // DEBUG console.log("user console command error", error)
         var cmd_console = this.state.cmd_console
@@ -195,4 +194,3 @@ export default class Console extends Component {
         this.forceUpdate()
     }
 }
-

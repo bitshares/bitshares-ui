@@ -1,17 +1,15 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import ChainStore from "api/ChainStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
-import PrivateKeyView from "components/PrivateKeyView"
+import PrivateKeyView from "components/PrivateKeyView";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import AddressIndex from "stores/AddressIndex"
+import AddressIndex from "stores/AddressIndex";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -77,7 +75,6 @@ class AccountPermissionRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
 class AccountPermissionsList extends React.Component {
 
     static propTypes = {
@@ -174,18 +171,21 @@ class AccountPermissionsList extends React.Component {
 
         return (
             <div>
-                <AccountSelector label={this.props.label}
-                                 error={error}
-                                 placeholder={this.props.placeholder}
-                                 account={this.state.item_name_input}
-                                 accountName={this.state.item_name_input}
-                                 onChange={this.onItemChange}
-                                 onAccountChanged={this.onItemAccountChange}
-                                 onAction={this.onAddItem}
-                                 action_label="account.votes.add_witness"
-                                 tabIndex={this.props.tabIndex}
-                                 allowPubKey={true}
-                                 disableActionButton={!this.state.weight_input}>
+                <AccountSelector
+                    label={this.props.label}
+                    error={error}
+                    placeholder={this.props.placeholder}
+                    account={this.state.item_name_input}
+                    accountName={this.state.item_name_input}
+                    onChange={this.onItemChange}
+                    onAccountChanged={this.onItemAccountChange}
+                    onAction={this.onAddItem}
+                    action_label="account.votes.add_witness"
+                    tabIndex={this.props.tabIndex}
+                    allowPubKey={true}
+                    disableActionButton={!this.state.weight_input}
+                    allowUppercase={true}
+                >
                     <input value={this.state.weight_input}
                            onChange={this.onWeightChanged.bind(this)}
                            className="weight-input"
@@ -216,4 +216,4 @@ class AccountPermissionsList extends React.Component {
 
 }
 
-export default AccountPermissionsList;
+export default BindToChainState(AccountPermissionsList, {keep_updating: true});

@@ -9,7 +9,6 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
-@BindToChainState({keep_updating:true})
 class WithdrawFiatOpenLedger extends React.Component {
 
    static propTypes = {
@@ -37,22 +36,22 @@ class WithdrawFiatOpenLedger extends React.Component {
      let amount = this.state.withdraw_amount.replace( /,/g, "" )
 
      let json_rpc_request = {
-      "jsonrpc": "2.0", 
-      "method": "getMemoForFiatWithdrawal", 
+      "jsonrpc": "2.0",
+      "method": "getMemoForFiatWithdrawal",
       "params": {
-         "bitsharesAccountName": this.props.account.get('name'), 
-         "currency": this.props.deposit_asset, 
-         "amount": amount 
-      }, 
-      "id": 1 
+         "bitsharesAccountName": this.props.account.get('name'),
+         "currency": this.props.deposit_asset,
+         "amount": amount
+      },
+      "id": 1
      };
      let is_withdrawal_approved_promise = fetch(this.props.rpc_url,
-                                                {method: 'POST', 
-                                                 headers: new Headers({"Accept": "application/json", 
-                                                 "content-type":"application/x-www-form-urlencoded"}), 
+                                                {method: 'POST',
+                                                 headers: new Headers({"Accept": "application/json",
+                                                 "content-type":"application/x-www-form-urlencoded"}),
                                                  body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                           .then(response => response.json());
-        
+
      is_withdrawal_approved_promise.then((json_response) => {
             if ('result' in json_response)
               AccountActions.transfer(
@@ -94,7 +93,7 @@ class WithdrawFiatOpenLedger extends React.Component {
                       <h3>Withdraw {this.props.deposit_asset}</h3>
                    </div>
                    <div className="content-block">
-                     <AmountSelector label="modal.withdraw.amount" 
+                     <AmountSelector label="modal.withdraw.amount"
                                      amount={this.state.withdraw_amount}
                                      asset={this.props.receive_asset.get('id')}
                                      assets={[this.props.receive_asset.get('id')]}
@@ -103,19 +102,19 @@ class WithdrawFiatOpenLedger extends React.Component {
                                      display_balance={balance}
                                      />
                    </div>
-                                  
+
                    <div className="content-block">
-                     <input type="submit" className="button" 
-                            onClick={this.onSubmit.bind(this)} 
+                     <input type="submit" className="button"
+                            onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modal_id}>
-                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
-                 </div> 
+                 </div>
                </form>)
    }
-   
+
 };
 
-export default WithdrawFiatOpenLedger
+export default BindToChainState(WithdrawFiatOpenLedger, {keep_updating:true});

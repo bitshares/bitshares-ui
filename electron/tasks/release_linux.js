@@ -1,5 +1,4 @@
 'use strict';
-
 var Q = require('q');
 var gulpUtil = require('gulp-util');
 var childProcess = require('child_process');
@@ -28,7 +27,7 @@ var init = function () {
 };
 
 var copyRuntime = function () {
-    return projectDir.copyAsync('node_modules/electron-prebuilt/dist', readyAppDir.path(), { overwrite: true });
+    return projectDir.copyAsync('node_modules/electron/dist', readyAppDir.path(), { overwrite: true });
 };
 
 var packageBuiltApp = function () {
@@ -97,6 +96,9 @@ var packToDebFile = function () {
             }
             deferred.resolve();
         });
+
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {linux: debPath});
 
     return deferred.promise;
 };

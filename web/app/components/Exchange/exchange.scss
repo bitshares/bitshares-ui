@@ -134,18 +134,15 @@ form.order-form {
     border-top: 1px solid #777;
     border-bottom: 1px solid #777;
   }
-  // .top-header {
-  //   border-top: 1px solid #777;
-  // }
-  // .bottom-header {
-  //   border-bottom: 1px solid #777;
-  // }
 }
 
 .final-row > td {
   border-bottom: none !important;
 }
 
+.orderbook-latest-price {
+    cursor: help;
+}
 
 
 .left-orderbook-header {
@@ -168,10 +165,10 @@ tr.top-header, tr.bottom-header, tr.spread-row {
 }
 
 .bid-total {
-  color: $bid-color !important;  
+  color: $bid-color !important;
 }
 
-.ask-total { 
+.ask-total {
   color: $ask-color !important;
 }
 
@@ -226,11 +223,12 @@ a.order-cancel {
   list-style: none;
   overflow: hidden;
   margin: 0px;
-  padding: 0px; 
+  padding: 0px;
 }
 
 .top-stats li {
   border-right: 1px solid grey;
+  border-top: 1px solid grey;
 }
 
 .bottom-stats li {
@@ -238,17 +236,15 @@ a.order-cancel {
 }
 
 .stats .stat {
-  padding: 3px 5px 0 5px;
+  text-align: center;
+  padding: 3px 5px;
   vertical-align: top;
   min-height: 27px;
 
   > span {
     > span:first-of-type {
       padding-right: 5px;
-    }
-
-    > span:last-of-type {
-      padding-left: 5px;
+      font-weight: bold;
     }
   }
 }
@@ -264,7 +260,7 @@ a.order-cancel {
 }
 .stats .stat .value {
   color: #FFFFFF;
-  letter-spacing: 1px;
+  // letter-spacing: 1px;
 }
 .stats .stat em {
   color: #888888;
@@ -272,11 +268,11 @@ a.order-cancel {
 }
 
 .stats .stat .negative {
-  color: $negative-color;
+  color: $negative-color !important;
 }
 
 .stats .stat .positive {
-  color: $positive-color;
+  color: $positive-color !important;
 }
 
 .market-symbol {
@@ -284,7 +280,7 @@ a.order-cancel {
     font-size: 1.1rem;
     padding-left: 0.3rem;
     padding-right: 0.5rem;
-    padding-top: 18px;
+    padding-top: 15px;
 }
 
 .active-bucket {
@@ -358,16 +354,6 @@ div.bucket-option {
     }
 }
 
-.account-drop-down {
-  a.button {
-    background-color: transparent;
-    text-transform: none;
-  }
-  a:active.button, a:hover.button {
-    background-color: transparent !important;
-  }
-}
-
 .borrow-button {
   margin-top: 0.2rem;
   margin-right: 0.2rem;
@@ -406,7 +392,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .borrow-price-feeds {
-  padding-bottom: 2px;
+  padding-bottom: 8px;
 }
 
 .middle-content {
@@ -505,3 +491,29 @@ table thead tr th.mymarkets-header {
   100% { background-color: transparent;}
 }
 
+.mymarkets-tabs {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    margin-top: 5px;
+
+    > li {
+        padding: 3px;
+        font-size: 12px;
+        display: inline-block;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+}
+
+.buysell-select {
+    background: none !important;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+    text-align: left;
+}
+
+form.hide-container {
+    display: none;
+}

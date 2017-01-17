@@ -1,27 +1,13 @@
 import React from "react";
-import connectToStores from "alt/utils/connectToStores";
-import HelpContent from "./Utility/HelpContent";
+import { connect } from "alt-react";
 import BlockchainStore from "stores/BlockchainStore";
 import SettingsStore from "stores/SettingsStore";
 import Translate from "react-translate-component";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
+import {Apis} from "graphenejs-ws";
 
-@connectToStores
 class InitError extends React.Component {
-
-    static getStores() {
-        return [BlockchainStore, SettingsStore]
-    }
-
-    static getPropsFromStores() {
-        return {
-            rpc_connection_status: BlockchainStore.getState().rpc_connection_status,
-            apis: SettingsStore.getState().defaults.connection,
-            connection: SettingsStore.getState().settings.get("connection"),
-            defaultConnection: SettingsStore.getState().defaultSettings.get("connection"),
-        }
-    }
 
     triggerModal(e) {
         console.log("triggerModal:");
@@ -29,7 +15,8 @@ class InitError extends React.Component {
     }
 
     onChangeWS(e) {
-        SettingsActions.changeSetting({setting: "connection", value: e.target.value });        
+        SettingsActions.changeSetting({setting: "apiServer", value: e.target.value });
+        Apis.reset(e.target.value, true);
     }
 
     onReloadClick(e) {
@@ -44,35 +31,40 @@ class InitError extends React.Component {
     }
 
     onReset() {
-        SettingsActions.changeSetting({setting: "connection", value: this.props.defaultConnection });
+        SettingsActions.changeSetting({setting: "apiServer", value: this.props.defaultConnection });
         SettingsActions.clearSettings();
     }
 
     render() {
-        console.log("-- InitError.render -->", this.props);
-
         let options = this.props.apis.map(entry => {
-            return <option key={entry} value={entry}>{entry}</option>;
+            return <option key={entry.url} value={entry.url}>{entry.location || entry.url} {entry.location ? `(${entry.url})` : null}</option>;
         });
 
         return (
             <div className="grid-block page-layout">
                 <div className="grid-container">
-                    <div className="grid-content">
+                    <div className="grid-content no-overflow">
                         <br/>
                         <Translate component="h3" content={`init_error.title`} />
                         <br/>
                         <section className="block-list">
-                            <header><Translate component="span" content={`settings.connection`} /></header>
+                            <header><Translate component="span" content={`settings.apiServer`} /></header>
                             <ul>
                                 <li className="with-dropdown">
-                                    <div style={{position: "absolute", right: "0.8rem", top: "0.2rem"}}
-                                         className="button no-margin outline"
-                                         onClick={this.triggerModal.bind(this)} id="add"
-                                         data-tip="Add connection string" data-type="light">+</div>
-                                    <select onChange={this.onChangeWS.bind(this)} value={this.props.connection}>
+
+                                    <select onChange={this.onChangeWS.bind(this)} value={this.props.apiServer}>
                                         {options}
                                     </select>
+
+                                    <div style={{paddingTop: 10}} className="button-group">
+                                        <div
+                                            onClick={this.triggerModal.bind(this)}
+                                            className="button outline"
+                                            id="add"
+                                        >
+                                                <Translate id="add_text" content="settings.add_api" />
+                                        </div>
+                                    </div>
                                 </li>
                                 <li className="key-value clearfix">
                                     <div className="float-left">Connection Status</div>
@@ -83,10 +75,12 @@ class InitError extends React.Component {
                             </ul>
                         </section>
                         <br/>
-                        <div className="button no-margin" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
-                        <br />
-                        <div onClick={this.onReset.bind(this)} className="button" style={{marginTop: 15}}>
-                            <Translate content="settings.reset" />
+                        <div className="button-group">
+                            <div className="button outline" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
+
+                            <div onClick={this.onReset.bind(this)} className="button outline">
+                                <Translate content="settings.reset" />
+                            </div>
                         </div>
                         <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
                     </div>
@@ -96,4 +90,16 @@ class InitError extends React.Component {
     }
 }
 
-export default InitError;
+export default connect(InitError, {
+    listenTo() {
+        return [BlockchainStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            rpc_connection_status: BlockchainStore.getState().rpc_connection_status,
+            apis: SettingsStore.getState().defaults.apiServer,
+            apiServer: SettingsStore.getState().settings.get("apiServer"),
+            defaultConnection: SettingsStore.getState().defaultSettings.get("apiServer"),
+        };
+    }
+});

@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
@@ -8,11 +7,10 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
+import ConvertModalBlocktrades from "./ConvertModalBlocktrades";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
-import Post from "common/formPost";
 import utils from "common/utils";
 
-@BindToChainState({keep_updating:true})
 class BlockTradesBridgeDepositRequest extends React.Component {
     static propTypes = {
         url:               React.PropTypes.string,
@@ -24,7 +22,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         initial_deposit_estimated_input_amount: React.PropTypes.string,
         initial_withdraw_input_coin_type: React.PropTypes.string,
         initial_withdraw_output_coin_type: React.PropTypes.string,
-        initial_withdraw_estimated_input_amount: React.PropTypes.string
+        initial_withdraw_estimated_input_amount: React.PropTypes.string,
+        initial_conversion_input_coin_type: React.PropTypes.string,
+        initial_conversion_output_coin_type: React.PropTypes.string,
+        initial_conversion_estimated_input_amount: React.PropTypes.string
     };
 
     constructor(props) {
@@ -46,14 +47,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             input_from_output: 1
         };
 
-        let urls = {
-            blocktrades: "https://api.blocktrades.us/v2",
-            openledger: "https://bitshares.openledger.info/depositwithdraw/api/v2"
-        }
-
         this.state =
         {
-            url: props.url || urls[props.gateway],
+			coin_symbol: 'btc',
+			supports_output_memos: '',
+            url: "https://api.blocktrades.us/v2",
 
             // things that get displayed for deposits
             deposit_input_coin_type: null,
@@ -64,13 +62,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             deposit_limit: null,
             deposit_error: null,
 
-            // things that get displayed for deposits
+            // things that get displayed for withdrawals
             withdraw_input_coin_type: null,
             withdraw_output_coin_type: null,
             withdraw_estimated_input_amount: this.props.initial_withdraw_estimated_input_amount || "1.0",
             withdraw_estimated_output_amount: null,
             withdraw_limit: null,
             withdraw_error: null,
+
+			// things that get displayed for conversions
+			conversion_input_coin_type: null,
+            conversion_output_coin_type: null,
+            conversion_estimated_input_amount: this.props.initial_conversion_estimated_input_amount || "1.0",
+            conversion_estimated_output_amount: null,
+			conversion_limit: null,
+            conversion_error: null,
 
             // input address-related
             coin_info_request_state: this.coin_info_request_states.request_in_progress,
@@ -86,29 +92,37 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // generic data from BlockTrades
             coins_by_type: null,
             allowed_mappings_for_deposit: null,
-            allowed_mappings_for_withdraw: null
+            allowed_mappings_for_withdraw: null,
+			allowed_mappings_for_conversion: null,
+			conversion_memo: null
         };
+    }
+
+	urlConnection(checkUrl, state_coin_info)
+	{
+		this.setState({
+            url: checkUrl
+        });
 
         // get basic data from blocktrades
-
-        let coin_types_url = this.state.url + "/coins";
-        let coin_types_promise = fetch(coin_types_url,
-                                       {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                 .then(response => response.json());
-        
-        let wallet_types_url = this.state.url + "/wallets";
-        let wallet_types_promise = fetch(wallet_types_url, 
-                                         {method: 'get', headers: new Headers({"Accept": "application/json"})})
-                                   .then(response => response.json());
-        
-        let trading_pairs_url = this.state.url + "/trading-pairs";
-        let trading_pairs_promise = fetch(trading_pairs_url, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
+		let coin_types_url = checkUrl + "/coins";
+		let coin_types_promise = fetch(coin_types_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
-        let active_wallets_url = this.state.url + "/active-wallets";
-        let active_wallets_promise = fetch(active_wallets_url, 
-                                          {method: 'get', headers: new Headers({"Accept": "application/json"})})
+        let wallet_types_url = checkUrl + "/wallets";
+        let wallet_types_promise = fetch(wallet_types_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+
+        let trading_pairs_url = checkUrl + "/trading-pairs";
+        let trading_pairs_promise = fetch(trading_pairs_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+
+        let active_wallets_url = checkUrl + "/active-wallets";
+        let active_wallets_promise = fetch(active_wallets_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
 
         Promise.all([coin_types_promise, wallet_types_promise, trading_pairs_promise, active_wallets_promise])
@@ -122,6 +136,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // determine which mappings we will display for deposits and withdrawals
             let allowed_mappings_for_deposit = {}; // all non-bts to bts
             let allowed_mappings_for_withdraw = {}; // all bts to non-bts
+			let allowed_mappings_for_conversion = {}; // all bts to bts
             trading_pairs.forEach(pair => {
                 let input_coin_info = coins_by_type[pair.inputCoinType];
                 let output_coin_info = coins_by_type[pair.outputCoinType];
@@ -135,17 +150,23 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (active_wallets.indexOf(input_coin_info.walletType) != -1 &&
                         active_wallets.indexOf(output_coin_info.walletType) != -1)
                     {
-                        if (input_coin_info.walletType != "bitshares2" && 
+                        if (input_coin_info.walletType != "bitshares2" &&
                             output_coin_info.walletType == "bitshares2")
                         {
                             allowed_mappings_for_deposit[pair.inputCoinType] = allowed_mappings_for_deposit[pair.inputCoinType] || [];
                             allowed_mappings_for_deposit[pair.inputCoinType].push(pair.outputCoinType);
                         }
-                        else if (input_coin_info.walletType == "bitshares2" && 
+                        else if (input_coin_info.walletType == "bitshares2" &&
                                  output_coin_info.walletType != "bitshares2")
                         {
                             allowed_mappings_for_withdraw[pair.inputCoinType] = allowed_mappings_for_withdraw[pair.inputCoinType] || [];
                             allowed_mappings_for_withdraw[pair.inputCoinType].push(pair.outputCoinType);
+                        }
+                        else if (input_coin_info.walletType == "bitshares2" &&
+                                 output_coin_info.walletType == "bitshares2")
+                        {
+                            allowed_mappings_for_conversion[pair.inputCoinType] = allowed_mappings_for_conversion[pair.inputCoinType] || [];
+                            allowed_mappings_for_conversion[pair.inputCoinType].push(pair.outputCoinType);
                         }
                     }
                 }
@@ -171,9 +192,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 else
                     deposit_output_coin_type = output_coin_types_for_this_input[0];
             }
-            
+
             let withdraw_input_coin_type = null;
             let withdraw_output_coin_type = null;
+			let conversion_input_coin_type = null;
+			let conversion_output_coin_type = null;
             let allowed_withdraw_coin_types = Object.keys(allowed_mappings_for_withdraw);
             allowed_withdraw_coin_types.forEach(withdraw_coin_type => { allowed_mappings_for_withdraw[withdraw_coin_type].sort(); });
 
@@ -191,19 +214,42 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 else
                     withdraw_output_coin_type = output_coin_types_for_this_input[0];
             }
-            
+
+            let allowed_conversion_coin_types = Object.keys(allowed_mappings_for_conversion);
+            allowed_conversion_coin_types.forEach(conversion_coin_type => { allowed_mappings_for_conversion[conversion_coin_type].sort(); });
+
+            if (allowed_conversion_coin_types.length)
+            {
+                if (this.props.initial_conversion_input_coin_type &&
+                    this.props.initial_conversion_input_coin_type in allowed_mappings_for_conversion)
+                    conversion_input_coin_type = this.props.initial_conversion_input_coin_type;
+                else
+                    conversion_input_coin_type = allowed_conversion_coin_types[0];
+                let output_coin_types_for_this_input = allowed_mappings_for_conversion[conversion_input_coin_type];
+                if (this.props.initial_conversion_output_coin_type &&
+                    output_coin_types_for_this_input.indexOf(this.props.initial_conversion_output_coin_type) != -1)
+                    conversion_output_coin_type = this.props.initial_conversion_output_coin_type;
+                else
+                    conversion_output_coin_type = output_coin_types_for_this_input[0];
+            }
+
             let input_address_and_memo = this.getCachedOrGeneratedInputAddress(deposit_input_coin_type, deposit_output_coin_type);
+
             let deposit_limit = this.getCachedOrFreshDepositLimit("deposit", deposit_input_coin_type, deposit_output_coin_type);
             let deposit_estimated_output_amount = this.getAndUpdateOutputEstimate("deposit", deposit_input_coin_type, deposit_output_coin_type, this.state.deposit_estimated_input_amount);
 
             let withdraw_estimated_output_amount = this.getAndUpdateOutputEstimate("withdraw", withdraw_input_coin_type, withdraw_output_coin_type, this.state.withdraw_estimated_input_amount);
             let withdraw_limit = this.getCachedOrFreshDepositLimit("withdraw", withdraw_input_coin_type, withdraw_output_coin_type);
 
+			let conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", conversion_input_coin_type, conversion_output_coin_type, this.state.conversion_estimated_input_amount);
+			let conversion_limit = this.getCachedOrFreshDepositLimit("conversion", conversion_input_coin_type, conversion_output_coin_type);
+
             this.setState({
                 coin_info_request_state: this.coin_info_request_states.request_complete,
                 coins_by_type: coins_by_type,
                 allowed_mappings_for_deposit: allowed_mappings_for_deposit,
                 allowed_mappings_for_withdraw: allowed_mappings_for_withdraw,
+				allowed_mappings_for_conversion: allowed_mappings_for_conversion,
                 deposit_input_coin_type: deposit_input_coin_type,
                 deposit_output_coin_type: deposit_output_coin_type,
                 input_address_and_memo: input_address_and_memo,
@@ -214,20 +260,25 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_output_coin_type: withdraw_output_coin_type,
                 withdraw_limit: withdraw_limit,
                 withdraw_estimated_output_amount: withdraw_estimated_output_amount,
+				conversion_input_coin_type: conversion_input_coin_type,
+				conversion_output_coin_type: conversion_output_coin_type,
+				conversion_limit: conversion_limit,
+				conversion_estimated_output_amount: conversion_estimated_output_amount,
                 withdraw_estimate_direction: this.estimation_directions.output_from_input,
+				conversion_estimate_direction: this.estimation_directions.output_from_input,
+                supports_output_memos: coins_by_type['btc'].supportsOutputMemos
             });
-
         })
-        .catch((error) => {
+		.catch((error) => {
             this.setState( {
-                coin_info_request_state: this.coin_info_request_states.request_failed,
+                coin_info_request_state: state_coin_info,
                 coins_by_type: null,
                 allowed_mappings_for_deposit: null,
-                allowed_mappings_for_withdraw: null
+                allowed_mappings_for_withdraw: null,
+				allowed_mappings_for_conversion : null
             });
-        });
-    }
-
+		});
+	}
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
@@ -247,7 +298,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 new_deposit_estimated_output_amount = this.getAndUpdateOutputEstimate("deposit", this.state.deposit_input_coin_type, this.state.deposit_output_coin_type, new_deposit_estimated_input_amount);
             else
                 new_deposit_estimated_input_amount = this.getAndUpdateInputEstimate("deposit", this.state.deposit_input_coin_type, this.state.deposit_output_coin_type, new_deposit_estimated_output_amount);
-            
+
 
             let new_withdraw_limit = this.getCachedOrFreshDepositLimit("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type);
             let new_withdraw_estimated_input_amount = this.state.withdraw_estimated_input_amount;
@@ -258,6 +309,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             else
                 new_withdraw_estimated_input_amount = this.getAndUpdateinputEstimate("withdraw", this.state.withdraw_input_coin_type, this.state.withdraw_output_coin_type, new_withdraw_estimated_output_amount);
 
+			let new_conversion_limit = this.getCachedOrFreshDepositLimit("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type);
+            let new_conversion_estimated_input_amount = this.state.conversion_estimated_input_amount;
+            let new_conversion_estimated_output_amount = this.state.conversion_estimated_output_amount;
+
+            if (this.state.conversion_estimate_direction == this.estimation_directions.output_from_input)
+                new_conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type, new_conversion_estimated_input_amount);
+            else
+                new_conversion_estimated_input_amount = this.getAndUpdateinputEstimate("conversion", this.state.conversion_input_coin_type, this.state.conversion_output_coin_type, new_conversion_estimated_output_amount);
 
             this.setState(
             {
@@ -267,9 +326,50 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 deposit_estimated_output_amount: new_deposit_estimated_output_amount,
                 withdraw_limit: new_withdraw_limit,
                 withdraw_estimated_input_amount: new_withdraw_estimated_input_amount,
-                withdraw_estimated_output_amount: new_withdraw_estimated_output_amount
+                withdraw_estimated_output_amount: new_withdraw_estimated_output_amount,
+				conversion_limit: new_conversion_limit,
+				conversion_estimated_input_amount: new_conversion_estimated_input_amount,
+				conversion_estimated_output_amount: new_conversion_estimated_output_amount
             });
         }
+    }
+
+    componentWillMount() {
+        // check api.blocktrades.us/v2
+        let checkUrl = "https://api.blocktrades.us/v2";
+        this.urlConnection(checkUrl, 0);
+        let coin_types_promisecheck = fetch(checkUrl + "/coins",
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+        let trading_pairs_promisecheck = fetch(checkUrl + "/trading-pairs",
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+        let active_wallets_promisecheck = fetch(checkUrl + "/active-wallets",
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+        Promise.all([coin_types_promisecheck,  trading_pairs_promisecheck, active_wallets_promisecheck])
+        .then((json_responses) => {
+            let [coin_types, trading_pairs, active_wallets] = json_responses;
+            let coins_by_type = {};
+            coin_types.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
+            trading_pairs.forEach(pair => {
+                let input_coin_info = coins_by_type[pair.inputCoinType];
+                let output_coin_info = coins_by_type[pair.outputCoinType];
+                if ((input_coin_info.backingCoinType != pair.outputCoinType) && (output_coin_info.backingCoinType != pair.inputCoinType)) {
+                    if ((active_wallets.indexOf(input_coin_info.walletType) != -1) && (active_wallets.indexOf(output_coin_info.walletType) != -1)) {
+                    }
+                }
+            });
+        }).catch((error) => {
+            this.urlConnection("https://api.blocktrades.info/v2", 2);
+            this.setState( {
+                coin_info_request_state: 0,
+                coins_by_type: null,
+                allowed_mappings_for_deposit: null,
+                allowed_mappings_for_withdraw: null,
+                allowed_mappings_for_conversion: null
+            });
+        });
     }
 
     componentDidMount()
@@ -281,7 +381,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     {
         clearInterval(this.update_timer);
     }
-    
+
     // functions for managing input addresses
     getCachedInputAddress(input_coin_type, output_coin_type, memo)
     {
@@ -308,9 +408,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             return null;
 
         // else, no active request for this mapping, kick one off
-        let body = JSON.stringify({ 
+        let body = JSON.stringify({
             inputCoinType: input_coin_type,
-            outputCoinType: output_coin_type, 
+            outputCoinType: output_coin_type,
             outputAddress: this.props.account.get('name')
         });
 
@@ -346,11 +446,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         });
         return null;
     }
-    
+
     // functions for managing deposit limits
     getCachedDepositLimit(input_coin_type, output_coin_type)
     {
-        
+
         this.state.deposit_limit_cache[input_coin_type] = this.state.deposit_limit_cache[input_coin_type] || {};
         if (this.state.deposit_limit_cache[input_coin_type][output_coin_type])
         {
@@ -358,7 +458,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             let cache_age = new Date() - deposit_limit_record.timestamp;
             if (cache_age < this.refresh_interval)
                 return deposit_limit_record;
-            delete this.state.deposit_limit_cache[input_coin_type][output_coin_type]; 
+            delete this.state.deposit_limit_cache[input_coin_type][output_coin_type];
         }
         return null;
     }
@@ -370,7 +470,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.deposit_limit_cache[input_coin_type][output_coin_type] = deposit_limit_record;
     }
 
-    getCachedOrFreshDepositLimit(deposit_or_withdraw, input_coin_type, output_coin_type)
+    getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, input_coin_type, output_coin_type)
     {
         let deposit_limit_record = this.getCachedDepositLimit(input_coin_type, output_coin_type);
         if (deposit_limit_record)
@@ -379,37 +479,37 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.deposit_limit_requests_in_progress[input_coin_type] = this.state.input_address_requests_in_progress[input_coin_type] || {};
         this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type] = true;
 
-        let deposit_limit_url = this.state.url + 
+        let deposit_limit_url = this.state.url +
                                 "/deposit-limits?inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
-        let deposit_limit_promise = fetch(deposit_limit_url, 
+        let deposit_limit_promise = fetch(deposit_limit_url,
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
         deposit_limit_promise.then(reply => {
             console.assert(reply.inputCoinType == input_coin_type &&
-                           reply.outputCoinType == output_coin_type, 
+                           reply.outputCoinType == output_coin_type,
                            "unexpected reply from deposit-limits");
             if (reply.inputCoinType != input_coin_type || reply.outputCoinType != output_coin_type)
                 throw Error("unexpected reply from deposit-limits");
             let new_deposit_limit_record =
-            { 
+            {
                 timestamp: new Date(),
-                limit: reply.depositLimit 
+                limit: reply.depositLimit
             };
             this.cacheDepositLimit(input_coin_type, output_coin_type, new_deposit_limit_record);
             delete this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type];
-            if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type)
-                this.setState({[deposit_or_withdraw + "_limit"]: new_deposit_limit_record});
+            if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type &&
+                this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type)
+                this.setState({[deposit_withdraw_or_convert + "_limit"]: new_deposit_limit_record});
         }, error => {
             delete this.state.deposit_limit_requests_in_progress[input_coin_type][output_coin_type];
         });
         return null;
     }
 
-    getAndUpdateOutputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, input_amount)
+    getAndUpdateOutputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, input_amount)
     {
-        let estimate_output_url = this.state.url + 
+        let estimate_output_url = this.state.url +
                                 "/estimate-output-amount?inputAmount=" + encodeURIComponent(input_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
@@ -420,34 +520,34 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // console.log("Reply: ", reply);
             if (reply.error)
             {
-                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
-                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.output_from_input)
                 {
                     let user_message = reply.error.message;
                     let expected_prefix = "Internal Server Error: ";
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
 
-                    this.setState({[deposit_or_withdraw + "_error"]: user_message});
+                    this.setState({[deposit_withdraw_or_convert + "_error"]: user_message});
                 }
             }
             else
             {
                 console.assert(reply.inputCoinType == input_coin_type &&
                                reply.outputCoinType == output_coin_type &&
-                               reply.inputAmount == input_amount, 
+                               reply.inputAmount == input_amount,
                                "unexpected reply from estimate-output-amount");
-                if (reply.inputCoinType != input_coin_type || 
-                    reply.outputCoinType != output_coin_type || 
+                if (reply.inputCoinType != input_coin_type ||
+                    reply.outputCoinType != output_coin_type ||
                     reply.inputAmount != input_amount)
                     throw Error("unexpected reply from estimate-output-amount");
-                if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                    this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                    this.state[deposit_or_withdraw + "_estimated_input_amount"] == input_amount &&
-                    this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.output_from_input)
-                    this.setState({[deposit_or_withdraw + "_estimated_output_amount"]: reply.outputAmount, [deposit_or_withdraw + "_error"]: null});
+                if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                    this.state[deposit_withdraw_or_convert + "_estimated_input_amount"] == input_amount &&
+                    this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.output_from_input)
+                    this.setState({[deposit_withdraw_or_convert + "_estimated_output_amount"]: reply.outputAmount, [deposit_withdraw_or_convert + "_error"]: null});
             }
         }, error => {
         });
@@ -455,9 +555,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         return null;
     }
 
-    getAndUpdateInputEstimate(deposit_or_withdraw, input_coin_type, output_coin_type, output_amount)
+    getAndUpdateInputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, output_amount)
     {
-        let estimate_input_url = this.state.url + 
+        let estimate_input_url = this.state.url +
                                 "/estimate-input-amount?outputAmount=" + encodeURIComponent(output_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
                                 "&outputCoinType=" + encodeURIComponent(output_coin_type);
@@ -467,52 +567,60 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         estimate_input_promise.then(reply => {
             console.assert(reply.inputCoinType == input_coin_type &&
                            reply.outputCoinType == output_coin_type &&
-                           reply.outputAmount == output_amount, 
+                           reply.outputAmount == output_amount,
                            "unexpected reply from estimate-input-amount");
-            if (reply.inputCoinType != input_coin_type || 
-                reply.outputCoinType != output_coin_type || 
+            if (reply.inputCoinType != input_coin_type ||
+                reply.outputCoinType != output_coin_type ||
                 reply.outputAmount != output_amount)
                 throw Error("unexpected reply from estimate-input-amount");
-            if (this.state[deposit_or_withdraw + "_input_coin_type"] == input_coin_type && 
-                this.state[deposit_or_withdraw + "_output_coin_type"] == output_coin_type &&
-                this.state[deposit_or_withdraw + "_estimated_output_amount"] == output_amount &&
-                this.state[deposit_or_withdraw + "_estimate_direction"] == this.estimation_directions.input_from_output)
-                this.setState({[deposit_or_withdraw + "_estimated_input_amount"]: reply.inputAmount});
+            if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type &&
+                this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
+                this.state[deposit_withdraw_or_convert + "_estimated_output_amount"] == output_amount &&
+                this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.input_from_output)
+                this.setState({[deposit_withdraw_or_convert + "_estimated_input_amount"]: reply.inputAmount});
         }, error => {
         });
 
         return null;
     }
 
-    onInputAmountChanged(deposit_or_withdraw, event)
+    onInputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_input_amount = event.target.value;
-        let new_estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw,
-                                                                          this.state[deposit_or_withdraw + "_input_coin_type"], 
-                                                                          this.state[deposit_or_withdraw + "_output_coin_type"], 
+		if (new_estimated_input_amount == '') {
+		    new_estimated_input_amount = '0';
+		}
+
+        let new_estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert,
+                                                                          this.state[deposit_withdraw_or_convert + "_input_coin_type"],
+                                                                          this.state[deposit_withdraw_or_convert + "_output_coin_type"],
                                                                           new_estimated_input_amount);
 
         this.setState(
         {
-            [deposit_or_withdraw + "_estimated_input_amount"]: new_estimated_input_amount,
-            [deposit_or_withdraw + "_estimated_output_amount"]: new_estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_estimated_input_amount"]: new_estimated_input_amount,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: new_estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
 
-    onOutputAmountChanged(deposit_or_withdraw, event)
+    onOutputAmountChanged(deposit_withdraw_or_convert, event)
     {
         let new_estimated_output_amount = event.target.value;
-        let new_estimated_input_amount = this.getAndUpdateInputEstimate(deposit_or_withdraw, 
-                                                                        this.state[deposit_or_withdraw + "_input_coin_type"], 
-                                                                        this.state[deposit_or_withdraw + "_output_coin_type"], 
+		if (new_estimated_output_amount == '') {
+		    new_estimated_output_amount = '0';
+		}
+
+        let new_estimated_input_amount = this.getAndUpdateInputEstimate(deposit_withdraw_or_convert,
+                                                                        this.state[deposit_withdraw_or_convert + "_input_coin_type"],
+                                                                        this.state[deposit_withdraw_or_convert + "_output_coin_type"],
                                                                         new_estimated_output_amount);
 
         this.setState(
         {
-            [deposit_or_withdraw + "_estimated_output_amount"]: new_estimated_output_amount,
-            [deposit_or_withdraw + "_estimated_input_amount"]: new_estimated_input_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.input_from_output
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: new_estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimated_input_amount"]: new_estimated_input_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.input_from_output
         });
     }
 
@@ -524,56 +632,124 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
-    
-    onInputCoinTypeChanged(deposit_or_withdraw, event)
+
+    getConvertModalId() {
+        return "convert_asset_" + this.props.gateway + "_bridge";
+    }
+
+    onConvert() {
+
+		let input_coin_type = this.state.conversion_input_coin_type;
+		let output_coin_type = this.state.conversion_output_coin_type;
+
+        let body = JSON.stringify({
+            inputCoinType: input_coin_type,
+            outputCoinType: output_coin_type,
+            outputAddress: this.props.account.get('name'),
+			inputMemo: "blocktrades conversion: " + input_coin_type + "to" + output_coin_type
+        });
+
+        fetch(this.state.url + '/simple-api/initiate-trade', {
+            method:'post',
+            headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
+            body: body
+        }).then(reply => { reply.json().then( json => {
+
+                if (json.inputCoinType != input_coin_type || json.outputCoinType != output_coin_type) {
+                    throw Error("unexpected reply from initiate-trade");
+				}
+                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType) {
+					this.setState({conversion_memo: json.inputMemo});
+					ZfApi.publish(this.getConvertModalId(), "open");
+				}
+            }, error => {
+                if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
+                    this.setState({conversion_memo: null});
+				}
+            }
+        )
+        }, error => {
+            if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
+                this.setState({conversion_memo: null});
+			}
+        });
+
+    }
+
+    onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
         let new_input_coin_type = event.target.value;
-        let possible_output_coin_types = this.state["allowed_mappings_for_" + deposit_or_withdraw][new_input_coin_type];
+        let possible_output_coin_types = this.state["allowed_mappings_for_" + deposit_withdraw_or_convert][new_input_coin_type];
         let new_output_coin_type = possible_output_coin_types[0];
-        if (possible_output_coin_types.indexOf(this.state[deposit_or_withdraw + "_output_coin_type"]) != -1)
-            new_output_coin_type = this.state[deposit_or_withdraw + "_output_coin_type"];
+        if (possible_output_coin_types.indexOf(this.state[deposit_withdraw_or_convert + "_output_coin_type"]) != -1)
+            new_output_coin_type = this.state[deposit_withdraw_or_convert + "_output_coin_type"];
 
         let new_input_address_and_memo = this.state.input_address_and_memo;
-        if (deposit_or_withdraw == "deposit")
+        if (deposit_withdraw_or_convert == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
-        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, new_input_coin_type, new_output_coin_type);
-        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
-        
+        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type);
+        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type, this.state.deposit_estimated_input_amount);
+
+		if (deposit_withdraw_or_convert == "withdraw") {
+			possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_input_coin_type + 'input',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});
+				}
+			});
+		}
+
         this.setState(
         {
-            [deposit_or_withdraw + "_input_coin_type"]: new_input_coin_type,
-            [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
+            [deposit_withdraw_or_convert + "_input_coin_type"]: new_input_coin_type,
+            [deposit_withdraw_or_convert + "_output_coin_type"]: new_output_coin_type,
             input_address_and_memo: new_input_address_and_memo,
-            [deposit_or_withdraw + "_limit"]: new_deposit_limit,
-            [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_limit"]: new_deposit_limit,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
-    
-    onOutputCoinTypeChanged(deposit_or_withdraw, event)
+
+    onOutputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
         let new_output_coin_type = event.target.value;
+		let withdraw_output_coin_types = this.state.allowed_mappings_for_withdraw[this.state.withdraw_input_coin_type];
+
+		if (deposit_withdraw_or_convert == "withdraw") {
+			withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+				if(new_output_coin_type===allowed_withdraw_output_coin_type){
+					this.setState({
+					coin_symbol: new_output_coin_type + 'output',
+					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+					});
+				}
+			});
+		}
+
         let new_input_address_and_memo = this.state.input_address_and_memo;
-        if (deposit_or_withdraw == "deposit")
-            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
-        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type);
-        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_or_withdraw, this.state[deposit_or_withdraw + "_input_coin_type"], new_output_coin_type, this.state[deposit_or_withdraw + "_estimated_input_amount"]);
-        
+        if (deposit_withdraw_or_convert == "deposit")
+            new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
+        let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
+        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type, this.state[deposit_withdraw_or_convert + "_estimated_input_amount"]);
+
         this.setState(
         {
-            [deposit_or_withdraw + "_output_coin_type"]: new_output_coin_type,
+            [deposit_withdraw_or_convert + "_output_coin_type"]: new_output_coin_type,
             input_address_and_memo: new_input_address_and_memo,
-            [deposit_or_withdraw + "_limit"]: new_deposit_limit,
-            [deposit_or_withdraw + "_estimated_output_amount"]: estimated_output_amount,
-            [deposit_or_withdraw + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_limit"]: new_deposit_limit,
+            [deposit_withdraw_or_convert + "_estimated_output_amount"]: estimated_output_amount,
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
         });
     }
 
     render() {
+
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
 
-        let deposit_body, deposit_header, withdraw_body, withdraw_header, withdraw_modal_id;
+        let deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
 
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
@@ -581,7 +757,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <p>Error connecting to blocktrades.us, please try again later</p>
                     </div>;
         }
-        else if (this.state.coin_info_request_state == this.coin_info_request_states.never_requested || 
+        else if (this.state.coin_info_request_state == this.coin_info_request_states.never_requested ||
                  this.state.coin_info_request_state == this.coin_info_request_states.request_in_progress)
         {
             return  <div>
@@ -590,7 +766,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         }
         else
         {
-            // depending on what wallets are online, we might support deposits, withdrawals, both, or neither at any given time.
+            // depending on what wallets are online, we might support deposits, withdrawals, conversions, all, or neither at any given time.
             let deposit_table = null;
             let withdraw_table = null;
 
@@ -603,7 +779,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 Object.keys(this.state.allowed_mappings_for_deposit).sort().forEach(allowed_deposit_input_coin_type => {
                     deposit_input_coin_type_options.push(<option key={allowed_deposit_input_coin_type} value={allowed_deposit_input_coin_type || ""}>{this.state.coins_by_type[allowed_deposit_input_coin_type].symbol}</option>);
                 });
-                let deposit_input_coin_type_select = 
+                let deposit_input_coin_type_select =
                     <select style={{width: "11rem"}} className="external-coin-types" value={this.state.deposit_input_coin_type || ""} onChange={this.onInputCoinTypeChanged.bind(this, "deposit")}>
                       {deposit_input_coin_type_options}
                     </select>;
@@ -613,18 +789,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 deposit_output_coin_types.forEach(allowed_deposit_output_coin_type => {
                     deposit_output_coin_type_options.push(<option key={allowed_deposit_output_coin_type} value={allowed_deposit_output_coin_type || ""}>{this.state.coins_by_type[allowed_deposit_output_coin_type].walletSymbol}</option>);
                 });
-                let deposit_output_coin_type_select = 
+                let deposit_output_coin_type_select =
                     <select style={{width: "11rem"}} className="native-coin-types" value={this.state.deposit_output_coin_type || ""} onChange={this.onOutputCoinTypeChanged.bind(this, "deposit")}>
                       {deposit_output_coin_type_options}
                     </select>
 
                 let input_address_and_memo = this.state.input_address_and_memo ? this.state.input_address_and_memo: {"address": "unknown", "memo": null};
 
-                    
                 let estimated_input_amount_text = this.state.deposit_estimated_input_amount;
                 let estimated_output_amount_text = this.state.deposit_estimated_output_amount;
 
-                let deposit_input_amount_edit_box = estimated_input_amount_text ? 
+                let deposit_input_amount_edit_box = estimated_input_amount_text ?
                         <input style={{width: "11rem"}} type="text"
                                value={estimated_input_amount_text || ""}
                                onChange={this.onInputAmountChanged.bind(this, "deposit") } /> : calcText;
@@ -632,24 +807,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <input style={{width: "11rem"}} type="text"
                                value={estimated_output_amount_text || ""}
                                onChange={this.onOutputAmountChanged.bind(this, "deposit") } /> : calcText;
-                
+
                 let deposit_limit_element = <span>updating</span>;
                 if (this.state.deposit_limit)
                 {
                     if (this.state.deposit_limit.limit)
-                        deposit_limit_element = <span className="deposit-limit"><Translate content="gateway.limit" amount={utils.format_number(this.state.deposit_limit.limit, 8)} symbol={this.state.coins_by_type[this.state.deposit_input_coin_type].walletSymbol} /></span>;                    
+                        deposit_limit_element = <span className="deposit-limit"><Translate content="gateway.limit" amount={utils.format_number(this.state.deposit_limit.limit, 8)} symbol={this.state.coins_by_type[this.state.deposit_input_coin_type].walletSymbol} /></span>;
                     else
                         deposit_limit_element = null;
                     //else
                     //    deposit_limit_element = <span>no limit</span>;
                 }
-                
+
                 let deposit_error_element = null;
                 if (this.state.deposit_error)
                     deposit_error_element = <div>{this.state.deposit_error}</div>;
 
 
-                deposit_header = 
+                deposit_header =
                 <thead>
                     <tr>
                         <th><Translate content="gateway.deposit" /></th>
@@ -658,29 +833,29 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     </tr>
                 </thead>;
 
-                deposit_body =                         
+                deposit_body =
                     <tbody>
                         <tr>
                             <td>
-                                <div style={{display: "inline-block"}}>
+                                <div className="inline-block">
                                     <div>{deposit_input_coin_type_select}</div>
                                     <div>{deposit_input_amount_edit_box}</div>
                                 </div>
                                 &rarr;
-                                <div style={{display: "inline-block"}}>
+                                <div className="inline-block">
                                     <div>{deposit_output_coin_type_select}</div>
                                     <div>{deposit_output_amount_edit_box}</div>
-                                </div>                            
+                                </div>
                                 <div>
                                     {deposit_error_element}
-                                 </div>  
+                                 </div>
                             </td>
                             <td>
                                 <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} />
                             </td>
                             <td>
                                 {input_address_and_memo.address}<br/>
-                                {deposit_limit_element}                                 
+                                {deposit_limit_element}
                             </td>
                         </tr>
                     </tbody>;
@@ -706,25 +881,26 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
                     withdraw_output_coin_type_options.push(<option key={allowed_withdraw_output_coin_type} value={allowed_withdraw_output_coin_type}>{this.state.coins_by_type[allowed_withdraw_output_coin_type].symbol}</option>);
                 });
-                let withdraw_output_coin_type_select = 
+                let withdraw_output_coin_type_select =
                     <select style={{width: "11rem"}} className="external-coin-types" value={this.state.withdraw_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "withdraw")}>
                       {withdraw_output_coin_type_options}
                     </select>;
 
                 let estimated_input_amount_text = this.state.withdraw_estimated_input_amount;
 
-                let withdraw_input_amount_edit_box = estimated_input_amount_text ? 
+                let withdraw_input_amount_edit_box = estimated_input_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_input_amount_text || ""}
                            onChange={this.onInputAmountChanged.bind(this, "withdraw") } /> : calcText;
 
                 let estimated_output_amount_text = this.state.withdraw_estimated_output_amount;
+
                 let withdraw_output_amount_edit_box = estimated_output_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_output_amount_text || ""}
                            onChange={this.onOutputAmountChanged.bind(this, "withdraw") } /> : calcText;
 
-                let withdraw_button = 
+                let withdraw_button =
                     <span>
                         <button className={"button"} onClick={this.onWithdraw.bind(this)}><Translate content="" /><Translate content="gateway.withdraw_now" /> </button>
                     </span>;
@@ -750,33 +926,126 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     </tr>
                 </thead>;
 
-               withdraw_body =                         
+               withdraw_body =
                 <tbody>
                     <tr>
                         <td>
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{withdraw_input_coin_type_select}</div>
                                 <div>{withdraw_input_amount_edit_box}</div>
                             </div>
                             &rarr;
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{withdraw_output_coin_type_select}</div>
                                 <div>{withdraw_output_amount_edit_box}</div>
-                            </div>                           
+                            </div>
                             <div>
                                 {withdraw_error_element}
-                             </div>                            
+                             </div>
                         </td>
                         <td>
-                            <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol} /> 
+                            <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol} />
                         </td>
                         <td>
                             {withdraw_button}<br/>
                             {withdraw_limit_element}
                         </td>
                     </tr>
+                </tbody>;
+            }
+
+            if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_conversion).length > 0)
+            {
+                conversion_modal_id = this.getConvertModalId();
+
+                // conversion
+                let conversion_input_coin_type_options = [];
+                Object.keys(this.state.allowed_mappings_for_conversion).sort().forEach(allowed_conversion_input_coin_type => {
+                    conversion_input_coin_type_options.push(<option key={allowed_conversion_input_coin_type} value={allowed_conversion_input_coin_type}>{this.state.coins_by_type[allowed_conversion_input_coin_type].walletSymbol}</option>);
+                });
+                let conversion_input_coin_type_select =
+                    <select style={{width: "11rem"}} className="native-coin-types" value={this.state.conversion_input_coin_type} onChange={this.onInputCoinTypeChanged.bind(this, "conversion")}>
+                      {conversion_input_coin_type_options}
+                    </select>;
+
+                let conversion_output_coin_type_options = [];
+                let conversion_output_coin_types = this.state.allowed_mappings_for_conversion[this.state.conversion_input_coin_type];
+                conversion_output_coin_types.forEach(allowed_conversion_output_coin_type => {
+                    conversion_output_coin_type_options.push(<option key={allowed_conversion_output_coin_type} value={allowed_conversion_output_coin_type}>{this.state.coins_by_type[allowed_conversion_output_coin_type].symbol}</option>);
+                });
+                let conversion_output_coin_type_select =
+                    <select style={{width: "11rem"}} className="external-coin-types" value={this.state.conversion_output_coin_type} onChange={this.onOutputCoinTypeChanged.bind(this, "conversion")}>
+                      {conversion_output_coin_type_options}
+                    </select>;
+
+                let estimated_input_amount_text = this.state.conversion_estimated_input_amount;
+
+                let conversion_input_amount_edit_box = estimated_input_amount_text ?
+                    <input style={{width: "11rem"}} type="text"
+                           value={estimated_input_amount_text || ""}
+                           onChange={this.onInputAmountChanged.bind(this, "conversion") } /> : calcText;
+
+                let estimated_output_amount_text = this.state.conversion_estimated_output_amount;
+
+                let conversion_output_amount_edit_box = estimated_output_amount_text ?
+                    <input style={{width: "11rem"}} type="text"
+                           value={estimated_output_amount_text || ""}
+                           onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcText;
+
+                let conversion_button =
+                    <span>
+                        <button className={"button"} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
+                    </span>;
+
+                let conversion_error_element = null;
+                if (this.state.conversion_error)
+                    conversion_error_element = <div>{this.state.conversion_error}</div>;
+
+                let conversion_limit_element = <span>...</span>;
+                if (this.state.conversion_limit)
+                {
+                    if (this.state.conversion_limit.limit)
+                        conversion_limit_element = <span className="deposit-limit"><Translate content="gateway.limit" amount={utils.format_number(this.state.conversion_limit.limit, 8)} symbol={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} /></span>;
+                    else
+                        conversion_limit_element = <span>no limit</span>;
+                }
+
+                conversion_header =
+                <thead>
+                    <tr>
+                        <th><Translate content="gateway.convert" /></th>
+                        <th ><Translate content="gateway.balance" /></th>
+                        <th ></th>
+                    </tr>
+                </thead>;
+
+               conversion_body =
+                <tbody>
+                    <tr>
+                        <td>
+                            <div className="inline-block">
+                                <div>{conversion_input_coin_type_select}</div>
+                                <div>{conversion_input_amount_edit_box}</div>
+                            </div>
+                            &rarr;
+                            <div className="inline-block">
+                                <div>{conversion_output_coin_type_select}</div>
+                                <div>{conversion_output_amount_edit_box}</div>
+                            </div>
+                            <div>
+                                {conversion_error_element}
+                             </div>
+                        </td>
+                        <td>
+                            <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} />
+                        </td>
+                        <td>
+                            {conversion_button}<br/>
+                            {conversion_limit_element}
+                        </td>
+                    </tr>
                 </tbody>
-                }   
+                }
 
             return (
                 <div>
@@ -787,6 +1056,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             {deposit_body}
                             {withdraw_header}
                             {withdraw_body}
+                            {conversion_header}
+                            {conversion_body}
                         </table>
                     </div>
                     <Modal id={withdraw_modal_id} overlay={true}>
@@ -796,15 +1067,35 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <br/>
                         <div className="grid-block vertical">
                             <WithdrawModalBlocktrades
+								key={`${this.state.coin_symbol}`}
                                 account={this.props.account.get('name')}
                                 issuer={this.props.issuer_account.get('name')}
                                 asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol}
                                 output_coin_name={this.state.coins_by_type[this.state.withdraw_output_coin_type].name}
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                 output_coin_type={this.state.withdraw_output_coin_type}
-                                modal_id={withdraw_modal_id} 
+								output_supports_memos={this.state.supports_output_memos}
+                                modal_id={withdraw_modal_id}
                                 url={this.state.url}
-                                output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} /> 
+                                output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} />
+                        </div>
+                    </Modal>
+                    <Modal id={conversion_modal_id} overlay={true}>
+                        <Trigger close={conversion_modal_id}>
+                            <a href="#" className="close-button">&times;</a>
+                        </Trigger>
+                        <br/>
+                        <div className="grid-block vertical">
+                            <ConvertModalBlocktrades
+								key={`${this.state.coin_symbol}`}
+                                from_account={this.props.account.get('name')}
+								to_account={'blocktrades'}
+                                asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol}
+                                output_coin_name={this.state.coins_by_type[this.state.conversion_output_coin_type].name}
+                                output_coin_symbol={this.state.coins_by_type[this.state.conversion_output_coin_type].symbol}
+								conversion_memo={this.state.conversion_memo}
+                                modal_id={conversion_modal_id}
+                                url={this.state.url} />
                         </div>
                     </Modal>
                 </div>
@@ -813,4 +1104,4 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 }; // BlockTradesBridgeDepositRequest
 
-export default BlockTradesBridgeDepositRequest;
+export default BindToChainState(BlockTradesBridgeDepositRequest, {keep_updating:true});

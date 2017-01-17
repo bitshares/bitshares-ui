@@ -24,7 +24,7 @@ var init = function () {
 };
 
 var copyRuntime = function () {
-    return projectDir.copyAsync('node_modules/electron-prebuilt/dist', readyAppDir.path(), { overwrite: true });
+    return projectDir.copyAsync('node_modules/electron/dist', readyAppDir.path(), { overwrite: true });
 };
 
 var cleanupRuntime = function () {
@@ -107,6 +107,9 @@ var createInstaller = function () {
         gulpUtil.log('Installer ready!', releasesDir.path(finalPackageName));
         deferred.resolve();
     });
+
+    // Write current release name to json file
+    releasesDir.write("current-release.json", {windows: finalPackageName});
 
     return deferred.promise;
 };

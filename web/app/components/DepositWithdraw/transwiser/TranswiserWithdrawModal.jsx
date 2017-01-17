@@ -2,7 +2,7 @@ import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib/es";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
 import BalanceComponent from "components/Utility/BalanceComponent";
@@ -10,7 +10,6 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 
-@BindToChainState({keep_updating:true})
 class TranswiserWithdrawModal extends React.Component {
 
    static propTypes = {
@@ -122,7 +121,7 @@ class TranswiserWithdrawModal extends React.Component {
                    </div>
                    <div className="content-block full-width-content">
                        <label><Translate component="span" content="gateway.transwiser.alipay"/></label>
-                       <input type="text" value={this.state.withdraw_address} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
+                       <input type="text" value={this.state.withdraw_address || ""} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
                    </div>
 
                    <div className="content-block">
@@ -130,7 +129,7 @@ class TranswiserWithdrawModal extends React.Component {
                             onClick={this.onSubmit.bind(this)}
                             value={counterpart.translate("modal.withdraw.submit")} />
                        <Trigger close={this.props.modalId}>
-                           <a href className="secondary button"><Translate content="account.perm.cancel" /></a>
+                           <div className="button"><Translate content="account.perm.cancel" /></div>
                        </Trigger>
                    </div>
                  </div>
@@ -138,4 +137,4 @@ class TranswiserWithdrawModal extends React.Component {
    }
 };
 
-export default TranswiserWithdrawModal
+export default BindToChainState(TranswiserWithdrawModal, {keep_updating:true});

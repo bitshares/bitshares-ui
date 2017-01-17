@@ -9,9 +9,9 @@ import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import RecentTransactions from "../Account/RecentTransactions";
+import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import ChainStore from "api/ChainStore";
+import {ChainStore} from "graphenejs-lib/es";
 
 class Transfer extends React.Component {
 
@@ -61,7 +61,7 @@ class Transfer extends React.Component {
     componentWillMount() {
         this.nestedRef = null;
     }
-   
+
     fromChanged(from_name) {
         let asset = undefined
         let amount = undefined
@@ -105,12 +105,12 @@ class Transfer extends React.Component {
             TransactionConfirmStore.reset();
         }
     }
-    
+
     onPropose(propose, e) {
         e.preventDefault()
         this.setState({ propose, propose_account: null })
     }
-    
+
     onProposeAccount(propose_account) {
         this.setState({ propose_account });
     }
@@ -160,7 +160,7 @@ class Transfer extends React.Component {
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
 
         let from_my_account = AccountStore.isMyAccount(from_account);
-            
+
         if(from_account && ! from_my_account && ! propose ) {
             from_error = <span>
                 {counterpart.translate("account.errors.not_yours")}
@@ -236,11 +236,13 @@ class Transfer extends React.Component {
         let tabIndex = 1;
 
         return (
-            <div className="grid-block vertical medium-horizontal" style={{paddingTop: "2rem"}}>
+            <div className="grid-block vertical">
+            <div className="grid-block shrink vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
-                <form className="grid-content medium-6 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
-                        <div>
-                        <div className="grid-content no-overflow" style={{paddingBottom: 16}}>
+                <form style={{paddingBottom: 20}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+
+
+                        <Translate content="transfer.header" component="h4" />
                         {/*  F R O M  */}
                         <div className="content-block">
                             <AccountSelector label="transfer.from" ref="from"
@@ -248,6 +250,7 @@ class Transfer extends React.Component {
                                              onChange={this.fromChanged.bind(this)}
                                              onAccountChanged={this.onFromAccountChanged.bind(this)}
                                              account={from_name}
+                                             size={60}
                                              error={from_error}
                                              tabIndex={tabIndex++}/>
                         </div>
@@ -258,10 +261,11 @@ class Transfer extends React.Component {
                                              onChange={this.toChanged.bind(this)}
                                              onAccountChanged={this.onToAccountChanged.bind(this)}
                                              account={to_name}
+                                             size={60}
                                              tabIndex={tabIndex++}/>
                         </div>
                         {/*  A M O U N T   */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <AmountSelector label="transfer.amount"
                                             amount={amount}
                                             onChange={this.onAmountChanged.bind(this)}
@@ -271,9 +275,9 @@ class Transfer extends React.Component {
                                             tabIndex={tabIndex++}/>
                         </div>
                         {/*  M E M O  */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <label><Translate component="span" content="transfer.memo"/></label>
-                            <textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                            <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
                             <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
@@ -282,7 +286,7 @@ class Transfer extends React.Component {
                         </div>
 
                         {/*  F E E   */}
-                        <div className="content-block" style={{paddingLeft: "96px"}}>
+                        <div className="content-block transfer-input">
                             <AmountSelector refCallback={this.setNestedRef.bind(this)}
                                             label="transfer.fee"
                                             disabled={true}
@@ -290,16 +294,16 @@ class Transfer extends React.Component {
                                             onChange={this.onFeeChanged.bind(this)}
                                             asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                             assets={fee_asset_types}
-                                            tabIndex={tabIndex++}                                        
+                                            tabIndex={tabIndex++}
                                             />
                         </div>
-                        
-                        {/* P R O P O S E   F R O M 
+
+                        {/* P R O P O S E   F R O M
                             Having some proposed transaction logic here (prior to the transaction confirmation)
-                            allows adjusting of the memo to / from parameters. 
+                            allows adjusting of the memo to / from parameters.
                         */}
                         {propose ?
-                        <div className="full-width-content form-group" style={{paddingLeft: "96px"}}>
+                        <div className="full-width-content form-group transfer-input">
                             <label><Translate content="account.propose_from" /></label>
                             <AccountSelect account_names={AccountStore.getMyAccounts()}
                                 onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
@@ -308,13 +312,13 @@ class Transfer extends React.Component {
 
                         {/*  S E N D  B U T T O N  */}
                         {error ? <div className="content-block has-error">{error}</div> : null}
-                        <div style={{paddingLeft: "96px"}}>
+                        <div>
                             {propose ?
                             <span>
                                 <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
                                     <Translate component="span" content="propose" />
                                 </button>
-                                <button className="secondary button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
+                                <button className=" button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
                                     <Translate component="span" content="cancel" />
                                 </button>
                             </span>:<span>
@@ -323,21 +327,23 @@ class Transfer extends React.Component {
                                 </button>
                             </span>}
                         </div>
-                        </div>
                         {/* TODO: show remaining balance */}
-
-                        </div>
-
                 </form>
-                <div className="grid-content medium-6 right-column">
-                    <div className="grid-content no-padding">
-                        <RecentTransactions
-                            accountsList={accountsList}
-                            limit={25}
-                            compactView={true}
-                            filter="transfer"
-                        />
-                    </div>
+                <div className="grid-content medium-6 large-4 right-column">
+                <div className="grid-content no-padding">
+                    <RecentTransactions
+                        accountsList={accountsList}
+                        limit={25}
+                        compactView={true}
+                        filter="transfer"
+                        fullHeight={true}
+                    />
+                </div>
+                </div>
+
+                <div className="grid-content medium-6 large-4">
+
+                </div>
                 </div>
             </div>
         );

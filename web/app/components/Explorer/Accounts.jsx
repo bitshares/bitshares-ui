@@ -1,16 +1,14 @@
 import React from "react";
 import {PropTypes} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import {debounce} from "lodash";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 
-@BindToChainState()
 class AccountRow extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
@@ -31,9 +29,10 @@ class AccountRow extends React.Component {
                 <td>{!balance? "n/a" : <BalanceComponent balance={balance} />}</td>
                 <td>{!balance ? "n/a" : <BalanceComponent balance={balance} asPercentage={true} />}</td>
             </tr>
-        )
+        );
     }
 }
+AccountRow = BindToChainState(AccountRow);
 
 class Accounts extends React.Component {
 
@@ -54,7 +53,7 @@ class Accounts extends React.Component {
     }
 
     _onSearchChange(e) {
-        this.setState({searchTerm: e.target.value});
+        this.setState({searchTerm: e.target.value.toLowerCase()});
         this._searchAccounts(e.target.value);
     }
 

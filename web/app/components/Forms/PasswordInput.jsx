@@ -1,68 +1,63 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes, Component} from "react";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 
 class PasswordInput extends Component {
-    
+
     static propTypes = {
         onChange: PropTypes.func,
         onEnter: PropTypes.func,
         confirmation: PropTypes.bool,
         wrongPassword: PropTypes.bool,
-        noValidation: PropTypes.bool
+        noValidation: PropTypes.bool,
+        noLabel: PropTypes.bool
     };
 
     static defaultProps = {
         confirmation: false,
         wrongPassword: false,
-        noValidation: false
+        noValidation: false,
+        noLabel: false
     };
-    
+
     constructor() {
         super();
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {value: "", error: null, wrong: false, doesnt_match: false};
     }
-    
+
     value() {
-        let node = ReactDOM.findDOMNode(this.refs.password);
+        let node = this.refs.password;
         return node ? node.value : "";
     }
 
     clear() {
-        ReactDOM.findDOMNode(this.refs.password).value = "";
-        if(this.props.confirmation) ReactDOM.findDOMNode(this.refs.confirm_password).value = "";
+        this.refs.password.value = "";
+        if(this.props.confirmation) this.refs.confirm_password.value = "";
     }
 
     focus() {
-        ReactDOM.findDOMNode(this.password.password).focus();
+        this.refs.password.focus();
     }
 
     valid() {
         return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= 8;
     }
 
-    checkPasswordConfirmation() {
-        let confirmation = ReactDOM.findDOMNode(this.refs.confirm_password).value;
-        let password = ReactDOM.findDOMNode(this.refs.password).value;
-        this.state.doesnt_match = confirmation && password !== confirmation;
-        this.setState({doesnt_match: this.state.doesnt_match});
-    }
-
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
-        let confirmation = this.props.confirmation ? ReactDOM.findDOMNode(this.refs.confirm_password).value : true;
-        let password = ReactDOM.findDOMNode(this.refs.password).value;
-        if(this.props.confirmation) this.checkPasswordConfirmation();
+        const confirmation = this.props.confirmation ? this.refs.confirm_password.value : true;
+        const password = this.refs.password.value;
+        const doesnt_match = this.props.confirmation ? confirmation && password !== confirmation : false;
         let state = {
             valid: !this.state.error && !this.state.wrong
-            && !(this.props.confirmation && this.state.doesnt_match)
+            && !(this.props.confirmation && doesnt_match)
             && confirmation && password.length >= 8,
-            value: password
+            value: password,
+            doesnt_match
         };
         if (this.props.onChange) this.props.onChange(state);
         this.setState(state);
@@ -81,19 +76,38 @@ class PasswordInput extends Component {
         if(this.state.doesnt_match) confirmation_error = <div>Confirmation doesn't match Password</div>;
         let password_class_name = classNames("form-group", {"has-error": password_error});
         let password_confirmation_class_name = classNames("form-group", {"has-error": this.state.doesnt_match});
+        let {noLabel} = this.props;
+
         return (
             <div>
                 <div className={password_class_name}>
-                    <Translate component="label" content="wallet.password" />
-                    <input name="password" type="password" ref="password" autoComplete="off"
-                           onChange={this.handleChange} onKeyDown={this.onKeyDown}/>
+                    {noLabel ? null : <Translate component="label" content="wallet.password" />}
+                    <section>
+                        <input
+                            name="password"
+                            type="password"
+                            ref="password"
+                            autoComplete="off"
+                            onChange={this.handleChange}
+                            onKeyDown={this.onKeyDown}
+                            placeholder="Enter password"
+                        />
+                    </section>
                     {password_error}
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
-                    <Translate component="label" content="wallet.confirm" />
-                    <input name="confirm_password" type="password" ref="confirm_password" autoComplete="off"
-                           onChange={this.handleChange}/>
+                    {noLabel ? null : <Translate component="label" content="wallet.confirm" />}
+                    <section>
+                        <input
+                            name="confirm_password"
+                            type="password"
+                            ref="confirm_password"
+                            autoComplete="off"
+                            placeholder="Confirm password"
+                            onChange={this.handleChange}
+                        />
+                    </section>
                     {confirmation_error}
                 </div> : null}
             </div>
