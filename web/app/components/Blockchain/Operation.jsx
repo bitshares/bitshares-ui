@@ -15,6 +15,8 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
+import ProposedOperation from "./ProposedOperation";
+
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
 
@@ -494,14 +496,33 @@ class Operation extends React.Component {
 
             case "proposal_create":
                 column = (
+                    <div className="inline-block">
                     <span>
                         <TranslateWithLinks
                             string="operation.proposal_create"
                             keys={[
                                 {type: "account", value: op[1].fee_paying_account, arg: "account"}
                             ]}
-                        />
+                        />:
                     </span>
+                    <div>
+                        {op[1].proposed_ops.map((o, index) => {
+                            return (
+                                <ProposedOperation
+                                    op={o.op}
+                                    key={index}
+                                    index={index}
+                                    inverted={false}
+                                    hideFee={true}
+                                    hideOpLabel={true}
+                                    hideDate={true}
+                                    proposal={true}
+                                />
+                            );
+                        })}
+
+                        </div>
+                    </div>
                 );
                 break;
 
