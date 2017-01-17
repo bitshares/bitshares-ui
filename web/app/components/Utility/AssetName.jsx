@@ -41,7 +41,6 @@ class AssetName extends React.Component {
 					className="tooltip inline-block"
 					data-tip={tooltip}
 					data-place="bottom"
-					data-type="light"
 					data-html={true}
 				>
 					<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>

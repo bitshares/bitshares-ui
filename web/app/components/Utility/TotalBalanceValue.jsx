@@ -251,7 +251,7 @@ class TotalValue extends React.Component {
             return <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>;
         } else {
             return (
-                <div className="tooltip" data-tip={totalsTip} data-place="bottom" data-type="light" data-html={true} >
+                <div className="tooltip" data-tip={totalsTip} data-place="bottom" data-html={true} >
                     <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
 

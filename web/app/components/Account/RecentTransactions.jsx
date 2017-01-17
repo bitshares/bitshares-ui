@@ -224,7 +224,6 @@ class RecentTransactions extends React.Component {
                                     onClick={this._downloadCSV.bind(this)}
                                     data-tip={counterpart.translate("transaction.csv_tip")}
                                     data-place="bottom"
-                                    data-type="light"
                                 >
                                     <Translate content="transaction.csv" />
                                 </a>
