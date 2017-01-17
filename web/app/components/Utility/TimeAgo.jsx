@@ -27,7 +27,7 @@ class TimeAgo extends React.Component {
         if (!time) {
             return null;
         }
-        
+
         if (typeof time === "string" && time.indexOf("+") === -1) {
             time += "+00:00";
         }
@@ -45,11 +45,10 @@ class TimeAgo extends React.Component {
 
         return (
             <span
-                className={this.props.className}
+                className={"tooltip inline-block " + this.props.className}
                 ref={"timeago_ttip_" + time}
                 data-tip={new Date(time)}
-                data-place="top"
-                data-type="light"
+                data-place="bottom"
             >
                 <FormattedRelative
                     updateInterval={interval}
@@ -58,7 +57,7 @@ class TimeAgo extends React.Component {
                 />
             </span>
         );
-        
+
     }
 }
 
