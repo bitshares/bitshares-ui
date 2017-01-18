@@ -28,7 +28,7 @@ function adjust_links(str) {
         if (text.indexOf("#/") === 0) return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0) return `<a href="${text}" target="_blank"`;
         let page = endsWith(text, ".md") ? text.substr(0, text.length - 3) : text;
-        let res = `<a href="/#/help/${page}" onclick="_onClickLink(event)"`;
+        let res = `<a href="${__ELECTRON__ ? "#" : ""}/help/${page}" onclick="_onClickLink(event)"`;
         return res;
     });
 }
