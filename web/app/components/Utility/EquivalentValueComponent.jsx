@@ -126,7 +126,7 @@ class ValueComponent extends React.Component {
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
 
         if (!eqValue) {
-            return <span data-place="left" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></span>;
+            return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
         return <FormattedAsset noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;

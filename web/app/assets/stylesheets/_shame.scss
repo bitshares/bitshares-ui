@@ -296,7 +296,7 @@ label.inline {
 
 .click-for-help {
   border-bottom: 1px dotted #777;
-  cursor: help;
+  cursor: pointer;
 }
 
 .asset-flag .label {
@@ -317,8 +317,15 @@ label.inline {
 }
 
 .tooltip:hover {
-  font-weight: bold;
   cursor: help;
+}
+
+.tooltip-zindex {
+    z-index: 1001;
+}
+
+.inline-block {
+    display: inline-block;
 }
 
 .__react_component_tooltip {
@@ -336,6 +343,7 @@ select {
 }
 
 select.bts-select {
+    cursor:pointer;
     border: none;
     background: none;
     background-color: transparent;
@@ -345,6 +353,12 @@ select.bts-select {
     -moz-appearance: menulist;
     appearance: menulist;
     height: inherit;
+}
+
+@media screen and (max-width: 600px) {
+    .column-hide-tiny {
+        display: none !important;
+    }
 }
 
 @media screen and (max-width: 900px) {
@@ -390,4 +404,8 @@ input[type=number] {
     form.hide-container {
         display: inherit !important;
     }
+}
+
+.unlock-tooltip {
+    min-width: 150px;
 }

@@ -15,6 +15,8 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "graphenejs-lib/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
+import ProposedOperation from "./ProposedOperation";
+
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
 
@@ -54,13 +56,13 @@ class Row extends React.Component {
 
     constructor(props) {
         super(props);
-        this.showDetails = this.showDetails.bind(this);
+        // this.showDetails = this.showDetails.bind(this);
     }
-
-    showDetails(e) {
-        e.preventDefault();
-        this.context.router.push(`/block/${this.props.block}`);
-    }
+    //
+    // showDetails(e) {
+    //     e.preventDefault();
+    //     this.context.router.push(`/block/${this.props.block}`);
+    // }
 
     shouldComponentUpdate(nextProps) {
         let {block, dynGlobalObject} = this.props;
@@ -72,12 +74,12 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, hideDate, hideFee, hideOpLabel} = this.props;
+        let {block, fee, color, type, hideOpLabel} = this.props;
 
         let last_irreversible_block_num = this.props.dynGlobalObject.get("last_irreversible_block_num" );
         let pending = null;
         if( block > last_irreversible_block_num ) {
-           pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>
+            pending = <span>(<Translate content="operation.pending" blocks={block - last_irreversible_block_num} />)</span>;
         }
 
         fee.amount = parseInt(fee.amount, 10);
@@ -85,8 +87,8 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td style={{width: "20%"}} className="left-td">
-                            <a href onClick={this.showDetails}><TransactionLabel color={color} type={type} /></a>
+                        <td style={{width: "20%"}} className="left-td column-hide-tiny">
+                            <Link className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.show_block", {block: utils.format_number(this.props.block, 0)})} to={`/block/${this.props.block}`}><TransactionLabel color={color} type={type} /></Link>
                         </td>)}
                     <td style={{padding: "8px 5px"}}>
                         <div>
@@ -111,8 +113,6 @@ class Operation extends React.Component {
         op: [],
         current: "",
         block: null,
-        hideDate: false,
-        hideFee: false,
         hideOpLabel: false,
         csvExportMode: false
     };
@@ -121,8 +121,6 @@ class Operation extends React.Component {
         op: React.PropTypes.array.isRequired,
         current: React.PropTypes.string,
         block: React.PropTypes.number,
-        hideDate: React.PropTypes.bool,
-        hideFee: React.PropTypes.bool,
         csvExportMode: React.PropTypes.bool
     };
 
@@ -148,7 +146,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block, hideFee} = this.props;
+        let {op, current, block} = this.props;
         let line = null, column = null, color = "info";
         let memoComponent = null;
 
@@ -498,14 +496,33 @@ class Operation extends React.Component {
 
             case "proposal_create":
                 column = (
+                    <div className="inline-block">
                     <span>
                         <TranslateWithLinks
                             string="operation.proposal_create"
                             keys={[
                                 {type: "account", value: op[1].fee_paying_account, arg: "account"}
                             ]}
-                        />
+                        />:
                     </span>
+                    <div>
+                        {op[1].proposed_ops.map((o, index) => {
+                            return (
+                                <ProposedOperation
+                                    op={o.op}
+                                    key={index}
+                                    index={index}
+                                    inverted={false}
+                                    hideFee={true}
+                                    hideOpLabel={true}
+                                    hideDate={true}
+                                    proposal={true}
+                                />
+                            );
+                        })}
+
+                        </div>
+                    </div>
                 );
                 break;
 
@@ -579,7 +596,6 @@ class Operation extends React.Component {
                 o = op[1];
 
                 let receivedAmount = o.fee.asset_id === o.receives.asset_id ? o.receives.amount - o.fee.amount : o.receives.amount;
-                hideFee = !(o.fee.amount > 0);
                 column = (
                         <span>
                             <TranslateWithLinks
@@ -790,8 +806,6 @@ class Operation extends React.Component {
                 type={op[0]}
                 color={color}
                 fee={op[1].fee}
-                hideDate={this.props.hideDate}
-                hideFee={hideFee}
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
             >

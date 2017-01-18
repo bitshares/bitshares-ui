@@ -25,7 +25,7 @@ class Connections extends React.Component {
                 {knownBy}
               </ul>
               <hr/>
-              <h5 style={{display: "inline-block"}}><Translate component="span" content="account.connections.black" /></h5> {isMyAccount ? <button className="hollow button tiny">Claim</button> : null}
+              <h5 className="inline-block"><Translate component="span" content="account.connections.black" /></h5> {isMyAccount ? <button className="hollow button tiny">Claim</button> : null}
               <ul style={{listStyle: "none", marginLeft: "0.25rem"}}>
                 {unwanted}
               </ul>

@@ -33,11 +33,26 @@
     "settle_price": "This is the price at which settle orders will execute.",
     "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
     "latest_price": "This is the latest price seen in this market.",
-    "no_price": "There's no recent price available for this asset that can be used to estimate its value."
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
+    "hide_asset": "Click here to hide this asset from this list.",
+    "show_asset": "Click here to show this asset in the main list.",
+    "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
+    "filter_ops": "Use this list to filter your history by operation type.",
+    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+    "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+    "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+    "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+    "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+    "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "trade": "Trade",
     "welcome": "Willkommen",
     "asset": "Asset",
     "market_value": "Marktwert",
@@ -643,6 +658,7 @@
     "spread": "Spread",
     "quantity": "Quantität",
     "buy": "Kaufen",
+    "buy_min": "Buy at least",
     "sell": "Verkaufen",
     "receive": "Empfangen",
     "vertical": "Vertical",
@@ -770,6 +786,7 @@
     "update": "Aktualisieren",
     "errors": {
       "below": "Kollateral Ratio unter Aufrechterhaltungslevel",
+      "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Unzureichendes Kollateral"
     }
   },

@@ -259,8 +259,8 @@ class AccountPermissions extends React.Component {
 
                             <div>
                                 <label
+                                    className="inline-block"
                                     style={{
-                                        display: "inline-block",
                                         position: "relative",
                                         top: -10,
                                         margin: 0

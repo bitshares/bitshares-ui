@@ -5,7 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
 import notify from "actions/NotificationActions";
 import Translate from "react-translate-component";
-
+import counterpart from "counterpart";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -104,7 +104,7 @@ class WalletUnlockModal extends React.Component {
                         wrongPassword={this.state.password_error}
                         noValidation />
                     <div className="button-group">
-                        <button className={"button"} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
+                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
                         <Trigger close={this.props.modalId}>
                             <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>

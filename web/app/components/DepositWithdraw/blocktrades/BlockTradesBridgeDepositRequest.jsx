@@ -837,12 +837,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     <tbody>
                         <tr>
                             <td>
-                                <div style={{display: "inline-block"}}>
+                                <div className="inline-block">
                                     <div>{deposit_input_coin_type_select}</div>
                                     <div>{deposit_input_amount_edit_box}</div>
                                 </div>
                                 &rarr;
-                                <div style={{display: "inline-block"}}>
+                                <div className="inline-block">
                                     <div>{deposit_output_coin_type_select}</div>
                                     <div>{deposit_output_amount_edit_box}</div>
                                 </div>
@@ -930,12 +930,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 <tbody>
                     <tr>
                         <td>
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{withdraw_input_coin_type_select}</div>
                                 <div>{withdraw_input_amount_edit_box}</div>
                             </div>
                             &rarr;
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{withdraw_output_coin_type_select}</div>
                                 <div>{withdraw_output_amount_edit_box}</div>
                             </div>
@@ -1023,12 +1023,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 <tbody>
                     <tr>
                         <td>
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{conversion_input_coin_type_select}</div>
                                 <div>{conversion_input_amount_edit_box}</div>
                             </div>
                             &rarr;
-                            <div style={{display: "inline-block"}}>
+                            <div className="inline-block">
                                 <div>{conversion_output_coin_type_select}</div>
                                 <div>{conversion_output_amount_edit_box}</div>
                             </div>

@@ -207,7 +207,7 @@ class BuySell extends React.Component {
 
                                     {/* BUY/SELL button */}
                                     {disabledText ?
-                                        (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                        (<div className="float-right" data-tip={disabledText} data-place="right">
                                             <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
                                         </div>) :
                                         (<div className="float-right" data-tip={""}>
@@ -217,7 +217,7 @@ class BuySell extends React.Component {
 
                                 {/* SHORT button */}
                                     {disabledText && isPredictionMarket ? (
-                                        <div style={{paddingRight: 10}} className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                        <div style={{paddingRight: 10}} className="float-right" data-tip={disabledText} data-place="right">
                                             <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
                                         </div>) : isPredictionMarket ? (
                                         <div style={{paddingRight: 10}} className="float-right" data-tip={""}>

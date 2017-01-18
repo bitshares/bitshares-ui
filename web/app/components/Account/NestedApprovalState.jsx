@@ -41,8 +41,8 @@ class AccountPermissionTree extends React.Component {
         status.push(
             <div key={account.get("id")} style={{width: "100%", clear: "both", paddingBottom: 5}}>
                 <div
+                    className="inline-block"
                     style={{
-                        display: "inline-block",
                         paddingLeft: `${5 * this.props.indent}%`
                     }}
                 >
@@ -117,8 +117,8 @@ class KeyPermissionBranch extends React.Component {
         status.push(
             <div key={permission.id} style={{width: "100%", paddingBottom: 5}}>
                 <div
+                    className="inline-block"
                     style={{
-                        display: "inline-block",
                         paddingLeft: `${5 * this.props.indent}%`
                     }}
                 >

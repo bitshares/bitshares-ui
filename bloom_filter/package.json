@@ -5,7 +5,8 @@
   "main": "bloom_filter_wallet.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cat wallet.json | node bloom_filter_wallet.js > filtered_wallet.json"
+    "start": "cat wallet.json | node bloom_filter_wallet.js > filtered_wallet.json",
+    "start-windows": "type wallet.json | node bloom_filter_wallet.js > filtered_wallet.json"
   },
   "author": "",
   "license": "ISC",

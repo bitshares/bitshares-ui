@@ -30,13 +30,6 @@ class MarketsStore {
         this.feedPrice = null;
         this.marketSettleOrders = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
-        // this.bids = [];
-        // this.asks = [];
-        // this.calls = [];
-        // this.flat_bids = [];
-        // this.flat_asks = [];
-        // this.flat_calls = [];
-        // this.flat_settles = [];
         this.marketData = {
             bids: [],
             asks: [],
@@ -163,10 +156,6 @@ class MarketsStore {
             flatCalls: [],
             flatSettles: []
         };
-        //
-        // this.bids = [];
-        // this.asks = [];
-        // this.calls = [];
         this.totals = {
             bid: 0,
             ask: 0,
@@ -174,10 +163,6 @@ class MarketsStore {
         };
         this.lowestCallPrice = null;
         this.pendingCreateLimitOrders = [];
-        // this.flat_bids = [];
-        // this.flat_asks = [];
-        // this.flat_calls = [];
-        // this.flat_settles = [];
         this.priceHistory =[];
         this.marketStats = Immutable.Map({
             change: 0,
@@ -283,7 +268,6 @@ class MarketsStore {
                 } catch(err) {
                     console.error("Unable to construct calls array, invalid feed price or prediction market?");
                 }
-
             });
 
             callsChanged = didOrdersChange(this.marketCallOrders, oldmarketCallOrders);
@@ -448,6 +432,18 @@ class MarketsStore {
             this.marketCallOrders = this.marketCallOrders.withMutations(callOrder => {
                 if (callOrder && callOrder.first()) {
                     callOrder.first().setFeed(this.feedPrice);
+                }
+            });
+
+            /*
+            * If the feed price changed, we need to check whether the orders
+            * being margin called have changed and filter accordingly.
+            */
+            this.marketCallOrders = this.marketCallOrders.filter(callOrder => {
+                if (callOrder) {
+                    return callOrder.isMarginCalled();
+                } else {
+                    return false;
                 }
             });
 
@@ -720,8 +716,8 @@ class MarketsStore {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
             totalToReceive.plus(a.amountToReceive(false));
-
             totalForSale.plus(a.amountForSale());
+
             a.setTotalForSale(totalForSale.clone());
             a.setTotalToReceive(totalToReceive.clone());
         });

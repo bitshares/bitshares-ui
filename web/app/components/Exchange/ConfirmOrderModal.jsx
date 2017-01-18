@@ -32,8 +32,8 @@ export default class ConfirmModal extends React.Component {
                 <div className="grid-block vertical">
                     <Translate content={"exchange.confirm_" + type} diff={utils.format_number(diff, 2)} />
                     <div className="button-group" style={{paddingTop: "2rem"}}>
-                        <input onClick={this._onForce.bind(this, false)} className="button info" type="submit" value="No" />
                         <input onClick={this._onForce.bind(this, true)} className="button success" type="submit" value="Yes" />
+                        <input onClick={this._onForce.bind(this, false)} className="button info" type="submit" value="No" />
                     </div>
                 </div>
             </Modal>

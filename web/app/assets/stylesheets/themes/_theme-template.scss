@@ -355,6 +355,10 @@
     color: $error-text-color;
   }
 
+  .has-warning, div.has-warning > label, div.has-warning > label > span {
+    color: $warning-color;
+  }
+
   div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
     border-color: $error-text-color;
   }
@@ -898,6 +902,34 @@
                 color: $link-text-color;
           }
 
+      }
+  }
+
+  a {
+      &.order-cancel > .icon > svg {
+        > path {
+          fill : $negative-color;
+        }
+      }
+
+      &.action-plus > .icon > svg {
+        > path {
+          fill : $positive-color;
+        }
+      }
+  }
+
+  tr.margin-row {
+      > td.danger {
+          background-color: darken($alert-color, 15%) !important;
+          color: $dark-text-color;
+          font-weight: bold;
+      }
+
+      > td.warning {
+          background-color: darken($warning-color, 15%) !important;
+          color: $dark-text-color;
+          font-weight: bold;
       }
   }
 

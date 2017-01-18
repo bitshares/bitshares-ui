@@ -521,8 +521,8 @@ class PriceChart extends React.Component {
                     <div className="exchange-content-header">
                         <Translate content="exchange.price_history" />
                         <div className="float-right">
-                            <div style={{display: "inline-block", marginBottom: -3, marginTop: -6, padding: "3px 8px"}} className="button outline clickable" onClick={this.props.onChangeSize.bind(this, false)}>-</div>
-                            <div style={{display: "inline-block", marginBottom: -3, marginTop: -6, padding: "3px 8px"}} className="button outline clickable" onClick={this.props.onChangeSize.bind(this, true)}>+</div>
+                            <div style={{marginBottom: -3, marginTop: -6, padding: "3px 8px"}} className="inline-block button outline clickable" onClick={this.props.onChangeSize.bind(this, false)}>-</div>
+                            <div style={{marginBottom: -3, marginTop: -6, padding: "3px 8px"}} className="inline-block button outline clickable" onClick={this.props.onChangeSize.bind(this, true)}>+</div>
                         </div>
                     </div>
                     {!priceSeriesData.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
