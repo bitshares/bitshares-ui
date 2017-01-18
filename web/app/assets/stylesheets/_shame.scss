@@ -320,6 +320,10 @@ label.inline {
   cursor: help;
 }
 
+.tooltip-zindex {
+    z-index: 1001;
+}
+
 .inline-block {
     display: inline-block;
 }
