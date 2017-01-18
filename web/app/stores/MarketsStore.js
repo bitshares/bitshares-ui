@@ -264,7 +264,6 @@ class MarketsStore {
                 } catch(err) {
                     console.error("Unable to construct calls array, invalid feed price or prediction market?");
                 }
-
             });
 
             callsChanged = didOrdersChange(this.marketCallOrders, oldmarketCallOrders);
@@ -429,6 +428,18 @@ class MarketsStore {
             this.marketCallOrders = this.marketCallOrders.withMutations(callOrder => {
                 if (callOrder && callOrder.first()) {
                     callOrder.first().setFeed(this.feedPrice);
+                }
+            });
+
+            /*
+            * If the feed price changed, we need to check whether the orders
+            * being margin called have changed and filter accordingly.
+            */
+            this.marketCallOrders = this.marketCallOrders.filter(callOrder => {
+                if (callOrder) {
+                    return callOrder.isMarginCalled();
+                } else {
+                    return false;
                 }
             });
 
