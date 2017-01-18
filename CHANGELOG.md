@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------
+Release 2.0.170118
+---------------------------------------------------------------------
+
+New features
+--------
+- Helpul tooltips have been added in multiple locations, such as login/unlock, margin mechanics ++
+- Proposed transaction summaries added to transaction history lists
+- Always display settings cog in header
+
+Bug fixes
+--------
+- Fix display of asset page for bit assets with no valid feeds
+- Remove maximum_short_squeeze_ratio requirement for minimum collateral
+- Base Call Order forSale/toReceive calculation on debt instead of collateral
+- Fix TimeAgo tooltip positioning
+- Hide 'show hidden assets' button when no assets are hidden
+- Update Chinese translations
+- Set depth chart xaxis properly when no asks are present
+- Fix price being set when clicking on orderbook order
+- Add a tooltip explaning that buy amounts are minimum to receive
+- Filter call orders on feed update
+
+---------------------------------------------------------------------
 Release 2.0.170116-rc1
 ---------------------------------------------------------------------
 
