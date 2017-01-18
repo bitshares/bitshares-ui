@@ -499,13 +499,14 @@ class Exchange extends React.Component {
 
     _orderbookClick(order) {
         const isBid = order.isBid();
-
         /*
         * Because we are using a bid order to construct an ask and vice versa,
         * totalToReceive becomes forSale, and totalForSale becomes toReceive
         */
         let forSale = order.totalToReceive({noCache: true});
-        let toReceive = order.totalForSale({noCache: true});
+        // let toReceive = order.totalForSale({noCache: true});
+        let toReceive = forSale.times(order.sellPrice());
+
         let newPrice = new Price({
             base: isBid ? toReceive : forSale,
             quote: isBid ? forSale : toReceive
@@ -519,8 +520,8 @@ class Exchange extends React.Component {
             [isBid ? "ask" : "bid"]: {
                 for_sale: forSale,
                 forSaleText: forSale.getAmount({real: true}),
-                to_receive: forSale.times(order.sellPrice()),
-                toReceiveText: forSale.times(order.sellPrice()).getAmount({real: true}),
+                to_receive: toReceive,
+                toReceiveText: toReceive.getAmount({real: true}),
                 price: newPrice,
                 priceText: newPrice.toReal()
             }

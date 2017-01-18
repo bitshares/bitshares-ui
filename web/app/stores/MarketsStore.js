@@ -30,13 +30,6 @@ class MarketsStore {
         this.feedPrice = null;
         this.marketSettleOrders = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
-        // this.bids = [];
-        // this.asks = [];
-        // this.calls = [];
-        // this.flat_bids = [];
-        // this.flat_asks = [];
-        // this.flat_calls = [];
-        // this.flat_settles = [];
         this.marketData = {
             bids: [],
             asks: [],
@@ -163,10 +156,6 @@ class MarketsStore {
             flatCalls: [],
             flatSettles: []
         };
-        //
-        // this.bids = [];
-        // this.asks = [];
-        // this.calls = [];
         this.totals = {
             bid: 0,
             ask: 0,
@@ -174,10 +163,6 @@ class MarketsStore {
         };
         this.lowestCallPrice = null;
         this.pendingCreateLimitOrders = [];
-        // this.flat_bids = [];
-        // this.flat_asks = [];
-        // this.flat_calls = [];
-        // this.flat_settles = [];
         this.priceHistory =[];
         this.marketStats = Immutable.Map({
             change: 0,
@@ -716,8 +701,8 @@ class MarketsStore {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
             totalToReceive.plus(a.amountToReceive(false));
-
             totalForSale.plus(a.amountForSale());
+
             a.setTotalForSale(totalForSale.clone());
             a.setTotalToReceive(totalToReceive.clone());
         });
