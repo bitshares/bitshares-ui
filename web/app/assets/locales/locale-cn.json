@@ -52,6 +52,7 @@
       "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
       "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
       "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。"
+      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "account": {
     "trade": "交易",
@@ -793,6 +794,7 @@
     "spread": "买卖价差",
     "quantity": "数量",
     "buy": "买入",
+    "buy_min": "Buy at least",
     "sell": "卖出",
     "confirm_buy": "你的订单价格超出最低卖出价 %(diff)s 倍，你确定么？",
     "confirm_sell": "你的订单价低于最高买入价 %(diff)s 倍，你确定么？",
@@ -995,6 +997,7 @@
     "errors": {
       "below": "保证金率低于维持保证金要求",
       "close": "你的抵押率已接近 %(mr)s ，这意味着如果价格继续下跌你的头寸将被强制平仓。",
+      "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "可用保证金不足"
     },
     "close": "平仓",

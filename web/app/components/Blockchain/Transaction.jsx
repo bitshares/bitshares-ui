@@ -18,6 +18,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
 import {ChainTypes} from "graphenejs-lib/es";
 let {operations} = ChainTypes;
+import ReactTooltip from "react-tooltip";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -83,6 +84,10 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
+
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
 
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
@@ -171,7 +176,7 @@ class Transaction extends React.Component {
 
                     break;
 
-                case "limit_order_create":
+            case "limit_order_create":
                     color = "warning";
                     // missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
                     // let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
@@ -199,7 +204,7 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr key={key++}>
-                            <td><Translate component="span" content="exchange.buy" /></td>
+                            <td data-place="left" data-class="tooltip-zindex" className="tooltip" data-tip={counterpart.translate("tooltip.buy_min")}><Translate component="span" content="exchange.buy_min" /></td>
                             <td><FormattedAsset amount={op[1].min_to_receive.amount} asset={op[1].min_to_receive.asset_id} /></td>
                         </tr>
                     );

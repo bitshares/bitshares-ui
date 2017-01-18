@@ -24,8 +24,9 @@ require('coffee-script/register') // npm install coffee-script
 var graphenejs = require("graphenejs-lib");
 var h = graphenejs.hash;
 var key_utils = graphenejs.key;
+const chainPrefix = "BTS";
 
-fs.readFile('bloom.dat', function (err, data) {
+fs.readFile('bloom_bitshares.dat', function (err, data) {
     if (err) throw err
     console.error('bloom_bitshares.dat (' + data.length + ' bytes)','sha1',h.sha1(data).toString('hex'),'\n')
 
@@ -59,17 +60,24 @@ fs.readFile('bloom.dat', function (err, data) {
         var wallet = JSON.parse(inputJSON)
         var removed_count = 0, running_count = 0
         if( ! wallet.account_keys ) unsupportedJsonFormat()
-        for(var a = 0; a < wallet.account_keys.length; a++) {
+        var total_count = 0;
+        for(let a = 0; a < wallet.account_keys.length; a++) {
+            let keys = wallet.account_keys[a]
+            total_count += keys.encrypted_private_keys.length;
+        }
+        for(let a = 0; a < wallet.account_keys.length; a++) {
             var keys = wallet.account_keys[a]
-            console.error('Account', keys.account_name)
+            let current_count = 0;
             for(var k = keys.encrypted_private_keys.length - 1; k >= 0; k--) {
+                current_count++
                 running_count++
-                if(running_count % 100 === 0) console.error('processing', running_count)
+                if(running_count % 100 === 0) console.error('processing | current:', current_count, "/", keys.encrypted_private_keys.length, "total:", running_count, "/", total_count)
                 if( ! keys.public_keys) unsupportedJsonFormat()
                 var key = keys.public_keys[k]
-                if( /^GPH/.test(key) ) key = "BTS" + key.substring(3)
+
+                if( /^GPH/.test(key) ) key = chainPrefix + key.substring(3)
                 if(in_bloom( key )) continue
-                var addresses = key_utils.addresses(key)
+                var addresses = key_utils.addresses(key, chainPrefix)
                 var addy_found = false
                 for(var i = 0; i < addresses.length; i++) {
                     if(in_bloom( addresses[i] )) {
