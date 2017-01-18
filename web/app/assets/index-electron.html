@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="format-detection" content="telephone=no">
+    <title>Graphene</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="app.css">
+    <style>
+        body {
+            background-color: #2a2a2a;
+        }
+        .centerDiv {
+            width:140px; border-radius: 5px; color:lightgrey;
+            padding:10px; height:50px; position:absolute;
+            margin-top:-25px; margin-left:-70px; top:50%; left:50%;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-weight: 100;
+            font-size: 44px;
+        }
+    </style>
+    <script>
+        var ref = encodeURIComponent(document.referrer);
+        if (window.process && window.process.versions && window.process.versions['electron']) {
+            window.electron = window.process.versions['electron'];
+            window.remote = require('electron').remote;
+            window._$guid$_ = window.remote.getGlobal('guid');
+            window.app_version = window.remote.getGlobal('version');
+            ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
+            window.onload = function(e){
+                var content = document.getElementById("content");
+                if (content) content.className = "electron " + window.process.platform;
+            }
+        }
+    </script>
+</head>
+<body>
+    <main id="content">
+        <h1 class="centerDiv" style="">Loading...</h1>
+    </main>
+
+<script src="app.js" charset="utf-8"></script>
+<script>
+    var BTSW = window.BTSW || {};
+    (function () {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = 'https://bitshares.openledger.info/widgets/2/w.js?ref=' + ref;
+        var entry = document.getElementsByTagName('script')[0];
+        entry.parentNode.insertBefore(script, entry);
+    }());
+</script>
+</body>
+</html>
