@@ -346,7 +346,7 @@ class BorrowModalContent extends React.Component {
                                     base_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                     />
                             </div>
-                            <div className="borrow-price-feeds">
+                            {/* <div className="borrow-price-feeds">
                                 <span
                                     className="inline-block tooltip borrow-price-label"
                                     data-place="bottom"
@@ -361,7 +361,7 @@ class BorrowModalContent extends React.Component {
                                     base_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "asset_id"])}
                                     base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                     />
-                            </div>
+                            </div> */}
                             <b/>
                             <div className={"borrow-price-final " + (errors.below_maintenance ? "has-error" : errors.close_maintenance ? "has-warning" : "")}>
                                 <span className="borrow-price-label"><Translate content="exchange.your_price" />:&nbsp;</span>

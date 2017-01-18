@@ -42,8 +42,8 @@
     "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
     "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
     "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
-    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the ratio above %(mr)s or closing the position.",
-    "cr_warning": "This position is close to being margin called, and if the ratio drops below %(mr)s, the position will be margin called. Consider adding collateral or closing the position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
     "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out."
   },
@@ -637,7 +637,7 @@
     "update": "Update",
     "errors": {
         "below": "Your collateral ratio is below %(mr)s which is not allowed.",
-        "close": "Your collateral ratio close to %(mr)s which means this position is in danger of being margin called if the price drops.",
+        "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Insufficient collateral balance"
     }
   },
