@@ -33,29 +33,29 @@
     "unlocked_tip": "钱包已解锁，点击锁定。"
   },
   "tooltip": {
-      "call_limit": "This is the call price of the least collateralized margin position in the market.",
+      "call_limit": "市场中最少抵押率头寸的平仓价",
       "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
-      "settle_price": "This is the price at which settle orders will execute.",
-      "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
-      "latest_price": "This is the latest price seen in this market.",
-      "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
-      "hide_asset": "Click here to hide this asset from this list.",
-      "show_asset": "Click here to show this asset in the main list.",
-      "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
-      "filter_ops": "Use this list to filter your history by operation type.",
-      "show_block": "Click here to show block #%(block)s where this transaction occured.",
-      "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
-      "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
-      "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
-      "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
-      "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
-      "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
-      "propose_scam": "This proposal was created by a known scammer, do not approve it!",
-      "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+      "settle_price": "清算单执行时将使用的价格",
+      "sign_owner": "如果你是账户的所有人，请检查签名是否正确。这只有在你使用所有者账户，而该账户未包括与活跃权限时需要关注。",
+      "latest_price": "市场最近的成交价",
+      "no_price": "未找到该资产最近的成交价来评估价值",
+      "hide_asset": "从列表中隐藏资产",
+      "show_asset": "在主列表中显示资产",
+      "settle": "使用清算你可以在24小时后以当时的喂价转换你的 %(asset)s 资产为 BTS",
+      "filter_ops": "根据操作类型过滤交易历史",
+      "show_block": "显示收录交易的区块信息 #%(block)s ",
+      "coll_ratio": "头寸抵押率计算公式为：抵押量 * 喂价 / 债务",
+      "call_price": "头寸平仓价。如果喂价低于该价格，头寸将被强制平仓。",
+      "close_position": "平仓。你至少需要 %(amount)s %(asset)s 进行平仓",
+      "update_position": "更新头寸。你可随时更新借款及抵押水平。",
+      "cr_danger": "该头寸目前抵押率不足。请考虑补仓已提高抵押率至少至 %(mr)s 或进行平仓。",
+      "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
+      "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
+      "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。"
       "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "account": {
-    "trade": "Trade",
+    "trade": "交易",
     "welcome": "欢迎使用 Graphene (石墨烯)系统",
     "assets": "资产",
     "market_value": "市值",
@@ -190,7 +190,7 @@
       "show": "显示",
       "brain": "脑钱包位置",
       "from": "已从账户导入",
-      "sign_owner": "Sign as owner"
+      "sign_owner": "已所有者身份签名"
     },
     "votes": {
       "proxy_short": "代理投票",
@@ -796,8 +796,8 @@
     "buy": "买入",
     "buy_min": "Buy at least",
     "sell": "卖出",
-    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
-    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "confirm_buy": "你的订单价格超出最低卖出价 %(diff)s 倍，你确定么？",
+    "confirm_sell": "你的订单价低于最高买入价 %(diff)s 倍，你确定么？",
     "settle": "喂价",
     "core_rate": "转账手续费汇率",
     "squeeze": "强制平仓价",
@@ -850,7 +850,7 @@
     "settings": "图表选项",
     "featured": "热门市场",
     "new": "新增",
-    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
+    "market_frozen": "%(asset)s 资产发行人已禁用该资产的市场交易"
   },
   "markets": {
     "title": "交易所",
@@ -996,6 +996,7 @@
     "adjust": "调整头寸",
     "errors": {
       "below": "保证金率低于维持保证金要求",
+      "close": "你的抵押率已接近 %(mr)s ，这意味着如果价格继续下跌你的头寸将被强制平仓。",
       "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "可用保证金不足"
     },
