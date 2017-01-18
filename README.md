@@ -1,24 +1,23 @@
 Graphene-UI
 ============
 
+This is a light wallet that connects to a Graphene based API server such as the Bitshares *witness_node* executable.
+
+It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
+
 ### Getting started
 
-Graphene-UI depends on Node.js. While it should work using versions as old as 0.12.x, it is recommended to use v5.x.
+Graphene-UI depends node Node.js, and version 6+ is required. It has not yet been tested with v7.
 
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
 
 To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v5
-nvm use v5
+nvm install v6
+nvm use v6
 ```
 
-On windows NVM (support node version 4 and up) work from here: https://github.com/coreybutler/nvm-windows
-```
-nvm install 5.11.1 32
-nvm use 5.11.1
-```
 Once you have Node installed, you can clone the repo:
 ```
 git clone https://github.com/cryptonomex/graphene-ui.git
@@ -27,26 +26,27 @@ cd graphene-ui
 
 Before launching the GUI you will need to install the npm packages for each subdirectory:
 ```
-cd dl; npm install
-cd ../web; npm install
-```
-
-There is an optional bloom filter that will greatly reduce the size of BTS 0.9.x wallet imports.  Go to the ./web folder and run:
-```
-wget https://github.com/bitshares/bitshares-js/releases/download/vBTS2_bloom_filter/bts_genesiskeys_bloom.dat -O app/assets/bts_genesiskeys_bloom.dat
+cd web
+npm install
 ```
 
 ## Running the dev server
 
-Once all the packages have been installed you can start the development server by going to the ./web folder and running:
+The dev server uses Express in combination with Wepback 2.
+
+Once all the packages have been installed you can start the development server by going to the `web` folder and running:
 ```
 npm start
 ```
 
-Once the compilation is done the GUI will be available in your browser at: localhost:8080. Hot Reloading is enabled so the browser will live update as you edit the source files.
+Once the compilation is done the GUI will be available in your browser at: `localhost:8080` or `127.0.0.1:8080`. Hot Reloading is enabled so the browser will live update as you edit the source files.
 
 ### Testnet
-By default graphene-ui connects to the live Bitshares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Api Connection, click the + button to add an api server. Enter the following address in the popup: ws://testnet.bitshares.eu:11011. From the dropdown, select the newly added server then click confirm. The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
+By default graphene-ui connects to the live Bitshares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu. 
+
+The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
+
+![image](https://cloud.githubusercontent.com/assets/6890015/22055747/f8e15e68-dd5c-11e6-84cd-692749b578d8.png)
 
 ## Production
 If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
@@ -54,6 +54,9 @@ If you'd like to host your own wallet somewhere, you should create a production 
 npm run build
 ```
 This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
+
+### Installable wallets
+We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform. 
 
 ## Contributing
 Graphene-UI is open source and anyone is free to contribute. PR's are welcomed and will be reviewed in a timely manner, and long-term contributors will be given access to the repo.
@@ -74,44 +77,6 @@ There's also a very active [Telegram chatroom](https://web.telegram.org/#/im?p=g
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
 
-### Github issues are being used to track bugs and feature requests. 
-
-- Project Coordinator (@wmbutler) reads through new issues and requests clarification if needed
-- Issues get assigned to Milestones
-- Milestones are typically 1 week long ending on Wednesday
-- All devs are expected to install zenhub. Zenhub creates viewable pipelines and allows for issue estimation. Estimates are based on anticipated hours to complete.
-
-`http://zenhub.io`
-
-- New issues have not been categorized yet or are tagged as question when seeking clarification
-- Backlog issues have been assigned to a Milestone and are waiting for a dev to estimate and claim
-- In Progress issues are being actively worked
-- Testing issues are waiting for independent tests. (Methodology fully defined as of yet, so devs test their own work for now)
-- Closed issues are complete
-
-### When a new Milestone is about to start
-
-- Project Coordinator announces the number of issues and requests them to be claimed and estimated
-- Presents a burndown chart for the week
-
-### Sunday
-
-- Project Coordinator summarizes progress with burndown chart
-- Ensures that all items are claimed and estimated
-- Escalates to @valzav for unestimated and/or unclaimed items
-
-### Wednesday
-
-- Testing is completed
-- Release notes completed by @valzav
-- Project Coordinator announces release on bitsharestalk and provides link to release notes
-
-### Thursday
-
-- Incomplete items are moved to new Milestone
-- Old Milestone is closed
-- New Milestone is activated (rinse lather repeat)
-
 ### Coding style guideline
 
 Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript), with few exceptions:
@@ -123,23 +88,3 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
-To install eslint and its dependencies, run:
-
-```
-npm install -g eslint-config-airbnb eslint-plugin-react eslint babel-eslint
-```
-
-## Testing
-Jest currently doesn't work with node (see https://github.com/facebook/jest/issues/243), so in order to run the tests you need to install iojs. Under Ubuntu instructions can be found here:
-
-[Nodesource Ubuntu io.js installation](https://nodesource.com/blog/nodejs-v012-iojs-and-the-nodesource-linux-repositories "Nodesource iojs")
-
-In order for jest to correctly follow paths it is necessary to add a local path to your NODE_PATH variable. Under Ubuntu, you can do so by running the following from the web directory:
-```
-export NODE_PATH=$NODE_PATH:.
-```
-
-Tests are then run using 
-```
-npm test
-```
