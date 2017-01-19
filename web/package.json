@@ -23,6 +23,7 @@
     "profile-nougly": "NODE_ENV=production webpack --config conf/webpack-prod-nougly.js --profile --json > stats-prod-nougly.json",
     "start": "NODE_ENV=development node server.js",
     "build": "NODE_ENV=production webpack --config conf/webpack-prod.js --progress --display-error-details --colors",
+    "build-hash": "NODE_ENV=production webpack --config conf/webpack-hash-history.js --progress --display-error-details --colors",
     "electron": "NODE_ENV=production webpack --config conf/webpack-electron.js --progress --display-error-details --colors;",
     "postelectron": " echo 'copying to electron/build..'; cp -r electron/* ../electron/build/; echo 'done.'",
     "build-win32": "set NODE_ENV=production && webpack --config conf/webpack-prod.js --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'"

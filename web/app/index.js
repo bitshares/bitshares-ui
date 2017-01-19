@@ -12,9 +12,10 @@ import routes from "./Routes";
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
 /*
-* Electron does not support browserHistory, so we need to use hashHistory
+* Electron does not support browserHistory, so we need to use hashHistory.
+* The same is true for servers without configuration options, such as Github Pages
 */
-const history = __ELECTRON__ ? hashHistory : browserHistory;
+const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
 const rootEl = document.getElementById("content");
 const render = () => {

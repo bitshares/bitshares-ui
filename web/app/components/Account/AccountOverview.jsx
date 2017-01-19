@@ -70,7 +70,7 @@ class AccountOverview extends React.Component {
                 let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
 
                 let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
-                marketLink = asset.get("id") !== "1.3.0" ? <a href={`/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
+                marketLink = asset.get("id") !== "1.3.0" ? <a href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
                 directMarketLink = asset.get("id") !== "1.3.0" ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="account.trade" /></Link> : null;
                 transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Translate content="transaction.trxTypes.transfer" /></Link>;
                 settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
@@ -78,7 +78,7 @@ class AccountOverview extends React.Component {
 
                 assetInfoLinks = (
                 <ul>
-                    <li><a href={`/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                    <li><a href={`${__HASH_HISTORY__ ? "#" : ""}/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
                     <li>{marketLink}</li>
                     {isBitAsset ? <li>{settleLink}</li> : null}
                 </ul>);
