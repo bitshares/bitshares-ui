@@ -1098,6 +1098,7 @@ class Exchange extends React.Component {
                             </div>) : (
                             <div className="grid-block vertical no-padding shrink" >
                                 <DepthHighChart
+                                    marketReady={marketReady}
                                     orders={marketLimitOrders}
                                     showCallLimit={showCallLimit}
                                     call_orders={marketCallOrders}
@@ -1225,6 +1226,7 @@ class Exchange extends React.Component {
                         </div>
                         <div className="grid-block no-padding no-margin vertical shrink">
                             <DepthHighChart
+                                    marketReady={marketReady}
                                     orders={marketLimitOrders}
                                     showCallLimit={showCallLimit}
                                     call_orders={marketCallOrders}

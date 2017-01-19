@@ -13,18 +13,17 @@ class DepthHighChart extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         let settleCheck = isNaN(nextProps.settlementPrice) ? false : nextProps.settlementPrice !== this.props.settlementPrice;
-
         return (
             didOrdersChange(nextProps.orders, this.props.orders) ||
             didOrdersChange(nextProps.call_orders, this.props.call_orders) ||
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
-            // nextProps.SQP !== this.props.SQP ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||
             nextProps.hasPrediction !== this.props.hasPrediction ||
-            nextProps.settlementPrice !== this.props.settlementPrice
+            nextProps.settlementPrice !== this.props.settlementPrice ||
+            nextProps.marketReady !== this.props.marketReady
         );
     }
 
