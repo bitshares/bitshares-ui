@@ -11,14 +11,14 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 
-// Actions
+// Actionsg
 import PrivateKeyActions from "actions/PrivateKeyActions";
 
 /*
 * Electron does not support async loading of components via System.import,
 * so we make sure they're bundled already by including them here
 */
-if (__ELECTRON__) {
+if (__ELECTRON__ || __HASH_HISTORY__) {
     require("./electron_imports");
 }
 

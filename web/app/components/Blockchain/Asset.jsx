@@ -199,7 +199,7 @@ class Asset extends React.Component {
                         issuer= {issuerName}
                     />
                     {short_name ? <p>{short_name}</p> : null}
-                    <a style={{textTransform: "uppercase"}} href={`${__ELECTRON__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
+                    <a style={{textTransform: "uppercase"}} href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
                 </div>
         );
     }

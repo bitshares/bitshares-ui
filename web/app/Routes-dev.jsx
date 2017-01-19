@@ -55,10 +55,7 @@ import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 
-/*
-* Electron does not support browserHistory, so we need to use hashHistory
-*/
-const history = __ELECTRON__ ? hashHistory : browserHistory;
+const history = browserHistory;
 
 class Auth extends React.Component {
     render() {return null; }
