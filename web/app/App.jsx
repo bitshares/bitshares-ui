@@ -1,5 +1,5 @@
-import {ChainStore} from "graphenejs-lib/es";
-import {Apis} from "graphenejs-ws";
+import {ChainStore} from "bitsharesjs/es";
+import {Apis} from "bitsharesjs-ws";
 import React from "react";
 import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";

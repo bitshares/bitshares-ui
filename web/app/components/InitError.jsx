@@ -5,7 +5,7 @@ import SettingsStore from "stores/SettingsStore";
 import Translate from "react-translate-component";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 
 class InitError extends React.Component {
 

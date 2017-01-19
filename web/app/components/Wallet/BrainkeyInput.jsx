@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from "react";
 import cname from "classnames";
-import {hash, key} from "graphenejs-lib/es";
+import {hash, key} from "bitsharesjs/es";
 
 var dictionary_set;
 

@@ -12,6 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "coffee-script": "^1.12.2",
-    "graphenejs-lib": "^0.4.10"
+    "bitsharesjs": "^0.4.10"
   }
 }

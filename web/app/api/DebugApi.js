@@ -1,4 +1,4 @@
-import { SerializerValidation, types} from "graphenejs-lib/es";
+import { SerializerValidation, types} from "bitsharesjs/es";
 var config = require("chain/serializer_config");
 
 class DebugApi {

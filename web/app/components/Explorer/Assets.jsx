@@ -11,7 +11,7 @@ import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetName from "../Utility/AssetName";
 import {Tabs, Tab} from "../Utility/Tabs";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 
 class Assets extends React.Component {
 

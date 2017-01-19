@@ -1,5 +1,5 @@
 import React from "react";
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 
 import { Route, IndexRoute } from "react-router/es";
 import App from "./App";

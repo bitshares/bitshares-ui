@@ -10,7 +10,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import AmountSelector from "../Utility/AmountSelector";
 
 let wallet_api = new WalletApi();

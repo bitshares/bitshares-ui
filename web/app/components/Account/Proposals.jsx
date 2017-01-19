@@ -7,7 +7,7 @@ import ChainTypes from "components/Utility/ChainTypes";
 import utils from "common/utils";
 import ProposalApproveModal from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import counterpart from "counterpart";
 
 class Proposals extends Component {

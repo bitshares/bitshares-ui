@@ -107,7 +107,7 @@ module.exports = function(options) {
 
     var config = {
         entry: {
-            // vendor: ["react", "react-dom", "highcharts/highstock", "graphenejs-lib", "lodash"],
+            // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
             app: options.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [
@@ -231,7 +231,7 @@ module.exports = function(options) {
     //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
     //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
     //     "whatwg-fetch", "alt", "react-json-inspector",
-    //     "immutable", "graphenejs-lib"
+    //     "immutable", "bitsharesjs"
     // ];
 
     return config;
