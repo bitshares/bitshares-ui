@@ -9,7 +9,7 @@
     "tr": "Turkish"
   },
   "header": {
-    "title": "Graphene",
+    "title": "Bitshares",
     "dashboard": "Accueil",
     "explorer": "Explorer",
     "exchange": "Échange",
@@ -379,7 +379,7 @@
     "always_confirm": "Toujours demander une confirmation"
   },
   "footer": {
-    "title": "Graphene",
+    "title": "Bitshares",
     "block": "Bloc courant"
   },
   "exchange": {

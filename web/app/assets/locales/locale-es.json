@@ -9,7 +9,7 @@
     "tr": "Türkçe"
   },
   "header": {
-    "title": "Graphene - Interfaz de Usiario",
+    "title": "Bitshares - Interfaz de Usiario",
     "account": "Cuenta",
     "dashboard": "Tablero",
     "explorer": "Explorer",
@@ -50,7 +50,7 @@
   },
   "account": {
     "trade": "Trade",
-    "welcome": "Bienvenido a Graphene",
+    "welcome": "Bienvenido a Bitshares",
     "asset": "Activo",
     "market_value": "Valor de Mercado",
     "hour_24": "Cambio 24hs",
@@ -510,7 +510,7 @@
     "faucet_address": "Faucet Address"
   },
   "footer": {
-    "title": "Graphene",
+    "title": "Bitshares",
     "block": "Bloque de cabecera",
     "loading": "Cargando..."
   },

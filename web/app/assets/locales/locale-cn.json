@@ -14,7 +14,7 @@
     "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
 },
   "header": {
-    "title": "Graphene (石墨烯)钱包",
+    "title": "Bitshares (石墨烯)钱包",
     "account": "账户",
     "dashboard": "概览",
     "explorer": "浏览",
@@ -56,7 +56,7 @@
   },
   "account": {
     "trade": "交易",
-    "welcome": "欢迎使用 Graphene (石墨烯)系统",
+    "welcome": "欢迎使用 Bitshares (石墨烯)系统",
     "assets": "资产",
     "market_value": "市值",
     "hour_24": "日涨跌幅%",
@@ -770,7 +770,7 @@
     "older": "更早"
   },
   "footer": {
-    "title": "Graphene (石墨烯)",
+    "title": "Bitshares (石墨烯)",
     "block": "最新区块",
     "loading": "载入中...",
     "backup": "需要备份",

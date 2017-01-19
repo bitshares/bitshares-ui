@@ -9,7 +9,7 @@
     "tr": "Turkish"
   },
   "header": {
-    "title": "Graphene UI",
+    "title": "Bitshares UI",
     "account": "Konto",
     "dashboard": "Übersicht",
     "explorer": "Explorer",
@@ -630,7 +630,7 @@
     "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)"
   },
   "footer": {
-    "title": "Graphene",
+    "title": "Bitshares",
     "block": "Spitzenblock",
     "loading": "Lade..."
   },
