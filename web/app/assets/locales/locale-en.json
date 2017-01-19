@@ -6,7 +6,8 @@
     "ko": "한국어",
     "de": "Deutsch",
     "es": "Español",
-    "tr": "Turkish"
+    "tr": "Turkish",
+    "ru": "Русский"
   },
   "sync_fail": {
     "title": "Failed to sync with the API server",
