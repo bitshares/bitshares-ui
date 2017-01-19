@@ -12,3 +12,4 @@ web/app/components/Exchange/exchange.css
 cli/bundle.js
 web/dist-prod
 web/stats*
+web/hash-history
