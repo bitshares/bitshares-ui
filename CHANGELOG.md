@@ -67,7 +67,7 @@ New features
 
 Bug fixes
 --------
-- Add Bitshares bloom filter for BTS 1 account imports
+- Add BitShares bloom filter for BTS 1 account imports
 - Fix a GenesisFilter bug and update ImportKeys flow slightly
 - Fix input of uppercase characters in AccountPermissions
 - Fix Highcharts build issues

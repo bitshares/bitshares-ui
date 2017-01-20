@@ -215,7 +215,7 @@ class Chat extends React.Component {
 
             data.history.filter(a => {
                 return (
-                    a.user !== "Welcome to Bitshares" &&
+                    a.user !== "Welcome to BitShares" &&
                     a.user !== "Welcome to Openledger"
                 );
             }).forEach(msg => {
@@ -255,7 +255,7 @@ class Chat extends React.Component {
     }
 
     sendHistory(c) {
-        c.send({history: this.state.messages.filter((msg) => {return msg.user !== "SYSTEM" && msg.user !== "Welcome to Bitshares";})});
+        c.send({history: this.state.messages.filter((msg) => {return msg.user !== "SYSTEM" && msg.user !== "Welcome to BitShares";})});
     }
 
     onConnection(c) {

@@ -1,1 +1,1 @@
-[见证人](introduction/witness) 是BitShares系统中区块的生产者。他们验证交易数据并维护网络安全。你可以投票选举你信任的人成为见证人。投票时，你选择的候选人将获得你投出的相同票数。见证人的竞选帖可在这里找到[Bitsharestalk](https://bitsharestalk.org/index.php/board,61.0.html)。
+[见证人](introduction/witness) 是BitShares系统中区块的生产者。他们验证交易数据并维护网络安全。你可以投票选举你信任的人成为见证人。投票时，你选择的候选人将获得你投出的相同票数。见证人的竞选帖可在这里找到[BitSharestalk](https://bitsharestalk.org/index.php/board,61.0.html)。
