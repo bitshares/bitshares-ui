@@ -15,8 +15,15 @@ import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import {Link} from "react-router";
+import ChainTypes from "../Utility/ChainTypes";
+import BindToChainState from "../Utility/BindToChainState";
+import utils from "common/utils";
 
 class AccountOverview extends React.Component {
+
+    static propTypes = {
+        balanceAssets: ChainTypes.ChainAssetsList
+    };
 
     constructor() {
         super();
@@ -27,8 +34,9 @@ class AccountOverview extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-
         return (
+            !utils.are_equal_shallow(nextProps.balanceAssets, this.props.balanceAssets) ||
+            !utils.are_equal_shallow(nextProps.balances, this.props.balances) ||
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
@@ -242,4 +250,27 @@ class AccountOverview extends React.Component {
     }
 }
 
-export default AccountOverview;
+AccountOverview = BindToChainState(AccountOverview);
+
+class BalanceWrapper extends React.Component {
+
+    static propTypes = {
+        balances: ChainTypes.ChainObjectsList
+    };
+
+    static defaultProps = {
+        balances: Immutable.List()
+    };
+
+    render() {
+        let balanceAssets = this.props.balances.map(b => {
+            return b && b.get("asset_type");
+        }).filter(b => !!b);
+
+        return (
+            <AccountOverview {...this.props} balanceAssets={Immutable.List(balanceAssets)} />
+        );
+    };
+}
+
+export default BindToChainState(BalanceWrapper);

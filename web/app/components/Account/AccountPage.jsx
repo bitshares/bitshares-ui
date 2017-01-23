@@ -57,7 +57,8 @@ class AccountPage extends React.Component {
                             account,
                             isMyAccount,
                             hiddenAssets,
-                            contained: true
+                            contained: true,
+                            balances: account.get("balances", null)
                         }
                     )}
                     </div>
