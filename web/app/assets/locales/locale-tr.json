@@ -864,7 +864,6 @@
     "unclaimed": "Sahiplenilmemiş",
     "unclaimed_vesting": "Çekilebilecek miktar",
     "no_accounts": "Hesap Yok",
-    "brainkey_no_match": "TekAnahtar uyuşmuyor, devam et",
     "reenter_brainkey": "TekAnahtarı tekrar gir",
     "pwd4brainkey": "Beyin-anahtarını göstermek için parolayı gir",
     "show_brainkey": "Beyin Anahtarını Göster",

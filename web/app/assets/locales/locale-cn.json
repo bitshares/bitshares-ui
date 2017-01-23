@@ -918,7 +918,6 @@
     "unclaimed": "未导入余额",
     "unclaimed_vesting": "未导入余额 (解冻中)",
     "no_accounts": "没有账户",
-    "brainkey_no_match": "脑钱包密钥不匹配，请重试",
     "reenter_brainkey": "请再输入一遍脑钱包密钥",
     "pwd4brainkey": "输入密码后显示脑钱包密钥",
     "show_brainkey": "显示脑钱包密钥",

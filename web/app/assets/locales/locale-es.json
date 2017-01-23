@@ -610,7 +610,6 @@
     "unclaimed": "Sin Solicitar",
     "unclaimed_vesting": "Sin Solicitar (consolidando)",
     "no_accounts": "Sin Cuentas",
-    "brainkey_no_match": "La Brainkey no coincide, intente denuevo",
     "reenter_brainkey": "Re-Ingrese Brainkey",
     "pwd4brainkey": "Ingrese el password para ver su brainkey",
     "show_brainkey": "Mostrar Brainkey",

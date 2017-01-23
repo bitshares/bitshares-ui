@@ -616,7 +616,6 @@
     "unclaimed": "미청구액",
     "unclaimed_vesting": "미청구액 (확정금)",
     "no_accounts": "계정이 없음",
-    "brainkey_no_match": "브레인키가 일치하지 않습니다",
     "reenter_brainkey": "브레인키를 다시 입력하세요",
     "pwd4brainkey": "브레인키를 확인하시려면 비밀번호를 입력하세요",
     "show_brainkey": "브레인키 확인",

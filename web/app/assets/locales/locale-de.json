@@ -763,7 +763,6 @@
     "unclaimed": "nicht eingefordert",
     "unclaimed_vesting": "nicht eingefordert (vesting)",
     "no_accounts": "Keine Konten",
-    "brainkey_no_match": "Brainkey stimmt (noch) nicht überein.",
     "reenter_brainkey": "Brainkey bestätigen",
     "pwd4brainkey": "Passwort eingeben um Brainkey anzuzeigen",
     "show_brainkey": "Brainkey anzeigen",
