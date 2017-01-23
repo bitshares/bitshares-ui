@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import Translate from "react-translate-component";
 import PrivateKeyView from "components/PrivateKeyView";
-import {PublicKey} from "graphenejs-lib/es";
+import {PublicKey} from "bitsharesjs/es";
 import Icon from "../Icon/Icon";
 
 /**

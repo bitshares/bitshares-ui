@@ -1,4 +1,4 @@
-import {SerializerValidation, TransactionBuilder, TransactionHelper} from "graphenejs-lib/es";
+import {SerializerValidation, TransactionBuilder, TransactionHelper} from "bitsharesjs/es";
 import ApplicationApi from "./ApplicationApi";
 
 class WalletApi {

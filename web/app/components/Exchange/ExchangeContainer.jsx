@@ -6,7 +6,7 @@ import AltContainer from "alt-container";
 import Exchange from "./Exchange";
 import ChainTypes from "../Utility/ChainTypes";
 import LoadingIndicator from "../LoadingIndicator";
-import { EmitterInstance } from "graphenejs-lib/es";
+import { EmitterInstance } from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
 

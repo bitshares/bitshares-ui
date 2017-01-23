@@ -16,7 +16,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
-import { ChainStore, FetchChain } from "graphenejs-lib/es";
+import { ChainStore, FetchChain } from "bitsharesjs/es";
 import SettingsActions from "actions/SettingsActions";
 import cnames from "classnames";
 import market_utils from "common/market_utils";
@@ -1098,6 +1098,7 @@ class Exchange extends React.Component {
                             </div>) : (
                             <div className="grid-block vertical no-padding shrink" >
                                 <DepthHighChart
+                                    marketReady={marketReady}
                                     orders={marketLimitOrders}
                                     showCallLimit={showCallLimit}
                                     call_orders={marketCallOrders}
@@ -1225,6 +1226,7 @@ class Exchange extends React.Component {
                         </div>
                         <div className="grid-block no-padding no-margin vertical shrink">
                             <DepthHighChart
+                                    marketReady={marketReady}
                                     orders={marketLimitOrders}
                                     showCallLimit={showCallLimit}
                                     call_orders={marketCallOrders}

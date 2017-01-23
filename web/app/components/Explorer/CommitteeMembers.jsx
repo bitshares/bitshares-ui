@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import { connect } from "alt-react";

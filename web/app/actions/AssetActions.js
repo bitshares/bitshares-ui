@@ -1,10 +1,10 @@
 var alt = require("alt-instance");
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import big from "bignumber.js";
 
 let wallet_api = new WalletApi();

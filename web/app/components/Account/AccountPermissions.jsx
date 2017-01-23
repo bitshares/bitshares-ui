@@ -6,7 +6,7 @@ import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js";
-import {PublicKey} from "graphenejs-lib/es";;
+import {PublicKey} from "bitsharesjs/es";;
 import AccountPermissionsList from "./AccountPermissionsList";
 import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";

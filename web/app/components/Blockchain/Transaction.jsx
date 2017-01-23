@@ -16,7 +16,7 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import {ChainTypes} from "graphenejs-lib/es";
+import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 
@@ -136,7 +136,7 @@ class Transaction extends React.Component {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
                         memo = text ? (
-                            <td>{text}</td>
+                            <td className="memo">{text}</td>
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;

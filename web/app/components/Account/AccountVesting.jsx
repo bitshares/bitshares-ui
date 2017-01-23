@@ -1,10 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 
 class VestingBalance extends React.Component {
 

@@ -1,7 +1,7 @@
 import React from "react";
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 
-import { Router, Route, IndexRoute, browserHistory, hashHistory } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory } from "react-router/es";
 import App from "./App";
 
 // Stores
@@ -55,15 +55,13 @@ import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 
-/*
-* Electron does not support browserHistory, so we need to use hashHistory
-*/
-const history = __ELECTRON__ ? hashHistory : browserHistory;
+const history = browserHistory;
 
 class Auth extends React.Component {
     render() {return null; }
 }
 
+let connect = true;
 const willTransitionTo = (nextState, replaceState, callback) => {
     let connectionString = SettingsStore.getSetting("apiServer");
 
@@ -84,7 +82,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         });
 
     }
-    Apis.instance(connectionString, true).init_promise.then(() => {
+    Apis.instance(connectionString, !!connect).init_promise.then(() => {
         var db;
         try {
             db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
@@ -92,9 +90,8 @@ const willTransitionTo = (nextState, replaceState, callback) => {
             console.log("db init error:", err);
         }
         return Promise.all([db]).then(() => {
-            console.log("db init done");
             return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=>AccountRefsStore.loadDbData()),
+                PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
                     if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
                         replaceState("/create-account");
@@ -123,6 +120,8 @@ const willTransitionTo = (nextState, replaceState, callback) => {
             callback();
         }
     });
+    /* Only try initialize the API with connect = true on the first onEnter */
+    connect = false;
 };
 
 const routes = (

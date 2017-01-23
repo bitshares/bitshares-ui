@@ -8,7 +8,7 @@ import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 
 /**
  *  Given an amount and an asset, render it with proper precision

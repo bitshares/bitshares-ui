@@ -4,7 +4,7 @@ import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedFee from "../Utility/FormattedFee";
 import counterpart from "counterpart";
@@ -597,6 +597,7 @@ class AccountAssetUpdate extends React.Component {
                                         </div>
                                         <div>
                                             <h5><Translate content="exchange.price" />: <FormattedPrice
+                                                invert
                                                 style={{fontWeight: "bold"}}
                                                 quote_amount={cr_quote_amount}
                                                 quote_asset={core_exchange_rate.quote.asset_id}

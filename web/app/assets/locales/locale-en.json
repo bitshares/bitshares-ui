@@ -914,7 +914,6 @@
     "balance_claim_lookup": "Lookup balances",
     "unclaimed": "Unclaimed balances belonging to these keys",
     "unclaimed_vesting": "Unclaimed (vesting)",
-    "brainkey_no_match": "",
     "reenter_brainkey": "Re-Enter Brainkey",
     "pwd4brainkey": "Enter your password to show your brainkey",
     "show_brainkey": "Show Brainkey",

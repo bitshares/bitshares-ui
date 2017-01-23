@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Apis} from "graphenejs-ws";
+import {Apis} from "bitsharesjs-ws";
 import ApplicationApi from "api/ApplicationApi";
 import WalletApi from "api/WalletApi";
 import DebugApi from "api/DebugApi";

@@ -1,4 +1,4 @@
-import {ChainStore} from "graphenejs-lib/es";
+import {ChainStore} from "bitsharesjs/es";
 import utils from "./utils";
 
 export default class AccountUtils {

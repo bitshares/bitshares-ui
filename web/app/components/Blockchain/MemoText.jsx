@@ -6,6 +6,7 @@ import Icon from "../Icon/Icon";
 import { connect } from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
+import ReactTooltip from "react-tooltip";
 
 class MemoText extends React.Component {
 
@@ -22,11 +23,14 @@ class MemoText extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        WalletUnlockActions.unlock();
+        WalletUnlockActions.unlock().then(() => {
+            console.log("unlocked");
+            ReactTooltip.rebuild();
+        });
     }
 
     render() {
-        let {memo, wallet_locked, fullLength} = this.props;
+        let {memo, fullLength} = this.props;
         if (!memo) {
             return null;
         }
@@ -51,8 +55,8 @@ class MemoText extends React.Component {
 
         if (text) {
             return (
-                <div className="memo" style={{paddingTop: 5}}>
-                    <span className="inline-block" data-tip={full_memo !== text ? full_memo : null} data-place="bottom" data-offset="{'bottom': 10}" data-html>
+                <div className="memo" style={{paddingTop: 5, cursor: "help"}}>
+                    <span className="inline-block" data-class="memo-tip" data-tip={full_memo !== text ? full_memo : null} data-place="bottom" data-offset="{'bottom': 10}" data-html>
                         {text}
                     </span>
                 </div>

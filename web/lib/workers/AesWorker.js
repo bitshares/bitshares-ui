@@ -1,13 +1,13 @@
 require("babel-polyfill");
-import {Aes} from "graphenejs-lib/es";
+import {Aes} from "bitsharesjs/es";
 
 onmessage = function(event) { try {
     console.log("AesWorker start");
-    var {private_plainhex_array, iv, key} = event.data;
-    var aes = new Aes(iv, key);
-    var private_cipherhex_array = [];
+    let {private_plainhex_array, iv, key} = event.data;
+    let aes = new Aes(iv, key);
+    let private_cipherhex_array = [];
     for(let private_plainhex of private_plainhex_array) {
-        var private_cipherhex = aes.encryptHex( private_plainhex );
+        let private_cipherhex = aes.encryptHex( private_plainhex );
         private_cipherhex_array.push( private_cipherhex );
     }
     postMessage( private_cipherhex_array );
