@@ -16,6 +16,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import {Link} from "react-router";
 
 let wallet_api = new WalletApi();
 
@@ -201,6 +202,8 @@ class AccountVoting extends React.Component {
             committee: s.prev_committee,
             workers: s.prev_workers,
             vote_ids: s.prev_vote_ids
+        }, () => {
+            this.updateAccountData(this.props.account);
         });
     }
 
@@ -481,10 +484,6 @@ class AccountVoting extends React.Component {
                     <button className={"outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
                         <Translate content="account.perm.reset"/>
                     </button>
-                    {proxy_is_set ? (
-                        <button className={"outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
-                            <Translate content="account.votes.clear_proxy"/>
-                        </button>) : null}
                 </div>
 
                 <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content">
@@ -497,7 +496,17 @@ class AccountVoting extends React.Component {
                                     currentAccount={this.props.account}
                                     proxyAccount={this.state.proxy_account_id}
                                     onProxyAccountChanged={this.onProxyAccountChange}
-                                />
+                                >
+                                    {proxy_is_set ? (
+                                    <div>
+                                        <p><Translate content="account.votes.proxy_current" />: <Link to={`account/${this.state.proxy_account_name}`}>{this.state.proxy_account_name}</Link></p>
+                                        <div>
+                                            <button className={"outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
+                                                <Translate content="account.votes.clear_proxy"/>
+                                            </button>
+                                        </div>
+                                    </div>) : null}
+                                </AccountVotingProxy>
                             </div>
                         </Tab>
 

@@ -181,6 +181,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",        
       "proxy_short": "Proxy",
       "workers_short": "Worker",
       "proxy": "Proxy Konto",

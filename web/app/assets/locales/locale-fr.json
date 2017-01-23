@@ -107,6 +107,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",        
       "proxy": "Proxy Voting Account",
       "name": "Nom",
       "info": "Info",

@@ -5,20 +5,29 @@ import ChainTypes from "../Utility/ChainTypes";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import {ChainStore} from "bitsharesjs/es";
+import {List} from "immutable";
 
 class AccountVotingProxy extends React.Component {
 
     static propTypes = {
         proxyAccount: ChainTypes.ChainAccount,
         currentAccount: React.PropTypes.object.isRequired,
-        onProxyAccountChanged: React.PropTypes.func.isRequired
+        onProxyAccountChanged: React.PropTypes.func.isRequired,
+        knownProxies: ChainTypes.ChainAccountsList
     };
 
+    static defaultProps = {
+        knownProxies: List(
+            [
+                "baozi", "bitsharesblocks", "laomao", "xeroc", "bitcrab",
+                "jonnybitcoin", "jakub", "dacs", "fav"
+            ]
+        )
+    };
 
     static contextTypes = {
         router: React.PropTypes.object.isRequired
-    }
+    };
 
     constructor(props){
         super(props);
@@ -70,48 +79,45 @@ class AccountVotingProxy extends React.Component {
     // }
 
     render(){
+        let {knownProxies} = this.props;
+        const isDisabled = !!this.props.proxyAccount;
         // console.log("-- AccountVotingProxy.render -->", this.props.currentAccount);
         let error = null;
         if(this.state.new_proxy_account && this.props.currentAccount.get("id") === this.state.new_proxy_account.get("id")) {
             error = "cannot proxy to yourself";
         }
 
-        let core = ChainStore.getObject("1.3.0");
-        let knownProxies = [];
-        if (core && core.get("symbol")) {
-            knownProxies = ["baozi", "bytemaster", "laomao", "xeroc", "bitcrab", "jonnybitcoin", "angel", "jakub", "dacs", "fav"];
-        }
+        let currentProxyName = this.props.proxyAccount && this.props.proxyAccount.get("name");
 
         let proxies = knownProxies
         .filter(a => {
-            return a !== this.props.currentAccount.get("name");
+            if (!a) return false;
+            return (
+                a.get("name") !== this.props.currentAccount.get("name") &&
+                a.get("name") !== currentProxyName
+            );
         })
         .map(proxy => {
-            let account = ChainStore.getAccount(proxy);
-            if (account) {
-                return (
-                    <tr key={account.get("id")}>
-                        <td>
-                            <AccountImage
-                                size={{height: 30, width: 30}}
-                                account={account.get("name")}
-                                custom_image={null}
-                            />
-                        </td>
-                        <td><LinkToAccountById account={account.get("id")} subpage="voting" /></td>
-                        <td className="text-right"><button className="button" onClick={this.onProxyChange.bind(this, account.get("name"))}>Set</button></td>
-                    </tr>
-                );
-            } else {
-                return null;
-            }
-        }).filter(a => {
-            return a !== null;
+            return (
+                <tr key={proxy.get("id")}>
+                    <td>
+                        <AccountImage
+                            size={{height: 30, width: 30}}
+                            account={proxy.get("name")}
+                            custom_image={null}
+                        />
+                    </td>
+                    <td><LinkToAccountById account={proxy.get("id")} subpage="voting" /></td>
+                    <td className="text-right"><button className="button" onClick={this.onProxyChange.bind(this, proxy.get("name"))}>Set</button></td>
+                </tr>
+            );
+
         });
 
         return (
             <div className="content-block" style={{maxWidth: "600px"}}>
-                <Translate component="h3" content="account.votes.proxy_short" />
+                {isDisabled ? null :<Translate component="h3" content="account.votes.proxy_short" />}
+                {isDisabled ? null :
                 <AccountSelector
                     label="account.votes.proxy"
                      error={error}
@@ -122,8 +128,8 @@ class AccountVotingProxy extends React.Component {
                      ref="proxy_selector" tabIndex={1}
                      onAction={this._onNavigate.bind(this, `/account/${this.state.current_proxy_input}/voting/`)}
                      action_label="account.votes.go_proxy"
-                />
-                {knownProxies.length ? (
+                />}
+                {!isDisabled && knownProxies.length ? (
                 <div>
                     <Translate component="h4" content="account.votes.proxy_known" />
                     <table className="table">
@@ -132,10 +138,10 @@ class AccountVotingProxy extends React.Component {
                         </tbody>
                     </table>
                 </div>) : null}
+                {this.props.children}
             </div>
         );
     }
-
 }
 
 export default BindToChainState(AccountVotingProxy);

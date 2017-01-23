@@ -121,6 +121,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",        
       "proxy": "대리투표 계정",
       "no_proxy": "대리투표 사용안함",
       "name": "이름",

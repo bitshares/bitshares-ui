@@ -193,6 +193,7 @@
       "sign_owner": "已所有者身份签名"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy_short": "代理投票",
       "workers_short": "预算项目",
       "proxy": "代理投票账户",

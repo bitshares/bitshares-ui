@@ -214,6 +214,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",        
       "proxy_short": "Vekil",
       "workers_short": "Geliştiriciler",
       "proxy": "Vekil Oy Hesabı",

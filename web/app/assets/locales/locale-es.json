@@ -121,6 +121,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",        
       "proxy": "Convertir en Apoderado de sus Votos a",
       "no_proxy": "Sin Apoderado",
       "name": "Nombre",
