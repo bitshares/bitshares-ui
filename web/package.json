@@ -1,7 +1,7 @@
 {
-  "name": "Bitshares-UI",
+  "name": "BitShares-UI",
   "version": "1.1.0",
-  "description": "Advanced wallet interface for the Bitshares financial blockchain.",
+  "description": "Advanced wallet interface for the BitShares financial blockchain.",
   "homepage": "https://github.com/bitshares/bitshares-ui",
   "author": [
     "Cryptonomex, Inc.",

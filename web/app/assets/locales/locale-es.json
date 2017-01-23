@@ -9,7 +9,7 @@
     "tr": "Türkçe"
   },
   "header": {
-    "title": "Bitshares - Interfaz de Usiario",
+    "title": "BitShares - Interfaz de Usiario",
     "account": "Cuenta",
     "dashboard": "Tablero",
     "explorer": "Explorer",
@@ -45,12 +45,12 @@
     "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
     "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
-    "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+    "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
     "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "account": {
     "trade": "Trade",
-    "welcome": "Bienvenido a Bitshares",
+    "welcome": "Bienvenido a BitShares",
     "asset": "Activo",
     "market_value": "Valor de Mercado",
     "hour_24": "Cambio 24hs",
@@ -510,7 +510,7 @@
     "faucet_address": "Faucet Address"
   },
   "footer": {
-    "title": "Bitshares",
+    "title": "BitShares",
     "block": "Bloque de cabecera",
     "loading": "Cargando..."
   },

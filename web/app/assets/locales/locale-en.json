@@ -14,7 +14,7 @@
     "sub_text_2" : "Once you've synchronized your clock, please refresh this page. If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header": {
-    "title": "Bitshares UI",
+    "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
     "explorer": "Explore",
@@ -51,14 +51,14 @@
     "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
     "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
-    "login": "This Bitshares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+    "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
     "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
     "trade": "Trade",
-    "welcome": "Welcome to Bitshares",
+    "welcome": "Welcome to BitShares",
     "asset": "Asset",
     "market_value": "Market Value",
     "hour_24": "24hr Change",
@@ -131,7 +131,7 @@
       "claim_all": "Try to claim all",
       "available": "Available to claim",
       "referral_link": "Your referral link",
-      "referral_text": "Give this to link to people you want to refer to Bitshares"
+      "referral_text": "Give this to link to people you want to refer to BitShares"
     },
     "user_issued_assets": {
       "symbol": "Symbol",
@@ -758,7 +758,7 @@
     "restore_key_count": "# of keys"
   },
   "footer": {
-    "title": "Bitshares",
+    "title": "BitShares",
     "block": "Head block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
@@ -878,7 +878,7 @@
     "create_backup": "Create Backup",
     "backup_brainkey": "Backup Brainkey",
     "create_backup_of": "Create backup now",
-    "import_backup": "Import Bitshares 2.0 backup (.bin file)",
+    "import_backup": "Import BitShares 2.0 backup (.bin file)",
     "import_backup_choose": "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
     "restore_backup": "Restore Backup",
     "import_keys": "Import Keys",
@@ -925,8 +925,8 @@
     "need_backup": "This wallet needs a backup",
     "noneed_backup": "No backup is needed",
     "restore": "Restore Wallet from Backup",
-    "create_text": "The Bitshares wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
-    "account_create_wallet_text": "This password will be used to create a new Bitshares wallet for you, which will only be stored locally in your browser. A Bitshares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+    "create_text": "The BitShares wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+    "account_create_wallet_text": "This password will be used to create a new BitShares wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
     "create_account_text": "Please enter your desired account name. This name will be registered publicly on the blockchain and is your identifer for any transactions you make.",
     "first_account_paid": "Since this is your first account, a faucet will pay the registration fee for you.",
     "must_be_ltm": "The fee paying account must be a lifetime member to perform that operation.",
@@ -950,7 +950,7 @@
     "import_bts": "Import a BTS 0.9.3c key export",
     "import_private_key": "Import a private key",
     "wallet_browser": "Your Web Browser is your Wallet",
-    "has_wallet": "When you create your first Bitshares account, a Bitshares wallet will be automatically created as well and stored in your browser.",
+    "has_wallet": "When you create your first BitShares account, a BitShares wallet will be automatically created as well and stored in your browser.",
     "go_get_started": "See Get Started tips",
     "wallet_crucial": "Your wallet is only stored in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost!",
     "wallet_move": "This backup file can also be used to move your wallet to different computers or different browsers.",
@@ -963,7 +963,7 @@
     "tips_settings": "Change the settings",
     "tips_account": "See your new account",
     "link_account": "Account",
-    "wallet_new": "New Bitshares account",
+    "wallet_new": "New BitShares account",
     "create_w_a": "Create a wallet and an account",
     "create_a": "Create a new account",
     "create_success": "Your wallet has been created",
@@ -1035,7 +1035,7 @@
     "connected": "Connected",
     "not_connected": "Not connected",
     "browser": "Unsupported browser",
-    "browser_text": "The Browser you are using has not been fully tested to support the Bitshares Wallet. We highly recommend that you backup your wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+    "browser_text": "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
     "understand": "I understand"
   },
   "refcode": {
@@ -1088,7 +1088,7 @@
 	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
-    "gateway_text": "A gateway lets you move to and from Bitshares assets to the real asset, like OPEN.BTC to BTC.",
+    "gateway_text": "A gateway lets you move to and from BitShares assets to the real asset, like OPEN.BTC to BTC.",
     "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
     "transwiser": {
       "gateway": "Transwiser",
@@ -1111,7 +1111,7 @@
     "user": "Username",
     "done": "Done",
     "reconnect": "Reconnect",
-    "welcome_user": "Welcome to Bitshares",
+    "welcome_user": "Welcome to BitShares",
     "users": "%(count)s users online",
     "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
     "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
