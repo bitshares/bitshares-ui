@@ -6,10 +6,13 @@ var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 
 // BASE APP DIR
-var root_dir = path.resolve(__dirname, "..");
+var root_dir = path.resolve(__dirname);
 
-module.exports = function(options) {
-    // console.log(options.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
+module.exports = function(env) {
+    if (!env.profile) {
+        console.log("env:", env);
+    }
+    // console.log(env.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = [
         {
@@ -52,14 +55,14 @@ module.exports = function(options) {
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(git.tag()),
-            __ELECTRON__: !!options.electron,
-            "__HASH_HISTORY__": !!options.hash
+            __ELECTRON__: !!env.electron,
+            "__HASH_HISTORY__": !!env.hash
         })
     ];
 
-    if (options.prod) {
+    if (env.prod) {
         // PROD OUTPUT PATH
-        let outputDir = options.electron ? "electron" : options.hash ? "hash-history" : "dist";
+        let outputDir = env.electron ? "electron" : env.hash ? "hash-history" : "dist";
         outputPath = path.join(root_dir, outputDir);
 
         // DIRECTORY CLEANER
@@ -86,7 +89,7 @@ module.exports = function(options) {
             minimize: true,
             debug: false
         }));
-        if (!options.noUgly) {
+        if (!env.noUgly) {
 
             plugins.push(new webpack.optimize.UglifyJsPlugin({
                 sourceMap: true,
@@ -108,7 +111,7 @@ module.exports = function(options) {
     var config = {
         entry: {
             // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
-            app: options.prod ?
+            app: env.prod ?
             path.resolve(root_dir, "app/Main.js") :
             [
                 "react-hot-loader/patch",
@@ -120,10 +123,10 @@ module.exports = function(options) {
             publicPath: "/",
             path: outputPath,
             filename: "[name].js",
-            pathinfo: !options.prod,
+            pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: options.prod ? "cheap-module-source-map" : "eval",
+        devtool: env.prod ? "cheap-module-source-map" : "eval",
         module: {
             rules: [
                 {
@@ -133,7 +136,7 @@ module.exports = function(options) {
                         {
                             loader: "babel-loader",
                             options: {
-                                cacheDirectory: options.prod ? false : true
+                                cacheDirectory: env.prod ? false : true
                             }
                         }
                     ]
@@ -213,8 +216,8 @@ module.exports = function(options) {
         },
         resolve: {
             modules: [
-                path.resolve(root_dir, "./app"),
-                path.resolve(root_dir, "./lib"),
+                path.resolve(root_dir, "app"),
+                path.resolve(root_dir, "lib"),
                 "node_modules"
             ],
             extensions: [".js", ".jsx", ".coffee", ".json"],
@@ -227,7 +230,7 @@ module.exports = function(options) {
         plugins: plugins
     };
 
-    // if(options.prod) config.entry.vendors = [
+    // if(env.prod) config.entry.vendors = [
     //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
     //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
     //     "whatwg-fetch", "alt", "react-json-inspector",
