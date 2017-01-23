@@ -226,6 +226,12 @@ div.disabled input {
 
 .memo {
   font-size: 0.9rem;
+  word-break: break-word;
+}
+
+div.memo-tip {
+  word-break: break-word;
+  max-width: 40rem;
 }
 
 .notresolved {

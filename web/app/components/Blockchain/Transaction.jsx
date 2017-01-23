@@ -136,7 +136,7 @@ class Transaction extends React.Component {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
                         memo = text ? (
-                            <td>{text}</td>
+                            <td className="memo">{text}</td>
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
