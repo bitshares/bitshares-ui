@@ -56,7 +56,8 @@ module.exports = function(env) {
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(git.tag()),
             __ELECTRON__: !!env.electron,
-            "__HASH_HISTORY__": !!env.hash
+            __HASH_HISTORY__: !!env.hash,
+            __HOST_PATH__: env.hostPath ? JSON.stringify(env.hostPath) : null
         })
     ];
 
@@ -120,7 +121,7 @@ module.exports = function(env) {
             ]
         },
         output: {
-            publicPath: "/",
+            publicPath: "",
             path: outputPath,
             filename: "[name].js",
             pathinfo: !env.prod,
