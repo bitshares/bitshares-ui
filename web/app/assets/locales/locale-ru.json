@@ -914,7 +914,6 @@
     "balance_claim_lookup":"Просмотреть балансы",
     "unclaimed":"Неутвержденные балансы, принадлежащие этим ключам",
     "unclaimed_vesting":"Неутвержденный (вестинг)",
-    "brainkey_no_match":"",
     "reenter_brainkey":"Введите Brainkey повторно",
     "pwd4brainkey":"Введите Ваш пароль, чтобы увидеть Ваш Brainkey",
     "show_brainkey":"Показать Brainkey",
