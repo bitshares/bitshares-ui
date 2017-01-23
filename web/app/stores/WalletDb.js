@@ -19,8 +19,9 @@ let aes_private;
 
 let TRACE = false;
 
-let dictJson;
+let dictJson, AesWorker;
 if (__ELECTRON__) {
+    AesWorker = require("worker-loader?inline!workers/AesWorker");
     dictJson = require("json-loader!common/dictionary_en.json");
 }
 
@@ -366,9 +367,12 @@ class WalletDb extends BaseStore {
             let addyIndexPromise = AddressIndex.addAll(pubkeys)
 
             let private_plainhex_array = []
-            for(let private_key_obj of private_key_objs)
-                private_plainhex_array.push( private_key_obj.private_plainhex )
-            let AesWorker = require("worker-loader!workers/AesWorker")
+            for(let private_key_obj of private_key_objs) {
+                private_plainhex_array.push( private_key_obj.private_plainhex );
+            }
+            if (!__ELECTRON__) {
+                AesWorker = require("worker-loader!workers/AesWorker");
+            }
             let worker = new AesWorker
             worker.postMessage({
                 private_plainhex_array,
