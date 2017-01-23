@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------
+Release 2.0.170123
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Use relative paths for fetching assets, fixed wallet creation issues
+- Fix some links in the light wallets
+- Fix market flipping for UIAs
+- Fix several bugs related to hash-history react router config
+- Change Graphene to BitShares
+- Replace graphenejs-lib with bitsharesjs
+- Fix npm errors
+- Fix line breaks for memos with very long words
+- Make sure asset actions render properly in AccountOverview
+- Ensure proxy accounts get resolved properly in Voting
+
+---------------------------------------------------------------------
 Release 2.0.170118
 ---------------------------------------------------------------------
 
