@@ -19,18 +19,19 @@ export default class BrainkeyInput extends Component {
         this.state = {
             brnkey: "",
             loading: true
-        }
+        };
     }
 
     componentWillMount() {
         if (!__ELECTRON__) {
-            fetch("/dictionary.json").then( (reply) => {
+            fetch("dictionary.json").then( (reply) => {
                 return reply.json().then(result => {
-                    dictionary_set = new Set(result.en.split(','));
+                    dictionary_set = new Set(result.en.split(","));
                     this.setState({
                         loading: false
                     });
-            })})
+                });
+            })
             .catch(err => {
                 console.log("fetch dictionary error:", err);
             });
