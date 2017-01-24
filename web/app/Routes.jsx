@@ -149,7 +149,7 @@ const routes = (
                 System.import("components/Wallet/Brainkey").then(loadRoute(cb, "ExistingAccountOptions")).catch(errorLoading);
             }}/>
             <Route path="create" getComponent={(location, cb) => {
-                System.import("components/Wallet/WalletCreate").then(loadRoute(cb)).catch(errorLoading);
+                System.import("components/Wallet/WalletCreate").then(loadRoute(cb, "WalletCreate")).catch(errorLoading);
             }}/>
             <Route path="delete" getComponent={(location, cb) => {
                 System.import("components/Wallet/WalletManager").then(loadRoute(cb, "WalletDelete")).catch(errorLoading);
@@ -169,7 +169,11 @@ const routes = (
         </Route>
 
         <Route path="create-wallet" getComponent={(location, cb) => {
-            System.import("components/Wallet/WalletCreate").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Wallet/WalletCreate").then(loadRoute(cb, "WalletCreate")).catch(errorLoading);
+        }}/>
+
+        <Route path="create-wallet-brainkey" getComponent={(location, cb) => {
+            System.import("components/Wallet/WalletCreate").then(loadRoute(cb, "CreateWalletFromBrainkey")).catch(errorLoading);
         }}/>
 
         <Route path="transfer" getComponent={(location, cb) => {

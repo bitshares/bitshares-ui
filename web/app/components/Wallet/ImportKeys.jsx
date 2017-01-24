@@ -6,7 +6,7 @@ import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs/es";
 import {ChainConfig} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import WalletCreate from "components/Wallet/WalletCreate";
+import {WalletCreate} from "components/Wallet/WalletCreate";
 import LoadingIndicator from "components/LoadingIndicator";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";

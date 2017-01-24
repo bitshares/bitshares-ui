@@ -43,7 +43,7 @@ import BlockContainer from "./components/Blockchain/BlockContainer";
 import AssetContainer from "./components/Blockchain/AssetContainer";
 import CreateAccount from "./components/Account/CreateAccount";
 import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
-import WalletCreate from "./components/Wallet/WalletCreate";
+import { WalletCreate , CreateWalletFromBrainkey } from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import Invoice from "./components/Transfer/Invoice";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
@@ -153,6 +153,7 @@ const routes = (
         </Route>
 
         <Route path="create-wallet" component={WalletCreate} />
+        <Route path="create-wallet-brainkey" component={CreateWalletFromBrainkey} />
 
         <Route path="transfer" component={Transfer}/>
 

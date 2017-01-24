@@ -220,6 +220,12 @@ class CreateAccount extends React.Component {
                             <Translate content="wallet.restore" />
                         </Link>
                     </label>
+
+                    <label style={{textTransform: "none"}}>
+                        <Link to="/create-wallet-brainkey">
+                            <Translate content="settings.backup_brainkey" />
+                        </Link>
+                    </label>
                 </div>
 
                 {/* Skip to step 3 */}

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {Link} from "react-router";
 import Translate from "react-translate-component";
 import BrainkeyInput from "components/Wallet/BrainkeyInput";
 import PasswordConfirm from "components/Wallet/PasswordConfirm";
@@ -7,14 +8,6 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import WalletActions from "actions/WalletActions";
 import { connect } from "alt-react";
 import cname from "classnames";
-
-class WalletCreate extends Component {
-    render() {
-        if(WalletDb.getWallet() && this.props.children) return <div>{this.props.children}</div>;
-
-        return <CreateNewWallet {...this.props}/>;
-    }
-}
 
 class CreateNewWallet extends Component {
 
@@ -100,10 +93,10 @@ class CreateNewWallet extends Component {
             isValid = state.brnkey !== null;
         this.setState({ isValid, errors });
     }
-
-    onDone() {
-        window.history.back();
-    }
+    //
+    // onDone() {
+    //     window.history.back();
+    // }
 
     render() {
         let state = this.state;
@@ -114,8 +107,9 @@ class CreateNewWallet extends Component {
             this.state.wallet_public_name === this.props.current_wallet) {
             return <div>
                 <h4><Translate content="wallet.wallet_created" /></h4>
-                <span onClick={this.onDone.bind(this)}
-                    className="button success"><Translate content="wallet.done" /></span>
+                <Link to="dashboard">
+                    <div className="button success"><Translate content="wallet.done" /></div>
+                </Link>
             </div>;
         }
 
@@ -188,7 +182,6 @@ class CreateNewWallet extends Component {
             </form>
         </div>);
     }
-
 }
 
 CreateNewWallet = connect(CreateNewWallet, {
@@ -200,4 +193,25 @@ CreateNewWallet = connect(CreateNewWallet, {
     }
 });
 
-export default WalletCreate;
+class WalletCreate extends Component {
+    render() {
+        if(WalletDb.getWallet() && this.props.children) return <div>{this.props.children}</div>;
+
+        return <CreateNewWallet {...this.props}/>;
+    }
+}
+
+const CreateWalletFromBrainkey = (props) => {
+    if (!props.nested) {
+        return (
+            <div className="grid-container" style={{paddingTop: 30}}>
+                <Translate content="settings.backup_brainkey" component="h3" />
+                <Translate content="settings.restore_brainkey_text" component="p" style={{maxWidth: "40rem", paddingBottom: 10}} />
+                <WalletCreate restoreBrainkey {...props} />
+            </div>
+        );
+    }
+    return <WalletCreate restoreBrainkey {...props} />;
+};
+
+export { WalletCreate, CreateWalletFromBrainkey };

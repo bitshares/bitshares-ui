@@ -50,15 +50,21 @@ class ExistingAccountOptions extends Component {
                     <Link to="existing-account/import-keys"><Translate content="wallet.import_bts1" /></Link><br/><br/>
                     <Link to="existing-account/import-keys"><Translate content="wallet.create_wallet" /></Link><br/>
                     <hr/>
-                </div>:null}
+                </div> : null}
 
-                {!has_wallet ? (null) : <BalanceClaimActive/>}
+                {!has_wallet ? null : <BalanceClaimActive/>}
 
                 {has_wallet ? <span>
-                    <Link to="dashboard"><div className="button outline">
-                        <Translate component="span" content="header.dashboard" /></div></Link>
-                    <Link to="wallet"><div className="button outline">
-                        <Translate content="settings.wallets" /></div></Link>
+                    <Link to="dashboard">
+                        <div className="button outline">
+                            <Translate component="span" content="header.dashboard" />
+                        </div>
+                    </Link>
+                    <Link to="wallet">
+                        <div className="button outline">
+                            <Translate content="settings.wallets" />
+                        </div>
+                    </Link>
                 </span>:null}
             </span>
         );
