@@ -3,3 +3,5 @@ files:
     translation: /web/app/assets/locales/locale-%two_letters_code%.json
   - source: /help/en/*.md
     translation: /help/%two_letters_code%/%original_file_name%
+  - source: /help/en/accounts/*.md
+    translation: /help/%two_letters_code%/accounts/%original_file_name%
