@@ -1,4 +1,4 @@
-var Immutable = require("immutable");
+import Immutable from "immutable";
 import alt from "alt-instance";
 import BlockchainActions from "actions/BlockchainActions";
 import {ChainStore} from "bitsharesjs/es";

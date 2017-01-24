@@ -1,6 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
-let ReactHighstock = require("react-highcharts/dist/ReactHighstock");
+import ReactHighstock from "react-highcharts/dist/ReactHighstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {cloneDeep} from "lodash";

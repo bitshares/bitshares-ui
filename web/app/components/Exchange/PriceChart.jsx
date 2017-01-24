@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import Highcharts from "highcharts/highstock";
-const ReactHighstock = require("react-highcharts/dist/ReactHighstock");
+import ReactHighstock from "react-highcharts/dist/ReactHighstock";
 import utils from "common/utils";
 import {cloneDeep, reduce} from "lodash";
 import Translate from "react-translate-component";

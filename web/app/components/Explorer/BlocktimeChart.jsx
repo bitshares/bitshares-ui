@@ -1,5 +1,4 @@
 import React from "react";
-// var Highcharts = require("highcharts/highstock");
 import ReactHighstock from "react-highcharts/dist/ReactHighstock";
 import {takeRight} from "lodash";
 import counterpart from "counterpart";

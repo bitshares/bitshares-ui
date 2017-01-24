@@ -1,10 +1,10 @@
 import BaseStore from "./BaseStore";
-var Immutable = require("immutable");
+import Immutable from "immutable";
 import alt from "alt-instance";
 import VoteActions from "actions/VoteActions";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-var Utils = require("common/utils");
+import {get_object_id} from "common/utils";
 
 const COMMITTEE_MEMBER = 0;
 const WITNESS = 1;
@@ -48,7 +48,7 @@ class VoteStore extends BaseStore {
         for (let v of list) {
             let account_id = account_name_to_id[v.name];
             if (account_id) {
-                res.push(`${vt}:${Utils.get_object_id(account_id)}`);
+                res.push(`${vt}:${get_object_id(account_id)}`);
             }
         }
         return res;

@@ -1,7 +1,7 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
-var Immutable = require("immutable");
+import Immutable from "immutable";
 import {merge} from "lodash";
 import ls from "common/localStorage";
 

@@ -8,7 +8,6 @@ import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
 
 let application_api = new ApplicationApi();
-//let fetch = require('node-fetch')
 
 class WalletActions {
 

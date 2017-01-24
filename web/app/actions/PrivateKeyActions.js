@@ -1,4 +1,4 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 
 class PrivateKeyActions {
 

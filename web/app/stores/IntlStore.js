@@ -1,4 +1,4 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 import IntlActions from "actions/IntlActions";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
