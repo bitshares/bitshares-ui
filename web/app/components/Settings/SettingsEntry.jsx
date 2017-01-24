@@ -15,7 +15,7 @@ export default class SettingsEntry extends React.Component {
             window.location.hash = "";
             window.remote.getCurrentWindow().reload();
         }
-        else window.location.href = __HOST_PATH__ ? __HOST_PATH__ : "/";
+        else window.location.href = __BASE_URL__ + "/";
     }
 
     render() {

@@ -24,7 +24,7 @@ export default class BrainkeyInput extends Component {
 
     componentWillMount() {
         if (!__ELECTRON__) {
-            fetch("dictionary.json").then( (reply) => {
+            fetch(`${__BASE_URL__}/dictionary.json`).then( (reply) => {
                 return reply.json().then(result => {
                     dictionary_set = new Set(result.en.split(","));
                     this.setState({

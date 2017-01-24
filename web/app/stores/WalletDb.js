@@ -247,7 +247,7 @@ class WalletDb extends BaseStore {
         if (__ELECTRON__) {
             return walletCreateFct(dictJson);
         } else {
-            let dictionaryPromise = brainkey_plaintext ? null : fetch("dictionary.json");
+            let dictionaryPromise = brainkey_plaintext ? null : fetch(`${__BASE_URL__}/dictionary.json`);
             return Promise.all([
                 dictionaryPromise
             ]).then(res => {

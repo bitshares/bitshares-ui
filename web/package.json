@@ -27,7 +27,7 @@
     "start": "NODE_ENV=development node server.js",
     "build": "NODE_ENV=production webpack --env.prod --progress --display-error-details --colors",
     "build-hash": "NODE_ENV=production webpack --env.prod --env.hash --progress --display-error-details --colors",
-    "build-github": "NODE_ENV=production webpack --env.prod --env.hash --env.hostPath='/wallet/' --progress --display-error-details --colors",
+    "build-github": "NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl='/wallet' --progress --display-error-details --colors",
     "electron": "NODE_ENV=production webpack --env.prod --env.electron --env.hash --progress --display-error-details --colors ",
     "electron-nougly": "NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
     "postelectron": " echo 'copying to electron/build..'; cp -r electron/* ../electron/build/; echo 'done.'",

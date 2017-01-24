@@ -57,7 +57,7 @@ module.exports = function(env) {
             APP_VERSION: JSON.stringify(git.tag()),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
-            __HOST_PATH__: env.hostPath ? JSON.stringify(env.hostPath) : null
+            __BASE_URL__: JSON.stringify(env.baseUrl || "")
         })
     ];
 
