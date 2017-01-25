@@ -17,11 +17,11 @@
 
 # Примеры
 
-Давайте обсудим несколько примеров, дабы пролить свет на используемую терминологию и варианты применения. We assume that a new account is created with it's active permissions set as described below. Note that the same scheme also works for the owner permissions!
+Давайте обсудим несколько примеров, дабы пролить свет на используемую терминологию и варианты применения. Предположим, что новый аккаунт создан с такими активными разрешениями, какие указаны ниже. Обратите внимание, что такая же схема работает и для разрешений владельца!
 
-## (Flat) Multi-Signature
+## (Фиксированная) Мульти-подпись
 
-A flat multi-signature scheme is composed of `M` entities of which `N` entities must sign in order for the transaction to be valid. Now, in BitShares, we have *weights* and a *threshold* instead of `M` and `N`. Still we can achieve the very same thing with even more flexibility as we will see now.
+Фиксированная мульти-подпись состоит из `M` единиц, из которых `N` единиц должны подписать транзакцию, чтобы она стала действительной. Сейчас в BitShares у нас *весы* и *пороги* вместо `M` и `N`. Still we can achieve the very same thing with even more flexibility as we will see now.
 
 Let's assume, Alice, Bob, Charlie and Dennis have common funds. We want to be able to construct a valid transaction if only two of those agree. Hence a **2-of-4** (N-of-M) scheme can look as follows:
 
