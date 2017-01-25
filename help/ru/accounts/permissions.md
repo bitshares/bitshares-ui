@@ -55,7 +55,7 @@
 
 ## Мульти-иерархическая Гибкая Мульти-подпись
 
-Let's take a look at a simple multi-hierarchical corporate account setup. We are looking at a company that has a Chief of Financial Officer (CFO) and a some departments working for him, such as the Treasurer, Controller, Tax Manager, Accounting, etc. The company also has a CEO that wants to have spending privileges. Hence we construct an authority for the funds according to:
+Давайте взглянем на структуру простого мульти-иерархического корпоративного аккаунта. Мы рассматриваем компанию, в которой есть Финансовый Директор (CFO) и несколько отделов, работающих на него, такие как Казначей, Контролер, Налоговый Менеджер, Бухгалтер и т. п. В компании также есть Исполнительный директор (CEO), который хочет обладать привилегией тратить средства. Значит, мы создадим авторитет для средств в соответствии с:
 
 | Account       | Weight   |
 | ------------- | -------- |
