@@ -8,9 +8,9 @@
 
 ## Пожизненные члены
 
-Lifetime Members get a percentage cashback on every transaction fee they pay and qualify to earn referral income from users they register with or referer to the network. A Lifetime membership is associated with a certain one-time fee that is defined by the committee.
+Пожизненные члены получают процентный кэшбэк с каждой комиссии за транзакцию, которую они оплачивают, и имеют право получать реферальный доход от пользователей, которых они регистрируют, или рефералов сети. Пожизненное членство подразумевает единоразовую оплату членского взноса, размер которого определяется комитетом.
 
-## Anual Members
+## Годовые члены
 
 If a lifetime membership is too much you can still get the same cashback for the next year by becoming an annual subscriber for a smaller one-time fee which lasts for only one year.
 
