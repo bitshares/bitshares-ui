@@ -16,11 +16,11 @@
 
 Каждый раз, когда {account} платит комиссию за транзакцию, эта комиссия делится между разными аккаунтами. Сеть забирает долю в {networkFee}%, и Пожизненный Член, рефералом которого является {account}, получает долю в {lifetimeFee}%.
 
-*Регистратор* - это аккаунт, который заплатил комиссию за регистрацию {account} в сети. The registrar gets to decide how to divide the remaining {referrerTotalFee}% between themselves and their own *Affiliate Referrer* program.
+*Регистратор* - это аккаунт, который заплатил комиссию за регистрацию {account} в сети. Регистратор должен решить, как разделить оставшиеся {referrerTotalFee}% между ним и его собственной *Аффилированной Партнерской* программой.
 
-{account}'s registrar chose to share {referrerFee}% of the total fee with the *Affiliate Referrer* and keep {registrarFee}% of the total fee for themselves.
+Регистратор {account} а решил отдать {referrerFee}% от суммы комиссии *Аффилированному Рефереру* и оставить {registrarFee}% от суммы комиссии себе.
 
-#### Pending Fees
+#### Ожидаемые комиссии
 
 Fees paid by {account} are only divided among the network, referrers, and registrars once every maintenance interval ({maintenanceInterval} seconds). The next maintenance time is {nextMaintenanceTime}.
 
