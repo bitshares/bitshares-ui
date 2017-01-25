@@ -81,6 +81,6 @@
 * CEO расходовать средства
 * Финансовому Директору расходовать средства
 * Казначею совместно с Контролером расходовать средства
-* Controller or Treasurer together with the Tax Manager and Accounting to spend funds.
+* Контролеру или Казначею совместно с Налоговым менеджером и Бухгалтером расходовать средства.
 
 Hence, a try of arbitrary depth can be spanned in order to construct a flexible authority to reflect mostly any business use-case.
