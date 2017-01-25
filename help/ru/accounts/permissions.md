@@ -57,30 +57,30 @@
 
 Давайте взглянем на структуру простого мульти-иерархического корпоративного аккаунта. Мы рассматриваем компанию, в которой есть Финансовый Директор (CFO) и несколько отделов, работающих на него, такие как Казначей, Контролер, Налоговый Менеджер, Бухгалтер и т. п. В компании также есть Исполнительный директор (CEO), который хочет обладать привилегией тратить средства. Значит, мы создадим авторитет для средств в соответствии с:
 
-| Account       | Weight   |
+| Аккаунт       | Вес      |
 | ------------- | -------- |
-| CEO.COMPANY   | 51%      |
-| CFO.COMPANY   | 51%      |
+| CEO.КОМПАНИИ  | 51%      |
+| CFO.КОМПАНИИ  | 51%      |
 | \---\---\---- | \---\--- |
-| Threshold:    | 51%      |
+| Порог:        | 51%      |
 
-whereas CEO.COMPANY and CFO.COMPANY have their own authorities. For instance, the CFO.COMPANY account could look like:
+В то же время, CEO.КОМПАНИИ и CFO.КОМПАНИИ имеют свои собственные авторитеты. Например, аккаунт CFO.КОМПАНИИ может выглядеть так:
 
-| CFO.COMPANY               | Weight   |
-| ------------------------- | -------- |
-| Chief.COMPANY             | 51%      |
-| Treasurer.COMPANY         | 33%      |
-| Controller.COMPANY        | 33%      |
-| Tax Manager.COMPANY       | 10%      |
-| Accounting.COMPANY        | 10%      |
-| \---\---\---\---\---\---- | \---\--- |
-| Threshold:                | 51%      |
+| CFO.КОМПАНИИ                | Вес      |
+| --------------------------- | -------- |
+| Шеф.КОМПАНИИ                | 51%      |
+| Казначей.КОМПАНИИ           | 33%      |
+| Контролер.КОМПАНИИ          | 33%      |
+| Налоговый менеджер.КОМПАНИИ | 10%      |
+| Бухгалтер.КОМПАНИИ          | 10%      |
+| \---\---\---\---\---\----   | \---\--- |
+| Порог:                      | 51%      |
 
-This scheme allows:
+Эта схема позволяет:
 
-* the CEO to spend funds
-* the Chief of Finance Officer to spend funds
-* Treasurer together with Controller to spend funds
+* CEO расходовать средства
+* Финансовому Директору расходовать средства
+* Казначею совместно с Контролером расходовать средства
 * Controller or Treasurer together with the Tax Manager and Accounting to spend funds.
 
 Hence, a try of arbitrary depth can be spanned in order to construct a flexible authority to reflect mostly any business use-case.
