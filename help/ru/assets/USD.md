@@ -1,9 +1,9 @@
-[# summary]
+[# резюме]
 
-### Asset {symbol}
+### Актив {symbol}
 
 {description}
 
-Issued by: {issuer}
+Выпущен: {issuer}
 
-The United States dollar (sign: $; symbol: USD) is the official currency of the United States of America.
+Доллар США (знак: $; символ: USD) является официальной валютой Соединенных Штатов Америки.
