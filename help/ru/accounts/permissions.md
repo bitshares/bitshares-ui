@@ -5,19 +5,19 @@
 * **Активное разрешение**: контроль над его средствами и
 * **Разрешение владельца**: контроль над аккаунтом.
 
-Оба их можно назначить во вкладке `Разрешения` в Вашем аккаунте, воспользовавшись так называемыми *полномочиями* (см. ниже) в сочетании с так называемым *порогом*, который должен быть преодолен, чтобы транзакция стала действительной.
+Оба их можно назначить во вкладке `Разрешения` в Вашем аккаунте, воспользовавшись так называемыми *авторитетами* (см. ниже) в сочетании с так называемым *порогом*, который должен быть преодолен, чтобы транзакция стала действительной.
 
-## Полномочия
+## Авторитеты
 
-In BitShares an *authority* consists of one or many entities that authorize an action, such as transfers or trades.
+В BitShares *авторитет* состоит из одной или нескольких единиц, которые авторизуют действие, такое как перевод или торговля.
 
-An authority consists of one or several pairs of an account name with a *weight*.
+Авторитет состоит из одной или нескольких пар имен аккаунтов с *весом*.
 
-In order to obtain a valid transaction, the sum of the weights from signing the parties has to exceed the threshold as defined in the permissions.
+Чтобы получить действительную транзакцию, сумма весов подписывающих сторон должна превысить порог, который определен в разрешениях.
 
-# Examples
+# Примеры
 
-Let's discuss some examples to shed some light on the used terminology and the use-cases. We assume that a new account is created with it's active permissions set as described below. Note that the same scheme also works for the owner permissions!
+Давайте обсудим несколько примеров, дабы пролить свет на используемую терминологию и варианты применения. We assume that a new account is created with it's active permissions set as described below. Note that the same scheme also works for the owner permissions!
 
 ## (Flat) Multi-Signature
 
