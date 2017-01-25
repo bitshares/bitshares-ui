@@ -18,12 +18,12 @@
 
 Каждый раз, когда Ваш реферальный аккаунт оплачивает комиссию за транзакцию, эта комиссия делится между несколькими разными аккаунтами. Часть получает сеть, еще часть получает Пожизненный Член, рефералом которого является аккаунт.
 
-Регистратором является аккаунт, который оплатил комиссию за транзакцию при регистрации аккаунта в сети. The registrar gets to decide how to divide the remaining fee between themselves and their own affiliate.
+Регистратором является аккаунт, который оплатил комиссию за транзакцию при регистрации аккаунта в сети. Регистратор должен решить, как разделить оставшуюся комиссию между собой и своими аффилиатами.
 
-### Pending Fees
+### Ожидаемые комиссии
 
-Fees paid are only divided among the network, referrers, and registrars once every maintenance interval.
+Оплаченные комиссии разделяются между сетью, рефералами и регистраторами только один раз в определенный интервал обслуживания.
 
-### Vesting Fees
+### Вестинговые комиссии
 
 Most fees are made available immediately, but fees over the vesting threshold (such as those paid to upgrade your membership or register a premium account name) must vest for some days as defined by the committee.
