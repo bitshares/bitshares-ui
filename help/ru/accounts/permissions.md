@@ -5,9 +5,9 @@
 * **Активное разрешение**: контроль над его средствами и
 * **Разрешение владельца**: контроль над аккаунтом.
 
-Both can be defined in the `Permissions` tab of your account using so called *authorities* (see below) together with a so called *threshold* that has to be exceeded in order for a transaction to be valid.
+Оба их можно назначить во вкладке `Разрешения` в Вашем аккаунте, воспользовавшись так называемыми *полномочиями* (см. ниже) в сочетании с так называемым *порогом*, который должен быть преодолен, чтобы транзакция стала действительной.
 
-## Authorities
+## Полномочия
 
 In BitShares an *authority* consists of one or many entities that authorize an action, such as transfers or trades.
 
