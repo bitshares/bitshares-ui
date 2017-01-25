@@ -26,4 +26,4 @@
 
 ### Вестинговые комиссии
 
-Most fees are made available immediately, but fees over the vesting threshold (such as those paid to upgrade your membership or register a premium account name) must vest for some days as defined by the committee.
+Большинство комиссий становятся доступны немедленно, но комиссии за переход порога (как при оплате повышения уровня Вашего членства или регистрации премиум-имени аккаунта) должны обрабатываться несколько дней, как это определено комитетом.
