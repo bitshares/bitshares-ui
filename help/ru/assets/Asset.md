@@ -22,8 +22,8 @@
 
 #### Ожидаемые комиссии
 
-Fees paid by {account} are only divided among the network, referrers, and registrars once every maintenance interval ({maintenanceInterval} seconds). The next maintenance time is {nextMaintenanceTime}.
+Комиссии, оплаченные {account}, разделяются только между сетью, реферерами и регистраторами один раз в каждый период обслуживания ({maintenanceInterval} секунд). Следующее время обслуживания {nextMaintenanceTime}.
 
-#### Vesting Fees
+#### Вестинговые комиссии
 
 Most fees are made available immediately, but fees over {vestingThreshold} (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {vestingPeriod} days.
