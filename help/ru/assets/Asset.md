@@ -8,15 +8,15 @@
 
 [# годовой]
 
-If a lifetime membership is too much you can still get {feesCashback}% cashback for the next year by becoming an annual subscriber for just {price} per year. ![GitHub Logo](/images/logo.png)
+Если пожизненное членство - это слишком много, Вы все равно можете получать {feesCashback}% кэшбэка за следующий год, став годовым подписчиком всего за {price} в год. ![GitHub Logo](/images/logo.png)
 
-[# fee-division]
+[# разделение-комиссии]
 
-#### Fee Division
+#### Разделение Комиссии
 
-Every time {account} pays a transaction fee, that fee is divided among several different accounts. The network takes a {networkFee}% cut, and the Lifetime Member who referred {account} gets a {lifetimeFee}% cut.
+Каждый раз, когда {account} платит комиссию за транзакцию, эта комиссия делится между разными аккаунтами. Сеть забирает долю в {networkFee}%, и Пожизненный Член, рефералом которого является {account}, получает долю в {lifetimeFee}%.
 
-The *registrar* is the account that paid the transaction fee to register {account} with the network. The registrar gets to decide how to divide the remaining {referrerTotalFee}% between themselves and their own *Affiliate Referrer* program.
+*Регистратор* - это аккаунт, который заплатил комиссию за регистрацию {account} в сети. The registrar gets to decide how to divide the remaining {referrerTotalFee}% between themselves and their own *Affiliate Referrer* program.
 
 {account}'s registrar chose to share {referrerFee}% of the total fee with the *Affiliate Referrer* and keep {registrarFee}% of the total fee for themselves.
 
