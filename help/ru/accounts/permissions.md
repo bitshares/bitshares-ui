@@ -36,24 +36,24 @@
 
 Все четыре участника имеют 33%, но порог установлен на 51%. Таким образом, нужно согласие всего лишь двух из четырех участников, чтобы подтвердить транзакцию.
 
-Alternatively, to construct a 3-of-4 scheme, we can either decrease the weights to 17 or increase the threshold to 99%.
+Аналогично, чтобы составить схему 3-из-4, мы можем либо уменьшить вес до 17, либо повысить порог до 99%.
 
-## (Flat) Flexible Multi-Signature
+## (Фиксированная) Гибкая Мульти-подпись
 
-With the threshold and weights, we now have more flexibility over our funds, or more precisely, we have more *control*. For instance, we can have separate weights for different people. Let's assume Alice wants to secure here funds against theft by a multi-signature scheme but she does not want to hand over too much control to her friends. Hence, we create an authority similar to:
+Теперь, с порогом и весами, мы имеем большую гибкость в отношении наших средств, или точнее, мы обладаем большим *контролем*. Например, мы можем использовать отдельные весы для разных людей. Предположим, что Алиса хочет обезопасить свои средства от кражи, используя схему мульти-подписи, но она не хочет передавать слишком много контроля своим друзьям. Значит, мы создадим авторитет, подобный:
 
-| Account       | Weight   |
+| Аккаунт       | Вес      |
 | ------------- | -------- |
-| Alice         | 49%      |
-| Bob           | 25%      |
-| Charlie       | 25%      |
-| Dennis        | 10%      |
+| Алиса         | 49%      |
+| Боб           | 25%      |
+| Чарли         | 25%      |
+| Денис         | 10%      |
 | \---\---\---- | \---\--- |
-| Threshold:    | 51%      |
+| Порог:        | 51%      |
 
-Now the funds can either be accessed by Alice and a single friend or by all three friends together.
+Теперь доступ к средствам могут иметь либо Алиса и один из друзей, либо три друга вместе.
 
-## Multi-Hierarchical Flexible Multi-Signature
+## Мульти-иерархическая Гибкая Мульти-подпись
 
 Let's take a look at a simple multi-hierarchical corporate account setup. We are looking at a company that has a Chief of Financial Officer (CFO) and a some departments working for him, such as the Treasurer, Controller, Tax Manager, Accounting, etc. The company also has a CEO that wants to have spending privileges. Hence we construct an authority for the funds according to:
 
