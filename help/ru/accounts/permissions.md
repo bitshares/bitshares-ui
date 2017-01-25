@@ -21,18 +21,18 @@
 
 ## (Фиксированная) Мульти-подпись
 
-Фиксированная мульти-подпись состоит из `M` единиц, из которых `N` единиц должны подписать транзакцию, чтобы она стала действительной. Сейчас в BitShares у нас *весы* и *пороги* вместо `M` и `N`. Still we can achieve the very same thing with even more flexibility as we will see now.
+Фиксированная мульти-подпись состоит из `M` единиц, из которых `N` единиц должны подписать транзакцию, чтобы она стала действительной. Сейчас в BitShares у нас *весы* и *пороги* вместо `M` и `N`. Тем не менее мы можем достичь того же результата с еще большей гибкостью, как мы сейчас увидим.
 
-Let's assume, Alice, Bob, Charlie and Dennis have common funds. We want to be able to construct a valid transaction if only two of those agree. Hence a **2-of-4** (N-of-M) scheme can look as follows:
+Предположим, что Алиса, Боб, Чарли и Денис имеют общие средства. Мы хотим иметь возможность создать действительную транзакцию, если только двое из них согласятся. Значит, **2-из-4** (N-из-M) схема может выглядеть следующим образом:
 
-| Account       | Weight   |
+| Аккаунт       | Вес      |
 | ------------- | -------- |
-| Alice         | 33%      |
-| Bob           | 33%      |
-| Charlie       | 33%      |
-| Dennis        | 33%      |
+| Алиса         | 33%      |
+| Боб           | 33%      |
+| Чарли         | 33%      |
+| Денис         | 33%      |
 | \---\---\---- | \---\--- |
-| Threshold:    | 51%      |
+| Порог:        | 51%      |
 
 All four participants have a weight of 33% but the threshold is set to 51%. Hence only two out of the four need to agree to validate the transaction.
 
