@@ -1,9 +1,9 @@
-# Permissions
+# Разрешения
 
-In BitShares, each account is separated into
+В BitShares каждый аккаунт разделен на
 
-* **Active Permission**: control over its funds and
-* **Owner Permission**: control over the account.
+* **Активное разрешение**: контроль над его средствами и
+* **Разрешение владельца**: контроль над аккаунтом.
 
 Both can be defined in the `Permissions` tab of your account using so called *authorities* (see below) together with a so called *threshold* that has to be exceeded in order for a transaction to be valid.
 
