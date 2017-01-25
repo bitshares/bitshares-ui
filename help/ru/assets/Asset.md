@@ -8,7 +8,7 @@
 
 [# годовой]
 
-Если пожизненное членство - это слишком много, Вы все равно можете получать {feesCashback}% кэшбэка за следующий год, став годовым подписчиком всего за {price} в год. ![GitHub Logo](/images/logo.png)
+Если пожизненное членство - это слишком много, Вы все равно можете получать {feesCashback}% кэшбэка за следующий год, став годовым подписчиком всего за {price} в год. ![GitHub лого](/images/logo.png)
 
 [# разделение-комиссии]
 
@@ -26,4 +26,4 @@
 
 #### Вестинговые комиссии
 
-Most fees are made available immediately, but fees over {vestingThreshold} (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {vestingPeriod} days.
+Большинство комиссий доступны немедленно, но комиссии за {vestingThreshold} (такие как комиссия за повышение уровня Вашего членства или регистрацию премиум-имени аккаунта) должны ожидать обработки {vestingPeriod} дней.
