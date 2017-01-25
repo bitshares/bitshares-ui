@@ -16,9 +16,9 @@
 
 ### Разделение комиссии
 
-Every time an account you referred pays a transaction fee, that fee is divided among several different accounts. The network takes a cut, and the Lifetime Member who referred the account gets a cut.
+Каждый раз, когда Ваш реферальный аккаунт оплачивает комиссию за транзакцию, эта комиссия делится между несколькими разными аккаунтами. Часть получает сеть, еще часть получает Пожизненный Член, рефералом которого является аккаунт.
 
-The registrar is the account that paid the transaction fee to register the account with the network. The registrar gets to decide how to divide the remaining fee between themselves and their own affiliate.
+Регистратором является аккаунт, который оплатил комиссию за транзакцию при регистрации аккаунта в сети. The registrar gets to decide how to divide the remaining fee between themselves and their own affiliate.
 
 ### Pending Fees
 
