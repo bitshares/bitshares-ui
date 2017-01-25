@@ -34,7 +34,7 @@
 | \---\---\---- | \---\--- |
 | Порог:        | 51%      |
 
-All four participants have a weight of 33% but the threshold is set to 51%. Hence only two out of the four need to agree to validate the transaction.
+Все четыре участника имеют 33%, но порог установлен на 51%. Таким образом, нужно согласие всего лишь двух из четырех участников, чтобы подтвердить транзакцию.
 
 Alternatively, to construct a 3-of-4 scheme, we can either decrease the weights to 17 or increase the threshold to 99%.
 
