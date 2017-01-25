@@ -12,9 +12,9 @@
 
 ## Годовые члены
 
-If a lifetime membership is too much you can still get the same cashback for the next year by becoming an annual subscriber for a smaller one-time fee which lasts for only one year.
+Если пожизненное членство это слишком много для Вас, Вы все так же можете получить кэшбэк за следующий год, приобретя годовое членство за меньший единоразовый взнос, которое продлится только один год.
 
-### Fee Division
+### Разделение комиссии
 
 Every time an account you referred pays a transaction fee, that fee is divided among several different accounts. The network takes a cut, and the Lifetime Member who referred the account gets a cut.
 
