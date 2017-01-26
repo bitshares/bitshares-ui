@@ -57,7 +57,8 @@ module.exports = function(env) {
             APP_VERSION: JSON.stringify(git.tag()),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
-            __BASE_URL__: JSON.stringify(env.baseUrl || "")
+            __BASE_URL__: JSON.stringify(env.baseUrl || ""),
+            __UI_API__: JSON.stringify(env.apiUrl || "http://127.0.0.1:3000/api")
         })
     ];
 

@@ -4,18 +4,58 @@ import DashboardList from "./DashboardList";
 import { RecentTransactions } from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 import MarketCard from "./MarketCard";
+import utils from "common/utils";
+import { Apis } from "bitsharesjs-ws";
 
 class Dashboard extends React.Component {
-
 
     constructor() {
         super();
         this.state = {
             width: null,
-            showIgnored: false
+            showIgnored: false,
+            featuredMarkets: [
+                ["BTS", "CNY"],
+                ["OPEN.BTC", "BTS", false],
+                ["OPEN.BTC", "OPEN.STEEM"],
+                ["BTS", "ICOO"],
+                ["BTS", "BLOCKPAY"],
+                ["BTS", "OBITS"],
+                ["BTS", "USD"],
+                ["BTS", "GOLD"],
+                ["BTS", "SILVER"],
+                ["BTS", "BKT"],
+                ["OPEN.BTC", "OPEN.DGD", false],
+                ["BTS", "BTWTY"],
+                ["BTS", "BTSR"],
+                ["OPEN.BTC", "OPEN.INCNT", false],
+                [ "BTS", "OPEN.ETH"],
+                ["CNY", "USD"]
+                // ["BTS", "SILVER"]
+                // ["BTS", "EUR"]
+            ],
+            newAssets: [
+
+            ]
         };
 
         this._setDimensions = this._setDimensions.bind(this);
+    }
+
+    componentWillMount() {
+        fetch(__UI_API__ + `/markets/${Apis.instance().chain_id.substr(0, 10)}`).then( (reply) => {
+            if (reply.ok) {
+                return reply.json().then(({markets, newAssets}) => {
+                    console.log("markets:", markets, newAssets);
+                    this.setState({
+                        featuredMarkets: markets.length ? markets: this.state.featuredMarkets,
+                        newAssets: newAssets.length ? newAssets : this.state.newAssets
+                    });
+                });
+            }
+        }).catch(err => {
+            console.error("Fetch markets error:", err);
+        });
     }
 
     componentDidMount() {
@@ -26,6 +66,8 @@ class Dashboard extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
+            !utils.are_equal_shallow(nextState.featuredMarkets, this.state.featuredMarkets) ||
+            !utils.are_equal_shallow(nextState.newAssets, this.state.newAssets) ||
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextState.width !== this.state.width ||
@@ -53,38 +95,12 @@ class Dashboard extends React.Component {
 
     render() {
         let {linkedAccounts, myIgnoredAccounts} = this.props;
-        let {width, showIgnored} = this.state;
+        let {width, showIgnored, featuredMarkets, newAssets} = this.state;
 
         let names = linkedAccounts.toArray().sort();
         let ignored = myIgnoredAccounts.toArray().sort();
 
         let accountCount = linkedAccounts.size + myIgnoredAccounts.size;
-
-        let featuredMarkets = [
-            ["BTS", "CNY"],
-            ["OPEN.BTC", "BTS", false],
-            ["OPEN.BTC", "OPEN.STEEM"],
-            ["BTS", "ICOO"],
-            ["BTS", "BLOCKPAY"],
-            ["BTS", "OBITS"],
-            ["BTS", "USD"],
-            ["BTS", "GOLD"],
-            ["BTS", "SILVER"],
-            ["BTS", "BKT"],
-            ["OPEN.BTC", "OPEN.DGD", false],
-            ["BTS", "BTWTY"],
-            ["BTS", "BTSR"],
-            ["OPEN.BTC", "OPEN.INCNT", false],
-            [ "BTS", "OPEN.ETH"],
-            ["CNY", "USD"]
-            // ["BTS", "SILVER"]
-            // ["BTS", "EUR"]
-        ];
-
-        let newAssets = [
-            "OPEN.DAO",
-            "OPEN.LISK"
-        ];
 
         let markets = featuredMarkets.map((pair, index) => {
 
