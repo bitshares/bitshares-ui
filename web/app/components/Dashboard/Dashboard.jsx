@@ -54,7 +54,7 @@ class Dashboard extends React.Component {
                 });
             }
         }).catch(err => {
-            console.error("Fetch markets error:", err);
+            console.log("Markets API not available:", err);
         });
     }
 

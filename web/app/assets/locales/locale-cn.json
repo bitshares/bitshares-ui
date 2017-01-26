@@ -55,6 +55,8 @@
       "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "交易",
     "welcome": "欢迎使用 BitShares (石墨烯)系统",
     "assets": "资产",

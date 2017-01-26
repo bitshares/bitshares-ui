@@ -57,6 +57,8 @@
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "Trade",
     "welcome": "Welcome to BitShares",
     "asset": "Asset",

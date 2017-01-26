@@ -52,6 +52,8 @@
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "Trade",
     "welcome": "Willkommen",
     "asset": "Asset",
@@ -181,7 +183,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
-      "proxy_current": "Your current proxy is",        
+      "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Worker",
       "proxy": "Proxy Konto",

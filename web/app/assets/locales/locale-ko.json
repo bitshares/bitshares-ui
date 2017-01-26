@@ -49,6 +49,8 @@
     "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
   },
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "Trade",
     "welcome": "비트쉐어 2.0 이용을 환영합니다",
     "asset": "자산",
@@ -121,7 +123,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
-      "proxy_current": "Your current proxy is",        
+      "proxy_current": "Your current proxy is",
       "proxy": "대리투표 계정",
       "no_proxy": "대리투표 사용안함",
       "name": "이름",
