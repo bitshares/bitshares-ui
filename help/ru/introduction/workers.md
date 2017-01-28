@@ -12,9 +12,9 @@
 
 ## Механизм бюджета работника
 
-Workers receive pay from a fixed daily budget on a first-come, first-serve basis until there are no more funds left. To see how this works, say we the following:
+Работники получают оплату из фиксированного ежедневного бюджета по принципу кто раньше пришел - того раньше обслужили, до тех пор, пока средств больше не останется. Чтобы понять, как это работает, давайте представим следующее:
 
-* A daily total budget of 400k BTS for all workers
-* 5 worker proposals with a positive votes total, with daily pay requests of 100k BTS each
+* Ежедневный общий бюджет составляет 400 000 BTS на всех работников
+* Есть 5 предложений о работе с положительным количеством голосов и запросом на ежедневную оплату в размере 100 000 BTS каждое
 
-Now the four workers with the most votes will all receive 100k BTS each per day, but once they've been paid the worker budget is empty. Therefore the fifth worker will receive nothing.
+Тогда четыре работника с наибольшим количеством голосов получат по 100 000 BTS в день каждый, но как только они получают выплаты, бюджет остается пустым. Следовательно, пятый работник ничего не получит.
