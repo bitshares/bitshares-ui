@@ -1,1 +1,1 @@
-[Committee members](introduction/committee) may propose changes to the dynamic parameters of the blockchain, such as fees, block time and many other things. It is a position of great responsibility that requires a good understanding of how BitShares works.
+[Члены Комитета](introduction/committee) могут предлагать изменения динамических параметров блокчейна, таких как комиссия, время блока и многое другое. Эта позиция несет в себе большую ответственность, которая требует четкого понимания механизма работы BitShares.
