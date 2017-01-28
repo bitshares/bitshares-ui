@@ -4,6 +4,6 @@
 
 *SmartCoin* (синоним MPA) - это криптовалюта, которая *всегда* имеет 100% или более своей стоимости обеспеченной основной валютой BitShares (BTS), на которую она может быть обменяна в любой момент, в качестве *залога* в CFD.
 
-What makes MPAs unique is that they are free from counterparty risk even though they resemble a CFD backed by collateral. This is achievable by letting the network itself (implemented as a software protocol) be responsible for securing the collateral and performing settlements as will be described in more detail below.
+Такими уникальными MPA делает их независимость от риска партнеров, даже несмотря на то, что они имеют сходство с CFD, подкрепленными залогом. Этого можно достичь с помощью предоставления сети возможности (реализованной как протокол программного обеспечения) самой быть ответственной за обеспечение залога и проведение сделок, как более подробно описано ниже.
 
-This is a subset of the available market pegged assets: * BitUSD * BitCNY * BitEUR * BitGOLD * ...
+Это подгруппа доступных привязанных к рынку активов: * BitUSD * BitCNY * BitEUR * BitGOLD * ...
