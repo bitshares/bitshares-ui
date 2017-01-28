@@ -1,3 +1,3 @@
-Active permissions define the accounts that have permission to spend funds for this account.
+Активные разрешения определяют аккаунты, которые имеют разрешение тратить средства этого аккаунта.
 
-They can be used to easily setup a multi-signature scheme, see [permissions](accounts/permissions) for more details.
+Они могут быть использованы для упрощенной настройки схемы с мульти-подписью, смотрите раздел [разрешения](accounts/permissions) чтобы узнать подробности.
