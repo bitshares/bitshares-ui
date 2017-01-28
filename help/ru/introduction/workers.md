@@ -8,9 +8,9 @@
 
 Оно также должно содержать ссылку на страницу, где предложение о работе описывается детально.
 
-Votes for worker proposals can be positive or negative, which means you can downvote a proposal that you do not like.
+Голоса за предложение о работе могут быть как положительными, так и отрицательными, что означает, что Вы можете проголосовать против предложения о работе, которое Вам не нравится.
 
-## Worker budget mechanics
+## Механизм бюджета работника
 
 Workers receive pay from a fixed daily budget on a first-come, first-serve basis until there are no more funds left. To see how this works, say we the following:
 
