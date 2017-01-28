@@ -1,6 +1,6 @@
 #### Содержание
 
-- [Вступление](index.md)
+- [Введение](index.md)
 - [Глоссарий](glossary.md)
 - [BitShares](introduction/bitshares.md)
 - [Кошелек](introduction/wallets.md)
