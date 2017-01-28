@@ -1,7 +1,7 @@
-# Committee
+# Комитет
 
-The committee is a set of entities that are approved by the shareholders and define some business parameters. Among these parameters are
+Комитет представляет собой утвержденный держателями долей набор единиц, который определяет некоторые параметры ведения дел. Среди этих параметров
 
-* transaction and trading fees
-* blockchain parameters, such as block size, block interval, etc., and
+* комиссии за транзакции и торговлю
+* параметры блокчейна, такие как размер блока, интервал блока и т.п.
 * referral and vesting parameters such as cash back percentage and vesting periods.
