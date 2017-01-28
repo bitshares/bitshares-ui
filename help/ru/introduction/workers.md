@@ -1,12 +1,12 @@
-# Workers
+# Работники
 
-Workers are proposals to perform a service in return for a salary from the blockchain. A worker proposal contains at a minimum the following information:
+Работники состоят из предложений по выполнению услуг в обмен на зарплату от блокчейна. Предложение о работе как минимум содержит следующую информацию:
 
-* A start and end date
-* A daily pay
-* A maximum total pay
+* Даты начала и окончания
+* Размер ежедневной выплаты
+* Максимальную итоговую выплату
 
-It should also contain a link to a webpage where the worker proposal is explained in more detail.
+Оно также должно содержать ссылку на страницу, где предложение о работе описывается детально.
 
 Votes for worker proposals can be positive or negative, which means you can downvote a proposal that you do not like.
 
