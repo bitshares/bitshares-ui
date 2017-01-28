@@ -2,7 +2,7 @@
 
 ### Получите {feesCashback}% кэшбэка с комиссий
 
-Lifetime Members get {feesCashback}% cashback on every transaction fee they pay and qualify to earn referral income from users they register with or refer to the network. A Lifetime Membership is just {price}.
+Пожизненные члены получают {feesCashback}% кэшбэка с каждой комиссии за транзакцию, которую они оплачивают, и имеют право получать реферальный доход от пользователей, которых они регистрируют, или рефереров сети. Пожизненное членство стоит всего {price}.
 
 [# fee-division]
 
