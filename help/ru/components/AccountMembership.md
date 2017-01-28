@@ -4,20 +4,20 @@
 
 Пожизненные члены получают {feesCashback}% кэшбэка с каждой комиссии за транзакцию, которую они оплачивают, и имеют право получать реферальный доход от пользователей, которых они регистрируют, или рефереров сети. Пожизненное членство стоит всего {price}.
 
-[# fee-division]
+[# разделение-комиссии]
 
-#### Fee Division
+#### Разделение Комиссии
 
-Every time {account} pays a transaction fee, that fee is divided among several different accounts. The network takes a {networkFee}% cut, and the Lifetime Member who referred {account} gets a {lifetimeFee}% cut.
+Каждый раз, когда {account} платит комиссию за транзакцию, эта комиссия делится между разными аккаунтами. Сеть забирает долю в {networkFee}%, и Пожизненный Член, рефералом которого является {account}, получает долю в {lifetimeFee}%.
 
-The *registrar* is the account that paid the transaction fee to register {account} with the network. The registrar gets to decide how to divide the remaining {referrerTotalFee}% between themselves and their own *Affiliate Referrer* program.
+*Регистратор* - это аккаунт, который заплатил комиссию за регистрацию {account} в сети. Регистратор должен решить, как разделить оставшиеся {referrerTotalFee}% между ним и его собственной *Аффилированной Партнерской* программой.
 
-{account}'s registrar chose to share {referrerFee}% of the total fee with the *Affiliate Referrer* and keep {registrarFee}% of the total fee for themselves.
+Регистратор {account} а решил отдать {referrerFee}% от суммы комиссии *Аффилированному Рефереру* и оставить {registrarFee}% от суммы комиссии себе.
 
-#### Pending Fees
+#### Ожидаемые комиссии
 
-Fees paid by {account} are only divided among the network, referrers, and registrars once every maintenance interval ({maintenanceInterval} seconds). The next maintenance time is {nextMaintenanceTime}.
+Комиссии, оплаченные {account}, разделяются только между сетью, реферерами и регистраторами один раз в каждый период обслуживания ({maintenanceInterval} секунд). Следующее время обслуживания {nextMaintenanceTime}.
 
-#### Vesting Fees
+#### Вестинговые комиссии
 
-Most fees are made available immediately, but fees over {vestingThreshold} (such as those paid to upgrade your membership or register a premium account name) must vest for a total of {vestingPeriod} days.
+Большинство комиссий доступны немедленно, но комиссии за {vestingThreshold} (такие как комиссия за повышение уровня Вашего членства или регистрацию премиум-имени аккаунта) должны ожидать обработки {vestingPeriod} дней.
