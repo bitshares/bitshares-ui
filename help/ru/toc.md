@@ -17,4 +17,4 @@
 - [Приватизированные BitAssets](assets/privbitassets.md)
 - [Децентрализованная биржа](dex/introduction.md)
 - [Торговля](dex/trading.md)
-- [Short Selling BitAssets](dex/shorting.md)
+- [Короткая продажа BitAssets](dex/shorting.md)
