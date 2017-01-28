@@ -1,3 +1,3 @@
-This is a binary prediction market.
+Это рынок бинарных прогнозов.
 
-The collateral ratio of this market is 1:1.
+Соотношение обеспечения для этого рынка составляет 1:1.
