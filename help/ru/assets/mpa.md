@@ -1,6 +1,6 @@
 # Привязанные к рынку активы
 
-Криптовалюта со свойствами и преимуществами Биткойна, которая способна поддерживать паритет цен с глобально принятой валютой (например, долларом США), может широко использоваться для удобной и устойчивой к цензуре торговли. This can be achieved by BitShares' market pegged assets (MPA), a new type of freely traded digital asset whose value is meant to track the value of a conventional underlying asset by means of contracts for difference (CFD).
+Криптовалюта со свойствами и преимуществами Биткойна, которая способна поддерживать паритет цен с глобально принятой валютой (например, долларом США), может широко использоваться для удобной и устойчивой к цензуре торговли. Это может быть достигнуто с помощью привязанных к рынку активов (market pegged assets - MPA) от BitShares, нового типа свободно торгуемых цифровых активов, чья стоимость привязана к стоимости обычного базового актива посредством контрактов на разницу цен (CFD).
 
 A *SmartCoin* (synonym for MPA) is a crypto-currency that *always* has 100% or more of its value backed by the BitShares core currency (BTS), to which they can be converted at any time, as *collateral* in a CFD.
 
