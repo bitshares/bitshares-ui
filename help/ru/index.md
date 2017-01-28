@@ -2,36 +2,36 @@
 
 BitShares 2.0 - это платформа Финансовых Смарт-Контрактов, постороенная по технологии [Graphene](https://github.com/cryptonomex/graphene), созданной [Cryptonomex](http://cryptonomex.com). Graphene можно рассматривать как набор инструментов или технологию для создания блокчейнов в реальном времени.
 
-This help section gives a brief overview and describes the most basic concepts of this application.
+Этот раздел помощи дает краткий обзор и описывает основные понятия этого приложения.
 
-## Introduction
+## Введение
 
 - [BitShares](introduction/bitshares.md)
-- [Wallet](introduction/wallets.md)
-- [Backups](introduction/backups.md)
-- [Blockchain](introduction/blockchain.md)
-- [Witnesses](introduction/witness.md)
-- [Workers](introduction/workers.md)
-- [Committe Members](introduction/committee.md)
+- [Кошелек](introduction/wallets.md)
+- [Резервные копии](introduction/backups.md)
+- [Блокчейн](introduction/blockchain.md)
+- [Делегаты](introduction/witness.md)
+- [Работники](introduction/workers.md)
+- [Члены Комитета](introduction/committee.md)
 
-## Accounts
+## Аккаунты
 
-- [Introduction](accounts/general.md)
-- [Permissions](accounts/permissions.md)
-- [Memberships](accounts/membership.md)
+- [Введение](accounts/general.md)
+- [Разрешения](accounts/permissions.md)
+- [Членства](accounts/membership.md)
 
-## Assets
+## Активы
 
-- [Market Pegged Assets](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
-- [User Issued Assets](assets/uia.md)
-- [Privatized BitAssets](assets/privbitassets.md)
+- [Привязанные к рынку активы](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
+- [Эмитированные пользователем активы](assets/uia.md)
+- [Приватизированные BitAssets](assets/privbitassets.md)
 
-## Decentralized Exchange
+## Децентрализованная биржа
 
-- [Introduction](dex/introduction.md)
-- [Trading](dex/trading.md)
-- [Short Selling BitAssets](dex/shorting.md)
+- [Введение](dex/introduction.md)
+- [Торговля](dex/trading.md)
+- [Короткая продажа BitAssets](dex/shorting.md)
 
 * * *
 
-[Glossary](glossary.md)
+[Глоссарий](glossary.md)
