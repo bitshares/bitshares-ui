@@ -1,3 +1,3 @@
-### Glossary
+### Глоссарий
 
-[Back to index](index.md)
+[Назад к оглавлению](index.md)
