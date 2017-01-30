@@ -6,7 +6,8 @@
     "ko": "한국어",
     "de": "Deutsch",
     "es": "Español",
-    "tr": "Turkish"
+    "tr": "Turkish",
+    "ru": "Русский"
   },
   "sync_fail": {
     "title": "Failed to sync with the API server",
@@ -43,7 +44,7 @@
     "show_asset": "Click here to show this asset in the main list.",
     "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
     "filter_ops": "Use this list to filter your history by operation type.",
-    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "show_block": "Click here to show block #%(block)s where this transaction occurred.",
     "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
     "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
     "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
@@ -216,7 +217,7 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account / Key / Address",
+      "acct_or_key": "Account / Key / Address",
       "key_viewer": "Private key viewer",
       "public": "Public key",
       "private": "Private key (WIF - Wallet Import Format)",
@@ -1123,6 +1124,5 @@
     "rate": "Please wait at least 2s before posting a new message",
     "disabled": "Chat disabled",
     "enable": "Enable chat now"
-
   }
 }
