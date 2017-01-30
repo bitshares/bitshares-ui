@@ -20,10 +20,10 @@ import colors from "assets/colors";
 import utils from "common/utils";
 
 const ema20 = ema()
-			.id(2)
-			.windowSize(20)
-			.merge((d, c) => {d.ema20 = c;})
-			.accessor(d => d.ema20);
+	.id(2)
+	.windowSize(20)
+	.merge((d, c) => {d.ema20 = c;})
+	.accessor(d => d.ema20);
 
 const ema50 = ema()
 	.id(1)
@@ -72,9 +72,8 @@ class CandleStickChartWithZoomPan extends React.Component {
 		const timeFormatter = timeFormat("%Y-%m-%d %H:%M");
 		const volumeFormat = format(`.${volumePrecision}r`);
 
-		const positiveColor = colors[theme].positiveColor;
-		const negativeColor = colors[theme].negativeColor;
-		const axisColor = colors[theme].axisLineColor;
+		const themeColors = colors[theme];
+		const { positiveColor, negativeColor, axisLineColor, indicatorLineColor} = themeColors;
 
         var margin = {left: 75, right: 75, top:20, bottom: 30};
 
@@ -101,8 +100,8 @@ class CandleStickChartWithZoomPan extends React.Component {
                     height={height * 0.2}
 					origin={(w, h) => [0, h - height * 0.2]}
 				>
-	                <YAxis tickStroke={axisColor} stroke={axisColor} axisAt="left" orient="left" ticks={4} tickFormat={volumeFormat}/>
-					<XAxis tickStroke={axisColor} stroke={axisColor} axisAt="bottom" orient="bottom" opacity={0.5}/>
+	                <YAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4} tickFormat={volumeFormat}/>
+					<XAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="bottom" orient="bottom" opacity={0.5}/>
 
 					<MouseCoordinateX id={1}
 						rectWidth={125}
@@ -122,16 +121,13 @@ class CandleStickChartWithZoomPan extends React.Component {
 	                <BarSeries yAccessor={d => d.volume} fill={d => d.close > d.open ? positiveColor : negativeColor} />
 	                <AreaSeries yAccessor={smaVolume70.accessor()} stroke={smaVolume70.stroke()} fill={smaVolume70.fill()}/>
 
-	                <CurrentCoordinate yAccessor={smaVolume70.accessor()} fill={smaVolume70.stroke()} />
-	                <CurrentCoordinate yAccessor={d => d.volume} fill="#9B0A47" />
-
-	                <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="first" orient="left" edgeAt="left"
+	                <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="first" orient="left" edgeAt="left"
 	                    yAccessor={d => d.volume} displayFormat={volumeFormat} fill="#0F0F0F"/>
-	                <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="last" orient="right" edgeAt="right"
+	                <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="last" orient="right" edgeAt="right"
 	                    yAccessor={d => d.volume} displayFormat={volumeFormat} fill="#0F0F0F"/>
-	                <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="first" orient="left" edgeAt="left"
+	                <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="first" orient="left" edgeAt="left"
 	                    yAccessor={smaVolume70.accessor()} displayFormat={volumeFormat} fill={smaVolume70.fill()}/>
-	                <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="last" orient="right" edgeAt="right"
+	                <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="last" orient="right" edgeAt="right"
 	                    yAccessor={smaVolume70.accessor()} displayFormat={volumeFormat} fill={smaVolume70.fill()}/>
 	            </Chart>
 
@@ -141,7 +137,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                     yExtents={[d => [d.high, d.low], ema20.accessor(), ema50.accessor()]}
                     padding={{ top: 10, bottom: 20 }}
                 >
-                    <YAxis axisAt="right" orient="right" {...yGrid} ticks={5} tickStroke={axisColor} stroke={axisColor}/>
+                    <YAxis axisAt="right" orient="right" {...yGrid} ticks={5} tickStroke={axisLineColor} stroke={axisLineColor}/>
 
 					<MouseCoordinateY id={1}
 						rectWidth={65}
@@ -166,10 +162,10 @@ class CandleStickChartWithZoomPan extends React.Component {
 					<CurrentCoordinate yAccessor={ema20.accessor()} fill={ema20.stroke()} />
 					<CurrentCoordinate yAccessor={ema50.accessor()} fill={ema50.stroke()} />
 
-                    <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="last" orient="right" edgeAt="right"
+                    <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="last" orient="right" edgeAt="right"
                         yAccessor={d => d.close} displayFormat={priceFormat} fill={d => d.close > d.open ? positiveColor : negativeColor}
 					/>
-                    <EdgeIndicator lineStroke={"#FFFFFF"} rectWidth={65} itemType="first" orient="left" edgeAt="left"
+                    <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="first" orient="left" edgeAt="left"
                         yAccessor={d => d.close} displayFormat={priceFormat} fill={d => d.close > d.open ? positiveColor : negativeColor}
 					/>
 
@@ -177,10 +173,10 @@ class CandleStickChartWithZoomPan extends React.Component {
 						xDisplayFormat={timeFormatter}
 						volumeFormat={volumeFormat}
 						ohlcFormat={priceFormat}
-						origin={[-40, 10]}
+						origin={[-40, -10]}
 					/>
 					<MovingAverageTooltip
-						origin={[-40, 20]}
+						origin={[-40, 0]}
 						calculators={[ema20, ema50]}
 					/>
 
@@ -194,7 +190,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 					/>*/}
                 </Chart>
 
-                <CrossHairCursor stroke="#FFFFFF"/>
+                <CrossHairCursor stroke={indicatorLineColor}/>
                 {/* <EventCapture mouseMove zoom pan> */}
 					{/*<TrendLine
 						forChart={1} id={1} ref="trend"

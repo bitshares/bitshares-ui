@@ -19,7 +19,8 @@ module.exports = {
         tooltipFillColor: "#fff",
         //axis
         axisLabelsColor: "#fff",
-        axisLineColor: "#AAAAAA"
+        axisLineColor: "#AAAAAA",
+        indicatorLineColor: "#FFFFFF"
 
     },
     darkTheme: {
@@ -42,7 +43,8 @@ module.exports = {
         tooltipFillColor: "#fff" ,
         //axis
         axisLabelsColor: "#fff",
-        axisLineColor: "#AAAAAA"
+        axisLineColor: "#AAAAAA",
+        indicatorLineColor: "#FFFFFF"
     },
     lightTheme: {
         bidColor: "#258A14",
@@ -64,6 +66,7 @@ module.exports = {
         tooltipFillColor: "#000",
         //axis
         axisLabelsColor: "#000",
-        axisLineColor: "#000"
+        axisLineColor: "#000",
+        indicatorLineColor: "#FFFFFF"
     }
 }

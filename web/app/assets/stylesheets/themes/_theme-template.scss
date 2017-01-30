@@ -919,7 +919,7 @@
       }
   }
 
-  tr.margin-row {
+    tr.margin-row {
       > td.danger {
           background-color: darken($alert-color, 15%) !important;
           color: $dark-text-color;
@@ -931,6 +931,13 @@
           color: $dark-text-color;
           font-weight: bold;
       }
-  }
+    }
+
+    .react-stockcharts-tooltip {
+      fill: $primary-text-color;
+    }
+    .react-stockcharts-tooltip-label {
+      fill: $link-text-color;
+    }
 
 }
