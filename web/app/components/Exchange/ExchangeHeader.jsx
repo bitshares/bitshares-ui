@@ -15,7 +15,7 @@ export default class ExchangeHeader extends React.Component {
         if (!nextProps.marketReady) return false;
         return true;
     }
-    
+
     _addMarket(quote, base) {
         let marketID = `${quote}_${base}`;
         if (!this.props.starredMarkets.has(marketID)) {
@@ -151,7 +151,13 @@ export default class ExchangeHeader extends React.Component {
                                 {showIndicators ? (
                                     <li className="stat clickable" onClick={this.props.onSelectIndicators}>
                                         <div className="indicators">
-                                            <Translate content="exchange.settings" />
+                                            Chart type
+                                        </div>
+                                    </li>) : null}
+                                {showIndicators ? (
+                                    <li className="stat clickable" onClick={this.props.onSelectIndicators}>
+                                        <div className="indicators">
+                                            Indicators
                                         </div>
                                     </li>) : null}
                             </ul>

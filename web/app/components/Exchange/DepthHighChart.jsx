@@ -18,6 +18,7 @@ class DepthHighChart extends React.Component {
             didOrdersChange(nextProps.call_orders, this.props.call_orders) ||
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
+            nextProps.height !== this.props.height ||
             nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||

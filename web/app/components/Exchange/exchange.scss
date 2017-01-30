@@ -96,17 +96,18 @@ form.order-form {
   padding: 10px;
 }
 
-
-
 #market-charts {
-  > div > div.tabs {
-    margin-bottom: 0.25rem;
-
-    .tab-item {
-      padding-top: 0.1rem;
+    padding-left: 10px;
+    > div.Stockcharts__wrapper {
+        overflow: hidden;
     }
-  }
+    > div > div.tabs {
+        margin-bottom: 0.25rem;
 
+        .tab-item {
+            padding-top: 0.1rem;
+        }
+    }
 }
 
 .left-order-book {

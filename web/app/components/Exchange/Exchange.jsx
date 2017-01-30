@@ -7,8 +7,8 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
+import PriceChartD3 from "./PriceChartD3";
 import assetUtils from "common/asset_utils";
-import PriceChart from "./PriceChart";
 import DepthHighChart from "./DepthHighChart";
 import { debounce } from "lodash";
 import { cloneDeep } from "lodash";
@@ -610,7 +610,7 @@ class Exchange extends React.Component {
 
     onChangeChartHeight(increase) {
         let newHeight = this.state.chartHeight + (increase ? 20 : -20);
-
+        console.log("newHeight", newHeight);
         this.setState({
             chartHeight: newHeight
         });
@@ -1067,10 +1067,9 @@ class Exchange extends React.Component {
 
                         <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
                         {!showDepthChart ? (
-                            <div className="grid-block shrink" id="market-charts" >
+                            <div className="grid-block shrink no-overflow" id="market-charts" >
                                 {/* Price history chart */}
-                                <PriceChart
-                                    onChangeSize={this.onChangeChartHeight.bind(this)}
+                                <PriceChartD3
                                     priceData={this.props.priceData}
                                     volumeData={this.props.volumeData}
                                     base={base}
@@ -1087,13 +1086,6 @@ class Exchange extends React.Component {
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
                                     zoom={this.state.currentPeriod}
-                                />
-                                <IndicatorModal
-                                    ref="indicators"
-                                    indicators={indicators}
-                                    indicatorSettings={indicatorSettings}
-                                    onChangeIndicator={this._changeIndicator.bind(this)}
-                                    onChangeSetting={this._changeIndicatorSetting.bind(this)}
                                 />
                             </div>) : (
                             <div className="grid-block vertical no-padding shrink" >
