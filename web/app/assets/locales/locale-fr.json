@@ -380,7 +380,8 @@
     "locale": "Changer de langue",
     "confirm_yes": "Toujours",
     "confirm_no": "Jamais",
-    "always_confirm": "Toujours demander une confirmation"
+    "always_confirm": "Toujours demander une confirmation",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",

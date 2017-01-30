@@ -767,7 +767,8 @@
     "lookup_text": "查看来自BTS 1.0的未领取余额",
     "delete_select": "选择要删除的钱包",
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
-    "restore_key_count": "# of 密钥"
+    "restore_key_count": "# of 密钥",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "pagination": {
     "newer": "更近",

@@ -5,6 +5,14 @@ import SettingsActions from "actions/SettingsActions";
 
 export default class SettingsEntry extends React.Component {
 
+    constructor() {
+        super();
+
+        this.state = {
+            message: null
+        };
+    }
+
     _onConfirm() {
         SettingsActions.changeSetting({setting: "apiServer", value: this.props.apiServer });
         setTimeout(this._onReloadClick, 250);
@@ -18,11 +26,24 @@ export default class SettingsEntry extends React.Component {
         else window.location.href = __BASE_URL__ + "/";
     }
 
+    _setMessage(key) {
+        this.setState({
+            message: counterpart.translate(key)
+        });
+
+        this.timer = setTimeout(() => {
+            this.setState({message: null});
+        }, 4000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
+    }
+
     render() {
         let {defaults, setting, settings, apiServer} = this.props;
         let options, optional, confirmButton, value, input, selected = settings.get(setting);
-
-        let myLocale = counterpart.getLocale();
+        let noHeader = false;
 
         switch (setting) {
         case "locale":
@@ -111,6 +132,20 @@ export default class SettingsEntry extends React.Component {
             input = <input type="text" defaultValue={value} onChange={this.props.onChange.bind(this, setting)}/>;
             break;
 
+        case "reset":
+            value = true;
+
+            input = <div
+                style={{height: 60, width: "100%", paddingTop: 20}}
+                className="button"
+                onClick={() => {SettingsActions.clearSettings().then(() => {this._setMessage("settings.restore_default_success");});}}
+            >
+                {counterpart.translate("settings.reset")}
+            </div>;
+
+            noHeader = true;
+            break;
+
         default:
 
             if (typeof selected === "number") {
@@ -139,10 +174,7 @@ export default class SettingsEntry extends React.Component {
                 input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>;
             }
             break;
-
         }
-
-
 
         if (!value && !options) return null;
 
@@ -152,7 +184,7 @@ export default class SettingsEntry extends React.Component {
 
         return (
             <section className="block-list">
-                <header><Translate component="span" content={`settings.${setting}`} /></header>
+                {noHeader ? null : <header><Translate component="span" content={`settings.${setting}`} /></header>}
                 {options ? <ul>
                     <li className="with-dropdown">
                         {optional}
@@ -163,6 +195,8 @@ export default class SettingsEntry extends React.Component {
                     </li>
                 </ul> : null}
                 {input ? <ul><li>{input}</li></ul> : null}
+
+                <div className="facolor-success">{this.state.message}</div>
             </section>
         );
     }

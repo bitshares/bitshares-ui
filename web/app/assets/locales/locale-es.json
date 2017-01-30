@@ -511,7 +511,8 @@
     "apiServer": "Conexión API",
     "add_ws": "Agregar nueva API websocket",
     "remove_ws": "Remover API websocket",
-    "faucet_address": "Faucet Address"
+    "faucet_address": "Faucet Address",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",

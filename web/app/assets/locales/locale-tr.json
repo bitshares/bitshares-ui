@@ -712,7 +712,8 @@
     "lightTheme": "Açık tema",
     "olDarkTheme": "Openledger koyu",
     "reset": "Ayarları sıfırla",
-    "disableChat": "Sohbeti etkinsizleştir"
+    "disableChat": "Sohbeti etkinsizleştir",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",

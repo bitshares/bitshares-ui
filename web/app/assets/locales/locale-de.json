@@ -631,7 +631,8 @@
     "showSettles": "Settlements in der Depth-Chart anzeigen",
     "yes": "Ja",
     "no": "Nein",
-    "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)"
+    "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",

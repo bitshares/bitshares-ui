@@ -759,7 +759,8 @@
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
     "delete_select": "Select wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
-    "restore_key_count": "# of keys"
+    "restore_key_count": "# of keys",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",
