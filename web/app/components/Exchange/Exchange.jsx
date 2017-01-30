@@ -1242,7 +1242,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={200}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.getSqueezePrice({real: true})}
+                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
