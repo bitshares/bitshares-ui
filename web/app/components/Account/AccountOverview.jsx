@@ -19,6 +19,8 @@ import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
+import BorrowModal from "../Modal/BorrowModal";
+import ReactTooltip from "react-tooltip";
 
 class AccountOverview extends React.Component {
 
@@ -74,19 +76,34 @@ class AccountOverview extends React.Component {
             const core_asset = ChainStore.getAsset("1.3.0");
 
             let assetInfoLinks;
-            let marketLink, directMarketLink, settleLink, transferLink;
+            let marketLink, directMarketLink, settleLink, transferLink, borrowLink, borrowModal;
             let symbol = "";
             if (asset) {
                 const notCore = asset.get("id") !== "1.3.0";
                 let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
                 symbol = asset.get("symbol");
                 let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
+
+                /* Table content */
                 marketLink = notCore ? <a href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
                 directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="account.trade" /></Link> : null;
                 transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Translate content="transaction.trxTypes.transfer" /></Link>;
+
+                if (isBitAsset) {
+                    let modalRef = "cp_modal_" + asset.get("id");
+                    borrowModal = <BorrowModal
+                        ref={modalRef}
+                        quote_asset={asset.get("id")}
+                        backing_asset={asset.getIn(["bitasset", "options", "short_backing_asset"])}
+                        account={this.props.account}
+                    />;
+
+                    borrowLink = <a onClick={() => {ReactTooltip.hide();this.refs[modalRef].show();}}><Translate content="exchange.borrow" /></a>;
+                }
+
+                /* Popover content */
                 settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
                     <Translate content="account.settle"/></a>;
-
                 assetInfoLinks = (
                 <ul>
                     <li><a href={`${__HASH_HISTORY__ ? "#" : ""}/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
@@ -119,6 +136,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "center"}}>
                         {directMarketLink}
                         {transferLink ? <span> {marketLink ? "|" : ""} {transferLink}</span> : null}
+                        {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.borrow", {asset: symbol})}>&nbsp;| {borrowLink}{borrowModal}</div> : null}
                         {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.settle", {asset: symbol})}>&nbsp;| {settleLink}</div> : null}
                     </td>
                     <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>

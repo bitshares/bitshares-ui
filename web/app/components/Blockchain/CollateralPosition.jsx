@@ -137,7 +137,7 @@ class CollateralPosition extends React.Component {
                     />
                 </td>
 
-                <td className="center-content">
+                <td>
                     <div
                         data-place="left"
                         data-tip={counterpart.translate("tooltip.update_position")}

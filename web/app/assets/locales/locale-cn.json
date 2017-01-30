@@ -52,7 +52,8 @@
       "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
       "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
       "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。",
-      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
+      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+      "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "account": {
     "in_open": "This is the amount of %(asset)s you have in open orders.",
