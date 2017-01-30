@@ -288,7 +288,7 @@ class BorrowModalContent extends React.Component {
 
         // Dynamically update user's remaining collateral
         let currentPosition = this._getCurrentPosition(this.props);
-        let backingBalance = backing_balance.id ? ChainStore.getObject(backing_balance.id) : null;;
+        let backingBalance = backing_balance.id ? ChainStore.getObject(backing_balance.id) : null;
         let backingAmount = backingBalance ? backingBalance.get("balance") : 0;
         let collateralChange = parseInt(this.state.collateral * backingPrecision - currentPosition.collateral, 10);
         let remainingBalance = backingAmount - collateralChange;

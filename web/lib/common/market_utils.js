@@ -13,7 +13,7 @@ const MarketUtils = {
     },
 
     isAsk(order, base) {
-        let baseId = base.toJS ? base.get("id") : base.id;;
+        let baseId = base.toJS ? base.get("id") : base.id;
 
         if (order.sell_price) {
             return order.sell_price.quote.asset_id === baseId;

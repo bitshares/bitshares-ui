@@ -5,7 +5,7 @@ import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import AccountInfo from "../Account/AccountInfo";
 import BalanceComponent from "../Utility/BalanceComponent";
-import {ChainStore, FetchChainObjects} from "bitsharesjs/es";;
+import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {decompress} from "lzma";
