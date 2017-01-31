@@ -67,6 +67,6 @@ module.exports = {
         //axis
         axisLabelsColor: "#000",
         axisLineColor: "#000",
-        indicatorLineColor: "#FFFFFF"
+        indicatorLineColor: "#848484"
     }
 }

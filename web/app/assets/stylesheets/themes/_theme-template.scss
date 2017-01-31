@@ -277,6 +277,10 @@
     svg:hover > path { fill: $primary-text-color; }
   }
 
+  .settings-cog {
+      svg > path { fill: $secondary-text-color; }
+  }
+
   // cards
 
 
@@ -834,9 +838,9 @@
 
   .indicators, li.stat.clickable{
     color: $secondary-text-color;
-    &:hover{
-      @include button-focus($primary-text-color, $panel-bg-color, 10);
-    }
+    // &:hover{
+    //   @include button-focus($primary-text-color, $panel-bg-color, 10);
+    // }
   }
 
 
@@ -938,6 +942,11 @@
     }
     .react-stockcharts-tooltip-label {
       fill: $link-text-color;
+    }
+
+    div.custom-dropdown-content {
+        background: $super-light-panel-bg-color;
+        color: $primary-text-color;
     }
 
 }

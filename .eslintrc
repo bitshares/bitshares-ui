@@ -19,7 +19,7 @@
     "rules": {
         "no-unused-vars": ["error", { "vars": "all", "args": "after-used" }],
         "comma-dangle": 0,
-        "indent": [2,4],
+        "indent": ["error", "tab", {SwitchCase: 1}],
         "quotes": [2, "double", "avoid-escape"],
         "semi": [2, "always"],
         "camelcase": [0],
