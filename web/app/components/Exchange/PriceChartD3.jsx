@@ -165,8 +165,9 @@ class CandleStickChartWithZoomPan extends React.Component {
 			height={height * 0.2}
 			origin={(w, h) => [0, h - (chartMultiplier * height * 0.2)]}
 		>
+
+			{indicators.macd ? null : <XAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="bottom" orient="bottom" opacity={0.5}/>}
 			<YAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4} tickFormat={volumeFormat}/>
-			<XAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="bottom" orient="bottom" opacity={0.5}/>
 
 			{indicators.macd ? null : <MouseCoordinateX id={1}
 				rectWidth={125}
@@ -218,7 +219,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 
 		return <Chart
 			id={1}
-			height={height * ((chartMultiplier ? 1 : 0.9) - (0.25 * chartMultiplier))}
+			height={height * ((chartMultiplier ? 1 : 0.9) - (0.20 * chartMultiplier))}
 			yExtents={[d => [d.high, d.low], calculators.ema1.accessor(), calculators.ema2.accessor(), calculators.sma.accessor()]}
 			padding={{ top: 10, bottom: 20 }}
 		>
