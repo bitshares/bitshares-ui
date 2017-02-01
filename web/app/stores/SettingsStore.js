@@ -30,9 +30,9 @@ class SettingsStore {
         let topMarkets = [
             "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK", "BKT",
             "OPEN.STEEM", "OPEN.GAME", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
-            "OPEN.DGD", "EUR", "TRADE.BTC", "CASH.BTC", "GOLD", "SILVER", "IOU.CNY",
+            "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY",
             "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
-            "OPEN.INCNT"
+            "OPEN.INCNT", "KAPITAL"
         ];
 
         this.preferredBases = Immutable.List([CORE_ASSET, "OPEN.BTC", "USD", "CNY", "BTC"]);
@@ -125,7 +125,6 @@ class SettingsStore {
 
         this.marketsString = "markets";
         this.starredMarkets = Immutable.Map(ss.get(this.marketsString, defaultMarkets));
-
         this.starredAccounts = Immutable.Map(ss.get("starredAccounts"));
 
         let savedDefaults = ss.get("defaults_v1", {});

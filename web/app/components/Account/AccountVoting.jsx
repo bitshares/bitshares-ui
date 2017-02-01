@@ -481,7 +481,7 @@ class AccountVoting extends React.Component {
                     <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
                         <Translate content="account.votes.publish"/>
                     </button>
-                    <button className={"outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
+                    <button className={"button outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
                         <Translate content="account.perm.reset"/>
                     </button>
                 </div>
@@ -501,7 +501,7 @@ class AccountVoting extends React.Component {
                                     <div>
                                         <p><Translate content="account.votes.proxy_current" />: <Link to={`account/${this.state.proxy_account_name}`}>{this.state.proxy_account_name}</Link></p>
                                         <div>
-                                            <button className={"outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
+                                            <button className={"button outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
                                                 <Translate content="account.votes.clear_proxy"/>
                                             </button>
                                         </div>
@@ -622,7 +622,7 @@ class AccountVoting extends React.Component {
                                         <td colSpan="3">
                                             <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
                                             <span>&nbsp;&nbsp;
-                                                <button onClick={this._toggleExpired.bind(this)} className="button outline">
+                                                <button onClick={this._toggleExpired.bind(this)} className="button outline small">
                                                     {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}
                                                 </button>
                                             </span>

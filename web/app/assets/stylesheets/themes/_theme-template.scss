@@ -261,7 +261,7 @@
 
   .grp-menu-item button {
     &:hover, &:focus, &:active {
-      background-color: #4c4c4c !important;
+      background-color: $light-panel-bg-color !important;
     }
   }
 
@@ -275,6 +275,10 @@
     svg > path { fill: $secondary-text-color; }
     a:hover > span { color: $primary-text-color; }
     svg:hover > path { fill: $primary-text-color; }
+  }
+
+  .settings-cog {
+      svg > path { fill: $secondary-text-color; }
   }
 
   // cards
@@ -408,6 +412,40 @@
     }
   }
 
+  .bid-total {
+    color: $bid-color !important;
+  }
+
+  .ask-total {
+    color: $ask-color !important;
+  }
+
+  .stats .stat .negative {
+    color: $negative-color !important;
+  }
+
+  .stats .stat .positive {
+    color: $positive-color !important;
+  }
+
+  .active-bucket {
+    background-color: lighten($light-panel-bg-color, 12%) ;
+  }
+
+  .bucket-option:hover {
+    background-color: $panel-bg-color;
+  }
+
+  .buy-sell-box {
+      background-color: lighten($light-panel-bg-color, 12%);
+
+      > select {
+        background-color: lighten($light-panel-bg-color, 12%);
+        background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
+      }
+  }
+
+
   // Account page
   .account-left-panel {
     h5 {
@@ -428,12 +466,12 @@
   .account-left-menu {
     > li > a:hover, > li > label:hover, > li select:hover {
       color: $light-text-color;
-      background-color: $panel-bg-color;
+      background-color: lighten($panel-bg-color, 5%);
     }
     > li > a.active {
       color: $light-text-color;
       background-color: lighten($panel-bg-color, 4%);
-      border-left-color: darken($button-bg-color, 4%);
+      border-right-color: darken($button-bg-color, 4%);
     }
   }
 
@@ -834,9 +872,9 @@
 
   .indicators, li.stat.clickable{
     color: $secondary-text-color;
-    &:hover{
-      @include button-focus($primary-text-color, $panel-bg-color, 10);
-    }
+    // &:hover{
+    //   @include button-focus($primary-text-color, $panel-bg-color, 10);
+    // }
   }
 
 
@@ -919,7 +957,7 @@
       }
   }
 
-  tr.margin-row {
+    tr.margin-row {
       > td.danger {
           background-color: darken($alert-color, 15%) !important;
           color: $dark-text-color;
@@ -931,6 +969,44 @@
           color: $dark-text-color;
           font-weight: bold;
       }
-  }
+    }
+
+    .react-stockcharts-tooltip {
+      fill: $primary-text-color;
+    }
+    .react-stockcharts-tooltip-label {
+      fill: $link-text-color;
+    }
+
+    div.custom-dropdown-content {
+        background: $panel-bg-color;
+        color: $primary-text-color;
+        > ul > li {
+            &.clickable:hover {
+                background-color: lighten($panel-bg-color, 5%);
+            }
+            > div.clickable:hover {
+                background-color: lighten($panel-bg-color, 5%);
+            }
+        }
+    }
+
+    .blocktrades-bridge input, .blocktrades-bridge select{
+      color: $secondary-text-color;
+
+      border: 1px solid $secondary-text-color;
+      background-color: $panel-bg-color !important;
+      &.native-coin-types, &.external-coin-types {
+          background-color: transparent !important;
+      }
+      > option {
+          background-color: white !important;
+      }
+        &:hover, &:focus {
+          color: $primary-text-color;
+            //box-shadow: 1px 2px 3px #000;
+          border: 2px solid $primary-text-color;
+        }
+    }
 
 }

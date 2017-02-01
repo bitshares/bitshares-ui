@@ -145,7 +145,7 @@ class BuySell extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="grid-block no-padding buy-sell-row bottom-row">
+                                <div className="grid-block buy-sell-row bottom-row">
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="exchange.total" />:
                                     </div>

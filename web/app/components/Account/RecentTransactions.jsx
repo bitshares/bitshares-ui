@@ -289,7 +289,7 @@ class RecentTransactions extends React.Component {
                 </div>
                 {this.props.showMore && historyCount > this.props.limit || 20 && limit < historyCount ? (
                     <div className="account-info more-button">
-                        <button className="button outline" onClick={this._onIncreaseLimit.bind(this)}>
+                        <button className="button outline small" onClick={this._onIncreaseLimit.bind(this)}>
                             <Translate content="account.more" />
                         </button>
                     </div>
