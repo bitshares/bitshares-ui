@@ -5,7 +5,7 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 import MarketCard from "./MarketCard";
 import utils from "common/utils";
-import { Apis } from "bitsharesjs-ws";
+// import { Apis } from "bitsharesjs-ws";
 
 class Dashboard extends React.Component {
 
@@ -42,21 +42,21 @@ class Dashboard extends React.Component {
         this._setDimensions = this._setDimensions.bind(this);
     }
 
-    componentWillMount() {
-        fetch(__UI_API__ + `/markets/${Apis.instance().chain_id.substr(0, 10)}`).then( (reply) => {
-            if (reply.ok) {
-                return reply.json().then(({markets, newAssets}) => {
-                    console.log("markets:", markets, newAssets);
-                    this.setState({
-                        featuredMarkets: markets.length ? markets: this.state.featuredMarkets,
-                        newAssets: newAssets.length ? newAssets : this.state.newAssets
-                    });
-                });
-            }
-        }).catch(err => {
-            console.log("Markets API not available:", err);
-        });
-    }
+    // componentWillMount() {
+    //     fetch(__UI_API__ + `/markets/${Apis.instance().chain_id.substr(0, 10)}`).then( (reply) => {
+    //         if (reply.ok) {
+    //             return reply.json().then(({markets, newAssets}) => {
+    //                 console.log("markets:", markets, newAssets);
+    //                 this.setState({
+    //                     featuredMarkets: markets.length ? markets: this.state.featuredMarkets,
+    //                     newAssets: newAssets.length ? newAssets : this.state.newAssets
+    //                 });
+    //             });
+    //         }
+    //     }).catch(err => {
+    //         console.log("Markets API not available:", err);
+    //     });
+    // }
 
     componentDidMount() {
         this._setDimensions();
