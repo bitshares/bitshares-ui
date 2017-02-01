@@ -230,9 +230,9 @@ class DashboardList extends React.Component {
 				{!this.props.compact ? (
 					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
 						<input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-						<div onClick={this.props.onToggleIgnored} style={{position: "absolute", top: 0, right: 0}} className="button outline small">
+						{this.props.ignoredAccounts.length ? <div onClick={this.props.onToggleIgnored} style={{position: "absolute", top: 0, right: 0}} className="button outline small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
-						</div>
+						</div> : null}
 					</section>) : null}
 				<table className="table table-hover" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (
