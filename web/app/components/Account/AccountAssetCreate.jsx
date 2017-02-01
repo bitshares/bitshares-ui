@@ -426,11 +426,11 @@ class AccountAssetCreate extends React.Component {
             amount = utils.limitByPrecision(e.target.value, this.state.update.precision);
             asset = null;
         } else {
-            if (!e || "amount" in e) {
+            if (!e || !("amount" in e)) {
                 return;
             }
             amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.replace(/,/g, ""), this.props.core.get("precision"));
-            asset = e.asset.get("id")
+            asset = e.asset.get("id");
         }
 
         let {core_exchange_rate} = this.state;
@@ -621,7 +621,12 @@ class AccountAssetCreate extends React.Component {
                                     <div>
                                         <h5>
                                             <Translate content="exchange.price" />
-                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision), {precision: update.precision}, core_exchange_rate.base.amount * utils.get_asset_precision(core), core)}</span>
+                                            <span>: {utils.format_number(utils.get_asset_price(
+                                                core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision),
+                                                {precision: update.precision},
+                                                core_exchange_rate.base.amount * utils.get_asset_precision(core),
+                                                core
+                                            ), 2 + (update.precision || 8))}</span>
                                             <span> {update.symbol}/{core.get("symbol")}</span>
                                         </h5>
                                     </div>
