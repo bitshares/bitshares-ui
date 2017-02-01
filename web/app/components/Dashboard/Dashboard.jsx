@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
                 ["OPEN.BTC", "OPEN.DGD", false],
                 ["BTS", "BTWTY"],
                 ["USD", "OPEN.USDT"],
-                ["OPEN.BTC", "OPEN.INCNT", false],
+                ["OPEN.BTC", "OPEN.INCNT"],
                 [ "BTS", "OPEN.ETH"],
                 ["CNY", "USD"]
                 // ["BTS", "SILVER"]
