@@ -185,6 +185,8 @@ class Exchange extends React.Component {
 
         const cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
 
+        if (cer.base.asset_id === cer.quote.asset_id) return coreFee;
+
         const cerBase = new Asset({
             asset_id: cer.base.asset_id,
             amount: cer.base.amount,
@@ -195,12 +197,17 @@ class Exchange extends React.Component {
             amount: cer.quote.amount,
             precision: ChainStore.getAsset(cer.quote.asset_id).get("precision")
         });
-        const cerPrice = new Price({
-            base: cerBase, quote: cerQuote
-        });
-        const convertedFee = coreFee.times(cerPrice);
+        try {
+            const cerPrice = new Price({
+                base: cerBase, quote: cerQuote
+            });
+            const convertedFee = coreFee.times(cerPrice);
 
-        return convertedFee;
+            return convertedFee;
+        }
+        catch(err) {
+            return coreFee;
+        }
     }
 
     _verifyFee(fee, sellAmount, sellBalance, coreBalance) {
