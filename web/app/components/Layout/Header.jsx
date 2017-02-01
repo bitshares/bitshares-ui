@@ -227,7 +227,7 @@ class Header extends React.Component {
                 accountsDropDown = (
                     <ActionSheet>
                         <ActionSheet.Button title="">
-                            <a style={{padding: "1rem"}} className="button">
+                            <a style={{padding: "1rem", border: "none"}} className="button">
                                 &nbsp;{account_display_name} &nbsp;
                                 <Icon className="icon-14px" name="chevron-down"/>
                             </a>
@@ -250,10 +250,18 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon className="icon-14px" name="menu"/></a></li>
                     </ul>
                 </div>
-                {window.electron ? <div className="grid-block show-for-medium shrink">
+                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink">
                     <ul className="menu-bar">
-                        <li><div style={{marginLeft: "1rem", height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline">{"<"}</div></div></li>
-                        <li><div style={{height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline">></div></div></li>
+                        <li>
+                            <div style={{marginLeft: "1rem", height: "3rem"}}>
+                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
+                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
+                            </div>
+                        </li>
                     </ul>
                 </div> : null}
                 <div className="grid-block show-for-medium">

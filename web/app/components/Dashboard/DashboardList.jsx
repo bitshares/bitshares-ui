@@ -13,7 +13,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
 
-const starSort = function(a, b, inverse) {
+const starSort = function(a, b, inverse, starredAccounts) {
 	let aName = a.get("name");
 	let bName = b.get("name");
 	let aStarred = starredAccounts.has(aName);
@@ -122,7 +122,7 @@ class DashboardList extends React.Component {
 		.sort((a, b) => {
 			switch (sortBy) {
 				case "star":
-					return starSort(a, b, inverseSort);
+					return starSort(a, b, inverseSort, starredAccounts);
 					break;
 
 				case "name":
