@@ -1,10 +1,3 @@
-$bid-color: #50D2C2;
-$ask-color: #E3745B;
-$call-color: #BBBF2B;
-$light-panel-bg-color: #353742;
-$positive-color: #6EC105;
-$negative-color: #E1424A;
-
 .market-layout {
   > .grid-block {
     // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
@@ -165,14 +158,6 @@ tr.top-header, tr.bottom-header, tr.spread-row {
   }
 }
 
-.bid-total {
-  color: $bid-color !important;
-}
-
-.ask-total {
-  color: $ask-color !important;
-}
-
 .chart-label {
   z-index: 5;
   position: absolute;
@@ -258,22 +243,6 @@ a.order-cancel {
 .stats .stat:first-child {
   border-left: none;
 }
-.stats .stat .value {
-  color: #FFFFFF;
-  // letter-spacing: 1px;
-}
-.stats .stat em {
-  color: #888888;
-  display: block;
-}
-
-.stats .stat .negative {
-  color: $negative-color !important;
-}
-
-.stats .stat .positive {
-  color: $positive-color !important;
-}
 
 .market-symbol {
     font-weight: bold;
@@ -281,11 +250,6 @@ a.order-cancel {
     padding-left: 0.3rem;
     padding-right: 0.5rem;
     padding-top: 15px;
-}
-
-.active-bucket {
-  background-color: lighten($light-panel-bg-color, 12%) ;
-  text-transform: uppercase;
 }
 
 div.bucket-option {
@@ -297,8 +261,8 @@ div.bucket-option {
   padding-bottom: 3px;
 }
 
-.bucket-option:hover {
-  background-color: #4C4C4C;
+.active-bucket {
+  text-transform: uppercase;
 }
 
 .buy-sell-row {
@@ -338,15 +302,12 @@ div.bucket-option {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
-    background-color: lighten($light-panel-bg-color, 12%);
 
     > select {
       padding: 0;
       margin: 0;
       height: 1.75rem;
       line-height: 1.75rem;
-      background-color: lighten($light-panel-bg-color, 12%);
-      background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
       background-size: 8px 8px;
       border: none;
       color: white;

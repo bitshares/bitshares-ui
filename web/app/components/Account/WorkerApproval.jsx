@@ -134,10 +134,10 @@ class WorkerApproval extends React.Component{
 
                 <td style={{textAlign: "right"}}>
                     {approvalState !== true ?
-                    <button className="button outline success" onClick={this.onApprove.bind(this)}>
+                    <button className="button outline small success" onClick={this.onApprove.bind(this)}>
                     +
                     </button> :
-                    <button className="button outline info" onClick={this.onReject.bind(this)}>
+                    <button className="button outline small info" onClick={this.onReject.bind(this)}>
                     -
                     </button>}
                 </td>
@@ -145,7 +145,7 @@ class WorkerApproval extends React.Component{
                 <td style={{padding: 0, textAlign: "center", backgroundColor: approvalState === true ? "green" : approvalState === false ? "red" : "transparent"}}>
                     {approval}
                 </td>
-                
+
                 {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
                 </div>*/}
             </tr>

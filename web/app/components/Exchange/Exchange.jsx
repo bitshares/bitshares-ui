@@ -27,8 +27,6 @@ import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 
-require("./exchange.scss");
-
 Highcharts.setOptions({
 	global: {
 		useUTC: false

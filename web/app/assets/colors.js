@@ -24,14 +24,14 @@ module.exports = {
 
     },
     darkTheme: {
-        bidColor: "#50D2C2",
+        bidColor: "#6BA583",
         bidFillColor: "rgba(80, 210, 194, 0.5)",
         askColor: "#E3745B",
         askFillColor: "rgba(227, 116, 91, 0.5)",
         callColor: "#BBBF2B",
         settleColor: "rgba(125, 134, 214, 1)",
         settleFillColor: "rgba(125, 134, 214, 0.5)",
-        positiveColor: "#6BA583",
+        positiveColor: "#258A14",
         negativeColor: "#DB0000",
         primaryText: "#e0e0e0",
         lightTextColor: "#fff",

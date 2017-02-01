@@ -250,6 +250,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 			<CandlestickSeries
 				wickStroke={d => d.close > d.open ? positiveColor : negativeColor}
 				fill={d => d.close > d.open ? positiveColor : negativeColor}
+				opacity={0.8}
 			/>
 			{indicators.bb ? <BollingerSeries calculator={calculators.bb} /> : null}
 
