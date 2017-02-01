@@ -137,20 +137,14 @@ class Dashboard extends React.Component {
                             <Translate content="account.accounts" />
                         </div>
                         <div className="box-content">
-                            <DashboardList accounts={Immutable.List(names)} width={width} />
-                            {myIgnoredAccounts.size ?
-                                <table className="table table-hover" style={{fontSize: "0.85rem"}}>
-                                    <tbody>
-                                        <tr>
-                                            <td colSpan={width < 750 ? "3" : "4"} style={{textAlign: "right"}}>
-                                                <div onClick={this._onToggleIgnored.bind(this)} className="button outline">
-                                                    <Translate content={`account.${ showIgnored ? "hide_ignored" : "show_ignored" }`} />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table> : null}
-                            {showIgnored ? <DashboardList compact accounts={Immutable.List(ignored)} width={width} /> : null}
+                            <DashboardList
+                                accounts={Immutable.List(names)}
+                                ignoredAccounts={Immutable.List(ignored)}
+                                width={width}
+                                onToggleIgnored={this._onToggleIgnored.bind(this)}
+                                showIgnored={showIgnored}
+                            />
+                            {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
                         </div>
                     </div> : null}
 
