@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------
+Release 2.0.170201
+---------------------------------------------------------------------
+New features
+- Charting revamp: new charts using [react-stockchart](https://github.com/rrag/react-stockcharts)
+- Russian language translation thanks to @testzcrypto
+- Add brainkey restoration to create-account, improve brainkey restoration
+- All open orders, collateral and debt are now included when estimating total account value on the account screen
+- A 'Borrow' action added to the account assets table
+- A 'Reset settings' button added to the Settings page
+- Dates have been added to the Chat (requires implementation by other clients like Openledger also)
+- Hide 'OPEN.' prefix from Openledger assets
+- The dashboard market cards have been modified to be more clear
+
+- Hempsweet UIA symbol added ahead of their launch
+
+Bug fixes
+--------
+- Many tweaks and fixes to colors, positioning and more
+- Make sure transfer asset stays synced
+- Fix bug in CER input during asset creation
+- Move 'show hidden accounts' inside DashboardList, improve the layout
+
+---------------------------------------------------------------------
 Release 2.0.170123
 ---------------------------------------------------------------------
 Bug fixes
