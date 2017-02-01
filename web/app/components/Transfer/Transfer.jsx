@@ -213,24 +213,6 @@ class Transfer extends React.Component {
         if (from_account && from_account.get("balances") && !from_error) {
 
             let account_balances = from_account.get("balances").toJS();
-            asset_types = Object.keys(account_balances).sort(utils.sortID);
-            fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
-            for (let key in account_balances) {
-                let asset = ChainStore.getObject(key);
-                let balanceObject = ChainStore.getObject(account_balances[key]);
-                if (balanceObject && balanceObject.get("balance") === 0) {
-                    asset_types.splice(asset_types.indexOf(key), 1);
-                    if (fee_asset_types.indexOf(key) !== -1) {
-                        fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                    }
-                }
-
-                if (asset) {
-                    if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
-                        fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                    }
-                }
-            }
 
             // Finish fee estimation
             let core = ChainStore.getObject("1.3.0");
