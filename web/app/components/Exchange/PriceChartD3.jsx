@@ -1,7 +1,7 @@
 import React from "react";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
-
+import Translate from "react-translate-component";
 import { ChartCanvas, Chart, series, scale, coordinates, tooltip, axes,
     indicator, helper, interactive } from "react-stockcharts";
 
@@ -17,7 +17,6 @@ const { FibonacciRetracement, TrendLine } = interactive;
 const { OHLCTooltip, MovingAverageTooltip, BollingerBandTooltip, MACDTooltip } = tooltip;
 import colors from "assets/colors";
 import { cloneDeep } from "lodash";
-
 import utils from "common/utils";
 
 class CandleStickChartWithZoomPan extends React.Component {
@@ -387,9 +386,8 @@ CandleStickChartWithZoomPan = fitWidth(CandleStickChartWithZoomPan);
 
 export default class Wrapper extends React.Component {
     shouldComponentUpdate(np) {
-        if (!np.priceData.length) {
-            return false;
-        }
+        if (!np.marketReady && !this.props.marketReady) return false;
+        if (!np.priceData.length && !this.props.priceData.length) return false;
         return (
             !utils.are_equal_shallow(np.priceData, this.props.priceData) ||
             !utils.are_equal_shallow(np.indicators, this.props.indicators) ||
@@ -403,7 +401,13 @@ export default class Wrapper extends React.Component {
 
     render() {
         if (!this.props.priceData.length) {
-            return null;
+            return (
+                <div className="grid-content text-center">
+                    <div style={{paddingTop: this.props.height / 2, height: this.props.height}}>
+                        <Translate content="exchange.no_data" component="h2" />
+                    </div>
+                </div>
+            );
         }
 
         return (
