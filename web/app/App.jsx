@@ -141,7 +141,6 @@ class App extends React.Component {
 
     render() {
         let {disableChat, isMobile, showChat, dockedChat, theme} = this.state;
-        console.log("theme", theme);
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
