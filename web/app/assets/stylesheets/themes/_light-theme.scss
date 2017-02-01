@@ -63,18 +63,7 @@ $chat-text-color: #191A1F;
     $chat-text-color
   );
 
-  .blocktrades-bridge input, .blocktrades-bridge select{
-    color: $secondary-text-color;
-    background-color: $bg-color !important;
-    border: 1px solid $secondary-text-color;
-      &:hover, &:focus {
-        color: $primary-text-color;
-	      //box-shadow: 1px 2px 3px #000;
-        border: 2px solid #000;
-      }
+  .change-up {
+      font-weight: bold;
   }
-}
-
-.lightTheme .change-up {
-    font-weight: bold;
 }

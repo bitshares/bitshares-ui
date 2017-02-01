@@ -991,4 +991,22 @@
         }
     }
 
+    .blocktrades-bridge input, .blocktrades-bridge select{
+      color: $secondary-text-color;
+
+      border: 1px solid $secondary-text-color;
+      background-color: $panel-bg-color !important;
+      &.native-coin-types, &.external-coin-types {
+          background-color: transparent !important;
+      }
+      > option {
+          background-color: white !important;
+      }
+        &:hover, &:focus {
+          color: $primary-text-color;
+            //box-shadow: 1px 2px 3px #000;
+          border: 2px solid $primary-text-color;
+        }
+    }
+
 }
