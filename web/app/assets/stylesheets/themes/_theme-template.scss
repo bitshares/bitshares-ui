@@ -945,8 +945,16 @@
     }
 
     div.custom-dropdown-content {
-        background: $super-light-panel-bg-color;
+        background: $panel-bg-color;
         color: $primary-text-color;
+        > ul > li {
+            &.clickable:hover {
+                background-color: $light-panel-bg-color;
+            }
+            > div.clickable:hover {
+                background-color: $light-panel-bg-color;
+            }
+        }
     }
 
 }

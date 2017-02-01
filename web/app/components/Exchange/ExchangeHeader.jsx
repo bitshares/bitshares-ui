@@ -205,7 +205,7 @@ export default class ExchangeHeader extends React.Component {
 
 				case "volume": {
 					content = (
-						<li className="indicator" key={i} onClick={this.props.onToggleVolume}>
+						<li className="clickable indicator" key={i} onClick={this.props.onToggleVolume}>
 							<input type="checkbox" checked={this.props.showVolumeChart} />
 							<div><Translate content={`exchange.chart_options.${i}`} /></div>
 						</li>
