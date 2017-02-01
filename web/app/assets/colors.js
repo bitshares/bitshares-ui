@@ -10,7 +10,6 @@ module.exports = {
         positiveColor: "#6BA583",
         negativeColor: "#DB0000",
         primaryText: "#e0e0e0",
-        lightTextColor: "#fff",
         volumeColor: "#848484",
 
          //tooltip
@@ -34,7 +33,6 @@ module.exports = {
         positiveColor: "#258A14",
         negativeColor: "#DB0000",
         primaryText: "#e0e0e0",
-        lightTextColor: "#fff",
         volumeColor: "#848484",
 
         //tooltip
@@ -56,8 +54,7 @@ module.exports = {
         settleFillColor: "rgba(125, 134, 214, 0.5)",
         positiveColor: "rgba(110, 193, 5, 1)",
         negativeColor: "rgba(225, 66, 74, 1)",
-        primaryText: "#3F2E55",
-        lightTextColor: "#3F2E55",
+        primaryText: "#242424",
         volumeColor: "#848484",
 
         //tooltip
