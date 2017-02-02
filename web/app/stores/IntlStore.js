@@ -18,6 +18,7 @@ import ko from "react-intl/locale-data/ko";
 import zh from "react-intl/locale-data/zh";
 import de from "react-intl/locale-data/de";
 import tr from "react-intl/locale-data/tr";
+import ru from "react-intl/locale-data/ru";
 
 addLocaleData(en);
 addLocaleData(es);
@@ -26,6 +27,7 @@ addLocaleData(ko);
 addLocaleData(zh);
 addLocaleData(de);
 addLocaleData(tr);
+addLocaleData(ru);
 
 class IntlStore {
     constructor() {
