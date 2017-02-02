@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router";
 import AccountSelector from "./AccountSelector";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -10,8 +11,8 @@ import {List} from "immutable";
 class AccountVotingProxy extends React.Component {
 
     static propTypes = {
-        proxyAccount: ChainTypes.ChainAccount,
-        currentAccount: React.PropTypes.object.isRequired,
+        existingProxy: ChainTypes.ChainAccount.isRequired,
+        account: React.PropTypes.object.isRequired,
         onProxyAccountChanged: React.PropTypes.func.isRequired,
         knownProxies: ChainTypes.ChainAccountsList
     };
@@ -19,10 +20,11 @@ class AccountVotingProxy extends React.Component {
     static defaultProps = {
         knownProxies: List(
             [
-                "baozi", "bitsharesblocks", "laomao", "xeroc", "bitcrab",
-                "jonnybitcoin", "jakub", "dacs", "fav"
+                "xeroc", "baozi", "bitcrab", "laomao", "bitshares-munich-wallet",
+                "bts1988", "harvey", "fav", "jonnybitcoin", "bitsharesblocks"
             ]
-        )
+        ),
+        existingProxy: "1.2.5" // proxy-to-self
     };
 
     static contextTypes = {
@@ -31,8 +33,10 @@ class AccountVotingProxy extends React.Component {
 
     constructor(props){
         super(props);
+        const defaultInput = props.existingProxy.get("id") === "1.2.5" ? "" : props.existingProxy.get("name");
+
         this.state = {
-            current_proxy_input: props.currentProxy,
+            current_proxy_input: defaultInput,
             new_proxy_account: null
         };
         this.onProxyChange = this.onProxyChange.bind(this);
@@ -45,12 +49,29 @@ class AccountVotingProxy extends React.Component {
                 current_proxy_input: nextProps.proxyAccount ? nextProps.proxyAccount.get("name") : ""
             });
         }
+    }
+    //     console.log("nextProps", nextProps.currentProxy);
+    //     if (!nextProps.currentProxy && nextProps.currentProxy !== this.state.current_proxy_input) {
+    //         this.setState({
+    //             current_proxy_input: nextProps.currentProxy
+    //         });
+    //     }
+    // }
 
-        if (nextProps.currentProxy !== this.state.current_proxy_input) {
-            this.setState({
-                current_proxy_input: nextProps.currentProxy
-            });
-        }
+    onResetProxy() {
+        const defaultInput = this.props.existingProxy.get("id") === "1.2.5" ? "" : this.props.existingProxy.get("name");
+        this.setState({
+            current_proxy_input: defaultInput,
+            new_proxy_account: null
+        });
+    }
+
+    clearProxy() {
+        this.setState({
+            current_proxy_input: "",
+            new_proxy_account: null
+        });
+        if (this.props.onClearProxy) this.props.onClearProxy();
     }
 
     onProxyChange(current_proxy_input) {
@@ -60,11 +81,14 @@ class AccountVotingProxy extends React.Component {
 
     onProxyAccountChange(new_proxy_account) {
         //console.log("-- AccountVotingProxy.onProxyAccountChange -->", new_proxy_account);
-        if(new_proxy_account && this.props.currentAccount.get("id") === new_proxy_account.get("id"))
-            this.props.onProxyAccountChanged(null, this.state.current_proxy_input);
-        else
-            this.props.onProxyAccountChanged(new_proxy_account, this.state.current_proxy_input);
-        this.setState({new_proxy_account});
+
+        this.setState({new_proxy_account}, () => {
+            if(new_proxy_account && this.props.account.get("id") === new_proxy_account.get("id")) {
+                // this.props.onProxyAccountChanged(null);
+            } else {
+                this.props.onProxyAccountChanged(new_proxy_account);
+            }
+        });
     }
 
     _onNavigate(route) {
@@ -79,11 +103,11 @@ class AccountVotingProxy extends React.Component {
     // }
 
     render(){
-        let {knownProxies} = this.props;
-        const isDisabled = !!this.props.proxyAccount;
-        // console.log("-- AccountVotingProxy.render -->", this.props.currentAccount);
+        let {knownProxies, existingProxy} = this.props;
+        const isDisabled = existingProxy && existingProxy.get("name") === this.state.current_proxy_input;
+        // console.log("-- AccountVotingProxy.render -->", this.props.account);
         let error = null;
-        if(this.state.new_proxy_account && this.props.currentAccount.get("id") === this.state.new_proxy_account.get("id")) {
+        if(this.state.new_proxy_account && this.props.account.get("id") === this.state.new_proxy_account.get("id")) {
             error = "cannot proxy to yourself";
         }
 
@@ -93,7 +117,7 @@ class AccountVotingProxy extends React.Component {
         .filter(a => {
             if (!a) return false;
             return (
-                a.get("name") !== this.props.currentAccount.get("name") &&
+                a.get("name") !== this.props.account.get("name") &&
                 a.get("name") !== currentProxyName
             );
         })
@@ -111,13 +135,22 @@ class AccountVotingProxy extends React.Component {
                     <td className="text-right"><button className="button" onClick={this.onProxyChange.bind(this, proxy.get("name"))}>Set</button></td>
                 </tr>
             );
-
         });
 
         return (
             <div className="content-block" style={{maxWidth: "600px"}}>
                 {isDisabled ? null :<Translate component="h3" content="account.votes.proxy_short" />}
-                {isDisabled ? null :
+                {isDisabled ? <div>
+                    <p>
+                        <Translate content="account.votes.proxy_current" />:
+                        &nbsp;<Link to={`account/${existingProxy.get("name")}`}>{existingProxy.get("name")}</Link>
+                    </p>
+                    <div>
+                        <button className={"button outline"} onClick={this.clearProxy.bind(this)} tabIndex={8}>
+                            <Translate content="account.votes.clear_proxy"/>
+                        </button>
+                    </div>
+                </div> :
                 <AccountSelector
                     label="account.votes.proxy"
                      error={error}

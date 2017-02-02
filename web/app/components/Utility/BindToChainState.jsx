@@ -347,7 +347,7 @@ function BindToChainState(Component, options = {}) {
                 }
             }
             //return <span className={this.state.resolved ? "resolved":"notresolved"}><Component {...props} {...this.state}/></span>;
-            return <Component {...props} {...this.state}/>;
+            return <Component ref="bound_component" {...props} {...this.state}/>;
         }
     };
 }
