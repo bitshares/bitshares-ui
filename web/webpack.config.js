@@ -122,7 +122,7 @@ module.exports = function(env) {
             ]
         },
         output: {
-            publicPath: "",
+            publicPath: env.prod ? "" : "/",
             path: outputPath,
             filename: "[name].js",
             pathinfo: !env.prod,
