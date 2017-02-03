@@ -216,7 +216,7 @@ class MarketsStore {
             this.marketLimitOrders = this.marketLimitOrders.clear();
             // console.time("Create limit orders " + this.activeMarket);
             result.limits.forEach(order => {
-                ChainStore._updateObject(order, false, false);
+                // ChainStore._updateObject(order, false, false);
                 if (typeof order.for_sale !== "number") {
                     order.for_sale = parseInt(order.for_sale, 10);
                 }
@@ -256,7 +256,7 @@ class MarketsStore {
             this.marketCallOrders = this.marketCallOrders.clear();
 
             result.calls.forEach(call => {
-                ChainStore._updateObject(call, false, false);
+                // ChainStore._updateObject(call, false, false);
                 try {
                     let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice, this.is_prediction_market);
                     if (callOrder.isMarginCalled()) {
