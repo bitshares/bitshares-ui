@@ -24,6 +24,16 @@ class WitnessCard extends React.Component {
         router: React.PropTypes.object.isRequired
     }
 
+    componentDidMount() {
+        ChainStore.fetchWitnessByAccount(this.props.witness.get("id")).then(() => {
+            this.forceUpdate();
+        });
+    }
+
+    componentWillUnmount() {
+        ChainStore.unSubFrom("subbedWitnesses", ChainStore.getWitnessById( this.props.witness.get("id") ).get("id"));
+    }
+
     _onCardClick(e) {
         e.preventDefault();
         this.context.router.push(`/account/${this.props.witness.get("name")}`);
@@ -90,6 +100,16 @@ class WitnessRow extends React.Component {
     _onRowClick(e) {
         e.preventDefault();
         this.context.router.push(`/account/${this.props.witness.get("name")}`);
+    }
+
+    componentDidMount() {
+        ChainStore.fetchWitnessByAccount(this.props.witness.get("id")).then(() => {
+            this.forceUpdate();
+        });
+    }
+
+    componentWillUnmount() {
+        ChainStore.unSubFrom("subbedWitnesses", ChainStore.getWitnessById( this.props.witness.get("id") ).get("id"));
     }
 
     render() {
