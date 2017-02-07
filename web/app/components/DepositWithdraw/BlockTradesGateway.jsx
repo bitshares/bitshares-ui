@@ -85,7 +85,7 @@ class BlockTradesGateway extends React.Component {
         }
 
         let filteredCoins = coins.filter(a => {
-            if (!a || !a.backingCoinType) {
+            if (!a || !a.walletSymbol) {
                 return false;
             } else {
                 return true;
@@ -93,14 +93,14 @@ class BlockTradesGateway extends React.Component {
         });
 
         let coinOptions = filteredCoins.map(coin => {
-            let option = action === "deposit" ? coin.backingCoinType.toUpperCase() : coin.symbol;
+            let option = action === "deposit" ? coin.walletSymbol.toUpperCase() : coin.symbol;
             return <option value={option} key={coin.symbol}>{option}</option>;
         }).filter(a => {
             return a !== null;
         });
 
         let coin = filteredCoins.filter(coin => {
-            return (action === "deposit" ? coin.backingCoinType.toUpperCase() === activeCoin : coin.symbol === activeCoin);
+            return (action === "deposit" ? coin.walletSymbol.toUpperCase() === activeCoin : coin.symbol === activeCoin);
         })[0];
 
         let issuers = {
@@ -145,14 +145,14 @@ class BlockTradesGateway extends React.Component {
                             gateway={provider}
                             issuer_account={issuer.name}
                             account={account}
-                            deposit_asset={coin.backingCoinType.toUpperCase()}
+                            deposit_asset={coin.walletSymbol.toUpperCase()}
                             deposit_asset_name={coin.name}
-                            deposit_coin_type={coin.backingCoinType.toLowerCase()}
+                            deposit_coin_type={coin.backingCoinType}
                             deposit_account={coin.depositAccount}
                             deposit_wallet_type={coin.walletType}
                             receive_asset={coin.symbol}
-                            receive_coin_type={coin.symbol.toLowerCase()}
-                            supports_output_memos={coin.supportsMemos}
+                            receive_coin_type={coin.coinType}
+                            supports_output_memos={coin.supportsOutputMemos}
                             action={this.state.action}
                         />
                         <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
