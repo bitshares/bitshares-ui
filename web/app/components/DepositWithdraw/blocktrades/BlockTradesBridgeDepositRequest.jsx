@@ -384,7 +384,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 // filter out pairs where one asset is a backed asset and the other is a backing asset,
                 // those pairs rightly belong under the gateway section, not under the bridge section.
                 if (input_coin_info.backingCoinType != pair.outputCoinType &&
-                    output_coin_info.backingCoinType != pair.inputCoinType)
+                    output_coin_info.backingCoinType != pair.inputCoinType && (input_coin_info.restricted == false) && (output_coin_info.restricted == false))
                 {
                     // filter out mappings where one of the wallets is offline
                     if (active_wallets.indexOf(input_coin_info.walletType) != -1 &&
@@ -791,10 +791,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     let expected_prefix = "Internal Server Error: ";
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
-
-                    if (isNaN(input_amount) || (input_amount.indexOf(' ') >= 0) || (input_amount.indexOf('-') >= 0))
-                        user_message = "Please enter a valid amount of " + input_coin_type.toUpperCase();
-
 
                     this.setState({[deposit_withdraw_or_convert + "_error"]: user_message});
                 }

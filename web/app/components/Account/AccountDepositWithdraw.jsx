@@ -169,7 +169,7 @@ class AccountDepositWithdraw extends React.Component {
             services, activeService} = this.state;
 
         let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
-            if (coin.backingCoinType === "muse") {    // it is not filterring, should be MUSE
+            if (coin.backingCoinType === "muse") {
                 return false;
             }
             return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
