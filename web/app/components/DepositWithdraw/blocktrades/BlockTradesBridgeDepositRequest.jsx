@@ -144,9 +144,9 @@ class ButtonConversionContainer extends React.Component {
                 url={this.props.url}
                 balance={this.props.account.get("balances").toJS()[this.props.asset.get('id')]}/>;
 
-        return (<div>
+        return (<span>
                     {conversion_button}
-                </div>);
+                </span>);
     }
 }
 
