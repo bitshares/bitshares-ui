@@ -104,7 +104,7 @@ class ButtonConversion extends React.Component {
 
         let button_class = "button disabled";
         if (Object.keys(this.props.account_balances.toJS()).includes(this.props.asset.get('id')) ) {		
-            if (!isNaN(this.props.amount) && (this.props.amount > 0) && (this.props.amount <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
+            if (!(this.props.amount.indexOf(' ') >= 0) && !isNaN(this.props.amount) && (this.props.amount > 0) && (this.props.amount <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
 
                 button_class = "button";
 
@@ -173,7 +173,7 @@ class ButtonWithdraw extends React.Component {
 
         let button_class = "button disabled";
         if (Object.keys(this.props.account.get('balances').toJS()).includes(this.props.asset.get('id')) ) {		
-            if (!isNaN(this.props.amount_to_withdraw) && (this.props.amount_to_withdraw > 0) && (this.props.amount_to_withdraw <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
+            if (!(this.props.amount_to_withdraw.indexOf(' ') >= 0) && !isNaN(this.props.amount_to_withdraw) && (this.props.amount_to_withdraw > 0) && (this.props.amount_to_withdraw <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
 
                 button_class = "button";
 
