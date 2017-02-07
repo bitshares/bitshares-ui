@@ -61,6 +61,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             deposit_estimated_output_amount: null,
             deposit_limit: null,
             deposit_error: null,
+            failed_calculate_deposit: null,
 
             // things that get displayed for withdrawals
             withdraw_input_coin_type: null,
@@ -69,6 +70,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             withdraw_estimated_output_amount: null,
             withdraw_limit: null,
             withdraw_error: null,
+            failed_calculate_withdraw: null,
 
 			// things that get displayed for conversions
 			conversion_input_coin_type: null,
@@ -77,6 +79,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             conversion_estimated_output_amount: null,
 			conversion_limit: null,
             conversion_error: null,
+            failed_calculate_conversion: null,
 
             // input address-related
             coin_info_request_state: this.coin_info_request_states.request_in_progress,
@@ -509,6 +512,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateOutputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, input_amount)
     {
+        if (deposit_withdraw_or_convert == 'deposit') {
+            this.setState({failed_calculate_deposit: null});
+        }
+        if (deposit_withdraw_or_convert == 'withdraw') {
+            this.setState({failed_calculate_withdraw: null});
+        }
+        if (deposit_withdraw_or_convert == 'conversion') {
+            this.setState({failed_calculate_conversion: null});
+        }
+
         let estimate_output_url = this.state.url +
                                 "/estimate-output-amount?inputAmount=" + encodeURIComponent(input_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
@@ -526,6 +539,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.output_from_input)
                 {
                     let user_message = reply.error.message;
+
+                    if (deposit_withdraw_or_convert == 'deposit') {
+                        this.setState({failed_calculate_deposit: 'Failed to calculate'});
+                    }
+                    if (deposit_withdraw_or_convert == 'withdraw') {
+                        this.setState({failed_calculate_withdraw: 'Failed to calculate'});
+                    }
+                    if (deposit_withdraw_or_convert == 'conversion') {
+                        this.setState({failed_calculate_conversion: 'Failed to calculate'});
+                    }
+
                     let expected_prefix = "Internal Server Error: ";
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
@@ -557,6 +581,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateInputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, output_amount)
     {
+        if (deposit_withdraw_or_convert == 'deposit') {
+            this.setState({failed_calculate_deposit: null});
+        }
+        if (deposit_withdraw_or_convert == 'withdraw') {
+            this.setState({failed_calculate_withdraw: null});
+        }
+        if (deposit_withdraw_or_convert == 'conversion') {
+            this.setState({failed_calculate_conversion: null});
+        }
+
         let estimate_input_url = this.state.url +
                                 "/estimate-input-amount?outputAmount=" + encodeURIComponent(output_amount) +
                                 "&inputCoinType=" + encodeURIComponent(input_coin_type) +
@@ -571,8 +605,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                            "unexpected reply from estimate-input-amount");
             if (reply.inputCoinType != input_coin_type ||
                 reply.outputCoinType != output_coin_type ||
-                reply.outputAmount != output_amount)
-                throw Error("unexpected reply from estimate-input-amount");
+                reply.outputAmount != output_amount) {
+                    
+                    if (deposit_withdraw_or_convert == 'deposit') {
+                        this.setState({failed_calculate_deposit: 'Failed to calculate'});
+                    }
+                    if (deposit_withdraw_or_convert == 'withdraw') {
+                        this.setState({failed_calculate_withdraw: 'Failed to calculate'});
+                    }
+                    if (deposit_withdraw_or_convert == 'conversion') {
+                        this.setState({failed_calculate_conversion: 'Failed to calculate'});
+                    }
+                }
+
             if (this.state[deposit_withdraw_or_convert + "_input_coin_type"] == input_coin_type &&
                 this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
                 this.state[deposit_withdraw_or_convert + "_estimated_output_amount"] == output_amount &&
@@ -781,6 +826,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             let calcText = <Translate content="gateway.calc" />;
 
+            let calcTextDeposit = <Translate content="gateway.calc" />;
+            if (this.state.failed_calculate_deposit != null) {
+                calcTextDeposit = this.state.failed_calculate_deposit;
+            }
+            let calcTextWithdraw = <Translate content="gateway.calc" />;
+            if (this.state.failed_calculate_withdraw != null) {
+                calcTextWithdraw = this.state.failed_calculate_withdraw;
+            }
+            let calcTextConversion = <Translate content="gateway.calc" />;
+            if (this.state.failed_calculate_conversion != null) {
+                calcTextConversion = this.state.failed_calculate_conversion;
+            }
+
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_deposit).length > 0)
             {
                 // deposit
@@ -811,11 +869,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let deposit_input_amount_edit_box = estimated_input_amount_text ?
                         <input style={{width: "11rem"}} type="text"
                                value={estimated_input_amount_text || ""}
-                               onChange={this.onInputAmountChanged.bind(this, "deposit") } /> : calcText;
+                               onChange={this.onInputAmountChanged.bind(this, "deposit") } /> : calcTextDeposit;
                 let deposit_output_amount_edit_box = estimated_output_amount_text ?
                         <input style={{width: "11rem"}} type="text"
                                value={estimated_output_amount_text || ""}
-                               onChange={this.onOutputAmountChanged.bind(this, "deposit") } /> : calcText;
+                               onChange={this.onOutputAmountChanged.bind(this, "deposit") } /> : calcTextDeposit;
 
                 let deposit_limit_element = <span>updating</span>;
                 if (this.state.deposit_limit)
@@ -900,14 +958,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let withdraw_input_amount_edit_box = estimated_input_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_input_amount_text || ""}
-                           onChange={this.onInputAmountChanged.bind(this, "withdraw") } /> : calcText;
+                           onChange={this.onInputAmountChanged.bind(this, "withdraw") } /> : calcTextWithdraw;
 
                 let estimated_output_amount_text = this.state.withdraw_estimated_output_amount;
 
                 let withdraw_output_amount_edit_box = estimated_output_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_output_amount_text || ""}
-                           onChange={this.onOutputAmountChanged.bind(this, "withdraw") } /> : calcText;
+                           onChange={this.onOutputAmountChanged.bind(this, "withdraw") } /> : calcTextWithdraw;
 
                 let withdraw_button =
                     <span>
@@ -992,14 +1050,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let conversion_input_amount_edit_box = estimated_input_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_input_amount_text || ""}
-                           onChange={this.onInputAmountChanged.bind(this, "conversion") } /> : calcText;
+                           onChange={this.onInputAmountChanged.bind(this, "conversion") } /> : calcTextConversion;
 
                 let estimated_output_amount_text = this.state.conversion_estimated_output_amount;
 
                 let conversion_output_amount_edit_box = estimated_output_amount_text ?
                     <input style={{width: "11rem"}} type="text"
                            value={estimated_output_amount_text || ""}
-                           onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcText;
+                           onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcTextConversion;
 
                 let conversion_button =
                     <span>
