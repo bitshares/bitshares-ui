@@ -884,7 +884,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 					this.setState({
 					coin_symbol: new_output_coin_type + 'output',
                     supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
-                    key_for_withdrawal_dialog: new_input_coin_type
+                    key_for_withdrawal_dialog: new_output_coin_type
 					});
 				}
 			});
