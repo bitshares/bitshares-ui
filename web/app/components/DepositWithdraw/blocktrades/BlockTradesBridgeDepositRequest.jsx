@@ -13,6 +13,102 @@ import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {ChainStore} from "bitsharesjs/es";
 
+class ButtonConversion extends React.Component {
+    static propTypes = {
+        asset: ChainTypes.ChainAsset.isRequired,
+        input_coin_type: React.PropTypes.string.isRequired,
+        output_coin_type: React.PropTypes.string.isRequired,
+        account_name: React.PropTypes.string.isRequired,
+        account_id: React.PropTypes.string.isRequired,
+        url: React.PropTypes.string.isRequired
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state =
+        {
+            error: null,
+			conversion_memo: null
+        };
+    }
+
+    onTrxIncluded(confirm_store_state) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+            // this.setState(Transfer.getInitialState());
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        } else if (confirm_store_state.closed) {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        }
+    }
+
+    onConvert() {
+
+		let input_coin_type = this.props.input_coin_type;
+		let output_coin_type = this.props.output_coin_type;
+
+        let body = JSON.stringify({
+            inputCoinType: input_coin_type,
+            outputCoinType: output_coin_type,
+            outputAddress: this.props.account_name,
+			inputMemo: "blocktrades conversion: " + input_coin_type + "to" + output_coin_type
+        });
+
+        fetch(this.props.url + '/simple-api/initiate-trade', {
+            method:'post',
+            headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
+            body: body
+        }).then(reply => { reply.json().then( json => {
+
+                if (json.inputCoinType != input_coin_type || json.outputCoinType != output_coin_type) {
+                    throw Error("unexpected reply from initiate-trade");
+				}
+                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType && !isNaN(this.props.amount)) {
+					
+                    this.setState({conversion_memo: json.inputMemo});
+                    this.setState({error: null});
+                    let precision = utils.get_asset_precision(this.props.asset.get("precision"));
+                    let amount = this.props.amount.replace( /,/g, "" );
+
+                    AccountActions.transfer(
+                        this.props.account_id,
+                        "1.2.32567",
+                        parseInt(amount * precision, 10),
+                        this.props.asset.get("id"),
+                        this.state.conversion_memo ? new Buffer(this.state.conversion_memo, "utf-8") : this.state.conversion_memo,
+                        null,
+                        "1.3.0"
+                    ).then( () => {
+                        TransactionConfirmStore.unlisten(this.onTrxIncluded);
+                        TransactionConfirmStore.listen(this.onTrxIncluded);
+                    }).catch( e => {
+                        let msg = e.message ? e.message.split( '\n' )[1] : null;
+                        console.log( "error: ", e, msg);
+                        this.setState({error: msg})
+                    } );
+				
+				}
+            }, error => {
+                this.setState({conversion_memo: null});
+            }
+        )
+        }, error => {
+            this.setState({conversion_memo: null});
+        });
+
+    }
+
+    render() {
+        return (<span>
+                    <button className={"button"} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
+                </span>);
+    }
+}
+
+ButtonConversion = BindToChainState(ButtonConversion);
+
 class BlockTradesBridgeDepositRequest extends React.Component {
     static propTypes = {
         url:               React.PropTypes.string,
@@ -285,17 +381,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
 		});
 	}
-	
-    onTrxIncluded(confirm_store_state) {
-        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
-            // this.setState(Transfer.getInitialState());
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
-            TransactionConfirmStore.reset();
-        } else if (confirm_store_state.closed) {
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
-            TransactionConfirmStore.reset();
-        }
-    }
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
@@ -696,67 +781,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
 
-    onConvert() {
-
-		let input_coin_type = this.state.conversion_input_coin_type;
-		let output_coin_type = this.state.conversion_output_coin_type;
-
-        let body = JSON.stringify({
-            inputCoinType: input_coin_type,
-            outputCoinType: output_coin_type,
-            outputAddress: this.props.account.get('name'),
-			inputMemo: "blocktrades conversion: " + input_coin_type + "to" + output_coin_type
-        });
-
-        fetch(this.state.url + '/simple-api/initiate-trade', {
-            method:'post',
-            headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
-            body: body
-        }).then(reply => { reply.json().then( json => {
-
-                if (json.inputCoinType != input_coin_type || json.outputCoinType != output_coin_type) {
-                    throw Error("unexpected reply from initiate-trade");
-				}
-                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType && !isNaN(this.state.conversion_estimated_input_amount)) {
-					
-                    this.setState({conversion_memo: json.inputMemo});
-                    this.setState({error: null});
-                    let asset = ChainStore.getAsset(this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol);
-                    let precision = utils.get_asset_precision(asset.get("precision"));
-                    let amount = this.state.conversion_estimated_input_amount.replace( /,/g, "" );
-
-                    AccountActions.transfer(
-                        this.props.account.get('id'),
-                        "1.2.32567",
-                        parseInt(amount * precision, 10),
-                        asset.get("id"),
-                        this.state.conversion_memo ? new Buffer(this.state.conversion_memo, "utf-8") : this.state.conversion_memo,
-                        null,
-                        "1.3.0"
-                    ).then( () => {
-                        TransactionConfirmStore.unlisten(this.onTrxIncluded);
-                        TransactionConfirmStore.listen(this.onTrxIncluded);
-                    }).catch( e => {
-                        let msg = e.message ? e.message.split( '\n' )[1] : null;
-                        console.log( "error: ", e, msg);
-                        this.setState({error: msg})
-                    } );
-				
-				}
-            }, error => {
-                if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
-                    this.setState({conversion_memo: null});
-				}
-            }
-        )
-        }, error => {
-            if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
-                this.setState({conversion_memo: null});
-			}
-        });
-
-    }
-
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
         let estimated_input_output_amount = null;
@@ -1100,9 +1124,13 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                            onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcTextConversion;
 
                 let conversion_button =
-                    <span>
-                        <button className={"button"} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
-                    </span>;
+                    <ButtonConversion asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} 
+                                      input_coin_type={this.state.conversion_input_coin_type}
+                                      output_coin_type={this.state.conversion_output_coin_type}
+                                      account_name={this.props.account.get('name')}
+                                      amount={this.state.conversion_estimated_input_amount}
+                                      account_id={this.props.account.get('id')}
+                                      url={this.state.url}/>;
 
                 let conversion_error_element = null;
                 if (this.state.conversion_error)
