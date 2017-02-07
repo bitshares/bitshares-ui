@@ -568,7 +568,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
 
-                    if (isNaN(input_amount))
+                    if (isNaN(input_amount) || (input_amount.indexOf(' ') >= 0))
                         user_message = "Please enter a valid amount of " + input_coin_type.toUpperCase();
 
 
