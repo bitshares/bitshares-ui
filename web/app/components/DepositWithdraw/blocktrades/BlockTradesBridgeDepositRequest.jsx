@@ -191,6 +191,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state =
         {
 			coin_symbol: 'btc',
+            key_for_withdrawal_dialog: 'btc',
 			supports_output_memos: '',
             url: "https://api.blocktrades.us/v2",
             error: null,
@@ -474,7 +475,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 withdraw_estimated_output_amount: new_withdraw_estimated_output_amount,
 				conversion_limit: new_conversion_limit,
 				conversion_estimated_input_amount: new_conversion_estimated_input_amount,
-				conversion_estimated_output_amount: new_conversion_estimated_output_amount
+				conversion_estimated_output_amount: new_conversion_estimated_output_amount,
+                key_for_withdrawal_dialog: new_withdraw_estimated_input_amount
             });
         }
     }
@@ -768,7 +770,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 this.state[deposit_withdraw_or_convert + "_output_coin_type"] == output_coin_type &&
                 this.state[deposit_withdraw_or_convert + "_estimated_output_amount"] == output_amount &&
                 this.state[deposit_withdraw_or_convert + "_estimate_direction"] == this.estimation_directions.input_from_output)
-                this.setState({[deposit_withdraw_or_convert + "_estimated_input_amount"]: reply.inputAmount});
+                this.setState({[deposit_withdraw_or_convert + "_estimated_input_amount"]: reply.inputAmount, key_for_withdrawal_dialog: reply.inputAmount});
         }, error => {
         });
 
@@ -791,7 +793,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         {
             [deposit_withdraw_or_convert + "_estimated_input_amount"]: new_estimated_input_amount,
             [deposit_withdraw_or_convert + "_estimated_output_amount"]: new_estimated_output_amount,
-            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input
+            [deposit_withdraw_or_convert + "_estimate_direction"]: this.estimation_directions.output_from_input,
+            key_for_withdrawal_dialog: new_estimated_input_amount
         });
     }
 
@@ -880,7 +883,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 				if(new_output_coin_type===allowed_withdraw_output_coin_type){
 					this.setState({
 					coin_symbol: new_output_coin_type + 'output',
-					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+                    supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos,
+                    key_for_withdrawal_dialog: new_input_coin_type
 					});
 				}
 			});
@@ -933,6 +937,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // depending on what wallets are online, we might support deposits, withdrawals, conversions, all, or neither at any given time.
             let deposit_table = null;
             let withdraw_table = null;
+            let amount_to_withdraw = null;
 
             let calcTextDeposit = <Translate content="gateway.calc" />;
             if (this.state.failed_calculate_deposit != null) {
@@ -1042,6 +1047,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 let withdraw_asset_symbol = this.state.coins_by_type[this.state.withdraw_input_coin_type].symbol;
 
                 // withdrawal
+
+                amount_to_withdraw = this.state.withdraw_estimated_input_amount;
+
                 let withdraw_input_coin_type_options = [];
                 Object.keys(this.state.allowed_mappings_for_withdraw).sort().forEach(allowed_withdraw_input_coin_type => {
                     withdraw_input_coin_type_options.push(<option key={allowed_withdraw_input_coin_type} value={allowed_withdraw_input_coin_type}>{this.state.coins_by_type[allowed_withdraw_input_coin_type].walletSymbol}</option>);
@@ -1247,7 +1255,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <br/>
                         <div className="grid-block vertical">
                             <WithdrawModalBlocktrades
-								key={`${this.state.coin_symbol}`}
+								key={`${this.state.key_for_withdrawal_dialog}`}
                                 account={this.props.account.get('name')}
                                 issuer={this.props.issuer_account.get('name')}
                                 asset={this.state.coins_by_type[this.state.withdraw_input_coin_type].walletSymbol}
@@ -1255,6 +1263,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 output_coin_symbol={this.state.coins_by_type[this.state.withdraw_output_coin_type].symbol}
                                 output_coin_type={this.state.withdraw_output_coin_type}
 								output_supports_memos={this.state.supports_output_memos}
+                                amount_to_withdraw={amount_to_withdraw}
                                 modal_id={withdraw_modal_id}
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} />

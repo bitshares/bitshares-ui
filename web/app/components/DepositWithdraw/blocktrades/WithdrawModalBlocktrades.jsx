@@ -22,7 +22,8 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
         output_wallet_type: React.PropTypes.string,
-		output_supports_memos: React.PropTypes.bool.isRequired
+		output_supports_memos: React.PropTypes.bool.isRequired,
+        amount_to_withdraw: React.PropTypes.string
     };
 
     constructor( props ) {
@@ -47,7 +48,7 @@ class WithdrawModalBlocktrades extends React.Component {
             })});
 
         this.state = {
-        withdraw_amount: null,
+        withdraw_amount: this.props.amount_to_withdraw,
         withdraw_address: localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : '',
         withdraw_address_check_in_progress: true,
 		withdraw_address_is_valid: null,
