@@ -15,6 +15,7 @@ import {ChainStore} from "bitsharesjs/es";
 
 class ButtonConversion extends React.Component {
     static propTypes = {
+        balance: ChainTypes.ChainObject,
         asset: ChainTypes.ChainAsset.isRequired,
         input_coin_type: React.PropTypes.string.isRequired,
         output_coin_type: React.PropTypes.string.isRequired,
@@ -101,13 +102,55 @@ class ButtonConversion extends React.Component {
     }
 
     render() {
+
+        let button_class = "button disabled";
+        if (Object.keys(this.props.account_balances.toJS()).includes(this.props.asset.get('id')) ) {		
+            if (!isNaN(this.props.amount) && (this.props.amount > 0) && (this.props.amount <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
+
+                button_class = "button";
+
+            }
+        }
+
         return (<span>
-                    <button className={"button"} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
+                    <button className={button_class} onClick={this.onConvert.bind(this)}><Translate content="" /><Translate content="gateway.convert_now" /> </button>
                 </span>);
     }
 }
 
 ButtonConversion = BindToChainState(ButtonConversion);
+
+class ButtonConversionContainer extends React.Component {
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired,
+        asset: ChainTypes.ChainAsset.isRequired,
+        input_coin_type: React.PropTypes.string.isRequired,
+        output_coin_type: React.PropTypes.string.isRequired,
+        account_name: React.PropTypes.string.isRequired,
+        account_id: React.PropTypes.string.isRequired,
+        url: React.PropTypes.string.isRequired
+    };
+
+    render() {
+
+        let conversion_button =
+            <ButtonConversion asset={this.props.asset.get("id")} 
+                input_coin_type={this.props.input_coin_type}
+                output_coin_type={this.props.output_coin_type}
+                account_name={this.props.account_name}
+                amount={this.props.amount}
+                account_id={this.props.account_id}
+                account_balances={this.props.account_balances}
+                url={this.props.url}
+                balance={this.props.account.get("balances").toJS()[this.props.asset.get('id')]}/>;
+
+        return (<div>
+                    {conversion_button}
+                </div>);
+    }
+}
+
+ButtonConversionContainer = BindToChainState(ButtonConversionContainer);
 
 class BlockTradesBridgeDepositRequest extends React.Component {
     static propTypes = {
@@ -653,7 +696,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (user_message.startsWith(expected_prefix))
                         user_message = user_message.substr(expected_prefix.length);
 
-                    if (isNaN(input_amount) || (input_amount.indexOf(' ') >= 0))
+                    if (isNaN(input_amount) || (input_amount.indexOf(' ') >= 0) || (input_amount.indexOf('-') >= 0))
                         user_message = "Please enter a valid amount of " + input_coin_type.toUpperCase();
 
 
@@ -1124,13 +1167,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                            onChange={this.onOutputAmountChanged.bind(this, "conversion") } /> : calcTextConversion;
 
                 let conversion_button =
-                    <ButtonConversion asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol} 
-                                      input_coin_type={this.state.conversion_input_coin_type}
-                                      output_coin_type={this.state.conversion_output_coin_type}
-                                      account_name={this.props.account.get('name')}
-                                      amount={this.state.conversion_estimated_input_amount}
-                                      account_id={this.props.account.get('id')}
-                                      url={this.state.url}/>;
+                    <ButtonConversionContainer asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol}
+                                               account={this.props.account.get('id')}
+                                               input_coin_type={this.state.conversion_input_coin_type}
+                                               output_coin_type={this.state.conversion_output_coin_type}
+                                               account_name={this.props.account.get('name')}
+                                               amount={this.state.conversion_estimated_input_amount}
+                                               account_id={this.props.account.get('id')}
+                                               account_balances={this.props.account.get("balances")}
+                                               url={this.state.url}/>;
 
                 let conversion_error_element = null;
                 if (this.state.conversion_error)
