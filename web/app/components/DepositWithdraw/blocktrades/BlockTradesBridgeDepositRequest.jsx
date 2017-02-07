@@ -7,9 +7,11 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
-import ConvertModalBlocktrades from "./ConvertModalBlocktrades";
 import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
 import utils from "common/utils";
+import AccountActions from "actions/AccountActions";
+import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import {ChainStore} from "bitsharesjs/es";
 
 class BlockTradesBridgeDepositRequest extends React.Component {
     static propTypes = {
@@ -52,6 +54,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 			coin_symbol: 'btc',
 			supports_output_memos: '',
             url: "https://api.blocktrades.us/v2",
+            error: null,
 
             // things that get displayed for deposits
             deposit_input_coin_type: null,
@@ -282,6 +285,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
 		});
 	}
+	
+    onTrxIncluded(confirm_store_state) {
+        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+            // this.setState(Transfer.getInitialState());
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        } else if (confirm_store_state.closed) {
+            TransactionConfirmStore.unlisten(this.onTrxIncluded);
+            TransactionConfirmStore.reset();
+        }
+    }
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
@@ -682,10 +696,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
 
-    getConvertModalId() {
-        return "convert_asset_" + this.props.gateway + "_bridge";
-    }
-
     onConvert() {
 
 		let input_coin_type = this.state.conversion_input_coin_type;
@@ -707,9 +717,31 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 if (json.inputCoinType != input_coin_type || json.outputCoinType != output_coin_type) {
                     throw Error("unexpected reply from initiate-trade");
 				}
-                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType) {
-					this.setState({conversion_memo: json.inputMemo});
-					ZfApi.publish(this.getConvertModalId(), "open");
+                if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType && !isNaN(this.state.conversion_estimated_input_amount)) {
+					
+                    this.setState({conversion_memo: json.inputMemo});
+                    this.setState({error: null});
+                    let asset = ChainStore.getAsset(this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol);
+                    let precision = utils.get_asset_precision(asset.get("precision"));
+                    let amount = this.state.conversion_estimated_input_amount.replace( /,/g, "" );
+
+                    AccountActions.transfer(
+                        this.props.account.get('id'),
+                        "1.2.32567",
+                        parseInt(amount * precision, 10),
+                        asset.get("id"),
+                        this.state.conversion_memo ? new Buffer(this.state.conversion_memo, "utf-8") : this.state.conversion_memo,
+                        null,
+                        "1.3.0"
+                    ).then( () => {
+                        TransactionConfirmStore.unlisten(this.onTrxIncluded);
+                        TransactionConfirmStore.listen(this.onTrxIncluded);
+                    }).catch( e => {
+                        let msg = e.message ? e.message.split( '\n' )[1] : null;
+                        console.log( "error: ", e, msg);
+                        this.setState({error: msg})
+                    } );
+				
 				}
             }, error => {
                 if (this.state.conversion_input_coin_type == input_coin_type && this.state.conversion_output_coin_type == output_coin_type) {
@@ -834,8 +866,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // depending on what wallets are online, we might support deposits, withdrawals, conversions, all, or neither at any given time.
             let deposit_table = null;
             let withdraw_table = null;
-
-            let calcText = <Translate content="gateway.calc" />;
 
             let calcTextDeposit = <Translate content="gateway.calc" />;
             if (this.state.failed_calculate_deposit != null) {
@@ -1034,7 +1064,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
             if (Object.getOwnPropertyNames(this.state.allowed_mappings_for_conversion).length > 0)
             {
-                conversion_modal_id = this.getConvertModalId();
 
                 // conversion
                 let conversion_input_coin_type_options = [];
@@ -1156,24 +1185,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 modal_id={withdraw_modal_id}
                                 url={this.state.url}
                                 output_wallet_type={this.state.coins_by_type[this.state.withdraw_output_coin_type].walletType} />
-                        </div>
-                    </Modal>
-                    <Modal id={conversion_modal_id} overlay={true}>
-                        <Trigger close={conversion_modal_id}>
-                            <a href="#" className="close-button">&times;</a>
-                        </Trigger>
-                        <br/>
-                        <div className="grid-block vertical">
-                            <ConvertModalBlocktrades
-								key={`${this.state.coin_symbol}`}
-                                from_account={this.props.account.get('name')}
-								to_account={'blocktrades'}
-                                asset={this.state.coins_by_type[this.state.conversion_input_coin_type].walletSymbol}
-                                output_coin_name={this.state.coins_by_type[this.state.conversion_output_coin_type].name}
-                                output_coin_symbol={this.state.coins_by_type[this.state.conversion_output_coin_type].symbol}
-								conversion_memo={this.state.conversion_memo}
-                                modal_id={conversion_modal_id}
-                                url={this.state.url} />
                         </div>
                     </Modal>
                 </div>
