@@ -723,7 +723,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event)
     {
-        let deposit_withdraw_or_convert_estimated_input_amount = this.state.deposit_estimated_input_amount;
         let new_input_coin_type = event.target.value;
         let possible_output_coin_types = this.state["allowed_mappings_for_" + deposit_withdraw_or_convert][new_input_coin_type];
         let new_output_coin_type = possible_output_coin_types[0];
@@ -734,26 +733,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (deposit_withdraw_or_convert == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type);
+        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type, this.state[deposit_withdraw_or_convert + "_estimated_input_amount"]);
 
         if (deposit_withdraw_or_convert == "withdraw") {
-            deposit_withdraw_or_convert_estimated_input_amount = this.state.withdraw_estimated_input_amount;
+            possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
+                if(new_output_coin_type===allowed_withdraw_output_coin_type) {
+                    this.setState({
+                    coin_symbol: new_input_coin_type + 'input',
+                    supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
+                    });	
+                }
+            });
         }
-    
-        if (deposit_withdraw_or_convert == "conversion") {
-            deposit_withdraw_or_convert_estimated_input_amount = this.state.conversion_estimated_input_amount;
-        }
-        let estimated_output_amount = this.getAndUpdateOutputEstimate(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type, deposit_withdraw_or_convert_estimated_input_amount);
-
-		if (deposit_withdraw_or_convert == "withdraw") {
-			possible_output_coin_types.forEach(allowed_withdraw_output_coin_type => {
-				if(new_output_coin_type===allowed_withdraw_output_coin_type){
-					this.setState({
-					coin_symbol: new_input_coin_type + 'input',
-					supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
-					});
-				}
-			});
-		}
 
         this.setState(
         {
