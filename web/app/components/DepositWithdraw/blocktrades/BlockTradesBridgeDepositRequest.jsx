@@ -202,7 +202,8 @@ class ButtonWithdraw extends React.Component {
                                 amount_to_withdraw={this.props.amount_to_withdraw}
                                 modal_id={withdraw_modal_id}
                                 url={this.props.url}
-                                output_wallet_type={this.props.output_wallet_type} />
+                                output_wallet_type={this.props.output_wallet_type}
+                                balance={this.props.account.get("balances").toJS()[this.props.asset.get('id')]} />
                         </div>
                     </Modal>
                 </span>);
