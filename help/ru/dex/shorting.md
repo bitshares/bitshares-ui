@@ -4,9 +4,9 @@
 
 ## Заем
 
-The BitShares network is capable of issuing any amount of any BitAsset and lend it out to participants given enough collateral.
+Сеть BitShares способна выдавать любое количество любого BitAsset и одалживать его участникам с учетом наличия достаточного залога.
 
-- *settlement price*: The price for 1 BTS as it is traded on external exchanges.
+- *расчетная цена*: Цена за 1 BTS взятая с внешних бирж.
 - *maintenance collateral ratio* (MCR): A ratio defined by the witnesses as minimum required collateral ratio
 - *maximum short squeeze ratio* (MSQR): A ratio defined by the witnesses as to how far shorts are protected against short squeezes
 - *short squeeze protection* (SQP): Defines the most that a margin position will ever be forced to pay to cover 
