@@ -1,8 +1,8 @@
 # Введение
 
-The decentralized exchange (further denoted simply as *the DEX*) allows for direct exchange of digital goods traded in the BitShares ecosystem.
+Децентрализованная биржа (далее обозначается как *DEX*) позволяет производить прямой обмен цифровых товаров, торгующихся в экосистеме BitShares.
 
-A decentralized exchange has a very particular set of advantages over traditional centralized exchanges and we would like to address some of them briefly below. Although the BitShares DEX comes with all of them, it is up to the reader and customer to leverage those features in full or only partially.
+Децентрализованная биржа обладает весьма определенным набором преимуществ перед традиционными централизованными биржами, о чем мы хотим кратко рассказать ниже. И хотя BitShares DEX включает в себя их все, право использовать эти функции полностью или частично остается за читателем и клиентом.
 
 * **Separation of Powers**: There is no reason why the same entity needs to be responsible for issuing IOUs and for processing the order book. In BitShares, order matching is performed by the protocol, which is unaware of implications concerning the involved assets.
 * **Global Unified Order Book**: Since BitShares is global, anybody with an internet access can use the DEX for trading. This brings the world's liquidity to a single order book for decentralized trading.
