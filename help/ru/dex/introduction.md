@@ -4,8 +4,8 @@
 
 Децентрализованная биржа обладает весьма определенным набором преимуществ перед традиционными централизованными биржами, о чем мы хотим кратко рассказать ниже. И хотя BitShares DEX включает в себя их все, право использовать эти функции полностью или частично остается за читателем и клиентом.
 
-* **Разделение сил**: Нет такой причины, которая бы обязывала одну и ту же единицу быть ответственной и за выдачу IOU, и за обработку книги ордеров. In BitShares, order matching is performed by the protocol, which is unaware of implications concerning the involved assets.
-* **Global Unified Order Book**: Since BitShares is global, anybody with an internet access can use the DEX for trading. This brings the world's liquidity to a single order book for decentralized trading.
+* **Разделение сил**: Нет такой причины, которая бы обязывала одну и ту же единицу быть ответственной и за выдачу IOU, и за обработку книги ордеров. В BitShares подбор ордеров производится протоколом, который не знает о последствиях, касающихся связанных с ними активов.
+* **Единая Общая Книга Ордеров**: Так как BitShares глобальна, любой, у кого есть Интернет, может использовать DEX для торговли. Это делает всю ликвидность мира доступной единственной книге ордеров для децентрализованной торговли.
 * **Trade Almost Anything**: The BitShares DEX is asset agnostic. Hence you can trade at **any** pair. While some pairs may end up with low liquidity, such as SILVER:GOLD, other pairs such as USD:EUR for FOREX trading will see huge volume.
 * **No Limits**: The BitShares protocol is unable to limit your trading experience.
 * **Decentralized**: The DEX is decentralized across the globe. This not only means that there is no single point of failure, but it also implies that the BitShares exchange is open for trading 24/7 because it's always daytime somewhere.
