@@ -4,7 +4,7 @@
 
 ## Пары
 
-На BitShares почти любой актив может торговаться со всеми остальными активами. Once we have picked two assets, we usually refer to a *market pair*. For instance, we can trade USD against EUR in the USD:EUR pair.
+На BitShares почти любой актив может торговаться со всеми остальными активами. Как только мы выбрали два актива, обычно мы ссылаемся на определенную *рыночную пару*. For instance, we can trade USD against EUR in the USD:EUR pair.
 
 For sake of consistency, we will use the generalized terms *base* and *quote* such that pairs are represented as
 
