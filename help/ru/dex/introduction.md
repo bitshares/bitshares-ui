@@ -6,8 +6,8 @@
 
 * **Разделение сил**: Нет такой причины, которая бы обязывала одну и ту же единицу быть ответственной и за выдачу IOU, и за обработку книги ордеров. В BitShares подбор ордеров производится протоколом, который не знает о последствиях, касающихся связанных с ними активов.
 * **Единая Общая Книга Ордеров**: Так как BitShares глобальна, любой, у кого есть Интернет, может использовать DEX для торговли. Это делает всю ликвидность мира доступной единственной книге ордеров для децентрализованной торговли.
-* **Trade Almost Anything**: The BitShares DEX is asset agnostic. Hence you can trade at **any** pair. While some pairs may end up with low liquidity, such as SILVER:GOLD, other pairs such as USD:EUR for FOREX trading will see huge volume.
-* **No Limits**: The BitShares protocol is unable to limit your trading experience.
+* **Торгуй чем угодно**: BitShares DEX - агностик в отношении активов. А значит, Вы можете торговать на **любой** паре. И хотя ликвидность некоторых пар в итоге окажется низкой, как у SILVER:GOLD, другие пары, вроде USD:EUR для торговли на FOREX, будут обладать внушительным объемом.
+* **Без ограничений**: протокол BitShares не в состоянии ограничить Ваш торговый опыт.
 * **Decentralized**: The DEX is decentralized across the globe. This not only means that there is no single point of failure, but it also implies that the BitShares exchange is open for trading 24/7 because it's always daytime somewhere.
 * **Secure**: Your funds and trades are secured with industry-grade elliptic curve cryptography. No one will be able to access your funds unless you let them. To further strengthen the security, we allow our customers to setup escrow and multi-signature schemes.
 * **Fast**: In contrast to other decentralized networks, the BitShares DEX allows for real-time trading and is only limited by the speed of light and the size of the planet.
