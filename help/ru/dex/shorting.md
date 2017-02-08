@@ -1,8 +1,8 @@
 # Короткая продажа BitAssets
 
-In order to increase your exposure to BTS and offer liquidity to BitAssets, such as USD, EUR, GOLD, etc., you can go *borrow* this bitAsset from the network and *sell it short*. We will here briefly describe the procedure.
+Чтобы увеличить Вашу видимость на BTS и добавить ликвидности BitAssets, таким как USD, EUR, GOLD и др., Вы можете пойти и *занять* этот bitAsset у сети и *совершить короткую продажу*. Здесь мы кратко опишем данную процедуру.
 
-## Borrowing
+## Заем
 
 The BitShares network is capable of issuing any amount of any BitAsset and lend it out to participants given enough collateral.
 
