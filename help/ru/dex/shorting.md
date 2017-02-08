@@ -1,4 +1,4 @@
-# Short Selling BitAssets
+# Короткая продажа BitAssets
 
 In order to increase your exposure to BTS and offer liquidity to BitAssets, such as USD, EUR, GOLD, etc., you can go *borrow* this bitAsset from the network and *sell it short*. We will here briefly describe the procedure.
 
