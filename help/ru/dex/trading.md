@@ -1,10 +1,10 @@
 # Торговля
 
-This page will give a very quick introduction on how to interpret the terms used by the DEX and how trading pairs are presented.
+Эта страница даст Вам краткую интерпретацию терминов, используемых на DEX и информацию о том, как размещаются торговые пары.
 
-## Pairs
+## Пары
 
-In BitShares, almost any asset can be traded with all other assets. Once we have picked two assets, we usually refer to a *market pair*. For instance, we can trade USD against EUR in the USD:EUR pair.
+На BitShares почти любой актив может торговаться со всеми остальными активами. Once we have picked two assets, we usually refer to a *market pair*. For instance, we can trade USD against EUR in the USD:EUR pair.
 
 For sake of consistency, we will use the generalized terms *base* and *quote* such that pairs are represented as
 
