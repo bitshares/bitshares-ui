@@ -10,6 +10,7 @@ import CollateralPosition from "../Blockchain/CollateralPosition";
 import { RecentTransactions } from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "bitsharesjs/es";
+import {Apis} from "bitsharesjs-ws";
 import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
@@ -172,8 +173,7 @@ class AccountOverview extends React.Component {
         let account_balances = account.get("balances");
 
         let includedBalancesList = Immutable.List(), hiddenBalancesList = Immutable.List();
-
-        account.get("call_orders").forEach( (callID, key) => {
+        account.get("call_orders").forEach( (callID) => {
             let position = ChainStore.getObject(callID);
             if (position) {
                 collateral += parseInt(position.get("collateral"), 10);
@@ -191,7 +191,7 @@ class AccountOverview extends React.Component {
             // Filter out balance objects that have 0 balance or are not included in open orders
             account_balances = account_balances.filter((a, index) => {
                 let balanceObject = ChainStore.getObject(a);
-                if (!balanceObject.get("balance") && !orders[index]) {
+                if (balanceObject && (!balanceObject.get("balance") && !orders[index])) {
                     return false;
                 } else {
                     return true;
