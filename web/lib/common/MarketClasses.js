@@ -256,7 +256,8 @@ class Price {
 
     equals(b) {
         if (this.base.asset_id !== b.base.asset_id || this.quote.asset_id !== b.quote.asset_id) {
-            throw new Error("Cannot compare prices for different assets");
+            console.error("Cannot compare prices for different assets");
+            return false;
         }
         const amult = b.quote.amount * this.base.amount;
         const bmult = this.quote.amount * b.base.amount;
