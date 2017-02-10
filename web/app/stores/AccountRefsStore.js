@@ -3,6 +3,7 @@ import iDB from "idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
 import {ChainStore} from "bitsharesjs/es";
+import {Apis} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 
@@ -81,16 +82,24 @@ class AccountRefsStore extends BaseStore {
 
 }
 
-export default alt.createStore(AccountRefsStore, "AccountRefsStore")
+export default alt.createStore(AccountRefsStore, "AccountRefsStore");
 
-// Performance optimization for large wallets
+/*
+*  Performance optimization for large wallets, no_account_refs tracks pubkeys
+*  that do not have a corresponding account and excludes them from future api calls
+*  to get_account_refs. The arrays are stored in the indexed db, one per chain id
+*/
 function loadNoAccountRefs() {
-    return iDB.root.getProperty("no_account_refs", [])
-        .then( array => Immutable.Set(array) )
+    let chain_id = Apis.instance().chain_id;
+    let refKey = `no_account_refs${!!chain_id ? ("_" + chain_id.substr(0, 8)) : ""}`;
+    return iDB.root.getProperty(refKey, [])
+        .then( array => Immutable.Set(array) );
 }
 
 function saveNoAccountRefs(no_account_refs) {
-    var array = []
-    for(let pubkey of no_account_refs) array.push(pubkey)
-    iDB.root.setProperty("no_account_refs", array)
+    let array = [];
+    let chain_id = Apis.instance().chain_id;
+    let refKey = `no_account_refs${!!chain_id ? ("_" + chain_id.substr(0, 8)) : ""}`;
+    for(let pubkey of no_account_refs) array.push(pubkey);
+    iDB.root.setProperty(refKey, array);
 }
