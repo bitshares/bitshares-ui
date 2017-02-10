@@ -756,7 +756,7 @@
   }
 
   .orderbook-latest-price {
-      div {
+      > div {
         background-color: $panel-bg-color !important;
         border-bottom: 1px solid grey !important;
         border-top: 1px solid grey !important;
