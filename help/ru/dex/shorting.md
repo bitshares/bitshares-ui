@@ -7,7 +7,7 @@
 Сеть BitShares способна создавать любое количество каждого актива BitAsset и занимать его субьектам экосистемы, при условии предоставления достаточного залога.
 
 - *расчетная цена*: Цена за 1 BTS взятая с внешних бирж.
-- *maintenance collateral ratio* (MCR): A ratio defined by the witnesses as minimum required collateral ratio
+- *уровень обеспечивающего залога* (MCR): Размер залога, определённый участниками рынка как минимальный
 - *maximum short squeeze ratio* (MSQR): A ratio defined by the witnesses as to how far shorts are protected against short squeezes
 - *short squeeze protection* (SQP): Defines the most that a margin position will ever be forced to pay to cover 
 - *call price* (CP): The price at which short/borrow positions are margin called
