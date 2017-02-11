@@ -1,6 +1,6 @@
 # Торговля
 
-Эта страница даст Вам краткую интерпретацию терминов, используемых на DEX и информацию о том, как размещаются торговые пары.
+Эта страница предоставит Вам краткую интерпретацию терминов, используемых на DEX и информацию о том, как размещаются торговые пары.
 
 ## Пары
 
@@ -23,7 +23,7 @@
 | Цена Продажи  | *базовый*    | *котируемый* |
 | \---\---\---- | \---\----    | \---\----    |
 
-Obviously, what is on the bid side of the USD:EUR pair will be on the ask side on the EUR:USD pair. Of course prices are internally represented as fractions, and thus results in both pairs being identical.
+Естественно, цена покупки пары USD:EUR является ценой продажи обратной пары EUR:USD. Of course prices are internally represented as fractions, and thus results in both pairs being identical.
 
 ## Trading
 
