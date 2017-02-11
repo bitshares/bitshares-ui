@@ -15,13 +15,13 @@
 
 ## Регистр Ордеров
 
-Регистр состоит из цен покупки и цен продажи. Since trading pairs do not have a preferred orientation, and can be flipped, the following table shall give an overview of ask/bid and the corresponding buy/sell operations for each side:
+Регистр состоит из цен покупки и цен продажи. Так как стороны торговых пар не фиксированы и могут меняться, следующая таблица даст вам представление о ценах покупки и продажи в соответствии с продаваемым/покупаемым лотом на каждый случай:
 
-| Side          | Sell      | Buy       |
-| ------------- | --------- | --------- |
-| Ask           | *quote*   | *base*    |
-| Bid           | *base*    | *quote*   |
-| \---\---\---- | \---\---- | \---\---- |
+| Сторона       | Продажа      | Покупка      |
+| ------------- | ------------ | ------------ |
+| Цена Покупки  | *котируемый* | *базовый*    |
+| Цена Продажи  | *базовый*    | *котируемый* |
+| \---\---\---- | \---\----    | \---\----    |
 
 Obviously, what is on the bid side of the USD:EUR pair will be on the ask side on the EUR:USD pair. Of course prices are internally represented as fractions, and thus results in both pairs being identical.
 
