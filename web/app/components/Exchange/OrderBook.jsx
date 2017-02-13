@@ -8,7 +8,6 @@ import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
-import counterpart from "counterpart";
 
 class OrderBookRowVertical extends React.Component {
 
@@ -493,7 +492,7 @@ class OrderBook extends React.Component {
                             </div>
                             <div ref="center_text" style={{minHeight: 35}}>
                                     <div key="spread" className="orderbook-latest-price" ref="centerRow">
-                                        <div className="text-center spread" data-place="right" data-tip={counterpart.translate("tooltip.latest_price")}>
+                                        <div className="text-center spread">
                                             {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> <AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span> : null}
                                         </div>
                                     </div>
