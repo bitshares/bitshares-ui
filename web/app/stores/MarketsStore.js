@@ -27,6 +27,7 @@ class MarketsStore {
         this.pendingOrders = Immutable.Map();
         this.marketLimitOrders = Immutable.Map();
         this.marketCallOrders = Immutable.Map();
+        this.allCallOrders = [];
         this.feedPrice = null;
         this.marketSettleOrders = Immutable.OrderedSet();
         this.activeMarketHistory = Immutable.OrderedSet();
@@ -140,6 +141,7 @@ class MarketsStore {
         this.is_prediction_market = false;
         this.marketLimitOrders = this.marketLimitOrders.clear();
         this.marketCallOrders = this.marketCallOrders.clear();
+        this.allCallOrders = [];
         this.feedPrice = null;
         this.marketSettleOrders = this.marketSettleOrders.clear();
         this.activeMarketHistory = this.activeMarketHistory.clear();
@@ -253,6 +255,7 @@ class MarketsStore {
 
         if (result.calls) {
             const oldmarketCallOrders = this.marketCallOrders;
+            this.allCallOrders = result.calls;
             this.marketCallOrders = this.marketCallOrders.clear();
 
             result.calls.forEach(call => {
@@ -329,10 +332,10 @@ class MarketsStore {
 
     onCancelLimitOrderSuccess(cancellations) {
         if (cancellations && cancellations.length) {
-
             let didUpdate = false;
             cancellations.forEach(orderID => {
                 if (orderID && this.marketLimitOrders.has(orderID)) {
+                    console.log("removed order", orderID);
                     didUpdate = true;
                     this.marketLimitOrders = this.marketLimitOrders.delete(orderID);
                 }
@@ -346,7 +349,6 @@ class MarketsStore {
             }
 
             if (didUpdate) {
-                console.log("removed order");
                 // Update orderbook
                 this._orderBook(true, false);
 
@@ -428,24 +430,47 @@ class MarketsStore {
 
         if (feedChanged) {
             this.feedPrice = newFeed;
-
-            this.marketCallOrders = this.marketCallOrders.withMutations(callOrder => {
-                if (callOrder && callOrder.first()) {
-                    callOrder.first().setFeed(this.feedPrice);
-                }
-            });
+            const assets = {
+                [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
+                [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
+            };
 
             /*
             * If the feed price changed, we need to check whether the orders
-            * being margin called have changed and filter accordingly.
+            * being margin called have changed and filter accordingly. To do so
+            * we recreate the marketCallOrders map from scratch using the
+            * previously fetched data and the new feed price.
             */
-            this.marketCallOrders = this.marketCallOrders.filter(callOrder => {
-                if (callOrder) {
-                    return callOrder.isMarginCalled();
-                } else {
-                    return false;
+            this.marketCallOrders = this.marketCallOrders.clear();
+            this.allCallOrders.forEach(call => {
+                // ChainStore._updateObject(call, false, false);
+                try {
+                    let callOrder = new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice, this.is_prediction_market);
+                    if (callOrder.isMarginCalled()) {
+                        this.marketCallOrders = this.marketCallOrders.set(
+                            call.id,
+                            new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                        );
+                    }
+                } catch(err) {
+                    console.error("Unable to construct calls array, invalid feed price or prediction market?");
                 }
             });
+
+            // this.marketCallOrders = this.marketCallOrders.withMutations(callOrder => {
+            //     if (callOrder && callOrder.first()) {
+            //         callOrder.first().setFeed(this.feedPrice);
+            //     }
+            // });
+
+
+            // this.marketCallOrders = this.marketCallOrders.filter(callOrder => {
+            //     if (callOrder) {
+            //         return callOrder.isMarginCalled();
+            //     } else {
+            //         return false;
+            //     }
+            // });
 
             // Update orderbook
             this._orderBook(true, true);
@@ -704,6 +729,8 @@ class MarketsStore {
                     calls.splice(i + 1, 1);
                 }
             }
+        } else {
+            this.lowestCallPrice = null;
         }
         return calls;
     }
@@ -711,12 +738,15 @@ class MarketsStore {
     _combineOrders() {
         const hasCalls = !!this.marketCallOrders.size;
         const isBid = hasCalls && this.marketCallOrders.first().isBid();
+
+        let combinedBids, combinedAsks;
+
         if (isBid) {
-            this.marketData.combinedBids = this.marketData.bids.concat(this.marketData.calls);
-            this.marketData.combinedAsks = this.marketData.asks.concat([]);
+            combinedBids = this.marketData.bids.concat(this.marketData.calls);
+            combinedAsks = this.marketData.asks.concat([]);
         } else {
-            this.marketData.combinedBids = this.marketData.bids.concat([]);
-            this.marketData.combinedAsks = this.marketData.asks.concat(this.marketData.calls);
+            combinedBids = this.marketData.bids.concat([]);
+            combinedAsks = this.marketData.asks.concat(this.marketData.calls);
         }
 
         let totalToReceive = new Asset({
@@ -728,7 +758,7 @@ class MarketsStore {
             asset_id: this.baseAsset.get("id"),
             precision: this.baseAsset.get("precision")
         });
-        this.marketData.combinedBids.sort((a, b) => {
+        combinedBids.sort((a, b) => {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
             totalToReceive.plus(a.amountToReceive(false));
@@ -748,7 +778,7 @@ class MarketsStore {
             precision: this.quoteAsset.get("precision")
         });
 
-        this.marketData.combinedAsks.sort((a, b) => {
+        combinedAsks.sort((a, b) => {
             return a.getPrice() - b.getPrice();
         }).forEach(a => {
             totalForSale.plus(a.amountForSale());
@@ -757,11 +787,14 @@ class MarketsStore {
             a.setTotalToReceive(totalToReceive.clone());
         });
 
-        this.marketData.lowestAsk = !this.marketData.combinedAsks.length ? nullPrice :
-            this.marketData.combinedAsks[0];
+        this.marketData.lowestAsk = !combinedAsks.length ? nullPrice :
+            combinedAsks[0];
 
         this.marketData.highestBid = !this.marketData.combinedBids.length ? nullPrice :
             this.marketData.combinedBids[0];
+
+        this.marketData.combinedBids = combinedBids;
+        this.marketData.combinedAsks = combinedAsks;
     }
 
     _depthChart() {
