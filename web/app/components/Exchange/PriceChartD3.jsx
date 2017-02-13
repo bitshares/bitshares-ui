@@ -308,7 +308,6 @@ class CandleStickChartWithZoomPan extends React.Component {
         const { timeFormatter, enableFib, enableTrendLine, margin, calculators } = this.state;
         const themeColors = colors[theme];
         const { axisLineColor, indicatorLineColor} = themeColors;
-
         let chartMultiplier = showVolumeChart ? 1 : 0; // Used to adjust the height of the charts and their positioning
         // if (indicators.bb) calc.push(bb);
 
@@ -394,6 +393,7 @@ export default class Wrapper extends React.Component {
             !utils.are_equal_shallow(np.indicatorSettings, this.props.indicatorSettings) ||
             !utils.are_equal_shallow(np.tools, this.props.tools) ||
             np.height !== this.props.height ||
+            np.verticalOrderbook !== this.props.verticalOrderbook ||
             np.zoom !== this.props.zoom ||
             np.showVolumeChart !== this.props.showVolumeChart
         );
