@@ -429,7 +429,7 @@ class AccountAssetCreate extends React.Component {
             if (!e || !("amount" in e)) {
                 return;
             }
-            amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.replace(/,/g, ""), this.props.core.get("precision"));
+            amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.toString().replace(/,/g, ""), this.props.core.get("precision"));
             asset = e.asset.get("id");
         }
 
@@ -463,8 +463,8 @@ class AccountAssetCreate extends React.Component {
     }
 
     render() {
-        let {account, account_name, globalObject, core} = this.props;
-        let {errors, isValid, update, assets, flagBooleans, permissionBooleans,
+        let {globalObject, core} = this.props;
+        let {errors, isValid, update, flagBooleans, permissionBooleans,
             core_exchange_rate, is_prediction_market, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset creation fee from the symbol character length
@@ -479,11 +479,6 @@ class AccountAssetCreate extends React.Component {
         else if(symbolLength > 4) {
             createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
         }
-
-        // let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
-        // let precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
-        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
-        let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
         // Loop over flags
         let flags = [];
@@ -626,7 +621,7 @@ class AccountAssetCreate extends React.Component {
                                                 {precision: update.precision},
                                                 core_exchange_rate.base.amount * utils.get_asset_precision(core),
                                                 core
-                                            ), 2 + (update.precision || 8))}</span>
+                                            ), 2 + (parseInt(update.precision, 10) || 8))}</span>
                                             <span> {update.symbol}/{core.get("symbol")}</span>
                                         </h5>
                                     </div>
