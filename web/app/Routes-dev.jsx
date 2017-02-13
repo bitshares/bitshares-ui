@@ -1,5 +1,6 @@
 import React from "react";
 import {Apis} from "bitsharesjs-ws";
+import {ChainStore} from "bitsharesjs/es";
 
 import { Router, Route, IndexRoute, browserHistory } from "react-router/es";
 import App from "./App";
@@ -70,7 +71,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         return Apis.reset(connectionString, true).init_promise
         .then(() => {
             var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-            return db.then(() => {
+            return Promise.all([db, ChainStore.init()]).then(() => {
                 return callback();
             }).catch((err) => {
                 console.log("err:", err);
@@ -89,7 +90,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         } catch(err) {
             console.log("db init error:", err);
         }
-        return Promise.all([db]).then(() => {
+        return Promise.all([db, ChainStore.init()]).then(() => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
