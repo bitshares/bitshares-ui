@@ -25,18 +25,8 @@ class CommitteeMemberCard extends React.Component {
         this.context.router.push(`/account/${this.props.committee_member.get("name")}`);
     }
 
-    componentDidMount() {
-        ChainStore.fetchCommitteeMemberByAccount(this.props.committee_member.get("id")).then(() => {
-            this.forceUpdate();
-        });
-    }
-
-    componentWillUnmount() {
-        ChainStore.unSubFrom("subbedCommittee", ChainStore.getCommitteeMemberById( this.props.committee_member.get("id") ).get("id"));
-    }
-
     render() {
-        let committee_member_data = ChainStore.getCommitteeMemberById( this.props.committee_member.get("id") )
+        let committee_member_data = ChainStore.getCommitteeMemberById( this.props.committee_member.get("id") );
 
         if (!committee_member_data) {
             return null;
@@ -69,16 +59,6 @@ class CommitteeMemberRow extends React.Component {
 
     static contextTypes = {
         router: React.PropTypes.object.isRequired
-    }
-
-    componentDidMount() {
-        ChainStore.fetchCommitteeMemberByAccount(this.props.committee_member.get("id")).then(() => {
-            this.forceUpdate();
-        });
-    }
-
-    componentWillUnmount() {
-        ChainStore.unSubFrom("subbedCommittee", ChainStore.getCommitteeMemberById( this.props.committee_member.get("id") ).get("id"));
     }
 
     _onRowClick(e) {
