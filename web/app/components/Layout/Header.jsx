@@ -16,6 +16,7 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
+import { Apis } from "bitsharesjs-ws";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -298,12 +299,13 @@ export default connect(Header, {
         return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
+        const chainID = Apis.instance().chain_id;
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
             starredAccounts: SettingsStore.getState().starredAccounts
         };
     }

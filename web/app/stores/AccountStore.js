@@ -259,10 +259,15 @@ class AccountStore extends BaseStore {
         });
     }
 
-    tryToSetCurrentAccount() {
+    _getCurrentAccountKey() {
+        const chainId = Apis.instance().chain_id;
+        return "currentAccount" + (chainId ? `_${chainId.substr(0, 8)}` : "");
+    }
 
-        if (accountStorage.has("currentAccount")) {
-            return this.setCurrentAccount(accountStorage.get("currentAccount", null));
+    tryToSetCurrentAccount() {
+        const key = this._getCurrentAccountKey();
+        if (accountStorage.has(key)) {
+            return this.setCurrentAccount(accountStorage.get(key, null));
         }
 
         let {starredAccounts} = SettingsStore.getState();
@@ -275,13 +280,14 @@ class AccountStore extends BaseStore {
     }
 
     setCurrentAccount(name) {
+        const key = this._getCurrentAccountKey();
         if (!name) {
             this.state.currentAccount = null;
         } else {
             this.state.currentAccount = name;
         }
 
-        accountStorage.set("currentAccount", this.state.currentAccount);
+        accountStorage.set(key, this.state.currentAccount);
     }
 
     onSetCurrentAccount(name) {

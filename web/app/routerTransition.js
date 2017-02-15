@@ -13,7 +13,6 @@ import PrivateKeyActions from "actions/PrivateKeyActions";
 
 let connect = true;
 const willTransitionTo = (nextState, replaceState, callback) => {
-    console.log("willTransitionTo", connect, nextState);
     let connectionString = SettingsStore.getSetting("apiServer");
 
     if (nextState.location.pathname === "/init-error") {
@@ -21,7 +20,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         return Apis.reset(connectionString, true).init_promise
         .then(() => {
             var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-            return Promise.all([db, ChainStore.init()]).then(() => {
+            return Promise.all([db, SettingsStore.init(), ChainStore.init()]).then(() => {
                 return callback();
             }).catch((err) => {
                 console.log("err:", err);
@@ -40,7 +39,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         } catch(err) {
             console.log("db init error:", err);
         }
-        return Promise.all([db, ChainStore.init()]).then(() => {
+        return Promise.all([db, SettingsStore.init(), ChainStore.init()]).then(() => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {

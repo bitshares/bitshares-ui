@@ -5,17 +5,15 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
 import MarketCard from "./MarketCard";
 import utils from "common/utils";
-// import { Apis } from "bitsharesjs-ws";
+import { Apis } from "bitsharesjs-ws";
 var logo = require("assets/logo-ico-blue.png");
 
 class Dashboard extends React.Component {
 
     constructor() {
         super();
-        this.state = {
-            width: null,
-            showIgnored: false,
-            featuredMarkets: [
+        let marketsByChain = {
+            "4018d784":[
                 ["BTS", "CNY"],
                 ["OPEN.BTC", "BTS", false],
                 ["OPEN.BTC", "OPEN.STEEM"],
@@ -32,9 +30,19 @@ class Dashboard extends React.Component {
                 ["OPEN.BTC", "OPEN.INCNT"],
                 [ "BTS", "OPEN.ETH"],
                 ["CNY", "USD"]
-                // ["BTS", "SILVER"]
-                // ["BTS", "EUR"]
             ],
+            "39f5e2ed": [
+                ["TEST", "PEG.FAKEUSD"],
+                ["TEST", "BTWTY"]
+            ]
+        };
+        let chainID = Apis.instance().chain_id;
+        if (chainID) chainID = chainID.substr(0, 8);
+        
+        this.state = {
+            width: null,
+            showIgnored: false,
+            featuredMarkets: marketsByChain[chainID] || marketsByChain["4018d784"],
             newAssets: [
 
             ]

@@ -9,6 +9,7 @@ import { connect } from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletManagerStore from "stores/WalletManagerStore";
 import SettingsStore from "stores/SettingsStore";
+import { Apis } from "bitsharesjs-ws";
 
 class MobileMenu extends React.Component {
     constructor() {
@@ -87,12 +88,13 @@ export default connect(MobileMenu, {
         return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
+        const chainID = Apis.instance().chain_id;
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
             myAccounts: AccountStore.getMyAccounts()
         };
     }
