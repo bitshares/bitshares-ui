@@ -92,9 +92,11 @@ class AccountDepositWithdraw extends React.Component {
                 blocktradesBackedCoins.push({
                     name: coins_by_type[coin_type.backingCoinType].name,
                     walletType: coins_by_type[coin_type.backingCoinType].walletType,
-                    backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
+                    walletSymbol: coins_by_type[coin_type.backingCoinType].walletSymbol,
+					backingCoinType: coins_by_type[coin_type.backingCoinType].coinType,
                     symbol: coin_type.walletSymbol,
-					supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos
+					supportsOutputMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos,
+                    coinType: coin_type.coinType
                 });
             }});
         return blocktradesBackedCoins;
@@ -110,9 +112,11 @@ class AccountDepositWithdraw extends React.Component {
                 openledgerBackedCoins.push({
                     name: coins_by_type[coin_type.backingCoinType].name,
                     walletType: coins_by_type[coin_type.backingCoinType].walletType,
-                    backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
+                    walletSymbol: coins_by_type[coin_type.backingCoinType].walletSymbol,
+					backingCoinType: coins_by_type[coin_type.backingCoinType].coinType,
                     symbol: coin_type.walletSymbol,
-					supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos
+					supportsOutputMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos,
+                    coinType: coin_type.coinType
                 });
             }});
         return openledgerBackedCoins;
@@ -165,7 +169,7 @@ class AccountDepositWithdraw extends React.Component {
             services, activeService} = this.state;
 
         let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
-            if (coin.backingCoinType === "muse") {    // it is not filterring, should be MUSE
+            if (coin.backingCoinType === "muse") {
                 return false;
             }
             return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;

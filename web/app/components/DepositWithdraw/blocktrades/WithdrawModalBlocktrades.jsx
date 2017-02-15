@@ -22,7 +22,9 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
         output_wallet_type: React.PropTypes.string,
-		output_supports_memos: React.PropTypes.bool.isRequired
+		output_supports_memos: React.PropTypes.bool.isRequired,
+        amount_to_withdraw: React.PropTypes.string,
+        balance: ChainTypes.ChainObject
     };
 
     constructor( props ) {
@@ -47,7 +49,7 @@ class WithdrawModalBlocktrades extends React.Component {
             })});
 
         this.state = {
-        withdraw_amount: null,
+        withdraw_amount: this.props.amount_to_withdraw,
         withdraw_address: localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) !== null ? localStorage.getItem(`history_address_last_${this.props.output_wallet_type}`) : '',
         withdraw_address_check_in_progress: true,
 		withdraw_address_is_valid: null,
@@ -222,6 +224,13 @@ class WithdrawModalBlocktrades extends React.Component {
         return "confirmation";
     }
 
+    onAccountBalance() {
+        if (Object.keys(this.props.account.get('balances').toJS()).includes(this.props.asset.get('id')) ) {
+            this.setState( {withdraw_amount: this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision"))} );
+        }
+        
+    }
+
     render() {
 
 	    let {withdraw_address_selected, memo} = this.state;
@@ -240,7 +249,7 @@ class WithdrawModalBlocktrades extends React.Component {
         if (asset_types.length > 0) {
             let current_asset_id = this.props.asset.get('id');
             if( current_asset_id )
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                balance = (<span><Translate component="span" content="transfer.available"/>: <span className="set-cursor" onClick={this.onAccountBalance.bind(this)}><BalanceComponent balance={account_balances[current_asset_id]}/></span></span>)
             else
                 balance = "No funds";
         } else {
