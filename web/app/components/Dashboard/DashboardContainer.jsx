@@ -24,7 +24,7 @@ class DashboardContainer extends React.Component {
                     return AccountStore.getState().myIgnoredAccounts;
                 }
               }}>
-                <Dashboard/>
+                <Dashboard {...this.props} />
             </AltContainer>
         );
     }

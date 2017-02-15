@@ -22,3 +22,12 @@ div.fm-container {
     padding-top: 4px;
    }
 }
+
+.Dashboard__intro-text {
+    padding: 20px;
+
+    > p:nth-of-type(2) {
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid grey;
+    }
+}
