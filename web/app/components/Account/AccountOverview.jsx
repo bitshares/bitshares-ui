@@ -173,7 +173,7 @@ class AccountOverview extends React.Component {
         let account_balances = account.get("balances");
 
         let includedBalancesList = Immutable.List(), hiddenBalancesList = Immutable.List();
-        account.get("call_orders").forEach( (callID) => {
+        call_orders.forEach( (callID) => {
             let position = ChainStore.getObject(callID);
             if (position) {
                 collateral += parseInt(position.get("collateral"), 10);

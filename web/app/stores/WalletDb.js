@@ -240,14 +240,18 @@ class WalletDb extends BaseStore {
                     this.setState({ wallet })
                     if(unlock) aes_private = local_aes_private
                 })
-                resolve( Promise.all([ add, end ]) )
+                Promise.all([ add, end ]).then(() => {
+                    resolve();
+                }).catch(err => {
+                    reject(err);
+                })
             })
         };
 
         if (__ELECTRON__) {
             return walletCreateFct(dictJson);
         } else {
-            let dictionaryPromise = brainkey_plaintext ? null : fetch(`${__BASE_URL__}/dictionary.json`);
+            let dictionaryPromise = brainkey_plaintext ? null : fetch(`${__BASE_URL__}dictionary.json`);
             return Promise.all([
                 dictionaryPromise
             ]).then(res => {
