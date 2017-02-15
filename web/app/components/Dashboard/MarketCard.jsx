@@ -30,6 +30,10 @@ class MarketCard extends React.Component {
 		super();
 
 		this.statsInterval = null;
+
+		this.state = {
+			imgError: false
+		};
 	}
 
 
@@ -52,6 +56,16 @@ class MarketCard extends React.Component {
 	goToMarket(e) {
 		e.preventDefault();
 		this.context.router.push(`/market/${this.props.base.get("symbol")}_${this.props.quote.get("symbol")}`);
+	}
+
+	_onError(imgName) {
+		if (!this.state.imgError) {
+			this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";
+			this.setState({
+				imgError: true
+			});
+		}
+
 	}
 
 	render() {
@@ -77,7 +91,7 @@ class MarketCard extends React.Component {
 		return (
 			<div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
 				<div className="grid-block vertical shrink">
-					<img ref={imgName.toLowerCase()} onError={() => {this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";}} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+					<img ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
 				</div>
 				<div className="grid-block vertical no-overflow">
 					<div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
