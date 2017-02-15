@@ -1,9 +1,33 @@
 ---------------------------------------------------------------------
+Release 2.0.170215
+---------------------------------------------------------------------
+New features
+- New intro text has been added to the Dashboard for new users
+- Several settings and wallet related parameters have been made dependent on the chain id, and will thus switch accordingly if you connect to the testnet for example.
+- Windows light client installer will now remove personal data properly if checked
+
+Bug fixes
+--------
+- Fix Russian language selection
+- Fix proxy selection
+- Fix committee/witness pages
+- A bug when importing old BTS 1 balances has been fixed
+- App init flow has been improved
+- Fix asset creation precision slider
+- Fix HelpContent links
+- Only trigger MarketCard img onerror update once
+- [Blocktrades] Fix issue with 'calculating crashes' in Blocktrades Bridge
+- [Blocktrades] Disable 'withdraw now' and 'convert now' buttons if no funds
+- [Blocktrades] Move amount from output withdraw section to withdraw dialog in Blocktrades Bridge
+- [Blocktrades] Fix displaying MKR coin
+- [Blocktrades] Add ability to move balance to 'Amount selector' in withdraw dialog on mouse click
+
+---------------------------------------------------------------------
 Release 2.0.170201
 ---------------------------------------------------------------------
 New features
 - Charting revamp: new charts using [react-stockchart](https://github.com/rrag/react-stockcharts)
-- Russian language translation thanks to @testzcrypto
+- Russian language translation thanks to @rusteemitblog and @testzcrypto
 - Add brainkey restoration to create-account, improve brainkey restoration
 - All open orders, collateral and debt are now included when estimating total account value on the account screen
 - A 'Borrow' action added to the account assets table
