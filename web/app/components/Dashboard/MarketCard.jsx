@@ -84,10 +84,6 @@ class MarketCard extends React.Component {
 		let stats = marketStats.get(marketID);
 		let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";
 
-		if (imgName === "BTS") {
-			imgName = getImageName(quote);
-		}
-
 		return (
 			<div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
 				<div className="grid-block vertical shrink">

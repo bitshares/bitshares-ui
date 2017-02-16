@@ -7,6 +7,7 @@ import MarketCard from "./MarketCard";
 import utils from "common/utils";
 import { Apis } from "bitsharesjs-ws";
 var logo = require("assets/logo-ico-blue.png");
+import LoadingIndicator from "../LoadingIndicator";
 
 class Dashboard extends React.Component {
 
@@ -15,21 +16,21 @@ class Dashboard extends React.Component {
         let marketsByChain = {
             "4018d784":[
                 ["BTS", "CNY"],
+                ["OPEN.BTC", "CNY", false],
+                ["CNY", "USD"],
                 ["OPEN.BTC", "BTS", false],
-                ["OPEN.BTC", "OPEN.STEEM"],
-                ["BTS", "ICOO"],
-                ["BTS", "BLOCKPAY"],
-                ["BTS", "OBITS"],
+                ["USD", "OPEN.BTC"],
+                ["USD", "OPEN.USDT"],
                 ["BTS", "USD"],
                 ["BTS", "GOLD"],
+                ["BTS", "BLOCKPAY"],
+                ["BTS", "OBITS"],
                 ["BTS", "SILVER"],
-                ["USD", "OPEN.BTC"],
                 ["OPEN.BTC", "OPEN.DGD", false],
                 ["BTS", "BTWTY"],
-                ["USD", "OPEN.USDT"],
-                ["OPEN.BTC", "OPEN.INCNT"],
                 [ "BTS", "OPEN.ETH"],
-                ["CNY", "USD"]
+                ["BTS", "ICOO"],
+                ["OPEN.BTC", "OPEN.STEEM"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -38,7 +39,7 @@ class Dashboard extends React.Component {
         };
         let chainID = Apis.instance().chain_id;
         if (chainID) chainID = chainID.substr(0, 8);
-        
+
         this.state = {
             width: null,
             showIgnored: false,
@@ -80,6 +81,7 @@ class Dashboard extends React.Component {
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextState.width !== this.state.width ||
+            nextProps.accountsReady !== this.props.accountsReady ||
             nextState.showIgnored !== this.state.showIgnored
         );
     }
@@ -103,13 +105,16 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        let {linkedAccounts, myIgnoredAccounts} = this.props;
+        let { linkedAccounts, myIgnoredAccounts, accountsReady } = this.props;
         let {width, showIgnored, featuredMarkets, newAssets} = this.state;
-
         let names = linkedAccounts.toArray().sort();
         let ignored = myIgnoredAccounts.toArray().sort();
 
         let accountCount = linkedAccounts.size + myIgnoredAccounts.size;
+
+        if (!accountsReady) {
+            return <LoadingIndicator />;
+        }
 
         let markets = featuredMarkets.map((pair, index) => {
 
