@@ -790,8 +790,8 @@ class MarketsStore {
         this.marketData.lowestAsk = !combinedAsks.length ? nullPrice :
             combinedAsks[0];
 
-        this.marketData.highestBid = !this.marketData.combinedBids.length ? nullPrice :
-            this.marketData.combinedBids[0];
+        this.marketData.highestBid = !combinedBids.length ? nullPrice :
+            combinedBids[0];
 
         this.marketData.combinedBids = combinedBids;
         this.marketData.combinedAsks = combinedAsks;
