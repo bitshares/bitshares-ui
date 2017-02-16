@@ -514,8 +514,8 @@ class OrderBook extends React.Component {
                                 </div>
                             </div>
                     </div>
-                    <div style={{width: "100%", borderTop: "1px solid grey"}} className="align-center grid-block footer shrink bottom-header">
-                        <div onClick={this.props.moveOrderBook} className="button outline">
+                    <div style={{width: "100%"}} className="v-align no-padding align-center grid-block footer shrink bottom-header">
+                        <div onClick={this.props.moveOrderBook} className="button small outline horizontal-button">
                             <Translate content="exchange.horizontal" />
                         </div>
                     </div>

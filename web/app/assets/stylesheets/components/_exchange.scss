@@ -144,6 +144,11 @@ form.order-form {
 }
 .bottom-header {
   padding-top: 0.25rem;
+  > .horizontal-button {
+      height: 100%;
+      width: 100%;
+      border-bottom: none !important;
+  }
 }
 
 tr.top-header, tr.bottom-header, tr.spread-row {
