@@ -78,13 +78,13 @@ class Exchange extends React.Component {
         let savedIndicators = ws.get("indicators", {});
         let indicators = {};
         [["sma", true], ["ema1", false], ["ema2", false], ["smaVolume", true], ["macd", false], ["bb", false]].forEach(i => {
-            indicators[i[0]] = savedIndicators[i[0]] || i[1];
+            indicators[i[0]] = (i[0] in savedIndicators) ? savedIndicators[i[0]] : i[1];
         });
 
         let savedIndicatorsSettings = ws.get("indicatorSettings", {});
         let indicatorSettings = {};
         [["sma", 7], ["ema1", 20], ["ema2", 50], ["smaVolume", 30]].forEach(i => {
-            indicatorSettings[i[0]] = savedIndicatorsSettings[i[0]] || i[1];
+            indicatorSettings[i[0]] = (i[0] in savedIndicatorsSettings) ?  savedIndicatorsSettings[i[0]] : i[1];
         });
 
         return {
