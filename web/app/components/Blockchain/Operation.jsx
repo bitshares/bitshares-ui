@@ -419,9 +419,9 @@ class Operation extends React.Component {
                         <TranslateWithLinks
                             string="operation.asset_global_settle"
                             keys={[
-                                {type: "account", value: op[1].account, arg: "account"},
+                                {type: "account", value: op[1].issuer, arg: "account"},
                                 {type: "asset", value: op[1].asset_to_settle, arg: "asset"},
-                                {type: "price", value: op[1].price, arg: "price"}
+                                {type: "price", value: op[1].settle_price, arg: "price"}
                             ]}
                         />
                     </span>
