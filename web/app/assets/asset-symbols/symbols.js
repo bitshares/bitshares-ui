@@ -7,7 +7,7 @@ require("file-loader?name=asset-symbols/[name].png!./eur.png");
 require("file-loader?name=asset-symbols/[name].png!./cny.png");
 require("file-loader?name=asset-symbols/[name].png!./gold.png");
 require("file-loader?name=asset-symbols/[name].png!./btc.png");
-require("file-loader?name=asset-symbols/silver.png!./bts.png");
+require("file-loader?name=asset-symbols/silver.png!./silver.png");
 
 // 3rd party assets
 require("file-loader?name=asset-symbols/[name].png!./eth.png");
