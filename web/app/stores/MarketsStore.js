@@ -173,6 +173,16 @@ class MarketsStore {
         });
     }
 
+    _marketHasCalls() {
+        const {quoteAsset, baseAsset} = this;
+        if (quoteAsset.has("bitasset") && quoteAsset.getIn(["bitasset", "options", "short_backing_asset"]) === baseAsset.get("id")) {
+            return true;
+        } else if (baseAsset.has("bitasset") && baseAsset.getIn(["bitasset", "options", "short_backing_asset"]) === quoteAsset.get("id")) {
+            return true;
+        }
+        return false;
+    }
+
     onSubscribeMarket(result) {
         if (result.switchMarket) {
             this.marketReady = false;
@@ -481,16 +491,17 @@ class MarketsStore {
     }
 
     _getFeed() {
+        if (!this._marketHasCalls()) {
+            this.bitasset_options = null;
+            this.is_prediction_market = false;
+            return null;
+        }
+
         const assets = {
             [this.quoteAsset.get("id")]: {precision: this.quoteAsset.get("precision")},
             [this.baseAsset.get("id")]: {precision: this.baseAsset.get("precision")}
         };
         let settlePrice =  this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "settlement_price"]);
-        if (!settlePrice) {
-            this.bitasset_options = null;
-            this.is_prediction_market = false;
-            return null;
-        }
 
         try {
             let sqr = this[this.invertedCalls ? "baseAsset" : "quoteAsset"].getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]);
