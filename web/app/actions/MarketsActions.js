@@ -136,10 +136,10 @@ class MarketsActions {
                         // Only check for call and settle orders if either the base or quote is the CORE asset
                         if (isMarketAsset) {
                             callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                                marketAsset.id, 100
+                                marketAsset.id, 200
                             ]);
                             settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                                marketAsset.id, 100
+                                marketAsset.id, 200
                             ]);
                         }
 
@@ -156,7 +156,7 @@ class MarketsActions {
                         // of operations received in the subscription update
                         Promise.all([
                             Apis.instance().db_api().exec("get_limit_orders", [
-                                base.get("id"), quote.get("id"), 100
+                                base.get("id"), quote.get("id"), 200
                             ]),
                             onlyLimitOrder ? null : callPromise,
                             onlyLimitOrder ? null : settlePromise,
@@ -199,10 +199,10 @@ class MarketsActions {
 
                 if (isMarketAsset) {
                     callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                        marketAsset.id, 100
+                        marketAsset.id, 200
                     ]);
                     settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                        marketAsset.id, 100
+                        marketAsset.id, 200
                     ]);
                 }
 
@@ -212,13 +212,13 @@ class MarketsActions {
                 startDate = new Date(startDate.getTime() - bucketSize * bucketCount * 1000);
                 startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
                 endDate.setDate(endDate.getDate() + 1);
-                console.time("Fetch market data");
+                if (__DEV__) console.time("Fetch market data");
                 return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
                         subscription, base.get("id"), quote.get("id")
                     ]),
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        base.get("id"), quote.get("id"), 100
+                        base.get("id"), quote.get("id"), 200
                     ]),
                     callPromise,
                     settlePromise,
@@ -233,7 +233,8 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
-                    console.timeEnd("Fetch market data");
+
+                    if (__DEV__) console.timeEnd("Fetch market data");
                     dispatch({
                         limits: results[1],
                         calls: results[2],

@@ -698,20 +698,20 @@ class MarketsStore {
 
         // Assign to store variables
         if (limitsChanged) {
-            console.time("Construct limit orders " + this.activeMarket);
+            if (__DEV__) console.time("Construct limit orders " + this.activeMarket);
             this.marketData.bids = constructBids(this.marketLimitOrders);
             this.marketData.asks = constructAsks(this.marketLimitOrders);
             if (!callsChanged) {
                 this._combineOrders();
             }
-            console.timeEnd("Construct limit orders " + this.activeMarket);
+            if (__DEV__) console.timeEnd("Construct limit orders " + this.activeMarket);
         }
 
         if (callsChanged) {
-            console.time("Construct calls " + this.activeMarket);
+            if (__DEV__) console.time("Construct calls " + this.activeMarket);
             this.marketData.calls = this.constructCalls(this.marketCallOrders);
             this._combineOrders();
-            console.timeEnd("Construct calls " + this.activeMarket);
+            if (__DEV__) console.timeEnd("Construct calls " + this.activeMarket);
         }
 
         // console.log("time to construct orderbook:", new Date() - orderBookStart, "ms");
