@@ -132,6 +132,8 @@ class OrderBook extends React.Component {
 
             if (this.refs.askTransition) {
                 this.refs.askTransition.resetAnimation();
+                if (this.refs.hor_asks) this.refs.hor_asks.scrollTop = 0;
+                if (this.refs.hor_bids) this.refs.hor_bids.scrollTop = 0;
             }
 
             if (this.refs.bidTransition) {
