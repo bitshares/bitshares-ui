@@ -7,7 +7,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
-import BlockTradesDepositAddressCache from "./BlockTradesDepositAddressCache";
+import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import utils from "common/utils";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -29,7 +29,7 @@ class ButtonConversion extends React.Component {
         this.state =
         {
             error: null,
-			conversion_memo: null
+            conversion_memo: null
         };
     }
 
@@ -66,7 +66,7 @@ class ButtonConversion extends React.Component {
                     throw Error("unexpected reply from initiate-trade");
 				}
                 if (input_coin_type == json.inputCoinType && output_coin_type == json.outputCoinType && !isNaN(this.props.amount)) {
-					
+
                     this.setState({conversion_memo: json.inputMemo});
                     this.setState({error: null});
                     let precision = utils.get_asset_precision(this.props.asset.get("precision"));
@@ -88,7 +88,7 @@ class ButtonConversion extends React.Component {
                         console.log( "error: ", e, msg);
                         this.setState({error: msg})
                     } );
-				
+
 				}
             }, error => {
                 this.setState({conversion_memo: null});
@@ -103,7 +103,7 @@ class ButtonConversion extends React.Component {
     render() {
 
         let button_class = "button disabled";
-        if (Object.keys(this.props.account_balances.toJS()).includes(this.props.asset.get('id')) ) {		
+        if (Object.keys(this.props.account_balances.toJS()).includes(this.props.asset.get('id')) ) {
             if (!(this.props.amount.indexOf(' ') >= 0) && !isNaN(this.props.amount) && (this.props.amount > 0) && (this.props.amount <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
 
                 button_class = "button";
@@ -133,7 +133,7 @@ class ButtonConversionContainer extends React.Component {
     render() {
 
         let conversion_button =
-            <ButtonConversion asset={this.props.asset.get("id")} 
+            <ButtonConversion asset={this.props.asset.get("id")}
                 input_coin_type={this.props.input_coin_type}
                 output_coin_type={this.props.output_coin_type}
                 account_name={this.props.account_name}
@@ -172,7 +172,7 @@ class ButtonWithdraw extends React.Component {
         let withdraw_modal_id = this.getWithdrawModalId();
 
         let button_class = "button disabled";
-        if (Object.keys(this.props.account.get('balances').toJS()).includes(this.props.asset.get('id')) ) {		
+        if (Object.keys(this.props.account.get('balances').toJS()).includes(this.props.asset.get('id')) ) {
             if (!(this.props.amount_to_withdraw.indexOf(' ') >= 0) && !isNaN(this.props.amount_to_withdraw) && (this.props.amount_to_withdraw > 0) && (this.props.amount_to_withdraw <= this.props.balance.toJS().balance/utils.get_asset_precision(this.props.asset.get("precision")))) {
 
                 button_class = "button";
@@ -183,7 +183,7 @@ class ButtonWithdraw extends React.Component {
         return (<span>
                     <span>
                         <button className={button_class} onClick={this.onWithdraw.bind(this)}><Translate content="" /><Translate content="gateway.withdraw_now" /> </button>
-                    </span>                    
+                    </span>
                     <Modal id={withdraw_modal_id} overlay={true}>
                         <Trigger close={withdraw_modal_id}>
                             <a href="#" className="close-button">&times;</a>
@@ -844,7 +844,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             if (reply.inputCoinType != input_coin_type ||
                 reply.outputCoinType != output_coin_type ||
                 reply.outputAmount != output_amount) {
-                    
+
                     if (deposit_withdraw_or_convert == 'deposit') {
                         this.setState({failed_calculate_deposit: 'Failed to calculate'});
                     }
@@ -931,7 +931,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (deposit_withdraw_or_convert == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(new_input_coin_type, new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type);
-		
+
         if (!this.state[deposit_withdraw_or_convert + "_estimated_input_amount"]) {
             estimated_input_output_amount = this.getAndUpdateInputEstimate(deposit_withdraw_or_convert, new_input_coin_type, new_output_coin_type, this.state[deposit_withdraw_or_convert + "_estimated_output_amount"]);
             estimated_input_output_amount_state = "_estimated_input_amount";
@@ -945,7 +945,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     this.setState({
                     coin_symbol: new_input_coin_type + 'input',
                     supports_output_memos: this.state.coins_by_type[allowed_withdraw_output_coin_type].supportsOutputMemos
-                    });	
+                    });
                 }
             });
         }
@@ -984,7 +984,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (deposit_withdraw_or_convert == "deposit")
             new_input_address_and_memo = this.getCachedOrGeneratedInputAddress(this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
         let new_deposit_limit = this.getCachedOrFreshDepositLimit(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type);
-		
+
         if (!this.state[deposit_withdraw_or_convert + "_estimated_input_amount"]) {
             estimated_input_output_amount = this.getAndUpdateInputEstimate(deposit_withdraw_or_convert, this.state[deposit_withdraw_or_convert + "_input_coin_type"], new_output_coin_type, this.state[deposit_withdraw_or_convert + "_estimated_output_amount"]);
             estimated_input_output_amount_state = "_estimated_input_amount";

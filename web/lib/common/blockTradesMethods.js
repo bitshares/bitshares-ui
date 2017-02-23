@@ -24,7 +24,7 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
         body: body_string
     }).then( reply => { reply.json()
         .then( json => {
-            // console.log( "reply: ", json )
+            console.log( "reply: ", json )
             let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo};
             if (stateCallback) stateCallback(address);
         }, error => {
@@ -96,17 +96,3 @@ export const WithdrawAddresses = {
     setLast: setLastWithdrawalAddress,
     getLast: getLastWithdrawalAddress
 };
-
-// export default {
-//     fetchCoins,
-//     getBackedCoins,
-//     requestDepositAddress,
-//     validateAddress,
-//     WithdrawAddresses: {
-//         has: hasWithdrawalAddress,
-//         set: setWithdrawalAddresses,
-//         get: getWithdrawalAddresses,
-//         setLast: setLastWithdrawalAddress,
-//         getLast: getLastWithdrawalAddress
-//     }
-// };

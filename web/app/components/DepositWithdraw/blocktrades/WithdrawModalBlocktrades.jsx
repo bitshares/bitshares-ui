@@ -55,9 +55,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSelectChanged(index, e) {
-		// let new_withdraw_address = JSON.parse(localStorage.getItem(`history_address_${this.props.output_wallet_type}`))[index];
         let new_withdraw_address = WithdrawAddresses.get(this.props.output_wallet_type)[index];
-		// localStorage.setItem(`history_address_last_${this.props.output_wallet_type}`, JSON.parse(localStorage.getItem(`history_address_${this.props.output_wallet_type}`))[index]);
         WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: new_withdraw_address});
 
         this.setState({

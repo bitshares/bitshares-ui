@@ -15,6 +15,7 @@ import cnames from "classnames";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
+import {fetchCoins, getBackedCoins} from "common/blockTradesMethods";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -59,67 +60,19 @@ class AccountDepositWithdraw extends React.Component {
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
 
-        fetch("https://blocktrades.us/api/v2/coins").then(reply => reply.json().then(result => {
+        fetchCoins("https://blocktrades.us/api/v2/coins").then(result => {
             this.setState({
-                blockTradesCoins: result
+                blockTradesCoins: result,
+                blockTradesBackedCoins: getBackedCoins({allCoins: result, backer: "TRADE"})
             });
-            this.setState({
-                blockTradesBackedCoins: this.getBlocktradesBackedCoins(result)
-            });
-        })).catch(err => {
-            console.log("error fetching blocktrades list of coins", err);
         });
 
-        fetch("https://blocktrades.us/ol/api/v2/coins").then(reply => reply.json().then(result => {
+        fetchCoins().then(result => {
             this.setState({
-                openLedgerCoins: result
+                openLedgerCoins: result,
+                openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
             });
-            this.setState({
-                openLedgerBackedCoins: this.getOpenledgerBackedCoins(result)
-            });
-        })).catch(err => {
-            console.log("error fetching openledger list of coins", err);
         });
-    }
-
-    getBlocktradesBackedCoins(allBlocktradesCoins) {
-        let coins_by_type = {};
-        allBlocktradesCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
-        let blocktradesBackedCoins = [];
-        allBlocktradesCoins.forEach(coin_type => {
-            if (coin_type.walletSymbol.startsWith('TRADE.') && coin_type.backingCoinType)
-            {
-                blocktradesBackedCoins.push({
-                    name: coins_by_type[coin_type.backingCoinType].name,
-                    walletType: coins_by_type[coin_type.backingCoinType].walletType,
-                    walletSymbol: coins_by_type[coin_type.backingCoinType].walletSymbol,
-					backingCoinType: coins_by_type[coin_type.backingCoinType].coinType,
-                    symbol: coin_type.walletSymbol,
-					supportsOutputMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos,
-                    coinType: coin_type.coinType
-                });
-            }});
-        return blocktradesBackedCoins;
-    }
-
-	getOpenledgerBackedCoins(allOpenledgerCoins) {
-        let coins_by_type = {};
-        allOpenledgerCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
-        let openledgerBackedCoins = [];
-        allOpenledgerCoins.forEach(coin_type => {
-            if (coin_type.walletSymbol.startsWith('OPEN.') && coin_type.backingCoinType)
-            {
-                openledgerBackedCoins.push({
-                    name: coins_by_type[coin_type.backingCoinType].name,
-                    walletType: coins_by_type[coin_type.backingCoinType].walletType,
-                    walletSymbol: coins_by_type[coin_type.backingCoinType].walletSymbol,
-					backingCoinType: coins_by_type[coin_type.backingCoinType].coinType,
-                    symbol: coin_type.walletSymbol,
-					supportsOutputMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos,
-                    coinType: coin_type.coinType
-                });
-            }});
-        return openledgerBackedCoins;
     }
 
     toggleOLService(service) {
@@ -178,23 +131,23 @@ class AccountDepositWithdraw extends React.Component {
             return coin;
         })
         .sort((a, b) => {
-			if (a.symbol < b.symbol)
-				return -1
-			if (a.symbol > b.symbol)
-				return 1
-			return 0
-		});
+            if (a.symbol < b.symbol)
+                return -1
+            if (a.symbol > b.symbol)
+                return 1
+            return 0
+        });
 
         let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
             return coin;
         })
         .sort((a, b) => {
-			if (a.symbol < b.symbol)
-				return -1
-			if (a.symbol > b.symbol)
-				return 1
-			return 0
-		});
+            if (a.symbol < b.symbol)
+                return -1
+            if (a.symbol > b.symbol)
+                return 1
+            return 0
+        });
 
         let options = services.map(name => {
             return <option key={name} value={name}>{name}</option>;
@@ -202,7 +155,7 @@ class AccountDepositWithdraw extends React.Component {
 
 
         return (
-		<div className={this.props.contained ? "grid-content" : "grid-container"}>
+        <div className={this.props.contained ? "grid-content" : "grid-container"}>
             <div className={this.props.contained ? "" : "grid-content"}>
                 <div style={{borderBottom: "2px solid #444"}}>
                     <HelpContent path="components/DepositWithdraw" section="receive" account={account.get("name")}/>
@@ -215,7 +168,7 @@ class AccountDepositWithdraw extends React.Component {
                     {options}
                 </select>
 
-    			<div className="grid-content no-padding" style={{paddingTop: 15}}>
+                <div className="grid-content no-padding" style={{paddingTop: 15}}>
 
                 {activeService === services.indexOf("BlockTrades (TRADE.X)") ?
                 <div>
@@ -323,7 +276,7 @@ class AccountDepositWithdraw extends React.Component {
 
                 </div>
             </div>
-		</div>
+        </div>
     );
     }
 };
