@@ -411,3 +411,13 @@ input[type=number] {
 .unlock-tooltip {
     min-width: 150px;
 }
+
+section input[type="text"], section input[type="password"] {
+  background-color: transparent;
+  border:none;
+  max-width: 30rem;
+  &:hover, &:active, &:focus {
+    background-color: transparent;
+    border:none;
+  }
+}

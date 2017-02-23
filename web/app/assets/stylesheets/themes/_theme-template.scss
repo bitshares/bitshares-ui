@@ -603,15 +603,10 @@
 
   // Block List (section)
   section input[type="text"], section input[type="password"] {
-    background-color: transparent;
-    border:none;
     border-bottom: 1px solid $panel-bg-color;
     color: $primary-text-color;
-    max-width: 30rem;
     &:hover, &:active, &:focus {
       color: $primary-text-color;
-      background-color: transparent;
-      border:none;
       border-bottom: 1px solid $panel-bg-color;
     }
   }

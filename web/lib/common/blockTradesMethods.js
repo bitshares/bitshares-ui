@@ -25,7 +25,7 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
     }).then( reply => { reply.json()
         .then( json => {
             console.log( "reply: ", json )
-            let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo};
+            let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo, error: json.error || null};
             if (stateCallback) stateCallback(address);
         }, error => {
             // console.log( "error: ",error  );

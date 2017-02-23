@@ -62,6 +62,7 @@
     "perfect-scrollbar": "git+https://github.com/bitshares/perfect-scrollbar.git",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.1",
+    "react-clipboard.js": "^1.0.1",
     "react-dom": "^15.4.1",
     "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
     "react-highcharts": "^10.0.0",

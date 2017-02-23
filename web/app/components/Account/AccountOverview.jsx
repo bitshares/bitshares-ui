@@ -21,6 +21,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
+import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
+import { fetchCoins, getBackedCoins } from "common/blockTradesMethods";
 
 class AccountOverview extends React.Component {
 
@@ -32,19 +34,21 @@ class AccountOverview extends React.Component {
         super();
         this.state = {
             settleAsset: "1.3.0",
-            showHidden: false
+            showHidden: false,
+            depositAsset: null,
+            withdrawAsset: null
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.balanceAssets, this.props.balanceAssets) ||
+            !utils.are_equal_shallow(nextProps.openLedgerBackedCoins, this.props.openLedgerBackedCoins) ||
             !utils.are_equal_shallow(nextProps.balances, this.props.balances) ||
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
-            nextState.settleAsset !== this.state.settleAsset ||
-            nextState.showHidden !== this.state.showHidden
+            !utils.are_equal_shallow(nextState, this.state)
         );
     }
 
@@ -59,6 +63,21 @@ class AccountOverview extends React.Component {
 
     _hideAsset(asset, status) {
         SettingsActions.hideAsset(asset, status);
+    }
+
+    _showDepositWithdraw(action, asset, fiatModal, e) {
+        e.preventDefault();
+        console.log("_showDepositWithdraw:", action, asset);
+        this.setState({
+            [action === "deposit_modal" ? "depositAsset" : "withdrawAsset"]: asset,
+            fiatModal
+        }, () => {
+            this.refs[action].show();
+        });
+    }
+
+    _getSeparator(render) {
+        return render ? <span> | </span> : null;
     }
 
     _renderBalances(balanceList) {
@@ -78,44 +97,46 @@ class AccountOverview extends React.Component {
             let assetInfoLinks;
             let marketLink, directMarketLink, settleLink, transferLink, borrowLink, borrowModal;
             let symbol = "";
-            if (asset) {
-                const notCore = asset.get("id") !== "1.3.0";
-                let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
-                symbol = asset.get("symbol");
-                let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
+            if (!asset) return null;
 
-                /* Table content */
-                marketLink = notCore ? <a href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
-                directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="account.trade" /></Link> : null;
-                transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Translate content="transaction.trxTypes.transfer" /></Link>;
+            const assetName = asset.get("symbol");
+            const notCore = asset.get("id") !== "1.3.0";
+            let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
+            symbol = asset.get("symbol");
+            let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
 
-                if (isBitAsset) {
-                    let modalRef = "cp_modal_" + asset.get("id");
-                    borrowModal = <BorrowModal
-                        ref={modalRef}
-                        quote_asset={asset.get("id")}
-                        backing_asset={asset.getIn(["bitasset", "options", "short_backing_asset"])}
-                        account={this.props.account}
-                    />;
+            /* Table content */
+            marketLink = notCore ? <a href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
+            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="account.trade" /></Link> : null;
+            transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Translate content="transaction.trxTypes.transfer" /></Link>;
 
-                    borrowLink = <a onClick={() => {ReactTooltip.hide();this.refs[modalRef].show();}}><Translate content="exchange.borrow" /></a>;
-                }
+            if (isBitAsset) {
+                let modalRef = "cp_modal_" + asset.get("id");
+                borrowModal = <BorrowModal
+                    ref={modalRef}
+                    quote_asset={asset.get("id")}
+                    backing_asset={asset.getIn(["bitasset", "options", "short_backing_asset"])}
+                    account={this.props.account}
+                />;
 
-                /* Popover content */
-                settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
-                    <Translate content="account.settle"/></a>;
-                assetInfoLinks = (
-                <ul>
-                    <li><a href={`${__HASH_HISTORY__ ? "#" : ""}/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
-                    {notCore ? <li>{marketLink}</li> : null}
-                    {isBitAsset ? <li>{settleLink}</li> : null}
-                </ul>);
+                borrowLink = <a onClick={() => {ReactTooltip.hide();this.refs[modalRef].show();}}><Translate content="exchange.borrow" /></a>;
             }
 
-            let includeAsset = !hiddenAssets.includes(asset_type);
-            let hasBalance = !!balanceObject.get("balance");
-            let hasOnOrder = !!orders[asset_type];
+            /* Popover content */
+            settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
+                <Translate content="account.settle"/></a>;
+            assetInfoLinks = (
+            <ul>
+                <li><a href={`${__HASH_HISTORY__ ? "#" : ""}/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                {notCore ? <li>{marketLink}</li> : null}
+                {isBitAsset ? <li>{settleLink}</li> : null}
+            </ul>);
 
+            const includeAsset = !hiddenAssets.includes(asset_type);
+            const hasBalance = !!balanceObject.get("balance");
+            const hasOnOrder = !!orders[asset_type];
+            const canDepositWithdraw = !!this.props.openLedgerBackedCoins.find(a => a.symbol === asset.get("symbol"));
+            const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             let onOrders = hasOnOrder ? <FormattedAsset amount={orders[asset_type]} asset={asset_type} /> : null;
 
             if (hasOnOrder) {
@@ -151,6 +172,22 @@ class AccountOverview extends React.Component {
                     </td> : null}
                     <td style={{textAlign: "center"}}>
                         {transferLink}
+                        {canDepositWithdraw && this.props.isMyAccount? (
+                            <span>
+                                {this._getSeparator(hasBalance || hasOnOrder)}
+                                <a onClick={this._showDepositWithdraw.bind(this, "deposit_modal", assetName, false)}>
+                                    <Translate content="gateway.deposit" />
+                                </a>
+                            </span>
+                        ) : null}
+                        {canWithdraw && this.props.isMyAccount? (
+                            <span>
+                                {this._getSeparator(canDepositWithdraw || hasBalance)}
+                                <a className={!canWithdraw ? "disabled" : ""} onClick={canWithdraw ? this._showDepositWithdraw.bind(this, "withdraw_modal", assetName, false) : () => {}}>
+                                    <Translate content="modal.withdraw.submit" />
+                                </a>
+                            </span>
+                        ) : null}
                     </td>
                     <td style={{textAlign: "center"}}>
                         {directMarketLink}
@@ -249,6 +286,14 @@ class AccountOverview extends React.Component {
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
+        // Find the current Openledger coins
+        const currentDepositAsset = this.props.openLedgerBackedCoins.find(c => {
+            return c.symbol === this.state.depositAsset;
+        }) || {};
+        const currentWithdrawAsset = this.props.openLedgerBackedCoins.find(c => {
+            return c.symbol === this.state.withdrawAsset;
+        }) || {};
+
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block small-12">
@@ -336,6 +381,32 @@ class AccountOverview extends React.Component {
                         showFilters={true}
                     />
                 </div>
+
+                {/* Deposit Modal */}
+                <SimpleDepositWithdraw
+                    ref="deposit_modal"
+                    action="deposit"
+                    fiatModal={this.state.fiatModal}
+                    account={this.props.account.get("name")}
+                    sender={this.props.account.get("id")}
+                    asset={this.state.depositAsset}
+                    modalId="simple_deposit_modal"
+                    balances={this.props.balances}
+                    {...currentDepositAsset}
+                />
+
+                {/* Withdraw Modal */}
+                <SimpleDepositWithdraw
+                    ref="withdraw_modal"
+                    action="withdraw"
+                    fiatModal={this.state.fiatModal}
+                    account={this.props.account.get("name")}
+                    sender={this.props.account.get("id")}
+                    asset={this.state.withdrawAsset}
+                    modalId="simple_withdraw_modal"
+                    balances={this.props.balances}
+                    {...currentWithdrawAsset}
+                />
             </div>
 
         );
@@ -356,6 +427,24 @@ class BalanceWrapper extends React.Component {
         orders: Immutable.List()
     };
 
+    constructor() {
+        super();
+
+        this.state = {
+            openLedgerCoins: [],
+            openLedgerBackedCoins: []
+        };
+    }
+
+    componentWillMount() {
+        fetchCoins().then(result => {
+            this.setState({
+                openLedgerCoins: result,
+                openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
+            });
+        });
+    }
+
     render() {
         let balanceAssets = this.props.balances.map(b => {
             return b && b.get("asset_type");
@@ -375,7 +464,7 @@ class BalanceWrapper extends React.Component {
         }
 
         return (
-            <AccountOverview {...this.props} orders={ordersByAsset} balanceAssets={Immutable.List(balanceAssets)} />
+            <AccountOverview {...this.state} {...this.props} orders={ordersByAsset} balanceAssets={Immutable.List(balanceAssets)} />
         );
     };
 }
