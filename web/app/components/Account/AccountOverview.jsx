@@ -66,7 +66,7 @@ class AccountOverview extends React.Component {
         let preferredUnit = settings.get("unit") || "1.3.0";
         let showAssetPercent = settings.get("showAssetPercent", false);
 
-        let balances = [];
+        let balances = [], openOrders = [];
         balanceList.forEach( balance => {
             let balanceObject = ChainStore.getObject(balance);
             let asset_type = balanceObject.get("asset_type");
@@ -118,24 +118,42 @@ class AccountOverview extends React.Component {
 
             let onOrders = hasOnOrder ? <FormattedAsset amount={orders[asset_type]} asset={asset_type} /> : null;
 
+            if (hasOnOrder) {
+                let goToLink = <Link to={`/account/${this.props.account.get("name")}/orders`}><Translate content="account.see_open" /></Link>;
+                openOrders.push(
+                    <tr key={balance} style={{maxWidth: "100rem"}}>
+                        <td style={{textAlign: "right"}}>
+                            <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>{onOrders}</div>
+                        </td>
+                        <td style={{textAlign: "right"}}>
+                            <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open_value", {asset: symbol})} style={{paddingTop: 8}}>
+                                <EquivalentValueComponent amount={orders[asset_type]} fromAsset={asset_type} noDecimals={true} toAsset={preferredUnit}/>
+                            </div>
+                        </td>
+                        <td colSpan="3" style={{textAlign: "center"}}>
+                            {directMarketLink}
+                            {directMarketLink ? <span> | </span> : null}
+                            {goToLink}
+                        </td>
+                    </tr>
+                );
+            }
             balances.push(
                 <tr key={balance} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "right"}}>
-                        {hasBalance ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
-                        {hasOnOrder ? <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>({onOrders})</div> : null}
+                        {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
                     </td>
                     <td style={{textAlign: "right"}}>
-                        {hasBalance ? <BalanceValueComponent balance={balance} toAsset={preferredUnit}/> : null}
-                        {hasOnOrder ? <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>
-                            (<EquivalentValueComponent amount={orders[asset_type]} fromAsset={asset_type} noDecimals={true} toAsset={preferredUnit}/>)
-                        </div> : null}
+                        {hasBalance || hasOnOrder ? <BalanceValueComponent balance={balance} toAsset={preferredUnit}/> : null}
                     </td>
                     {showAssetPercent ? <td style={{textAlign: "right"}}>
                         {hasBalance ? <BalanceComponent balance={balance} asPercentage={true}/> : null}
                     </td> : null}
                     <td style={{textAlign: "center"}}>
+                        {transferLink}
+                    </td>
+                    <td style={{textAlign: "center"}}>
                         {directMarketLink}
-                        {transferLink ? <span> {marketLink ? "|" : ""} {transferLink}</span> : null}
                         {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.borrow", {asset: symbol})}>&nbsp;| {borrowLink}{borrowModal}</div> : null}
                         {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.settle", {asset: symbol})}>&nbsp;| {settleLink}</div> : null}
                     </td>
@@ -148,7 +166,7 @@ class AccountOverview extends React.Component {
             );
         });
 
-        return balances;
+        return {balances, openOrders};
     }
 
     _toggleHiddenAssets() {
@@ -168,7 +186,7 @@ class AccountOverview extends React.Component {
         let call_orders = [], collateral = 0, debt = {};
 
         if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
-        let includedBalances, hiddenBalances;
+        let includedBalances, hiddenBalances, includedOrders, hiddenOrders, hasOpenOrders = false;
         let account_balances = account.get("balances");
 
         let includedBalancesList = Immutable.List(), hiddenBalancesList = Immutable.List();
@@ -206,18 +224,20 @@ class AccountOverview extends React.Component {
                 }
             });
 
-            includedBalances = this._renderBalances(includedBalancesList);
-            hiddenBalances = this._renderBalances(hiddenBalancesList);
+            let included = this._renderBalances(includedBalancesList);
+            includedBalances = included.balances;
+            includedOrders = included.openOrders;
+            let hidden = this._renderBalances(hiddenBalancesList);
+            hiddenBalances = hidden.balances;
+            hiddenOrders = hidden.openOrders;
+
+            hasOpenOrders = hiddenOrders.length || includedOrders.length;
         }
 
         if (hiddenBalances) {
             hiddenBalances.unshift(<tr style={{backgroundColor: "transparent"}} key="hidden"><td style={{height: 20}} colSpan="4"></td></tr>);
-            // hiddenBalances.push(
-            //     <tr key={"hidden_total"}>
-            //         <td colSpan="2" style={{textAlign: "right", fontWeight: "bold", paddingTop: 20}}>{hiddenTotal}</td>
-            //     </tr>
-            // );
         }
+
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
         let totalBalance = totalBalanceList.size ?
             <TotalBalanceValue
@@ -233,8 +253,15 @@ class AccountOverview extends React.Component {
             <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
-                        <div className="block-content-header">
+                        <div className="block-content-header" style={{position: "relative"}}>
                             <Translate content="transfer.balances" />
+                            {hiddenBalances && hiddenBalances.length - 1 > 0 ? <div
+                                className="button outline small column-hide-small no-margin"
+                                style={{position: "absolute", top: 0, right: 0}}
+                                onClick={this._toggleHiddenAssets.bind(this)}
+                            >
+                                <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 1})</span>
+                            </div> : null}
                         </div>
                         <table className="table">
                             <thead>
@@ -244,14 +271,13 @@ class AccountOverview extends React.Component {
                                     {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
                                     {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
-                                    <th style={{textAlign: "right"}} colSpan="2">
-                                        {hiddenBalances && hiddenBalances.length - 1 > 0 ? <div
-                                            className="button outline small column-hide-small"
-                                            onClick={this._toggleHiddenAssets.bind(this)}
-                                        >
-                                            <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 1})</span>
-                                        </div> : null}
+                                    <th style={{textAlign: "center"}}>
+                                        <Translate content="account.transfer_actions" />
                                     </th>
+                                    <th style={{textAlign: "center"}}>
+                                        <Translate content="account.market_actions" />
+                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -263,6 +289,18 @@ class AccountOverview extends React.Component {
                                     </td>
                                 </tr> : null}
                                 {showHidden ? hiddenBalances : null}
+
+                                {/* Open orders */}
+                                {hasOpenOrders ? <tr style={{backgroundColor: "transparent"}}><td style={{height: 20}} colSpan="4"></td></tr> : null}
+                                {hasOpenOrders ? <tr style={{backgroundColor: "transparent"}}>
+                                    <td colSpan="5" className="no-padding">
+                                        <div className="block-content-header">
+                                            <Translate content="account.open_orders" />
+                                        </div>
+                                    </td>
+                                </tr>  : null}
+                                {includedOrders}
+                                {hiddenOrders}
                             </tbody>
                         </table>
                         <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>

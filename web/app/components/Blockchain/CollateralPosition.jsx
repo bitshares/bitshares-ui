@@ -156,14 +156,15 @@ class CollateralPosition extends React.Component {
                             <Translate content="borrow.close" />
                         </a>
                     </div>
+                    {debtAsset ? (
+                        <BorrowModal
+                            ref={"cp_modal_" + co.call_price.quote.asset_id}
+                            quote_asset={co.call_price.quote.asset_id}
+                            backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                            account={this.props.account}
+                        />) : null}
                 </td>
-                {debtAsset ? (
-                <BorrowModal
-                    ref={"cp_modal_" + co.call_price.quote.asset_id}
-                    quote_asset={co.call_price.quote.asset_id}
-                    backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
-                    account={this.props.account}
-                />) : null}
+
             </tr>
         );
     }

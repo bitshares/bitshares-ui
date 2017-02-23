@@ -58,6 +58,10 @@
   "propose":"Предложить",
   "cancel":"Отмена",
   "account":{
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
     "trade":"Торговать",
     "welcome":"Добро пожаловать в BitShares",
     "asset":"Актив",
