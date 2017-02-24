@@ -23,6 +23,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import { fetchCoins, getBackedCoins } from "common/blockTradesMethods";
+import { Apis } from "bitsharesjs-ws";
 
 class AccountOverview extends React.Component {
 
@@ -502,12 +503,14 @@ class BalanceWrapper extends React.Component {
     }
 
     componentWillMount() {
-        fetchCoins().then(result => {
-            this.setState({
-                openLedgerCoins: result,
-                openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
+        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
+            fetchCoins().then(result => {
+                this.setState({
+                    openLedgerCoins: result,
+                    openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
+                });
             });
-        });
+        }
     }
 
     render() {

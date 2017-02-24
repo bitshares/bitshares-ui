@@ -244,6 +244,8 @@ class Header extends React.Component {
             }
         }
 
+        const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
+
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -272,7 +274,7 @@ class Header extends React.Component {
                         {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
                         {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
                         <li>{tradeLink}</li>
-                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                        {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">

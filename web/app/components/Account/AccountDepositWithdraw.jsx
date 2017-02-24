@@ -16,6 +16,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import {fetchCoins, getBackedCoins} from "common/blockTradesMethods";
+import { Apis } from "bitsharesjs-ws";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -59,20 +60,21 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
-
-        fetchCoins("https://blocktrades.us/api/v2/coins").then(result => {
-            this.setState({
-                blockTradesCoins: result,
-                blockTradesBackedCoins: getBackedCoins({allCoins: result, backer: "TRADE"})
+        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
+            fetchCoins("https://blocktrades.us/api/v2/coins").then(result => {
+                this.setState({
+                    blockTradesCoins: result,
+                    blockTradesBackedCoins: getBackedCoins({allCoins: result, backer: "TRADE"})
+                });
             });
-        });
 
-        fetchCoins().then(result => {
-            this.setState({
-                openLedgerCoins: result,
-                openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
+            fetchCoins().then(result => {
+                this.setState({
+                    openLedgerCoins: result,
+                    openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
+                });
             });
-        });
+        }
     }
 
     toggleOLService(service) {
