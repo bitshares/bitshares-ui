@@ -36,7 +36,14 @@ class AccountOverview extends React.Component {
             settleAsset: "1.3.0",
             showHidden: false,
             depositAsset: null,
-            withdrawAsset: null
+            withdrawAsset: null,
+            alwaysShowAssets: [
+                "OPEN.BTC",
+                "OPEN.USDT",
+                "OPEN.ETH",
+                "OPEN.MAID",
+                "OPEN.STEEM"
+            ]
         };
     }
 
@@ -67,7 +74,6 @@ class AccountOverview extends React.Component {
 
     _showDepositWithdraw(action, asset, fiatModal, e) {
         e.preventDefault();
-        console.log("_showDepositWithdraw:", action, asset);
         this.setState({
             [action === "deposit_modal" ? "depositAsset" : "withdrawAsset"]: asset,
             fiatModal
@@ -85,7 +91,7 @@ class AccountOverview extends React.Component {
         this.props.router.push(route);
     }
 
-    _renderBalances(balanceList) {
+    _renderBalances(balanceList, optionalAssets, visible) {
         let {settings, hiddenAssets, orders} = this.props;
         let preferredUnit = settings.get("unit") || "1.3.0";
         let showAssetPercent = settings.get("showAssetPercent", false);
@@ -149,7 +155,7 @@ class AccountOverview extends React.Component {
             if (hasOnOrder) {
                 let goToLink = <Link to={`/account/${this.props.account.get("name")}/orders`}><Translate content="account.see_open" /></Link>;
                 openOrders.push(
-                    <tr key={balance} style={{maxWidth: "100rem"}}>
+                    <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                         <td style={{textAlign: "right"}}>
                             <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>{onOrders}</div>
                         </td>
@@ -167,7 +173,7 @@ class AccountOverview extends React.Component {
                 );
             }
             balances.push(
-                <tr key={balance} style={{maxWidth: "100rem"}}>
+                <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
                     </td>
@@ -210,6 +216,58 @@ class AccountOverview extends React.Component {
             );
         });
 
+        const currentIndex = balances.length;
+
+        if (optionalAssets) {
+            optionalAssets.filter(asset => {
+                let keep = true;
+                balances.forEach(a => {
+                    if (a.key === asset) keep = false;
+                });
+
+                return keep;
+            }).forEach(a => {
+                let asset = ChainStore.getAsset(a);
+                if (asset && this.props.isMyAccount) {
+                    const includeAsset = !hiddenAssets.includes(asset.get("id"));
+
+                    if (includeAsset && visible || !includeAsset && !visible) balances.push(
+                        <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
+                            <td style={{textAlign: "right"}}>
+                                <AssetName name={a} />
+                            </td>
+                            <td></td>
+                            <td colSpan="1" style={{textAlign: "center"}}>
+                                <span>
+                                    <a onClick={this._showDepositWithdraw.bind(this, "deposit_modal", a, false)}>
+                                        <Translate content="gateway.deposit" />
+                                    </a>
+                                </span>
+                            </td>
+                            <td></td>
+                            <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
+                                <a style={{marginRight: 0}} className={includeAsset ? "order-cancel" : "action-plus"} onClick={this._hideAsset.bind(this, asset.get("id"), includeAsset)}>
+                                    <Icon name={includeAsset ? "cross-circle" : "plus-circle"} className="icon-14px" />
+                                </a>
+                            </td>
+                        </tr>
+                    );
+                }
+            });
+
+            if (balances.length !== currentIndex) {
+                balances.splice(currentIndex + 1, 0, <tr style={{backgroundColor: "transparent"}} key={"hidden_" + currentIndex} ><td style={{height: 20}} colSpan="5"></td></tr>);
+            }
+        }
+
+        function sortAlphabetic(a, b) {
+            if (a.key > b.key) return 1;
+            if (a.key < b.key) return -1;
+            return 0;
+        };
+
+        balances.sort(sortAlphabetic);
+        openOrders.sort(sortAlphabetic);
         return {balances, openOrders};
     }
 
@@ -268,10 +326,10 @@ class AccountOverview extends React.Component {
                 }
             });
 
-            let included = this._renderBalances(includedBalancesList);
+            let included = this._renderBalances(includedBalancesList, this.state.alwaysShowAssets, true);
             includedBalances = included.balances;
             includedOrders = included.openOrders;
-            let hidden = this._renderBalances(hiddenBalancesList);
+            let hidden = this._renderBalances(hiddenBalancesList, this.state.alwaysShowAssets);
             hiddenBalances = hidden.balances;
             hiddenOrders = hidden.openOrders;
 

@@ -1,29 +1,20 @@
 import React from "react";
-// import {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-// import AssetName from "../Utility/AssetName";
-// import FormattedFee from "../Utility/FormattedFee";
-// import BalanceComponent from "../Utility/BalanceComponent";
-// import FormattedAsset from "../Utility/FormattedAsset";
-// import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import { Asset } from "common/MarketClasses";
 import utils from "common/utils";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-// import AccountApi from "api/accountApi";
 import AccountActions from "actions/AccountActions";
-// import AccountSelector from "../Account/AccountSelector";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
 import {requestDepositAddress, validateAddress, WithdrawAddresses} from "common/blockTradesMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
-// import SettingsStore from "stores/SettingsStore";
-
+import LoadingIndicator from "../LoadingIndicator";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -305,9 +296,8 @@ class DepositWithdrawContent extends React.Component {
         //         return (<p>Click <a href='#' onClick={(e)=>{ window.open(SettingsStore.site_registr,'_blank');}} >here</a> to register for deposits </p>);
         //     }
         // }
-        console.log("receive_address", receive_address);
         return (
-            <div>
+            <div className={!addressValue ? "no-overflow" : ""}>
                 <p><Translate content="gateway.add_funds" /></p>
 
                 {this._renderCurrentBalance()}
@@ -316,7 +306,7 @@ class DepositWithdrawContent extends React.Component {
                     <p style={{marginBottom: 10}} data-place="right" data-tip={counterpart.translate("tooltip.deposit_tip", {asset: assetName})}>
                         <Translate className="help-tooltip" content="gateway.deposit_to" asset={assetName} />:
                     </p>
-                    <label>
+                    {!addressValue ? <LoadingIndicator type="three-bounce"/> :<label>
                         <span className="inline-label">
                             <input readOnly type="text" value={addressValue} />
 
@@ -324,7 +314,7 @@ class DepositWithdrawContent extends React.Component {
                                 text={addressValue}
                             />
                         </span>
-                    </label>
+                    </label>}
                     {hasMemo ?
                         <label>
                             <span className="inline-label">
@@ -336,7 +326,7 @@ class DepositWithdrawContent extends React.Component {
                             </span>
                         </label> : null}
 
-                    {receive_address.error ?
+                    {receive_address && receive_address.error ?
                         <div className="has-error" style={{paddingTop: 10}}>
                             {receive_address.error.message}
                         </div> : null}
@@ -403,12 +393,10 @@ class DepositWithdrawContent extends React.Component {
     }
 
     render() {
-        let {asset, sender, balances, action} = this.props;
-        let {to_withdraw, toSendText, to} = this.state;
+        let {asset, action} = this.props;
 
         let isDeposit = action === "deposit";
 
-        console.log("render", asset);
         if (!asset) {
             return null;
         }
