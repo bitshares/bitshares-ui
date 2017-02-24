@@ -80,6 +80,11 @@ class AccountOverview extends React.Component {
         return render ? <span> | </span> : null;
     }
 
+    _onNavigate(route, e) {
+        e.preventDefault();
+        this.props.router.push(route);
+    }
+
     _renderBalances(balanceList) {
         let {settings, hiddenAssets, orders} = this.props;
         let preferredUnit = settings.get("unit") || "1.3.0";
@@ -91,7 +96,6 @@ class AccountOverview extends React.Component {
             let asset_type = balanceObject.get("asset_type");
             let asset = ChainStore.getObject(asset_type);
             let isBitAsset = asset && asset.has("bitasset_data_id");
-
             const core_asset = ChainStore.getAsset("1.3.0");
 
             let assetInfoLinks;
@@ -106,7 +110,10 @@ class AccountOverview extends React.Component {
             let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
 
             /* Table content */
-            marketLink = notCore ? <a href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.get("symbol")}_${preferredMarket}`}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
+            const assetDetailURL = `/asset/${asset.get("symbol")}`;
+            const marketURL = `/market/${asset.get("symbol")}_${preferredMarket}`;
+
+            marketLink = notCore ? <a href={marketURL} onClick={this._onNavigate.bind(this, marketURL)}><AssetName name={asset.get("symbol")} /> : <AssetName name={preferredMarket} /></a> : null;
             directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Translate content="account.trade" /></Link> : null;
             transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Translate content="transaction.trxTypes.transfer" /></Link>;
 
@@ -127,7 +134,7 @@ class AccountOverview extends React.Component {
                 <Translate content="account.settle"/></a>;
             assetInfoLinks = (
             <ul>
-                <li><a href={`${__HASH_HISTORY__ ? "#" : ""}/asset/${asset.get("symbol")}`}><Translate content="account.asset_details"/></a></li>
+                <li><a href={assetDetailURL} onClick={this._onNavigate.bind(this, assetDetailURL)}><Translate content="account.asset_details"/></a></li>
                 {notCore ? <li>{marketLink}</li> : null}
                 {isBitAsset ? <li>{settleLink}</li> : null}
             </ul>);

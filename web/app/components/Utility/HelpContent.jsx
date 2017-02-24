@@ -2,6 +2,7 @@ import React from "react";
 import {reduce, zipObject} from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
+import {withRouter} from "react-router";
 
 let req = require.context("../../../../help", true, /\.md/);
 let HelpData = {};
@@ -42,10 +43,6 @@ class HelpContent extends React.Component {
         section: React.PropTypes.string
     };
 
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
-    }
-
     constructor(props) {
         super(props);
         window._onClickLink = this.onClickLink.bind(this);
@@ -76,7 +73,7 @@ class HelpContent extends React.Component {
         let path = (__HASH_HISTORY__ ? e.target.hash : e.target.pathname).split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.context.router.push(route);
+        this.props.router.push(route);
         return false;
     }
 
@@ -126,4 +123,4 @@ class HelpContent extends React.Component {
     }
 }
 
-export default HelpContent;
+export default withRouter(HelpContent);

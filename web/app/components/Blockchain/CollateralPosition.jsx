@@ -3,12 +3,14 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AssetName from "../Utility/AssetName";
 import BorrowModal from "../Modal/BorrowModal";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import counterpart from "counterpart";
+import {Link} from "react-router";
 
 const wallet_api = new WalletApi();
 /**
@@ -26,6 +28,10 @@ class CollateralPosition extends React.Component {
 
     static defaultProps = {
         tempComponent: "tr"
+    };
+
+    static contextTypes = {
+        router: React.PropTypes.object
     };
 
     _onUpdatePosition(e) {
@@ -109,17 +115,44 @@ class CollateralPosition extends React.Component {
         }
     }
 
+    _onNavigate(route, e) {
+        e.preventDefault();
+        this.context.router.push(route);
+    }
+
     render() {
-        let {debtAsset, object} = this.props;
+        let {debtAsset, collateralAsset, object} = this.props;
         const co = object.toJS();
         const cr = this._getCollateralRatio();
         const d = utils.get_asset_amount(co.debt, this.props.debtAsset);
 
         const statusClass = this._getStatusClass();
 
+        const assetDetailURL = `/asset/${debtAsset.get("symbol")}`;
+        const marketURL = `/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`;
+        const assetInfoLinks = (
+        <ul>
+            <li>
+                <a href={assetDetailURL} onClick={this._onNavigate.bind(this, assetDetailURL)}>
+                    <Translate content="account.asset_details"/>
+                </a>
+            </li>
+            <li>
+                <a href={marketURL} onClick={this._onNavigate.bind(this, marketURL)}>
+                    <AssetName name={debtAsset.get("symbol")} /> : <AssetName name={collateralAsset.get("symbol")} />
+                </a>
+            </li>
+        </ul>);
+
         return (
             <tr className="margin-row">
-                <td>{<FormattedAsset amount={co.debt} asset={co.call_price.quote.asset_id}/>}</td>
+                <td>
+                    <FormattedAsset
+                        amount={co.debt}
+                        asset={co.call_price.quote.asset_id}
+                        assetInfo={assetInfoLinks}
+                    />
+                </td>
                 <td className="column-hide-medium">
                     <FormattedAsset
                         decimalOffset={5}
