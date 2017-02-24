@@ -1,7 +1,7 @@
 import ls from "./localStorage";
 const blockTradesStorage = new ls("");
 
-export function fetchCoins(url = "https://blocktrades.us/ol/api/v2/coins") {
+export function fetchCoins(url = "https://blocktrades.us/api/v2/coins") {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;
     })).catch(err => {
@@ -24,7 +24,7 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
         body: body_string
     }).then( reply => { reply.json()
         .then( json => {
-            console.log( "reply: ", json )
+            // console.log( "reply: ", json )
             let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo, error: json.error || null};
             if (stateCallback) stateCallback(address);
         }, error => {
@@ -44,7 +44,7 @@ export function getBackedCoins({allCoins, backer}) {
     allCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
     let blocktradesBackedCoins = [];
     allCoins.forEach(coin_type => {
-        if (coin_type.walletSymbol.startsWith(backer + ".") && coin_type.backingCoinType) {
+        if (coin_type.walletSymbol.startsWith(backer + ".") && coin_type.backingCoinType && coins_by_type[coin_type.backingCoinType]) {
             blocktradesBackedCoins.push({
                 name: coins_by_type[coin_type.backingCoinType].name,
                 walletType: coins_by_type[coin_type.backingCoinType].walletType,
