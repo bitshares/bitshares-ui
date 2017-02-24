@@ -1,4 +1,32 @@
 ---------------------------------------------------------------------
+Release 2.0.170224
+---------------------------------------------------------------------
+New features
+--------
+- New modal for quick deposit/withdraw of OPEN.X assets on account overview page
+- A set of default assets are available for deposits on the account overview page
+- New summary of open orders on account overview page
+- Set precision for bitCNY and bitUSD to 5 in orderbook display
+- Flip CNY:OPEN.BTC market in dashboard
+- Add bitSilver asset icon
+- Add Chinese intro text by bitcrab
+- Add grid lines and y axis labels to the depth chart
+
+Bug fixes
+--------
+- Fix Popover links so they work within the router context
+- Update react-router to v3.0.2
+- Refactor blockTrades withdrawal address caching
+- Scroll orderbook to top when changing markets
+- Don't set feed price in MarketStore for markets without call orders
+- Fix setting of highestBid in MarketStore
+- Update bitsharesjs, fixes vesting balances not loading properly
+- Fix persistence of indicator settings
+- Fix PriceChart resize on switching to/from left orderbook
+- Update Dashboard markets, add loading indication until accounts are ready
+- Fix Operation display of asset_global_settle operation
+
+---------------------------------------------------------------------
 Release 2.0.170215
 ---------------------------------------------------------------------
 New features
