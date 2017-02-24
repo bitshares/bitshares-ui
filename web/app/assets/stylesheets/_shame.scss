@@ -413,11 +413,9 @@ input[type=number] {
 }
 
 section input[type="text"], section input[type="password"] {
-  background-color: transparent;
   border:none;
   max-width: 30rem;
   &:hover, &:active, &:focus {
-    background-color: transparent;
     border:none;
   }
 }
