@@ -220,13 +220,11 @@ class DepthHighChart extends React.Component {
 			let yMax = 0;
 			flatBids.forEach(b => {
 				if (b[0] >= config.xAxis.min) {
-					console.log("b:", b, "min:", config.xAxis.min);
 					yMax = Math.max(b[1], yMax);
 				}
 			});
 			flatAsks.forEach(a => {
 				if (a[0] <= config.xAxis.max) {
-					console.log("a:", a, "max:", config.xAxis.max);
 					yMax = Math.max(a[1], yMax);
 				}
 			});
