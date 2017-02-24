@@ -232,6 +232,12 @@ class DepthHighChart extends React.Component {
 			});
 			config.yAxis.max = yMax * 1.15;
 
+			// Adjust y axis label decimals
+			let yLabelDecimals = yMax > 10 ? 0 : yMax > 1 ? 2 : 5;
+			config.yAxis.labels.formatter = function() {
+				return utils.format_number(this.value, yLabelDecimals);
+			}
+
 		} else if (flatBids.length && !flatAsks.length) {
 			config.xAxis.min = flatBids[flatBids.length - 1][0] * 0.4;
 			config.xAxis.max = flatBids[flatBids.length - 1][0] * 1.6;
