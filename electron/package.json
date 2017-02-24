@@ -2,7 +2,7 @@
   "devDependencies": {
     "asar": "^0.12.4",
     "babel-eslint": "^7.1.1",
-    "electron": "^1.4.14",
+    "electron": "^1.4.15",
     "fs-jetpack": "^0.10.5",
     "gulp": "^3.9.0",
     "gulp-less": "^3.0.3",
@@ -19,5 +19,8 @@
     "release": "./node_modules/.bin/gulp release --env=production",
     "postrelease": "node ./tasks/write_digest",
     "start": "node ./tasks/start"
+  },
+  "dependencies": {
+    "electron": "^1.4.15"
   }
 }
