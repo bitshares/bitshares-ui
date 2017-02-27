@@ -339,6 +339,39 @@ var Utils = {
         return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
     },
 
+    getFee: function({opType, options, globalObject, asset, coreAsset, balances}) {
+        let coreFee = {asset: "1.3.0"};
+        coreFee.amount = this.estimateFee(opType, options, globalObject) || 0;
+
+        if (!asset || asset.get("id") === "1.3.0") return coreFee; // Desired fee is in core asset
+
+        let cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
+        if (!coreAsset || cer.base.asset_id === cer.quote.asset_id) return coreFee;
+        let price = this.convertPrice(coreAsset, cer, null, asset.get("id"));
+        let eqValue = this.convertValue(price, coreFee.amount, coreAsset, asset);
+        let fee = {
+            amount: Math.floor(eqValue + 0.5),
+            asset: asset.get("id")
+        };
+
+        let useCoreFee = true; // prefer CORE fee by default
+        if (balances && balances.length) {
+            balances.forEach(b => {
+                if (b.get("asset_type") === "1.3.0" && b.get("balance") < coreFee.amount) { // User has sufficient CORE, use it (cheapeest)
+                    useCoreFee = false;
+                }
+            });
+
+            balances.forEach(b => {
+                if (b.get("asset_type") === fee.asset && b.get("balance") < fee.amount) { // User has insufficient {asset}, use CORE instead
+                    useCoreFee = true;
+                }
+            });
+        }
+
+        return useCoreFee ? coreFee : fee;
+    },
+
     convertPrice: function(fromRate, toRate, fromID, toID) {
 
         if (!fromRate || !toRate) {
