@@ -31,7 +31,7 @@ class Settings extends React.Component {
             ],
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
-                "disableChat", "showAssetPercent"],
+                "disableChat", "showAssetPercent", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
@@ -194,8 +194,8 @@ class Settings extends React.Component {
                         </ul>
                     </div>
 
-                    <div className="grid-content">
-                        <div className="grid-block small-10 no-padding no-margin vertical">
+                    <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
+                        <div className="grid-block small-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
                             <Translate style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
                             {entries}

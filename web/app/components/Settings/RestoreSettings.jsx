@@ -1,7 +1,7 @@
 import React from "react";
 import {BackupRestore} from "../Wallet/Backup";
 import ImportKeys from "../Wallet/ImportKeys";
-import WalletCreate from "../Wallet/WalletCreate";
+import {CreateWalletFromBrainkey} from "../Wallet/WalletCreate";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
@@ -43,7 +43,7 @@ export default class RestoreSettings extends React.Component {
             content = (
                 <div>
                     <p style={{maxWidth: "40rem", paddingBottom: 10}}><Translate content="settings.restore_brainkey_text" /></p>
-                    <WalletCreate restoreBrainkey={true} />
+                    <CreateWalletFromBrainkey nested />
                 </div>
             );
             break;

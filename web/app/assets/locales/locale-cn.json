@@ -52,9 +52,20 @@
       "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
       "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
       "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。",
-      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
+      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+      "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "account": {
+    "intro_text_title": "欢迎来到比特股去中心化交易所！",
+    "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所，该交易所通称DEX, DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要.",
+    "intro_text_2": "发行用户定义资产（UIA）,也可以买卖通用的数字资产如BTC, ETH等。",
+    "intro_text_3": "来比特股尽情享受交易的乐趣吧！",
+    "intro_text_4": "<br/>官网：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>QQ群：&nbsp;&nbsp;423951676<br/>Github：<a target='_blank' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "交易",
     "welcome": "欢迎使用 BitShares (石墨烯)系统",
     "assets": "资产",
@@ -193,6 +204,7 @@
       "sign_owner": "已所有者身份签名"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy_short": "代理投票",
       "workers_short": "预算项目",
       "proxy": "代理投票账户",
@@ -763,7 +775,8 @@
     "lookup_text": "查看来自BTS 1.0的未领取余额",
     "delete_select": "选择要删除的钱包",
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
-    "restore_key_count": "# of 密钥"
+    "restore_key_count": "# of 密钥",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "pagination": {
     "newer": "更近",
@@ -779,6 +792,23 @@
     "brainkey": "建议备份脑钱包密钥"
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "price_history": "价格历史",
     "order_depth": "市场深度",
     "market_history": "市场历史",

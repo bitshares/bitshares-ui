@@ -8,7 +8,6 @@ import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
 
 let application_api = new ApplicationApi();
-//let fetch = require('node-fetch')
 
 class WalletActions {
 
@@ -151,79 +150,79 @@ class WalletActions {
         additional values: {vested_balance, public_key_string}
     */
     importBalance( account_name_or_id, balances, broadcast) {
-        return new Promise((resolve, reject) => {
+        return (dispatch) => {
 
-            let db = Apis.instance().db_api();
-            let address_publickey_map = {};
+            return new Promise((resolve, reject) => {
 
-            let account_lookup = FetchChain("getAccount", account_name_or_id);
-            let unlock = WalletUnlockActions.unlock();
+                let db = Apis.instance().db_api();
+                let address_publickey_map = {};
 
-            let p = Promise.all([ unlock, account_lookup ]).then( (results)=> {
-                let account = results[1];
-                //DEBUG console.log('... account',account)
-                if(account == void 0)
-                    return Promise.reject("Unknown account " + account_name_or_id);
+                let account_lookup = FetchChain("getAccount", account_name_or_id);
+                let unlock = WalletUnlockActions.unlock();
 
-                let balance_claims = [];
-                let signer_pubkeys = {};
-                for(let balance of balances) {
-                    let {vested_balance, public_key_string} = balance;
+                let p = Promise.all([ unlock, account_lookup ]).then( (results)=> {
+                    let account = results[1];
+                    //DEBUG console.log('... account',account)
+                    if(account == void 0)
+                        return Promise.reject("Unknown account " + account_name_or_id);
 
-                    //DEBUG console.log('... balance',b)
-                    let total_claimed;
-                    if( vested_balance ) {
-                        if(vested_balance.amount == 0)
-                            // recently claimed
-                            continue;
+                    let balance_claims = [];
+                    let signer_pubkeys = {};
+                    for(let balance of balances) {
+                        let {vested_balance, public_key_string} = balance;
 
-                        total_claimed = vested_balance.amount;
-                    } else
-                        total_claimed = balance.balance.amount;
+                        //DEBUG console.log('... balance',b)
+                        let total_claimed;
+                        if( vested_balance ) {
+                            if(vested_balance.amount == 0)
+                                // recently claimed
+                                continue;
 
-                    //assert
-                    if(vested_balance && vested_balance.asset_id != balance.balance.asset_id)
-                        throw new Error("Vested balance record and balance record asset_id missmatch",
-                            vested_balance.asset_id,
-                            balance.balance.asset_id
-                        );
+                            total_claimed = vested_balance.amount;
+                        } else
+                            total_claimed = balance.balance.amount;
 
-                    signer_pubkeys[public_key_string] = true;
-                    balance_claims.push({
-                        fee: { amount: "0", asset_id: "1.3.0"},
-                        deposit_to_account: account.get("id"),
-                        balance_to_claim: balance.id,
-                        balance_owner_key: public_key_string,
-                        total_claimed: {
-                            amount: total_claimed,
-                            asset_id: balance.balance.asset_id
-                        }
-                    });
-                }
-                if( ! balance_claims.length) {
-                    throw new Error("No balances to claim");
-                }
+                        //assert
+                        if(vested_balance && vested_balance.asset_id != balance.balance.asset_id)
+                            throw new Error("Vested balance record and balance record asset_id missmatch",
+                                vested_balance.asset_id,
+                                balance.balance.asset_id
+                            );
 
-                //DEBUG console.log('... balance_claims',balance_claims)
-                let tr = new TransactionBuilder();
+                        signer_pubkeys[public_key_string] = true;
+                        balance_claims.push({
+                            fee: { amount: "0", asset_id: "1.3.0"},
+                            deposit_to_account: account.get("id"),
+                            balance_to_claim: balance.id,
+                            balance_owner_key: public_key_string,
+                            total_claimed: {
+                                amount: total_claimed,
+                                asset_id: balance.balance.asset_id
+                            }
+                        });
+                    }
+                   //  if( ! balance_claims.length) {
+                   //      throw new Error("No balances to claim");
+                   //  }
 
-                for(let balance_claim of balance_claims) {
-                    tr.add_type_operation("balance_claim", balance_claim);
-                }
-                // With a lot of balance claims the signing can take so Long
-                // the transaction will expire.  This will increase the timeout...
-                tr.set_expire_seconds( (15 * 60) + balance_claims.length);
+                    //DEBUG console.log('... balance_claims',balance_claims)
+                    let tr = new TransactionBuilder();
 
-                return (dispatch) => {
+                    for(let balance_claim of balance_claims) {
+                        tr.add_type_operation("balance_claim", balance_claim);
+                    }
+                    // With a lot of balance claims the signing can take so Long
+                    // the transaction will expire.  This will increase the timeout...
+                    tr.set_expire_seconds( (15 * 60) + balance_claims.length);
                     return WalletDb.process_transaction(tr, Object.keys(signer_pubkeys), broadcast )
                     .then(result => {
                         dispatch(true);
                         return result;
                     });
-                };
+                });
+                resolve(p);
             });
-            resolve(p);
-        });
+        };
     }
 }
 

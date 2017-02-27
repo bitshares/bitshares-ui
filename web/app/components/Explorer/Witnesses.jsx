@@ -92,6 +92,10 @@ class WitnessRow extends React.Component {
         this.context.router.push(`/account/${this.props.witness.get("name")}`);
     }
 
+    // componentWillUnmount() {
+    //     ChainStore.unSubFrom("witnesses", ChainStore.getWitnessById( this.props.witness.get("id") ).get("id"));
+    // }
+
     render() {
         let {witness, isCurrent, rank} = this.props;
         let witness_data = ChainStore.getWitnessById( this.props.witness.get('id') );

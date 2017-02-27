@@ -16,6 +16,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import {Link} from "react-router";
 
 let wallet_api = new WalletApi();
 
@@ -60,11 +61,8 @@ class AccountVoting extends React.Component {
     updateAccountData(account) {
         let options = account.get("options");
         let proxy_account_id = options.get("voting_account");
-        let proxyAccount = ChainStore.getAccount(proxy_account_id);
-        let proxy_account_name = proxyAccount ? proxyAccount.get("name") : "";
         if (proxy_account_id === "1.2.5" ) {
             proxy_account_id = "";
-            proxy_account_name = "";
         }
 
         let votes = options.get("votes");
@@ -89,7 +87,6 @@ class AccountVoting extends React.Component {
             });
             let state = {
                 proxy_account_id: proxy_account_id,
-                proxy_account_name: proxy_account_name,
                 witnesses: witnesses,
                 committee: committee,
                 workers: workers,
@@ -195,12 +192,15 @@ class AccountVoting extends React.Component {
 
     onReset() {
         let s = this.state;
+        if (this.refs.voting_proxy && this.refs.voting_proxy.refs.bound_component) this.refs.voting_proxy.refs.bound_component.onResetProxy();
         this.setState({
             proxy_account_id: s.prev_proxy_account_id,
             witnesses: s.prev_witnesses,
             committee: s.prev_committee,
             workers: s.prev_workers,
             vote_ids: s.prev_vote_ids
+        }, () => {
+            this.updateAccountData(this.props.account);
         });
     }
 
@@ -234,10 +234,9 @@ class AccountVoting extends React.Component {
         this.setState(state);
     }
 
-    onProxyAccountChange(proxy_account, current_proxy_input) {
+    onProxyAccountChange(proxy_account) {
         this.setState({
-            proxy_account_id: proxy_account ? proxy_account.get("id") : "",
-            proxy_account_name: current_proxy_input
+            proxy_account_id: proxy_account ? proxy_account.get("id") : ""
         });
     }
 
@@ -256,11 +255,9 @@ class AccountVoting extends React.Component {
         return null;
     }
 
-    onClearProxy(e) {
-        e.preventDefault();
+    onClearProxy() {
         this.setState({
-            proxy_account_id: "",
-            proxy_account_name: ""
+            proxy_account_id: ""
         });
     }
 
@@ -320,7 +317,7 @@ class AccountVoting extends React.Component {
 
     render() {
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
-        let proxy_is_set = !!this.state.proxy_account_id;
+        let proxy_is_set = this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
 
         let {globalObject, dynamicGlobal} = this.props;
@@ -341,7 +338,6 @@ class AccountVoting extends React.Component {
         }
 
         let remainingBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
-
 
         let now = new Date();
         let workerArray = this._getWorkerArray();
@@ -478,13 +474,9 @@ class AccountVoting extends React.Component {
                     <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
                         <Translate content="account.votes.publish"/>
                     </button>
-                    <button className={"outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
+                    <button className={"button outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
                         <Translate content="account.perm.reset"/>
                     </button>
-                    {proxy_is_set ? (
-                        <button className={"outline"} onClick={this.onClearProxy.bind(this)} tabIndex={8}>
-                            <Translate content="account.votes.clear_proxy"/>
-                        </button>) : null}
                 </div>
 
                 <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content">
@@ -493,10 +485,11 @@ class AccountVoting extends React.Component {
                             <div className="content-block">
                                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
                                 <AccountVotingProxy
-                                    currentProxy={this.state.proxy_account_name}
-                                    currentAccount={this.props.account}
-                                    proxyAccount={this.state.proxy_account_id}
+                                    ref="voting_proxy"
+                                    existingProxy={this.props.account.getIn(["options", "voting_account"])}
+                                    account={this.props.account}
                                     onProxyAccountChanged={this.onProxyAccountChange}
+                                    onClearProxy={this.onClearProxy.bind(this)}
                                 />
                             </div>
                         </Tab>
@@ -613,7 +606,7 @@ class AccountVoting extends React.Component {
                                         <td colSpan="3">
                                             <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
                                             <span>&nbsp;&nbsp;
-                                                <button onClick={this._toggleExpired.bind(this)} className="button outline">
+                                                <button onClick={this._toggleExpired.bind(this)} className="button outline small">
                                                     {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}
                                                 </button>
                                             </span>

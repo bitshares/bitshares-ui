@@ -53,11 +53,28 @@
     "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
     "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
-    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
+    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+    "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
+    "deposit_tip": "To complete the deposit, go to your %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
+    "copy_tip": "Click to copy the text",
+    "withdraw_full": "Click to withdraw the full balance",
+    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
   },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "intro_text_title": "Welcome to the Bitshares DEX",
+    "intro_text_1": "<b>BitShares 2.0</b> and its decentralized exchange - also known as The DEX - is a next-generation cryptocurrency trading platform.",
+    "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged  assets such as bitUSD, bitCNY, bitBTC, bitGold and more.  These assets can all be traded with zero counter-party risk, putting you in total control of your funds.",
+    "intro_text_3": "<b>The DEX</b> also enables user-issued assets (UIAs), which can be traded via an order book against any other asset on the platform, both trustless and user-issued.  One well-known issuer on the platform is <b>OpenLedger</b>, with a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more.",
+    "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "see_open": "See open orders",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "Trade",
     "welcome": "Welcome to BitShares",
     "asset": "Asset",
@@ -224,6 +241,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Workers",
       "proxy": "Proxy Voting Account",
@@ -301,7 +319,7 @@
     },
     "collaterals": "Margin Positions",
     "eq_value": "Equivalent Value",
-    "no_price": "Unknown",
+    "no_price": "Unknown value",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",
@@ -756,7 +774,8 @@
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
     "delete_select": "Select wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
-    "restore_key_count": "# of keys"
+    "restore_key_count": "# of keys",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",
@@ -768,6 +787,23 @@
     "brainkey": "Backup brainkey recommended"
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "market": "Market",
     "price_history": "Price Chart",
     "order_depth": "Market Depth",
@@ -1058,6 +1094,10 @@
     "symbol": "Symbol",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
+    "add_funds": "You are going to add funds to your BitShares account.",
+    "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+    "balance_asset": "Current %(asset)s balance",
+    "withdraw_placeholder": "Please enter your %(asset)s address",
     "balance": "Current balance",
     "generate": "Generate",
     "generate_new": "Get new address",

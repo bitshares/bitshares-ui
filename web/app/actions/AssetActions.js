@@ -1,4 +1,4 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import WalletApi from "api/WalletApi";

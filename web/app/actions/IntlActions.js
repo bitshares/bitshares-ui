@@ -1,8 +1,8 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 
 var locales = {};
 if (__ELECTRON__) {
-    ["cn", "de", "es", "fr", "ko", "tr"].forEach(locale => {
+    ["cn", "de", "es", "fr", "ko", "tr", "ru"].forEach(locale => {
         locales[locale] = require("json-loader!assets/locales/locale-" + locale + ".json");
     });
 }
@@ -20,7 +20,7 @@ class IntlActions {
             };
         } else {
             return (dispatch) => {
-                fetch("/locale-" + locale + ".json").then( (reply) => {
+                fetch("locale-" + locale + ".json").then( (reply) => {
                     return reply.json().then(result => {
                         dispatch({
                             locale,

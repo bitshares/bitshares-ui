@@ -13,7 +13,8 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import {FetchChainObjects} from "bitsharesjs/es";;
+import {FetchChainObjects} from "bitsharesjs/es";
+import TimeAgo from "../Utility/TimeAgo";
 
 const PROD = true;
 const hostConfig = PROD ? { // Prod config
@@ -36,20 +37,28 @@ class Comment extends React.Component {
     }
 
     render() {
-        let {comment, user, color} = this.props;
+        let {comment, date, user, color} = this.props;
         let systemUsers = [counterpart.translate("chat.welcome_user"), "SYSTEM"];
         return (
             <div style={{padding: "3px 1px"}}>
-                <span
-                    className="clickable"
-                    onClick={this.props.onSelectUser.bind(this, user)}
-                    style={{
-                        fontWeight: "bold",
-                        color: color
-                    }}>
-                        {user}:&nbsp;
-                </span>
-                <span className="chat-text">{systemUsers.indexOf(user) !== -1 ? comment : comment.substr(0, 140)}</span>
+                {date ?
+                <div style={{paddingTop: 2, fontSize: "90%"}}>
+                    <TimeAgo time={new Date(date)} />
+                </div> : null}
+                <div>
+                    <span
+                        className="clickable"
+                        onClick={this.props.onSelectUser.bind(this, user)}
+                        style={{
+                            fontWeight: "bold",
+                            color: color
+                        }}>
+                            {user}:&nbsp;
+                    </span>
+                    <span className="chat-text">
+                        {systemUsers.indexOf(user) !== -1 ? comment : comment.substr(0, 140)}
+                    </span>
+                </div>
             </div>
         );
     }
@@ -97,7 +106,7 @@ class Chat extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (this.props.footerVisible !== prevProps.footerVisible) {
             this._scrollToBottom();
         }
@@ -404,7 +413,8 @@ class Chat extends React.Component {
         let message = {
             user: this.state.userName,
             message: this.refs.input.value.substr(0, 140),
-            color: this.state.myColor || "#ffffff"
+            color: this.state.myColor || "#ffffff",
+            date: new Date().toISOString()
         };
 
         // Public and local broadcast
@@ -517,13 +527,13 @@ class Chat extends React.Component {
                 return null;
             }
             let isMine = msg.user === userName || msg.user === this._myID;
-
             return (
                 <Comment
                     onSelectUser={this._onSelectUser.bind(this)}
                     key={index}
                     user={msg.user}
                     comment={msg.message}
+                    date={msg.date}
                     color={msg.color}
                     isMine={isMine}
                 />

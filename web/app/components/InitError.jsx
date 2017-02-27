@@ -10,7 +10,6 @@ import {Apis} from "bitsharesjs-ws";
 class InitError extends React.Component {
 
     triggerModal(e) {
-        console.log("triggerModal:");
         this.refs.ws_modal.show(e);
     }
 
@@ -27,7 +26,7 @@ class InitError extends React.Component {
             window.location.hash = "";
             window.remote.getCurrentWindow().reload();
         }
-        else window.location.href = "/";
+        else window.location.href = __BASE_URL__;
     }
 
     onReset() {

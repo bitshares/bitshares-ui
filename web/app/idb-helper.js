@@ -1,7 +1,7 @@
 let db;
 let idb_helper;
 
-module.exports = idb_helper = {
+export default idb_helper = {
 
     set_graphene_db: database => {
         db = database;

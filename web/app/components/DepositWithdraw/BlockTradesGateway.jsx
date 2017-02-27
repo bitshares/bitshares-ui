@@ -79,13 +79,12 @@ class BlockTradesGateway extends React.Component {
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
-
         if (!coins.length) {
             return <LoadingIndicator />;
         }
 
         let filteredCoins = coins.filter(a => {
-            if (!a || !a.backingCoinType) {
+            if (!a || !a.symbol) {
                 return false;
             } else {
                 return true;
@@ -182,14 +181,13 @@ class BlockTradesGateway extends React.Component {
                                 customFilter={{
                                     fields: ["to", "from", "asset_id"],
                                     values: {
-                                            to: to.get("id"),
-                                            from: fromAccount.get("id") ,
-                                            asset_id: asset.get("id")
-                                        }
-
-                                    }}
-                            />
-                            }
+                                        to: to.get("id"),
+                                        from: fromAccount.get("id") ,
+                                        asset_id: asset.get("id")
+                                    }
+                                }}
+                            />;
+                        }
                         }
                     </TransactionWrapper> : null}
                 </div>

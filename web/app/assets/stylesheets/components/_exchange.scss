@@ -1,10 +1,3 @@
-$bid-color: #50D2C2;
-$ask-color: #E3745B;
-$call-color: #BBBF2B;
-$light-panel-bg-color: #353742;
-$positive-color: #6EC105;
-$negative-color: #E1424A;
-
 .market-layout {
   > .grid-block {
     // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
@@ -96,17 +89,18 @@ form.order-form {
   padding: 10px;
 }
 
-
-
 #market-charts {
-  > div > div.tabs {
-    margin-bottom: 0.25rem;
-
-    .tab-item {
-      padding-top: 0.1rem;
+    padding-left: 10px;
+    > div.Stockcharts__wrapper {
+        overflow: hidden;
     }
-  }
+    > div > div.tabs {
+        margin-bottom: 0.25rem;
 
+        .tab-item {
+            padding-top: 0.1rem;
+        }
+    }
 }
 
 .left-order-book {
@@ -140,11 +134,6 @@ form.order-form {
   border-bottom: none !important;
 }
 
-.orderbook-latest-price {
-    cursor: help;
-}
-
-
 .left-orderbook-header {
   width: 100%;
   font-size: 0.75rem;
@@ -155,6 +144,12 @@ form.order-form {
 }
 .bottom-header {
   padding-top: 0.25rem;
+  > .horizontal-button {
+      height: 100%;
+      width: 100%;
+      border-bottom: none !important;
+      border-right: none !important;
+  }
 }
 
 tr.top-header, tr.bottom-header, tr.spread-row {
@@ -162,14 +157,6 @@ tr.top-header, tr.bottom-header, tr.spread-row {
     background-color: inherit !important;
     cursor: pointer !important;
   }
-}
-
-.bid-total {
-  color: $bid-color !important;
-}
-
-.ask-total {
-  color: $ask-color !important;
 }
 
 .chart-label {
@@ -221,7 +208,6 @@ a.order-cancel {
 .stats {
   line-height: 1rem !important;
   list-style: none;
-  overflow: hidden;
   margin: 0px;
   padding: 0px;
 }
@@ -258,22 +244,6 @@ a.order-cancel {
 .stats .stat:first-child {
   border-left: none;
 }
-.stats .stat .value {
-  color: #FFFFFF;
-  // letter-spacing: 1px;
-}
-.stats .stat em {
-  color: #888888;
-  display: block;
-}
-
-.stats .stat .negative {
-  color: $negative-color !important;
-}
-
-.stats .stat .positive {
-  color: $positive-color !important;
-}
 
 .market-symbol {
     font-weight: bold;
@@ -283,11 +253,6 @@ a.order-cancel {
     padding-top: 15px;
 }
 
-.active-bucket {
-  background-color: lighten($light-panel-bg-color, 12%) ;
-  text-transform: uppercase;
-}
-
 div.bucket-option {
   cursor: pointer;
   text-transform: none !important;
@@ -295,10 +260,11 @@ div.bucket-option {
   border-radius: 0;
   padding-top: 3px;
   padding-bottom: 3px;
+  user-select: none;
 }
 
-.bucket-option:hover {
-  background-color: #4C4C4C;
+.active-bucket {
+  text-transform: uppercase;
 }
 
 .buy-sell-row {
@@ -338,15 +304,12 @@ div.bucket-option {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
-    background-color: lighten($light-panel-bg-color, 12%);
 
     > select {
       padding: 0;
       margin: 0;
       height: 1.75rem;
       line-height: 1.75rem;
-      background-color: lighten($light-panel-bg-color, 12%);
-      background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
       background-size: 8px 8px;
       border: none;
       color: white;
@@ -516,4 +479,57 @@ table thead tr th.mymarkets-header {
 
 form.hide-container {
     display: none;
+}
+
+.custom-dropdown {
+    position: relative;
+    overflow: visible !important;
+    z-index: 9;
+
+    > div.custom-dropdown-content {
+        position: absolute;
+        z-index: 99;
+        top: 29px;
+        left: 0;
+        right: auto;
+        min-width: 15rem;
+        > ul {
+            margin: 0;
+            list-style: none;
+            text-align: left;
+            font-size: 0.75rem;
+
+            input {
+                font-size: 0.8rem;
+                height: 1.25rem;
+                max-width: 40px;
+                display: inline-block;
+            }
+            > li {
+                position: relative;
+                &.indicator-title {
+                    text-transform: uppercase;
+                }
+                padding: 5px;
+                min-width: 5rem;
+                border: none;
+                &.indicator {
+                    > div:first-of-type {
+                        display: inline-block;
+                        padding-left: 25px;
+                        width: 60%;
+                    }
+                    > div:nth-of-type(2) {
+                        width: 40%;
+                        text-align: right;
+                        display: inline-block;
+                    }
+                }
+                > input {
+                    position: absolute;
+                    top: 5px;
+                }
+            }
+        }
+    }
 }

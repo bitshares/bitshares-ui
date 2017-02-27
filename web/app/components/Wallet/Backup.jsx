@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from "react";
+import {Link} from "react-router";
 import {FormattedDate} from "react-intl";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
@@ -131,6 +132,11 @@ class Restore extends Component {
         if(has_new_wallet)
             return <span>
                 <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
+                <Link to="dashboard">
+                    <div className="button outline">
+                        <Translate component="span" content="header.dashboard" />
+                    </div>
+                </Link>
                 <div>{this.props.children}</div>
             </span>
 

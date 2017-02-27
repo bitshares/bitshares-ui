@@ -1,4 +1,95 @@
 ---------------------------------------------------------------------
+Release 2.0.170224
+---------------------------------------------------------------------
+New features
+--------
+- New modal for quick deposit/withdraw of OPEN.X assets on account overview page
+- A set of default assets are available for deposits on the account overview page
+- New summary of open orders on account overview page
+- Set precision for bitCNY and bitUSD to 5 in orderbook display
+- Flip CNY:OPEN.BTC market in dashboard
+- Add bitSilver asset icon
+- Add Chinese intro text by bitcrab
+- Add grid lines and y axis labels to the depth chart
+
+Bug fixes
+--------
+- Fix Popover links so they work within the router context
+- Update react-router to v3.0.2
+- Refactor blockTrades withdrawal address caching
+- Scroll orderbook to top when changing markets
+- Don't set feed price in MarketStore for markets without call orders
+- Fix setting of highestBid in MarketStore
+- Update bitsharesjs, fixes vesting balances not loading properly
+- Fix persistence of indicator settings
+- Fix PriceChart resize on switching to/from left orderbook
+- Update Dashboard markets, add loading indication until accounts are ready
+- Fix Operation display of asset_global_settle operation
+
+---------------------------------------------------------------------
+Release 2.0.170215
+---------------------------------------------------------------------
+New features
+- New intro text has been added to the Dashboard for new users
+- Several settings and wallet related parameters have been made dependent on the chain id, and will thus switch accordingly if you connect to the testnet for example.
+- Windows light client installer will now remove personal data properly if checked
+
+Bug fixes
+--------
+- Fix Russian language selection
+- Fix proxy selection
+- Fix committee/witness pages
+- A bug when importing old BTS 1 balances has been fixed
+- App init flow has been improved
+- Fix asset creation precision slider
+- Fix HelpContent links
+- Only trigger MarketCard img onerror update once
+- [Blocktrades] Fix issue with 'calculating crashes' in Blocktrades Bridge
+- [Blocktrades] Disable 'withdraw now' and 'convert now' buttons if no funds
+- [Blocktrades] Move amount from output withdraw section to withdraw dialog in Blocktrades Bridge
+- [Blocktrades] Fix displaying MKR coin
+- [Blocktrades] Add ability to move balance to 'Amount selector' in withdraw dialog on mouse click
+
+---------------------------------------------------------------------
+Release 2.0.170201
+---------------------------------------------------------------------
+New features
+- Charting revamp: new charts using [react-stockchart](https://github.com/rrag/react-stockcharts)
+- Russian language translation thanks to @rusteemitblog and @testzcrypto
+- Add brainkey restoration to create-account, improve brainkey restoration
+- All open orders, collateral and debt are now included when estimating total account value on the account screen
+- A 'Borrow' action added to the account assets table
+- A 'Reset settings' button added to the Settings page
+- Dates have been added to the Chat (requires implementation by other clients like Openledger also)
+- Hide 'OPEN.' prefix from Openledger assets
+- The dashboard market cards have been modified to be more clear
+
+- Hempsweet UIA symbol added ahead of their launch
+
+Bug fixes
+--------
+- Many tweaks and fixes to colors, positioning and more
+- Make sure transfer asset stays synced
+- Fix bug in CER input during asset creation
+- Move 'show hidden accounts' inside DashboardList, improve the layout
+
+---------------------------------------------------------------------
+Release 2.0.170123
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Use relative paths for fetching assets, fixed wallet creation issues
+- Fix some links in the light wallets
+- Fix market flipping for UIAs
+- Fix several bugs related to hash-history react router config
+- Change Graphene to BitShares
+- Replace graphenejs-lib with bitsharesjs
+- Fix npm errors
+- Fix line breaks for memos with very long words
+- Make sure asset actions render properly in AccountOverview
+- Ensure proxy accounts get resolved properly in Voting
+
+---------------------------------------------------------------------
 Release 2.0.170118
 ---------------------------------------------------------------------
 

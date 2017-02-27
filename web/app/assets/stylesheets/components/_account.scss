@@ -20,7 +20,7 @@
 }
 
 .account-left-menu {
-  margin-left: 1.25rem !important;
+  margin-left: 1rem !important;
   > li {
     &.menu-subheader {
       text-transform: uppercase;
@@ -38,13 +38,8 @@
 
     > a {
       padding-left: 1.75rem !important;
-      border-left: 2px solid transparent;
-      &.active {
-        border-left-color: #f00;
-      }
+      border-right: 3px solid transparent;
     }
-
-
   }
 }
 

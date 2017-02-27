@@ -42,9 +42,15 @@
     "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
     "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
-    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount."
+    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
     "trade": "Trade",
     "asset": "Actif",
     "market_value": "Valeur",
@@ -107,6 +113,7 @@
       "sign_owner": "Sign as owner"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy": "Proxy Voting Account",
       "name": "Nom",
       "info": "Info",
@@ -376,13 +383,31 @@
     "locale": "Changer de langue",
     "confirm_yes": "Toujours",
     "confirm_no": "Jamais",
-    "always_confirm": "Toujours demander une confirmation"
+    "always_confirm": "Toujours demander une confirmation",
+    "restore_default_success": "Settings have been reset successfully"
   },
   "footer": {
     "title": "BitShares",
     "block": "Bloc courant"
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "price_history": "Historique du prix",
     "order_depth": "Carnet d'ordres",
     "market_history": "Historique du marché",

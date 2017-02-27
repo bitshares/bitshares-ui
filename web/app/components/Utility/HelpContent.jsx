@@ -2,6 +2,7 @@ import React from "react";
 import {reduce, zipObject} from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
+import {withRouter} from "react-router";
 
 let req = require.context("../../../../help", true, /\.md/);
 let HelpData = {};
@@ -25,7 +26,7 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        if (text.indexOf("#/") === 0) return `<a href="${text}" onclick="_onClickLink(event)"`;
+        if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0) return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0) return `<a href="${text}" target="_blank"`;
         let page = endsWith(text, ".md") ? text.substr(0, text.length - 3) : text;
         let res = `<a href="${__HASH_HISTORY__ ? "#" : ""}/help/${page}" onclick="_onClickLink(event)"`;
@@ -41,10 +42,6 @@ class HelpContent extends React.Component {
         path: React.PropTypes.string.isRequired,
         section: React.PropTypes.string
     };
-
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
-    }
 
     constructor(props) {
         super(props);
@@ -73,10 +70,10 @@ class HelpContent extends React.Component {
 
     onClickLink(e) {
         e.preventDefault();
-        let path = e.target.hash.split("/").filter(p => p && p !== "#");
+        let path = (__HASH_HISTORY__ ? e.target.hash : e.target.pathname).split("/").filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.context.router.push(route);
+        this.props.router.push(route);
         return false;
     }
 
@@ -126,4 +123,4 @@ class HelpContent extends React.Component {
     }
 }
 
-export default HelpContent;
+export default withRouter(HelpContent);

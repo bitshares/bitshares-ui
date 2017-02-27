@@ -873,7 +873,7 @@ AccountAssetUpdate = BindToChainState(AccountAssetUpdate);
 class AssetUpdateWrapper extends React.Component {
 
     render() {
-        let asset = this.props.params.asset;;
+        let asset = this.props.params.asset;
         return <AccountAssetUpdate asset={asset} {...this.props}/>;
     }
 }

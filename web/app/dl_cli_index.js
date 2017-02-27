@@ -11,7 +11,7 @@ import WalletActions from "actions/WalletActions"
 import alt from 'alt-instance'
 import iDB from 'idb-instance'
 
-module.exports = {
+const utils = {
 
     PrivateKey, PublicKey, Aes, key,
     WalletDb, WalletManagerStore, PrivateKeyStore,
@@ -49,5 +49,6 @@ module.exports = {
             context[obj] = module.exports[obj]
         }
     }
-
 }
+
+export default utils;

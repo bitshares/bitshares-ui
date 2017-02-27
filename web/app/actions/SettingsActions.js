@@ -1,4 +1,4 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 
 class SettingsActions {
 
@@ -44,11 +44,12 @@ class SettingsActions {
     }
 
     clearSettings() {
-        return true;
+        return (dispatch) => {
+            return new Promise((resolve) => {
+                dispatch(resolve);
+            });
+        };
     }
-    // changeBase(index, value) {
-    //     this.dispatch({index, value});
-    // }
 }
 
 export default alt.createActions(SettingsActions);

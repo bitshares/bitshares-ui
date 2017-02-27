@@ -148,10 +148,16 @@ var Utils = {
         let quotePrecision  = quote.toJS ? quote.get("precision") : quote.precision;
         let baseID = base.toJS ? base.get("id") : base.id;
         let basePrecision  = base.toJS ? base.get("precision") : base.precision;
+        let fixedPrecisionAssets = {
+            "1.3.113": 5, // bitCNY
+            "1.3.121": 5 // bitUSD
+        };
         if (quoteID === "1.3.0") {
             priceText = this.format_number(price, quotePrecision);
         } else if (baseID === "1.3.0") {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + 2));
+        }  else if (fixedPrecisionAssets[quoteID]) {
+            priceText = this.format_number(price, fixedPrecisionAssets[quoteID]);
         } else {
             priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
         }
@@ -490,9 +496,12 @@ var Utils = {
             }
         }
 
+        let prefix = isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null;
+        if (prefix === "open.") prefix = "";
+
         return {
             name,
-            prefix: isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null
+            prefix
         };
     }
 };

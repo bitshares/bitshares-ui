@@ -1,4 +1,4 @@
-var alt = require("alt-instance");
+import alt from "alt-instance";
 import IntlActions from "actions/IntlActions";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
@@ -18,6 +18,7 @@ import ko from "react-intl/locale-data/ko";
 import zh from "react-intl/locale-data/zh";
 import de from "react-intl/locale-data/de";
 import tr from "react-intl/locale-data/tr";
+import ru from "react-intl/locale-data/ru";
 
 addLocaleData(en);
 addLocaleData(es);
@@ -26,6 +27,7 @@ addLocaleData(ko);
 addLocaleData(zh);
 addLocaleData(de);
 addLocaleData(tr);
+addLocaleData(ru);
 
 class IntlStore {
     constructor() {
@@ -39,8 +41,6 @@ class IntlStore {
             onGetLocale: IntlActions.getLocale,
             onClearSettings: SettingsActions.clearSettings
         });
-
-        // this._export("getCurrentLocale", "hasLocale");
     }
 
     hasLocale(locale) {
@@ -53,18 +53,13 @@ class IntlStore {
 
     onSwitchLocale({locale, localeData}) {
         switch (locale) {
-            case "en":
-                counterpart.registerTranslations("en", this.localesObject.en);
-                break;
+        case "en":
+            counterpart.registerTranslations("en", this.localesObject.en);
+            break;
 
-            default:
-                // let newLocale = this.localesObject[locale];
-                // if (!newLocale) {
-                    // newLocale = require("assets/locales/locale-" + locale);
-                //     this.localesObject[locale] = newLocale;
-                // }
-                counterpart.registerTranslations(locale, localeData);
-                break;
+        default:
+            counterpart.registerTranslations(locale, localeData);
+            break;
         }
 
         counterpart.setLocale(locale);
@@ -78,7 +73,7 @@ class IntlStore {
     }
 
     onClearSettings() {
-        this.onSwitchLocale("en");
+        this.onSwitchLocale({locale: "en"});
     }
 }
 

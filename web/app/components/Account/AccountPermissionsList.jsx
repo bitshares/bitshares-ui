@@ -34,7 +34,7 @@ class AccountPermissionRow extends React.Component {
     render() {
         let name, item_id, name_or_key;
         let suffix = "_accounts";
-        let pubKey = this.props.pubkey;;
+        let pubKey = this.props.pubkey;
 
         if (this.props.account) {
             name = this.props.account.get("name");

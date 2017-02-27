@@ -16,6 +16,7 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
+import { Apis } from "bitsharesjs-ws";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -227,7 +228,7 @@ class Header extends React.Component {
                 accountsDropDown = (
                     <ActionSheet>
                         <ActionSheet.Button title="">
-                            <a style={{padding: "1rem"}} className="button">
+                            <a style={{padding: "1rem", border: "none"}} className="button">
                                 &nbsp;{account_display_name} &nbsp;
                                 <Icon className="icon-14px" name="chevron-down"/>
                             </a>
@@ -243,6 +244,8 @@ class Header extends React.Component {
             }
         }
 
+        const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
+
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -250,10 +253,18 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon className="icon-14px" name="menu"/></a></li>
                     </ul>
                 </div>
-                {window.electron ? <div className="grid-block show-for-medium shrink">
+                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink">
                     <ul className="menu-bar">
-                        <li><div style={{marginLeft: "1rem", height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline">{"<"}</div></div></li>
-                        <li><div style={{height: "3rem"}}><div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline">></div></div></li>
+                        <li>
+                            <div style={{marginLeft: "1rem", height: "3rem"}}>
+                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
+                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
+                            </div>
+                        </li>
                     </ul>
                 </div> : null}
                 <div className="grid-block show-for-medium">
@@ -263,7 +274,7 @@ class Header extends React.Component {
                         {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
                         {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
                         <li>{tradeLink}</li>
-                        {currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                        {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">
@@ -290,12 +301,13 @@ export default connect(Header, {
         return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
+        const chainID = Apis.instance().chain_id;
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get("lastMarket"),
+            lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
             starredAccounts: SettingsStore.getState().starredAccounts
         };
     }

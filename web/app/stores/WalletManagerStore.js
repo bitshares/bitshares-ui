@@ -49,12 +49,12 @@ class WalletManagerStore extends BaseStore {
         should a <b>create_wallet_password</b> be provided.
     */
     onSetWallet({wallet_name = "default", create_wallet_password, brnkey, resolve}) {
-        var p = new Promise( resolve => {
+        var p = new Promise( res => {
             if( /[^a-z0-9_-]/.test(wallet_name) || wallet_name === "" )
                 throw new Error("Invalid wallet name")
 
             if(this.state.current_wallet === wallet_name) {
-                resolve()
+                res()
                 return
             }
 
@@ -67,7 +67,7 @@ class WalletManagerStore extends BaseStore {
 
             var current = iDB.root.setProperty("current_wallet", wallet_name)
 
-            resolve( Promise.all([ add, current ]).then(()=>{
+            res( Promise.all([ add, current ]).then(()=>{
                 // The database must be closed and re-opened first before the current
                 // application code can initialize its new state.
                 iDB.close()

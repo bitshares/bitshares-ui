@@ -1,9 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
 import utils from "common/utils";
-import assetUtils from "common/asset_utils";
 import connectToStores from "alt/utils/connectToStores";
 import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
@@ -12,6 +10,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
+import { Apis } from "bitsharesjs-ws";
 
 require("./BuySell.scss");
 
@@ -180,13 +179,19 @@ class BuySell extends React.Component {
         }
     }
 
+    _getLastMarketKey() {
+        const chainID = Apis.instance().chain_id;
+        return `lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`;
+    }
+
     componentDidMount() {
         let centerContainer = ReactDOM.findDOMNode(this.refs.center);
         if (centerContainer) {
             Ps.initialize(centerContainer);
         }
+
         SettingsActions.changeViewSetting({
-            lastMarket: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
+            [this._getLastMarketKey()]: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
 
     }
@@ -205,7 +210,7 @@ class BuySell extends React.Component {
     componentWillReceiveProps(np) {
         if (np.baseAsset && np.baseAsset.getIn(["bitasset", "is_prediction_market"])) {
             // console.log("this.props:", this.props);
-            this.props.history.push(`market/${np.baseAsset.get("symbol")}_${np.quoteAsset.get("symbol")}`)
+            this.props.history.push(`market/${np.baseAsset.get("symbol")}_${np.quoteAsset.get("symbol")}`);
         }
 
         if (np.quoteAsset.toJS && np.baseAsset.toJS) {
@@ -221,7 +226,7 @@ class BuySell extends React.Component {
             let currentSub = this.state.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
             SettingsActions.changeViewSetting({
-                lastMarket: np.quoteAsset.get("symbol") + "_" + np.baseAsset.get("symbol")
+                [this._getLastMarketKey()]: np.quoteAsset.get("symbol") + "_" + np.baseAsset.get("symbol")
             });
             this.setState(this._getInitState(np));
             return this._subToMarket(np);

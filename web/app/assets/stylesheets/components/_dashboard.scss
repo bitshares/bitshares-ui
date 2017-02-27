@@ -22,3 +22,87 @@ div.fm-container {
     padding-top: 4px;
    }
 }
+
+.Dashboard__intro-text {
+    padding: 20px;
+
+    > p:nth-of-type(2) {
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid grey;
+    }
+}
+
+.SimpleTrade__modal {
+    overflow: auto;
+    .Modal__header {
+        background-color: #484848;
+        padding: 20px 2rem;
+    }
+    .Modal__divider {
+        margin: 0px;
+        border-bottom: 2px solid #020202;
+    }
+    .SimpleTrade__hide-zero {
+        position: relative;
+        top: -3px;
+        cursor: pointer;
+    }
+    .SimpleTrade__withdraw-row {
+        padding: 10px 0;
+
+        &.button-group {
+            color: red;
+        }
+    }
+}
+
+.balance-row.active {
+    background-color: #3C3C3C;
+}
+
+.balance-row:hover {
+    background-color: #3C3C3C;
+}
+
+.balance-row {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 10px 20px;
+}
+
+.balance-row:hover {
+    cursor: pointer;
+}
+
+.SimpleTrade__help-text {
+    font-style: italic;
+    padding-top: 5px;
+    font-size: 95%;
+}
+
+#simple_transfer_modal {
+    max-width: 650px;
+}
+
+#simple_transfer_modal,
+#simple_deposit_modal,
+#simple_withdraw_modal {
+    padding: 0;
+}
+
+#simple_deposit_modal,
+#simple_withdraw_modal {
+    overflow: auto !important;
+    max-width: 500px;
+}
+
+#simple_deposit_modal label,
+#simple_withdraw_modal label {
+    text-transform: none !important;
+}
+
+#simple_buy_modal,
+#simple_sell_modal {
+    overflow: auto !important;
+    padding: 0;
+}

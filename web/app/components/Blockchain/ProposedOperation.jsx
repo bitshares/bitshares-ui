@@ -440,10 +440,10 @@ class ProposedOperation extends React.Component {
                         &nbsp;<Translate component="span" content="proposal.at" />
                         &nbsp;<FormattedPrice
                                 style={{fontWeight: "bold"}}
-                                quote_amount={op[1].price.quote.amount}
-                                quote_asset={op[1].price.quote.asset_id}
-                                base_asset={op[1].price.base.asset_id}
-                                base_amount={op[1].price.base.amount}
+                                quote_amount={op[1].settle_price.quote.amount}
+                                quote_asset={op[1].settle_price.quote.asset_id}
+                                base_asset={op[1].settle_price.base.asset_id}
+                                base_amount={op[1].settle_price.base.amount}
                             />
                     </span>
                 );
