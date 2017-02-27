@@ -1,13 +1,13 @@
-## Bridge and gateway services
+## Сервисы моста и шлюза
 
-Both bridges and gateways allow you to deposit and withdraw coins, but there is a difference in the amount of trust you need to place in the service providers.
+И мосты, и шлюзы позволяют Вам заводить и выводить монеты, но существует разница в уровне доверия, которое Вам нужно будет оказать поставщикам этих сервисов.
 
-### Bridges: trust-free model
+### Мосты: модель без доверия
 
-A bridge service provides a way to deposit an amount of a crypto-currency other than BitShares, and in turn receive a SmartCoin equivalent. SmartCoins have no counterparty risk, so the only risk you experience when using a bridge is during the short time it takes to complete the transfer. This is better than a centralized exchange such as Poloniex, where you are always at risk of the exchange being hacked, going bankrupt, or experiencing any number of other issues.
+Сервис моста предоставляет Вам способ завести некоторое количество криптовалюты, кроме BitShares, и получить взамен эквивалент в SmartCoin. SmartCoins не подвержены риску от третьей стороны, поэтому единственный риск, с которым Вы сталкиваетесь при использовании моста, это тот короткий момент времени, который нужен на завершение трансфера. Это лучше, чем централизованная биржа вроде Poloniex, на которой Вы всегда находитесь под риском взлома биржи, ее банкротства, или других подобных проблем.
 
-### Gateways: trust-based model
+### Шлюзы: модель на основе доверия
 
-Gateways are basically equivalent to the standard exchange model where you depend on the solvency of the exchange to be able to redeem your coins. Generally gateways issue assets prefixed with their symbol, like OPEN, TRADE, or META. These assets are backed 100% by the real BTC or ETH or any other coin that people deposit with the gateways.
+Шлюзы по сути являются аналогом стандартной модели обмена, где Вы зависите от платежеспособности биржи, которая должна выкупить Ваши монеты. В основном шлюзы выпускают активы с собственным символом в префиксе, например, OPEN, TRADE, или META. Эти активы на 100% обеспечены реальными BTC или ETH, либо же любой другой валютой, которую люди заводят через шлюзы.
 
-An OPEN.BTC is thus in theory equivalent to the BTC you get on Poloniex, which could be prefixed POLO.BTC. In both cases you rely on the service provider, CCEDK for OPEN. assets and Poloniex for POLO. assets, to remain solvent in order to back the value of the assets they've issued. Because gateways only provide this one service which is normally only one part of running an exchange, one might even argue that they have an easier job of securing their holdings.
+Таким образом, OPEN.BTC теоретически эквивалентны BTC, которые Вы получаете на Poloniex, которые могут иметь префикс POLO.BTC. В обоих случаях Вы полагаетесь на поставщика сервиса: CCEDK для OPEN. assets и Poloniex для POLO. assets, которые должны оставаться платежеспособными, дабы обеспечивать ценность выпущенных ими активов. Так как шлюзы предоставляют только один сервис, который обычно является частью работы биржи, кто-нибудь даже может сказать, что их работа по обеспечению своих средств довольно легкая.
