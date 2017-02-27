@@ -1,0 +1,1 @@
+Прокси голосует от Вашего имени. Вы можете найти людей, готовых выступать в качестве прокси, на форуме BitShares - [BitSharestalk](https://bitsharestalk.org/index.php/board,104.0.html).
