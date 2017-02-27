@@ -1,11 +1,11 @@
-# Wallet
+# Кошелек
 
-As you may have noticed already, this application is a web application and runs in a browser. A connection is established to a trusted node in the network that serves as a gateway to the rest of the ecosystem.
+Как Вы уже могли заметить, это веб-приложение, которое работает в браузере. Соединение устанавливается с доверенным узлом сети, который служит шлюзом в остальную часть экосистемы.
 
-## Wallet Security
+## Безопасность кошелька
 
-Rest assured that our servers do never have access to your funds because none of your private keys ever leave your browser. Instead they are encrypted with your pass phrase and are stored in your local browser's database. Hence you should make sure to have a proper [Backup](../introduction/backups.md) to not lose access to your funds on computer malfunctions or browser crashes.
+Будьте уверены, что наши сервера никогда не получат доступа к Вашим средствам, потому как ни один из Ваших приватных ключей никогда не покидает браузер. Вместо этого они зашифрованы с помощью Вашей фразы-пароля и хранятся в локальной базе данных Вашего браузера. Поэтому Вам следует позаботится о создании соответствующей [резервной копии](../introduction/backups.md), чтобы не потерять доступ к своим средствам из-за взлома компьютера или отказа браузера.
 
-## Wallet Management
+## Управление кошельком
 
-Furthermore, the user interface is capable of carrying and accessing several separated wallets each containing possible several accounts and corresponding funds. You can add, backup, and switch existing wallets in `Settings->Wallets`.
+Кроме того, пользовательский интерфейс способен содержать и предоставлять доступ к нескольким кошелькам, каждый из которых может содержать несколько аккаунтов и соответствующие им средства. Вы можете добавлять, создавать резервную копию и переключаться между существующими кошельками в меню `Настройки->Кошельки`.
