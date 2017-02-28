@@ -55,7 +55,7 @@
     "login":"Кошелек Bitshares не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается и Вы выходите из аккаунта.",
     "buy_min":"Вы получите, как минимум, это количество. Если обнаружатся подходящие сделки по цене меньшей, чем Вы указали, то Вы получите больше этого количества.",
     "borrow":"Одолжить %(asset)s у сети. Это создаст смарт-контракт, который заблокирует Ваш залог до того момента, когда Вы измените позицию или потребуется марджин колл.",
-    "transfer_actions":"Click here to make a transfer, or to deposit/withdraw those assets that support it.",
+    "transfer_actions":"Нажмите здесь, чтобы совершить трансфер или разместить депозит/вывести те активы, которые это позволяют.",
     "deposit_tip":"To complete the deposit, go to your %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
     "copy_tip":"Нажмите, чтобы скопировать текст",
     "withdraw_full":"Click to withdraw the full balance",
