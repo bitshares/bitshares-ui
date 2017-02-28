@@ -59,7 +59,7 @@
     "deposit_tip":"Чтобы разместить депозит, зайдите в Ваш %(asset)s кошелек и переведите средства на адрес, указанный на этой странице. Вы получите депозит как только перевод будет подтвержден. Если отображается мемо, то нужно обязательно включить это мемо в Ваш перевод.",
     "copy_tip":"Нажмите, чтобы скопировать текст",
     "withdraw_full":"Нажмите, чтобы вывести баланс целиком",
-    "withdraw_address":"If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
+    "withdraw_address":"Если у Вас еще нет %(asset)s адреса, пожалуйста, найдите подходящий кошелек и создайте его, чтобы завершить вывод средств."
   },
   "propose":"Предложить",
   "cancel":"Отмена",
@@ -69,12 +69,12 @@
     "intro_text_2":"<b>DEX</b> децентрализована по самой своей сути, что позволяет Вам торговать основным токеном BitShares (BTS) и разнообразными не требующими доверия активами со стабильной, привязанной к рынку ценой, такими как bitUSD, bitCNY, bitBTC, bitGold и многими другими. Все эти активы могут торговаться без связанного с участием контрагентов риска, оставляя контроль над Вашими средствами полностью в Ваших руках.",
     "intro_text_3":"<b>Также DEX</b> дает возможность создавать выпускаемые пользователем активы (user-issued assets - UIA), которые могут торговаться с помощью книги ордеров против любого другого актива на платформе, как не требующего доверия, так и выпущенного пользователем. Самым известным эмитентом на платформе является <b>OpenLedger</b>, поддерживающий такие активы, как BTC, ETH, STEEM, DASH, LTC, DOGE и многие другие.",
     "intro_text_4":"Это уникальный микс традиционной и децентрализованной торговли, и всё это в таком знакомом для криптовалютных трейдеров интерфейсе биржи. Удачной торговли!",
-    "in_open":"This is the amount of %(asset)s you have in open orders.",
-    "in_open_value":"This is the equivalent value of the %(asset)s you have in open orders.",
-    "transfer_actions":"Transfer actions",
+    "in_open":"Это количество %(asset)s, которым Вы располагаете в открытых ордерах.",
+    "in_open_value":"Это эквивалентная ценность %(asset)s, которой Вы располагаете в открытых ордерах.",
+    "transfer_actions":"Операции переводов",
     "market_actions":"Market actions",
-    "see_open":"See open orders",
-    "total_estimate":"This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+    "see_open":"Отобразить открытые ордера",
+    "total_estimate":"Это оценочная стоимость всех Ваших активов, включая скрытые активы, открытые ордера, долг и залоговое обеспечение. Оценка произведена на основе данных блокчейна в текущий момент и может иметь некоторую погрешность.",
     "trade":"Торговать",
     "welcome":"Добро пожаловать в BitShares",
     "asset":"Актив",
@@ -241,7 +241,7 @@
       "sign_owner":"Подписать как владелец"
     },
     "votes":{
-      "proxy_current":"Your current proxy is",
+      "proxy_current":"Ваш текущий прокси ",
       "proxy_short":"Прокси",
       "workers_short":"Работники",
       "proxy":"Аккаунт, которому Вы доверяете свои голоса",
@@ -775,7 +775,7 @@
     "delete_select":"Выберите кошелек для удаления",
     "restore_brainkey_text":"Чтобы восстановиться с помощью brainkey, Вам нужно создать новый кошелек. Пожалуйста, введите пароль и имя нового кошелька в строки ниже, потом введите brainkey.",
     "restore_key_count":"# ключей",
-    "restore_default_success":"Settings have been reset successfully"
+    "restore_default_success":"Настройки были успешно изменены"
   },
   "footer":{
     "title":"BitShares",
