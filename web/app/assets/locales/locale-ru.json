@@ -788,8 +788,8 @@
   },
   "exchange":{
     "chart_options":{
-      "tools":"Tools",
-      "title":"Indicators",
+      "tools":"Инструменты",
+      "title":"Индикаторы",
       "sma":"SMA",
       "ema1":"EMA 1",
       "ema2":"EMA 2",
@@ -801,8 +801,8 @@
       "volume":"Show volume chart",
       "period":"Period",
       "height":"Chart height",
-      "price_title":"Price indicators",
-      "volume_title":"Volume indicators"
+      "price_title":"Индикаторы цены",
+      "volume_title":"Индикаторы объема"
     },
     "market":"Рынок",
     "price_history":"График цен",
