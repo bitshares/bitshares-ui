@@ -296,7 +296,7 @@ class AccountDepositWithdraw extends React.Component {
                     </select>
 
                     <div className="grid-content no-padding" style={{paddingTop: 15}}>
-                    {services[activeService].template}
+                    {activeService && services[activeService] ? services[activeService].template : services[0].template}
                     </div>
                 </div>
             </div>
