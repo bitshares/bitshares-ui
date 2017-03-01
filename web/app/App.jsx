@@ -32,7 +32,6 @@ class App extends React.Component {
         let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
         let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
-        console.log("synced:", ChainStore.subscribed, "subError:", ChainStore.subError, ChainStore.subError && ChainStore.subError.message);
         this.state = {
             loading: true,
             synced: ChainStore.subscribed,
