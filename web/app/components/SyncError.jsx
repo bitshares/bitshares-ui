@@ -51,7 +51,7 @@ class SyncError extends React.Component {
                     <p style={{marginBottom: 0}}><Translate content="sync_fail.sub_text_1" /></p>
                     <Icon name="clock" size="5x"/>
 
-                    <p><Translate content="sync_fail.sub_text_2" /></p>
+                    <p><Translate unsafe content="sync_fail.sub_text_2" /></p>
                 </div>
                 <div className="grid-container text-center" style={{paddingTop: "1rem", maxWidth: "40rem"}}>
                 <section className="block-list">

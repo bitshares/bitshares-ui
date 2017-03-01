@@ -22,8 +22,6 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 
-ChainStore.setDispatchFrequency(20);
-
 class App extends React.Component {
 
     constructor() {
@@ -33,10 +31,12 @@ class App extends React.Component {
         const user_agent = navigator.userAgent.toLowerCase();
         let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+        let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+        console.log("synced:", ChainStore.subscribed, "subError:", ChainStore.subError, ChainStore.subError && ChainStore.subError.message);
         this.state = {
             loading: true,
-            synced: false,
-            syncFail: false,
+            synced: ChainStore.subscribed,
+            syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
             disableChat: SettingsStore.getState().settings.get("disableChat", true),
             showChat: SettingsStore.getState().viewSettings.get("showChat", false),
@@ -57,23 +57,23 @@ class App extends React.Component {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
 
-            ChainStore.init().then(() => {
-                this.setState({synced: true});
+            // ChainStore.init().then(() => {
 
-                Promise.all([
-                    AccountStore.loadDbData(Apis.instance().chainId)
-                ]).then(() => {
-                    AccountStore.tryToSetCurrentAccount();
-                    this.setState({loading: false, syncFail: false});
-                }).catch(error => {
-                    console.log("[App.jsx] ----- ERROR ----->", error);
-                    this.setState({loading: false});
-                });
+
+            Promise.all([
+                AccountStore.loadDbData(Apis.instance().chainId)
+            ]).then(() => {
+                AccountStore.tryToSetCurrentAccount();
+                this.setState({loading: false});
             }).catch(error => {
-                console.log("[App.jsx] ----- ChainStore.init error ----->", error);
-                let syncFail = error.message === "ChainStore sync error, please check your system clock" ? true : false;
-                this.setState({loading: false, syncFail});
+                console.log("[App.jsx] ----- ERROR ----->", error);
+                this.setState({loading: false});
             });
+            // }).catch(error => {
+            //     console.log("[App.jsx] ----- ChainStore.init error ----->", error);
+            //
+            //     this.setState({loading: false, syncFail});
+            // });
         } catch(e) {
             console.error("e:", e);
         }
