@@ -15,5 +15,6 @@ export const settingsAPIs = {
         {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
         {url: "wss://testnet.bitshares.eu/ws", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
-    DEFAULT_FAUCET: "https://bitshares.openledger.info"
+    DEFAULT_FAUCET: "https://bitshares.openledger.info",
+    RPC_URL: "https://openledger.info/api/"
 };
