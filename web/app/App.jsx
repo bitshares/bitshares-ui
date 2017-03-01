@@ -182,7 +182,17 @@ class App extends React.Component {
             <div style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}} className={this.state.theme}>
                 <div id="content-wrapper">
                     {content}
-                    <NotificationSystem ref="notificationSystem" allowHTML={true}/>
+                    <NotificationSystem
+                        ref="notificationSystem"
+                        allowHTML={true}
+                        style={{
+                            Containers: {
+                                DefaultStyle: {
+                                    width: "425px"
+                                }
+                            }
+                        }}
+                    />
                     <TransactionConfirm/>
                     <WalletUnlockModal/>
                     <BrowserSupportModal ref="browser_modal"/>

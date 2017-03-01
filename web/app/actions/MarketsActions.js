@@ -233,7 +233,6 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
-
                     if (__DEV__) console.timeEnd("Fetch market data");
                     dispatch({
                         limits: results[1],
