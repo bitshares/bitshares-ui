@@ -12,7 +12,7 @@
   "sync_fail":{
     "title":"Не смог синхронизоваться с API сервером",
     "sub_text_1":"Пожалуйста убедитесь, что часы вашего компьютера точны.",
-    "sub_text_2":"После того, как вы синхронизировали ваши часы, пожалуйста перезагрузите эту страницу. Если ваши часы уже идут правильно, возможно выбранный вами API сервер не синхронизирован. В таком случае, пожалуйста, выберите другой сервер из списка ниже."
+    "sub_text_2":"Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header":{
     "title":"Пользовательский интерфейс BitShares",
@@ -732,7 +732,7 @@
     "confirm_no":"Никогда",
     "always_confirm":"Всегда запрашивать подтверждение",
     "wallets":"Кошельки",
-    "apiServer":"Подключение к API",
+    "apiServer":"Full node API server",
     "add_ws":"Добавить новый WebSocket API",
     "remove_ws":"Удалить WebSocket API",
     "faucet_address":"Адрес сервера-крана (faucet)",
@@ -761,7 +761,7 @@
     "password_text":"Поменяйте пароль.",
     "backup_text":"Создать резервные копии.",
     "restore_text":"Восстановить из резервной копии или импортировать ключи.",
-    "access_text":"Изменить настройки API серверов и серверов-кранов (faucet).",
+    "access_text":"Choose which full node you want to connect to.<br/><br/>The faucet is used to pay the registration fee for new users.",
     "view_keys":"Просмотреть ключи",
     "add_api":"Добавить API",
     "remove_api":"Удалить API",
@@ -1088,6 +1088,10 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
+    "bitkapital_text":"Choose an asset to deposit or withdraw:",
+    "bitkapital_withdraw":"You are withdrawing",
+    "bitkapital_receive":"You will receive",
+    "iban":"IBAN",
     "service":"Перевод средств",
     "bridge":"Мост",
     "gateway":"Шлюз",
