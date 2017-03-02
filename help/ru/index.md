@@ -1,6 +1,6 @@
-# Помощь с Graphene
+# Помощь Graphene
 
-BitShares 2.0 - это платформа Финансовых Смарт-Контрактов, постороенная по технологии [Graphene](https://github.com/cryptonomex/graphene), созданной [Cryptonomex](http://cryptonomex.com). Graphene можно рассматривать как набор инструментов или технологию для создания блокчейнов в реальном времени.
+BitShares 2.0 - это платформа Финансовых Смарт-Контрактов, постороенная на технологии [Graphene](https://github.com/cryptonomex/graphene), созданной [Cryptonomex](http://cryptonomex.com). Graphene можно рассматривать как набор инструментов или технологию для создания блокчейнов работающих в режиме реального времени.
 
 Этот раздел помощи дает краткий обзор и описывает основные понятия этого приложения.
 
@@ -18,7 +18,7 @@ BitShares 2.0 - это платформа Финансовых Смарт-Кон
 
 - [Введение](accounts/general.md)
 - [Разрешения](accounts/permissions.md)
-- [Членства](accounts/membership.md)
+- [Членство](accounts/membership.md)
 
 ## Активы
 

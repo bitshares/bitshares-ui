@@ -1,13 +1,13 @@
-# Blockchain
+# Блокчейн
 
-As most crypto currencies, Graphene makes use of a blockchain to update participants about transfers and market activities. Since blocks always refer to the previous block, we get a chain of blocks (blockchain) that contains all transactions every made in the network. Because the blockchain is a publicly accessible and auditable ledger, everyone can take a closer look and verify transfers as well as market orders and order books.
+Как и большинство криптовалют, для оповещения участников о транзакциях и происходящем на рынке Графен использует технологию блокчейн. Так как блок всегда ссылается на предыдущий блок, мы получаем цепь блоков (блокчейн), которая содержит все когда-либо проведенные в сети транзакции. Так как блокчейн - это публично доступный и проверяемый регистр, любой желающий может детально просмотреть и проверить транзакции, а также рыночные ордера и книги ордеров.
 
-Of course, this web wallet offers a block explorer to assist you with your audit.
+Конечно, этот веб-кошелек предлагает Вам обозреватель блоков, дабы помочь Вам с аудитом.
 
-## Consensus Mechanism
+## Механизм консенсуса
 
-Who exactly is allows to *produce* a block at which time instant is defined by a consensus mechanism called *Delegated Proof of Stake*. In essence, the shareholders of BitShares (holders of the BTS token) can cast a vote for their preferred block producers on the blockchain. Those so called *witnesses* with the most votes are allowed to produce blocks.
+То, кому именно и в какое время будет позволено *произвести* блок, определяется механизмом консенсуса под названием *Делегированное доказательство владением долей*. По сути, держатели долей BitShares (держатели токена BTS) могут голосовать за предпочитаемых ими производителей блоков в блокчейне. Этим так называемым *делегатам* с наибольшим количеством голосов и позволяется производить блоки.
 
-## Transactions
+## Транзакции
 
-The Graphene blockchain technology offers a variety of transaction types. Users are not only able to simply transfer assets between each other, but there are also transactions to interact with the decentralized exchange. Most of these transaction types are labeled with a self-explaining tag, others require more knowledge about the inner workings of the company.
+Блокчейн-технология Графен предлагает Вам различные типы транзакций. Пользователи могут не только просто переводить активы друг другу, но и воспользоваться транзакциями для взаимодействия с децентрализованной биржей. Большая часть этих типов транзакций помечена поясняющим флагом, другие же требуют некоторых познаний в механизмах внутреннего функционирования компании.

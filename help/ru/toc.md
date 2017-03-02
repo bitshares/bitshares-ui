@@ -11,7 +11,7 @@
 - [Член комитета](introduction/committee.md)
 - [Аккаунты](accounts/general.md)
 - [Разрешения](accounts/permissions.md)
-- [Членства](accounts/membership.md)
+- [Членство](accounts/membership.md)
 - [Привязанные к рынку активы](assets/mpa.md) (BitUSD, BitEUR, BitGOLD, Bit\*,...)
 - [Эмитированные пользователем активы](assets/uia.md)
 - [Приватизированные BitAssets](assets/privbitassets.md)

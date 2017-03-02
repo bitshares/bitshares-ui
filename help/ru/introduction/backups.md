@@ -1,18 +1,18 @@
-# Backups
+# Резервные копии
 
-It is recommended to make regular backups of your wallet even though in most cases a single backup may be sufficient. Please note that in order to recover from a backup you will also need to provide the pass phrase because **backups are encrypted**. Hence, if you either lose your wallet or your pass phrase you will be unable to access any of your funds again!
+Мы настоятельно рекомендуем Вам регулярно создавать резервные копии Вашего кошелька несмотря на то, что одной резервной копии в большинстве случаев оказывается достаточно. Пожалуйста, обратите внимание, что для восстановления из резервной копии будет необходимо предоставить фразу-пароль, так как **резервные копии зашифрованы**. Следовательно, если Вы потеряете кошелек или Вашу фразу-пароль, то больше никогда не сможете получить доступ к своим средствам!
 
-Backups can be obtain from the Wallet Management Console (`Settings ->
-Wallets`).
+Резервные копии можно получить с помощью Панели Управления Кошельком (`Настройки ->
+Кошельки`).
 
-## Wallet Exports
+## Экспорт кошелька
 
-The most convenient way to create a new backup is by exporting the wallet with the provided link in the Wallet Management Console. Please store your backups safe from loss, theft, and natural catastrophes
+Наиболее удобным способом создания новой резервной копии является экспорт кошелька с помощью ссылки, сгенерированной в Панели Управления Кошельком. Пожалуйста, храните свои резервные копии так, чтобы их нельзя было потерять, украсть или случайно повредить.
 
-## Brainkey (advanced users ONLY)
+## Brainkey (ТОЛЬКО для опытных пользователей)
 
-If you never manually imported an account key into your wallet, you can alternatively backup your accounts and their funds by exporting the *brainkey*, a string of words from which your keys are derived deterministically.
+Если Вы никогда не импортировали ключ аккаунта в свой кошелек вручную, Вы также можете создать резервную копию Вашего аккаунта и принадлежащих ему средств, экспортировав *brainkey* - цепочку слов, из которой Ваши ключи извлекаются детерминированно.
 
-## Remark: Hierarchical Authorities (advanced uses ONLY)
+## Примечание: Иерархические авторитеты (ТОЛЬКО для опытных пользователей)
 
-If you are using hierarchical authorities (account and/or active permissions), backing up your keys alone may not be sufficient to regain access to your funds! Please revise the documentations about hierarchical authorities.
+Если Вы используете иерархические авторитеты (разрешения аккаунта/активные разрешения), создания резервной копии только одних ключей может быть недостаточно для восстановления доступа к Вашим средствам! Пожалуйста, ознакомьтесь с документацией об иерархических авторитетах.
