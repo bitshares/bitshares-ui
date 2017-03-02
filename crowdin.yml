@@ -3,6 +3,3 @@ files:
     translation: /web/app/assets/locales/locale-%two_letters_code%.json
   - source: /help/en/**/
     translation: /help/%two_letters_code%/**/%original_file_name%
-    languages_mapping:
-      locale:
-        ru: aaa
