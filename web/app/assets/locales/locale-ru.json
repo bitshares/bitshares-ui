@@ -1088,9 +1088,9 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
-    "bitkapital_text":"Choose an asset to deposit or withdraw:",
-    "bitkapital_withdraw":"You are withdrawing",
-    "bitkapital_receive":"You will receive",
+    "bitkapital_text":"Выберите актив для для пополнения или вывода:",
+    "bitkapital_withdraw":"Вы выводите",
+    "bitkapital_receive":"Вы получите",
     "iban":"IBAN",
     "service":"Перевод средств",
     "bridge":"Мост",
