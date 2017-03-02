@@ -18,7 +18,7 @@ BitShares 2.0 - это платформа Финансовых Смарт-Кон
 
 - [Введение](accounts/general.md)
 - [Разрешения](accounts/permissions.md)
-- [Членства](accounts/membership.md)
+- [Членство](accounts/membership.md)
 
 ## Активы
 
