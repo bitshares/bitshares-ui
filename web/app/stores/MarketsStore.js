@@ -667,7 +667,7 @@ class MarketsStore {
             if (bids.length > 1) {
                 for (let i = bids.length - 2; i >= 0; i--) {
                     if (bids[i].getPrice() === bids[i + 1].getPrice()) {
-                        bids[i].sum(bids[i + 1]);
+                        bids[i] = bids[i].sum(bids[i + 1]);
                         bids.splice(i + 1, 1);
                     }
                 }
@@ -688,7 +688,7 @@ class MarketsStore {
             if (asks.length > 1) {
                 for (let i = asks.length - 2; i >= 0; i--) {
                     if (asks[i].getPrice() === asks[i + 1].getPrice()) {
-                        asks[i].sum(asks[i + 1]);
+                        asks[i] = asks[i].sum(asks[i + 1]);
                         asks.splice(i + 1, 1);
                     }
                 }
