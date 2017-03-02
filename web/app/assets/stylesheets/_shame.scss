@@ -419,3 +419,14 @@ section input[type="text"], section input[type="password"] {
     border:none;
   }
 }
+
+.notification {
+    table > tr > td {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+
+        span {
+            line-height: 1.1rem;
+        }
+    }
+}

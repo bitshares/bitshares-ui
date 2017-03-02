@@ -11,6 +11,8 @@ import SettingsStore from "stores/SettingsStore";
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
 
+ChainStore.setDispatchFrequency(20);
+
 let connect = true;
 const willTransitionTo = (nextState, replaceState, callback) => {
     let connectionString = SettingsStore.getSetting("apiServer");
@@ -20,7 +22,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         return Apis.reset(connectionString, true).init_promise
         .then(() => {
             var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-            return Promise.all([db, SettingsStore.init(), ChainStore.init()]).then(() => {
+            return Promise.all([db, SettingsStore.init()]).then(() => {
                 return callback();
             }).catch((err) => {
                 console.log("err:", err);
@@ -39,7 +41,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         } catch(err) {
             console.log("db init error:", err);
         }
-        return Promise.all([db, SettingsStore.init(), ChainStore.init()]).then(() => {
+        return Promise.all([db, SettingsStore.init(), ChainStore.init("willTransitionTo !init-error")]).then(() => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {

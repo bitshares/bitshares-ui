@@ -12,7 +12,7 @@
   "sync_fail": {
     "title": "Failed to sync with the API server",
     "sub_text_1" : "Please verify that your computer clock is correct.",
-    "sub_text_2" : "Once you've synchronized your clock, please refresh this page. If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
+    "sub_text_2" : "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
   },
   "header": {
     "title": "BitShares UI",
@@ -732,7 +732,7 @@
     "confirm_no": "Never",
     "always_confirm": "Always ask for confirmation",
     "wallets": "Wallets",
-    "apiServer": "API Connection",
+    "apiServer": "Full node API server",
     "add_ws": "Add new websocket API",
     "remove_ws": "Remove websocket API",
     "faucet_address": "Faucet Address",
@@ -761,7 +761,7 @@
     "password_text": "Change your password.",
     "backup_text": "Create backups here.",
     "restore_text": "Restore from a backup or import keys.",
-    "access_text": "Change API and faucet servers here.",
+    "access_text": "Choose which full node you want to connect to.<br/><br/>The faucet is used to pay the registration fee for new users.",
     "view_keys": "View keys",
     "add_api": "Add API",
     "remove_api": "Remove API",
@@ -1088,6 +1088,10 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "bitkapital_text": "Choose an asset to deposit or withdraw:",
+    "bitkapital_withdraw": "You are withdrawing",
+    "bitkapital_receive": "You will receive",
+    "iban": "IBAN",
     "service": "Transfer Service",
     "bridge": "Bridge",
     "gateway": "Gateway",

@@ -11,6 +11,7 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import utils from "common/utils";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
+import { blockTradesAPIs } from "api/apiConfig";
 
 class ButtonConversion extends React.Component {
     static propTypes = {
@@ -287,7 +288,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 			coin_symbol: 'btc',
             key_for_withdrawal_dialog: 'btc',
 			supports_output_memos: '',
-            url: "https://api.blocktrades.us/v2",
+            url: blockTradesAPIs.BASE,
             error: null,
 
             // things that get displayed for deposits
@@ -577,7 +578,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     componentWillMount() {
         // check api.blocktrades.us/v2
-        let checkUrl = "https://api.blocktrades.us/v2";
+        let checkUrl = this.state.url;
         this.urlConnection(checkUrl, 0);
         let coin_types_promisecheck = fetch(checkUrl + "/coins",
                                         {method: 'get', headers: new Headers({"Accept": "application/json"})})

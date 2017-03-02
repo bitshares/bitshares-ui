@@ -96,8 +96,8 @@ class Row extends React.Component {
                         </div>
                         <div style={{fontSize: 14, paddingTop: 5}}>
                             {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
-                            <BlockTime  block_number={block}/>
-                            <span className="facolor-fee"> - <FormattedAsset amount={fee.amount} asset={fee.asset_id} /></span>
+                            {!this.props.hideDate ? <BlockTime  block_number={block}/> : null}
+                            {!this.props.hideFee ? <span className="facolor-fee"> - <FormattedAsset amount={fee.amount} asset={fee.asset_id} /></span> : null}
                             {pending ? <span> - {pending}</span> : null}
                         </div>
                     </td>
@@ -807,7 +807,9 @@ class Operation extends React.Component {
                 color={color}
                 fee={op[1].fee}
                 hideOpLabel={this.props.hideOpLabel}
+                hideDate={this.props.hideDate}
                 info={column}
+                hideFee={this.props.hideFee}
             >
             </Row>
         ) : null;

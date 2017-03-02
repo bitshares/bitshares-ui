@@ -1,7 +1,8 @@
 import ls from "./localStorage";
+import {blockTradesAPIs} from "api/apiConfig";
 const blockTradesStorage = new ls("");
 
-export function fetchCoins(url = "https://blocktrades.us/api/v2/coins") {
+export function fetchCoins(url = (blockTradesAPIs.BASE + blockTradesAPIs.COINS_LIST)) {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;
     })).catch(err => {
@@ -9,7 +10,7 @@ export function fetchCoins(url = "https://blocktrades.us/api/v2/coins") {
     });
 }
 
-export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url, stateCallback}) {
+export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url = blockTradesAPIs.BASE_OL, stateCallback}) {
     let body = {
         inputCoinType,
         outputCoinType,
@@ -56,7 +57,7 @@ export function getBackedCoins({allCoins, backer}) {
     return blocktradesBackedCoins;
 }
 
-export function validateAddress({url = "https://bitshares.openledger.info/depositwithdraw/api/v2", walletType, newAddress}) {
+export function validateAddress({url = blockTradesAPIs.BASE, walletType, newAddress}) {
     if (!newAddress) return new Promise((res) => res());
     return fetch(
         url + "/wallets/" + walletType + "/address-validator?address=" + encodeURIComponent(newAddress),

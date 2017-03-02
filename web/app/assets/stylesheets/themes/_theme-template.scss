@@ -90,7 +90,7 @@
   // notification
 
   .notification {
-    @include color($primary-text-color, $super-light-panel-bg-color, true);
+    @include color($primary-text-color, $light-panel-bg-color, true);
   }
 
   .notification-dismiss {

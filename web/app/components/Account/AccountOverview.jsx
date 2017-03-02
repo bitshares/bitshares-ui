@@ -221,12 +221,18 @@ class AccountOverview extends React.Component {
 
         if (optionalAssets) {
             optionalAssets.filter(asset => {
+                let isAvailable = false;
+                this.props.openLedgerBackedCoins.forEach(coin => {
+                    if (coin && (coin.symbol === asset)) {
+                        isAvailable = true;
+                    }
+                });
                 let keep = true;
                 balances.forEach(a => {
                     if (a.key === asset) keep = false;
                 });
 
-                return keep;
+                return keep && isAvailable;
             }).forEach(a => {
                 let asset = ChainStore.getAsset(a);
                 if (asset && this.props.isMyAccount) {
