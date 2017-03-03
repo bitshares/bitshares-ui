@@ -10,7 +10,7 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import {validateAddress, WithdrawAddresses} from "common/blockTradesMethods";
+import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 
 class WithdrawModalBlocktrades extends React.Component {
 
@@ -28,7 +28,7 @@ class WithdrawModalBlocktrades extends React.Component {
         balance: ChainTypes.ChainObject
     };
 
-    constructor( props ) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -40,7 +40,8 @@ class WithdrawModalBlocktrades extends React.Component {
             confirmation_is_valid: false,
             withdraw_address_selected: WithdrawAddresses.getLast(props.output_wallet_type),
             memo: "",
-            withdraw_address_first: true
+            withdraw_address_first: true,
+            empty_withdraw_value: false
         };
 
         this._validateAddress(this.state.withdraw_address, props);
@@ -51,7 +52,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onWithdrawAmountChange( {amount, asset} ) {
-        this.setState( {withdraw_amount:amount} );
+        this.setState( {withdraw_amount: amount, empty_withdraw_value: !parseInt(amount, 10)} );
     }
 
     onSelectChanged(index, e) {
@@ -95,10 +96,9 @@ class WithdrawModalBlocktrades extends React.Component {
     onSubmit() {
 
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
-
             if (!this.state.withdraw_address_is_valid) {
 				ZfApi.publish(this.getWithdrawModalId(), "open");
-	        } else {
+	        } else if(parseInt(this.state.withdraw_amount)){
 
     		   if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
 
@@ -132,6 +132,14 @@ class WithdrawModalBlocktrades extends React.Component {
                     asset.get("id"),
                     this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : "")
                 );
+
+                this.setState({
+                    empty_withdraw_value: false
+                });
+            } else {
+                this.setState({
+                    empty_withdraw_value: true
+                });
             }
         }
 	}
@@ -286,6 +294,8 @@ class WithdrawModalBlocktrades extends React.Component {
                         onChange={this.onWithdrawAmountChange.bind(this)}
                         display_balance={balance}
                     />
+                    {this.state.empty_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.valid" /></p>:null}
+
                 </div>
                 <div className="content-block">
                     <label><Translate component="span" content="modal.withdraw.address"/></label>
