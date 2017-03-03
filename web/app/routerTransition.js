@@ -39,7 +39,6 @@ const willTransitionTo = (nextState, replaceState, callback) => {
     });
     if (!connectionManager) connectionManager = new Manager({url: connectionString, urls: urls.map(a => a.url)});
     if (nextState.location.pathname === "/init-error") {
-
         return Apis.reset(connectionString, true).init_promise
         .then(() => {
             var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
@@ -66,9 +65,9 @@ const willTransitionTo = (nextState, replaceState, callback) => {
             return Promise.all([
                 PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                 WalletDb.loadDbData().then(() => {
-                    if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                        replaceState("/dashboard");
-                    }
+                    // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
+                    //     replaceState("/dashboard");
+                    // }
                     if (nextState.location.pathname.indexOf("/auth/") === 0) {
                         replaceState("/dashboard");
                     }
