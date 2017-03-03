@@ -74,7 +74,6 @@ class PrivateKeyStore extends BaseStore {
     }
 
     getPubkeys() {
-        console.log("getPubkeys", this.state.keys.keySeq().toArray());
         return this.state.keys.keySeq().toArray();
     }
 
@@ -127,7 +126,6 @@ class PrivateKeyStore extends BaseStore {
                 private_key_object
             );
 
-            console.log("p:", p);
             p.catch( event => {
                 // ignore_duplicates
                 let error = event.target.error;

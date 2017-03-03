@@ -107,13 +107,13 @@ class WalletActions {
                 }
                 return updateWallet();
             }).catch(error => {
-                if (
-                    error instanceof TypeError ||
-                    error.toString().indexOf("ECONNREFUSED") != -1
-                ) {
-                    console.log("Warning! faucet registration failed, falling back to direct application_api.create_account..");
-                    return create_account();
-                }
+                /*
+                * Since the account creation failed, we need to decrement the
+                * sequence used to generate private keys from the brainkey. Two
+                * keys were generated, so we decrement twice.
+                */
+                WalletDb.decrementBrainKeySequence();
+                WalletDb.decrementBrainKeySequence();
                 throw error;
             });
         }

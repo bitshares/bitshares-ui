@@ -1012,7 +1012,11 @@
     "tips_explore": "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links on the left to start exploring.",
     "tips_header": "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
     "tips_login": "IMPORTANT: There is no login/logout functionality here, you merely unlock your wallet when you wish to make a transaction.",
-    "import_key_success": "Successfully imported %(count)s keys."
+    "import_key_success": "Successfully imported %(count)s keys.",
+    "brainkey_seq_reset": "Reset brainkey sequence",
+    "brainkey_seq_reset_text": "Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a refresh of the private keys in the wallet.",
+    "brainkey_seq_reset_button": "Reset now",
+    "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet."
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
