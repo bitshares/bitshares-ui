@@ -23,7 +23,10 @@ let connect = true;
 let connectionManager;
 const willTransitionTo = (nextState, replaceState, callback) => {
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 25 connect attempts we refresh the api latency list
-    if (latencyChecks >= 25) apiLatenciesCount = 0;
+    if (latencyChecks >= 25) {
+        apiLatenciesCount = 0;
+        ss.set("latencyChecks", 0);
+    }
     let connectionString = SettingsStore.getSetting("apiServer");
     let urls = SettingsStore.getState().defaults.apiServer
     .filter(a => {
