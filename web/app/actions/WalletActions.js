@@ -96,7 +96,7 @@ class WalletActions {
                         "memo_key": active_private.private_key.toPublicKey().toPublicKeyString(),
                         //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
                         "refcode": refcode,
-                        "referrer": window && window.BTSW ? BTSW.referrer : ""
+                        "referrer": referrer
                     }
                 })
             }).then(r => r.json());

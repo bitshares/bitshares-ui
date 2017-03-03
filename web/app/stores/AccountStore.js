@@ -47,6 +47,26 @@ class AccountStore extends BaseStore {
     _getInitialState() {
         this.account_refs = null;
         this.initial_account_refs_load = true; // true until all undefined accounts are found
+        let referralAccount = "";
+        if (window) {
+            function getQueryParam(param) {
+                var result =  window.location.search.match(
+                    new RegExp("(\\?|&)" + param + "(\\[\\])?=([^&]*)")
+                );
+
+                return result ? result[3] : false;
+            }
+            let validQueries = ["r", "ref", "referrer", "referral"];
+            for (let i = 0; i < validQueries.length; i++) {
+                referralAccount = getQueryParam(validQueries[i]);
+                if (referralAccount) break;
+            }
+        }
+        if (referralAccount) {
+            accountStorage.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
+        } else {
+            accountStorage.remove("referralAccount");
+        }
 
         return {
             update: false,
@@ -54,6 +74,7 @@ class AccountStore extends BaseStore {
             accountsLoaded: false,
             refsLoaded: false,
             currentAccount: null,
+            referralAccount: accountStorage.get("referralAccount", ""),
             linkedAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
             unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts", [])),
