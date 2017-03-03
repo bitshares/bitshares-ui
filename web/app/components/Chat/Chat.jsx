@@ -39,6 +39,7 @@ class Comment extends React.Component {
     render() {
         let {comment, date, user, color} = this.props;
         let systemUsers = [counterpart.translate("chat.welcome_user"), "SYSTEM"];
+
         return (
             <div style={{padding: "3px 1px"}}>
                 {date ?
@@ -69,6 +70,18 @@ class Chat extends React.Component {
         super(props);
 
         let anonName = "anonymous" + Math.round(10000 * Math.random());
+        let myAccounts = this.props.linkedAccounts
+        .filter(a => {
+            let account = ChainStore.getAccount(a);
+            if (!account) {
+                return false;
+            }
+            return AccountStore.isMyAccount(account);
+        })
+        .map(account => {
+            return account;
+        });
+
         this.state = {
             messages: [{
                 user: counterpart.translate("chat.welcome_user"),
@@ -78,7 +91,7 @@ class Chat extends React.Component {
             connected: false,
             showChat: props.viewSettings.get("showChat", true),
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
-            userName: props.viewSettings.get("chatUsername", anonName),
+            userName: props.viewSettings.get("chatUsername", myAccounts.size ? myAccounts.first() : anonName),
             shouldScroll: true,
             loading: true,
             anonName: anonName,
@@ -664,7 +677,15 @@ class Chat extends React.Component {
     }
 }
 
-export default connect(Chat, {
+class SettingsContainer extends React.Component {
+
+    render() {
+        if (!this.props.accountsReady) return null;
+        return <Chat {...this.props} />;
+    }
+}
+
+export default connect(SettingsContainer, {
     listenTo() {
         return [AccountStore, SettingsStore];
     },
@@ -672,7 +693,8 @@ export default connect(Chat, {
         return {
             currentAccount: AccountStore.getState().currentAccount,
             linkedAccounts: AccountStore.getState().linkedAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
+            viewSettings: SettingsStore.getState().viewSettings,
+            accountsReady: AccountStore.getState().accountsLoaded && AccountStore.getState().refsLoaded
         };
     }
 });
