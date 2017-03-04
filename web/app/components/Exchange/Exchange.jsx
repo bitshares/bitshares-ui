@@ -279,7 +279,7 @@ class Exchange extends React.Component {
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
             return notify.addNotification({
-                message: "Insufficient funds to place current. Required: " + current.for_sale.getAmount() + " " + sellAsset.get("symbol"),
+                message: "Insufficient funds to place order, you need at least " + current.for_sale.getAmount({real: true}) + " " + sellAsset.get("symbol"),
                 level: "error"
             });
         }

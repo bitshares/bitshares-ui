@@ -95,7 +95,6 @@ class DepositWithdrawContent extends React.Component {
             inputCoinType: this.props.backingCoinType.toLowerCase(),
             outputCoinType: this.props.symbol.toLowerCase(),
             outputAddress: this.props.sender.get("name"),
-            url: "https://bitshares.openledger.info/depositwithdraw/api/v2",
             stateCallback: this.addDepositAddress
         };
     }
@@ -146,7 +145,6 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _updateAmount(amount) {
-        console.log("updateAmount", amount);
         this.state.to_withdraw.setAmount({sats: amount});
         this.setState({
             withdrawValue: this.state.to_withdraw.getAmount({real: true}),

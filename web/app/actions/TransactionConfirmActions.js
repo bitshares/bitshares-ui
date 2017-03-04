@@ -3,13 +3,13 @@ import {ChainConfig} from "bitsharesjs-ws";
 
 class TransactionConfirmActions {
 
-    confirm(transaction) {
-        return {transaction};
+    confirm(transaction, resolve, reject) {
+        return {transaction, resolve, reject};
     }
 
-    broadcast(transaction) {
+    broadcast(transaction, resolve, reject) {
         return (dispatch) => {
-            dispatch({broadcasting: true});
+            dispatch({broadcasting: true, closed: true});
 
             let broadcast_timeout = setTimeout(() => {
                 this.actions.error("Your transaction has expired without being confirmed, please try again later.");
@@ -28,6 +28,7 @@ class TransactionConfirmActions {
                     trx_block_num: res[0].block_num,
                     broadcasted_transaction: true
                 });
+                if (resolve) resolve();
             }).catch( error => {
                 console.error(error);
                 clearTimeout(broadcast_timeout);
@@ -38,8 +39,10 @@ class TransactionConfirmActions {
                 dispatch({
                     broadcast: false,
                     broadcasting: false,
-                    error: message
+                    error: message,
+                    closed: false
                 });
+                if (reject) reject();
             });
         };
     }

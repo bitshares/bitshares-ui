@@ -47,6 +47,26 @@ class AccountStore extends BaseStore {
     _getInitialState() {
         this.account_refs = null;
         this.initial_account_refs_load = true; // true until all undefined accounts are found
+        let referralAccount = "";
+        if (window) {
+            function getQueryParam(param) {
+                var result =  window.location.search.match(
+                    new RegExp("(\\?|&)" + param + "(\\[\\])?=([^&]*)")
+                );
+
+                return result ? result[3] : false;
+            }
+            let validQueries = ["r", "ref", "referrer", "referral"];
+            for (let i = 0; i < validQueries.length; i++) {
+                referralAccount = getQueryParam(validQueries[i]);
+                if (referralAccount) break;
+            }
+        }
+        if (referralAccount) {
+            accountStorage.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
+        } else {
+            accountStorage.remove("referralAccount");
+        }
 
         return {
             update: false,
@@ -54,6 +74,7 @@ class AccountStore extends BaseStore {
             accountsLoaded: false,
             refsLoaded: false,
             currentAccount: null,
+            referralAccount: accountStorage.get("referralAccount", ""),
             linkedAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
             unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts", [])),
@@ -92,13 +113,14 @@ class AccountStore extends BaseStore {
                 });
                 Promise.all(accountPromises).then(() => {
                     ChainStore.subscribe(this.chainStoreUpdate.bind(this));
-
+                    this.chainStoreUpdate();
                     this.setState({
                         subbed: true
                     });
                     resolve();
                 }).catch(err => {
                     ChainStore.subscribe(this.chainStoreUpdate.bind(this));
+                    this.chainStoreUpdate();
                     this.setState({
                         subbed: true
                     });
@@ -112,9 +134,6 @@ class AccountStore extends BaseStore {
     }
 
     chainStoreUpdate() {
-        if(this.state.update) {
-            this.setState({update: false});
-        }
         this.addAccountRefs();
     }
 
@@ -123,7 +142,7 @@ class AccountStore extends BaseStore {
         let account_refs = AccountRefsStore.getState().account_refs;
         if( ! this.initial_account_refs_load && this.account_refs === account_refs) {
             return this.setState({refsLoaded: true});
-        };
+        }
         this.account_refs = account_refs;
         let pending = false;
         this.state.linkedAccounts = this.state.linkedAccounts.withMutations(linkedAccounts => {
@@ -152,12 +171,10 @@ class AccountStore extends BaseStore {
         }
 
         let accounts = [];
-        let needsUpdate = false;
         for(let account_name of this.state.linkedAccounts) {
             let account = ChainStore.getAccount(account_name);
             if(account === undefined) {
                 // console.log(account_name, "account undefined");
-                needsUpdate = true;
                 continue;
             }
             if(account == null) {
@@ -168,7 +185,6 @@ class AccountStore extends BaseStore {
 
             if(auth === undefined) {
                 // console.log(account_name, "auth undefined");
-                needsUpdate = true;
                 continue;
             }
 
@@ -179,7 +195,6 @@ class AccountStore extends BaseStore {
             // console.log("account:", account_name, "auth:", auth);
 
         }
-        if (needsUpdate) this.state.update = true;
         // console.log("accounts:", accounts, "linkedAccounts:", this.state.linkedAccounts);
         return accounts.sort();
     }

@@ -233,7 +233,6 @@ class MarketsActions {
                 ])
                 .then((results) => {
                     subs[subID] = subscription;
-
                     if (__DEV__) console.timeEnd("Fetch market data");
                     dispatch({
                         limits: results[1],
@@ -395,21 +394,21 @@ class MarketsActions {
         });
     }
 
-    cancelLimitOrderSuccess(orderID) {
+    cancelLimitOrderSuccess(ids) {
         return (dispatch) => {
             /* In the case of many cancel orders being issued at the same time,
             * we batch them here and dispatch them all at once at a frequency
             * defined by "dispatchCancelTimeout"
             */
             if (!dispatchCancelTimeout) {
-                cancelBatchIDs = cancelBatchIDs.push(orderID);
+                cancelBatchIDs = cancelBatchIDs.concat(ids);
                 dispatchCancelTimeout = setTimeout(() => {
                     dispatch(cancelBatchIDs.toJS());
                     dispatchCancelTimeout = null;
                     cancelBatchIDs = cancelBatchIDs.clear();
                 }, cancelBatchTime);
             } else {
-                cancelBatchIDs = cancelBatchIDs.push(orderID);
+                cancelBatchIDs = cancelBatchIDs.concat(ids);
             }
         };
     }

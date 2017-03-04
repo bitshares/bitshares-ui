@@ -13,3 +13,4 @@ cli/bundle.js
 web/dist-prod
 web/stats*
 web/hash-history
+docs/_build/

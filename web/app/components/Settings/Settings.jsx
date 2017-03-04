@@ -176,6 +176,7 @@ class Settings extends React.Component {
                         locales={this.props.localesObject}
                         triggerModal={this.triggerModal.bind(this)}
                         {...this.state}
+                        apiLatencies={this.props.apiLatencies}
                     />);
             });
             break;
@@ -197,7 +198,7 @@ class Settings extends React.Component {
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
                         <div className="grid-block small-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
-                            <Translate style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
+                            <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
                             {entries}
                         </div>
                     </div>

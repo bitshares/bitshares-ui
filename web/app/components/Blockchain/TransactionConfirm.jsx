@@ -13,8 +13,11 @@ import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
 import {ChainStore} from "bitsharesjs/es";
 import utils from "common/utils";
+import Operation from "components/Blockchain/Operation";
+import notify from "actions/NotificationActions";
 
 class TransactionConfirm extends React.Component {
+
     shouldComponentUpdate(nextProps) {
         if (!nextProps.transaction) {
             return false;
@@ -35,17 +38,16 @@ class TransactionConfirm extends React.Component {
 
     onConfirmClick(e) {
         e.preventDefault();
-
         if(this.props.propose) {
-            TransactionConfirmActions.close();
             const propose_options = {
                 fee_paying_account: ChainStore.getAccount(this.props.fee_paying_account).get("id")
             };
             this.props.transaction.update_head_block().then(() => {
                 WalletDb.process_transaction(this.props.transaction.propose(propose_options), null, true);
             });
-        } else
-            TransactionConfirmActions.broadcast(this.props.transaction);
+        } else {
+            TransactionConfirmActions.broadcast(this.props.transaction, this.props.resolve, this.props.reject);
+        }
     }
 
     onCloseClick(e) {
@@ -54,18 +56,47 @@ class TransactionConfirm extends React.Component {
     }
 
     onProposeClick(e) {
-        e.preventDefault()
-        TransactionConfirmActions.togglePropose()
+        e.preventDefault();
+        TransactionConfirmActions.togglePropose();
     }
 
     onProposeAccount(fee_paying_account) {
-        ChainStore.getAccount(fee_paying_account)
-        TransactionConfirmActions.proposeFeePayingAccount(fee_paying_account)
+        ChainStore.getAccount(fee_paying_account);
+        TransactionConfirmActions.proposeFeePayingAccount(fee_paying_account);
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.broadcast && np.included && !this.props.included && !np.error) {
+            notify.addNotification.defer({
+                children: (
+                    <div>
+                        <p>
+                            <Translate content="transaction.transaction_confirmed" />
+                            &nbsp;&nbsp;<span><Icon name="checkmark-circle" size="1x" className="success"/></span>
+                        </p>
+                        <table>
+                            <Operation
+                                op={this.props.transaction.serialize().operations[0]}
+                                block={1}
+                                current={"1.2.0"}
+                                hideFee
+                                inverted={false}
+                                hideOpLabel={true}
+                                hideDate={true}
+                            />
+                        </table>
+                    </div>
+                ),
+                level: "success",
+                autoDismiss: 5
+            });
+        }
+
+
     }
 
     render() {
         let {broadcast, broadcasting} = this.props;
-
         if ( !this.props.transaction || this.props.closed ) {return null; }
         let button_group, header, confirmButtonClass = "button";
         if(this.props.propose && ! this.props.fee_paying_account) confirmButtonClass += " disabled";
@@ -142,12 +173,13 @@ class TransactionConfirm extends React.Component {
                 <div style={{minHeight: 350}} className="grid-block vertical no-padding no-margin">
                     {!broadcasting ? <div className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</div> : null}
                     {header}
-                    <div className="grid-content shrink" style={{maxHeight: "60vh", overflowY:'auto', overflowX: "hidden"}}>
+                    <div className="grid-content shrink" style={{maxHeight: "60vh", overflowY: "auto", overflowX: "hidden"}}>
                         <Transaction
                             key={Date.now()}
                             trx={this.props.transaction.serialize()}
                             index={0}
-                            no_links={true}/>
+                            no_links={true}
+                        />
                     </div>
 
                     {/* P R O P O S E   F R O M */}
