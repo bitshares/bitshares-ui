@@ -23,7 +23,10 @@ class SettingsContainer extends React.Component {
                     },
                     localesObject: () => {
                         return IntlStore.getState().localesObject;
-                    }
+                    },
+                    apiLatencies: () => {
+                        return SettingsStore.getState().apiLatencies;
+                    },
                   }}
                   >
                 <Settings/>

@@ -394,6 +394,7 @@ class LimitOrder {
         if (!market_base) {
             throw new Error("LimitOrder requires a market_base id");
         }
+        this.order = order;
         this.assets = assets;
         this.market_base = market_base;
         this.id = order.id;
@@ -454,10 +455,14 @@ class LimitOrder {
     }
 
     sum(order) {
-        this.for_sale += order.for_sale;
-        this._for_sale = null;
-        this._total_to_receive = null;
-        this._total_for_sale = null;
+        let newOrder = this.clone();
+        newOrder.for_sale += order.for_sale;
+
+        return newOrder;
+    }
+
+    clone() {
+        return new LimitOrder(this.order, this.assets, this.market_base);
     }
 
     ne(order) {

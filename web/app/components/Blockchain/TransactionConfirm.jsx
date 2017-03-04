@@ -46,7 +46,7 @@ class TransactionConfirm extends React.Component {
                 WalletDb.process_transaction(this.props.transaction.propose(propose_options), null, true);
             });
         } else {
-            TransactionConfirmActions.broadcast(this.props.transaction);
+            TransactionConfirmActions.broadcast(this.props.transaction, this.props.resolve, this.props.reject);
         }
     }
 

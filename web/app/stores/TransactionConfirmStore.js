@@ -26,9 +26,9 @@ class TransactionConfirmStore {
         };
     }
 
-    onConfirm({transaction}) {
+    onConfirm({transaction, resolve, reject}) {
         let init_state = this.getInitialState();
-        let state = {...init_state, transaction: transaction, closed: false, broadcasted_transaction: null}
+        let state = {...init_state, transaction, closed: false, broadcasted_transaction: null, resolve, reject};
         //console.log("-- TransactionConfirmStore.onConfirm -->", state);
         this.setState(state);
     }

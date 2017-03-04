@@ -15,7 +15,7 @@ class BlockTradesGateway extends React.Component {
 
         this.state = {
             activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-            action: "deposit"
+            action: props.viewSettings.get(`${props.provider}Action`, "deposit")
         };
     }
 
@@ -70,10 +70,13 @@ class BlockTradesGateway extends React.Component {
 
         let activeCoin = this._getActiveCoin(this.props, {action: type});
 
+
         this.setState({
             action: type,
             activeCoin: activeCoin
         });
+
+        SettingsActions.changeViewSetting({[`${this.props.provider}Action`]: type});
     }
 
     render() {
@@ -102,6 +105,8 @@ class BlockTradesGateway extends React.Component {
             return (action === "deposit" ? coin.backingCoinType.toUpperCase() === activeCoin : coin.symbol === activeCoin);
         })[0];
 
+        if (!coin) coin = filteredCoins[0];
+
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
             openledger: {name: "openledger-wallet", id: "1.2.96397", support: "opensupport@blocktrades.us"}
@@ -120,7 +125,7 @@ class BlockTradesGateway extends React.Component {
                     <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
                 </div>
 
-                {!coin ? <LoadingIndicator /> :
+                {!coin ? null :
                 <div>
                     <div>
                         <span><Translate content={"gateway.choose_" + action} />: </span>

@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------
+Release 2.0.170303
+---------------------------------------------------------------------
+New features
+--------
+- API node hopping: fallback to next API server if current API is down
+- API latency checks: all known API servers are regularly polled for latency, the ranking is used for fallback attempts
+- Notifications for confirmed transactions instead of second OK button
+- Big Russian language update
+- Delay Chat component appearance, default user name is now the first account in the user's wallet
+- Add empty input warning to WithdrawModalBlocktrades
+- Persist BlockTradesGateway deposit/withdraw setting
+
+Bug fixes
+--------
+- Remove redirect from / to /dashboard
+- Store referral account in localStorage, fixes account creation referrals
+- Fix brainkey sequence sync issues with account creation failure, add reset/decrement methods, resolve process_transaction properly on trx inclusion
+- Trigger account ref lookup immediately on AccountStore loadDbData, fixes slow Dashboard load
+- Fix for MyOrders incorrect amounts
+- Fix Exchange insufficient funds message
+- Fix order cancellations not updating properly
+- Filter out OPEN.X coins that are currently unavailable from preset list
+- Modify app init Chain to better handle sync error redirects
+- Add missing getFee method for SimpleDepositWithdraw
+
+---------------------------------------------------------------------
 Release 2.0.170224
 ---------------------------------------------------------------------
 New features

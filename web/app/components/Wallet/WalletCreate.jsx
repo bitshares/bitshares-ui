@@ -107,7 +107,7 @@ class CreateNewWallet extends Component {
             this.state.wallet_public_name === this.props.current_wallet) {
             return <div>
                 <h4><Translate content="wallet.wallet_created" /></h4>
-                <Link to="dashboard">
+                <Link to="/dashboard">
                     <div className="button success"><Translate content="wallet.done" /></div>
                 </Link>
             </div>;
