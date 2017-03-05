@@ -206,7 +206,7 @@ class Settings extends React.Component {
                 <WebsocketAddModal
                     ref="ws_modal"
                     apis={defaults["apiServer"]}
-                    api={defaults["apiServer"].filter(a => {return a === this.state.apiServer;})}
+                    api={defaults["apiServer"].filter(a => {return a.url === this.state.apiServer;}).reduce((a, b) => {return b && b.url;}, null)}
                     changeConnection={(apiServer) => {this.setState({apiServer});}}
                 />
             </div>
