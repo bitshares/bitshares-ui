@@ -1071,7 +1071,7 @@
   },
   "init_error": {
     "title": "Application initialization issues",
-    "ws_status": "Websocket Connection Status",
+    "ws_status": "Full node connection status",
     "retry": "Retry",
     "connected": "Connected",
     "not_connected": "Not connected",

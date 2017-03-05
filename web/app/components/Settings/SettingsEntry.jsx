@@ -83,7 +83,14 @@ export default class SettingsEntry extends React.Component {
                 let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
                 let key = entry.translate ? entry.translate : entry;
                 let latency = this.props.apiLatencies[option.url];
-                return <option value={option.url} key={key.url}>{option.location || option.url} {option.location ? `(${option.url})` : null} {latency ? `- Latency: ${latency}ms` : null}</option>;
+                let onlyDescription = option.url.indexOf("fake.automatic-selection") !== -1;
+                return (
+                    <option value={option.url} key={key.url}>
+                        {option.location || option.url}
+                        {option.location && !onlyDescription ? ` (${option.url})` : null}
+                        {latency && !onlyDescription ? ` - Latency: ${latency}ms` : null}
+                    </option>
+                );
             });
 
             confirmButton = (

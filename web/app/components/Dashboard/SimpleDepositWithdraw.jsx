@@ -204,6 +204,8 @@ class DepositWithdrawContent extends React.Component {
                         validAddress: isValid
                     });
                 }
+            }).catch(err => {
+                console.error("Error when validating address:", err);
             });
     }
 
