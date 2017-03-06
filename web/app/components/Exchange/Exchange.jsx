@@ -948,7 +948,7 @@ class Exchange extends React.Component {
         let buyForm = isFrozen ? null : (
             <BuySell
                 currentAccount={currentAccount}
-                backedCoin={this.props.backedCoins.find(a => {console.log("a:", a, "quote:", base.get("symbol")); return a.symbol === base.get("symbol");})}
+                backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
                 smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}

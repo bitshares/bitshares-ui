@@ -9,6 +9,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
 import AssetName from "../Utility/AssetName";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
+import {Asset} from "common/MarketClasses";
 
 class BuySell extends React.Component {
 
@@ -41,10 +42,11 @@ class BuySell extends React.Component {
     }
 
     _addBalance(balance) {
+        console.log("_addBalance:", balance);
         if (this.props.type === "bid") {
-            this.props.totalChange({target: {value: balance.toString()}});
+            this.props.totalChange({target: {value: balance.getAmount({real: true}).toString()}});
         } else {
-            this.props.amountChange({target: {value: balance.toString()}});
+            this.props.amountChange({target: {value: balance.getAmount({real: true}).toString()}});
         }
     }
 
@@ -63,24 +65,23 @@ class BuySell extends React.Component {
             balancePrecision, currentPrice, currentPriceObject,
             feeAsset, feeAssets, backedCoin} = this.props;
         let amount = 0, price = 0, total = 0;
-        console.log("backedCoin:", backedCoin);
         let caret = this.props.isOpen ? <span>&#9660;</span> : <span>&#9650;</span>;
 
         if (this.props.amount) amount = this.props.amount;
         if (this.props.price) price = this.props.price;
         if (this.props.total) total = this.props.total;
 
-        let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
-        if (!balanceAmount) {
-            balanceAmount = 0;
-        }
+        let balanceAmount = new Asset({amount: balance ? balance.get("balance") : 0, precision: balancePrecision, asset_id: balance.get("asset_type")});
+        // if (!balanceAmount) {
+        //     balanceAmount = 0;
+        // }
 
-        let hasBalance = type === "bid" ? balanceAmount >= parseFloat(total) : balanceAmount >= parseFloat(amount);
+        let hasBalance = type === "bid" ? balanceAmount.getAmount() >= parseFloat(total) : balanceAmount >= parseFloat(amount);
 
         let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
         let forceSellText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
 
-        let noBalance = isPredictionMarket ? false : !(balanceAmount > 0 && hasBalance);
+        let noBalance = isPredictionMarket ? false : !(balanceAmount.getAmount() > 0 && hasBalance);
         let invalidPrice = !(price > 0);
         let invalidAmount = !(amount >0);
 
@@ -109,9 +110,9 @@ class BuySell extends React.Component {
         let balanceToAdd;
 
         if (this.props.feeAsset.get("symbol") === balanceSymbol) {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee.getAmount();
+            balanceToAdd = balanceAmount.clone(balanceAmount.getAmount() - fee.getAmount());
         } else {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
+            balanceToAdd = balanceAmount;
         }
 
         return (
@@ -195,7 +196,7 @@ class BuySell extends React.Component {
                                                 <td><Translate content="exchange.balance" />:</td>
                                                 <td style={{paddingLeft: 5, textAlign: "right"}}>
                                                     <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>
-                                                        {utils.format_number(balanceAmount, balancePrecision)} <AssetName name={balanceSymbol} />
+                                                        {utils.format_number(balanceAmount.getAmount({real: true}), balancePrecision)} <AssetName name={balanceSymbol} />
                                                     </span>
                                                 </td>
                                           </tr>
@@ -246,7 +247,7 @@ class BuySell extends React.Component {
                     asset={this.props[type === "bid" ? "base" : "quote"].get("id")}
                     modalId={"simple_deposit_modal" + (type === "bid" ? "" : "_ask")}
                     balances={[this.props.balance]}
-                    {...this.props.backedCoin}
+                    {...backedCoin}
                 />
             </div>
         );
