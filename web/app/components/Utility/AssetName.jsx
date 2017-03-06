@@ -41,12 +41,11 @@ class AssetName extends React.Component {
 			let desc = asset_utils.parseDescription(asset.getIn(["options", "description"]));
 			let realPrefix = name.split(".");
 			realPrefix = realPrefix.length > 1 ? realPrefix[0] : null;
-			let	optional = realPrefix ? counterpart.translate("gateway.assets." + realPrefix.replace(".", "").toLowerCase(), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
-
+			let	optional = realPrefix || includeBitAssetDescription ? counterpart.translate("gateway.assets." + (isBitAsset ? "bit" : realPrefix.replace(".", "").toLowerCase()), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
 			if (isBitAsset && name === "CNY") {
 				optional = optional + counterpart.translate("gateway.assets.bitcny");
 			}
-			let tooltip = `<div><strong>${!isBitAsset && realPrefix ? realPrefix.toUpperCase() : realPrefix || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
+			let tooltip = `<div><strong>${includeBitAssetDescription ? "bit" : realPrefix ? realPrefix.toUpperCase() : realPrefix || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
 
 			return (
 				<div
