@@ -533,3 +533,15 @@ form.hide-container {
         }
     }
 }
+
+.buy-sell-deposit {
+    font-size: 85%;
+    padding-left: 10px;
+    text-transform: lowercase;
+    text-decoration: underline;
+
+    > a > span.asset-name {
+        text-transform: uppercase;
+    }
+
+}

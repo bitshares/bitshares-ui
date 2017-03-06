@@ -337,7 +337,8 @@ label.inline {
 }
 
 .asset-prefix-replaced {
-  text-transform: uppercase;
+  // text-transform: uppercase;
+  font-variant: small-caps;
 }
 
 select {

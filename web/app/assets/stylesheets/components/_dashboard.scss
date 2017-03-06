@@ -86,17 +86,20 @@ div.fm-container {
 
 #simple_transfer_modal,
 #simple_deposit_modal,
+#simple_deposit_modal_ask,
 #simple_withdraw_modal {
     padding: 0;
 }
 
 #simple_deposit_modal,
+#simple_deposit_modal_ask,
 #simple_withdraw_modal {
     overflow: auto !important;
     max-width: 500px;
 }
 
 #simple_deposit_modal label,
+#simple_deposit_modal_ask label,
 #simple_withdraw_modal label {
     text-transform: none !important;
 }

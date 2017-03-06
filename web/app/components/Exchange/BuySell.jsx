@@ -8,6 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
 import AssetName from "../Utility/AssetName";
+import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 
 class BuySell extends React.Component {
 
@@ -51,13 +52,18 @@ class BuySell extends React.Component {
         this.props.priceChange({target: {value: price.toString()}});
     }
 
+    _onDeposit(e) {
+        e.preventDefault();
+        this.refs.deposit_modal.show();
+    }
+
     render() {
         let {type, quote, base, amountChange, fee, isPredictionMarket,
             priceChange, onSubmit, balance, totalChange,
             balancePrecision, currentPrice, currentPriceObject,
-            feeAsset, feeAssets} = this.props;
+            feeAsset, feeAssets, backedCoin} = this.props;
         let amount = 0, price = 0, total = 0;
-
+        console.log("backedCoin:", backedCoin);
         let caret = this.props.isOpen ? <span>&#9660;</span> : <span>&#9650;</span>;
 
         if (this.props.amount) amount = this.props.amount;
@@ -115,6 +121,7 @@ class BuySell extends React.Component {
                         <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
+                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}>Deposit <span className="asset-name">{this.props.backedCoin.backingCoinType}</span></a></div> : null}
                         {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge">{caret}</div>}
                     </div>
 
@@ -230,6 +237,17 @@ class BuySell extends React.Component {
 
                     </form>
                 </div>
+                <SimpleDepositWithdraw
+                    ref="deposit_modal"
+                    action="deposit"
+                    fiatModal={false}
+                    account={this.props.currentAccount.get("name")}
+                    sender={this.props.currentAccount.get("id")}
+                    asset={this.props[type === "bid" ? "base" : "quote"].get("id")}
+                    modalId={"simple_deposit_modal" + (type === "bid" ? "" : "_ask")}
+                    balances={[this.props.balance]}
+                    {...this.props.backedCoin}
+                />
             </div>
         );
     }

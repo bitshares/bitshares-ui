@@ -344,7 +344,7 @@ class DepositWithdrawContent extends React.Component {
     _renderCurrentBalance() {
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         const isDeposit = this.props.action === "deposit";
-
+        
         let currentBalance = this.props.balances.find(b => {
             return b && b.get("asset_type") === this.props.asset.get("id");
         });
@@ -446,7 +446,7 @@ export default class SimpleDepositWithdrawModal extends React.Component {
 
     render() {
         return (
-            <Modal onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
+            <Modal className="test" onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
                 <Trigger close={this.props.modalId}>
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>

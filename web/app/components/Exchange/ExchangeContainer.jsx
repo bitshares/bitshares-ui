@@ -2,6 +2,7 @@ import React from "react";
 import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
+import GatewayStore from "stores/GatewayStore";
 import AltContainer from "alt-container";
 import Exchange from "./Exchange";
 import ChainTypes from "../Utility/ChainTypes";
@@ -78,6 +79,9 @@ class ExchangeContainer extends React.Component {
                         },
                         marketReady: () => {
                             return MarketsStore.getState().marketReady;
+                        },
+                        backedCoins: () => {
+                            return GatewayStore.getState().backedCoins.get("OPEN", []);
                         }
                     }}
                   >
