@@ -154,7 +154,7 @@ class SettingsStore {
 
             let bases = {
                 markets_4018d784: [ // BTS MAIN NET
-                    "BTS", "OPEN.BTC", "USD", "CNY", "BTC"
+                    "USD", "OPEN.BTC", "CNY", "BTS", "BTC"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "TEST"
