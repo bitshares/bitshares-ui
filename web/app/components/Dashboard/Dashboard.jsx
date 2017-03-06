@@ -24,13 +24,20 @@ class Dashboard extends React.Component {
                 ["BTS", "USD"],
                 ["BTS", "GOLD"],
                 ["BTS", "BLOCKPAY"],
+                ["OPEN.BTC", "BLOCKPAY", false],
                 ["BTS", "OBITS"],
                 ["BTS", "SILVER"],
                 ["OPEN.BTC", "OPEN.DGD", false],
                 ["BTS", "BTWTY"],
                 [ "BTS", "OPEN.ETH"],
                 ["BTS", "ICOO"],
-                ["OPEN.BTC", "OPEN.STEEM"]
+                ["OPEN.BTC", "OPEN.STEEM"],
+                ["OPEN.USDT", "OPEN.BTC", false],
+                ["BTS", "OPEN.STEEM"],
+                ["OPEN.BTC", "KAPITAL"],
+                ["OPEN.BTC", "OPEN.MAID"],
+                ["BTS", "OPEN.MAID"],
+                ["HEMPSWEET", "OPEN.BTC"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -52,22 +59,6 @@ class Dashboard extends React.Component {
         this._setDimensions = this._setDimensions.bind(this);
     }
 
-    // componentWillMount() {
-    //     fetch(__UI_API__ + `/markets/${Apis.instance().chain_id.substr(0, 10)}`).then( (reply) => {
-    //         if (reply.ok) {
-    //             return reply.json().then(({markets, newAssets}) => {
-    //                 console.log("markets:", markets, newAssets);
-    //                 this.setState({
-    //                     featuredMarkets: markets.length ? markets: this.state.featuredMarkets,
-    //                     newAssets: newAssets.length ? newAssets : this.state.newAssets
-    //                 });
-    //             });
-    //         }
-    //     }).catch(err => {
-    //         console.log("Markets API not available:", err);
-    //     });
-    // }
-
     componentDidMount() {
         this._setDimensions();
 
@@ -77,6 +68,7 @@ class Dashboard extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextState.featuredMarkets, this.state.featuredMarkets) ||
+            !utils.are_equal_shallow(nextProps.lowVolumeMarkets, this.props.lowVolumeMarkets) ||
             !utils.are_equal_shallow(nextState.newAssets, this.state.newAssets) ||
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
@@ -116,7 +108,10 @@ class Dashboard extends React.Component {
             return <LoadingIndicator />;
         }
 
-        let markets = featuredMarkets.map((pair, index) => {
+        let markets = featuredMarkets.filter(pair => {
+            let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
+            return !isLowVolume;
+        }).map((pair, index) => {
 
             let className = "";
             if (index > 5) {
@@ -125,6 +120,8 @@ class Dashboard extends React.Component {
             if (index > 8) {
                 className += " show-for-large";
             }
+
+            if (index >= 16) return null;
 
             return (
                 <MarketCard
@@ -136,7 +133,7 @@ class Dashboard extends React.Component {
                     invert={pair[2]}
                 />
             );
-        });
+        }).filter(a => !!a);
 
         if (!accountCount) {
             return (
