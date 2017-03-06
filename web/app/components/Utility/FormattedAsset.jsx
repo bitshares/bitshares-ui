@@ -119,7 +119,7 @@ class FormattedAsset extends React.Component {
                     >
                         <span className="currency click-for-help" onClick={this.togglePopover}><AssetName name={asset.symbol} /></span>
                     </Popover></span>) :
-                    <span className="currency" onClick={this.togglePopover}> <AssetName noPrefix={this.props.noPrefix} name={asset.symbol} /></span>)}
+                    <span className="currency" onClick={this.togglePopover}> <AssetName noPrefix={this.props.noPrefix} name={asset.symbol} replace={this.props.replace} /></span>)}
                 </span>
         );
     }

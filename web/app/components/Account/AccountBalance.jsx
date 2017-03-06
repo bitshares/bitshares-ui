@@ -21,8 +21,8 @@ class AccountBalance extends React.Component {
         let asset_id = this.props.asset.get("id");
         let balance_id = this.props.account.getIn( ["balances", asset_id] );
 
-        if( balance_id ) return <BalanceComponent balance={balance_id} />;
-        else return <span>0&nbsp;<AssetName name={this.props.asset.get("symbol")} /></span>;
+        if( balance_id ) return <BalanceComponent balance={balance_id} replace={this.props.replace} />;
+        else return <span>0&nbsp;<AssetName name={this.props.asset.get("symbol")} replace={this.props.replace} /></span>;
     }
 }
 
