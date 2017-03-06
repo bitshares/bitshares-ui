@@ -82,7 +82,7 @@ class AccountPageStoreWrapper extends React.Component {
 
 export default connect(AccountPageStoreWrapper, {
     listenTo() {
-        return [AccountStore, SettingsStore, WalletUnlockStore];
+        return [AccountStore, SettingsStore, WalletUnlockStore, GatewayStore];
     },
     getProps() {
         return {
