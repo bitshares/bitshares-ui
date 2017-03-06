@@ -3,6 +3,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
+import GatewayStore from "stores/GatewayStore";
 import AccountLeftPanel from "./AccountLeftPanel";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -59,7 +60,8 @@ class AccountPage extends React.Component {
                             hiddenAssets,
                             contained: true,
                             balances: account.get("balances", null),
-                            orders: account.get("orders", null)
+                            orders: account.get("orders", null),
+                            backedCoins: this.props.backedCoins
                         }
                     )}
                     </div>
@@ -90,7 +92,8 @@ export default connect(AccountPageStoreWrapper, {
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
             myAccounts:  AccountStore.getState().myAccounts,
-            viewSettings: SettingsStore.getState().viewSettings
+            viewSettings: SettingsStore.getState().viewSettings,
+            backedCoins: GatewayStore.getState().backedCoins
         };
     }
 });
