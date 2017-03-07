@@ -76,7 +76,7 @@ class BuySell extends React.Component {
         //     balanceAmount = 0;
         // }
 
-        let hasBalance = type === "bid" ? balanceAmount.getAmount() >= parseFloat(total) : balanceAmount >= parseFloat(amount);
+        let hasBalance = type === "bid" ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
 
         let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
         let forceSellText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
