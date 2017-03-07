@@ -71,7 +71,7 @@ class BuySell extends React.Component {
         if (this.props.price) price = this.props.price;
         if (this.props.total) total = this.props.total;
 
-        let balanceAmount = new Asset({amount: balance ? balance.get("balance") : 0, precision: balancePrecision, asset_id: balance.get("asset_type")});
+        let balanceAmount = new Asset({amount: balance ? balance.get("balance") : 0, precision: balancePrecision, asset_id: this.props.balanceId});
         // if (!balanceAmount) {
         //     balanceAmount = 0;
         // }

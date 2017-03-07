@@ -969,6 +969,7 @@ class Exchange extends React.Component {
                 setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputSell.bind(this, "bid")}
                 balance={baseBalance}
+                balanceId={base.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, baseBalance, coreBalance, buyFeeAsset, "buy")}
                 balancePrecision={base.get("precision")}
                 quotePrecision={quote.get("precision")}
@@ -1010,6 +1011,7 @@ class Exchange extends React.Component {
                 setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputReceive.bind(this, "ask")}
                 balance={quoteBalance}
+                balanceId={quote.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, quoteBalance, coreBalance, sellFeeAsset, "sell")}
                 balancePrecision={quote.get("precision")}
                 quotePrecision={quote.get("precision")}

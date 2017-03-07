@@ -1109,7 +1109,7 @@
     "symbol": "Symbol",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
-    "add_funds": "You are going to add funds to your BitShares account.",
+    "add_funds": "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
     "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
     "balance_asset": "Current %(asset)s balance",
     "withdraw_placeholder": "Please enter your %(asset)s address",
