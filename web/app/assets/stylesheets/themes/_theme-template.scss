@@ -27,6 +27,10 @@
   $chat-text-color
   ) {
 
+  .font-secondary {
+      color: $secondary-text-color;
+  }
+
   #content-wrapper {
     @include color($primary-text-color, $bg-color);
   }
@@ -271,7 +275,11 @@
 
   .header-right-menu {
     a:hover {background-color: lighten($panel-bg-color, 4%);}
-    a > span { color: $secondary-text-color; }
+    a.active {background-color: lighten($panel-bg-color, 4%);}
+    li.current-account > a {
+        @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+        > span { font-weight: bold; }
+    }
     svg > path { fill: $secondary-text-color; }
     a:hover > span { color: $primary-text-color; }
     svg:hover > path { fill: $primary-text-color; }
@@ -682,10 +690,10 @@
     }
   }
 
-  .block-content-header {
-    //text-transform: uppercase;
-    @include RobotoLight;
-  }
+  // .block-content-header {
+  //   //text-transform: uppercase;
+  //   @include RobotoLight;
+  // }
 
   td.orderHistoryBid {
 
@@ -784,6 +792,9 @@
       color: $primary-text-color;
   }
 
+  li.stat.input {
+      &:hover {background-color: lighten($panel-bg-color, 4%);}
+  }
   .stats .stat {
     > span {
       > span:first-of-type {

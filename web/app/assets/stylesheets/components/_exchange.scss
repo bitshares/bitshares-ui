@@ -4,12 +4,12 @@
   }
 
   >.left-column {
-    border-right: 1px solid grey;
+    border-right: 1px solid $border-color;
     border-top: none;
   }
 
   .right-column {
-    border-left: 1px solid grey;
+    border-left: 1px solid $border-color;
 
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -18,7 +18,7 @@
 
   .main-content {
     .top-bar {
-      border-bottom: 1px solid grey;
+      border-bottom: 1px solid $border-color;
     }
   }
 }
@@ -193,6 +193,15 @@ a.order-cancel {
   }
 }
 
+div.market-stats-container {
+    border-bottom: 1px solid $border-color;
+}
+
+ul.market-stats {
+    font-size: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+}
 .market-stats .stat {
   text-align: left;
   font-size: 0.75rem;
@@ -206,26 +215,23 @@ a.order-cancel {
 }
 
 .stats {
-  line-height: 1rem !important;
   list-style: none;
   margin: 0px;
   padding: 0px;
 }
 
 .top-stats li {
-  border-right: 1px solid grey;
-  border-top: 1px solid grey;
+  border-right: 1px solid $border-color;
 }
 
 .bottom-stats li {
-  border-right: 1px solid grey;
+  border-right: 1px solid $border-color;
 }
 
 .stats .stat {
   text-align: center;
-  padding: 3px 5px;
-  vertical-align: top;
-  min-height: 27px;
+  padding: 2px 5px;
+  vertical-align: middle;
 
   > span {
     > span:first-of-type {
@@ -236,8 +242,6 @@ a.order-cancel {
 }
 
 .stats .indicators {
-  padding: 2px 0;
-  line-height: 1rem;
   text-transform: uppercase;
 }
 
@@ -250,16 +254,14 @@ a.order-cancel {
     font-size: 1.1rem;
     padding-left: 0.3rem;
     padding-right: 0.5rem;
-    padding-top: 15px;
 }
 
 div.bucket-option {
+  line-height: 1;
   cursor: pointer;
   text-transform: none !important;
   margin-right: 3px;
   border-radius: 0;
-  padding-top: 3px;
-  padding-bottom: 3px;
   user-select: none;
 }
 
@@ -440,7 +442,7 @@ table thead tr th.mymarkets-header {
 .orderbook-showall {
   text-align: center;
   padding: 5px 0;
-  border-top: 1px solid #444;
+  border-top: 1px solid $border-color;
   font-size: 12px;
 }
 

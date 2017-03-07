@@ -358,6 +358,12 @@ select.bts-select {
     height: inherit;
 }
 
+@media screen and (min-width: 900px) {
+    .column-show-small {
+        display: none !important;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .column-hide-tiny {
         display: none !important;
@@ -387,16 +393,6 @@ select.bts-select {
 
 input[type=number] {
     -moz-appearance:textfield;
-}
-
-.account-drop-down {
-  a.button {
-    background-color: transparent;
-    text-transform: none;
-  }
-  a:active.button, a:hover.button {
-    background-color: transparent !important;
-  }
 }
 
 .clickable {

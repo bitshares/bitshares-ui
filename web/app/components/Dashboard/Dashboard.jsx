@@ -168,7 +168,7 @@ class Dashboard extends React.Component {
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
                     <Translate content="exchange.featured" component="h4" />
-                    <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow">
+                    <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
                     </div>
 

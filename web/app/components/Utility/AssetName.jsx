@@ -15,7 +15,8 @@ class AssetName extends React.Component {
 
 	static defaultProps = {
 		replace: true,
-		noPrefix: false
+		noPrefix: false,
+		noTip: false
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -46,7 +47,7 @@ class AssetName extends React.Component {
 			if (isBitAsset && name === "CNY") {
 				optional = optional + counterpart.translate("gateway.assets.bitcny");
 			}
-			let tooltip = `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
+			let tooltip = this.props.noTip ? null : `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
 
 			return (
 				<div

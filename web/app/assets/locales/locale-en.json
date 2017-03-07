@@ -871,7 +871,7 @@
     "to_market": "Go to market",
     "zoom_all": "All",
     "settings": "Chart options",
-    "featured": "Featured Markets",
+    "featured": "Top Markets",
     "new": "New",
     "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },

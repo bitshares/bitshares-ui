@@ -13,13 +13,20 @@
 }
 
 .header {
+    &.primary {
+        border-bottom: 1px solid $border-color;
+    }
   padding-left: 0 !important;
-  padding-right: 1rem;
-  min-height: 48px;
+  min-height: 66px;
+  text-transform: uppercase;
   .menu-bar > li {
+
     display: list-item;
     padding: 0;
+    border-right: 1px solid $border-color;
     > a {
+      font-weight: bold;
+      line-height: 2rem;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       font-size: 0.9rem;
@@ -29,6 +36,43 @@
       }
     }
   }
+}
+
+div.header-balance {
+    a {
+        font-size: 90%;
+        &:hover {
+            background-color: transparent !important;
+        };
+    }
+}
+
+div.account-drop-down {
+    font-size: 90%;
+
+    .dropdown-divider {
+        padding-bottom: 10px;
+    }
+  a.button {
+    background-color: transparent;
+  }
+  a:active.button, a:hover.button {
+    background-color: transparent !important;
+  }
+}
+
+div.header-right-menu {
+    > .grp-menu-item {
+        border-left: 1px solid $border-color;
+        line-height: 2rem;
+
+        > a {
+            @include breakpoint(large) {
+              padding-left: 1.25rem;
+              padding-right: 1.25rem;
+            }
+        }
+    }
 }
 
 .grp-menu-items-group {

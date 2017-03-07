@@ -1,5 +1,26 @@
+div.fm-outer-container {
+    border-left: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    margin-bottom: 20px;
+}
+
+@include breakpoint(large) {
+    div.fm-container {
+        > div:first-child() {
+            padding-right: 15px;
+        }
+
+        > div:last-child() {
+            padding-right: 15px;
+        }
+    }
+}
+
 div.fm-container {
-    padding: 0.5rem;
+    border: 1px solid $border-color;
+    border-bottom: none;
+    border-left: none;
+    padding: 1rem 0.5rem;
     min-width: 13rem;
    &:hover {
     background-color: #D8D8D8;
@@ -12,14 +33,17 @@ div.fm-container {
 
    .fm-name {
     font-weight: bold;
+    padding-bottom: 10px;
    }
 
    .fm-volume {
-    padding-top: 8px;
+    font-variant: small-caps;
+    padding-top: 6px;
    }
 
    .fm-change {
-    padding-top: 4px;
+    font-variant: small-caps;
+    padding-top: 6px;
    }
 }
 
@@ -28,7 +52,7 @@ div.fm-container {
 
     > p:nth-of-type(2) {
         padding-bottom: 1.25rem;
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid $border-color;
     }
 }
 

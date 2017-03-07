@@ -87,21 +87,22 @@ class MarketCard extends React.Component {
 		return (
 			<div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
 				<div className="grid-block vertical shrink">
-					<img ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+					<div className="v-align">
+						<img className="align-center" ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+					</div>
 				</div>
 				<div className="grid-block vertical no-overflow">
-					<div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
 					<div className="fm-name"><AssetName name={base.get("symbol")} /> : <AssetName name={quote.get("symbol")} /></div>
-					<div className="fm-volume">p: {(!stats || !stats.close) ? null : utils.format_price(
+					<div className="fm-volume">price: <div className="float-right">{(!stats || !stats.close) ? null : utils.format_price(
 						stats.close.quote.amount,
 						base,
 						stats.close.base.amount,
 						quote,
 						true,
 						this.props.invert
-					)}</div>
-					<div className="fm-volume">v: {!stats ? null : utils.format_volume(stats.volumeBase, quote.get("precision"))}</div>
-					<div className={cnames("fm-change", changeClass)}>{!stats ? null : stats.change}%</div>
+					)}</div></div>
+					<div className="fm-volume">volume: <div className="float-right">{!stats ? null : utils.format_volume(stats.volumeBase, quote.get("precision"))}</div></div>
+					<div className="fm-change">change: <div className={cnames("float-right", changeClass)}>{!stats ? null : stats.change}%</div></div>
 				</div>
 			</div>
 		);

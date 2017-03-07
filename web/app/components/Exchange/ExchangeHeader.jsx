@@ -227,7 +227,8 @@ export default class ExchangeHeader extends React.Component {
 		return (
 			<div className="grid-block shrink no-padding overflow-visible top-bar">
 				<div className="grid-block overflow-visible">
-					<div className="grid-block shrink" style={{borderRight: "1px solid grey"}}>
+					<div className="grid-block shrink show-for-large" style={{borderRight: "1px solid grey"}}>
+						<div className="v-align">
 						<span style={{paddingRight: 0}} onClick={this._addMarket.bind(this, quoteSymbol, baseSymbol)} className="market-symbol">
 							<Icon className={starClass} name="fi-star"/>
 						</span>
@@ -239,10 +240,11 @@ export default class ExchangeHeader extends React.Component {
 							<span>{`${quoteSymbol} : ${baseSymbol}`}</span>
 						</a>
 						)}
+						</div>
 					</div>
 
 					<div className="grid-block vertical" style={{overflow: "visible"}}>
-						<div className="grid-block show-for-medium wrap" style={{borderBottom: "1px solid grey"}}>
+						<div className="grid-block show-for-medium wrap market-stats-container">
 							<ul className="market-stats stats top-stats">
 								{latestPrice ?
 									<PriceStat ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} content="exchange.latest"/> : null}
@@ -269,7 +271,7 @@ export default class ExchangeHeader extends React.Component {
 							</ul>
 							<div className="grid-block" style={{minHeight: 39, justifyContent: "flex-end"}}>
 								<ul className="float-right market-stats stats top-stats">
-									<li className="stat float-right clickable" style={{height: "100%", borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this.props.onToggleCharts}>
+									<li className="stat input float-right clickable" style={{height: "100%", borderLeft: "1px solid grey", borderRight: "none", padding: "3px 15px 0 15px"}} onClick={this.props.onToggleCharts}>
 										<div className="indicators">
 										   {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
 										</div>
@@ -296,7 +298,7 @@ export default class ExchangeHeader extends React.Component {
 										</span>
 									</li>) : null}
 								{showIndicators ? (
-									<li className="stat custom-dropdown">
+									<li className="stat input custom-dropdown">
 										<div className="indicators clickable" onClick={this._toggleDropdown.bind(this, "indicators")}>
 											<Translate content="exchange.chart_options.title" />
 										</div>
@@ -312,7 +314,7 @@ export default class ExchangeHeader extends React.Component {
 										</div> : null}
 									</li>) : null}
 								{showIndicators ? (
-									<li className="stat custom-dropdown">
+									<li className="stat input custom-dropdown">
 										<div className="indicators clickable" onClick={this._toggleDropdown.bind(this, "tools")}>
 											<Translate content="exchange.chart_options.tools" />
 										</div>
@@ -325,7 +327,7 @@ export default class ExchangeHeader extends React.Component {
 									</li>) : null}
 
 								{showIndicators ?
-									<li className="stat custom-dropdown">
+									<li className="stat input custom-dropdown">
 										<div className="indicators clickable" onClick={this._toggleDropdown.bind(this, "settings")}>
 											<Icon className="icon-14px settings-cog" name="cog"/>
 										</div>
@@ -336,16 +338,28 @@ export default class ExchangeHeader extends React.Component {
 											</ul>
 										</div> : null}
 									</li> : null}
-							</ul>
-							<ul className="market-stats stats bottom-stats">
-								{/* Borrow buttons */}
-								{onBorrowQuote ? <li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowQuote}>
+
+								{onBorrowQuote ? <li className="stat input clickable column-show-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowQuote}>
 									<div className="indicators">
 									   <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
 									</div>
 								</li> : null}
 
-								{onBorrowBase ? <li className="stat clickable" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowBase}>
+								{onBorrowBase ? <li className="stat input clickable column-show-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowBase}>
+									<div className="indicators">
+									   <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
+									</div>
+								</li> : null}
+							</ul>
+							<ul className="market-stats stats bottom-stats">
+								{/* Borrow buttons */}
+								{onBorrowQuote ? <li className="stat input clickable column-hide-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowQuote}>
+									<div className="indicators">
+									   <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
+									</div>
+								</li> : null}
+
+								{onBorrowBase ? <li className="stat input clickable column-hide-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowBase}>
 									<div className="indicators">
 									   <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
 									</div>
