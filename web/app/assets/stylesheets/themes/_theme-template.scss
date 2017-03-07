@@ -269,6 +269,12 @@
     }
   }
 
+  .grp-menu-item {
+    > a, .button {
+      color: $primary-text-color !important;
+    }
+  }
+
   .header .logo {
     color: $secondary-text-color;
   }
@@ -281,7 +287,6 @@
         > span { font-weight: bold; }
     }
     svg > path { fill: $secondary-text-color; }
-    a:hover > span { color: $primary-text-color; }
     svg:hover > path { fill: $primary-text-color; }
   }
 
@@ -1014,6 +1019,15 @@
           color: $primary-text-color;
             //box-shadow: 1px 2px 3px #000;
           border: 2px solid $primary-text-color;
+        }
+    }
+
+    .SimpleTrade__modal {
+        .Modal__header {
+            background-color: lighten($panel-bg-color, 5%);
+        }
+        .Modal__divider {
+            border-bottom: 2px solid #020202;
         }
     }
 

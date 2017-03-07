@@ -135,7 +135,7 @@ class Dashboard extends React.Component {
             );
         }).filter(a => !!a);
 
-        if (!accountCount) {
+        if (true || !accountCount) {
             return (
                 <div ref="wrapper" className="grid-block page-layout vertical">
                     <div ref="container" className="grid-block vertical medium-horizontal"  style={{padding: "25px 10px 0 10px"}}>
@@ -155,7 +155,7 @@ class Dashboard extends React.Component {
                         </div>
                         <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
                             <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
-                            <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow">
+                            <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow fm-outer-container">
                                 {markets}
                             </div>
                         </div>

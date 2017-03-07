@@ -54,7 +54,8 @@ div.account-drop-down {
         padding-bottom: 10px;
     }
   a.button {
-    background-color: transparent;
+      font-size: 90%;
+      background-color: transparent;
   }
   a:active.button, a:hover.button {
     background-color: transparent !important;
@@ -85,21 +86,13 @@ div.header-right-menu {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  .button:hover {
-    background: #414141 !important;
-  }
   > a, .button {
-    color: #fff !important;
     padding: 0.5rem;
     @include breakpoint(large) {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
     }
     font-size: 1rem;
-    &:hover {
-      background: #414141;
-      color: #fff;
-    }
   }
 }
 

@@ -59,12 +59,10 @@ div.fm-container {
 .SimpleTrade__modal {
     overflow: auto;
     .Modal__header {
-        background-color: #484848;
         padding: 20px 2rem;
     }
     .Modal__divider {
         margin: 0px;
-        border-bottom: 2px solid #020202;
     }
     .SimpleTrade__hide-zero {
         position: relative;
@@ -73,10 +71,6 @@ div.fm-container {
     }
     .SimpleTrade__withdraw-row {
         padding: 10px 0;
-
-        &.button-group {
-            color: red;
-        }
     }
 }
 
