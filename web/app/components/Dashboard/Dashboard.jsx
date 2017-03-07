@@ -135,7 +135,7 @@ class Dashboard extends React.Component {
             );
         }).filter(a => !!a);
 
-        if (true || !accountCount) {
+        if (!accountCount) {
             return (
                 <div ref="wrapper" className="grid-block page-layout vertical">
                     <div ref="container" className="grid-block vertical medium-horizontal"  style={{padding: "25px 10px 0 10px"}}>
