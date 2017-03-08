@@ -993,8 +993,9 @@ class MarketsStore {
                 asset_id: invert ? last.key.base : last.key.quote
             }
         } : null;
-
-        if (!volumeBase) {
+        volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
+        volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
+        if (!Math.floor(volumeBase * 100)) {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
         } else {
             this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
@@ -1003,8 +1004,8 @@ class MarketsStore {
 
         return {
             change: change.toFixed(2),
-            volumeBase: utils.get_asset_amount(volumeBase, baseAsset),
-            volumeQuote: utils.get_asset_amount(volumeQuote, quoteAsset),
+            volumeBase,
+            volumeQuote,
             close: close,
             latestPrice
         };
