@@ -271,6 +271,11 @@ div.bucket-option {
 
 .buy-sell-row {
   margin-bottom: 10px;
+
+    input {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+   }
 }
 
 .bottom-row {
@@ -306,6 +311,8 @@ div.bucket-option {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 
     > select {
       padding: 0;
