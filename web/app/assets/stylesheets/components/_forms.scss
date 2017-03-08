@@ -42,6 +42,13 @@ td > input, td > .autocomplete input {
   width: auto;
 }
 
+div.account-image {
+    .icon.key > svg {
+        height: 2.4rem !important;
+        width: 2.4rem !important;
+    }
+}
+
 .account-selector, .pubkey-input {
   clear: right;
   input {

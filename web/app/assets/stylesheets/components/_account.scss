@@ -1,4 +1,8 @@
 .account-left-panel {
+    > div.grid-block {
+        padding-top: 1rem;
+        border-right: 1px solid $border-color;
+    }
   .account-buttons-row .button {
     min-width: 4.5rem;
   }
@@ -10,13 +14,30 @@
       margin: 0 auto;
     }
   }
+
+
+    a.pay-button {
+        font-weight: bold;
+        letter-spacing: 2px;
+        font-size: 1.1rem;
+        border: 0;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+    }
 }
 
 .account-info {
-  text-align: center;
   .my-account-label {
     font-size: 90%;
   }
+
+  .account-image {
+      padding-bottom: 1rem;
+      > canvas {
+          padding: 1rem;
+          border: 1px solid $border-color;
+      }
+}
 }
 
 .account-left-menu {

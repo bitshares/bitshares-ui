@@ -350,7 +350,7 @@
   .block-list {
     color: $primary-text-color;
     li {
-      border-bottom: 1px solid $dark-text-color;
+      border-bottom: 1px solid $border-color;
     }
     li > a {
       color: $secondary-text-color;
@@ -360,7 +360,7 @@
       background-color: lighten($bg-color, 4%);
     }
     li:first-child {
-      border-top: 1px solid $dark-text-color;
+      border-top: 1px solid $border-color;
     }
     header {
       color: $secondary-text-color;
@@ -412,6 +412,13 @@
 
   }
 
+  .account-image {
+      .icon:hover {
+          svg path {
+              fill: darken($secondary-text-color, 5%);
+          }
+      }
+  }
   .account-selector, .pubkey-input {
     .account-image {
         > canvas {
@@ -526,15 +533,66 @@
       color: $primary-text-color;
     }
     h6 {
-      color: $secondary-text-color;
+        font-weight: bold;
     }
     .bottom {
       border-top-color: $bg-color;
     }
+
+    .advanced-toggle > a {
+        color: $primary-text-color;
+    }
+
+    a.pay-button {
+        background-color: $bg-color;
+        color: $primary-text-color;
+
+        &:hover {
+            background-color: $light-panel-bg-color !important;
+        }
+    }
+
+    div.create-account-button {
+        background: transparent;
+        border: 2px solid $button-bg-color;
+
+        > a {
+            font-weight: bold;
+            color: $primary-text-color;
+        }
+    }
+
+
+  }
+
+  .account-info {
+      color: $primary-text-color;
+      .account-title {
+          margin-bottom: 0;
+      }
+      > div.secondary {
+          padding-bottom: 1rem;
+          position: relative;
+
+          > span:first-of-type {
+              font-weight: bold;
+              color: $primary-text-color;
+          }
+
+          > span:last-of-type {
+              top: 4px;
+              font-size: 0.8rem;
+              color: $secondary-text-color;
+              position: absolute;
+              right: 0;
+              text-transform: uppercase;
+              font-variant: small-caps;
+          }
+      }
   }
 
   .my-account h5, .my-account h4, td.my-account {
-    color: $info-color;
+    font-weight: bold;
   }
 
   .account-left-menu {
@@ -1090,5 +1148,4 @@
             border-bottom: 2px solid #020202;
         }
     }
-
 }
