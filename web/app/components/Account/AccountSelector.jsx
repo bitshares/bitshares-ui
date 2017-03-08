@@ -8,6 +8,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
+import accountUtils from "common/account_utils";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -39,10 +40,14 @@ class AccountSelector extends React.Component {
     }
 
     getError() {
+
+        let scamMessage = accountUtils.isKnownScammer(this.props.accountName);
+
         let error = this.props.error;
         if (!error && this.props.accountName && !this.getNameType(this.props.accountName))
             error = counterpart.translate("account.errors.invalid");
-        return error;
+
+        return scamMessage || error;
     }
 
     getNameType(value) {
@@ -59,7 +64,7 @@ class AccountSelector extends React.Component {
             value = value.toLowerCase();
         }
         // If regex matches ^.*#/account/account-name/.*$, parse out account-name
-        let newValue = value.match(/(?:#\/account\/)(.*)(?:\/overview)/);
+        let newValue = value.replace("#", "").match(/(?:\/account\/)(.*)(?:\/overview)/);
         if (newValue) value = newValue[1];
 
         if (this.props.onChange && value !== this.props.accountName) this.props.onChange(value);
@@ -106,43 +111,18 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
-        let scamAccountsPolo = [
-            "polonie-wallet",
-            "polonie-xwallet",
-            "poloniex-deposit",
-            "poloniex-wallet",
-            "poloniexwall-et",
-            "poloniexwallett",
-            "poloniexwall-t",
-            "poloniexwalle",
-            "poloniex"
-        ];
-
-        let scamAccountsBittrex = [
-            "bittrex-deopsit",
-            "bittrex-deposi",
-            "bittrex-depositt",
-            "bittrex-dposit",
-            "bittrex"
-        ];
-
-        if (scamAccountsPolo.indexOf(this.props.accountName) !== -1) {
-            error = counterpart.translate("account.polo_scam");
-        }
-
-        if (scamAccountsBittrex.indexOf(this.props.accountName) !== -1) {
-            error = counterpart.translate("account.bittrex_scam");
-        }
-
         return (
-            <div className="account-selector no-overflow" style={this.props.style}>
+            <div className="account-selector" style={this.props.style}>
                  <div className="content-area">
                     <div className="header-area">
-                        {error ? null : <div className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></div>}
-                        <Translate component="label" content={this.props.label}/>
+                        {error ? null : <label className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></label>}
+                        <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
                       <div className="inline-label">
+                          {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
+                          <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
+                                        account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
                           <input type="text"
                                  value={this.props.accountName || ""}
                                  placeholder={this.props.placeholder || counterpart.translate("account.name")}
@@ -159,13 +139,10 @@ class AccountSelector extends React.Component {
                       </div>
                     </div>
 
-                    <div className="error-area">
+                    {error ? <div className="error-area">
                         <span>{error}</span>
-                    </div>
+                    </div> : null}
                 </div>
-                {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
-                <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
-                              account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
             </div>
         );
 

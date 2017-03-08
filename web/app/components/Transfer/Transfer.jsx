@@ -72,6 +72,7 @@ class Transfer extends React.Component {
     }
 
     fromChanged(from_name) {
+        if (!from_name) this.setState({from_account: null});
         this.setState({from_name, error: null, propose: false, propose_account: ""});
     }
 
@@ -246,7 +247,7 @@ class Transfer extends React.Component {
 
         }
         let propose_incomplete = propose && ! propose_account;
-        let submitButtonClass = "button";
+        let submitButtonClass = "button float-right no-margin";
         if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
             submitButtonClass += " disabled";
 
@@ -258,20 +259,20 @@ class Transfer extends React.Component {
             <div className="grid-block vertical">
             <div className="grid-block shrink vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
-                <form style={{paddingBottom: 20}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                <form style={{paddingBottom: 20, overflow: "visible"}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
 
-
-                        <Translate content="transfer.header" component="h4" />
+                        <Translate content="transfer.header" component="h2" />
                         {/*  F R O M  */}
                         <div className="content-block">
                             <AccountSelector label="transfer.from" ref="from"
-                                             accountName={from_name}
-                                             onChange={this.fromChanged.bind(this)}
-                                             onAccountChanged={this.onFromAccountChanged.bind(this)}
-                                             account={from_name}
-                                             size={60}
-                                             error={from_error}
-                                             tabIndex={tabIndex++}/>
+                                accountName={from_name}
+                                onChange={this.fromChanged.bind(this)}
+                                onAccountChanged={this.onFromAccountChanged.bind(this)}
+                                account={from_name}
+                                size={60}
+                                error={from_error}
+                                tabIndex={tabIndex++}
+                            />
                         </div>
                         {/*  T O  */}
                         <div className="content-block">
@@ -299,26 +300,38 @@ class Transfer extends React.Component {
                         </div>
                         {/*  M E M O  */}
                         <div className="content-block transfer-input">
-                            <label><Translate component="span" content="transfer.memo"/></label>
+                            {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
+                            <Translate className="left-label" component="label" content="transfer.memo"/>
                             <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
-                            <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
+                                <div className="error-area" style={{position: "absolute"}}>
+                                    <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
+                                </div>
                             :null}
 
                         </div>
 
                         {/*  F E E   */}
-                        <div className="content-block transfer-input">
-                            <AmountSelector refCallback={this.setNestedRef.bind(this)}
-                                            label="transfer.fee"
-                                            disabled={true}
-                                            amount={fee}
-                                            onChange={this.onFeeChanged.bind(this)}
-                                            asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
-                                            assets={fee_asset_types}
-                                            tabIndex={tabIndex++}
-                                            />
+                        <div className={"content-block transfer-input fee-row" + (this.state.propose ? " proposal" : "")}>
+                            <AmountSelector
+                                refCallback={this.setNestedRef.bind(this)}
+                                label="transfer.fee"
+                                disabled={true}
+                                amount={fee}
+                                onChange={this.onFeeChanged.bind(this)}
+                                asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                assets={fee_asset_types}
+                                tabIndex={tabIndex++}
+                            />
+                            {propose ?
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="propose" />
+                                </button> :
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="transfer.send" />
+                                </button>
+                            }
                         </div>
 
                         {/* P R O P O S E   F R O M
@@ -327,9 +340,12 @@ class Transfer extends React.Component {
                         */}
                         {propose ?
                         <div className="full-width-content form-group transfer-input">
-                            <label><Translate content="account.propose_from" /></label>
-                            <AccountSelect account_names={AccountStore.getMyAccounts()}
-                                onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
+                            <label className="left-label"><Translate content="account.propose_from" /></label>
+                            <AccountSelect
+                                account_names={AccountStore.getMyAccounts()}
+                                onChange={this.onProposeAccount.bind(this)}
+                                tabIndex={tabIndex++}
+                            />
                         </div>:null}
 
 
@@ -338,18 +354,13 @@ class Transfer extends React.Component {
                         <div>
                             {propose ?
                             <span>
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                    <Translate component="span" content="propose" />
-                                </button>
                                 <button className=" button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
                                     <Translate component="span" content="cancel" />
                                 </button>
-                            </span>:<span>
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                    <Translate component="span" content="transfer.send" />
-                                </button>
-                            </span>}
+                            </span> :
+                            null}
                         </div>
+
                         {/* TODO: show remaining balance */}
                 </form>
                 <div className="grid-content medium-6 large-4 right-column">

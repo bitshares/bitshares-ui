@@ -93,7 +93,7 @@ class AssetSelector extends React.Component {
 
                 <div>
                     <div className="header-area">
-                        {error ? null : <div className="right-label">&nbsp; <span>{lookup_display}</span></div>}
+                        {error ? null : <label className="right-label">&nbsp; <span>{lookup_display}</span></label>}
                         <Translate component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">

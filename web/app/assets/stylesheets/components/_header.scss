@@ -41,6 +41,7 @@
 div.header-balance {
     a {
         font-size: 90%;
+        font-weight: bold;
         &:hover {
             background-color: transparent !important;
         };
@@ -49,11 +50,11 @@ div.header-balance {
 
 div.account-drop-down {
     font-size: 90%;
-
     .dropdown-divider {
         padding-bottom: 10px;
     }
   a.button {
+      font-weight: bold;
       font-size: 90%;
       background-color: transparent;
   }

@@ -391,6 +391,10 @@ select.bts-select {
   }
 }
 
+input, textarea {
+    border-radius: 5px !important;
+}
+
 input[type=number] {
     -moz-appearance:textfield;
 }

@@ -24,7 +24,8 @@
   $negative-color,
   $row-accent-color,
   $header-color,
-  $chat-text-color
+  $chat-text-color,
+  $input-background
   ) {
 
   .font-secondary {
@@ -115,6 +116,7 @@
       border-top-color: $panel-bg-color;
       &:hover {
         @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+        color: $link-text-color;
       }
     }
   }
@@ -368,6 +370,63 @@
 
   // forms
 
+  .right-label, .left-label {
+      color: $secondary-text-color;
+
+      > span {
+          color: inherit;
+      }
+  }
+
+  div.amount-selector {
+
+      .wrapper-dropdown {
+          > div:first-of-type {
+              color: $secondary-text-color;
+          }
+
+          ul.dropdown {
+              @include color($light-text-color, $super-light-panel-bg-color);
+              &::after {
+                border-bottom-color: $super-light-panel-bg-color;
+              }
+              > li > span {
+                color: $light-text-color;
+              }
+              /* Hover state */
+
+              li:hover span {
+                  @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+                  color: $link-text-color;
+              }
+          }
+
+          &.active:after {
+              border-color: $link-text-color transparent;
+          }
+
+          &:after { /* Little arrow */
+              border-color: $secondary-text-color transparent;
+          }
+      }
+
+  }
+
+  .account-selector, .pubkey-input {
+    .account-image {
+        > canvas {
+            color: black;
+        }
+        .icon > svg path {
+            fill: $primary-text-color;
+        }
+        .icon:hover {
+            svg path {
+                fill: darken($secondary-text-color, 5%);
+            }
+        }
+      }
+  }
   .has-error, div.has-error > label, div.has-error > label > span {
     color: $error-text-color;
   }
@@ -385,9 +444,11 @@
   }
 
   input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
-    background-color: #ddd;
+    background-color: $input-background;
+    border: 0;
+    color: $primary-text-color;
     &:hover, &:focus, &:active {
-      background-color: #ddd;
+      background-color: $input-background;
     }
     &:focus {
       border-color: #aaa;
@@ -525,11 +586,10 @@
   }
 
   // AccountSelector component
-
+  .error-area {
+    color: $error-text-color;
+  }
   .account-selector {
-    .error-area {
-      color: $error-text-color;
-    }
     .right-label {
       color: $secondary-text-color;
     }

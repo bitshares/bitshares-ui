@@ -15,6 +15,7 @@ $light-panel-bg-color: #6a6a6a;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
 $button-bg-color: #4A90E2;
 $secondary-button-bg-color: #999999;
+$input-background: lighten($bg-color, 8%);
 
 $alert-color: $error-text-color;
 $info-color: #A0D3E8;
@@ -59,6 +60,7 @@ $chat-text-color: #191A1F;
     $negative-color,
     $row-accent-color,
     $header-color,
-    $chat-text-color
+    $chat-text-color,
+    $input-background
   );
 }
