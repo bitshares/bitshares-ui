@@ -193,9 +193,9 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         if (this.props.action === "deposit") {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
-                    <div className="medium-5">
+                    <div className="small-12 medium-5">
                         <Translate component="h4" content="gateway.deposit_summary" />
-                        <div className="medium-10">
+                        <div className="small-12 medium-10">
                             <table className="table">
                                 <tbody>
                                     <tr>
@@ -228,7 +228,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                             </table>
                         </div>
                     </div>
-                    <div className="medium-6">
+                    <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.deposit_inst" />
                         <label className="left-label"><Translate content="gateway.deposit_to" asset={this.props.deposit_asset} />:</label>
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
@@ -257,7 +257,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
                     <div className="small-12 medium-5">
                         <Translate component="h4" content="gateway.withdraw_summary" />
-                        <div className="medium-10">
+                        <div className="small-12 medium-10">
                             <table className="table">
                                 <tbody>
                                     <tr>
@@ -289,7 +289,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                         {/*<p>When you withdraw {this.props.receive_asset.get("symbol")}, you will receive {this.props.deposit_asset} at a 1:1 ratio (minus fees).</p>*/}
 
                     </div>
-                    <div className="small-12 medium-6">
+                    <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.withdraw_inst" />
                         <label className="left-label"><Translate content="gateway.withdraw_to" asset={this.props.deposit_asset} />:</label>
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
