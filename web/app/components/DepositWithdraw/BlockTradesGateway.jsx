@@ -119,29 +119,34 @@ class BlockTradesGateway extends React.Component {
         return (
 
             <div style={this.props.style}>
-                <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.gateway_text" /></div>
-                <div style={{paddingBottom: 15}}>
-                    <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit")} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
-                    <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
+                <div className="grid-block no-margin vertical medium-horizontal no-padding">
+                    <div className="medium-4">
+                        <div>
+                            <label style={{minHeight: "2rem"}} className="left-label"><Translate content={"gateway.choose_" + action} />: </label>
+                            <select
+                                className="external-coin-types bts-select"
+                                onChange={this.onSelectCoin.bind(this)}
+                                value={activeCoin}
+                            >
+                                {coinOptions}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="medium-6 medium-offset-1">
+                        <label style={{minHeight: "2rem"}} className="left-label"><Translate content="gateway.gateway_text" /></label>
+                        <div style={{paddingBottom: 15}}>
+                            <ul className="button-group segmented no-margin">
+                            <li className={action === "deposit" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "deposit")}><Translate content="gateway.deposit" /></a></li>
+                            <li className={action === "withdraw" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "withdraw")}><Translate content="gateway.withdraw" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 {!coin ? null :
                 <div>
-                    <div>
-                        <span><Translate content={"gateway.choose_" + action} />: </span>
-                        <select
-                            style={{
-                                marginLeft: 5,
-                                display: "inline",
-                                maxWidth: "15rem"
-                            }}
-                            className="external-coin-types bts-select"
-                            onChange={this.onSelectCoin.bind(this)}
-                            value={activeCoin}
-                        >
-                            {coinOptions}
-                        </select>
-                    </div>
+
 
                     <div style={{marginBottom: 15}}>
                         <BlockTradesGatewayDepositRequest
@@ -159,7 +164,8 @@ class BlockTradesGateway extends React.Component {
                             supports_output_memos={coin.supportsMemos}
                             action={this.state.action}
                         />
-                        <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
+                        <label className="left-label">Support</label>
+                        <div><Translate content="gateway.support_block" /><br /><br /><a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
                     </div>
 
                     {coin && coin.symbol ?

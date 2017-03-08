@@ -20,6 +20,7 @@ import { settingsAPIs } from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
+import AccountImage from "../Account/AccountImage";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -109,14 +110,15 @@ class AccountDepositWithdraw extends React.Component {
             name: "Openledger (OPEN.X)",
             template: (
                 <div className="content-block">
-                        <div className="float-right">
+                        {/* <div className="float-right">
                             <a href="https://www.ccedk.com/" target="__blank"><Translate content="gateway.website" /></a>
+                        </div> */}
+                        <div className="service-selector">
+                            <ul className="button-group segmented no-margin">
+                                <li onClick={this.toggleOLService.bind(this, "gateway")} className={olService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
+                                <li onClick={this.toggleOLService.bind(this, "fiat")} className={olService === "fiat" ? "is-active" : ""}><a>Fiat</a></li>
+                            </ul>
                         </div>
-                        <div className="button-group" style={{marginBottom: 0}}>
-                            <div onClick={this.toggleOLService.bind(this, "gateway")} className={cnames("button", olService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
-                            <div onClick={this.toggleOLService.bind(this, "fiat")} className={cnames("button", olService === "fiat" ? "active" : "outline")}>Fiat</div>
-                        </div>
-
 
                         {olService === "gateway" && openLedgerGatewayCoins.length ?
                         <BlockTradesGateway
@@ -146,7 +148,7 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                         <div className="content-block">
-                            <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div>
+                            {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div> */}
                             <div className="button-group">
                                 <div onClick={this.toggleBTService.bind(this, "bridge")} className={cnames("button", btService === "bridge" ? "active" : "outline")}><Translate content="gateway.bridge" /></div>
                                 <div onClick={this.toggleBTService.bind(this, "gateway")} className={cnames("button", btService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
@@ -262,17 +264,44 @@ class AccountDepositWithdraw extends React.Component {
         });
         return (
             <div className={this.props.contained ? "grid-content" : "grid-container"}>
-                <div className={this.props.contained ? "" : "grid-content"}>
-                    <div style={{borderBottom: "2px solid #444"}}>
-                        <HelpContent path="components/DepositWithdraw" section="receive" account={account.get("name")}/>
-                        <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
+                <div className={this.props.contained ? "" : "grid-content"} style={{paddingTop: "2rem"}}>
+
+                    <h2>Deposit & Withdraw</h2>
+                    <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                        <div className="medium-6 show-for-medium">
+                            <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
+                        </div>
+                        <div className="medium-5 medium-offset-1">
+                            <HelpContent path="components/DepositWithdraw" section="receive"/>
+                        </div>
                     </div>
-                    <div style={{paddingTop: 30, paddingLeft: 8, paddingBottom: 10, fontSize: 14}}>
-                        <Translate content="gateway.service" />
+                    <div>
+                        <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                            <div className="medium-6 small-order-2 medium-order-1">
+                                <Translate component="label" className="left-label" content="gateway.service" />
+                                <select onChange={this.onSetService.bind(this)} className="bts-select" value={activeService} >
+                                    {options}
+                                </select>
+                            </div>
+                            <div className="medium-5 medium-offset-1 small-order-1 medium-order-2" style={{paddingBottom: 20}}>
+                                <label className="left-label" content="gateway.yours">Your account</label>
+                                <div className="inline-label">
+                                    <AccountImage
+                                        size={{height: 40, width: 40}}
+                                        account={account.get("name")} custom_image={null}
+                                    />
+                                    <input type="text"
+                                           value={account.get("name")}
+                                           placeholder={null}
+                                           disabled
+                                           onChange={() => {}}
+                                           onKeyDown={() => {}}
+                                           tabIndex={1}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <select onChange={this.onSetService.bind(this)} className="bts-select" value={activeService} >
-                        {options}
-                    </select>
 
                     <div className="grid-content no-padding" style={{paddingTop: 15}}>
                     {activeService && services[activeService] ? services[activeService].template : services[0].template}

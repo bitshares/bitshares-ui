@@ -192,43 +192,45 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         if (this.props.action === "deposit") {
             return (
-                <div className="grid-block no-padding no-margin test">
-                    <div style={{paddingRight: 40, paddingBottom: 20}}>
+                <div className="Blocktrades__gateway grid-block no-padding no-margin">
+                    <div className="medium-5">
                         <Translate component="h4" content="gateway.deposit_summary" />
-                        <table style={{width: "inherit"}} className="table">
-                            <tbody>
-                                <tr>
-                                    <Translate component="td" content="gateway.asset_to_deposit" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
-                                </tr>
-                                <tr>
-                                    <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
-                                </tr>
-                                <tr>
-                                    <Translate component="td" content="gateway.intermediate" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
-                                </tr>
-                                <tr>
-                                    <Translate component="td" content="gateway.your_account" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="gateway.balance" />:</td>
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
-                                        <AccountBalance
-                                            account={this.props.account.get("name")}
-                                            asset={this.props.receive_asset.get("symbol")}
-                                            replace={false}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div className="medium-10">
+                            <table className="table">
+                                <tbody>
+                                    <tr>
+                                        <Translate component="td" content="gateway.asset_to_deposit" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                    </tr>
+                                    <tr>
+                                        <Translate component="td" content="gateway.asset_to_receive" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                    </tr>
+                                    <tr>
+                                        <Translate component="td" content="gateway.intermediate" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                    </tr>
+                                    <tr>
+                                        <Translate component="td" content="gateway.your_account" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="gateway.balance" />:</td>
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                            <AccountBalance
+                                                account={this.props.account.get("name")}
+                                                asset={this.props.receive_asset.get("symbol")}
+                                                replace={false}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div>
+                    <div className="medium-6">
                         <Translate component="h4" content="gateway.deposit_inst" />
-                        <span><Translate content="gateway.deposit_to" asset={this.props.deposit_asset} />:</span>
+                        <label className="left-label"><Translate content="gateway.deposit_to" asset={this.props.deposit_asset} />:</label>
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
                             <table className="table">
                                 <tbody>
@@ -252,42 +254,44 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             );
         } else {
             return (
-                <div className="grid-block no-padding no-margin">
-                    <div style={{paddingRight: 40, paddingBottom: 20}}>
+                <div className="Blocktrades__gateway grid-block no-padding no-margin">
+                    <div className="small-12 medium-5">
                         <Translate component="h4" content="gateway.withdraw_summary" />
-                        <table style={{width: "inherit"}} className="table">
-                            <tbody>
-                                <tr>
-                                    <Translate component="td" content="gateway.asset_to_withdraw" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
-                                </tr>
-                                <tr>
-                                    <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
-                                </tr>
-                                <tr>
-                                    <Translate component="td" content="gateway.intermediate" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="gateway.balance" />:</td>
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
-                                        <AccountBalance
-                                            account={this.props.account.get("name")}
-                                            asset={this.props.receive_asset.get("symbol")}
-                                            replace={false}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div className="medium-10">
+                            <table className="table">
+                                <tbody>
+                                    <tr>
+                                        <Translate component="td" content="gateway.asset_to_withdraw" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                    </tr>
+                                    <tr>
+                                        <Translate component="td" content="gateway.asset_to_receive" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                    </tr>
+                                    <tr>
+                                        <Translate component="td" content="gateway.intermediate" />
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><Translate content="gateway.balance" />:</td>
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                            <AccountBalance
+                                                account={this.props.account.get("name")}
+                                                asset={this.props.receive_asset.get("symbol")}
+                                                replace={false}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         {/*<p>When you withdraw {this.props.receive_asset.get("symbol")}, you will receive {this.props.deposit_asset} at a 1:1 ratio (minus fees).</p>*/}
 
                     </div>
-                    <div>
+                    <div className="small-12 medium-6">
                         <Translate component="h4" content="gateway.withdraw_inst" />
-                        <span><Translate content="gateway.withdraw_to" asset={this.props.deposit_asset} />:</span>
+                        <label className="left-label"><Translate content="gateway.withdraw_to" asset={this.props.deposit_asset} />:</label>
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
                             <div style={{paddingTop: 10}}>
                                 <button className={"button success"} style={{width: "100%"}} onClick={this.onWithdraw.bind(this)}><Translate content="gateway.withdraw_now" /> </button>

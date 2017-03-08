@@ -90,3 +90,26 @@
 .set-cursor {
   cursor: default;
 }
+
+div.Blocktrades__gateway {
+    h4 {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    div.medium-10 {
+        padding-bottom: 1.25rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid $border-color;
+    }
+}
+
+div.service-selector {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid $border-color;
+
+    > ul a {
+        font-size: 1.3rem;
+    }
+}
