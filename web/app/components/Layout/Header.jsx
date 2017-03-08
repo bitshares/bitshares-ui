@@ -73,10 +73,6 @@ class Header extends React.Component {
         );
     }
 
-    componentWillReceiveProps(nextProps) {
-        // this._setActivePath();
-    }
-
     _triggerMenu(e) {
         e.preventDefault();
         ZfApi.publish("mobile-menu", "toggle");
@@ -140,7 +136,6 @@ class Header extends React.Component {
             });
         }
 
-
         let myAccounts = AccountStore.getMyAccounts();
 
         let walletBalance = myAccounts.length ? (
@@ -190,7 +185,6 @@ class Header extends React.Component {
             }
 
             if (tradingAccounts.length >= 1) {
-
                 let accountsList = tradingAccounts
                     .sort()
                     .map((name, index) => {
@@ -203,16 +197,16 @@ class Header extends React.Component {
                         );
                     });
 
-                let optionsEntries = [
-                    {to: "/help", text: "header.help"},
-                    {to: "/explorer", text: "header.explorer"}
-                ];
-
-                let options = optionsEntries.map((entry, index) => {
-                    return <li className={"dropdown-options" + (index === optionsEntries.length - 1 ? " dropdown-divider" : "")} key={entry.to}>
-                        <Translate content={entry.text} component="a" onClick={this._onNavigate.bind(this, entry.to)}/>
-                    </li>;
-                });
+                // let optionsEntries = [
+                //     {to: "/help", text: "header.help"},
+                //     {to: "/explorer", text: "header.explorer"}
+                // ];
+                //
+                // let options = optionsEntries.map((entry, index) => {
+                //     return <li className={"dropdown-options" + (index === optionsEntries.length - 1 ? " dropdown-divider" : "")} key={entry.to}>
+                //         <Translate content={entry.text} component="a" onClick={this._onNavigate.bind(this, entry.to)}/>
+                //     </li>;
+                // });
 
                 // let lockOptions = (this.props.current_wallet && myAccountCount) ? (
                 //     <li className="dropdown-options">
@@ -228,12 +222,11 @@ class Header extends React.Component {
                     <ActionSheet>
                         <ActionSheet.Button title="">
                             <a style={{padding: "1rem", border: "none"}} className="button">
-                                <Icon className="icon-14px" name="user"/> <Translate content="account.accounts" />
+                                <Icon className="icon-14px" name="user"/> {account_display_name}
                             </a>
                         </ActionSheet.Button>
                         <ActionSheet.Content >
                             <ul className="no-first-element-top-border">
-                                {options}
                                 {tradingAccounts.length > 1 ? accountsList : null}
                             </ul>
                         </ActionSheet.Content>
