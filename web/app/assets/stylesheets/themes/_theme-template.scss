@@ -378,38 +378,34 @@
       }
   }
 
-  div.amount-selector {
+  .dropdown-wrapper {
+      > div:first-of-type {
+          color: $secondary-text-color;
+      }
 
-      .wrapper-dropdown {
-          > div:first-of-type {
-              color: $secondary-text-color;
+      ul.dropdown {
+          @include color($light-text-color, $super-light-panel-bg-color);
+          &::after {
+            border-bottom-color: $super-light-panel-bg-color;
           }
-
-          ul.dropdown {
-              @include color($light-text-color, $super-light-panel-bg-color);
-              &::after {
-                border-bottom-color: $super-light-panel-bg-color;
-              }
-              > li > span {
-                color: $light-text-color;
-              }
-              /* Hover state */
-
-              li:hover span {
-                  @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
-                  color: $link-text-color;
-              }
+          > li > span {
+            color: $light-text-color;
           }
+          /* Hover state */
 
-          &.active:after {
-              border-color: $link-text-color transparent;
-          }
-
-          &:after { /* Little arrow */
-              border-color: $secondary-text-color transparent;
+          li:hover span {
+              @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+              color: $link-text-color;
           }
       }
 
+      &.active:after {
+          border-color: $link-text-color transparent;
+      }
+
+      &:after { /* Little arrow */
+          border-color: $secondary-text-color transparent;
+      }
   }
 
   .account-image {
@@ -567,32 +563,20 @@
 
   .account-info {
       color: $primary-text-color;
-      .account-title {
-          margin-bottom: 0;
-      }
       > div.secondary {
-          padding-bottom: 1rem;
-          position: relative;
-
           > span:first-of-type {
-              font-weight: bold;
               color: $primary-text-color;
           }
 
           > span:last-of-type {
-              top: 4px;
-              font-size: 0.8rem;
               color: $secondary-text-color;
-              position: absolute;
-              right: 0;
-              text-transform: uppercase;
-              font-variant: small-caps;
           }
       }
   }
 
   .my-account h5, .my-account h4, td.my-account {
     font-weight: bold;
+    color: $info-color;
   }
 
   .account-left-menu {

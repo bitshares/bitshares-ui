@@ -142,7 +142,95 @@ div.transfer-input {
   }
 }
 
+.dropdown-wrapper {
+    /* Size & position */
+    position: relative;
+    margin: 0 auto;
+    padding: 12px 15px;
 
+    /* Styles */
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease-out;
+
+    &.inactive {
+        cursor: default;
+    }
+
+    > div:first-of-type {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    &.active {
+        border-radius: 5px 5px 0 0;
+        box-shadow: none;
+        border-bottom: none;
+    }
+
+    &.active .dropdown {
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        max-height: 400px;
+    }
+
+    ul.dropdown {
+        /* Size & position */
+        min-width: 200px;
+        position: absolute;
+        top: 2.4rem;
+        right: 0;
+        z-index: 999;
+        margin-left: 0;
+
+        /* Styles */
+        background: #fff;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-top: none;
+        border-bottom: none;
+        list-style: none;
+        transition: all 0.3s ease-out;
+
+        /* Hiding */
+        max-height: 0;
+        overflow: hidden;
+
+        li span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px 10px;
+            transition: all 0.3s ease-out;
+        }
+
+        li:last-of-type span {
+            border: none;
+        }
+
+        li i {
+            margin-right: 5px;
+            color: inherit;
+            vertical-align: middle;
+        }
+    }
+}
+.dropdown-wrapper:after { /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    margin-top: -3px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+}
+.dropdown-wrapper.inactive:after {
+    border: 0;
+}
 
 div.amount-selector {
 
@@ -153,95 +241,7 @@ div.amount-selector {
         text-align: right;
     }
 
-    .wrapper-dropdown {
-        /* Size & position */
-        position: relative;
-        margin: 0 auto;
-        padding: 12px 15px;
 
-        /* Styles */
-        background: transparent;
-        cursor: pointer;
-        outline: none;
-        transition: all 0.3s ease-out;
-
-        &.inactive {
-            cursor: default;
-        }
-
-        > div:first-of-type {
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        &.active {
-            border-radius: 5px 5px 0 0;
-            box-shadow: none;
-            border-bottom: none;
-        }
-
-        &.active .dropdown {
-            border-bottom: 1px solid rgba(0,0,0,0.2);
-            max-height: 400px;
-        }
-
-        ul.dropdown {
-            /* Size & position */
-            min-width: 200px;
-            position: absolute;
-            top: 2.4rem;
-            right: 0;
-            z-index: 999;
-            margin-left: 0;
-
-            /* Styles */
-            background: #fff;
-            border-radius: 0 0 5px 5px;
-            border: 1px solid rgba(0,0,0,0.2);
-            border-top: none;
-            border-bottom: none;
-            list-style: none;
-            transition: all 0.3s ease-out;
-
-            /* Hiding */
-            max-height: 0;
-            overflow: hidden;
-
-            li span {
-                font-size: 0.9rem;
-                font-weight: bold;
-                display: block;
-                text-decoration: none;
-                color: #333;
-                padding: 10px 10px;
-                transition: all 0.3s ease-out;
-            }
-
-            li:last-of-type span {
-                border: none;
-            }
-
-            li i {
-                margin-right: 5px;
-                color: inherit;
-                vertical-align: middle;
-            }
-        }
-    }
-    .wrapper-dropdown:after { /* Little arrow */
-        content: "";
-        width: 0;
-        height: 0;
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        margin-top: -3px;
-        border-width: 6px 6px 0 6px;
-        border-style: solid;
-    }
-    .wrapper-dropdown.inactive:after {
-        border: 0;
-    }
     .input-wrapper {
         position: relative;
     }

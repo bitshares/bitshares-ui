@@ -27,9 +27,9 @@
 }
 
 .account-info {
-  .my-account-label {
-    font-size: 90%;
-  }
+    .account-title {
+        margin-bottom: 0;
+    }
 
   .account-image {
       padding-bottom: 1rem;
@@ -37,7 +37,24 @@
           padding: 1rem;
           border: 1px solid $border-color;
       }
-}
+  }
+  > div.secondary {
+      padding-bottom: 1rem;
+      position: relative;
+
+      > span:first-of-type {
+          font-weight: bold;
+      }
+
+      > span.my-account-label {
+          top: 4px;
+          font-size: 0.8rem;
+          position: absolute;
+          right: 0;
+          text-transform: uppercase;
+          font-variant: small-caps;
+      }
+  }
 }
 
 .account-left-menu {

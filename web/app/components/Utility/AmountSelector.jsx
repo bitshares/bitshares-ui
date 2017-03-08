@@ -4,123 +4,31 @@ import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
-
-class AssetOption extends React.Component {
-
-    static propTypes = {
-        asset: ChainTypes.ChainObject,
-        asset_id: React.PropTypes.string
-    }
-
-    render() {
-        let symbol = this.props.asset ? this.props.asset.get("symbol") : this.props.asset_id;
-        return (<li onClick={this.props.onClick.bind(this, this.props.asset_id)}><span>{symbol}</span></li>);
-    }
-
-}
-AssetOption = BindToChainState(AssetOption);
+import FloatingDropdown from "./FloatingDropdown";
+import Immutable from "immutable";
 
 class AssetSelector extends React.Component {
 
     static propTypes = {
+        assets: ChainTypes.ChainAssetsList,
         value: React.PropTypes.string, // asset id
-        assets: React.PropTypes.array, // a translation key for the label
         onChange: React.PropTypes.func
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            selected: props.value || props.assets[0],
-            active: false,
-            listener: false
-        };
-
-        this.onBodyClick = this.onBodyClick.bind(this);
-    }
-
-    componentDidMount() {
-        this._setListener();
-    }
-
-    _setListener(props = this.props, state = this.state) {
-        if(props.assets.length > 1 && !state.listener) {
-            document.body.addEventListener("click", this.onBodyClick, false);
-            this.setState({listener: true});
-        }
-    }
-
-    componentWillReceiveProps(np) {
-        this._setListener(np);
-    }
-
-    componentWillUnmount() {
-        document.body.removeEventListener("click", this.onBodyClick);
-    }
-
-    onBodyClick(e) {
-      let el = e.target;
-      let insideActionSheet = false;
-
-      do {
-        if(el.classList && el.classList.contains('action-sheet-container') && el.id === this.props.id) {
-          insideActionSheet = true;
-          break;
-        }
-
-      } while ((el = el.parentNode));
-
-      if(!insideActionSheet) {
-        this.setState({active: false});
-      }
-    }
-
-    onChange(value, e) {
-        e.preventDefault();
-        e.stopPropagation();
-        let asset = ChainStore.getAsset(value);
-        this.props.onChange(asset);
-        this.setState({
-            selected: asset ? asset.get("id") : "1.3.0",
-            active: false
-        });
-    }
-
-    _toggleDropdown(e) {
-        this.setState({
-            active: !this.state.active
-        });
-    }
-
     render() {
-        let {active} = this.state;
-        const currentAsset = ChainStore.getAsset(this.props.value);
         if(this.props.assets.length === 0) return null;
-        var options = this.props.assets.map(value => {
-            return <AssetOption onClick={this.onChange.bind(this)} key={value} asset={value} asset_id={value}/>;
-        });
 
-        if(this.props.assets.length == 1) {
-            return (
-               <div className={"wrapper-dropdown inactive"}>
-                   <div><FormattedAsset asset={this.props.assets[0]} amount={0} hide_amount={true}/></div>
-               </div>
-           );
-
-        } else {
-            return (
-                <div onClick={this._toggleDropdown.bind(this)} className={"wrapper-dropdown" + (active ? " active" : "")}>
-                    <div style={{paddingRight: 15}}>{currentAsset && currentAsset.get("symbol")}</div>
-                    <ul className="dropdown">
-                        {options}
-                    </ul>
-                </div>
-                );
-        }
-
+        return <FloatingDropdown
+            entries={this.props.assets.map(a => a && a.get("symbol")).filter(a => !!a)}
+            values={this.props.assets.reduce((map, a) => {if (a && a.get("symbol")) map[a.get("symbol")] = a; return map;}, {})}
+            singleEntry={this.props.assets[0] ? <FormattedAsset asset={this.props.assets[0].get("id")} amount={0} hide_amount={true}/> : null}
+            value={this.props.value}
+            onChange={this.props.onChange}
+        />;
     }
-
 }
+
+AssetSelector = BindToChainState(AssetSelector);
 
 class AmountSelector extends React.Component {
 
@@ -165,14 +73,12 @@ class AmountSelector extends React.Component {
     }
 
     _onChange(event) {
-        let amount = event.target.value
-        this.setState({amount})
-        this.props.onChange({amount: amount, asset: this.props.asset})
+        let amount = event.target.value;
+        this.props.onChange({amount: amount, asset: this.props.asset});
     }
 
     onAssetChange(selected_asset) {
-        this.setState({selected_asset})
-        this.props.onChange({amount: this.props.amount, asset: selected_asset})
+        this.props.onChange({amount: this.props.amount, asset: selected_asset});
     }
 
     render() {
@@ -183,20 +89,21 @@ class AmountSelector extends React.Component {
                 <Translate className="left-label" component="label" content={this.props.label}/>
                 <div className="inline-label input-wrapper">
                     <input
-                           disabled={this.props.disabled}
-                           type="text"
-                           value={value || ""}
-                           placeholder={this.props.placeholder}
-                           onChange={this._onChange.bind(this) }
-                           tabIndex={this.props.tabIndex}/>
-                   <div className="form-label select asset-selector">
-                       <AssetSelector
-                           ref={this.props.refCallback}
-                           value={this.props.asset.get("id")}
-                           assets={this.props.assets}
-                           onChange={this.onAssetChange.bind(this)}
-                       />
-                   </div>
+                        disabled={this.props.disabled}
+                        type="text"
+                        value={value || ""}
+                        placeholder={this.props.placeholder}
+                        onChange={this._onChange.bind(this) }
+                        tabIndex={this.props.tabIndex}
+                    />
+                    <div className="form-label select asset-selector">
+                        <AssetSelector
+                            ref={this.props.refCallback}
+                            value={this.props.asset.get("symbol")}
+                            assets={Immutable.List(this.props.assets)}
+                            onChange={this.onAssetChange.bind(this)}
+                        />
+                    </div>
                 </div>
             </div>
         )
