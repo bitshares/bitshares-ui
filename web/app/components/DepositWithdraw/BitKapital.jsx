@@ -31,7 +31,7 @@ class BitKapital extends React.Component {
         this.state = {
             action: props.viewSettings.get("bktAction", "deposit"),
             min: 50,
-            max: 25000
+            max: 100000
         };
     }
 
