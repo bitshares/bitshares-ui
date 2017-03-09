@@ -1,0 +1,27 @@
+name: bitshares-ui
+version: master
+summary: Graphical User Interface for Bitshares
+description: |
+  This is a light wallet that connects to a BitShares API provided by the
+  witness_node executable.
+
+  It stores all keys locally in the browser, never exposing your keys to
+  anyone as it signs transactions locally before transmitting them to the
+  API server which then broadcasts them to the blockchain network. The wallet
+  is encrypted with a password of your choosing and encrypted in a browser
+  database.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: strict
+
+apps:
+  server:
+    command: sh -c \"cd $SNAP/lib/node_modules/BitShares-UI && npm start\"
+    plugs: [network-bind]
+    daemon: simple
+
+parts:
+  bitshares-ui:
+    source: web
+    plugin: nodejs
+    node-engine: '6.10.0'
