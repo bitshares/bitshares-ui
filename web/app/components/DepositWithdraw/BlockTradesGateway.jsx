@@ -134,7 +134,7 @@ class BlockTradesGateway extends React.Component {
                     </div>
 
                     <div className="medium-6 medium-offset-1">
-                        <label style={{minHeight: "2rem"}} className="left-label"><Translate content="gateway.gateway_text" /></label>
+                        <label style={{minHeight: "2rem"}} className="left-label"><Translate content="gateway.gateway_text" />:</label>
                         <div style={{paddingBottom: 15}}>
                             <ul className="button-group segmented no-margin">
                             <li className={action === "deposit" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "deposit")}><Translate content="gateway.deposit" /></a></li>

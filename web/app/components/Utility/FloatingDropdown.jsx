@@ -85,7 +85,7 @@ class Dropdown extends React.Component {
            );
         } else {
             let options = entries.map(value => {
-                return <li onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>
+                return <li key={value} onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>;
             });
             return (
                 <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")}>
