@@ -218,18 +218,26 @@ class Header extends React.Component {
                 //     </li>) : null;
 
 
-                accountsDropDown = (
+                accountsDropDown = tradingAccounts.length === 1 ?
+                (<ActionSheet.Button title="">
+                    <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{padding: "1rem", border: "none"}} className="button">
+                        <Icon className="icon-14px" name="user"/> {account_display_name}
+                    </a>
+                </ActionSheet.Button>) :
+
+                (
                     <ActionSheet>
                         <ActionSheet.Button title="">
                             <a style={{padding: "1rem", border: "none"}} className="button">
                                 <Icon className="icon-14px" name="user"/> {account_display_name}
                             </a>
                         </ActionSheet.Button>
-                        <ActionSheet.Content >
+                        {tradingAccounts.length > 1 ?
+                        <ActionSheet.Content>
                             <ul className="no-first-element-top-border">
-                                {tradingAccounts.length > 1 ? accountsList : null}
+                                 {accountsList}
                             </ul>
-                        </ActionSheet.Content>
+                        </ActionSheet.Content> : null}
                     </ActionSheet>);
             }
         }
