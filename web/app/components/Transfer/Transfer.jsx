@@ -35,7 +35,7 @@ class Transfer extends React.Component {
         }
         if(query.memo) this.state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name && query.to !== currentAccount) this.state.from_name = currentAccount;
+        if (!this.state.from_name) this.state.from_name = currentAccount;
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
