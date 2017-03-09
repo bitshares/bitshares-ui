@@ -73,7 +73,6 @@ class Dropdown extends React.Component {
 
     render() {
         const {entries, value} = this.props;
-        console.log("entries:", entries, "value:", value);
         let {active} = this.state;
         if(entries.length === 0) return null;
         if(entries.length == 1) {

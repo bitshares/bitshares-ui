@@ -292,10 +292,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                     <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.withdraw_inst" />
                         <label className="left-label"><Translate content="gateway.withdraw_to" asset={this.props.deposit_asset} />:</label>
-                        <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
-                            <div style={{paddingTop: 10}}>
-                                <button className={"button success"} style={{width: "100%"}} onClick={this.onWithdraw.bind(this)}><Translate content="gateway.withdraw_now" /> </button>
-                            </div>
+                        <div className="button-group" style={{paddingTop: 20}}>
+                            <button className="button success" style={{fontSize: "1.3rem"}} onClick={this.onWithdraw.bind(this)}><Translate content="gateway.withdraw_now" /> </button>
                         </div>
                     </div>
                     <Modal id={withdraw_modal_id} overlay={true}>

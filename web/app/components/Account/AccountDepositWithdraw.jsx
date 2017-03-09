@@ -149,9 +149,12 @@ class AccountDepositWithdraw extends React.Component {
                 <div>
                         <div className="content-block">
                             {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div> */}
-                            <div className="button-group">
-                                <div onClick={this.toggleBTService.bind(this, "bridge")} className={cnames("button", btService === "bridge" ? "active" : "outline")}><Translate content="gateway.bridge" /></div>
-                                <div onClick={this.toggleBTService.bind(this, "gateway")} className={cnames("button", btService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
+
+                            <div className="service-selector">
+                                <ul className="button-group segmented no-margin">
+                                    <li onClick={this.toggleBTService.bind(this, "bridge")} className={btService === "bridge" ? "is-active" : ""}><a><Translate content="gateway.bridge" /></a></li>
+                                    <li onClick={this.toggleBTService.bind(this, "gateway")} className={btService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
+                                </ul>
                             </div>
 
                             {btService === "bridge" ?
