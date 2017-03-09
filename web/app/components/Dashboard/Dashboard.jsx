@@ -30,13 +30,15 @@ class Dashboard extends React.Component {
                 ["BTS", "SILVER"],
                 ["OPEN.BTC", "OPEN.DGD", false],
                 ["BTS", "BTWTY"],
-                [ "BTS", "OPEN.ETH"],
+                ["BTS", "OPEN.ETH"],
                 ["BTS", "ICOO"],
                 ["OPEN.BTC", "OPEN.STEEM"],
                 ["OPEN.USDT", "OPEN.BTC", false],
                 ["BTS", "OPEN.STEEM"],
+                ["OPEN.BTC", "ICOO"],
                 ["OPEN.BTC", "OPEN.MAID"],
                 ["BTS", "OPEN.MAID"],
+                ["OPEN.BTC", "OBITS", false],
                 ["HEMPSWEET", "OPEN.BTC"]
             ],
             "39f5e2ed": [
