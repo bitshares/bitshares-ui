@@ -259,7 +259,7 @@ class Transfer extends React.Component {
             <div className="grid-block vertical">
             <div className="grid-block shrink vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
-                <form style={{paddingBottom: 20, overflow: "visible"}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                <form style={{paddingBottom: 20, overflow: "visible"}} className="grid-content small-12 medium-6 large-5 large-offset-1 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
 
                         <Translate content="transfer.header" component="h2" />
                         {/*  F R O M  */}
@@ -363,7 +363,7 @@ class Transfer extends React.Component {
 
                         {/* TODO: show remaining balance */}
                 </form>
-                <div className="grid-content medium-6 large-4 right-column">
+                <div className="grid-content small-12 medium-6 large-4 large-offset-1 right-column">
                 <div className="grid-content no-padding">
                     <RecentTransactions
                         accountsList={accountsList}
