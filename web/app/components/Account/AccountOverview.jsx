@@ -354,6 +354,7 @@ class AccountOverview extends React.Component {
                 openOrders={orders}
                 debt={debt}
                 collateral={collateral}
+                label="account.estimate_value"
             /> : null;
 
         let showAssetPercent = settings.get("showAssetPercent", false);
@@ -402,7 +403,7 @@ class AccountOverview extends React.Component {
                                 {totalBalanceList.size > 1 ?
                                 <tr className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.total_estimate")} style={{backgroundColor: "transparent"}}>
                                     <td colSpan="2" style={{textAlign: "right", fontWeight: "bold", paddingTop: 20}}>
-                                        <span><Translate content="account.estimate_value" />: {totalBalance}</span>
+                                        <span>{totalBalance}</span>
                                     </td>
                                 </tr> : null}
                                 {showHidden ? hiddenBalances : null}
