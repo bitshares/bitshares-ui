@@ -242,7 +242,7 @@ const CollateralTable = ({callOrders, account}) => {
             </tr>
             </thead>
             <tbody>
-                { callOrders.map(id => <CollateralPositionWrapper key={id} object={id} account={account}/>) }
+                { callOrders.sort((a, b) => (a.split(".")[2] - b.split(".")[2])).map(id => <CollateralPositionWrapper key={id} object={id} account={account}/>) }
             </tbody>
         </table>
     );
