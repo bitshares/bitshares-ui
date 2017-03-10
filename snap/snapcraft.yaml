@@ -16,12 +16,18 @@ confinement: strict
 
 apps:
   server:
-    command: sh -c \"cd $SNAP/lib/node_modules/BitShares-UI && npm start\"
+    command: sh -c \"cd $SNAP && http-server -a localhost -p 8080\"
     plugs: [network-bind]
     daemon: simple
 
 parts:
   bitshares-ui:
-    source: web
+    source: .
+    source-subdir: web
     plugin: nodejs
     node-engine: '6.10.0'
+    install: |
+      cd web
+      npm run build
+      mv dist/* $SNAPCRAFT_PART_INSTALL
+    node-packages: [http-server]
