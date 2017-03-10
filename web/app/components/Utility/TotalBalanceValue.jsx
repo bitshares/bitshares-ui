@@ -252,14 +252,14 @@ class TotalValue extends React.Component {
         if (!inHeader) {
             return(
                 <span>
-                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} /> :</span>) : null}
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
                     <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </span>
             );
         } else {
             return (
                 <div className="tooltip inline-block" data-tip={totalsTip} data-place="bottom" data-html={true} >
-                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} /> :</span>) : null}
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
                     <FormattedAsset noTip noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
             );
