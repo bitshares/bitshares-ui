@@ -161,6 +161,10 @@ div.transfer-input {
     > div:first-of-type {
         font-size: 0.9rem;
         font-weight: bold;
+
+        > span.hidden {
+            visibility: hidden;
+        }
     }
 
     &.active {
@@ -232,17 +236,12 @@ div.transfer-input {
     border: 0;
 }
 
-div.amount-selector {
-
-    div.asset-selector {
+div.input-wrapper {
+    position: relative;
+    div.floating-dropdown {
         background: transparent;
         position: absolute;
         right: 0;
         text-align: right;
-    }
-
-
-    .input-wrapper {
-        position: relative;
     }
 }

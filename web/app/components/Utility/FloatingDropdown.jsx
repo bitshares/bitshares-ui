@@ -89,7 +89,7 @@ class Dropdown extends React.Component {
             });
             return (
                 <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")}>
-                    <div style={{paddingRight: 15}}>{value}</div>
+                    <div style={{paddingRight: 15}}>{value ? value : <span className="hidden">A</span>}</div>
                     <ul className="dropdown">
                         {options}
                     </ul>

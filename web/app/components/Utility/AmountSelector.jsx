@@ -1,6 +1,5 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
@@ -96,7 +95,7 @@ class AmountSelector extends React.Component {
                         onChange={this._onChange.bind(this) }
                         tabIndex={this.props.tabIndex}
                     />
-                    <div className="form-label select asset-selector">
+                    <div className="form-label select floating-dropdown">
                         <AssetSelector
                             ref={this.props.refCallback}
                             value={this.props.asset.get("symbol")}

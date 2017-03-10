@@ -9,6 +9,7 @@ import classnames from "classnames";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
+import FloatingDropdown from "../Utility/FloatingDropdown";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -113,36 +114,46 @@ class AccountSelector extends React.Component {
 
         return (
             <div className="account-selector" style={this.props.style}>
-                 <div className="content-area">
+                <div className="content-area">
                     <div className="header-area">
                         {error ? null : <label className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></label>}
                         <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
-                      <div className="inline-label">
-                          {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
-                          <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
-                                        account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
-                          <input type="text"
-                                 value={this.props.accountName || ""}
-                                 placeholder={this.props.placeholder || counterpart.translate("account.name")}
-                                 ref="user_input"
-                                 onChange={this.onInputChanged.bind(this)}
-                                 onKeyDown={this.onKeyDown.bind(this)}
-                                 tabIndex={this.props.tabIndex}/>
-                              { this.props.children }
-                              { this.props.onAction ? (
-                                  <button className={action_class}
-                                          onClick={this.onAction.bind(this)}>
-                                      <Translate content={this.props.action_label}/></button>
-                              ) : null }
-                      </div>
-                    </div>
+                        <div className="inline-label input-wrapper">
+                            {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
+                            <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
+                                account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
+                                <input type="text"
+                                    value={this.props.accountName || ""}
+                                    placeholder={this.props.placeholder || counterpart.translate("account.name")}
+                                    ref="user_input"
+                                    onChange={this.onInputChanged.bind(this)}
+                                    onKeyDown={this.onKeyDown.bind(this)}
+                                    tabIndex={this.props.tabIndex}
+                                />
+                                {this.props.dropDownContent ? <div className="form-label select floating-dropdown">
+                                    <FloatingDropdown
+                                        entries={this.props.dropDownContent}
+                                        values={this.props.dropDownContent.reduce((map, a) => {if (a) map[a] = a; return map;}, {})}
+                                        singleEntry={this.props.dropDownContent[0]}
+                                        value={this.props.dropDownValue || ""}
+                                        onChange={this.props.onDropdownSelect}
+                                    />
+                                </div> : null}
+                                { this.props.children }
+                                { this.props.onAction ? (
+                                    <button className={action_class}
+                                        onClick={this.onAction.bind(this)}>
+                                        <Translate content={this.props.action_label}/></button>
+                                    ) : null }
+                                </div>
+                            </div>
 
-                    {error ? <div className="error-area">
-                        <span>{error}</span>
-                    </div> : null}
-                </div>
+                            {error ? <div className="error-area">
+                                <span>{error}</span>
+                            </div> : null}
+                        </div>
             </div>
         );
 
