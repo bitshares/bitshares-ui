@@ -20,7 +20,8 @@
     "create_account": "Créér un compte",
     "create_asset": "Créér un actif",
     "lock": "Vérouiller",
-    "unlock": "Dévérouiller"
+    "unlock": "Dévérouiller",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",

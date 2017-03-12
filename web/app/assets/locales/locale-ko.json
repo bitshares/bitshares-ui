@@ -24,7 +24,8 @@
     "unlock": "잠금해제",
     "help": "도움말",
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
-    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
+    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",

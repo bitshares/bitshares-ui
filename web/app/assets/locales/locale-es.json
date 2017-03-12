@@ -24,7 +24,8 @@
     "unlock": "Desbloquear",
     "help": "Ayuda",
     "locked_tip": "Billetera bloqueada. Click para desbloquear.",
-    "unlocked_tip": "Billetera desbloqueada. Click para bloquear"
+    "unlocked_tip": "Billetera desbloqueada. Click para bloquear",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",

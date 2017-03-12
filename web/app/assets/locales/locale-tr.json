@@ -25,7 +25,8 @@
     "unlock": "Kilidi Aç",
     "help": "Yardım",
     "locked_tip": "Cüzdan kilidi kapalı.<br/>Açmak için tıkla.",
-    "unlocked_tip": "Cüzdan kilidi açık .<br/>Kapamak için tıkla."
+    "unlocked_tip": "Cüzdan kilidi açık .<br/>Kapamak için tıkla.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",

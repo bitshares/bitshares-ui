@@ -261,8 +261,18 @@
     background-color: $panel-bg-color !important;
   }
 
-  .header .button.create-account {
-    background-color: $button-bg-color !important;
+  .header a.button.create-account {
+    transition: color 0s !important;
+    color: $button-bg-color !important;
+    > span > svg > path {
+        fill: $button-bg-color;
+    }
+    &:hover {
+        color: lighten($button-bg-color, 10%) !important;
+        > span > svg > path {
+            fill: lighten($button-bg-color, 10%);
+        }
+    }
   }
 
   .grp-menu-item button {
@@ -1132,6 +1142,12 @@
         }
         .Modal__divider {
             border-bottom: 2px solid #020202;
+        }
+    }
+
+    ul.dashboard-links {
+        > li.active {
+            color: $primary-text-color;
         }
     }
 }

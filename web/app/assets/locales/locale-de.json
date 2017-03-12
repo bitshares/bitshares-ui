@@ -25,7 +25,8 @@
     "unlock": "Entsperren",
     "help": "Hilfe",
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
-    "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren."
+    "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
