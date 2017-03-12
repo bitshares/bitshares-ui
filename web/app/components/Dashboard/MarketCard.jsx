@@ -69,7 +69,9 @@ class MarketCard extends React.Component {
 	}
 
 	render() {
-		let {base, quote, marketStats} = this.props;
+		let {hide, isLowVolume, base, quote, marketStats} = this.props;
+
+		if (isLowVolume || hide) return null;
 
 		let desc = assetUtils.parseDescription(base.getIn(["options", "description"]));
 		function getImageName(asset) {

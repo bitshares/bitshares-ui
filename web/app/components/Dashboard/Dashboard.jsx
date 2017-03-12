@@ -38,8 +38,11 @@ class Dashboard extends React.Component {
                 ["OPEN.BTC", "ICOO"],
                 ["OPEN.BTC", "OPEN.MAID"],
                 ["BTS", "OPEN.MAID"],
+                ["BTS", "OPEN.HEAT"],
+                ["BTS", "OPEN.INCENT"],
                 ["OPEN.BTC", "OBITS", false],
-                ["HEMPSWEET", "OPEN.BTC"]
+                ["HEMPSWEET", "OPEN.BTC"],
+                ["KAPITAL", "BTS"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -110,20 +113,19 @@ class Dashboard extends React.Component {
             return <LoadingIndicator />;
         }
 
-        let markets = featuredMarkets.filter(pair => {
-            let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
-            return !isLowVolume;
-        }).map((pair, index) => {
+        let validMarkets = 0;
 
+        let markets = featuredMarkets
+        .map(pair => {
+            let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
+            if (!isLowVolume) validMarkets++;
             let className = "";
-            if (index > 5) {
+            if (validMarkets > 6) {
                 className += "show-for-medium";
             }
-            if (index > 8) {
+            if (validMarkets > 9) {
                 className += " show-for-large";
             }
-
-            if (index >= 16) return null;
 
             return (
                 <MarketCard
@@ -133,9 +135,12 @@ class Dashboard extends React.Component {
                     quote={pair[0]}
                     base={pair[1]}
                     invert={pair[2]}
+                    isLowVolume={isLowVolume}
+                    hide={validMarkets > 16}
                 />
             );
         }).filter(a => !!a);
+        console.log("validMarkets", validMarkets);
 
         if (!accountCount) {
             return (
