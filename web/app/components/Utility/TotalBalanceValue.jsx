@@ -248,7 +248,7 @@ class TotalValue extends React.Component {
             totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
         totalsTip += "</tbody></table>";
-
+        
         if (!inHeader) {
             return(
                 <span>
@@ -383,7 +383,17 @@ class AccountWrapper extends React.Component {
             }
         });
 
-        return balanceList.size ? <TotalBalanceValue label={this.props.label} inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
+        if (!balanceList.size) {
+            return(
+                <span>
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null} 0
+                </span>
+            );
+        } else {
+            return <TotalBalanceValue label={this.props.label} inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/>;
+
+        }
+
     }
 }
 AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});
