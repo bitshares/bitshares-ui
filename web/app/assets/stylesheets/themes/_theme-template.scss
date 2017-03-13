@@ -116,7 +116,7 @@
       border-top-color: $panel-bg-color;
       &:hover {
         @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
-        color: $link-text-color;
+        // color: $link-text-color;
       }
     }
   }
@@ -295,7 +295,7 @@
     a:hover {background-color: lighten($panel-bg-color, 4%);}
     a.active {background-color: lighten($panel-bg-color, 4%);}
     li.current-account > a {
-        @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+        @include color($info-color, lighten($super-light-panel-bg-color, 4%));
         > span { font-weight: bold; }
     }
     svg > path { fill: $secondary-text-color; }
