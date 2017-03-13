@@ -1156,4 +1156,12 @@
             color: $primary-text-color;
         }
     }
+
+    .switch input:checked + label{
+        background-color: darken($positive-color, 10%);
+        &::after {
+            border: none;
+            background-color: lighten($positive-color, 5%);
+        }
+    }
 }
