@@ -120,12 +120,12 @@ class Dashboard extends React.Component {
             let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
             if (!isLowVolume) validMarkets++;
             let className = "";
-            if (validMarkets > 6) {
-                className += "show-for-medium";
-            }
             if (validMarkets > 9) {
-                className += " show-for-large";
+                className += ` show-for-${!accountCount ? "xlarge" : "large"}`;
+            } else if (validMarkets > 6) {
+                className += ` show-for-${!accountCount ? "large" : "medium"}`;
             }
+
 
             return (
                 <MarketCard
@@ -140,7 +140,6 @@ class Dashboard extends React.Component {
                 />
             );
         }).filter(a => !!a);
-        console.log("validMarkets", validMarkets);
 
         if (!accountCount) {
             return (
@@ -162,7 +161,7 @@ class Dashboard extends React.Component {
                         </div>
                         <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
                             <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
-                            <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow fm-outer-container">
+                            <div className="grid-block small-up-1 large-up-3 xlarge-up-4 no-overflow fm-outer-container">
                                 {markets}
                             </div>
                         </div>
@@ -175,7 +174,7 @@ class Dashboard extends React.Component {
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
                     <Translate content="exchange.featured" component="h4" />
-                    <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow fm-outer-container">
+                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
                     </div>
 

@@ -1,6 +1,6 @@
 div.fm-outer-container {
     border-left: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+    border-top: 1px solid $border-color;
     margin-bottom: 20px;
 }
 
@@ -18,7 +18,7 @@ div.fm-outer-container {
 
 div.fm-container {
     border: 1px solid $border-color;
-    border-bottom: none;
+    border-top: none;
     border-left: none;
     padding: 1rem 0.5rem;
     min-width: 13rem;
