@@ -8,6 +8,7 @@ import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
 import AccountBalance from "../Account/AccountBalance";
 import utils from "common/utils";
+import SettingsStore from "stores/SettingsStore";
 
 class BitKapital extends React.Component {
 
@@ -38,7 +39,7 @@ class BitKapital extends React.Component {
     _renderDeposits() {
         return <iframe
             style={{width: "100%", border: 0, minHeight: 800}}
-            src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name")}
+            src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
         >
         </iframe>;
     }
@@ -136,7 +137,7 @@ class BitKapital extends React.Component {
                     <div className="content-block">
                         <iframe
                             style={{width: "100%", border: 0, minHeight: 1730}}
-                            src={"https://www.123contactform.com/sf.php?s=123contactform-2315816&control23748168=" + account.get("name")}
+                            src={"https://www.123contactform.com/sf.php?s=123contactform-2315816&control23748168=" + account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
                         >
                         </iframe>
                     </div>
