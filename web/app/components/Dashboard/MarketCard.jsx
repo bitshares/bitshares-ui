@@ -39,8 +39,8 @@ class MarketCard extends React.Component {
     _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
         return (
             newStats.volumeBase !== oldStats.volumeBase ||
-            !utils.are_equal_shallow(newStats.close.base, oldStats.close.base) ||
-            !utils.are_equal_shallow(newStats.close.quote, oldStats.close.quote)
+            !utils.are_equal_shallow(newStats.close && newStats.close.base, oldStats.close && oldStats.close.base) ||
+            !utils.are_equal_shallow(newStats.close && newStats.close.quote, oldStats.close && oldStats.close.quote)
         );
     }
 
