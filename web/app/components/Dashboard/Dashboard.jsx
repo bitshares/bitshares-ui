@@ -130,6 +130,7 @@ class Dashboard extends React.Component {
             return (
                 <MarketCard
                     key={pair[0] + "_" + pair[1]}
+                    marketId={pair[1] + "_" + pair[0]}
                     new={newAssets.indexOf(pair[1]) !== -1}
                     className={className}
                     quote={pair[0]}
