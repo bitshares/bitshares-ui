@@ -122,8 +122,8 @@ class BuySell extends React.Component {
                         <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
-                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}>Deposit <span className="asset-name">{this.props.backedCoin.backingCoinType}</span></a></div> : null}
-                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge">{caret}</div>}
+                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge" style={{paddingLeft: 10}}>{caret}</div>}
+                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name">{this.props.backedCoin.backingCoinType}</span></a></div> : null}
                     </div>
 
                     <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
