@@ -383,15 +383,6 @@ select.bts-select {
     }
 }
 
-.block-content-header {
-  font-size: 1.4375rem;
-  padding: 0.5rem 0;
-
-  @include breakpoint(small only) {
-      font-size: 1.125rem;
-  }
-}
-
 input, textarea {
     border-radius: 5px !important;
 }
