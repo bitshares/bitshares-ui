@@ -47,7 +47,7 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
 
     componentDidMount() {
-        document.addEventListener("keyup", this.onKeyPress);
+        document.addEventListener("keyup", this.onKeyPress, {capture: false, passive: true});
     }
     componentWillUnmount() {
         document.removeEventListener("keyup", this.onKeyPress);

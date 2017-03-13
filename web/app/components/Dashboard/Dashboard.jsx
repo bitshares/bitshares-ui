@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
     componentDidMount() {
         this._setDimensions();
 
-        window.addEventListener("resize", this._setDimensions, false);
+        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -84,7 +84,7 @@ class Dashboard extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._setDimensions, false);
+        window.removeEventListener("resize", this._setDimensions);
     }
 
     _setDimensions() {

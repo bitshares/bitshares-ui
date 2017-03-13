@@ -49,7 +49,7 @@ export default class ExchangeHeader extends React.Component {
 			else newState[k] = false;
 		}
 		if (newState[key]) {
-			document.addEventListener("click", this._listener, false);
+			document.addEventListener("click", this._listener, {capture: false, passive: true});
 		}
 		this.setState({dropdowns: newState});
 	}
@@ -67,7 +67,7 @@ export default class ExchangeHeader extends React.Component {
 		this.setState({dropdowns});
 	}
 
-	_listener(e) {
+	_listener() {
 		this._resetDropdowns();
 		document.removeEventListener("click", this._listener);
 	}

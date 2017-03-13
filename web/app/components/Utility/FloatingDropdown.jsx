@@ -27,7 +27,7 @@ class Dropdown extends React.Component {
 
     _setListener(props = this.props, state = this.state) {
         if(props.entries.length > 1 && !state.listener) {
-            document.body.addEventListener("click", this.onBodyClick, false);
+            document.body.addEventListener("click", this.onBodyClick, {capture: false, passive: true});
             this.setState({listener: true});
         }
     }

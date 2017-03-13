@@ -151,7 +151,7 @@ class Exchange extends React.Component {
             [this._getLastMarketKey()]: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
 
-        window.addEventListener("resize", this._getWindowSize, false);
+        window.addEventListener("resize", this._getWindowSize, {capture: false, passive: true});
     }
 
     shouldComponentUpdate(nextProps) {
@@ -186,7 +186,7 @@ class Exchange extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._getWindowSize, false);
+        window.removeEventListener("resize", this._getWindowSize);
     }
 
     _getFee(asset) {
