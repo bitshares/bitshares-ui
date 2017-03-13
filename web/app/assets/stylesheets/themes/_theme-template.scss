@@ -468,7 +468,13 @@
     }
   }
 
-
+  ul.button-group.segmented {
+      > li.is-active > a {
+          background: $input-background;
+          color: $primary-text-color;
+          border-bottom: 1px solid $button-bg-color;
+      }
+  }
   // Tabs
 
   .tabs {

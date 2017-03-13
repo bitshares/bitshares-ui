@@ -117,3 +117,9 @@
         overflow-wrap: break-word;
     }
 }
+
+@media (max-width: 640px) {
+  #chatbox.chat-floating {
+    bottom: 0 !important;
+  }
+}

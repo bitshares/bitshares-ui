@@ -46,7 +46,7 @@ class AccountPage extends React.Component {
                     />
                 </div>
                 <div className="grid-block main-content">
-                    <div className="grid-container" style={{paddingTop: 15}}>
+                    <div className="grid-container" style={{paddingTop: 25}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
