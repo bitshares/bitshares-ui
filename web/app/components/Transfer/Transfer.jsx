@@ -12,6 +12,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
+import {connect} from "alt-react";
 
 class Transfer extends React.Component {
 
@@ -69,6 +70,15 @@ class Transfer extends React.Component {
             this.onAmountChanged({amount: ns.amount, asset: ChainStore.getAsset(asset_types[0])});
         }
         return true;
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.currentAccount !== this.state.from_name && np.currentAccount !== this.props.currentAccount) {
+            this.setState({
+                from_name: np.currentAccount,
+                from_account: ChainStore.getAccount(np.currentAccount)
+            });
+        }
     }
 
     fromChanged(from_name) {
@@ -396,4 +406,13 @@ class Transfer extends React.Component {
     }
 }
 
-export default Transfer;
+export default connect(Transfer, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount
+        };
+    }
+});
