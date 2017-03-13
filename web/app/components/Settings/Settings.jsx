@@ -196,7 +196,7 @@ class Settings extends React.Component {
                     </div>
 
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
-                        <div className="grid-block small-10 no-margin vertical">
+                        <div className="grid-block small-12 medium-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
                             <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
                             {entries}

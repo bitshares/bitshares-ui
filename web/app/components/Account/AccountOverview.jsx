@@ -160,7 +160,7 @@ class AccountOverview extends React.Component {
                         <td style={{textAlign: "right"}}>
                             <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>{onOrders}</div>
                         </td>
-                        <td style={{textAlign: "right"}}>
+                        <td style={{textAlign: "right"}} className="column-hide-small">
                             <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open_value", {asset: symbol})} style={{paddingTop: 8}}>
                                 <EquivalentValueComponent amount={orders[asset_type]} fromAsset={asset_type} noDecimals={true} toAsset={preferredUnit}/>
                             </div>
@@ -178,7 +178,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td style={{textAlign: "right"}} className="column-hide-small">
                         {hasBalance || hasOnOrder ? <BalanceValueComponent balance={balance} toAsset={preferredUnit}/> : null}
                     </td>
                     {showAssetPercent ? <td style={{textAlign: "right"}}>
@@ -387,7 +387,7 @@ class AccountOverview extends React.Component {
                                     {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
                                     {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
-                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                                    <th style={{textAlign: "right"}} className="column-hide-small"><Translate component="span" content="account.eq_value" /></th>
                                     {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                     <th style={{textAlign: "center"}}>
                                         <Translate content="account.transfer_actions" />
