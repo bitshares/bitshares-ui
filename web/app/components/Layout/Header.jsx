@@ -103,12 +103,17 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
+        if (this.context.location.pathname.indexOf("/account/") !== -1) {
+            let currentPath = this.context.location.pathname.split("/");
+            currentPath[2] = account_name;
+            this.context.router.push(currentPath.join("/"));
+        }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
             notify.addNotification({
                 message: counterpart.translate("header.account_notify", {account: account_name}),
                 level: "success",
-                autoDismiss: 5
+                autoDismiss: 3
             });
         }
         // this.onClickUser(account_name, e);
