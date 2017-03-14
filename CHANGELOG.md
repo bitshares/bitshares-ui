@@ -1,4 +1,55 @@
 ---------------------------------------------------------------------
+Release 2.0.170314
+---------------------------------------------------------------------
+New features
+--------
+- Make the account dropdown a direct link when only one account is present
+- Add a 'choose automatically' option for API server selection.
+- Add tooltips for bitassets, open.x and trade.x assets
+- Add 'to' account to deposit/withdraw summary, and show full asset name
+- Add several markets to dashboard list, filter out low volume markets
+- Implement some design ideas from @etherdesign
+- Refactor Transfer page, add new asset dropdown
+- Refactor AccountLeftPanel using etherdesign's designs
+- Increase max. KAPITAL withdraw limit to 100k
+- Improve the determination of low volume markets
+- Refactor DepositWithdraw layout according to design by @etherdesign
+- Add a dropdown to AccountSelector, use it in Transfer to show your accounts in From field
+- Change Tabs styling to use segmented button class
+- Modify the switch colors to make it very clear what's the checked state
+- Update the header account link behaviour to always switch the active account, add notification
+- Make the header balance value depend on the active account
+- Put Explore, Help and Settings behind a dropdown using the cog icon
+- Move the price chart controls below the chart itself
+- Fetch 3x as much data for price charts
+
+Bug fixes
+--------
+- Make event listeners passive, ensure removal
+- Add theme as query param to BitKapital iframe urls
+- Improve MarketCard shouldComponentUpdate logic
+- Improve the borders and display of market cards in the Dashboard
+- Fix top markets list disappearing due to low volume check
+- Rename 'pay' to 'send to
+- Sort call orders by id for consistent sort in CollateralPosition
+- Move the date in the operation list to a third column
+- Always set the 'from' account in Transfer.jsx
+- Fix account registration without referral id
+- Fix KAPITAL:OPEN.BTC price display in dashboard
+- Fix BuySell input style after Transfer refactor
+- Improve the Identicon question mark color
+- Include accounts with partial authority in list of my accounts
+- Only render mobileMenu on small screens
+- Filter Blocktrades backed coins by active wallets
+- Fix Exchange balance check
+- Fix BuySell balance asset construction
+- Fix withdrawal modal input check for amounts < 0
+- Fix fee subtraction in BuySell
+- Fix removal of ws api nodes in WebSocketAddModal
+- Persist backedCoins in localStorage
+- Persist map of low volume markets
+
+---------------------------------------------------------------------
 Release 2.0.170303
 ---------------------------------------------------------------------
 New features
