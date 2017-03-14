@@ -1146,7 +1146,7 @@
     "convert_coin":"Конвертировать в %(coin)s (%(symbol)s)",
     "limit":"Лимит: %(amount)s %(symbol)s",
     "bridge_text":"Шлюз позволяет Вам “превращать” один актив в другой, например, BTC в BTS",
-    "gateway_text":"Choose whether you want to make a deposit or withdrawal here",
+    "gateway_text":"Здесь выберите, хотите ли Вы разместить депозит или вывести средства",
     "fiat_text":"Пополнение депозита и вывод фиатных денег производится с помощью CCEDK. Чтобы начать, Вам необходимо завершить процесс регистрации. Доступны следующие виды конверсии:",
     "transwiser":{
       "gateway":"Transwiser\n",
