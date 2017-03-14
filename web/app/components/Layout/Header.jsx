@@ -301,7 +301,6 @@ class Header extends React.Component {
                                         <Icon className="icon-14px" name="cog"/>
                                     </a>
                                 </ActionSheet.Button>
-                                {tradingAccounts.length > 1 ?
                                 <ActionSheet.Content>
                                     <ul className="no-first-element-top-border">
                                         <li>
@@ -320,7 +319,7 @@ class Header extends React.Component {
                                             </a>
                                         </li>
                                     </ul>
-                                </ActionSheet.Content> : null}
+                                </ActionSheet.Content>
                             </ActionSheet>
                             {/* <Link className={cnames({active: active.indexOf("settings") !== -1})} style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link> */}
                         </div>
