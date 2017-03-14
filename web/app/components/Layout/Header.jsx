@@ -295,7 +295,34 @@ class Header extends React.Component {
                             {accountsDropDown}
                         </div>
                         <div className="grp-menu-item" >
-                            <Link className={cnames({active: active.indexOf("settings") !== -1})} style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link>
+                            <ActionSheet>
+                                <ActionSheet.Button title="">
+                                    <a style={{padding: "1rem", border: "none"}} className="button">
+                                        <Icon className="icon-14px" name="cog"/>
+                                    </a>
+                                </ActionSheet.Button>
+                                {tradingAccounts.length > 1 ?
+                                <ActionSheet.Content>
+                                    <ul className="no-first-element-top-border">
+                                        <li>
+                                            <a href onClick={this._onNavigate.bind(this, "/settings")}>
+                                                <span><Translate content="header.settings" /></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href onClick={this._onNavigate.bind(this, "/explorer")}>
+                                                <span><Translate content="header.explorer" /></span>
+                                            </a>
+                                        <li>
+                                        </li>
+                                            <a href onClick={this._onNavigate.bind(this, "/help")}>
+                                                <span><Translate content="header.help" /></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </ActionSheet.Content> : null}
+                            </ActionSheet>
+                            {/* <Link className={cnames({active: active.indexOf("settings") !== -1})} style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link> */}
                         </div>
                         {lock_unlock}
                     </div>
