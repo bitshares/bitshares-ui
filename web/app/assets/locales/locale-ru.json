@@ -1073,7 +1073,7 @@
   },
   "init_error":{
     "title":"Проблемы инициализации приложения",
-    "ws_status":"Full node connection status",
+    "ws_status":"Состояние подключения полного узла",
     "retry":"Повторить",
     "connected":"Соединение установлено",
     "not_connected":"Отключено",
