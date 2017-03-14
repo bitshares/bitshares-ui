@@ -194,7 +194,8 @@ a.order-cancel {
 }
 
 div.market-stats-container {
-    border-bottom: 1px solid $border-color;
+    // border-bottom: 1px solid $border-color;
+    justify-content: space-between;
 }
 
 ul.market-stats {
@@ -222,10 +223,11 @@ ul.market-stats {
 
 .top-stats li {
   border-right: 1px solid $border-color;
+  min-height: 42px;
 }
 
 .bottom-stats li {
-  border-right: 1px solid $border-color;
+  // border-right: 1px solid $border-color;
 }
 
 .stats .stat {
@@ -241,8 +243,9 @@ ul.market-stats {
   }
 }
 
-.stats .indicators {
+.stats div.indicators {
   text-transform: uppercase;
+  height: 100%;
 }
 
 .stats .stat:first-child {

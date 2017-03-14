@@ -1077,38 +1077,12 @@ class Exchange extends React.Component {
                             showCallLimit={showCallLimit} feedPrice={feedPrice}
                             marketReady={marketReady} latestPrice={latestPrice}
                             showDepthChart={showDepthChart}
-                            showIndicators={!showDepthChart && this.props.priceData.length}
-                            buckets={buckets} bucketSize={bucketSize}
-                            currentPeriod={this.state.currentPeriod}
-                            changeBucketSize={this._changeBucketSize.bind(this)}
-                            changeZoomPeriod={this._changeZoomPeriod.bind(this)}
                             onSelectIndicators={this._onSelectIndicators.bind(this)}
                             marketStats={marketStats}
                             onBorrowQuote={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                             onBorrowBase={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                             onToggleCharts={this._toggleCharts.bind(this)}
-                            indicators={indicators}
-                            onChangeIndicators={this._changeIndicator.bind(this)}
-                            tools={tools}
-                            onChangeTool={(key) => {
-                                let tools = cloneDeep(this.state.tools);
-                                for (let k in tools) {
-                                    if (k === key) {
-                                        tools[k] = !tools[k];
-                                    } else {
-                                        tools[k] = false;
-                                    }
-                                }
-                                this.setState({tools}, () => {
-                                    this.setState({tools: {fib: false, trendline: false}});
-                                });
-                            }}
-                            onChangeChartHeight={this.onChangeChartHeight.bind(this)}
-                            chartHeight={chartHeight}
                             showVolumeChart={showVolumeChart}
-                            onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
-                            onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
-                            indicatorSettings={indicatorSettings}
                         />
 
                         <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
@@ -1127,12 +1101,35 @@ class Exchange extends React.Component {
                                     marketReady={marketReady}
                                     indicators={indicators}
                                     indicatorSettings={indicatorSettings}
-                                    bucketSize={bucketSize}
                                     latest={latestPrice}
                                     theme={this.props.settings.get("themes")}
                                     zoom={this.state.currentPeriod}
                                     tools={tools}
                                     showVolumeChart={showVolumeChart}
+
+                                    buckets={buckets} bucketSize={bucketSize}
+                                    currentPeriod={this.state.currentPeriod}
+                                    changeBucketSize={this._changeBucketSize.bind(this)}
+                                    changeZoomPeriod={this._changeZoomPeriod.bind(this)}
+                                    onSelectIndicators={this._onSelectIndicators.bind(this)}
+                                    onChangeIndicators={this._changeIndicator.bind(this)}
+                                    onChangeTool={(key) => {
+                                        let tools = cloneDeep(this.state.tools);
+                                        for (let k in tools) {
+                                            if (k === key) {
+                                                tools[k] = !tools[k];
+                                            } else {
+                                                tools[k] = false;
+                                            }
+                                        }
+                                        this.setState({tools}, () => {
+                                            this.setState({tools: {fib: false, trendline: false}});
+                                        });
+                                    }}
+                                    onChangeChartHeight={this.onChangeChartHeight.bind(this)}
+                                    chartHeight={chartHeight}
+                                    onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
+                                    onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
                                 />
                             </div>) : (
                             <div className="grid-block vertical no-padding shrink" >
