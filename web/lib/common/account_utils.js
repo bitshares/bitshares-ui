@@ -1,5 +1,6 @@
 import {ChainStore} from "bitsharesjs/es";
 import utils from "./utils";
+import counterpart from "counterpart";
 
 export default class AccountUtils {
 
@@ -19,7 +20,7 @@ export default class AccountUtils {
 
         return feePool >= fee;
     }
-    
+
     static getPossibleFees(account, operation) {
         let core = ChainStore.getAsset("1.3.0");
         account = !account || account.toJS ? account : ChainStore.getAccount(account);
@@ -61,7 +62,7 @@ export default class AccountUtils {
             if (hasBalance) {
                 assets.push(assetID);
                 fees[assetID] = eqFee ? eqFee : fee;
-            } 
+            }
         })
 
         return {assets, fees};
@@ -76,5 +77,41 @@ export default class AccountUtils {
         }
 
         return fee_asset_id;
+    }
+
+    static isKnownScammer(account) {
+        const scamAccountsPolo = [
+            "polonie-wallet",
+            "polonie-xwallet",
+            "poloniex-deposit",
+            "poloniex-wallet",
+            "poloniexwall-et",
+            "poloniexwallett",
+            "poloniexwall-t",
+            "poloniexwalle",
+            "poloniex"
+        ];
+
+        const scamAccountsBittrex = [
+            "bittrex-deopsit",
+            "bittrex-deposi",
+            "bittrex-depositt",
+            "bittrex-dposit",
+            "bittrex"
+        ];
+
+        const scamAccountsOther = [
+            "coinbase"
+        ];
+
+        let scamMessage = null;
+        if (scamAccountsPolo.indexOf(account) !== -1) {
+            scamMessage = counterpart.translate("account.polo_scam");
+        } else if (scamAccountsBittrex.indexOf(account) !== -1) {
+            scamMessage = counterpart.translate("account.bittrex_scam");
+        } else if (scamAccountsOther.indexOf(account) !== -1) {
+            scamMessage = counterpart.translate("account.other_scam");
+        }
+        return scamMessage;
     }
 }

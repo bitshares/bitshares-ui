@@ -95,22 +95,6 @@ class SettingsStore {
         let savedDefaults = ss.get("defaults_v1", {});
         this.defaults = merge({}, defaults, savedDefaults);
 
-        (savedDefaults.connection || []).forEach(api => {
-            let hasApi = false;
-            if (typeof api === "string") {
-                api = {url: api, location: null};
-            }
-            apiServer.forEach(server => {
-                if (server.url === api.url) {
-                    hasApi = true;
-                }
-            });
-
-            if (!hasApi) {
-                this.defaults.apiServer.push(api);
-            }
-        });
-
         (savedDefaults.apiServer || []).forEach(api => {
             let hasApi = false;
             if (typeof api === "string") {
@@ -127,15 +111,17 @@ class SettingsStore {
             }
         });
 
-        for (let i = apiServer.length - 1; i >= 0; i--) {
-            let hasApi = false;
-            this.defaults.apiServer.forEach(api => {
-                if (api.url === apiServer[i].url) {
-                    hasApi = true;
+        if (!savedDefaults || (savedDefaults && (!savedDefaults.apiServer || !savedDefaults.apiServer.length))) {
+            for (let i = apiServer.length - 1; i >= 0; i--) {
+                let hasApi = false;
+                this.defaults.apiServer.forEach(api => {
+                    if (api.url === apiServer[i].url) {
+                        hasApi = true;
+                    }
+                });
+                if (!hasApi) {
+                    this.defaults.apiServer.unshift(apiServer[i]);
                 }
-            });
-            if (!hasApi) {
-                this.defaults.apiServer.unshift(apiServer[i]);
             }
         }
 
@@ -168,7 +154,7 @@ class SettingsStore {
 
             let bases = {
                 markets_4018d784: [ // BTS MAIN NET
-                    "BTS", "OPEN.BTC", "USD", "CNY", "BTC"
+                    "USD", "OPEN.BTC", "CNY", "BTS", "BTC"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "TEST"

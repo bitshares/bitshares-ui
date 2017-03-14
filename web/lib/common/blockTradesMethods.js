@@ -10,6 +10,14 @@ export function fetchCoins(url = (blockTradesAPIs.BASE + blockTradesAPIs.COINS_L
     });
 }
 
+export function getActiveWallets(url = (blockTradesAPIs.BASE + blockTradesAPIs.ACTIVE_WALLETS)) {
+    return fetch(url).then(reply => reply.json().then(result => {
+        return result;
+    })).catch(err => {
+        console.log("error fetching blocktrades active wallets", err, url);
+    });
+}
+
 export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url = blockTradesAPIs.BASE_OL, stateCallback}) {
     let body = {
         inputCoinType,

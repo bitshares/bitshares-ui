@@ -161,11 +161,11 @@ class OrderBook extends React.Component {
     }
 
     componentWillMount() {
-        window.addEventListener("resize", this._updateHeight, false);
+        window.addEventListener("resize", this._updateHeight, {capture: false, passive: true});
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._updateHeight, false);
+        window.removeEventListener("resize", this._updateHeight);
     }
 
     componentDidMount() {

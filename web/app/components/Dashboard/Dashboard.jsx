@@ -24,13 +24,27 @@ class Dashboard extends React.Component {
                 ["BTS", "USD"],
                 ["BTS", "GOLD"],
                 ["BTS", "BLOCKPAY"],
+                ["OPEN.BTC", "BLOCKPAY", false],
                 ["BTS", "OBITS"],
+                ["KAPITAL", "OPEN.BTC", false],
                 ["BTS", "SILVER"],
                 ["OPEN.BTC", "OPEN.DGD", false],
+                ["USD", "OPEN.STEEM"],
+                ["USD", "OPEN.ETH"],
                 ["BTS", "BTWTY"],
-                [ "BTS", "OPEN.ETH"],
+                ["BTS", "OPEN.ETH"],
                 ["BTS", "ICOO"],
-                ["OPEN.BTC", "OPEN.STEEM"]
+                ["OPEN.BTC", "OPEN.STEEM"],
+                ["OPEN.USDT", "OPEN.BTC", false],
+                ["BTS", "OPEN.STEEM"],
+                ["OPEN.BTC", "ICOO"],
+                ["OPEN.BTC", "OPEN.MAID"],
+                ["BTS", "OPEN.MAID"],
+                ["BTS", "OPEN.HEAT"],
+                ["BTS", "OPEN.INCENT"],
+                ["OPEN.BTC", "OBITS", false],
+                ["HEMPSWEET", "OPEN.BTC"],
+                ["KAPITAL", "BTS"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -52,31 +66,16 @@ class Dashboard extends React.Component {
         this._setDimensions = this._setDimensions.bind(this);
     }
 
-    // componentWillMount() {
-    //     fetch(__UI_API__ + `/markets/${Apis.instance().chain_id.substr(0, 10)}`).then( (reply) => {
-    //         if (reply.ok) {
-    //             return reply.json().then(({markets, newAssets}) => {
-    //                 console.log("markets:", markets, newAssets);
-    //                 this.setState({
-    //                     featuredMarkets: markets.length ? markets: this.state.featuredMarkets,
-    //                     newAssets: newAssets.length ? newAssets : this.state.newAssets
-    //                 });
-    //             });
-    //         }
-    //     }).catch(err => {
-    //         console.log("Markets API not available:", err);
-    //     });
-    // }
-
     componentDidMount() {
         this._setDimensions();
 
-        window.addEventListener("resize", this._setDimensions, false);
+        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextState.featuredMarkets, this.state.featuredMarkets) ||
+            !utils.are_equal_shallow(nextProps.lowVolumeMarkets, this.props.lowVolumeMarkets) ||
             !utils.are_equal_shallow(nextState.newAssets, this.state.newAssets) ||
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
@@ -87,7 +86,7 @@ class Dashboard extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._setDimensions, false);
+        window.removeEventListener("resize", this._setDimensions);
     }
 
     _setDimensions() {
@@ -116,27 +115,34 @@ class Dashboard extends React.Component {
             return <LoadingIndicator />;
         }
 
-        let markets = featuredMarkets.map((pair, index) => {
+        let validMarkets = 0;
 
+        let markets = featuredMarkets
+        .map(pair => {
+            let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
+            if (!isLowVolume) validMarkets++;
             let className = "";
-            if (index > 5) {
-                className += "show-for-medium";
+            if (validMarkets > 9) {
+                className += ` show-for-${!accountCount ? "xlarge" : "large"}`;
+            } else if (validMarkets > 6) {
+                className += ` show-for-${!accountCount ? "large" : "medium"}`;
             }
-            if (index > 8) {
-                className += " show-for-large";
-            }
+
 
             return (
                 <MarketCard
                     key={pair[0] + "_" + pair[1]}
+                    marketId={pair[1] + "_" + pair[0]}
                     new={newAssets.indexOf(pair[1]) !== -1}
                     className={className}
                     quote={pair[0]}
                     base={pair[1]}
                     invert={pair[2]}
+                    isLowVolume={isLowVolume}
+                    hide={validMarkets > 16}
                 />
             );
-        });
+        }).filter(a => !!a);
 
         if (!accountCount) {
             return (
@@ -158,7 +164,7 @@ class Dashboard extends React.Component {
                         </div>
                         <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
                             <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
-                            <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow">
+                            <div className="grid-block small-up-1 large-up-3 xlarge-up-4 no-overflow fm-outer-container">
                                 {markets}
                             </div>
                         </div>
@@ -170,8 +176,10 @@ class Dashboard extends React.Component {
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
-                    <Translate content="exchange.featured" component="h4" />
-                    <div className="grid-block small-up-2 medium-up-3 large-up-4 no-overflow">
+                    <div className="block-content-header" style={{marginBottom: 15}}>
+                    <Translate content="exchange.featured"/>
+                    </div>
+                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
                     </div>
 

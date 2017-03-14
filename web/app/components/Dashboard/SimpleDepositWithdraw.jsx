@@ -204,6 +204,8 @@ class DepositWithdrawContent extends React.Component {
                         validAddress: isValid
                     });
                 }
+            }).catch(err => {
+                console.error("Error when validating address:", err);
             });
     }
 
@@ -296,7 +298,7 @@ class DepositWithdrawContent extends React.Component {
         // }
         return (
             <div className={!addressValue ? "no-overflow" : ""}>
-                <p><Translate content="gateway.add_funds" /></p>
+                <p><Translate unsafe content="gateway.add_funds" account={this.props.sender.get("name")} /></p>
 
                 {this._renderCurrentBalance()}
 
@@ -399,7 +401,7 @@ class DepositWithdrawContent extends React.Component {
             return null;
         }
 
-        const {replaceName:assetName} = utils.replaceName(asset.get("symbol"), true);
+        const {name: assetName} = utils.replaceName(asset.get("symbol"), true);
 
         return (
             <div className="SimpleTrade__modal">
@@ -444,7 +446,7 @@ export default class SimpleDepositWithdrawModal extends React.Component {
 
     render() {
         return (
-            <Modal onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
+            <Modal className="test" onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
                 <Trigger close={this.props.modalId}>
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>

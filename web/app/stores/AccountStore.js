@@ -188,14 +188,14 @@ class AccountStore extends BaseStore {
                 continue;
             }
 
-            if(auth === "full") {
+            if(auth === "full" || auth === "partial") {
                 accounts.push(account_name);
             }
 
             // console.log("account:", account_name, "auth:", auth);
 
         }
-        // console.log("accounts:", accounts, "linkedAccounts:", this.state.linkedAccounts);
+        // console.log("accounts:", accounts, "linkedAccounts:", this.state.linkedAccounts && this.state.linkedAccounts.toJS());
         return accounts.sort();
     }
 

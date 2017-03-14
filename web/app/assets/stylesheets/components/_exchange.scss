@@ -4,12 +4,12 @@
   }
 
   >.left-column {
-    border-right: 1px solid grey;
+    border-right: 1px solid $border-color;
     border-top: none;
   }
 
   .right-column {
-    border-left: 1px solid grey;
+    border-left: 1px solid $border-color;
 
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -18,7 +18,7 @@
 
   .main-content {
     .top-bar {
-      border-bottom: 1px solid grey;
+      border-bottom: 1px solid $border-color;
     }
   }
 }
@@ -193,6 +193,16 @@ a.order-cancel {
   }
 }
 
+div.market-stats-container {
+    // border-bottom: 1px solid $border-color;
+    justify-content: space-between;
+}
+
+ul.market-stats {
+    font-size: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+}
 .market-stats .stat {
   text-align: left;
   font-size: 0.75rem;
@@ -206,26 +216,24 @@ a.order-cancel {
 }
 
 .stats {
-  line-height: 1rem !important;
   list-style: none;
   margin: 0px;
   padding: 0px;
 }
 
 .top-stats li {
-  border-right: 1px solid grey;
-  border-top: 1px solid grey;
+  border-right: 1px solid $border-color;
+  min-height: 42px;
 }
 
 .bottom-stats li {
-  border-right: 1px solid grey;
+  // border-right: 1px solid $border-color;
 }
 
 .stats .stat {
   text-align: center;
-  padding: 3px 5px;
-  vertical-align: top;
-  min-height: 27px;
+  padding: 2px 5px;
+  vertical-align: middle;
 
   > span {
     > span:first-of-type {
@@ -235,10 +243,9 @@ a.order-cancel {
   }
 }
 
-.stats .indicators {
-  padding: 2px 0;
-  line-height: 1rem;
+.stats div.indicators {
   text-transform: uppercase;
+  height: 100%;
 }
 
 .stats .stat:first-child {
@@ -250,16 +257,14 @@ a.order-cancel {
     font-size: 1.1rem;
     padding-left: 0.3rem;
     padding-right: 0.5rem;
-    padding-top: 15px;
 }
 
 div.bucket-option {
+  line-height: 1;
   cursor: pointer;
   text-transform: none !important;
   margin-right: 3px;
   border-radius: 0;
-  padding-top: 3px;
-  padding-bottom: 3px;
   user-select: none;
 }
 
@@ -269,6 +274,11 @@ div.bucket-option {
 
 .buy-sell-row {
   margin-bottom: 10px;
+
+    input {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+   }
 }
 
 .bottom-row {
@@ -304,6 +314,8 @@ div.bucket-option {
     font-size: 75%;
     padding: 0 0 0 5px;
     min-width: 5rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 
     > select {
       padding: 0;
@@ -440,7 +452,7 @@ table thead tr th.mymarkets-header {
 .orderbook-showall {
   text-align: center;
   padding: 5px 0;
-  border-top: 1px solid #444;
+  border-top: 1px solid $border-color;
   font-size: 12px;
 }
 
@@ -532,4 +544,16 @@ form.hide-container {
             }
         }
     }
+}
+
+.buy-sell-deposit {
+    font-size: 85%;
+    padding-left: 10px;
+    text-transform: lowercase;
+    text-decoration: underline;
+
+    > a > span.asset-name {
+        text-transform: uppercase;
+    }
+
 }

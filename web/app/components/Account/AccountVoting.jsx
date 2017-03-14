@@ -479,7 +479,7 @@ class AccountVoting extends React.Component {
                     </button>
                 </div>
 
-                <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content">
+                <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content no-padding">
 
                         <Tab title="account.votes.proxy_short">
                             <div className="content-block">

@@ -296,13 +296,13 @@ class MyMarkets extends React.Component {
 
     componentWillMount() {
         if (this.props.setMinWidth) {
-            window.addEventListener("resize", this._setMinWidth, false);
+            window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
         }
     }
 
     componetWillUnmount() {
         if (this.props.setMinWidth) {
-            window.removeEventListener("resize", this._setMinWidth, false);
+            window.removeEventListener("resize", this._setMinWidth);
         }
     }
 

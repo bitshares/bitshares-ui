@@ -59,7 +59,7 @@ class AccountPermissionRow extends React.Component {
                 : pubKey ? (
                     <div className="account-image">
                         <PrivateKeyView pubkey={pubKey}>
-                            <Icon name="key" size="1x"/>
+                            <Icon name="key" size="4x"/>
                         </PrivateKeyView>
                     </div>)
                 : null}

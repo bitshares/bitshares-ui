@@ -9,6 +9,7 @@ import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
 import Immutable from "immutable";
+import Translate from "react-translate-component";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -25,11 +26,13 @@ class TotalValue extends React.Component {
     static propTypes = {
         fromAssets: ChainTypes.ChainAssetsList.isRequired,
         toAsset: ChainTypes.ChainAsset.isRequired,
-        inHeader: React.PropTypes.bool
+        inHeader: React.PropTypes.bool,
+        label: React.PropTypes.string
     };
 
     static defaultProps = {
-        inHeader: false
+        inHeader: false,
+        label: ""
     };
 
     constructor() {
@@ -245,16 +248,20 @@ class TotalValue extends React.Component {
             totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
         totalsTip += "</tbody></table>";
-
-        // console.log("assetValues:", assetValues, "totalsTip:", totalsTip);
+        
         if (!inHeader) {
-            return <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>;
+            return(
+                <span>
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
+                    <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                </span>
+            );
         } else {
             return (
-                <div className="tooltip" data-tip={totalsTip} data-place="bottom" data-html={true} >
-                    <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                <div className="tooltip inline-block" data-tip={totalsTip} data-place="bottom" data-html={true} >
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
+                    <FormattedAsset noTip noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
-
             );
         }
     }
@@ -317,7 +324,7 @@ class TotalBalanceValue extends React.Component {
             }
         }
 
-        return <ValueStoreWrapper inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
+        return <ValueStoreWrapper label={this.props.label} inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
     }
 }
 TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});
@@ -376,7 +383,17 @@ class AccountWrapper extends React.Component {
             }
         });
 
-        return balanceList.size ? <TotalBalanceValue inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/> : null;
+        if (!balanceList.size) {
+            return(
+                <span>
+                    {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null} 0
+                </span>
+            );
+        } else {
+            return <TotalBalanceValue label={this.props.label} inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/>;
+
+        }
+
     }
 }
 AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});

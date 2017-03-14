@@ -31,7 +31,8 @@
     "unlock": "Log in (unlock the wallet)",
     "help": "Help",
     "locked_tip": "<br/>Click to login by unlocking your wallet.<br/><br/>Closing the browser window will also log you out.",
-    "unlocked_tip": "<br/>Click to log out by locking your wallet.<br/><br/>Closing the browser window will also log you out."
+    "unlocked_tip": "<br/>Click to log out by locking your wallet.<br/><br/>Closing the browser window will also log you out.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -64,8 +65,8 @@
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
-    "intro_text_title": "Welcome to the Bitshares DEX",
-    "intro_text_1": "<b>BitShares 2.0</b> and its decentralized exchange - also known as The DEX - is a next-generation cryptocurrency trading platform.",
+    "intro_text_title": "BitShares",
+    "intro_text_1": "<b>Decentralized exchange,<br/>next-generation cryptocurrency trading platform.",
     "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged  assets such as bitUSD, bitCNY, bitBTC, bitGold and more.  These assets can all be traded with zero counter-party risk, putting you in total control of your funds.",
     "intro_text_3": "<b>The DEX</b> also enables user-issued assets (UIAs), which can be traded via an order book against any other asset on the platform, both trustless and user-issued.  One well-known issuer on the platform is <b>OpenLedger</b>, with a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more.",
     "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
@@ -83,6 +84,7 @@
     "recent": "Recent activity",
     "name": "Account name",
     "id": "Account ID",
+    "mine": "My account",
     "more": "see more",
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
@@ -301,7 +303,7 @@
     "upgrade": "Upgrade account",
     "unfollow": "Unfollow",
     "follow": "Follow",
-    "pay": "Pay",
+    "pay": "Send to",
     "overview": "Overview",
     "home": "Home",
     "bts_market": "Market",
@@ -871,7 +873,7 @@
     "to_market": "Go to market",
     "zoom_all": "All",
     "settings": "Chart options",
-    "featured": "Featured Markets",
+    "featured": "Top Markets",
     "new": "New",
     "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
@@ -1071,7 +1073,7 @@
   },
   "init_error": {
     "title": "Application initialization issues",
-    "ws_status": "Websocket Connection Status",
+    "ws_status": "Full node connection status",
     "retry": "Retry",
     "connected": "Connected",
     "not_connected": "Not connected",
@@ -1092,6 +1094,13 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+    },
+    "your_account": "Your account",
     "bitkapital_text": "Choose an asset to deposit or withdraw:",
     "bitkapital_withdraw": "You are withdrawing",
     "bitkapital_receive": "You will receive",
@@ -1102,7 +1111,7 @@
     "symbol": "Symbol",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
-    "add_funds": "You are going to add funds to your BitShares account.",
+    "add_funds": "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
     "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
     "balance_asset": "Current %(asset)s balance",
     "withdraw_placeholder": "Please enter your %(asset)s address",
@@ -1137,7 +1146,7 @@
 	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
-    "gateway_text": "A gateway lets you move to and from BitShares assets to the real asset, like OPEN.BTC to BTC.",
+    "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
     "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
     "transwiser": {
       "gateway": "Transwiser",

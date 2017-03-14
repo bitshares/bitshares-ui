@@ -42,49 +42,206 @@ td > input, td > .autocomplete input {
   width: auto;
 }
 
+div.account-image {
+    .icon.key > svg {
+        height: 2.4rem !important;
+        width: 2.4rem !important;
+    }
+}
+
 .account-selector, .pubkey-input {
   clear: right;
   input {
     display: block;
     flex: auto;
   }
-  > .account-image {
-    float: right;
-    width: 80px;
-    > .icon > svg path {
-      fill: rgba(255, 255, 255, 0.2);
-    }
-
-    @include breakpoint(small only) {
-        display: none;
+  .error-area {
+      position: absolute;
+      padding-left: 3.8rem;
+  }
+  .account-image {
+    float: left;
+    width: 3.5rem;
+    > canvas, .icon.key > svg {
+        height: 2.4rem !important;
+        width: 2.4rem !important;
     }
   }
   > .content-area {
     //width: 100%;
-    width: calc(100% - 100px);
+    position: relative;
+    width: 100%;
     display: inline-block;
 
     @include breakpoint(small only) {
         width: 100%;
     }
   }
-  .error-area {
-    padding-top: 0.5rem;
-    min-height: 30px;
-    font-size: 1rem;
+}
+
+.error-area {
+    min-height: 2rem;
+    font-size: 0.9rem;
     line-height: normal;
-  }
-  .right-label {
+}
+
+.right-label, .left-label {
+  font-size: 90%;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  padding-bottom: 5px;
+}
+
+.right-label {
     float: right;
-  }
 }
 
 div.transfer-input {
   //width: 100%;
-  width: calc(100% - 100px);
+  width: 100%;
   display: inline-block;
+
+  &.fee-row {
+      border-top: 1px solid $border-color;
+      padding-top: 2rem;
+      position: relative;
+  }
+
+  &.fee-row {
+      > .amount-selector {
+          width: calc(100% - 6.6rem);
+      }
+      &.proposal > .amount-selector {
+          width: calc(100% - 9rem);
+      }
+      > button {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          font-size: 1.3rem;
+          border-radius: 5px;
+      }
+  }
 
   @include breakpoint(small only) {
       width: 100%;
+
+      &.fee-row {
+        > .amount-selector {
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        > button {
+            position: inherit;
+        }
+      }
+
+
+
   }
+}
+
+.dropdown-wrapper {
+    /* Size & position */
+    position: relative;
+    margin: 0 auto;
+    padding: 12px 15px;
+
+    /* Styles */
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease-out;
+
+    &.inactive {
+        cursor: default;
+    }
+
+    > div:first-of-type {
+        font-size: 0.9rem;
+        font-weight: bold;
+
+        > span.hidden {
+            visibility: hidden;
+        }
+    }
+
+    &.active {
+        border-radius: 5px 5px 0 0;
+        box-shadow: none;
+        border-bottom: none;
+    }
+
+    &.active .dropdown {
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        max-height: 400px;
+    }
+
+    ul.dropdown {
+        /* Size & position */
+        min-width: 200px;
+        position: absolute;
+        top: 2.4rem;
+        right: 0;
+        z-index: 999;
+        margin-left: 0;
+
+        /* Styles */
+        background: #fff;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-top: none;
+        border-bottom: none;
+        list-style: none;
+        transition: all 0.3s ease-out;
+
+        /* Hiding */
+        max-height: 0;
+        overflow: hidden;
+
+        li span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px 10px;
+            transition: all 0.3s ease-out;
+        }
+
+        li:last-of-type span {
+            border: none;
+        }
+
+        li i {
+            margin-right: 5px;
+            color: inherit;
+            vertical-align: middle;
+        }
+    }
+}
+.dropdown-wrapper:after { /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    margin-top: -3px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+}
+.dropdown-wrapper.inactive:after {
+    border: 0;
+}
+
+div.input-wrapper {
+    position: relative;
+    div.floating-dropdown {
+        background: transparent;
+        position: absolute;
+        right: 0;
+        text-align: right;
+    }
 }

@@ -24,8 +24,13 @@
   $negative-color,
   $row-accent-color,
   $header-color,
-  $chat-text-color
+  $chat-text-color,
+  $input-background
   ) {
+
+  .font-secondary {
+      color: $secondary-text-color;
+  }
 
   #content-wrapper {
     @include color($primary-text-color, $bg-color);
@@ -111,6 +116,7 @@
       border-top-color: $panel-bg-color;
       &:hover {
         @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+        // color: $link-text-color;
       }
     }
   }
@@ -255,13 +261,29 @@
     background-color: $panel-bg-color !important;
   }
 
-  .header .button.create-account {
-    background-color: $button-bg-color !important;
+  .header a.button.create-account {
+    transition: color 0s !important;
+    color: $button-bg-color !important;
+    > span > svg > path {
+        fill: $button-bg-color;
+    }
+    &:hover {
+        color: lighten($button-bg-color, 10%) !important;
+        > span > svg > path {
+            fill: lighten($button-bg-color, 10%);
+        }
+    }
   }
 
   .grp-menu-item button {
     &:hover, &:focus, &:active {
       background-color: $light-panel-bg-color !important;
+    }
+  }
+
+  .grp-menu-item {
+    > a, .button {
+      color: $primary-text-color !important;
     }
   }
 
@@ -271,9 +293,12 @@
 
   .header-right-menu {
     a:hover {background-color: lighten($panel-bg-color, 4%);}
-    a > span { color: $secondary-text-color; }
+    a.active {background-color: lighten($panel-bg-color, 4%);}
+    li.current-account > a {
+        @include color($info-color, lighten($super-light-panel-bg-color, 4%));
+        > span { font-weight: bold; }
+    }
     svg > path { fill: $secondary-text-color; }
-    a:hover > span { color: $primary-text-color; }
     svg:hover > path { fill: $primary-text-color; }
   }
 
@@ -335,7 +360,7 @@
   .block-list {
     color: $primary-text-color;
     li {
-      border-bottom: 1px solid $dark-text-color;
+      border-bottom: 1px solid $border-color;
     }
     li > a {
       color: $secondary-text-color;
@@ -345,7 +370,7 @@
       background-color: lighten($bg-color, 4%);
     }
     li:first-child {
-      border-top: 1px solid $dark-text-color;
+      border-top: 1px solid $border-color;
     }
     header {
       color: $secondary-text-color;
@@ -355,6 +380,66 @@
 
   // forms
 
+  .right-label, .left-label {
+      color: $secondary-text-color;
+
+      > span {
+          color: inherit;
+      }
+  }
+
+  .dropdown-wrapper {
+      > div:first-of-type {
+          color: $secondary-text-color;
+      }
+
+      ul.dropdown {
+          @include color($light-text-color, $super-light-panel-bg-color);
+          &::after {
+            border-bottom-color: $super-light-panel-bg-color;
+          }
+          > li > span {
+            color: $light-text-color;
+          }
+          /* Hover state */
+
+          li:hover span {
+              @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+              color: $link-text-color;
+          }
+      }
+
+      &.active:after {
+          border-color: $link-text-color transparent;
+      }
+
+      &:after { /* Little arrow */
+          border-color: $secondary-text-color transparent;
+      }
+  }
+
+  .account-image {
+      .icon:hover {
+          svg path {
+              fill: darken($secondary-text-color, 5%);
+          }
+      }
+  }
+  .account-selector, .pubkey-input {
+    .account-image {
+        > canvas {
+            color: black;
+        }
+        .icon > svg path {
+            fill: $primary-text-color;
+        }
+        .icon:hover {
+            svg path {
+                fill: darken($secondary-text-color, 5%);
+            }
+        }
+      }
+  }
   .has-error, div.has-error > label, div.has-error > label > span {
     color: $error-text-color;
   }
@@ -372,16 +457,24 @@
   }
 
   input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
-    background-color: #ddd;
+    background-color: $input-background;
+    border: 0;
+    color: $primary-text-color;
     &:hover, &:focus, &:active {
-      background-color: #ddd;
+      background-color: $input-background;
     }
     &:focus {
       border-color: #aaa;
     }
   }
 
-
+  ul.button-group.segmented {
+      > li.is-active > a {
+          background: $input-background;
+          color: $primary-text-color;
+          border-bottom: 1px solid $button-bg-color;
+      }
+  }
   // Tabs
 
   .tabs {
@@ -452,14 +545,53 @@
       color: $primary-text-color;
     }
     h6 {
-      color: $secondary-text-color;
+        font-weight: bold;
     }
     .bottom {
       border-top-color: $bg-color;
     }
+
+    .advanced-toggle > a {
+        color: $primary-text-color;
+    }
+
+    a.pay-button {
+        background-color: $bg-color;
+        color: $primary-text-color;
+
+        &:hover {
+            background-color: $light-panel-bg-color !important;
+        }
+    }
+
+    div.create-account-button {
+        background: transparent;
+        border: 2px solid $button-bg-color;
+
+        > a {
+            font-weight: bold;
+            color: $primary-text-color;
+        }
+    }
+
+
+  }
+
+  .account-info {
+      color: $primary-text-color;
+      > div.secondary {
+          > span:first-of-type {
+              color: $primary-text-color;
+          }
+
+          > span:last-of-type {
+              color: $secondary-text-color;
+          }
+      }
   }
 
   .my-account h5, .my-account h4, td.my-account {
+    font-weight: bold;
     color: $info-color;
   }
 
@@ -512,11 +644,10 @@
   }
 
   // AccountSelector component
-
+  .error-area {
+    color: $error-text-color;
+  }
   .account-selector {
-    .error-area {
-      color: $error-text-color;
-    }
     .right-label {
       color: $secondary-text-color;
     }
@@ -682,10 +813,10 @@
     }
   }
 
-  .block-content-header {
-    //text-transform: uppercase;
-    @include RobotoLight;
-  }
+  // .block-content-header {
+  //   //text-transform: uppercase;
+  //   @include RobotoLight;
+  // }
 
   td.orderHistoryBid {
 
@@ -784,6 +915,9 @@
       color: $primary-text-color;
   }
 
+  li.stat.input {
+      &:hover {background-color: lighten($panel-bg-color, 4%);}
+  }
   .stats .stat {
     > span {
       > span:first-of-type {
@@ -894,9 +1028,11 @@
 
   select.bts-select, select.native-coin-types, , select.external-coin-types {
       color: $secondary-text-color;
-
-      > option {
-          color: $chat-text-color;
+      background-color: $input-background;
+      border: 0;
+      color: $primary-text-color;
+      &:hover, &:focus, &:active {
+        background-color: $input-background;
       }
   }
 
@@ -1006,4 +1142,26 @@
         }
     }
 
+    .SimpleTrade__modal {
+        .Modal__header {
+            background-color: lighten($panel-bg-color, 5%);
+        }
+        .Modal__divider {
+            border-bottom: 2px solid #020202;
+        }
+    }
+
+    ul.dashboard-links {
+        > li.active {
+            color: $primary-text-color;
+        }
+    }
+
+    .switch input:checked + label{
+        background-color: darken($positive-color, 10%);
+        &::after {
+            border: none;
+            background-color: lighten($positive-color, 5%);
+        }
+    }
 }

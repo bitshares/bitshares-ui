@@ -87,10 +87,15 @@ class CreateAccount extends React.Component {
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
 
-            AccountActions.createAccount(name, this.state.registrar_account, referralAccount, 0, refcode).then(() => {
+            AccountActions.createAccount(name, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
                 // User registering his own account
                 if(this.state.registrar_account) {
-                    this.setState({loading: false});
+                    FetchChain("getAccount", name).then(() => {
+                        this.setState({
+                            step: 2,
+                            loading: false
+                        });
+                    });
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else { // Account registered by the faucet
                     // this.props.router.push(`/wallet/backup/create?newAccount=true`);

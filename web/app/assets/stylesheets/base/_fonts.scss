@@ -9,12 +9,12 @@
   }
 }
 
-@include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
-@mixin RobotoLight {
-  font-family: 'Roboto-Light', arial, sans-serif;
-  font-weight: lighter;
-  font-style: normal;
-}
+// @include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
+// @mixin RobotoLight {
+//   font-family: 'Roboto-Light', arial, sans-serif;
+//   font-weight: lighter;
+//   font-style: normal;
+// }
 
 @include font-face(Roboto-Regular, 'vendors/Roboto-Regular', normal, normal);
 @mixin RobotoRegular {
@@ -76,27 +76,27 @@ button, .button {
   text-transform: uppercase;
 }
 
-.content-block > h3 {
-  @include RobotoLight;
-}
-
-.page-header > h3 {
-  @include RobotoLight;
-}
-
-a.currency, span.currency {
-  @include RobotoLight;
-  font-variant: small-caps;
-}
+// .content-block > h3 {
+//   @include RobotoLight;
+// }
+//
+// .page-header > h3 {
+//   @include RobotoLight;
+// }
+//
+// a.currency, span.currency {
+//   @include RobotoLight;
+//   font-variant: small-caps;
+// }
 
 .txtlabel {
   @include RobotoCondensed;
   text-transform: uppercase;
 }
 
-span.time {
-  @include RobotoLight;
-}
+// span.time {
+//   @include RobotoLight;
+// }
 
 .account-drop-down a.button {
   @include RobotoRegular;
@@ -118,9 +118,9 @@ span.time {
   @include RobotoCondensed;
 }
 
-.key-value-table tr > td:first-child {
-  @include RobotoLight;
-}
+// .key-value-table tr > td:first-child {
+//   @include RobotoLight;
+// }
 
 .win32 {
   @include RobotoRegular;

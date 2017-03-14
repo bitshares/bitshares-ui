@@ -3,6 +3,7 @@ import utils from "common/utils";
 import asset_utils from "common/asset_utils";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import counterpart from "counterpart";
 
 class AssetName extends React.Component {
 
@@ -14,7 +15,8 @@ class AssetName extends React.Component {
 
 	static defaultProps = {
 		replace: true,
-		noPrefix: false
+		noPrefix: false,
+		noTip: false
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -33,9 +35,20 @@ class AssetName extends React.Component {
 		// let prefix = isBitAsset && !isPredMarket ? <span>bit</span> :
 		// 			 replacedName !== this.props.name ? <span>{replacedPrefix}</span> : null;
 
-		if (replace && replacedName !== this.props.name) {
+		let excludeList = ["BTWTY", "BANCOR", "BTCSHA", "CROWDFUN", "DRAGON", "TESTME"];
+		let includeBitAssetDescription = isBitAsset && !isPredMarket && excludeList.indexOf(name) === -1;
+
+		if (replace && replacedName !== this.props.name || isBitAsset) {
 			let desc = asset_utils.parseDescription(asset.getIn(["options", "description"]));
-			let tooltip = `<div><strong>${this.props.name}</strong><br />${desc.short ? desc.short : desc.main}</div>`;
+			let realPrefix = name.split(".");
+			realPrefix = realPrefix.length > 1 ? realPrefix[0] : null;
+			if (realPrefix) realPrefix += ".";
+			let	optional = realPrefix || includeBitAssetDescription ? counterpart.translate("gateway.assets." + (isBitAsset ? "bit" : realPrefix.replace(".", "").toLowerCase()), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
+			if (isBitAsset && name === "CNY") {
+				optional = optional + counterpart.translate("gateway.assets.bitcny");
+			}
+			let tooltip = this.props.noTip ? null : `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
+
 			return (
 				<div
 					className="tooltip inline-block"
@@ -47,7 +60,7 @@ class AssetName extends React.Component {
 				</div>
 			);
 		} else {
-			return <span>{!noPrefix ? prefix : null}{name}</span>;
+			return <span><span className={!noPrefix ? "asset-prefix-replaced" : ""}>{!noPrefix ? prefix : null}</span>{replacedName}</span>;
 		}
 
 	}

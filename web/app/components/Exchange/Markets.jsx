@@ -13,7 +13,7 @@ class Markets extends React.Component {
     }
 
     componentWillMount() {
-        window.addEventListener("resize", this._setDimensions, false);
+        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
     }
 
     componentDidMount() {
@@ -21,13 +21,11 @@ class Markets extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._setDimensions, false);
+        window.removeEventListener("resize", this._setDimensions);
     }
 
     _setDimensions() {
         let height = this.refs.wrapper.offsetHeight;
-
-        console.log("wrapper height:", this.refs.wrapper.offsetHeight);
 
         if (height !== this.state.height) {
             this.setState({height});

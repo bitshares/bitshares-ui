@@ -31,7 +31,8 @@
     "unlock":"Войти (открыть кошелек)",
     "help":"Помощь",
     "locked_tip":"<br/>Нажмите, чтобы войти, открыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
-    "unlocked_tip":"<br/>Нажмите, чтобы выйти, закрыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта."
+    "unlocked_tip":"<br/>Нажмите, чтобы выйти, закрыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip":{
     "call_limit":"Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -1092,6 +1093,13 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+        },
+    "your_account": "Your account",
     "bitkapital_text":"Выберите актив для для пополнения или вывода:",
     "bitkapital_withdraw":"Вы выводите",
     "bitkapital_receive":"Вы получите",

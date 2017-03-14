@@ -68,7 +68,7 @@ class MarketsStore {
         this.marketReady = false;
 
         this.allMarketStats = Immutable.Map();
-        this.lowVolumeMarkets = Immutable.Map();
+        this.lowVolumeMarkets = Immutable.Map(marketStorage.get("lowVolumeMarkets", {}));
 
         this.baseAsset = {
             id: "1.3.0",
@@ -335,6 +335,8 @@ class MarketsStore {
             this.priceHistory = result.price;
             this._priceChart();
         }
+
+        marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
 
         this.marketReady = true;
         this.emitChange();
@@ -918,7 +920,7 @@ class MarketsStore {
         };
     }
 
-    _calcMarketStats(history, baseAsset, quoteAsset, recent) {
+    _calcMarketStats(history, baseAsset, quoteAsset, recent, market) {
         let yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         yesterday = yesterday.getTime();
@@ -991,11 +993,19 @@ class MarketsStore {
                 asset_id: invert ? last.key.base : last.key.quote
             }
         } : null;
+        volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
+        volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
+        if (!Math.floor(volumeBase * 100)) {
+            this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
+        } else {
+            this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
+        }
+        marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
 
         return {
             change: change.toFixed(2),
-            volumeBase: utils.get_asset_amount(volumeBase, baseAsset),
-            volumeQuote: utils.get_asset_amount(volumeQuote, quoteAsset),
+            volumeBase,
+            volumeQuote,
             close: close,
             latestPrice
         };
@@ -1003,7 +1013,7 @@ class MarketsStore {
 
     onGetMarketStats(payload) {
         if (payload) {
-            let stats = this._calcMarketStats(payload.history, payload.base, payload.quote, payload.last);
+            let stats = this._calcMarketStats(payload.history, payload.base, payload.quote, payload.last, payload.market);
             this.allMarketStats = this.allMarketStats.set(payload.market, stats);
         }
     }
