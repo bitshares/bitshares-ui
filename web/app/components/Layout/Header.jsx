@@ -149,6 +149,7 @@ class Header extends React.Component {
             });
         }
 
+
         let myAccounts = AccountStore.getMyAccounts();
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
@@ -190,7 +191,6 @@ class Header extends React.Component {
         let accountsDropDown = null, account_display_name, accountsList;
 
         if (currentAccount) {
-
             account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0) {
                 tradingAccounts.push(currentAccount);
@@ -210,31 +210,11 @@ class Header extends React.Component {
                 });
             }
         }
-        // let optionsEntries = [
-        //     {to: "/help", text: "header.help"},
-        //     {to: "/explorer", text: "header.explorer"}
-        // ];
-        //
-        // let options = optionsEntries.map((entry, index) => {
-        //     return <li className={"dropdown-options" + (index === optionsEntries.length - 1 ? " dropdown-divider" : "")} key={entry.to}>
-        //         <Translate content={entry.text} component="a" onClick={this._onNavigate.bind(this, entry.to)}/>
-        //     </li>;
-        // });
-
-        // let lockOptions = (this.props.current_wallet && myAccountCount) ? (
-        //     <li className="dropdown-options">
-        //         <Translate
-        //             content={ this.props.locked ? "header.unlock" : "header.lock"}
-        //             component="a"
-        //             onClick={this._toggleLock.bind(this)}
-        //         />
-        //     </li>) : null;
-
 
         accountsDropDown = createAccountLink ?
         createAccountLink :
         tradingAccounts.length === 1 ?
-        (<ActionSheet.Button title="">
+        (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{padding: "1rem", border: "none"}} className="button">
                 <Icon className="icon-14px" name="user"/> {account_display_name}
             </a>
