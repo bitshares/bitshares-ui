@@ -15,11 +15,12 @@ import cnames from "classnames";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import { fetchCoins, getBackedCoins } from "common/blockTradesMethods";
 import { Apis } from "bitsharesjs-ws";
 import { settingsAPIs } from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
-
+import GatewayStore from "stores/GatewayStore";
+import GatewayActions from "actions/GatewayActions";
+import AccountImage from "../Account/AccountImage";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -35,10 +36,6 @@ class AccountDepositWithdraw extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            blockTradesCoins: [],
-            blockTradesBackedCoins: [],
-            openLedgerCoins: [],
-            openLedgerBackedCoins: [],
             olService: props.viewSettings.get("olService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge"),
@@ -49,10 +46,8 @@ class AccountDepositWithdraw extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.account !== this.props.account ||
-            !utils.are_equal_shallow(nextState.blockTradesCoins, this.state.blockTradesCoins) ||
-            !utils.are_equal_shallow(nextState.blockTradesBackedCoins, this.state.blockTradesBackedCoins) ||
-            !utils.are_equal_shallow(nextState.openLedgerCoins, this.state.openLedgerCoins) ||
-            !utils.are_equal_shallow(nextState.openLedgerBackedCoins, this.state.openLedgerBackedCoins) ||
+            !utils.are_equal_shallow(nextProps.blockTradesBackedCoins, this.props.blockTradesBackedCoins) ||
+            !utils.are_equal_shallow(nextProps.openLedgerBackedCoins, this.props.openLedgerBackedCoins) ||
             nextState.olService !== this.state.olService ||
             nextState.btService !== this.state.btService ||
             nextState.metaService !== this.state.metaService ||
@@ -62,21 +57,6 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
-            fetchCoins().then(result => {
-                this.setState({
-                    blockTradesCoins: result,
-                    blockTradesBackedCoins: getBackedCoins({ allCoins: result, backer: "TRADE" })
-                });
-            });
-
-            fetchCoins().then(result => {
-                this.setState({
-                    openLedgerCoins: result,
-                    openLedgerBackedCoins: getBackedCoins({ allCoins: result, backer: "OPEN" })
-                });
-            });
-        }
     }
 
     toggleOLService(service) {
@@ -130,14 +110,15 @@ class AccountDepositWithdraw extends React.Component {
             name: "Openledger (OPEN.X)",
             template: (
                 <div className="content-block">
-                        <div className="float-right">
+                        {/* <div className="float-right">
                             <a href="https://www.ccedk.com/" target="__blank"><Translate content="gateway.website" /></a>
+                        </div> */}
+                        <div className="service-selector">
+                            <ul className="button-group segmented no-margin">
+                                <li onClick={this.toggleOLService.bind(this, "gateway")} className={olService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
+                                <li onClick={this.toggleOLService.bind(this, "fiat")} className={olService === "fiat" ? "is-active" : ""}><a>Fiat</a></li>
+                            </ul>
                         </div>
-                        <div className="button-group" style={{marginBottom: 0}}>
-                            <div onClick={this.toggleOLService.bind(this, "gateway")} className={cnames("button", olService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
-                            <div onClick={this.toggleOLService.bind(this, "fiat")} className={cnames("button", olService === "fiat" ? "active" : "outline")}>Fiat</div>
-                        </div>
-
 
                         {olService === "gateway" && openLedgerGatewayCoins.length ?
                         <BlockTradesGateway
@@ -167,10 +148,13 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                         <div className="content-block">
-                            <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div>
-                            <div className="button-group">
-                                <div onClick={this.toggleBTService.bind(this, "bridge")} className={cnames("button", btService === "bridge" ? "active" : "outline")}><Translate content="gateway.bridge" /></div>
-                                <div onClick={this.toggleBTService.bind(this, "gateway")} className={cnames("button", btService === "gateway" ? "active" : "outline")}><Translate content="gateway.gateway" /></div>
+                            {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div> */}
+
+                            <div className="service-selector">
+                                <ul className="button-group segmented no-margin">
+                                    <li onClick={this.toggleBTService.bind(this, "bridge")} className={btService === "bridge" ? "is-active" : ""}><a><Translate content="gateway.bridge" /></a></li>
+                                    <li onClick={this.toggleBTService.bind(this, "gateway")} className={btService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
+                                </ul>
                             </div>
 
                             {btService === "bridge" ?
@@ -248,8 +232,8 @@ class AccountDepositWithdraw extends React.Component {
         let { account } = this.props;
         let { activeService } = this.state;
 
-        let blockTradesGatewayCoins = this.state.blockTradesBackedCoins.filter(coin => {
-            if (coin.backingCoinType === "muse") {
+        let blockTradesGatewayCoins = this.props.blockTradesBackedCoins.filter(coin => {
+            if (coin.backingCoinType.toLowerCase() === "muse") {
                 return false;
             }
             return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
@@ -265,7 +249,7 @@ class AccountDepositWithdraw extends React.Component {
             return 0;
         });
 
-        let openLedgerGatewayCoins = this.state.openLedgerBackedCoins.map(coin => {
+        let openLedgerGatewayCoins = this.props.openLedgerBackedCoins.map(coin => {
             return coin;
         })
         .sort((a, b) => {
@@ -283,17 +267,44 @@ class AccountDepositWithdraw extends React.Component {
         });
         return (
             <div className={this.props.contained ? "grid-content" : "grid-container"}>
-                <div className={this.props.contained ? "" : "grid-content"}>
-                    <div style={{borderBottom: "2px solid #444"}}>
-                        <HelpContent path="components/DepositWithdraw" section="receive" account={account.get("name")}/>
-                        <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
+                <div className={this.props.contained ? "" : "grid-content"} style={{paddingTop: "2rem"}}>
+
+                    <h2>Deposit & Withdraw</h2>
+                    <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                        <div className="medium-6 show-for-medium">
+                            <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
+                        </div>
+                        <div className="medium-5 medium-offset-1">
+                            <HelpContent path="components/DepositWithdraw" section="receive"/>
+                        </div>
                     </div>
-                    <div style={{paddingTop: 30, paddingLeft: 8, paddingBottom: 10, fontSize: 14}}>
-                        <Translate content="gateway.service" />
+                    <div>
+                        <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                            <div className="medium-6 small-order-2 medium-order-1">
+                                <Translate component="label" className="left-label" content="gateway.service" />
+                                <select onChange={this.onSetService.bind(this)} className="bts-select" value={activeService} >
+                                    {options}
+                                </select>
+                            </div>
+                            <div className="medium-5 medium-offset-1 small-order-1 medium-order-2" style={{paddingBottom: 20}}>
+                                <label className="left-label" content="gateway.yours">Your account</label>
+                                <div className="inline-label">
+                                    <AccountImage
+                                        size={{height: 40, width: 40}}
+                                        account={account.get("name")} custom_image={null}
+                                    />
+                                    <input type="text"
+                                           value={account.get("name")}
+                                           placeholder={null}
+                                           disabled
+                                           onChange={() => {}}
+                                           onKeyDown={() => {}}
+                                           tabIndex={1}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <select onChange={this.onSetService.bind(this)} className="bts-select" value={activeService} >
-                        {options}
-                    </select>
 
                     <div className="grid-content no-padding" style={{paddingTop: 15}}>
                     {activeService && services[activeService] ? services[activeService].template : services[0].template}
@@ -306,6 +317,14 @@ class AccountDepositWithdraw extends React.Component {
 AccountDepositWithdraw = BindToChainState(AccountDepositWithdraw);
 
 class DepositStoreWrapper extends React.Component {
+
+    componentWillMount() {
+        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
+            GatewayActions.fetchCoins.defer(); // Openledger
+            GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
+        }
+    }
+
     render() {
         return <AccountDepositWithdraw {...this.props}/>;
     }
@@ -313,12 +332,14 @@ class DepositStoreWrapper extends React.Component {
 
 export default connect(DepositStoreWrapper, {
     listenTo() {
-        return [AccountStore, SettingsStore];
+        return [AccountStore, SettingsStore, GatewayStore];
     },
     getProps() {
         return {
             account: AccountStore.getState().currentAccount,
-            viewSettings: SettingsStore.getState().viewSettings
+            viewSettings: SettingsStore.getState().viewSettings,
+            openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
+            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", [])
         };
     }
 });

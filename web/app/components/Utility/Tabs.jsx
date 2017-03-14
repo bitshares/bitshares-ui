@@ -38,12 +38,12 @@ class Tab extends React.Component {
 
     render() {
         let {isActive, index, changeTab, title} = this.props;
-        let c = cnames("tab-item", {"is-active": isActive});
+        let c = cnames({"is-active": isActive});
 
         return (
-            <div className={c} onClick={changeTab.bind(this, index)}>
-                {title.indexOf(".") > 0 ? <Translate content={title} /> : title}
-            </div>
+            <li className={c} onClick={changeTab.bind(this, index)}>
+                <a>{title.indexOf(".") > 0 ? <Translate content={title} /> : title}</a>
+            </li>
         );
     }
 }
@@ -115,8 +115,10 @@ class Tabs extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div style={style} className={cnames("tabs", tabsClass)}>
-                    {tabs}
+                <div className="service-selector">
+                    <ul style={style} className={cnames("button-group segmented no-margin", tabsClass)}>
+                        {tabs}
+                    </ul>
                 </div>
                 <div className={contentClass} >
                     {activeContent}

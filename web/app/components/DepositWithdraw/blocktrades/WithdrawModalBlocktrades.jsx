@@ -51,11 +51,14 @@ class WithdrawModalBlocktrades extends React.Component {
         this.setState( {memo: e.target.value} );
     }
 
-    onWithdrawAmountChange( {amount, asset} ) {
-        this.setState( {withdraw_amount: amount, empty_withdraw_value: !parseInt(amount, 10)} );
+    onWithdrawAmountChange( {amount} ) {
+        this.setState({
+            withdraw_amount: amount,
+            empty_withdraw_value: !parseFloat(amount)
+        });
     }
 
-    onSelectChanged(index, e) {
+    onSelectChanged(index) {
         let new_withdraw_address = WithdrawAddresses.get(this.props.output_wallet_type)[index];
         WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: new_withdraw_address});
 
@@ -98,7 +101,7 @@ class WithdrawModalBlocktrades extends React.Component {
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
 				ZfApi.publish(this.getWithdrawModalId(), "open");
-	        } else if(parseInt(this.state.withdraw_amount)){
+	        } else if (parseFloat(this.state.withdraw_amount) > 0){
 
     		   if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
 

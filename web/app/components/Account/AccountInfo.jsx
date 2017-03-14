@@ -3,6 +3,7 @@ import AccountImage from "./AccountImage";
 import Utils from "common/utils.js";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import Translate from "react-translate-component";
 
 class AccountInfo extends React.Component {
 
@@ -28,8 +29,11 @@ class AccountInfo extends React.Component {
             <div className={"account-info" + (this.props.my_account ? " my-account" : "")}>
                 {this.props.title ? <h4>{this.props.title}</h4> : null}
                 <AccountImage size={image_size} account={account.get("name")} custom_image={null}/>
-                <h5><span className={isLTM ? "lifetime" : ""}>{account.get("name")}</span></h5>
-                <h6 className="subheader">#{display_id} {this.props.my_account ? <span className="my-account-label">(My Account)</span> : null}</h6>
+                <h4 className="account-title"><span className={isLTM ? "lifetime" : ""}>{account.get("name")}</span></h4>
+                <div className="secondary">
+                    <span className="subheader">#{display_id}</span>
+                    {this.props.my_account ? <span className="my-account-label"><Translate content="account.mine" /></span> : null}
+                </div>
             </div>
         );
     }

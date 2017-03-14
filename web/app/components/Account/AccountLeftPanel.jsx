@@ -70,9 +70,9 @@ class AccountLeftPanel extends React.Component {
 		let linkBtn = null;
 
 		linkBtn = isMyAccount ? null : linkedAccounts.has(account_name) ?
-			<a style={{marginBottom: "1rem", marginRight: 0}} href className="button outline small block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
+			<a style={{marginBottom: "1rem", marginRight: 0}} href className="button outline block-button" onClick={this.onUnlinkAccount.bind(this)}><Translate
 				content="account.unfollow"/></a> :
-			<a style={{marginBottom: "1rem", marginRight: 0}} href className="button outline small block-button" onClick={this.onLinkAccount.bind(this)}><Translate
+			<a style={{marginBottom: "1rem", marginRight: 0}} href className="button outline block-button" onClick={this.onLinkAccount.bind(this)}><Translate
 				content="account.follow"/></a>;
 
 		let settings = counterpart.translate("header.settings");
@@ -85,10 +85,10 @@ class AccountLeftPanel extends React.Component {
 					<div className="grid-content no-padding" style={{overflowX: "hidden"}}>
 
 						<div className="regular-padding">
-							<AccountInfo account={account.get("id")} image_size={{height: 90, width: 90}} my_account={isMyAccount}/>
+							<AccountInfo account={account.get("id")} image_size={{height: 140, width: 140}} my_account={isMyAccount}/>
 							<div className="grid-container no-margin">
 								{ linkBtn }
-								<Link className="button outline small block-button" to={`/transfer/?to=${account_name}`}><Translate content="account.pay"/></Link>
+								<Link className="pay-button button small block-button" to={`/transfer/?to=${account_name}`}><Translate content="account.pay"/></Link>
 							</div>
 						</div>
 						<section className="block-list">
@@ -97,9 +97,7 @@ class AccountLeftPanel extends React.Component {
 								<li><Link to={`/account/${account_name}/member-stats/`} activeClassName="active"><Translate content="account.member.stats"/></Link></li>
 								<li><Link to={`/account/${account_name}/orders/`} activeClassName="active"><Translate content="account.open_orders"/></Link></li>
 								<li><Link to={`/account/${account_name}/voting/`} activeClassName="active"><Translate content="account.voting"/></Link></li>
-								{isMyAccount ? <li><Link to={`/account/${account_name}/deposit-withdraw/`} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
 
-								{/* Advanced features*/}
 								{/* <li className="menu-subheader" >
 									<span className="button outline small">
 										<Translate content="account.user_issued_assets.advanced" />
@@ -108,8 +106,10 @@ class AccountLeftPanel extends React.Component {
 								</li> */}
 							</ul>
 						</section>
+
+						{/* Advanced features*/}
 						<div style={{paddingBottom: 10, paddingTop: 20}}>
-							<div className="grid-container no-margin">
+							<div className="grid-container no-margin advanced-toggle">
 								<a
 									onClick={this._toggleAdvanced.bind(this)}
 									className="button outline small block-button"
@@ -132,14 +132,16 @@ class AccountLeftPanel extends React.Component {
 								{isMyAccount ? <li><Link to={`/account/${account_name}/vesting/`} activeClassName="active"><Translate content="account.vesting.title"/></Link></li> : null}
 							</ul>) : null}
 						</section>
+
+						{isMyAccount ?
+							<div className="regular-padding">
+								<div className="button block-button create-account-button">
+									<Link to="/create-account"><Translate content="account.create_new" /></Link>
+								</div>
+						</div>
+						: null}
 					</div>
 				</div>
-				{isMyAccount ?
-				<div className="grid-block shrink bottom">
-					<div className="center">
-						<div className="inline-block" data-tip={counterpart.translate("account.create_new")} data-place="top"><Link to="/create-account"><Icon name="plus-circle"/></Link></div>
-					</div>
-				</div> : null}
 			</div>
 		);
 	}

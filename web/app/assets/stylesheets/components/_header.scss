@@ -13,13 +13,20 @@
 }
 
 .header {
+    &.primary {
+        border-bottom: 1px solid $border-color;
+    }
   padding-left: 0 !important;
-  padding-right: 1rem;
-  min-height: 48px;
+  min-height: 66px;
+  text-transform: uppercase;
   .menu-bar > li {
+
     display: list-item;
     padding: 0;
+    border-right: 1px solid $border-color;
     > a {
+      font-weight: bold;
+      line-height: 2rem;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       font-size: 0.9rem;
@@ -29,6 +36,45 @@
       }
     }
   }
+}
+
+div.header-balance {
+    a {
+        font-size: 90%;
+        font-weight: bold;
+        &:hover {
+            background-color: transparent !important;
+        };
+    }
+}
+
+div.account-drop-down {
+    font-size: 90%;
+    .dropdown-divider {
+        padding-bottom: 10px;
+    }
+  a.button {
+      font-weight: bold;
+      font-size: 90%;
+      background-color: transparent;
+  }
+  a:active.button, a:hover.button {
+    background-color: transparent !important;
+  }
+}
+
+div.header-right-menu {
+    > .grp-menu-item {
+        border-left: 1px solid $border-color;
+        line-height: 2rem;
+
+        > a {
+            @include breakpoint(large) {
+              padding-left: 1.25rem;
+              padding-right: 1.25rem;
+            }
+        }
+    }
 }
 
 .grp-menu-items-group {
@@ -41,34 +87,17 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  .button:hover {
-    background: #414141 !important;
-  }
   > a, .button {
-    color: #fff !important;
     padding: 0.5rem;
     @include breakpoint(large) {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
     }
     font-size: 1rem;
-    &:hover {
-      background: #414141;
-      color: #fff;
-    }
   }
 }
 
 .user-icon > a {
   padding-left: 0.3rem;
   padding-right: 0.3rem;
-}
-
-.header .button.create-account {
-    margin-left: 16px;
-
-  > span {
-      font-size: 14px;
-      text-transform: capitalize;
-  }
 }

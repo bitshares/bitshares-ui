@@ -24,7 +24,8 @@
     "unlock": "잠금해제",
     "help": "도움말",
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
-    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
+    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
+    "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -688,6 +689,13 @@
     "not_connected": "연결안됨"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+        },
+    "your_account": "Your account",
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",

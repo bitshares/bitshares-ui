@@ -72,7 +72,7 @@ class MobileMenu extends React.Component {
                 </section>
 
                 <section style={{marginTop: "3rem"}} className="block-list">
-                  <header>Accounts</header>
+                  <header><Translate content="account.accounts" /></header>
                   <ul>
                       {accounts}
                   </ul>
@@ -83,7 +83,7 @@ class MobileMenu extends React.Component {
     }
 }
 
-export default connect(MobileMenu, {
+MobileMenu = connect(MobileMenu, {
     listenTo() {
         return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
     },
@@ -99,3 +99,38 @@ export default connect(MobileMenu, {
         };
     }
 });
+
+export default class WidthWrapper extends React.Component {
+
+    constructor() {
+        super();
+
+        let width = window && window.innerWidth;
+        this.state = {
+            visible: width <= 640
+        };
+
+        this._checkWidth = this._checkWidth.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener("resize", this._checkWidth, {capture: false, passive: true});
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this._checkWidth);
+    }
+
+    _checkWidth() {
+        let width = window && window.innerWidth;
+        let visible = width <= 640;
+        if (visible !== this.state.visible) {
+            this.setState({visible});
+        }
+    }
+
+    render() {
+        if (!this.state.visible) return null;
+        return <MobileMenu {...this.props} />;
+    }
+}

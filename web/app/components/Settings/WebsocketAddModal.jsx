@@ -64,12 +64,16 @@ class WebsocketAddModal extends React.Component {
             }
         });
 
+        /* Set default if removing currently active API server */
+        if (this.props.api === this.props.apis[removeIndex].url) {
+            SettingsActions.changeSetting.defer({
+                setting: "apiServer",
+                value: this.props.apis[0].url
+            });
+            this.props.changeConnection(this.props.apis[0].url);
+        }
+
         SettingsActions.removeWS(removeIndex);
-        SettingsActions.changeSetting.defer({
-            setting: "apiServer",
-            value: this.props.apis[0]
-        });
-        this.props.changeConnection(this.props.apis[0]);
         this.close();
     }
 

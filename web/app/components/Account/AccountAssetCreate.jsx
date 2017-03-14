@@ -68,7 +68,7 @@ class BitAssetOptions extends React.Component {
         let {error} = this.state;
 
         return (
-            <div>
+            <div className="small-12 grid-content">
                 <label><Translate content="account.user_issued_assets.feed_lifetime_sec" />
                     <input type="number" value={bitasset_opts.feed_lifetime_sec / 60} onChange={this.props.onUpdate.bind(this, "feed_lifetime_sec")}/>
                 </label>

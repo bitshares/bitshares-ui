@@ -6,13 +6,18 @@
 
 
 .icon > svg, span.icon {
-  width: 1.12rem;
-  height: 1.12rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .icon-14px > svg, span.icon-14px {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-32px > svg, span.icon-32px {
+  width: 32px;
+  height: 32px;
 }
 
 .icon-2x > svg, span.icon-2x {

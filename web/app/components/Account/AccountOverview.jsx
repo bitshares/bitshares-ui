@@ -22,8 +22,8 @@ import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
-import { fetchCoins, getBackedCoins } from "common/blockTradesMethods";
 import { Apis } from "bitsharesjs-ws";
+import GatewayActions from "actions/GatewayActions";
 
 class AccountOverview extends React.Component {
 
@@ -51,7 +51,7 @@ class AccountOverview extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.balanceAssets, this.props.balanceAssets) ||
-            !utils.are_equal_shallow(nextProps.openLedgerBackedCoins, this.props.openLedgerBackedCoins) ||
+            !utils.are_equal_shallow(nextProps.backedCoins, this.props.backedCoins) ||
             !utils.are_equal_shallow(nextProps.balances, this.props.balances) ||
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
@@ -149,7 +149,7 @@ class AccountOverview extends React.Component {
             const includeAsset = !hiddenAssets.includes(asset_type);
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
-            const canDepositWithdraw = !!this.props.openLedgerBackedCoins.find(a => a.symbol === asset.get("symbol"));
+            const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             let onOrders = hasOnOrder ? <FormattedAsset amount={orders[asset_type]} asset={asset_type} /> : null;
 
@@ -160,7 +160,7 @@ class AccountOverview extends React.Component {
                         <td style={{textAlign: "right"}}>
                             <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open", {asset: symbol})} style={{paddingTop: 8}}>{onOrders}</div>
                         </td>
-                        <td style={{textAlign: "right"}}>
+                        <td style={{textAlign: "right"}} className="column-hide-small">
                             <div className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.in_open_value", {asset: symbol})} style={{paddingTop: 8}}>
                                 <EquivalentValueComponent amount={orders[asset_type]} fromAsset={asset_type} noDecimals={true} toAsset={preferredUnit}/>
                             </div>
@@ -178,7 +178,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td style={{textAlign: "right"}} className="column-hide-small">
                         {hasBalance || hasOnOrder ? <BalanceValueComponent balance={balance} toAsset={preferredUnit}/> : null}
                     </td>
                     {showAssetPercent ? <td style={{textAlign: "right"}}>
@@ -222,7 +222,7 @@ class AccountOverview extends React.Component {
         if (optionalAssets) {
             optionalAssets.filter(asset => {
                 let isAvailable = false;
-                this.props.openLedgerBackedCoins.forEach(coin => {
+                this.props.backedCoins.get("OPEN", []).forEach(coin => {
                     if (coin && (coin.symbol === asset)) {
                         isAvailable = true;
                     }
@@ -354,15 +354,16 @@ class AccountOverview extends React.Component {
                 openOrders={orders}
                 debt={debt}
                 collateral={collateral}
+                label="account.estimate_value"
             /> : null;
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
         // Find the current Openledger coins
-        const currentDepositAsset = this.props.openLedgerBackedCoins.find(c => {
+        const currentDepositAsset = this.props.backedCoins.get("OPEN", []).find(c => {
             return c.symbol === this.state.depositAsset;
         }) || {};
-        const currentWithdrawAsset = this.props.openLedgerBackedCoins.find(c => {
+        const currentWithdrawAsset = this.props.backedCoins.get("OPEN", []).find(c => {
             return c.symbol === this.state.withdrawAsset;
         }) || {};
 
@@ -386,7 +387,7 @@ class AccountOverview extends React.Component {
                                     {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                     <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
                                     {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
-                                    <th style={{textAlign: "right"}}><Translate component="span" content="account.eq_value" /></th>
+                                    <th style={{textAlign: "right"}} className="column-hide-small"><Translate component="span" content="account.eq_value" /></th>
                                     {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                     <th style={{textAlign: "center"}}>
                                         <Translate content="account.transfer_actions" />
@@ -402,7 +403,7 @@ class AccountOverview extends React.Component {
                                 {totalBalanceList.size > 1 ?
                                 <tr className="tooltip" data-place="bottom" data-tip={counterpart.translate("account.total_estimate")} style={{backgroundColor: "transparent"}}>
                                     <td colSpan="2" style={{textAlign: "right", fontWeight: "bold", paddingTop: 20}}>
-                                        <span><Translate content="account.estimate_value" />: {totalBalance}</span>
+                                        <span>{totalBalance}</span>
                                     </td>
                                 </tr> : null}
                                 {showHidden ? hiddenBalances : null}
@@ -499,23 +500,9 @@ class BalanceWrapper extends React.Component {
         orders: Immutable.List()
     };
 
-    constructor() {
-        super();
-
-        this.state = {
-            openLedgerCoins: [],
-            openLedgerBackedCoins: []
-        };
-    }
-
     componentWillMount() {
         if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
-            fetchCoins().then(result => {
-                this.setState({
-                    openLedgerCoins: result,
-                    openLedgerBackedCoins: getBackedCoins({allCoins: result, backer: "OPEN"})
-                });
-            });
+            GatewayActions.fetchCoins();
         }
     }
 

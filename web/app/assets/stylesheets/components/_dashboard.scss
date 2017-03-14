@@ -1,5 +1,26 @@
+div.fm-outer-container {
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
+    margin-bottom: 20px;
+}
+
+@include breakpoint(large) {
+    div.fm-container {
+        > div:first-child() {
+            padding-right: 15px;
+        }
+
+        > div:last-child() {
+            padding-right: 15px;
+        }
+    }
+}
+
 div.fm-container {
-    padding: 0.5rem;
+    border: 1px solid $border-color;
+    border-top: none;
+    border-left: none;
+    padding: 1rem 0.5rem;
     min-width: 13rem;
    &:hover {
     background-color: #D8D8D8;
@@ -12,14 +33,17 @@ div.fm-container {
 
    .fm-name {
     font-weight: bold;
+    padding-bottom: 10px;
    }
 
    .fm-volume {
-    padding-top: 8px;
+    font-variant: small-caps;
+    padding-top: 6px;
    }
 
    .fm-change {
-    padding-top: 4px;
+    font-variant: small-caps;
+    padding-top: 6px;
    }
 }
 
@@ -28,19 +52,17 @@ div.fm-container {
 
     > p:nth-of-type(2) {
         padding-bottom: 1.25rem;
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid $border-color;
     }
 }
 
 .SimpleTrade__modal {
     overflow: auto;
     .Modal__header {
-        background-color: #484848;
         padding: 20px 2rem;
     }
     .Modal__divider {
         margin: 0px;
-        border-bottom: 2px solid #020202;
     }
     .SimpleTrade__hide-zero {
         position: relative;
@@ -49,10 +71,6 @@ div.fm-container {
     }
     .SimpleTrade__withdraw-row {
         padding: 10px 0;
-
-        &.button-group {
-            color: red;
-        }
     }
 }
 
@@ -86,17 +104,20 @@ div.fm-container {
 
 #simple_transfer_modal,
 #simple_deposit_modal,
+#simple_deposit_modal_ask,
 #simple_withdraw_modal {
     padding: 0;
 }
 
 #simple_deposit_modal,
+#simple_deposit_modal_ask,
 #simple_withdraw_modal {
     overflow: auto !important;
     max-width: 500px;
 }
 
 #simple_deposit_modal label,
+#simple_deposit_modal_ask label,
 #simple_withdraw_modal label {
     text-transform: none !important;
 }
