@@ -8,4 +8,4 @@
 
 ### Внесение депозита или снятие койнов
 
-If you want to deposit or withdraw funds, either in fiat or from other blockchains, you may use a [bridge](introduction/bridges_gateways) or [gateway](introduction/bridges_gateways) service to do so.
+Если Вы хотите внести депозит или снять средства, в фиате или из других блокчейнов, Вы можете воспользоваться для этого сервисами [моста](introduction/bridges_gateways) или [шлюза](introduction/bridges_gateways).
