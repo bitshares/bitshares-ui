@@ -215,7 +215,7 @@ class Header extends React.Component {
         createAccountLink :
         tradingAccounts.length === 1 ?
         (<ActionSheet.Button title="" setActiveState={() => {}}>
-            <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{padding: "1rem", border: "none"}} className="button">
+            <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
                 <Icon className="icon-14px" name="user"/> {account_display_name}
             </a>
         </ActionSheet.Button>) :
