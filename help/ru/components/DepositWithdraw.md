@@ -2,10 +2,10 @@
 
 ### Получение BTS
 
-Для того, чтобы получить BTS от другого лица или биржи, просто сообщите им имя Вашего аккаунта: **{account}**
+In order to receive BTS from another person or from an exchange, simply give them your account name:
 
 [# deposit-short]
 
 ### Внесение депозита или снятие койнов
 
-Если Вы хотите внести депозит или снять средства, в фиате ли или из других блокчейнов, Вы можете воспользоваться для этого сервисами [моста](introduction/bridges_gateways) или [шлюза](introduction/bridges_gateways). Вы найдете подборку поставщиков данных сервисов во вкладках ниже. Начните с выбора поставщика, а затем выберите сервис: мост, шлюз (или фиат, там где это доступно).
+If you want to deposit or withdraw funds, either in fiat or from other blockchains, you may use a [bridge](introduction/bridges_gateways) or [gateway](introduction/bridges_gateways) service to do so.
