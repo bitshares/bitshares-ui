@@ -99,6 +99,7 @@
     "estimate_value":"Текущая стоимость аккаунта",
     "polo_scam":"Этот аккаунт не является реальным аккаунтом Poloniex, пожалуйста, отправьте на этот аккаунт: poloniexwallet.",
     "bittrex_scam":"Этот аккаунт не является реальным аккаунтом Bittrex, пожалуйста, отправьте на этот аккаунт: bittrex-deposit.",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
     "whitelist":{
       "title":"Белый список",
       "black":"Черный список",

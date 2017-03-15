@@ -153,7 +153,8 @@
       "unknown": "Compte inconnu",
       "not_yours": "Pas votre compte"
     },
-    "settle": "Settle"
+    "settle": "Settle",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "transfer": {
     "from": "De",

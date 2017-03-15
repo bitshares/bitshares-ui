@@ -270,7 +270,8 @@
     "propose_from": "Vorschlagen von",
     "settle": "Settle",
     "no_orders": "Keine offenen Order",
-    "asset_details": "Asset Details"
+    "asset_details": "Asset Details",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "pagination": {
     "newer": "Jüngere",

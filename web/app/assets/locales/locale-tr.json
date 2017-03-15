@@ -276,6 +276,7 @@
     "percent": "Toplam arzın yüzdesi",
     "please_create_account": "Lütfen bir hesap oluşturun",
     "polo_scam": "Bu hesap Poloniex'e ait değildir. Lütfen alıcıyı poloniexwallet olarak değiştirin.",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
     "create_account": "Hesap oluştur",
     "create_new": "Yeni Hesap Oluştur",
     "identicon": "Hesap logosu",
