@@ -1133,7 +1133,8 @@
           background-color: transparent !important;
       }
       > option {
-          background-color: white !important;
+          color: $primary-text-color;
+          background-color: $panel-bg-color !important;
       }
         &:hover, &:focus {
           color: $primary-text-color;
