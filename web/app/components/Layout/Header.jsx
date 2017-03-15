@@ -243,7 +243,7 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon className="icon-32px" name="menu"/></a></li>
                     </ul>
                 </div>
-                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink">
+                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
                     <ul className="menu-bar">
                         <li>
                             <div style={{marginLeft: "1rem", height: "3rem"}}>

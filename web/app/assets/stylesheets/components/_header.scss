@@ -13,6 +13,9 @@
 }
 
 .header {
+    .electron-navigation > ul > li {
+        border: none;
+    }
     &.primary {
         border-bottom: 1px solid $border-color;
     }
