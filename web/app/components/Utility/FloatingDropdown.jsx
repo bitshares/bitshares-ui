@@ -6,10 +6,10 @@ class Dropdown extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            active: false,
-            listener: false
+            active: false
         };
 
+        this.listener = false;
         this.onBodyClick = this.onBodyClick.bind(this);
     }
 
@@ -25,19 +25,28 @@ class Dropdown extends React.Component {
         );
     }
 
-    _setListener(props = this.props, state = this.state) {
-        if(props.entries.length > 1 && !state.listener) {
+    _setListener(props = this.props) {
+        if(props.entries.length > 1 && !this.listener) {
+            this.listener = true;
             document.body.addEventListener("click", this.onBodyClick, {capture: false, passive: true});
-            this.setState({listener: true});
         }
     }
 
+    _removeListener() {
+        document.body.removeEventListener("click", this.onBodyClick);
+        this.listener = false;
+    }
+
     componentWillReceiveProps(np) {
-        this._setListener(np);
+        if (np.entries.length === 1) {
+            this._removeListener();
+        } else if (np.entries.length > 1) {
+            this._setListener(np);
+        }
     }
 
     componentWillUnmount() {
-        document.body.removeEventListener("click", this.onBodyClick);
+        this._removeListener();
     }
 
     onBodyClick(e) {
@@ -53,6 +62,8 @@ class Dropdown extends React.Component {
 
         if(!insideActionSheet) {
             this.setState({active: false});
+        } else {
+            e.stopPropagation();
         }
     }
 
@@ -90,7 +101,7 @@ class Dropdown extends React.Component {
             return (
                 <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")}>
                     <div style={{paddingRight: 15}}>{value ? value : <span className="hidden">A</span>}</div>
-                    <ul className="dropdown">
+                    <ul className="dropdown" style={{overflow: entries.length > 9 ? "auto": "hidden"}}>
                         {options}
                     </ul>
                 </div>

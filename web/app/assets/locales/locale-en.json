@@ -1145,7 +1145,7 @@
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
-    "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
+    "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
     "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
     "transwiser": {
