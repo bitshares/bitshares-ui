@@ -167,7 +167,7 @@ class Header extends React.Component {
         );
 
         let createAccountLink = myAccountCount === 0 ? (
-            <ActionSheet.Button title="">
+            <ActionSheet.Button title="" setActiveState={() => {}}>
                 <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")} style={{padding: "1rem", border: "none"}} >
                     <Icon className="icon-14px" name="user"/> <Translate content="header.create_account" />
                 </a>

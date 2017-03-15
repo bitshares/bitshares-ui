@@ -203,7 +203,8 @@ class WithdrawModalBlocktrades extends React.Component {
     onAccountBalance() {
         if (Object.keys(this.props.account.get("balances").toJS()).includes(this.props.asset.get("id")) ) {
             this.setState({
-                withdraw_amount: this.props.balance.get("balance") / utils.get_asset_precision(this.props.asset.get("precision"))
+                withdraw_amount: this.props.balance.get("balance") / utils.get_asset_precision(this.props.asset.get("precision")),
+                empty_withdraw_value: false
             });
         }
     }
