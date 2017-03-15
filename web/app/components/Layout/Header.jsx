@@ -129,7 +129,6 @@ class Header extends React.Component {
     render() {
         let {active} = this.state;
         let {currentAccount, starredAccounts} = this.props;
-        let settings = counterpart.translate("header.settings");
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
@@ -234,6 +233,33 @@ class Header extends React.Component {
             </ActionSheet.Content> : null}
         </ActionSheet>);
 
+        let settingsDropdown = <ActionSheet>
+            <ActionSheet.Button title="">
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <Icon className="icon-14px" name="cog"/>
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    <li>
+                        <a href onClick={this._onNavigate.bind(this, "/settings")}>
+                            <span><Translate content="header.settings" /></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href onClick={this._onNavigate.bind(this, "/explorer")}>
+                            <span><Translate content="header.explorer" /></span>
+                        </a>
+                    <li>
+                    </li>
+                        <a href onClick={this._onNavigate.bind(this, "/help")}>
+                            <span><Translate content="header.help" /></span>
+                        </a>
+                    </li>
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         return (
@@ -269,40 +295,19 @@ class Header extends React.Component {
                 </div>
                 <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
+
                         {!myAccountCount || !walletBalance ? null : walletBalance}
+
+                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>}
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-                        <div className="grp-menu-item" >
-                            <ActionSheet>
-                                <ActionSheet.Button title="">
-                                    <a style={{padding: "1rem", border: "none"}} className="button">
-                                        <Icon className="icon-14px" name="cog"/>
-                                    </a>
-                                </ActionSheet.Button>
-                                <ActionSheet.Content>
-                                    <ul className="no-first-element-top-border">
-                                        <li>
-                                            <a href onClick={this._onNavigate.bind(this, "/settings")}>
-                                                <span><Translate content="header.settings" /></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href onClick={this._onNavigate.bind(this, "/explorer")}>
-                                                <span><Translate content="header.explorer" /></span>
-                                            </a>
-                                        <li>
-                                        </li>
-                                            <a href onClick={this._onNavigate.bind(this, "/help")}>
-                                                <span><Translate content="header.help" /></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </ActionSheet.Content>
-                            </ActionSheet>
-                            {/* <Link className={cnames({active: active.indexOf("settings") !== -1})} style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link> */}
-                        </div>
+                        {!myAccountCount ? null :<div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>}
                         {lock_unlock}
                     </div>
                 </div>
