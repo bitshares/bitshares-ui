@@ -22,6 +22,7 @@ class BlockTradesDepositAddressCache {
     getCachedInputAddress(exchange_name, account_name, input_coin_type, output_coin_type)
     {
         let wallet = WalletDb.getWallet();
+        if (!wallet) return null;
         wallet.deposit_keys = wallet.deposit_keys || {};
         wallet.deposit_keys[exchange_name] = wallet.deposit_keys[exchange_name] || {};
         let index = this.getIndexForDepositKeyInExchange(account_name, input_coin_type, output_coin_type);
@@ -36,6 +37,7 @@ class BlockTradesDepositAddressCache {
     cacheInputAddress(exchange_name, account_name, input_coin_type, output_coin_type, address, memo)
     {
         let wallet = WalletDb.getWallet();
+        if (!wallet) return null;
         wallet.deposit_keys = wallet.deposit_keys || {};
         wallet.deposit_keys[exchange_name] = wallet.deposit_keys[exchange_name] || {};
         let index = this.getIndexForDepositKeyInExchange(account_name, input_coin_type, output_coin_type);
