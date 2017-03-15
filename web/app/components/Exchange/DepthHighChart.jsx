@@ -239,6 +239,9 @@ class DepthHighChart extends React.Component {
 		} else if (flatBids.length && !flatAsks.length) {
 			config.xAxis.min = flatBids[flatBids.length - 1][0] * 0.4;
 			config.xAxis.max = flatBids[flatBids.length - 1][0] * 1.6;
+		} else if (flatAsks.length && !flatBids.length) {
+			config.xAxis.min = 0;
+			config.xAxis.max = flatAsks[0][0] * 2;
 		}
 
 		if (this.props.hasPrediction) {
