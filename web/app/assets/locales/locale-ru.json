@@ -1016,9 +1016,9 @@
     "tips_login":"ВАЖНО: здесь отсутствует функциональная возможность Войти/Выйти. Для того, чтобы совершить операцию, просто разблокируйте свой кошелек.",
     "import_key_success":"Успешно импортированы %(count)s ключей",
     "brainkey_seq_reset":"Сбросить brainkey последовательность",
-    "brainkey_seq_reset_text":"Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a refresh of the private keys in the wallet.",
-    "brainkey_seq_reset_button":"Reset now",
-    "brainkey_reset_success":"Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet."
+    "brainkey_seq_reset_text":"Используйте это для сброса счетчика последовательности, используемого для извлечения приватных ключей из brainkey кошелька.<br />Это может быть использовано для принудительного обновления приватных ключей в кошельке.",
+    "brainkey_seq_reset_button":"Сбросить сейчас",
+    "brainkey_reset_success":"Последовательность сброшена. Чтобы запустить обновление Ваших привантых ключей, перезапустите Ваш браузер, после чего разблокируйте кошелек."
   },
   "borrow":{
     "title":"%(asset_symbol)s маржа",
