@@ -733,7 +733,7 @@
   }
 
   // Block List (section)
-  section input[type="text"], section input[type="password"] {
+  section.block-list input[type="text"], section.block-list input[type="password"] {
     border-bottom: 1px solid $panel-bg-color;
     background-color: transparent;
     color: $primary-text-color;
@@ -1167,6 +1167,23 @@
         &::after {
             border: none;
             background-color: lighten($positive-color, 5%);
+        }
+    }
+
+    div.Account_create {
+        button.submit-button, div.backup-submit .button {
+            background-color: $warning-color;
+        }
+
+        label > a {
+            color: $secondary-text-color;
+        }
+    }
+
+    div.ok-indicator {
+        color: $secondary-text-color;
+        &.success {
+            color: $success-color;
         }
     }
 }

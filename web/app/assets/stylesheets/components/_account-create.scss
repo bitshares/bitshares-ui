@@ -1,0 +1,16 @@
+div.Account_create {
+    button.submit-button, div.backup-submit .button {
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+
+    div.divider {
+        margin: 20px 0;
+        border-bottom: 1px solid $border-color;
+        max-width: 30rem;
+    }
+
+    label > a {
+        text-decoration: underline;
+    }
+}

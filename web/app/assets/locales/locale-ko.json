@@ -624,7 +624,7 @@
     "verify": "확인",
     "invalid_format": "잘못된 포맷",
     "enter_password": "비밀번호를 입력하세요",
-    "downoad": "다운로드",
+    "download": "다운로드",
     "new_wallet_name": "새 지갑 이름",
     "wallet_exist": "지갑이 이미 존재합니다. 새로운 이름을 선택하세요",
     "wallet_exist_with_name": "(%(name)s) 지갑이 이미 존재합니다. 다른 이름을 선택하세요",

@@ -912,7 +912,7 @@
     "verify": "Doğrula",
     "invalid_format": "Geçersiz format",
     "enter_password": "Şifrenizi girin",
-    "downoad": "İndir",
+    "download": "İndir",
     "new_wallet_name": "Yeni Cüzdan Adı",
     "wallet_exist": "Zaten mevcut , yeni bir ad seçin",
     "wallet_exist_with_name": "%(name)s adında bir cüzdan zaten mevcut, lütfen adını değiştirin",

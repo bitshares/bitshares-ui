@@ -619,7 +619,7 @@
     "verify": "Verificar",
     "invalid_format": "Formato no Válido",
     "enter_password": "Ingresar Password",
-    "downoad": "Descargar",
+    "download": "Descargar",
     "new_wallet_name": "Nuevo nombre de Billetera",
     "wallet_exist": "Esta Billetera ya existe, elija un nuevo nombre",
     "wallet_exist_with_name": "La Billetera (%(name)s) ya existe,  por favor elija otro nombre",

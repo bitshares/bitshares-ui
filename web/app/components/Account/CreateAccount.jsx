@@ -174,7 +174,7 @@ class CreateAccount extends React.Component {
             }
         }
 
-        let buttonClass = classNames("button no-margin", {disabled: (!valid || (registrar_account && !isLTM))});
+        let buttonClass = classNames("submit-button button no-margin", {disabled: (!valid || (registrar_account && !isLTM))});
 
         return (
             <form
@@ -182,9 +182,10 @@ class CreateAccount extends React.Component {
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
             >
+                <p style={{fontWeight: "bold"}}>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</p>
                 <AccountNameInput
                     ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
-                    cheapNameOnly={firstAccount}
+                    cheapNameOnly={!!firstAccount}
                     onChange={this.onAccountNameChange.bind(this)}
                     accountShouldNotExist={true}
                     placeholder="Account Name (Public)"
@@ -194,7 +195,6 @@ class CreateAccount extends React.Component {
                 {/* Only ask for password if a wallet already exists */}
                 {hasWallet ?
                     null :
-
                         <PasswordInput
                             ref="password"
                             confirmation={true}
@@ -217,18 +217,20 @@ class CreateAccount extends React.Component {
                     </div>)
                 }
 
+                <div className="divider" />
+
                 {/* Submit button */}
                 {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
 
                 {/* Backup restore option */}
                 <div style={{paddingTop: 40}}>
-                    <label style={{textTransform: "none"}}>
+                    <label>
                         <Link to="/existing-account">
                             <Translate content="wallet.restore" />
                         </Link>
                     </label>
 
-                    <label style={{textTransform: "none"}}>
+                    <label>
                         <Link to="/create-wallet-brainkey">
                             <Translate content="settings.backup_brainkey" />
                         </Link>
@@ -237,7 +239,7 @@ class CreateAccount extends React.Component {
 
                 {/* Skip to step 3 */}
                 {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
-                    <label style={{textTransform: "none"}}>
+                    <label>
                         <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
                     </label>
                 </div>}
@@ -252,13 +254,15 @@ class CreateAccount extends React.Component {
 
         return (
             <div>
-                <p style={{fontWeight: "bold"}}><Translate content="wallet.wallet_browser" /></p>
+                <h4 style={{fontWeight: "bold", paddingBottom: 15}}><Translate content="wallet.wallet_browser" /></h4>
 
                 <p>{!hasWallet ? <Translate content="wallet.has_wallet" /> : null}</p>
 
                 <Translate style={{textAlign: "left"}} component="p" content="wallet.create_account_text" />
 
-                {firstAccount ? <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> : null}
+                {firstAccount ?
+                    <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> :
+                    <Translate style={{textAlign: "left"}} component="p" content="wallet.not_first_account" />}
 
                 {/* {this.state.hide_refcode ? null :
                     <div>
@@ -272,7 +276,9 @@ class CreateAccount extends React.Component {
 
     _renderBackup() {
         return (
-            <div>
+            <div className="backup-submit">
+                <p><Translate unsafe content="wallet.wallet_crucial" /></p>
+                <div className="divider" />
                 <BackupCreate noText downloadCb={this._onBackupDownload}/>
             </div>
         );
@@ -288,9 +294,8 @@ class CreateAccount extends React.Component {
         return (
             <div>
                 <p style={{fontWeight: "bold"}}><Translate content="footer.backup" /></p>
-                <p><Translate content="wallet.wallet_crucial" /></p>
-                <p><Translate content="wallet.wallet_move" /></p>
-                <p><Translate content="wallet.wallet_lose_warning" /></p>
+                <p><Translate content="wallet.wallet_move" unsafe /></p>
+                <p className="txtlabel warning"><Translate unsafe content="wallet.wallet_lose_warning" /></p>
             </div>
         );
     }
@@ -345,7 +350,7 @@ class CreateAccount extends React.Component {
 
                 <p><Translate content="wallet.tips_header" /></p>
 
-                <p style={{fontWeight: "bold"}}><Translate content="wallet.tips_login" /></p>
+                <p className="txtlabel warning"><Translate content="wallet.tips_login" /></p>
             </div>
         );
     }
@@ -353,40 +358,37 @@ class CreateAccount extends React.Component {
     render() {
         let {step} = this.state;
 
-        let my_accounts = AccountStore.getMyAccounts();
-        let firstAccount = my_accounts.length === 0;
-
+        // let my_accounts = AccountStore.getMyAccounts();
+        // let firstAccount = my_accounts.length === 0;
         return (
-            <div className="grid-block vertical page-layout">
-                <div className="grid-container shrink">
-                    <div style={{textAlign: "center", paddingTop: 20}}>
+            <div className="grid-block vertical page-layout Account_create">
+                <div className="grid-block shrink small-12 medium-10 medium-offset-2">
+                    <div className="grid-content" style={{paddingTop: 20}}>
                         <Translate content="wallet.wallet_new" component="h2" />
-
-                        <h4 style={{paddingTop: 20}}>
+                        {/* <h4 style={{paddingTop: 20}}>
                             {step === 1 ?
                                 <span>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</span> :
                             step === 2 ? <Translate content="wallet.create_success" /> :
                             <Translate content="wallet.all_set" />
-                        }
-                        </h4>
+                            }
+                        </h4> */}
                     </div>
                 </div>
-                <div className="grid-block main-content wrap" style={{marginTop: "2rem"}}>
-                    <div className="grid-content small-12 medium-6" style={{paddingLeft: "15%"}}>
-                        <p style={{fontWeight: "bold"}}>
+                <div className="grid-block wrap">
+                    <div className="grid-content small-12 medium-4 medium-offset-2">
+                        {step !== 1 ? <p style={{fontWeight: "bold"}}>
                             <Translate content={"wallet.step_" + step} />
-                        </p>
+                        </p> : null}
 
                         {step === 1 ? this._renderAccountCreateForm() : step === 2 ? this._renderBackup() :
                             this._renderGetStarted()
                         }
                     </div>
 
-                    <div className="grid-content small-12 medium-6" style={{paddingRight: "15%"}}>
+                    <div className="grid-content small-12 medium-4 medium-offset-1">
                         {step === 1 ? this._renderAccountCreateText() : step === 2 ? this._renderBackupText() :
                             this._renderGetStartedText()
                         }
-
                     </div>
                 </div>
             </div>

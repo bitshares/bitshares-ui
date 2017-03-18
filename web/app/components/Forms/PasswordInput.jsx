@@ -1,6 +1,6 @@
 import React from "react";
 import {PropTypes, Component} from "react";
-import classNames from "classnames";
+import cname from "classnames";
 import Translate from "react-translate-component";
 
 class PasswordInput extends Component {
@@ -69,20 +69,26 @@ class PasswordInput extends Component {
 
     render() {
         let password_error = null, confirmation_error = null;
-        if(this.state.wrong || this.props.wrongPassword) password_error = <div>Incorrect password</div>;
+        if(this.state.wrong || this.props.wrongPassword) password_error = <div><Translate content="wallet.pass_incorrect" /></div>;
         else if(this.state.error) password_error = <div>{this.state.error}</div>;
         if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < 8))
             password_error = "Password must be 8 characters or more";
-        if(this.state.doesnt_match) confirmation_error = <div>Confirmation doesn't match Password</div>;
-        let password_class_name = classNames("form-group", {"has-error": password_error});
-        let password_confirmation_class_name = classNames("form-group", {"has-error": this.state.doesnt_match});
-        let {noLabel} = this.props;
+        if(this.state.doesnt_match) confirmation_error = <div><Translate content="wallet.confirm_error" /></div>;
+        let password_class_name = cname("form-group", {"has-error": password_error});
+        let password_confirmation_class_name = cname("form-group", {"has-error": this.state.doesnt_match});
+        // let {noLabel} = this.props;
+
+        let confirmMatch = false;
+        if (this.refs.confirm_password && this.refs.confirm_password.value && !this.state.doesnt_match) {
+            confirmMatch = true;
+        }
 
         return (
-            <div>
+            <div className="account-selector">
                 <div className={password_class_name}>
-                    {noLabel ? null : <Translate component="label" content="wallet.password" />}
+                    {/* {noLabel ? null : <Translate component="label" content="wallet.password" />} */}
                     <section>
+                        <label className="left-label"><Translate content="wallet.enter_password" /></label>
                         <input
                             name="password"
                             type="password"
@@ -90,23 +96,23 @@ class PasswordInput extends Component {
                             autoComplete="off"
                             onChange={this.handleChange}
                             onKeyDown={this.onKeyDown}
-                            placeholder="Enter password"
                         />
                     </section>
                     {password_error}
                 </div>
                 { this.props.confirmation ?
                 <div className={password_confirmation_class_name}>
-                    {noLabel ? null : <Translate component="label" content="wallet.confirm" />}
-                    <section>
+                    {/* {noLabel ? null : <Translate component="label" content="wallet.confirm" />} */}
+                    <label className="left-label"><Translate content="wallet.confirm_password" /></label>
+                    <section style={{position: "relative", maxWidth: "30rem"}}>
                         <input
                             name="confirm_password"
                             type="password"
                             ref="confirm_password"
                             autoComplete="off"
-                            placeholder="Confirm password"
                             onChange={this.handleChange}
                         />
+                        {confirmMatch ? <div className={"ok-indicator success"}>OK</div> : null}
                     </section>
                     {confirmation_error}
                 </div> : null}
