@@ -307,15 +307,15 @@
     "warn_name_unable_read_memo": "Uyarı: %(name)s bu memoyu okuyamayacaktır",
     "fee": "Ücret",
     "send": "Gönder",
-    "final": "Son bakiye",
+    "final": "Kalan bakiye",
     "balances": "Bakiyeler",
     "available": "Bakiye",
     "errors": {
       "req": "Mecburi alan",
-      "pos": "Miktar pozitif olmak zorunda",
-      "valid": "Lütfen geçerli bir pozitif numara giriniz",
-      "balance": "Sonuç bakiye 0'dan büyük olmalıdır",
-      "insufficient": "Yetersiz Bakiye"
+      "pos": "Miktar pozitif olmak zorundadır.",
+      "valid": "Lütfen geçerli bir değer giriniz.",
+      "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
+      "insufficient": "Yetersiz bakiye"
     },
     "back": "GERİ",
     "confirm": "ONAYLA",
@@ -706,8 +706,8 @@
     "accounts": "Hesaplar",
     "no_accounts": "Bu cüzdanda hiçbir hesap bulunmuyor.",
     "password": "Şifre",
-    "backup": "Backup",
-    "restore": "Yedekle/Kurtar",
+    "backup": "Yedekle",
+    "restore": "Cüzdan kurtarma",
     "access": "Erişim",
     "general_text": "Genel ayarlar",
     "wallet_text": "Cüzdan detayları",
@@ -722,6 +722,7 @@
     "backup_backup": ".bin dosyasında yedekli cüzdanı aktar.",
     "backup_key": "Özel anahtar aktar",
     "backup_legacy": "BTS 0.9.3c .json dosyası ile cüzdan kurtar",
+    "backupcreate_backup": "Cüzdanı yedekle",
     "backup_brainkey": "TekAnahtar yedeği ile cüzdan oluştur",
     "backupcreate_brainkey": "TekAnahtar yedeği oluştur",
     "restore_brainkey_text": "TekAnahtarına sahip olduğunuz eski cüzdanınızı buraya aktarmak için şifrenizi ve TekAnahtarınızı aşağıdaki alana girin.",
@@ -941,7 +942,7 @@
     "custom_brainkey": "Kişiye Özel TekAnahtar (gelişmiş)",
     "last_backup": "Son yedekleme",
     "never_backed_up": "Bu cüzdan hiç yedeklenmedi.",
-    "need_backup": "KURALLAR",
+    "need_backup": "Lütfen cüzdanınızı yedekleyin!",
     "noneed_backup": "Cüzdanınız daha önceden yedeklenmiş görünüyor."
   },
   "borrow": {
@@ -1013,6 +1014,12 @@
     "fee_paying_account": "Ücreti ödeyen hesap"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+        "trade": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+        "bit": "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
+        "bitcny": "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Transwiser tarafından yürütülmektedir. Daha fazla bilgi için: https://www.transwiser.com/"
+    },
     "bitkapital_receive": "Vermiş olduğunuz banka hesabınıza yatacak miktar",
     "bitkapital_text": "Lütfen yatırmak ya da çekmek istediğiniz enstrümanı seçin.",
     "bitkapital_withdraw": "Satılan miktar",
@@ -1031,9 +1038,9 @@
     "inventory": "Envanter",
     "scan_qr": "Karekod Tara",
     "calc": "Hesaplanıyor...",
-    "choose_deposit": "Lütfen yatırmak istediğiniz koin türünü seçin",
-    "choose_withdraw": "Lütfen çekmek istediğiniz koin türünü seçin",
-    "asset_to_deposit": "Yatırılacak dijital varlık türü:",
+    "choose_deposit": "Lütfen yatırmak istediğiniz dijital varlığı seçin",
+    "choose_withdraw": "Lütfen çekmek istediğiniz dijital varlığı seçin",
+    "asset_to_deposit": "Yatırılacak dijital varlık:",
     "asset_to_receive": "Alacağınız:",
     "receive_account": "Alacak hesap:",
     "deposit_summary": "İşlem özeti",
@@ -1067,7 +1074,7 @@
     }
   },
   "chat": {
-    "title": "Trol Kanalı",
+    "title": "Sohbet Kanalı",
     "button": "Sohbet",
     "send": "Gönder",
     "color": "Kullanıcı rengi",
