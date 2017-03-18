@@ -1099,6 +1099,7 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "title": "Deposit & Withdraw",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",

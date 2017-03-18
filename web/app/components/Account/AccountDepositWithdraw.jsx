@@ -269,7 +269,7 @@ class AccountDepositWithdraw extends React.Component {
             <div className={this.props.contained ? "grid-content" : "grid-container"}>
                 <div className={this.props.contained ? "" : "grid-content"} style={{paddingTop: "2rem"}}>
 
-                    <h2>Deposit & Withdraw</h2>
+                    <Translate content="gateway.title" component="h2" />
                     <div className="grid-block vertical medium-horizontal no-margin no-padding">
                         <div className="medium-6 show-for-medium">
                             <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
