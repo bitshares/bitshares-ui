@@ -440,7 +440,8 @@
     "reject": "Reject",
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
-    "asset_reserve": "Reserve (burn) {amount} using {account}"
+    "asset_reserve": "Reserve (burn) {amount} using {account}",
+    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
