@@ -990,7 +990,6 @@ class MarketsStore {
             let base = new Asset({amount: last[invert ? "close_quote" : "close_base"], asset_id: last.key[invert ? "quote" : "base"], precision: baseAsset.get("precision")});
             let quote = new Asset({amount: last[!invert ? "close_quote" : "close_base"], asset_id: last.key[!invert ? "quote" : "base"], precision: quoteAsset.get("precision")});
             price = new Price({base, quote});
-            // console.log(quoteAsset.get("symbol"), baseAsset.get("symbol"), "last:", last, "price:", price.toReal(), "flipped:", flipped);
         }
 
         let close = last.close_base && last.close_quote ? {
@@ -1003,14 +1002,25 @@ class MarketsStore {
                 asset_id: invert ? last.key.base : last.key.quote
             }
         } : null;
-        volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
         let volumeBaseAsset = new Asset({amount: volumeBase, asset_id: baseAsset.get("id"), precision: baseAsset.get("precision")});
-        volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
         let volumeQuoteAsset = new Asset({amount: volumeQuote, asset_id: quoteAsset.get("id"), precision: quoteAsset.get("precision")});
-        if (!Math.floor(volumeBase * 100)) {
+        volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
+        volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
+
+        let coreVolume = volumeBaseAsset.asset_id === "1.3.0" ? volumeBaseAsset.getAmount({real: true}) :
+            volumeQuoteAsset.asset_id === "1.3.0" ? volumeQuoteAsset.getAmount({real: true}) : null;
+        let usdVolume = !!coreVolume ? null : volumeBaseAsset.asset_id === "1.3.121" ? volumeBaseAsset.getAmount({real: true}) :
+            volumeQuoteAsset.asset_id === "1.3.121" ? volumeQuoteAsset.getAmount({real: true}) : null;
+        let btcVolume = (!!coreVolume || !!usdVolume) ? null : (volumeBaseAsset.asset_id === "1.3.861" || volumeBaseAsset.asset_id === "1.3.103") ? volumeBaseAsset.getAmount({real: true}) :
+                (volumeQuoteAsset.asset_id === "1.3.861" || volumeQuoteAsset.asset_id === "1.3.103") ? volumeQuoteAsset.getAmount({real: true}) : null;
+
+        if ((coreVolume && coreVolume <= 40000) || (usdVolume && usdVolume < 200) || (btcVolume && btcVolume < 0.2) || !Math.floor(volumeBase * 100)) {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
         } else {
             this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
+            /* Clear both market directions from the list */
+            let invertedMarket = market.split("_");
+            this.lowVolumeMarkets = this.lowVolumeMarkets.delete(invertedMarket[1] + "_" + invertedMarket[0]);
         }
         marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
 

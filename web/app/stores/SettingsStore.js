@@ -143,7 +143,7 @@ class SettingsStore {
                 markets_4018d784: [ // BTS MAIN NET
                     "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK", "BKT",
                     "OPEN.STEEM", "OPEN.GAME", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
-                    "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY",
+                    "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
                     "OPEN.INCNT", "KAPITAL"
                 ],
