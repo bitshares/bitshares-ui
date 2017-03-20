@@ -1260,7 +1260,7 @@ class Exchange extends React.Component {
                                 current={`${quoteSymbol}_${baseSymbol}`}
                             />
                         </div>
-                        {/* <div className="grid-block no-padding no-margin vertical shrink">
+                        <div style={{padding: "0 0 40px 0"}} className="grid-block no-margin vertical shrink">
                             <DepthHighChart
                                     marketReady={marketReady}
                                     orders={marketLimitOrders}
@@ -1286,7 +1286,7 @@ class Exchange extends React.Component {
                                     noText={true}
                                     theme={this.props.settings.get("themes")}
                                 />
-                        </div> */}
+                        </div>
                     </div>
 
                     {!isNullAccount && quoteIsBitAsset  ?
