@@ -43,7 +43,8 @@ class AccountOverview extends React.Component {
                 "OPEN.USDT",
                 "OPEN.ETH",
                 "OPEN.MAID",
-                "OPEN.STEEM"
+                "OPEN.STEEM",
+                "OPEN.DASH"
             ]
         };
     }
