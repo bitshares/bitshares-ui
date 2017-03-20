@@ -1015,7 +1015,7 @@ class MarketsStore {
                 (volumeQuoteAsset.asset_id === "1.3.861" || volumeQuoteAsset.asset_id === "1.3.103") ? volumeQuoteAsset.getAmount({real: true}) : null;
 
         if (market) {
-            if ((coreVolume && coreVolume <= 40000) || (usdVolume && usdVolume < 200) || (btcVolume && btcVolume < 0.2) || !Math.floor(volumeBase * 100)) {
+            if ((coreVolume && coreVolume <= 25000) || (usdVolume && usdVolume < 200) || (btcVolume && btcVolume < 0.2) || !Math.floor(volumeBase * 100)) {
                 this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
             } else {
                 this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
