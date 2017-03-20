@@ -830,7 +830,7 @@
     "account_create_wallet_text": "Bu şifre yeni bir Bitshares cüzdanı oluşturmak için kullanılacak ve tarayıcınızda saklanacaktır. Cüzdanınızı yedeklerseniz, bu şifre ile birlikte başka bilgisayarlardan ve tarayıcılardan cüzdanınıza ulaşabilirsiniz.",
     "all_set": "İşleminiz başarıyla tamamlandı!",
     "backup_explain": "Aşağıdaki butona tıkladığınızda .bin uzantılı bir yedekleme dosyası oluşturulacaktır. Bu dosya, cüzdan şifreniz ile şifrelenmiştir, ve kendi şifreniz ile birlikte kullanıldığında cüzdanınıza tam erişim sağlar. Yedekleme dosyasını cüzdanınızı başka bir tarayıcı ya da bilgisayara taşımak için de kullanabilirsiniz.",
-    "backup_new_account": "Tebrikler, yeni hesabınız oluşturuldu. Lütfen cüzdanınızı yedekleyin. Cüzdanınıza ya da bilgisayarınıza erişiminizi kaybetseniz bile TekAnahtar ile hesabınıza tekrar erişebilirsiniz.",
+    "backup_new_account": "Tebrikler, yeni hesabınız oluşturuldu. Lütfen cüzdanınızı yedekleyin. Cüzdanınıza ya da bilgisayarınıza erişiminizi kaybetseniz bile TekAnahtar ile, ya da .bin dosyası ve şifrenizle hesabınıza tekrar erişebilirsiniz.",
     "brainkey_backed_up": "TekAnahtar son yedeklenme tarihi",
     "brainkey_not_backed_up": "TekAnahtar daha önce hiç yedeklenmemiş.",
     "bts_09_export": "BTS 0.9.3c yedek anahtar dosyası (.json)",
@@ -846,8 +846,8 @@
     "create_wallet_backup": "Yedeklenmiş cüzdanı aktar.",
     "delete_confirm_line4": "Evet, şu cüzdanı silmek istiyorum: %(name)s",
     "has_wallet": "Bitshares hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
-    "create_account_text": "Hesabınıza ait TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, size bir sonraki adımda verilecek olan TekAnahtarı yazıp güvenli bir yerde saklamalı ve bu bilgileri hiçkimse ile paylaşmamalısınız.",
-    "first_account_paid": "TekAnahtarınızı veya şifrenizi güvende tutmazsanız, bilgisayarınızda oluşacak herhangi bir sorun ya da güncelleme nedeniyle cüzdanınıza erişimi kaybedebilirsiniz. Bu durumda cüzdanınızdaki dijital varlıkları geri getirmenin hiçbir yolu yoktur.",
+    "create_account_text": "Hesabınıza ait .bin dosyasını kaybetmeniz, veya TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, bir sonraki adımda cüzdanınızı yedeklemeli ve .bin dosyanızı, şifrenizi ve TekAnahtarınızı kesinlikle kaybetmemelisiniz.",
+    "first_account_paid": "TekAnahtarınızı, şifrenizi veya .bin dosyasını güvende tutmazsanız, bilgisayarınızda oluşacak herhangi bir sorun ya da güncelleme nedeniyle cüzdanınıza erişimi kaybedebilirsiniz. Bu durumda cüzdanınızdaki dijital varlıkları geri getirmenin hiçbir yolu yoktur.",
     "import_backup_choose": "Lütfen yedekleme dosyasını seçin. Bu işlem esnasında dosya kendi bilgisayarınızdan dışarıya asla aktarılmaz, bütün işlem bilgisayarınızda gerçekleşir.",
     "import_balance": "Bakiyeyi aktar.",
     "import_key_success": "İşleminiz başarıyla tamamlandı!",
@@ -1014,6 +1014,7 @@
     "fee_paying_account": "Ücreti ödeyen hesap"
   },
   "gateway": {
+    "title": "Yatır & Çek",
     "assets": {
         "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
         "trade": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
