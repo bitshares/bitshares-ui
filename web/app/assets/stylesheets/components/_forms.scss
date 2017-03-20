@@ -200,24 +200,27 @@ div.transfer-input {
         max-height: 0;
         overflow: hidden;
 
-        li span {
-            font-size: 0.9rem;
-            font-weight: bold;
-            display: block;
-            text-decoration: none;
-            color: #333;
-            padding: 10px 10px;
-            transition: all 0.3s ease-out;
-        }
+        > li {
+            width: 100%;
 
-        li:last-of-type span {
-            border: none;
-        }
+            &:last-of-type span {
+                border: none;
+            }
 
-        li i {
-            margin-right: 5px;
-            color: inherit;
-            vertical-align: middle;
+            span {
+                font-size: 0.9rem;
+                font-weight: bold;
+                display: block;
+                text-decoration: none;
+                color: #333;
+                padding: 10px 10px;
+                transition: all 0.3s ease-out;
+            }
+            i {
+                margin-right: 5px;
+                color: inherit;
+                vertical-align: middle;
+            }
         }
     }
 }
