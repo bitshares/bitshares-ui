@@ -744,7 +744,7 @@
     "showAssetPercent": "Show asset percentages on the account page",
     "yes": "Yes",
     "no": "No",
-    "walletLockTimeout": "Wallet auto-lock time (seconds)",
+    "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
     "themes": "Theme",
     "darkTheme": "Dark theme",
     "lightTheme": "Light theme",

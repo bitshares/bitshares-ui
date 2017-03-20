@@ -183,8 +183,7 @@ export default class SettingsEntry extends React.Component {
             }
             break;
         }
-
-        if (!value && !options) return null;
+        if ((typeof value !== "number" && !value) && !options) return null;
 
         if (value && value.translate) {
             value = value.translate;

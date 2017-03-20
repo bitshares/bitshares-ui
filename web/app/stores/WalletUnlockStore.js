@@ -73,13 +73,16 @@ class WalletUnlockStore {
 
     _setLockTimeout() {
         this._clearLockTimeout();
-        this.timeout = setTimeout(() => {
-            if (!WalletDb.isLocked()) {
-                console.log("auto locking after", this.walletLockTimeout, "s");
-                WalletDb.onLock()
-                this.setState({locked: true})
-            };
-        }, this.walletLockTimeout * 1000);
+        /* If the timeout is different from zero, auto unlock the wallet using a timeout */
+        if (!!this.walletLockTimeout) {
+            this.timeout = setTimeout(() => {
+                if (!WalletDb.isLocked()) {
+                    console.log("auto locking after", this.walletLockTimeout, "s");
+                    WalletDb.onLock()
+                    this.setState({locked: true})
+                };
+            }, this.walletLockTimeout * 1000);
+        }
     }
 
     _clearLockTimeout() {
