@@ -36,12 +36,8 @@ div.fm-container {
     padding-bottom: 10px;
    }
 
-   .fm-volume {
-    font-variant: small-caps;
-    padding-top: 6px;
-   }
-
-   .fm-change {
+   .fm-volume, .fm-change {
+    text-transform: lowercase;
     font-variant: small-caps;
     padding-top: 6px;
    }

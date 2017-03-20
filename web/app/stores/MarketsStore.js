@@ -6,7 +6,7 @@ import ls from "common/localStorage";
 import {ChainStore} from "bitsharesjs/es";
 import utils from "common/utils";
 import {LimitOrder, CallOrder, FeedPrice, SettleOrder, Asset,
-    didOrdersChange} from "common/MarketClasses";
+    didOrdersChange, Price} from "common/MarketClasses";
 
 // import {
 //     SettleOrder
@@ -983,6 +983,16 @@ class MarketsStore {
             latestPrice = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped).full;
         }
 
+        let price;
+
+        if (last.close_base && last.close_quote) {
+            let invert = last.key.base !== baseAsset.get("id");
+            let base = new Asset({amount: last[invert ? "close_quote" : "close_base"], asset_id: last.key[invert ? "quote" : "base"], precision: baseAsset.get("precision")});
+            let quote = new Asset({amount: last[!invert ? "close_quote" : "close_base"], asset_id: last.key[!invert ? "quote" : "base"], precision: quoteAsset.get("precision")});
+            price = new Price({base, quote});
+            // console.log(quoteAsset.get("symbol"), baseAsset.get("symbol"), "last:", last, "price:", price.toReal(), "flipped:", flipped);
+        }
+
         let close = last.close_base && last.close_quote ? {
             quote: {
                 amount: invert ? last.close_quote : last.close_base,
@@ -994,7 +1004,9 @@ class MarketsStore {
             }
         } : null;
         volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
+        let volumeBaseAsset = new Asset({amount: volumeBase, asset_id: baseAsset.get("id"), precision: baseAsset.get("precision")});
         volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
+        let volumeQuoteAsset = new Asset({amount: volumeQuote, asset_id: quoteAsset.get("id"), precision: quoteAsset.get("precision")});
         if (!Math.floor(volumeBase * 100)) {
             this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
         } else {
@@ -1007,7 +1019,10 @@ class MarketsStore {
             volumeBase,
             volumeQuote,
             close: close,
-            latestPrice
+            latestPrice,
+            price,
+            volumeBaseAsset,
+            volumeQuoteAsset
         };
     }
 

@@ -18,31 +18,31 @@ class Dashboard extends React.Component {
                 ["BTS", "CNY"],
                 ["CNY", "OPEN.BTC"],
                 ["CNY", "USD"],
-                ["OPEN.BTC", "BTS", false],
+                ["OPEN.BTC", "BTS"],
                 ["USD", "OPEN.BTC"],
                 ["USD", "OPEN.USDT"],
                 ["BTS", "USD"],
                 ["BTS", "GOLD"],
                 ["BTS", "BLOCKPAY"],
-                ["OPEN.BTC", "BLOCKPAY", false],
+                ["OPEN.BTC", "BLOCKPAY"],
                 ["BTS", "OBITS"],
-                ["KAPITAL", "OPEN.BTC", false],
+                ["KAPITAL", "OPEN.BTC"],
                 ["BTS", "SILVER"],
-                ["OPEN.BTC", "OPEN.DGD", false],
+                ["OPEN.BTC", "OPEN.DGD"],
                 ["USD", "OPEN.STEEM"],
                 ["USD", "OPEN.ETH"],
                 ["BTS", "BTWTY"],
                 ["BTS", "OPEN.ETH"],
                 ["BTS", "ICOO"],
                 ["OPEN.BTC", "OPEN.STEEM"],
-                ["OPEN.USDT", "OPEN.BTC", false],
+                ["OPEN.USDT", "OPEN.BTC"],
                 ["BTS", "OPEN.STEEM"],
                 ["OPEN.BTC", "ICOO"],
                 ["OPEN.BTC", "OPEN.MAID"],
                 ["BTS", "OPEN.MAID"],
                 ["BTS", "OPEN.HEAT"],
                 ["BTS", "OPEN.INCENT"],
-                ["OPEN.BTC", "OBITS", false],
+                ["OPEN.BTC", "OBITS"],
                 ["HEMPSWEET", "OPEN.BTC"],
                 ["KAPITAL", "BTS"]
             ],
@@ -64,6 +64,7 @@ class Dashboard extends React.Component {
         };
 
         this._setDimensions = this._setDimensions.bind(this);
+        // this._sortMarketsByVolume = this._sortMarketsByVolume.bind(this);
     }
 
     componentDidMount() {
@@ -78,6 +79,7 @@ class Dashboard extends React.Component {
             !utils.are_equal_shallow(nextProps.lowVolumeMarkets, this.props.lowVolumeMarkets) ||
             !utils.are_equal_shallow(nextState.newAssets, this.state.newAssets) ||
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            // nextProps.marketStats !== this.props.marketStats ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextState.width !== this.state.width ||
             nextProps.accountsReady !== this.props.accountsReady ||
@@ -103,6 +105,64 @@ class Dashboard extends React.Component {
         });
     }
 
+    // _sortMarketsByVolume(a, b) {
+    //     let idA = a[1] + "_" + a[0];
+    //     let idB = b[1] + "_" + b[0];
+    //     let statsA = this.props.marketStats.get(idA);
+    //     let statsB = this.props.marketStats.get(idB);
+    //     if (!statsA || !statsB) return -1;
+    //
+    //     function getEquivalentVolume(stats, market, marketStats) {
+    //         let coreVolume = stats.volumeBaseAsset.asset_id === "1.3.0" ? stats.volumeBaseAsset :
+    //            stats.volumeQuoteAsset.asset_id === "1.3.0" ? stats.volumeQuoteAsset : 0;
+    //
+    //         if (!coreVolume) {
+    //             let options = [
+    //                 `${market[1]}_BTS`,
+    //                 `BTS_${market[1]}`,
+    //                 `${market[0]}_BTS`,
+    //                 `BTS_${market[0]}`,
+    //             ];
+    //             let convertUsingStats;
+    //             for (var i = 0; i < options.length; i++) {
+    //                 convertUsingStats = marketStats.get(options[i]);
+    //                 if (convertUsingStats) break;
+    //             }
+    //
+    //             if (convertUsingStats && convertUsingStats.price) {
+    //                 if (convertUsingStats.price.base.asset_id === "1.3.0") {
+    //                     if (stats.volumeBaseAsset.asset_id === convertUsingStats.price.quote.asset_id) {
+    //                         coreVolume = stats.volumeBaseAsset.times(convertUsingStats.price);
+    //                     } else if (stats.volumeQuoteAsset.asset_id === convertUsingStats.price.quote.asset_id) {
+    //                         coreVolume = stats.volumeQuoteAsset.times(convertUsingStats.price);
+    //                     }
+    //                 } else if (convertUsingStats.price.quote.asset_id === "1.3.0") {
+    //                     if (stats.volumeBaseAsset.asset_id === convertUsingStats.price.base.asset_id) {
+    //                         coreVolume = stats.volumeBaseAsset.times(convertUsingStats.price);
+    //                     } else if (stats.volumeQuoteAsset.asset_id === convertUsingStats.price.base.asset_id) {
+    //                         coreVolume = stats.volumeQuoteAsset.times(convertUsingStats.price);
+    //                     }
+    //                 }
+    //
+    //                 console.log(market, "coreVolume", coreVolume && coreVolume.getAmount(), coreVolume && coreVolume.asset_id);
+    //
+    //             } else {
+    //                 console.log(market, "*** Unable to convert price ***");
+    //             }
+    //         }
+    //
+    //         return coreVolume;
+    //     }
+    //
+    //     let coreVolumeA = getEquivalentVolume(statsA, a, this.props.marketStats);
+    //     let coreVolumeB =  getEquivalentVolume(statsB, b, this.props.marketStats);
+    //
+    //     if (coreVolumeA && coreVolumeB) {
+    //         return coreVolumeB.getAmount() - coreVolumeA.getAmount();
+    //     }
+    //     return 0;
+    // }
+
     render() {
         let { linkedAccounts, myIgnoredAccounts, accountsReady } = this.props;
         let {width, showIgnored, featuredMarkets, newAssets} = this.state;
@@ -118,6 +178,7 @@ class Dashboard extends React.Component {
         let validMarkets = 0;
 
         let markets = featuredMarkets
+        // .sort(this._sortMarketsByVolume)
         .map(pair => {
             let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
             if (!isLowVolume) validMarkets++;
@@ -127,7 +188,6 @@ class Dashboard extends React.Component {
             } else if (validMarkets > 6) {
                 className += ` show-for-${!accountCount ? "large" : "medium"}`;
             }
-
 
             return (
                 <MarketCard
