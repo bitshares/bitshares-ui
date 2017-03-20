@@ -309,7 +309,7 @@ class MarketsStore {
 
         if (result.recent && result.recent.length) {
 
-            let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset);
+            let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset, result.history, this.quoteAsset.get("symbol") + "_" + this.baseAsset.get("symbol"));
 
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
@@ -1014,16 +1014,17 @@ class MarketsStore {
         let btcVolume = (!!coreVolume || !!usdVolume) ? null : (volumeBaseAsset.asset_id === "1.3.861" || volumeBaseAsset.asset_id === "1.3.103") ? volumeBaseAsset.getAmount({real: true}) :
                 (volumeQuoteAsset.asset_id === "1.3.861" || volumeQuoteAsset.asset_id === "1.3.103") ? volumeQuoteAsset.getAmount({real: true}) : null;
 
-        if ((coreVolume && coreVolume <= 40000) || (usdVolume && usdVolume < 200) || (btcVolume && btcVolume < 0.2) || !Math.floor(volumeBase * 100)) {
-            this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
-        } else {
-            this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
-            /* Clear both market directions from the list */
-            let invertedMarket = market.split("_");
-            this.lowVolumeMarkets = this.lowVolumeMarkets.delete(invertedMarket[1] + "_" + invertedMarket[0]);
+        if (market) {
+            if ((coreVolume && coreVolume <= 40000) || (usdVolume && usdVolume < 200) || (btcVolume && btcVolume < 0.2) || !Math.floor(volumeBase * 100)) {
+                this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
+            } else {
+                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
+                /* Clear both market directions from the list */
+                let invertedMarket = market.split("_");
+                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(invertedMarket[1] + "_" + invertedMarket[0]);
+            }
+            marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
         }
-        marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
-
         return {
             change: change.toFixed(2),
             volumeBase,
