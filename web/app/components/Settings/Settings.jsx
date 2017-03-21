@@ -112,6 +112,13 @@ class Settings extends React.Component {
             let index = findEntry(e.target.value, defaults[setting]);
             SettingsActions.changeSetting({setting: setting, value: defaults[setting][index]});
             break;
+                
+        case "faucet_address":
+            SettingsActions.changeSetting({setting: "faucet_address", value: e.target.value });
+            this.setState({
+                faucet_address: e.target.value
+            });
+            break;
 
         default:
             value = findEntry(e.target.value, defaults[setting]);
