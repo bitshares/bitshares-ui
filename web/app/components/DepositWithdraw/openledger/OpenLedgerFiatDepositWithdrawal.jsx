@@ -92,7 +92,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                             </td>;
         }
         else
-            deposit_fragment = <td>Click <a href="https://openledger.info/v/" target="_blank">here</a> to register for deposits of {this.props.deposit_asset}</td>;
+            deposit_fragment = <td>Click <a href="https://openledger.info/v/" rel="noopener noreferrer" target="_blank">here</a> to register for deposits of {this.props.deposit_asset}</td>;
 
         let withdraw_fragment = null;
         if (this.props.withdraw_allowed)
@@ -118,7 +118,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                             </td>;
         }
         else
-            withdraw_fragment = <td>Click <a href="https://openledger.info/v/" target="_blank">here</a> to register for withdrawals of {this.props.deposit_asset}</td>;
+            withdraw_fragment = <td>Click <a href="https://openledger.info/v/" rel="noopener noreferrer" target="_blank">here</a> to register for withdrawals of {this.props.deposit_asset}</td>;
 
         return  <tr>
                     <td>{ this.props.deposit_asset}</td>

@@ -111,7 +111,7 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div className="content-block">
                         {/* <div className="float-right">
-                            <a href="https://www.ccedk.com/" target="__blank"><Translate content="gateway.website" /></a>
+                            <a href="https://www.ccedk.com/" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a>
                         </div> */}
                         <div className="service-selector">
                             <ul className="button-group segmented no-margin">
@@ -148,7 +148,7 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                         <div className="content-block">
-                            {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank"><Translate content="gateway.website" /></a></div> */}
+                            {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
 
                             <div className="service-selector">
                                 <ul className="button-group segmented no-margin">
@@ -189,7 +189,7 @@ class AccountDepositWithdraw extends React.Component {
             name: "Transwiser",
             template: (
                 <div>
-                    <div className="float-right"><a href="http://www.transwiser.com" target="_blank"><Translate content="gateway.website" /></a></div>
+                    <div className="float-right"><a href="http://www.transwiser.com" rel="noopener noreferrer" target="_blank"><Translate content="gateway.website" /></a></div>
                     <table className="table">
                         <thead>
                         <tr>
@@ -200,10 +200,10 @@ class AccountDepositWithdraw extends React.Component {
                         </tr>
                         </thead>
                         <tbody>
-                        <TranswiserDepositWithdraw
+                        {/* <TranswiserDepositWithdraw
                             issuerAccount="transwiser-wallet"
                             account={account.get("name")}
-                            receiveAsset="TCNY" />
+                            receiveAsset="TCNY" /> */}
                         <TranswiserDepositWithdraw
                             issuerAccount="transwiser-wallet"
                             account={account.get("name")}

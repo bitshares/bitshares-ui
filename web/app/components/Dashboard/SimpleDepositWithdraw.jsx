@@ -209,6 +209,12 @@ class DepositWithdrawContent extends React.Component {
             });
     }
 
+    _openRegistrarSite(e) {
+        e.preventDefault();
+        let newWnd = window.open(SettingsStore.site_registr, "_blank");
+        newWnd.opener = null;
+    }
+
     _renderWithdraw() {
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         let tabIndex = 1;
@@ -224,7 +230,7 @@ class DepositWithdrawContent extends React.Component {
         //             rpc_url={SettingsStore.rpc_url}
         //         />);
         //     }else{
-        //         return (<p>Click <a href='#' onClick={(e)=>{ window.open(SettingsStore.site_registr,'_blank');}} >here</a> to register for deposits </p>);
+        //         return (<p>Click <a href='#' onClick={this._openRegistrarSite} >here</a> to register for deposits </p>);
         //     }
         // }
 
@@ -293,7 +299,7 @@ class DepositWithdrawContent extends React.Component {
         //             rpc_url={SettingsStore.rpc_url}
         //         />);
         //     }else{
-        //         return (<p>Click <a href='#' onClick={(e)=>{ window.open(SettingsStore.site_registr,'_blank');}} >here</a> to register for deposits </p>);
+        //         return (<p>Click <a href='#' onClick={this._openRegistrarSite} >here</a> to register for deposits </p>);
         //     }
         // }
         return (
