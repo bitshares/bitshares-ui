@@ -128,12 +128,11 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin} = this.props;
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let tradingAccounts = AccountStore.getMyAccounts();
-        let myAccountCount = tradingAccounts.length;
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -150,6 +149,7 @@ class Header extends React.Component {
 
 
         let myAccounts = AccountStore.getMyAccounts();
+        let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
                             <div className="grp-menu-item header-balance">
@@ -174,7 +174,7 @@ class Header extends React.Component {
             </ActionSheet.Button>
         ) : null;
 
-        let lock_unlock = (this.props.current_wallet && myAccountCount) ? (
+        let lock_unlock = ((this.props.current_wallet && myAccountCount) || passwordLogin) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
                 <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
@@ -188,13 +188,11 @@ class Header extends React.Component {
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null, account_display_name, accountsList;
-
         if (currentAccount) {
             account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0) {
                 tradingAccounts.push(currentAccount);
             }
-
             if (tradingAccounts.length >= 1) {
                 accountsList = tradingAccounts
                 .sort()
@@ -328,7 +326,8 @@ export default connect(Header, {
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
-            starredAccounts: SettingsStore.getState().starredAccounts
+            starredAccounts: SettingsStore.getState().starredAccounts,
+            passwordLogin: SettingsStore.getState().settings.get("passwordLogin")
         };
     }
 });

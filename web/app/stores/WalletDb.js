@@ -6,6 +6,7 @@ import idb_helper from "idb-helper";
 import {cloneDeep} from "lodash";
 
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import SettingsStore from "stores/SettingsStore";
 import {WalletTcomb} from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -14,7 +15,8 @@ import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
 
-let aes_private;
+let aes_private = null;
+let _passwordKey = null;
 // let transaction;
 
 let TRACE = false;
@@ -65,11 +67,12 @@ class WalletDb extends BaseStore {
     }
 
     onLock() {
-        aes_private = null
+        _passwordKey = null;
+        aes_private = null;
     }
 
     isLocked() {
-        return aes_private ? false : true
+        return !(aes_private || _passwordKey);
     }
 
     decryptTcomb_PrivateKey(private_key_tcomb) {
@@ -81,6 +84,7 @@ class WalletDb extends BaseStore {
 
     /** @return ecc/PrivateKey or null */
     getPrivateKey(public_key) {
+        if (_passwordKey) return _passwordKey[public_key];
         if(! public_key) return null
         if(public_key.Q) public_key = public_key.toPublicKeyString()
         let private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(public_key)
@@ -89,7 +93,9 @@ class WalletDb extends BaseStore {
     }
 
     process_transaction(tr, signer_pubkeys, broadcast, extra_keys = []) {
-        if(Apis.instance().chain_id !== this.state.wallet.chain_id)
+        const passwordLogin = SettingsStore.getState().settings.get("passwordLogin");
+
+        if(!passwordLogin && Apis.instance().chain_id !== this.state.wallet.chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.state.wallet.chain_id + ", but got " +
                 Apis.instance().chain_id)
@@ -270,21 +276,60 @@ class WalletDb extends BaseStore {
     }
 
     /** This also serves as 'unlock' */
-    validatePassword( password, unlock = false ) {
-        let wallet = this.state.wallet
-        try {
-            let password_private = PrivateKey.fromSeed( password )
-            let password_pubkey = password_private.toPublicKey().toPublicKeyString()
-            if(wallet.password_pubkey !== password_pubkey) return false
-            if( unlock ) {
-                let password_aes = Aes.fromSeed( password )
-                let encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
-                aes_private = Aes.fromSeed( encryption_plainbuffer )
+    validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
+        if (account) {
+            roles.forEach(role => {
+                let seed = account + role + password;
+                let tempKey = PrivateKey.fromSeed(seed);
+                let acc = ChainStore.getAccount(account);
+                let pubKey = tempKey.toPublicKey().toString();
+
+                function setKey(role, priv, pub) {
+                    if (!_passwordKey) _passwordKey = {};
+                    _passwordKey[pub] = priv;
+                    PrivateKeyStore.setPasswordLoginKey({
+                        pubkey: pubKey,
+                        import_account_names: [account],
+                        encrypted_key: null,
+                        id: 1,
+                        brainkey_sequence: null
+                    });
+                }
+
+                if (acc) {
+                    if (role === "memo") {
+                        if (acc.getIn(["options", "memo_key"]) === pubKey) {
+                            setKey(role, tempKey, pubKey);
+                        }
+                    } else {
+                        acc.getIn([role, "key_auths"]).forEach(auth => {
+                            if (auth.get(0) === pubKey) {
+                                setKey(role, tempKey, pubKey);
+                                return false;
+                            }
+                        });
+                    }
+                }
+            });
+
+            return !!_passwordKey;
+
+        } else {
+            let wallet = this.state.wallet;
+            try {
+                let password_private = PrivateKey.fromSeed( password );
+                let password_pubkey = password_private.toPublicKey().toPublicKeyString();
+                if(wallet.password_pubkey !== password_pubkey) return false;
+                if( unlock ) {
+                    let password_aes = Aes.fromSeed( password );
+                    let encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key );
+                    aes_private = Aes.fromSeed( encryption_plainbuffer );
+                }
+                return true;
+            } catch(e) {
+                console.error(e);
+                return false;
             }
-            return true
-        } catch(e) {
-            console.error(e)
-            return false
         }
     }
 

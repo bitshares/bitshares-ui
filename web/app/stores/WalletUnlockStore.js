@@ -10,8 +10,11 @@ let ss = new ls(STORAGE_KEY);
 class WalletUnlockStore {
 
     constructor() {
-        this.bindActions(WalletUnlockActions)
-        this.state = {locked: true}
+        this.bindActions(WalletUnlockActions);
+        this.state = {
+            locked: true,
+            passwordLogin: ss.get("settings_v3").passwordLogin || false
+        };
 
         this.walletLockTimeout = this._getTimeout(); // seconds (10 minutes)
         this.timeout = null;
@@ -31,11 +34,10 @@ class WalletUnlockStore {
     onUnlock({resolve, reject}) {
         //DEBUG console.log('... onUnlock setState', WalletDb.isLocked())
         //
-
         this._setLockTimeout();
         if( ! WalletDb.isLocked()) {
-            resolve()
-            return
+            resolve();
+            return;
         }
 
         this.setState({resolve, reject, locked: WalletDb.isLocked()});
@@ -63,10 +65,15 @@ class WalletUnlockStore {
 
 
     onChangeSetting(payload) {
+        console.log("onChangeSetting", payload);
         if (payload.setting === "walletLockTimeout") {
             this.walletLockTimeout = payload.value;
             this._clearLockTimeout();
             this._setLockTimeout();
+        } else if (payload.setting === "passwordLogin") {
+            this.setState({
+                passwordLogin: payload.value
+            });
         }
     }
 

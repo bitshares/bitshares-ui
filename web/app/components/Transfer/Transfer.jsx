@@ -214,8 +214,7 @@ class Transfer extends React.Component {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
-
-        let from_my_account = AccountStore.isMyAccount(from_account);
+        let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
 
         if(from_account && ! from_my_account && ! propose ) {
             from_error = <span>
@@ -412,7 +411,8 @@ export default connect(Transfer, {
     },
     getProps() {
         return {
-            currentAccount: AccountStore.getState().currentAccount
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount
         };
     }
 });

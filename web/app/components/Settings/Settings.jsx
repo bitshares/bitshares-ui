@@ -31,7 +31,7 @@ class Settings extends React.Component {
             ],
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
-                "disableChat", "showAssetPercent", "reset"],
+                "disableChat", "showAssetPercent", "passwordLogin", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
@@ -97,15 +97,10 @@ class Settings extends React.Component {
             break;
 
         case "disableChat":
-            SettingsActions.changeSetting({setting: "disableChat", value: e.target.value === "yes" });
-            break;
-
         case "showSettles":
-            SettingsActions.changeSetting({setting: "showSettles", value: e.target.value === "yes" });
-            break;
-
         case "showAssetPercent":
-            SettingsActions.changeSetting({setting: "showAssetPercent", value: e.target.value === "yes" });
+        case "passwordLogin":
+            SettingsActions.changeSetting({setting, value: e.target.value === "yes" });
             break;
 
         case "unit":

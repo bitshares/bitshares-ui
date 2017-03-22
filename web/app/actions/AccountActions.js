@@ -122,6 +122,10 @@ class AccountActions {
     unlinkAccount(name) {
         return name;
     }
+
+    setPasswordAccount(account) {
+        return account;
+    }
 }
 
 export default alt.createActions(AccountActions);
