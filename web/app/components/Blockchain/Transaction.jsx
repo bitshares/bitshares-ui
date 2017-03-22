@@ -800,7 +800,7 @@ class Transaction extends React.Component {
                         rows.push(
                             <tr key={key++}>
                                 <td><Translate component="span" content="transaction.new_url" /></td>
-                                <td><a href={op[1].new_url} target="_blank">{op[1].new_url}</a></td>
+                                <td><a href={op[1].new_url} target="_blank" rel="noopener noreferrer">{op[1].new_url}</a></td>
                             </tr>
                         );
                     }

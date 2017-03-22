@@ -61,7 +61,7 @@
     "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所，该交易所通称DEX, DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要.",
     "intro_text_2": "发行用户定义资产（UIA）,也可以买卖通用的数字资产如BTC, ETH等。",
     "intro_text_3": "来比特股尽情享受交易的乐趣吧！",
-    "intro_text_4": "<br/>官网：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>QQ群：&nbsp;&nbsp;423951676<br/>Github：<a target='_blank' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
+    "intro_text_4": "<br/>官网：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>QQ群：&nbsp;&nbsp;423951676<br/>Github：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
