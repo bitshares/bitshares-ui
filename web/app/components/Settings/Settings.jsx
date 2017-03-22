@@ -17,12 +17,16 @@ class Settings extends React.Component {
     constructor(props) {
         super();
 
-
+        let menuEntries = this._getMenuEntries(props);
+        let activeSetting = props.viewSettings.get("activeSetting", 0);
+        if (activeSetting > (menuEntries.length - 1)) {
+            activeSetting = 0;
+        }
 
         this.state = {
             apiServer: props.settings.get("apiServer"),
-            activeSetting: props.viewSettings.get("activeSetting", 0),
-            menuEntries: this._getMenuEntries(props),
+            activeSetting,
+            menuEntries,
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
                 "disableChat", "showAssetPercent", "passwordLogin", "reset"],
@@ -33,9 +37,16 @@ class Settings extends React.Component {
 
     componentWillReceiveProps(np) {
         if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
+            const menuEntries = this._getMenuEntries(np);
             this.setState({
-                menuEntries: this._getMenuEntries(np)
+                menuEntries
             });
+
+            if (this.state.activeSetting > (menuEntries.length - 1)) {
+                this.setState({
+                    activeSetting: 0
+                });
+            }
         }
     }
 
@@ -157,7 +168,7 @@ class Settings extends React.Component {
         const {menuEntries, activeSetting, settingEntries} = this.state;
 
         let entries;
-        let activeEntry = menuEntries[activeSetting];
+        let activeEntry = menuEntries[activeSetting] || menuEntries[0];
         switch (activeEntry) {
 
         case "accounts":
