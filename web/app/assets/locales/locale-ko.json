@@ -506,6 +506,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",
     "confirmMarketOrder": "주문시 주문확인을 함",

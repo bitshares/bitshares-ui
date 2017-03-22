@@ -727,6 +727,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "市场交易对视角",
     "unit": "显示记账单位",
     "confirmMarketOrder": "市场订单要求确认",

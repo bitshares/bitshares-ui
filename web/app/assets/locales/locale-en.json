@@ -731,6 +731,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",

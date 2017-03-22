@@ -505,6 +505,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "Invertir orientación del Mercado",
     "unit": "Unidad preferida para esta cuenta",
     "confirmMarketOrder": "Pedir confirmación en órdenes de mercado",

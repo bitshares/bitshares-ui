@@ -17,24 +17,44 @@ class Settings extends React.Component {
     constructor(props) {
         super();
 
+
+
         this.state = {
             apiServer: props.settings.get("apiServer"),
             activeSetting: props.viewSettings.get("activeSetting", 0),
-            menuEntries: [
-                "general",
-                "wallet",
-                "accounts",
-                "password",
-                "backup",
-                "restore",
-                "access"
-            ],
+            menuEntries: this._getMenuEntries(props),
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
                 "disableChat", "showAssetPercent", "passwordLogin", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
+            this.setState({
+                menuEntries: this._getMenuEntries(np)
+            });
+        }
+    }
+
+    _getMenuEntries(props) {
+        let menuEntries = [
+            "general",
+            "wallet",
+            "accounts",
+            "password",
+            "backup",
+            "restore",
+            "access"
+        ];
+
+        if (props.settings.get("passwordLogin")) {
+            menuEntries.splice(4, 1);
+            menuEntries.splice(1, 1);
+        }
+        return menuEntries;
     }
 
     triggerModal(e) {
@@ -134,7 +154,7 @@ class Settings extends React.Component {
 
     render() {
         let {settings, defaults} = this.props;
-        let {menuEntries, activeSetting, settingEntries} = this.state;
+        const {menuEntries, activeSetting, settingEntries} = this.state;
 
         let entries;
         let activeEntry = menuEntries[activeSetting];

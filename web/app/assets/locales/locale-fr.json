@@ -379,6 +379,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "Orientation préféré pour les marchés",
     "unit": "Unité de valeur préféré",
     "confirmMarketOrder": "Demander une confirmation pour des ordres du marché",

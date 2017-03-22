@@ -679,6 +679,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the password model",
     "inverseMarket": "Piyasa eğilim tercihi",
     "unit": "Tercih edilen hesap birimi",
     "confirmMarketOrder": "Piyasa emirleri için teyit iste",
