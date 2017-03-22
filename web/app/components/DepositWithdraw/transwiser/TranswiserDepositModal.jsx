@@ -21,11 +21,8 @@ class TranswiserDepositModal extends React.Component {
       super(props);
    }
 
-   gotoShop(){
-       window.open(this.props.depositUrl);
-   }
-
    render() {
+       let qr = this.props.qr && this.props.qr.replace("http://", "https://");
        return (
            <div className="grid-block vertical full-width-content">
                <div className="grid-container">
@@ -38,11 +35,11 @@ class TranswiserDepositModal extends React.Component {
                     </div>
                     <div className="content-block">
                        <label><Translate content="gateway.transwiser.visit_weidian" /></label>
-                       <a onClick={this.gotoShop.bind(this)} href={this.props.depositUrl} target="_blank">{this.props.depositUrl}</a>
+                       <a href={this.props.depositUrl} rel="noopener noreferrer" target="_blank">{this.props.depositUrl}</a>
                     </div>
                     <div className="content-block">
                        <label><Translate content="gateway.scan_qr" /></label>
-                       <img src={this.props.qr} />
+                       <img src={qr} />
                     </div>
                    {/*
                    <br/>
