@@ -4,15 +4,18 @@ div.Account_create {
         font-weight: bold;
     }
 
-    div.divider {
-        margin: 20px 0;
-        border-bottom: 1px solid $border-color;
-        max-width: 30rem;
-    }
-
     label > a {
         text-decoration: underline;
     }
+
+    div.divider {
+        max-width: 30rem;
+    }
+}
+
+div.divider {
+    margin: 20px 0;
+    border-bottom: 1px solid $border-color;
 }
 
 .login-selector {

@@ -16,7 +16,7 @@ import {ChainStore, FetchChain} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 
-class CreateAccount extends React.Component {
+class CreateAccountPassword extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -377,7 +377,7 @@ class CreateAccount extends React.Component {
     }
 }
 
-export default connect(CreateAccount, {
+export default connect(CreateAccountPassword, {
     listenTo() {
         return [AccountStore];
     },

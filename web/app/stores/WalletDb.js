@@ -72,7 +72,7 @@ class WalletDb extends BaseStore {
     }
 
     isLocked() {
-        return !(aes_private || _passwordKey);
+        return !(!!aes_private || !!_passwordKey);
     }
 
     decryptTcomb_PrivateKey(private_key_tcomb) {

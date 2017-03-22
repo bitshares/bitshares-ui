@@ -12,6 +12,7 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import AccountStore from "stores/AccountStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import AccountActions from "actions/AccountActions";
+import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
@@ -95,8 +96,8 @@ class WalletUnlockModal extends React.Component {
     onPasswordEnter(e) {
         const {passwordLogin} = this.props;
         e.preventDefault();
-        const password = this.refs.password_input.value;
-        const account = this.state.account && this.state.account.get("name");
+        const password = passwordLogin ? this.refs.password_input.value : this.refs.password_input.value();
+        const account = passwordLogin ? this.state.account && this.state.account.get("name") : null;
         this.setState({password_error: null});
         WalletDb.validatePassword(
             password || "",
@@ -121,19 +122,32 @@ class WalletUnlockModal extends React.Component {
         return false;
     }
 
+    _toggleLoginType() {
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: !this.props.passwordLogin
+        });
+    }
+
     renderWalletLogin() {
         return (
             <form onSubmit={this.onPasswordEnter} noValidate>
-                <PasswordInput ref="password_input"
+                <PasswordInput
+                    ref="password_input"
                     onEnter={this.onPasswordEnter}
                     key={this.state.password_input_reset}
                     wrongPassword={this.state.password_error}
-                    noValidation />
-                <div className="button-group">
-                    <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
-                    <Trigger close={this.props.modalId}>
-                        <div className=" button"><Translate content="account.perm.cancel" /></div>
-                    </Trigger>
+                    noValidation
+                />
+
+                <div>
+                    <div className="button-group">
+                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
+                        <Trigger close={this.props.modalId}>
+                            <div className=" button"><Translate content="account.perm.cancel" /></div>
+                        </Trigger>
+                    </div>
+                    <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_password" /></div>
                 </div>
             </form>
         );
@@ -154,6 +168,8 @@ class WalletUnlockModal extends React.Component {
 
         return (
             <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20}}>
+                {/* Dummy input to trick Chrome into disabling auto-complete */}
+                <input type="text" className="no-padding no-margin" style={{visibility: "hidden", height: 0}}/>
 
                 <div className="content-block">
                     <AccountSelector label="account.name" ref="account_input"
@@ -184,11 +200,14 @@ class WalletUnlockModal extends React.Component {
                 </div>
 
 
-                <div className="button-group" style={{marginLeft: "3.5rem"}}>
-                    <button tabIndex={tabIndex++} className="button" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
-                    <Trigger close={this.props.modalId}>
-                        <div tabIndex={tabIndex++} className=" button"><Translate content="account.perm.cancel" /></div>
-                    </Trigger>
+                <div style={{marginLeft: "3.5rem"}}>
+                    <div className="button-group">
+                        <button tabIndex={tabIndex++} className="button" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
+                        <Trigger close={this.props.modalId}>
+                            <div tabIndex={tabIndex++} className=" button"><Translate content="account.perm.cancel" /></div>
+                        </Trigger>
+                    </div>
+                    <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_wallet" /></div>
                 </div>
             </form>
         );
@@ -207,7 +226,9 @@ class WalletUnlockModal extends React.Component {
                 <Trigger close="">
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>
-                <h3><Translate content={"header.unlock" + (passwordLogin ? "_password" : "")} /></h3>
+                <h3>
+                    <Translate content={"header.unlock" + (passwordLogin ? "_password" : "")} />
+                </h3>
                 {passwordLogin ? this.renderPasswordLogin() : this.renderWalletLogin()}
             </Modal>
         );

@@ -1195,4 +1195,10 @@
             }
         }
     }
+
+    table.table > tbody > tr.in-use {
+        > td:nth-child(2) {
+            font-weight: bold;
+        }
+    }
 }

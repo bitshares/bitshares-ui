@@ -202,7 +202,13 @@
       "show": "显示",
       "brain": "脑钱包位置",
       "from": "已从账户导入",
-      "sign_owner": "已所有者身份签名"
+      "sign_owner": "已所有者身份签名",
+      "password_model": "Password model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
@@ -1036,7 +1042,9 @@
     "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
     "use_wallet": "Use the wallet model",
     "use_password": "Use the password model",
-    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 16 or more, and a combination of numbers, special characters and letters."
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to password model"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",
