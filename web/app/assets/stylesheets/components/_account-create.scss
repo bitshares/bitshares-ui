@@ -14,3 +14,24 @@ div.Account_create {
         text-decoration: underline;
     }
 }
+
+.login-selector {
+    justify-content: space-around;
+    > div.box {
+        position: relative;
+        padding: 1rem;
+        padding-bottom: 4.5rem;
+        border: 1px solid $border-color;
+        margin-top: 2rem;
+
+        h4 {
+            font-weight: bold;
+        }
+
+        .button {
+            font-size: 1.2rem;
+            position: absolute;
+            bottom: 1rem;
+        }
+    }
+}

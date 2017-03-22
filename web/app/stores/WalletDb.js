@@ -41,7 +41,7 @@ class WalletDb extends BaseStore {
         // for now many methods need to be exported...
         this._export(
             "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
-            "importKeysWorker", "resetBrainKeySequence", "decrementBrainKeySequence"
+            "importKeysWorker", "resetBrainKeySequence", "decrementBrainKeySequence", "generateKeyFromPassword"
         );
         this.generatingKey = false;
     }
@@ -275,14 +275,20 @@ class WalletDb extends BaseStore {
         }
     }
 
+    generateKeyFromPassword(accountName, role, password) {
+        let seed = accountName + role + password;
+        let privKey = PrivateKey.fromSeed(seed);
+        let pubKey = privKey.toPublicKey().toString();
+
+        return {privKey, pubKey};
+    }
+
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
         if (account) {
             roles.forEach(role => {
-                let seed = account + role + password;
-                let tempKey = PrivateKey.fromSeed(seed);
+                let {privKey, pubKey} = this.generateKeyFromPassword(account, role, password);
                 let acc = ChainStore.getAccount(account);
-                let pubKey = tempKey.toPublicKey().toString();
 
                 function setKey(role, priv, pub) {
                     if (!_passwordKey) _passwordKey = {};
@@ -299,12 +305,12 @@ class WalletDb extends BaseStore {
                 if (acc) {
                     if (role === "memo") {
                         if (acc.getIn(["options", "memo_key"]) === pubKey) {
-                            setKey(role, tempKey, pubKey);
+                            setKey(role, privKey, pubKey);
                         }
                     } else {
                         acc.getIn([role, "key_auths"]).forEach(auth => {
                             if (auth.get(0) === pubKey) {
-                                setKey(role, tempKey, pubKey);
+                                setKey(role, privKey, pubKey);
                                 return false;
                             }
                         });

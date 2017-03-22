@@ -65,7 +65,6 @@ class WalletUnlockStore {
 
 
     onChangeSetting(payload) {
-        console.log("onChangeSetting", payload);
         if (payload.setting === "walletLockTimeout") {
             this.walletLockTimeout = payload.value;
             this._clearLockTimeout();

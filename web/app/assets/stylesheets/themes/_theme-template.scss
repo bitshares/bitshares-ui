@@ -1186,4 +1186,13 @@
             color: $success-color;
         }
     }
+
+    .login-selector {
+        > div.box {
+            background-color: $panel-bg-color;
+            a {
+                color: $primary-text-color;
+            }
+        }
+    }
 }

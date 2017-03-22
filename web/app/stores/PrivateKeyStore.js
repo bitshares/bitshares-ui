@@ -47,8 +47,7 @@ class PrivateKeyStore extends BaseStore {
     }
 
     setPasswordLoginKey(key) {
-        let keys = Immutable.Map();
-        keys = keys.set(key.pubkey, key);
+        let keys = this.state.keys.set(key.pubkey, key);
         this.setState({
             keys
         });

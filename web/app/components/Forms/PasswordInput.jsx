@@ -11,14 +11,16 @@ class PasswordInput extends Component {
         confirmation: PropTypes.bool,
         wrongPassword: PropTypes.bool,
         noValidation: PropTypes.bool,
-        noLabel: PropTypes.bool
+        noLabel: PropTypes.bool,
+        passwordLength: PropTypes.number
     };
 
     static defaultProps = {
         confirmation: false,
         wrongPassword: false,
         noValidation: false,
-        noLabel: false
+        noLabel: false,
+        passwordLength: 8
     };
 
     constructor() {
@@ -43,7 +45,7 @@ class PasswordInput extends Component {
     }
 
     valid() {
-        return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= 8;
+        return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= this.props.passwordLength;
     }
 
     handleChange(e) {
@@ -55,7 +57,7 @@ class PasswordInput extends Component {
         let state = {
             valid: !this.state.error && !this.state.wrong
             && !(this.props.confirmation && doesnt_match)
-            && confirmation && password.length >= 8,
+            && confirmation && password.length >= this.props.passwordLength,
             value: password,
             doesnt_match
         };
@@ -71,8 +73,8 @@ class PasswordInput extends Component {
         let password_error = null, confirmation_error = null;
         if(this.state.wrong || this.props.wrongPassword) password_error = <div><Translate content="wallet.pass_incorrect" /></div>;
         else if(this.state.error) password_error = <div>{this.state.error}</div>;
-        if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < 8))
-            password_error = "Password must be 8 characters or more";
+        if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < this.props.passwordLength))
+            password_error = <div><Translate content="wallet.pass_length" minLength={this.props.passwordLength} /></div>;
         if(this.state.doesnt_match) confirmation_error = <div><Translate content="wallet.confirm_error" /></div>;
         let password_class_name = cname("form-group", {"has-error": password_error});
         let password_confirmation_class_name = cname("form-group", {"has-error": this.state.doesnt_match});
