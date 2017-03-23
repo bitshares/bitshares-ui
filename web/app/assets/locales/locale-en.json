@@ -779,7 +779,8 @@
     "delete_select": "Select wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
     "restore_key_count": "# of keys",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -1024,7 +1025,9 @@
     "brainkey_seq_reset": "Reset brainkey sequence",
     "brainkey_seq_reset_text": "Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a refresh of the private keys in the wallet.",
     "brainkey_seq_reset_button": "Reset now",
-    "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet."
+    "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet.",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",

@@ -637,7 +637,8 @@
     "yes": "Ja",
     "no": "Nein",
     "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -800,7 +801,9 @@
     "last_backup": "letzte Sicherung",
     "never_backed_up": "Diese Geldbörse wurde noch nie gesichert!",
     "need_backup": "Diese Gelbörse sollte neu gesichert werden!",
-    "noneed_backup": "Kein Sicherung erforderlich"
+    "noneed_backup": "Kein Sicherung erforderlich",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "Kollateral Position für %(asset_symbol)s",

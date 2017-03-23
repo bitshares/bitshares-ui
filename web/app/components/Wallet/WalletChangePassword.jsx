@@ -128,7 +128,7 @@ class WalletPassword extends Component {
                     <label><Translate content="wallet.existing_password"/></label>
                     <section>
                         <input
-                            placeholder="Current password"
+                            placeholder={counterpart.translate("wallet.current_pass")}
                             type="password"
                             id="password"
                             onChange={this.formChange.bind(this)}

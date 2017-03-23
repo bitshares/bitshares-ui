@@ -778,7 +778,8 @@
     "delete_select": "选择要删除的钱包",
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
     "restore_key_count": "# of 密钥",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "pagination": {
     "newer": "更近",
@@ -1018,7 +1019,9 @@
     "tips_explore": "现在你已经成功创建了一个账户，并且下载了备份文件，让我们开始吧。点击左侧的链接开始探索。",
     "tips_header": "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
     "tips_login": "重要！这里没有登录/注销的概念和功能，当你需要发生交易时解锁钱包，闲置或者手动选择进行钱包锁定。",
-    "import_key_success": "已成功导入 %(count)s 个密钥。"
+    "import_key_success": "已成功导入 %(count)s 个密钥。",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",

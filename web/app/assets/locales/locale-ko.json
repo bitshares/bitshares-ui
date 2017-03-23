@@ -518,7 +518,8 @@
     "add_ws": "새로운 웹소켓 API 추가",
     "remove_ws": "웹소켓 API 제거",
     "faucet_address": "Faucet Address",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "비트쉐어 2.0",
@@ -653,7 +654,9 @@
     "last_backup": "Last backup",
     "never_backed_up": "This Wallet has never been backed up",
     "need_backup": "This Wallet needs a backup",
-    "noneed_backup": "No backup is needed"
+    "noneed_backup": "No backup is needed",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "Collateral position for %(asset_symbol)s",

@@ -731,7 +731,8 @@
     "delete_select": "Silinecek cüzdanı seçin",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
     "restore_key_count": "# of keys",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "Bitshares",
@@ -943,7 +944,9 @@
     "last_backup": "Son yedekleme",
     "never_backed_up": "Bu cüzdan hiç yedeklenmedi.",
     "need_backup": "Lütfen cüzdanınızı yedekleyin!",
-    "noneed_backup": "Cüzdanınız daha önceden yedeklenmiş görünüyor."
+    "noneed_backup": "Cüzdanınız daha önceden yedeklenmiş görünüyor.",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s Marjin",

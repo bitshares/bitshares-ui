@@ -517,7 +517,8 @@
     "add_ws": "Agregar nueva API websocket",
     "remove_ws": "Remover API websocket",
     "faucet_address": "Faucet Address",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -647,7 +648,9 @@
     "last_backup": "Ultimo backup",
     "never_backed_up": "Todavía no ha realizado un backup de esta Billetera",
     "need_backup": "Esta Billetera necesita un backup",
-    "noneed_backup": "No es necesario un backup"
+    "noneed_backup": "No es necesario un backup",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",

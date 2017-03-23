@@ -386,7 +386,8 @@
     "confirm_yes": "Toujours",
     "confirm_no": "Jamais",
     "always_confirm": "Toujours demander une confirmation",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -441,7 +442,9 @@
   "wallet": {
     "title": "Portefeuille",
     "confirm": "Confirmer le mot de passe",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "refcode": {
     "claim": "Claim",

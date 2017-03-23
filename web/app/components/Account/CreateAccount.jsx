@@ -18,6 +18,7 @@ import {ChainStore, FetchChain} from "bitsharesjs/es";
 import {BackupCreate} from "../Wallet/Backup";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
+import counterpart from "counterpart";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -188,7 +189,7 @@ class CreateAccount extends React.Component {
                     cheapNameOnly={!!firstAccount}
                     onChange={this.onAccountNameChange.bind(this)}
                     accountShouldNotExist={true}
-                    placeholder="Account Name (Public)"
+                    placeholder={counterpart.translate("wallet.account_public")}
                     noLabel
                 />
 
