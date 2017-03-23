@@ -180,7 +180,7 @@ class Header extends React.Component {
                 <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
                 : <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
             </div>
-        ) : null;
+        ) : <div className="grp-menu-item" ><a style={{padding: "1rem",cursor:"default"}}><Icon className="icon-14px" name="locked"/></a></div>;
 
         let tradeLink = this.props.lastMarket && active.indexOf("market/") === -1 ?
             <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
