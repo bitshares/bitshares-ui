@@ -785,7 +785,8 @@
     "delete_select": "选择要删除的钱包",
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
     "restore_key_count": "# of 密钥",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "pagination": {
     "newer": "更近",
@@ -1044,7 +1045,9 @@
     "use_password": "Use the account model",
     "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
     "switch_model_wallet": "Switch to wallet model",
-    "switch_model_password": "Switch to account model"
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",

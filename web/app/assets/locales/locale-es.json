@@ -524,7 +524,8 @@
     "add_ws": "Agregar nueva API websocket",
     "remove_ws": "Remover API websocket",
     "faucet_address": "Faucet Address",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -673,7 +674,9 @@
     "use_password": "Use the account model",
     "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
     "switch_model_wallet": "Switch to wallet model",
-    "switch_model_password": "Switch to account model"
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
