@@ -483,7 +483,7 @@
       "open_website": "Open Website"
     },
     "purchase": "Purchase %(asset)s",
-    "purchase_1": "Easily purchase %(outputAsset)s using external %(inputAsset)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using external %(inputAsset)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
   }
 }
