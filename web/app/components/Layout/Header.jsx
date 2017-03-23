@@ -66,6 +66,7 @@ class Header extends React.Component {
         return (
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.currentAccount !== this.props.currentAccount ||
+            nextProps.passwordLogin !== this.props.passwordLogin ||
             nextProps.locked !== this.props.locked ||
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||

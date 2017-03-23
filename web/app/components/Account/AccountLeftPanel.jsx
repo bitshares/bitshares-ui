@@ -16,10 +16,6 @@ class AccountLeftPanel extends React.Component {
 		linkedAccounts: PropTypes.object,
 	};
 
-	static contextTypes = {
-		history: React.PropTypes.object
-	}
-
 	constructor(props) {
 		super(props);
 		this.last_path = null;

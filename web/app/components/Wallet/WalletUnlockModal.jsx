@@ -19,6 +19,10 @@ import AccountSelector from "../Account/AccountSelector";
 
 class WalletUnlockModal extends React.Component {
 
+    static contextTypes = {
+        router: React.PropTypes.object
+    }
+
     constructor(props) {
         super();
         this.state = this._getInitialState(props);
@@ -60,10 +64,11 @@ class WalletUnlockModal extends React.Component {
                 WalletUnlockActions.cancel();
             } else if (msg === "open") {
                 if (!this.props.passwordLogin) {
-                    this.refs.password_input.clear();
-                    this.refs.password_input.focus();
-
-                    if(Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
+                    if (this.refs.password_input) {
+                        this.refs.password_input.clear();
+                        this.refs.password_input.focus();
+                    }
+                    if(WalletDb.getWallet() && Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
                         notify.error("This wallet was intended for a different block-chain; expecting " +
                             WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
                             Apis.instance().chain_id.substring(0,4).toUpperCase());
@@ -109,7 +114,7 @@ class WalletUnlockModal extends React.Component {
             return false;
         } else {
             if (!passwordLogin) {
-                this.refs.password_input.clear()
+                this.refs.password_input.clear();
             } else {
                 this.refs.password_input.value = "";
                 AccountActions.setPasswordAccount(account);
@@ -129,7 +134,24 @@ class WalletUnlockModal extends React.Component {
         });
     }
 
+    _onCreateWallet() {
+        ZfApi.publish(this.props.modalId, "close");
+        this.context.router.push("/create-account/wallet");
+    }
+
     renderWalletLogin() {
+        if (!WalletDb.getWallet()) {
+            return (
+                <div>
+                    <Translate content="wallet.no_wallet" component="p" />
+                    <div className="button-group">
+                        <div className="button" onClick={this._onCreateWallet.bind(this)}><Translate content="wallet.create_wallet" /></div>
+                    </div>
+
+                    <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_password" /></div>
+                </div>
+            );
+        }
         return (
             <form onSubmit={this.onPasswordEnter} noValidate>
                 <PasswordInput
