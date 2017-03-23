@@ -36,7 +36,7 @@ class GatewayStore {
                 this.bridgeInputs.indexOf(a.inputCoinType) !== -1 // Only use coin types defined in bridgeInputs
             );
         }).forEach(coin => {
-            this.bridgeCoins = this.bridgeCoins.setIn([coins_by_type[coin.outputCoinType].walletSymbol, coin.inputCoinType], coin);
+            this.bridgeCoins = this.bridgeCoins.setIn([coins_by_type[coin.outputCoinType].walletSymbol, coin.inputCoinType], Immutable.fromJS(coin));
         });
         ss.set("bridgeCoins", this.bridgeCoins.toJS());
     }

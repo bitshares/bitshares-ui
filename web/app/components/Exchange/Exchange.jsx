@@ -139,6 +139,7 @@ class Exchange extends React.Component {
     componentWillMount() {
         if (Apis.instance().chain_id.substr(0, 8)=== "4018d784") {
             GatewayActions.fetchCoins.defer();
+            GatewayActions.fetchBridgeCoins.defer();
         }
     }
 
@@ -950,6 +951,7 @@ class Exchange extends React.Component {
                 onBorrow={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
+                currentBridges={this.props.bridgeCoins.get(base.get("symbol")) || null}
                 smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
@@ -993,6 +995,7 @@ class Exchange extends React.Component {
                 onBorrow={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === quote.get("symbol"))}
+                currentBridges={this.props.bridgeCoins.get(quote.get("symbol")) || null}
                 smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}

@@ -67,6 +67,11 @@ div.fm-container {
     }
     .SimpleTrade__withdraw-row {
         padding: 10px 0;
+        > div > div.small-6 {
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
     }
 }
 
@@ -102,14 +107,16 @@ div.fm-container {
 #simple_deposit_modal,
 #simple_deposit_modal_ask,
 #simple_withdraw_modal,
-#simple_bridge_modal {
+#simple_bridge_modal,
+#simple_bridge_modal_ask {
     padding: 0;
 }
 
 #simple_deposit_modal,
 #simple_deposit_modal_ask,
 #simple_withdraw_modal,
-#simple_bridge_modal {
+#simple_bridge_modal,
+#simple_bridge_modal_ask {
     overflow: auto !important;
     max-width: 500px;
 }
@@ -117,7 +124,8 @@ div.fm-container {
 #simple_deposit_modal label,
 #simple_deposit_modal_ask label,
 #simple_withdraw_modal label,
-#simple_bridge_modal label {
+#simple_bridge_modal label,
+#simple_bridge_modal_ask label {
     text-transform: none !important;
 }
 

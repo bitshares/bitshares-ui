@@ -190,13 +190,13 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         return (
             <div className={!addressValue ? "no-overflow" : ""}>
-                <p><Translate unsafe content="gateway.purchase_1" input={inputName} output={receiveName} />.</p>
+                <p><Translate unsafe content="gateway.purchase_1" inputAsset={inputName} outputAsset={receiveName} />.</p>
 
                 {this._renderCurrentBalance()}
 
                 <div className="SimpleTrade__withdraw-row">
 
-                    <div className="grid-block no-margin no-padding">
+                    <div className="no-margin no-padding">
                         <div className="small-6" style={{paddingRight: 10}}>
                             <label className="left-label"><Translate content="transfer.send" /></label>
                             <div className="inline-label input-wrapper">
@@ -360,7 +360,7 @@ class StoreWrapper extends React.Component {
             currentBridge = this.props.bridges.first();
             preferredBridge = currentBridge.inputCoinType;
         }
-        return <SimpleDepositBlocktradesBridge {...others} preferredBridge={preferredBridge} {...currentBridge} />;
+        return <SimpleDepositBlocktradesBridge {...others} preferredBridge={preferredBridge} {...currentBridge.toJS()} />;
     }
 }
 

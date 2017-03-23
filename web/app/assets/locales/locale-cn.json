@@ -1142,7 +1142,10 @@
     "bridge_text": "桥接能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
     "gateway_text": "网关能让你将BitShares中的资产与外部资产进行互换，比如OPEN.BTC到BTC。",
     "fiat_text": "法币的冲提现服务由CCEDK提供。你必须先行在CCEDK上进行账户注册。下面是支持的货币：",
-    "service": "转账服务"
+    "service": "转账服务",
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Easily purchase %(outputAsset)s using external %(inputAsset)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   },
   "propose": "提议",
   "cancel": "取消",
