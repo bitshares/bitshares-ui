@@ -198,7 +198,10 @@
       "password_model_2": "Add password generated keys",
       "new_active": "New active key",
       "new_owner": "New owner key",
-      "new_memo": "New memo key"
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
       "proxy_short": "Vekil",
@@ -964,7 +967,7 @@
     "wallet_model": "Wallet model",
     "password_model": "Account model",
     "wallet_model_1": "The wallet model uses a wallet that is stored in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
-    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To move to another browser/computer, you may use the backup file or brainkey.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To use in another browser or computer, you may use the backup file or brainkey.",
     "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
     "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
     "use_wallet": "Use the wallet model",

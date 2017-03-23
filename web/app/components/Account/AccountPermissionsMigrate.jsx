@@ -2,6 +2,7 @@ import React from "react";
 import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 export default class AccountPermissionsMigrate extends React.Component {
 
@@ -57,6 +58,9 @@ export default class AccountPermissionsMigrate extends React.Component {
         let ownerInUse = this.checkKeyUse(this.props.owner && this.props.owner, "owner");
         let memoInUse = this.checkKeyUse(this.props.memo && this.props.memo, "memo");
 
+        let useText = counterpart.translate("account.perm.use_text");
+        let removeText = counterpart.translate("account.perm.remove_text");
+
         return (
                 <div>
                     <p style={{maxWidth: "800px"}}><Translate content="account.perm.password_model_1" /></p>
@@ -89,25 +93,25 @@ export default class AccountPermissionsMigrate extends React.Component {
                                 <td><Translate content="account.perm.new_active" />:</td>
                                 <td>{this.props.active}</td>
                                 <td className="text-right">
-                                    <div className="button" onClick={this._onUseKey.bind(this, "active", activeInUse)}>{activeInUse ? "Remove" : "Use"}</div>
+                                    <div className="button" onClick={this._onUseKey.bind(this, "active", activeInUse)}>{activeInUse ? removeText : useText}</div>
                                 </td>
                             </tr>
                             <tr className={ownerInUse ? "in-use" : ""}>
                                 <td><Translate content="account.perm.new_owner" />:</td>
                                 <td>{this.props.owner}</td>
-                                <td className="text-right"><div className="button" onClick={this._onUseKey.bind(this, "owner", ownerInUse)}>{ownerInUse ? "Remove" : "Use"}</div></td>
+                                <td className="text-right"><div className="button" onClick={this._onUseKey.bind(this, "owner", ownerInUse)}>{ownerInUse ? removeText : useText}</div></td>
                             </tr>
                             <tr className={memoInUse ? "in-use" : ""}>
                                 <td><Translate content="account.perm.new_memo" />:</td>
                                 <td>{this.props.memo}</td>
                                 <td className="text-right">
-                                    <div className="button" style={{visibility: memoInUse ? "hidden" : ""}} onClick={this._onUseKey.bind(this, "memo", memoInUse)}>Use</div>
+                                    <div className="button" style={{visibility: memoInUse ? "hidden" : ""}} onClick={this._onUseKey.bind(this, "memo", memoInUse)}>{useText}</div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
-                    {memoInUse ? <p style={{maxWidth: "800px", paddingTop: 10}} className="has-error">WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos.</p> : null}
+                    {memoInUse ? <p style={{maxWidth: "800px", paddingTop: 10}} className="has-error"><Translate content="account.perm.memo_warning" /></p> : null}
 
 
                 </div>
