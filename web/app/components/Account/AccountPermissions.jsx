@@ -366,7 +366,7 @@ class AccountPermissions extends React.Component {
                     limit={25}
                     compactView={false}
                     filter="account_update"
-                    style={{paddingTop: "2rem"}}
+                    style={{paddingTop: "2rem", paddingBottom: "2rem"}}
                 />
 
             </div>
