@@ -79,6 +79,7 @@ export default class AccountPermissionsMigrate extends React.Component {
                             onChange={this.onPasswordChange.bind(this)}
                             noLabel
                             passwordLength={12}
+                            checkStrength
                         />
                     </form>
 

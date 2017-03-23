@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import cname from "classnames";
 import Translate from "react-translate-component";
+import pw from "zxcvbn";
 
 class PasswordInput extends Component {
 
@@ -12,7 +13,8 @@ class PasswordInput extends Component {
         wrongPassword: PropTypes.bool,
         noValidation: PropTypes.bool,
         noLabel: PropTypes.bool,
-        passwordLength: PropTypes.number
+        passwordLength: PropTypes.number,
+        checkStrength: PropTypes.bool
     };
 
     static defaultProps = {
@@ -20,7 +22,8 @@ class PasswordInput extends Component {
         wrongPassword: false,
         noValidation: false,
         noLabel: false,
-        passwordLength: 8
+        passwordLength: 8,
+        checkStrength: false
     };
 
     constructor() {
@@ -85,6 +88,10 @@ class PasswordInput extends Component {
             confirmMatch = true;
         }
 
+        const strength = pw(this.state.value || "");
+        /* Require a length of passwordLength + 50% for the max score */
+        const score = strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5));
+
         return (
             <div className="account-selector">
                 <div className={password_class_name}>
@@ -92,6 +99,7 @@ class PasswordInput extends Component {
                     <section>
                         <label className="left-label"><Translate content="wallet.enter_password" /></label>
                         <input
+                            style={{marginBottom: this.props.checkStrength ? 0 : null}}
                             name="password"
                             type="password"
                             ref="password"
@@ -99,7 +107,11 @@ class PasswordInput extends Component {
                             onChange={this.handleChange}
                             onKeyDown={this.onKeyDown}
                         />
+                        {this.props.checkStrength ? (
+                                <progress style={{height: 10}} className={score === 5 ? "high" : score === 4 ? "medium" : "low"} value={score} max="5" min="0"></progress>
+                        ) : null}
                     </section>
+
                     {password_error}
                 </div>
                 { this.props.confirmation ?

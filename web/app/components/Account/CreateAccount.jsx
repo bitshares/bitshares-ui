@@ -208,6 +208,7 @@ class CreateAccount extends React.Component {
                             confirmation={true}
                             onChange={this.onPasswordChange.bind(this)}
                             noLabel
+                            checkStrength
                         />
                 }
 
