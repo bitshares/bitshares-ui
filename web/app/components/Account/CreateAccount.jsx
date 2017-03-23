@@ -18,6 +18,7 @@ import {ChainStore, FetchChain} from "bitsharesjs/es";
 import {BackupCreate} from "../Wallet/Backup";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -35,6 +36,13 @@ class CreateAccount extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
         this.accountNameInput = null;
+    }
+
+    componentWillMount() {
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: false
+        });
     }
 
     componentDidMount() {

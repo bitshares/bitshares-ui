@@ -21,6 +21,7 @@ div.divider {
 .login-selector {
     justify-content: space-around;
     > div.box {
+        cursor: pointer;
         position: relative;
         padding: 1rem;
         padding-bottom: 4.5rem;

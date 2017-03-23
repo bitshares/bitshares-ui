@@ -15,6 +15,7 @@ import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -33,6 +34,13 @@ class CreateAccountPassword extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
         this.accountNameInput = null;
+    }
+
+    componentWillMount() {
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: true
+        });
     }
 
     componentDidMount() {
