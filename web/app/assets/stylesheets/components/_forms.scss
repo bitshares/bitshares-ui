@@ -254,3 +254,9 @@ div.ok-indicator {
     top: 11px;
     right: 10px;
 }
+
+div.dropdown-wrapper.upper-case {
+    > div, > ul > li {
+        text-transform: uppercase;
+    }
+}

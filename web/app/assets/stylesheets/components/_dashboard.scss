@@ -101,20 +101,23 @@ div.fm-container {
 #simple_transfer_modal,
 #simple_deposit_modal,
 #simple_deposit_modal_ask,
-#simple_withdraw_modal {
+#simple_withdraw_modal,
+#simple_bridge_modal {
     padding: 0;
 }
 
 #simple_deposit_modal,
 #simple_deposit_modal_ask,
-#simple_withdraw_modal {
+#simple_withdraw_modal,
+#simple_bridge_modal {
     overflow: auto !important;
     max-width: 500px;
 }
 
 #simple_deposit_modal label,
 #simple_deposit_modal_ask label,
-#simple_withdraw_modal label {
+#simple_withdraw_modal label,
+#simple_bridge_modal label {
     text-transform: none !important;
 }
 
@@ -122,4 +125,24 @@ div.fm-container {
 #simple_sell_modal {
     overflow: auto !important;
     padding: 0;
+}
+
+div.input-wrapper {
+    > div.input-right-symbol {
+        font-size: 0.9rem;
+        font-weight: bold;
+        position: absolute;
+        top: 12px;
+        right: 8px;
+    }
+}
+
+.SimpleDepositBridge__info-row {
+    > div {
+        padding-bottom: 5px;
+        > div.float-right {
+            clear: both;
+            font-weight: bold;
+        }
+    }
 }

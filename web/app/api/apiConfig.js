@@ -2,7 +2,10 @@ export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     BASE_OL: "https://api.blocktrades.us/ol/v2",
     COINS_LIST: "/coins",
-    ACTIVE_WALLETS: "/active-wallets"
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount"
 };
 
 export const settingsAPIs = {

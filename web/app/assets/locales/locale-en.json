@@ -1169,7 +1169,10 @@
     },
     "meta": {
       "open_website": "Open Website"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Easily purchase %(output)s using %(input)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"    
   },
   "chat": {
     "title": "Trollbox",

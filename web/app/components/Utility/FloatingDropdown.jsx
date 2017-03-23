@@ -88,7 +88,7 @@ class Dropdown extends React.Component {
         if(entries.length === 0) return null;
         if(entries.length == 1) {
             return (
-               <div className={"dropdown-wrapper inactive"}>
+               <div className={"dropdown-wrapper inactive" + (this.props.upperCase ? " upper-case" : "")}>
                    <div>
                        {this.props.singleEntry ? this.props.singleEntry : entries[0]}
                    </div>
@@ -96,10 +96,10 @@ class Dropdown extends React.Component {
            );
         } else {
             let options = entries.map(value => {
-                return <li key={value} onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>;
+                return <li className={this.props.upperCase ? "upper-case" : ""} key={value} onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>;
             });
             return (
-                <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")}>
+                <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")  + (this.props.upperCase ? " upper-case" : "")}>
                     <div style={{paddingRight: 15}}>{value ? value : <span className="hidden">A</span>}</div>
                     <ul className="dropdown" style={{overflow: entries.length > 9 ? "auto": "hidden"}}>
                         {options}
