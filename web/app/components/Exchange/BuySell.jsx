@@ -28,6 +28,7 @@ class BuySell extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 nextProps.amount !== this.props.amount ||
+                nextProps.onBorrow !== this.props.onBorrow ||
                 nextProps.total !== this.props.total ||
                 nextProps.currentPrice !== this.props.currentPrice ||
                 nextProps.price !== this.props.price ||
@@ -75,11 +76,11 @@ class BuySell extends React.Component {
         // if (!balanceAmount) {
         //     balanceAmount = 0;
         // }
+        const isBid = type === "bid";
+        let hasBalance = isBid ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
 
-        let hasBalance = type === "bid" ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
-
-        let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
-        let forceSellText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
+        let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
+        let forceSellText = isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
 
         let noBalance = isPredictionMarket ? false : !(balanceAmount.getAmount() > 0 && hasBalance);
         let invalidPrice = !(price > 0);
@@ -88,7 +89,7 @@ class BuySell extends React.Component {
         let disabled = noBalance || invalidPrice || invalidAmount;
 
         let buttonClass = classNames("button buySellButton", type, {disabled: disabled});
-        let balanceSymbol = type === "bid" ? base.get("symbol") : quote.get("symbol");
+        let balanceSymbol = isBid ? base.get("symbol") : quote.get("symbol");
 
         let disabledText = invalidPrice ? counterpart.translate("exchange.invalid_price") :
                            invalidAmount ? counterpart.translate("exchange.invalid_amount") :
@@ -124,6 +125,7 @@ class BuySell extends React.Component {
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
                         {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge" style={{paddingLeft: 10}}>{caret}</div>}
                         {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name">{this.props.backedCoin.backingCoinType}</span></a></div> : null}
+                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit"><a onClick={this.props.onBorrow}><Translate content="exchange.borrow" />&nbsp;<span className="asset-name">{this.props[isBid ? "base" : "quote"].get("symbol")}</span></a></div> : null}
                     </div>
 
                     <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
@@ -202,7 +204,7 @@ class BuySell extends React.Component {
                                           </tr>
 
                                           <tr className="buy-sell-info">
-                                                <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
+                                                <td style={{paddingTop: 5}}>{isBid ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
                                                 <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
                                                     <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject.sellPrice())}>
@@ -244,7 +246,7 @@ class BuySell extends React.Component {
                     fiatModal={false}
                     account={this.props.currentAccount.get("name")}
                     sender={this.props.currentAccount.get("id")}
-                    asset={this.props[type === "bid" ? "base" : "quote"].get("id")}
+                    asset={this.props[isBid ? "base" : "quote"].get("id")}
                     modalId={"simple_deposit_modal" + (type === "bid" ? "" : "_ask")}
                     balances={[this.props.balance]}
                     {...backedCoin}

@@ -65,7 +65,7 @@ export default class ExchangeHeader extends React.Component {
 					</div>
 
 					<div className="grid-block vertical" style={{overflow: "visible"}}>
-						<div className="grid-block show-for-medium wrap market-stats-container">
+						<div className="grid-block wrap market-stats-container">
 							<ul className="market-stats stats top-stats">
 								{latestPrice ?
 									<PriceStat ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} content="exchange.latest"/> : null}
@@ -96,19 +96,6 @@ export default class ExchangeHeader extends React.Component {
                                        {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
                                     </div>
                                 </li>
-
-                                {/* Borrow buttons */}
-                                {onBorrowQuote ? <li className="stat input clickable column-hide-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowQuote}>
-                                    <div className="v-align indicators">
-                                       <Translate content="exchange.borrow" />&nbsp;{quoteAsset.get("symbol")}
-                                    </div>
-                                </li> : null}
-
-                                {onBorrowBase ? <li className="stat input clickable column-hide-small" style={{borderLeft: "1px solid grey", borderRight: "none"}} onClick={onBorrowBase}>
-                                    <div className="v-align indicators">
-                                       <Translate content="exchange.borrow" />&nbsp;{baseAsset.get("symbol")}
-                                    </div>
-                                </li> : null}
                             </ul>
 						</div>
 					</div>

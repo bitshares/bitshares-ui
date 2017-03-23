@@ -947,6 +947,7 @@ class Exchange extends React.Component {
 
         let buyForm = isFrozen ? null : (
             <BuySell
+                onBorrow={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
                 smallScreen={smallScreen}
@@ -989,6 +990,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
+                onBorrow={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === quote.get("symbol"))}
                 smallScreen={smallScreen}
@@ -1079,8 +1081,6 @@ class Exchange extends React.Component {
                             showDepthChart={showDepthChart}
                             onSelectIndicators={this._onSelectIndicators.bind(this)}
                             marketStats={marketStats}
-                            onBorrowQuote={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
-                            onBorrowBase={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                             onToggleCharts={this._toggleCharts.bind(this)}
                             showVolumeChart={showVolumeChart}
                         />
