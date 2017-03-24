@@ -1192,7 +1192,10 @@
     },
     "meta":{
       "open_website":"Открыть веб-сайт"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using external %(inputAsset)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   },
   "chat":{
     "title":"Троллбокс",

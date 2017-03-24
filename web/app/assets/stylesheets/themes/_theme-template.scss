@@ -388,6 +388,12 @@
       }
   }
 
+  div.input-wrapper {
+      > div.input-right-symbol {
+          color: $secondary-text-color;
+      }
+  }
+
   .dropdown-wrapper {
       > div:first-of-type {
           color: $secondary-text-color;
@@ -1202,6 +1208,16 @@
     table.table > tbody > tr.in-use {
         > td:nth-child(2) {
             font-weight: bold;
+        }
+    }
+
+    .SimpleDepositBridge__info-row {
+        > div {
+            > div.float-right {
+                &.above-limit {
+                    color: $error-text-color;
+                }
+            }
         }
     }
 }
