@@ -286,31 +286,46 @@ class WalletDb extends BaseStore {
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
         if (account) {
-            roles.forEach(role => {
-                let {privKey, pubKey} = this.generateKeyFromPassword(account, role, password);
-                let acc = ChainStore.getAccount(account);
+            function setKey(role, priv, pub) {
+                if (!_passwordKey) _passwordKey = {};
+                _passwordKey[pub] = priv;
+                PrivateKeyStore.setPasswordLoginKey({
+                    pubkey: pub,
+                    import_account_names: [account],
+                    encrypted_key: null,
+                    id: 1,
+                    brainkey_sequence: null
+                });
+            }
 
-                function setKey(role, priv, pub) {
-                    if (!_passwordKey) _passwordKey = {};
-                    _passwordKey[pub] = priv;
-                    PrivateKeyStore.setPasswordLoginKey({
-                        pubkey: pubKey,
-                        import_account_names: [account],
-                        encrypted_key: null,
-                        id: 1,
-                        brainkey_sequence: null
-                    });
+            /* Check if the user tried to login with a private key */
+            let fromWif;
+            try {
+                fromWif = PrivateKey.fromWif(password);
+            } catch(err) {
+
+            }
+            let acc = ChainStore.getAccount(account);
+            let key;
+            if (fromWif) {
+                key = {privKey: fromWif, pubKey: fromWif.toPublicKey().toString()};
+            }
+
+            /* Test the pubkey for each role against either the wif key, or the password generated keys */
+            roles.forEach(role => {
+                if (!fromWif) {
+                    key = this.generateKeyFromPassword(account, role, password);
                 }
 
                 if (acc) {
                     if (role === "memo") {
-                        if (acc.getIn(["options", "memo_key"]) === pubKey) {
-                            setKey(role, privKey, pubKey);
+                        if (acc.getIn(["options", "memo_key"]) === key.pubKey) {
+                            setKey(role, key.privKey, key.pubKey);
                         }
                     } else {
                         acc.getIn([role, "key_auths"]).forEach(auth => {
-                            if (auth.get(0) === pubKey) {
-                                setKey(role, privKey, pubKey);
+                            if (auth.get(0) === key.pubKey) {
+                                setKey(role, key.privKey, key.pubKey);
                                 return false;
                             }
                         });
