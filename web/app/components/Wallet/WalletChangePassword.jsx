@@ -5,6 +5,7 @@ import notify from "actions/NotificationActions";
 import cname from "classnames";
 import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
+import counterpart from "counterpart";
 
 export default class WalletChangePassword extends Component {
     constructor() {
