@@ -413,6 +413,10 @@ section input[type="text"], section input[type="password"] {
   }
 }
 
+section progress {
+    max-width: 30rem;
+}
+
 .notification {
     table > tr > td {
         padding-left: 0 !important;

@@ -2,6 +2,7 @@ import React from "react";
 import {PropTypes, Component} from "react";
 import cname from "classnames";
 import Translate from "react-translate-component";
+import pw from "zxcvbn";
 
 class PasswordInput extends Component {
 
@@ -11,14 +12,18 @@ class PasswordInput extends Component {
         confirmation: PropTypes.bool,
         wrongPassword: PropTypes.bool,
         noValidation: PropTypes.bool,
-        noLabel: PropTypes.bool
+        noLabel: PropTypes.bool,
+        passwordLength: PropTypes.number,
+        checkStrength: PropTypes.bool
     };
 
     static defaultProps = {
         confirmation: false,
         wrongPassword: false,
         noValidation: false,
-        noLabel: false
+        noLabel: false,
+        passwordLength: 8,
+        checkStrength: false
     };
 
     constructor() {
@@ -43,7 +48,7 @@ class PasswordInput extends Component {
     }
 
     valid() {
-        return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= 8;
+        return !(this.state.error || this.state.wrong || this.state.doesnt_match) && this.state.value.length >= this.props.passwordLength;
     }
 
     handleChange(e) {
@@ -55,7 +60,7 @@ class PasswordInput extends Component {
         let state = {
             valid: !this.state.error && !this.state.wrong
             && !(this.props.confirmation && doesnt_match)
-            && confirmation && password.length >= 8,
+            && confirmation && password.length >= this.props.passwordLength,
             value: password,
             doesnt_match
         };
@@ -71,8 +76,8 @@ class PasswordInput extends Component {
         let password_error = null, confirmation_error = null;
         if(this.state.wrong || this.props.wrongPassword) password_error = <div><Translate content="wallet.pass_incorrect" /></div>;
         else if(this.state.error) password_error = <div>{this.state.error}</div>;
-        if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < 8))
-            password_error = "Password must be 8 characters or more";
+        if (!this.props.noValidation && !password_error && (this.state.value.length > 0 && this.state.value.length < this.props.passwordLength))
+            password_error = <div><Translate content="wallet.pass_length" minLength={this.props.passwordLength} /></div>;
         if(this.state.doesnt_match) confirmation_error = <div><Translate content="wallet.confirm_error" /></div>;
         let password_class_name = cname("form-group", {"has-error": password_error});
         let password_confirmation_class_name = cname("form-group", {"has-error": this.state.doesnt_match});
@@ -83,6 +88,10 @@ class PasswordInput extends Component {
             confirmMatch = true;
         }
 
+        const strength = pw(this.state.value || "");
+        /* Require a length of passwordLength + 50% for the max score */
+        const score = strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5));
+
         return (
             <div className="account-selector">
                 <div className={password_class_name}>
@@ -90,6 +99,7 @@ class PasswordInput extends Component {
                     <section>
                         <label className="left-label"><Translate content="wallet.enter_password" /></label>
                         <input
+                            style={{marginBottom: this.props.checkStrength ? 0 : null}}
                             name="password"
                             type="password"
                             ref="password"
@@ -97,7 +107,11 @@ class PasswordInput extends Component {
                             onChange={this.handleChange}
                             onKeyDown={this.onKeyDown}
                         />
+                        {this.props.checkStrength ? (
+                                <progress style={{height: 10}} className={score === 5 ? "high" : score === 4 ? "medium" : "low"} value={score} max="5" min="0"></progress>
+                        ) : null}
                     </section>
+
                     {password_error}
                 </div>
                 { this.props.confirmation ?

@@ -17,24 +17,55 @@ class Settings extends React.Component {
     constructor(props) {
         super();
 
+        let menuEntries = this._getMenuEntries(props);
+        let activeSetting = props.viewSettings.get("activeSetting", 0);
+        if (activeSetting > (menuEntries.length - 1)) {
+            activeSetting = 0;
+        }
+
         this.state = {
             apiServer: props.settings.get("apiServer"),
-            activeSetting: props.viewSettings.get("activeSetting", 0),
-            menuEntries: [
-                "general",
-                "wallet",
-                "accounts",
-                "password",
-                "backup",
-                "restore",
-                "access"
-            ],
+            activeSetting,
+            menuEntries,
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
-                "disableChat", "showAssetPercent", "reset"],
+                "disableChat", "showAssetPercent", "passwordLogin", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
+            const menuEntries = this._getMenuEntries(np);
+            this.setState({
+                menuEntries
+            });
+
+            if (this.state.activeSetting > (menuEntries.length - 1)) {
+                this.setState({
+                    activeSetting: 0
+                });
+            }
+        }
+    }
+
+    _getMenuEntries(props) {
+        let menuEntries = [
+            "general",
+            "wallet",
+            "accounts",
+            "password",
+            "backup",
+            "restore",
+            "access"
+        ];
+
+        if (props.settings.get("passwordLogin")) {
+            menuEntries.splice(4, 1);
+            menuEntries.splice(1, 1);
+        }
+        return menuEntries;
     }
 
     triggerModal(e) {
@@ -97,15 +128,10 @@ class Settings extends React.Component {
             break;
 
         case "disableChat":
-            SettingsActions.changeSetting({setting: "disableChat", value: e.target.value === "yes" });
-            break;
-
         case "showSettles":
-            SettingsActions.changeSetting({setting: "showSettles", value: e.target.value === "yes" });
-            break;
-
         case "showAssetPercent":
-            SettingsActions.changeSetting({setting: "showAssetPercent", value: e.target.value === "yes" });
+        case "passwordLogin":
+            SettingsActions.changeSetting({setting, value: e.target.value === "yes" });
             break;
 
         case "unit":
@@ -139,10 +165,10 @@ class Settings extends React.Component {
 
     render() {
         let {settings, defaults} = this.props;
-        let {menuEntries, activeSetting, settingEntries} = this.state;
+        const {menuEntries, activeSetting, settingEntries} = this.state;
 
         let entries;
-        let activeEntry = menuEntries[activeSetting];
+        let activeEntry = menuEntries[activeSetting] || menuEntries[0];
         switch (activeEntry) {
 
         case "accounts":

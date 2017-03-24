@@ -27,7 +27,6 @@ class AccountPermissionRow extends React.Component {
     _lookUpPubKeyForAddress(address) {
         var addresses = AddressIndex.getState().addresses;
         var pubkey = addresses.get(address);
-        console.log("pubkey:", pubkey);
         return pubkey;
     }
 

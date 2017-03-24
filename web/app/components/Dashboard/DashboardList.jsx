@@ -4,6 +4,7 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
+import WalletUnlockStore from "stores/WalletUnlockStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
@@ -70,6 +71,7 @@ class DashboardList extends React.Component {
 			!utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
 			nextProps.width !== this.props.width ||
 			nextProps.showIgnored !== this.props.showIgnored ||
+			nextProps.locked !== this.props.locked ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state)
 		);
@@ -271,10 +273,11 @@ class AccountsListWrapper extends React.Component {
 
 export default connect(AccountsListWrapper, {
 	listenTo() {
-		return [SettingsStore];
+		return [SettingsStore, WalletUnlockStore];
 	},
 	getProps() {
 		return {
+			locked: WalletUnlockStore.getState().locked,
 			starredAccounts: SettingsStore.getState().starredAccounts,
 			viewSettings: SettingsStore.getState().viewSettings
 		};

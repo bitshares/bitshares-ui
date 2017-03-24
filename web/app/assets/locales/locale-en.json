@@ -29,6 +29,8 @@
     "update_asset": "Update Asset",
     "lock": "Log out (lock the wallet)",
     "unlock": "Log in (unlock the wallet)",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "Help",
     "locked_tip": "<br/>Click to login by unlocking your wallet.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out by locking your wallet.<br/><br/>Closing the browser window will also log you out.",
@@ -241,7 +243,16 @@
       "show": "show",
       "brain": "Brainkey position",
       "from": "Imported from account",
-      "sign_owner": "Sign as owner"
+      "sign_owner": "Sign as owner",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password and account name, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
@@ -326,7 +337,8 @@
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",
-    "create_new": "Create New Account",
+    "create_new": "Create A New Account",
+    "password_login": "Login with password",
     "identicon": "Identicon",
     "pay_from": "Pay with account",
     "existing_accounts": "Existing Accounts",
@@ -728,6 +740,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",
@@ -1026,8 +1039,28 @@
     "brainkey_seq_reset_text": "Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a refresh of the private keys in the wallet.",
     "brainkey_seq_reset_button": "Reset now",
     "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet.",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys. The wallet model lets you use multiple accounts at the same time.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private keys on the fly. It restricts you to only logging in with one account at a time, in return for ease of use and convenience.",
+    "password_model_2": "The account model lets you login to your wallet from anywhere using only your account name and password, but <strong> your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!</strong>",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
     "account_public": "Account Name (Public)",
-    "current_pass": "Current password"
+    "current_pass": "Current password",
+    "no_wallet": "You do not have a wallet yet"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
@@ -1171,7 +1204,7 @@
       "open_website": "Open Website"
     },
     "purchase": "Purchase %(asset)s",
-    "purchase_1": "Quickly and easily purchase %(outputAsset)s using external %(inputAsset)s. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
   },
   "chat": {

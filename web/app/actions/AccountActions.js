@@ -95,6 +95,29 @@ class AccountActions {
         };
     }
 
+    createAccountWithPassword(
+        account_name,
+        password,
+        registrar,
+        referrer,
+        referrer_percent,
+        refcode
+    ) {
+        return (dispatch) => {
+            return WalletActions.createAccountWithPassword(
+                account_name,
+                password,
+                registrar,
+                referrer,
+                referrer_percent,
+                refcode
+            ).then( () => {
+                dispatch(account_name);
+                return account_name;
+            });
+        };
+    }
+
     /**
      *  TODO:  This is a function of the wallet_api and has no business being part of AccountActions, the account should already
      *  be linked.
@@ -121,6 +144,10 @@ class AccountActions {
 
     unlinkAccount(name) {
         return name;
+    }
+
+    setPasswordAccount(account) {
+        return account;
     }
 }
 

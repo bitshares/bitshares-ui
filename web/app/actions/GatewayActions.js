@@ -24,6 +24,8 @@ class GatewayActions {
                     });
                 });
             };
+        } else {
+            dispatch({});
         }
     }
 
@@ -45,6 +47,8 @@ class GatewayActions {
                     });
                 });
             };
+        } else {
+            dispatch({});
         }
     }
 }

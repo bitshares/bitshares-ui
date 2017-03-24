@@ -65,7 +65,12 @@ const willTransitionTo = (nextState, replaceState, callback) => {
     if (nextState.location.pathname === "/init-error") {
         return Apis.reset(connectionString, true).init_promise
         .then(() => {
-            var db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
+            var db;
+            try {
+                db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
+            } catch(err) {
+                console.log("db init error:", err);
+            }
             return Promise.all([db, SettingsStore.init()]).then(() => {
                 return callback();
             }).catch((err) => {

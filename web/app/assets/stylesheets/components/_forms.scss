@@ -55,9 +55,13 @@ div.account-image {
     display: block;
     flex: auto;
   }
+
+  .header-area {
+      margin-left: 3.5rem;
+  }
   .error-area {
       position: absolute;
-      padding-left: 3.8rem;
+      padding-left: 3.5rem;
   }
   .account-image {
     float: left;

@@ -31,7 +31,8 @@ class PrivateKeyStore extends BaseStore {
             "getTcomb_byPubkey",
             "getPubkeys_having_PrivateKey",
             "addPrivateKeys_noindex",
-            "decodeMemo"
+            "decodeMemo",
+            "setPasswordLoginKey"
         );
     }
 
@@ -43,6 +44,13 @@ class PrivateKeyStore extends BaseStore {
             privateKeyStorage_error_add_key: null,
             privateKeyStorage_error_loading: null
         };
+    }
+
+    setPasswordLoginKey(key) {
+        let keys = this.state.keys.set(key.pubkey, key);
+        this.setState({
+            keys
+        });
     }
 
     /** This method may be called again should the main database change */

@@ -9,19 +9,15 @@ import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router/es";
 import AccountSelect from "../Forms/AccountSelect";
-import WalletUnlockActions from "actions/WalletUnlockActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
-import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
-import {BackupCreate} from "../Wallet/Backup";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
-import counterpart from "counterpart";
 
-class CreateAccount extends React.Component {
+class CreateAccountPassword extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -32,7 +28,8 @@ class CreateAccount extends React.Component {
             loading: false,
             hide_refcode: true,
             show_identicon: false,
-            step: 1
+            step: 1,
+            showPass: false
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
@@ -42,7 +39,7 @@ class CreateAccount extends React.Component {
     componentWillMount() {
         SettingsActions.changeSetting({
             setting: "passwordLogin",
-            value: false
+            value: true
         });
     }
 
@@ -75,7 +72,7 @@ class CreateAccount extends React.Component {
     }
 
     onPasswordChange(e) {
-        this.setState({validPassword: e.valid});
+        this.setState({validPassword: e.valid, pass: e.value});
     }
 
     onFinishConfirm(confirm_store_state) {
@@ -90,59 +87,47 @@ class CreateAccount extends React.Component {
         }
     }
 
-    createAccount(name) {
-        let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
-        let referralAccount = AccountStore.getState().referralAccount;
-        WalletUnlockActions.unlock().then(() => {
-            this.setState({loading: true});
-
-            AccountActions.createAccount(name, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
-                // User registering his own account
-                if(this.state.registrar_account) {
-                    FetchChain("getAccount", name).then(() => {
-                        this.setState({
-                            step: 2,
-                            loading: false
-                        });
-                    });
-                    TransactionConfirmStore.listen(this.onFinishConfirm);
-                } else { // Account registered by the faucet
-                    // this.props.router.push(`/wallet/backup/create?newAccount=true`);
-                    FetchChain("getAccount", name).then(() => {
-                        this.setState({
-                            step: 2
-                        });
-                    });
-                    // this.props.router.push(`/account/${name}/overview`);
-
-                }
-            }).catch(error => {
-                console.log("ERROR AccountActions.createAccount", error);
-                let error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
-                if (error.remote_ip) error_msg = error.remote_ip[0];
-                notify.addNotification({
-                    message: `Failed to create account: ${name} - ${error_msg}`,
-                    level: "error",
-                    autoDismiss: 10
-                });
-                this.setState({loading: false});
-            });
-        });
+    _unlockAccount(name, password) {
+        WalletDb.validatePassword(password, true, name);
     }
 
-    createWallet(password) {
-        return WalletActions.setWallet(
-            "default", //wallet name
-            password
-        ).then(()=> {
-            console.log("Congratulations, your wallet was successfully created.");
-        }).catch(err => {
-            console.log("CreateWallet failed:", err);
+    createAccount(name, password) {
+        let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
+        let referralAccount = AccountStore.getState().referralAccount;
+        this.setState({loading: true});
+
+        AccountActions.createAccountWithPassword(name, password, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
+            // User registering his own account
+            if(this.state.registrar_account) {
+                FetchChain("getAccount", name).then(() => {
+                    this.setState({
+                        step: 2,
+                        loading: false
+                    });
+                    this._unlockAccount(name, password);
+                });
+                TransactionConfirmStore.listen(this.onFinishConfirm);
+            } else { // Account registered by the faucet
+                // this.props.router.push(`/wallet/backup/create?newAccount=true`);
+                FetchChain("getAccount", name).then(() => {
+                    this.setState({
+                        step: 2
+                    });
+                });
+                this._unlockAccount(name, password);
+                // this.props.router.push(`/account/${name}/overview`);
+
+            }
+        }).catch(error => {
+            console.log("ERROR AccountActions.createAccount", error);
+            let error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
+            if (error.remote_ip) error_msg = error.remote_ip[0];
             notify.addNotification({
-                message: `Failed to create wallet: ${err}`,
+                message: `Failed to create account: ${name} - ${error_msg}`,
                 level: "error",
                 autoDismiss: 10
-            })
+            });
+            this.setState({loading: false});
         });
     }
 
@@ -150,12 +135,11 @@ class CreateAccount extends React.Component {
         e.preventDefault();
         if (!this.isValid()) return;
         let account_name = this.accountNameInput.getValue();
-        if (WalletDb.getWallet()) {
-            this.createAccount(account_name);
-        } else {
-            let password = this.refs.password.value();
-            this.createWallet(password).then(() => this.createAccount(account_name));
-        }
+        // if (WalletDb.getWallet()) {
+        //     this.createAccount(account_name);
+        // } else {
+        let password = this.refs.password.value();
+        this.createAccount(account_name, password);
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -191,13 +175,13 @@ class CreateAccount extends React.Component {
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
             >
-                <p style={{fontWeight: "bold"}}>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</p>
+                <p style={{fontWeight: "bold"}}><Translate content="wallet.create_password" /></p>
                 <AccountNameInput
                     ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
                     cheapNameOnly={!!firstAccount}
                     onChange={this.onAccountNameChange.bind(this)}
                     accountShouldNotExist={true}
-                    placeholder={counterpart.translate("wallet.account_public")}
+                    placeholder="Account Name (Public)"
                     noLabel
                 />
 
@@ -209,6 +193,7 @@ class CreateAccount extends React.Component {
                             confirmation={true}
                             onChange={this.onPasswordChange.bind(this)}
                             noLabel
+                            passwordLength={12}
                             checkStrength
                         />
                 }
@@ -233,7 +218,7 @@ class CreateAccount extends React.Component {
                 {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
 
                 {/* Backup restore option */}
-                <div style={{paddingTop: 40}}>
+                {/* <div style={{paddingTop: 40}}>
                     <label>
                         <Link to="/existing-account">
                             <Translate content="wallet.restore" />
@@ -245,41 +230,33 @@ class CreateAccount extends React.Component {
                             <Translate content="settings.backup_brainkey" />
                         </Link>
                     </label>
-                </div>
+                </div> */}
 
                 {/* Skip to step 3 */}
-                {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
+                {/* {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
                     <label>
                         <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
                     </label>
-                </div>}
+                </div>} */}
             </form>
         );
     }
 
     _renderAccountCreateText() {
-        let hasWallet = WalletDb.getWallet();
         let my_accounts = AccountStore.getMyAccounts();
         let firstAccount = my_accounts.length === 0;
 
         return (
             <div>
-                <h4 style={{fontWeight: "bold", paddingBottom: 15}}><Translate content="wallet.wallet_browser" /></h4>
+                <h4 style={{fontWeight: "bold", paddingBottom: 15}}><Translate content="wallet.wallet_password" /></h4>
 
-                <p>{!hasWallet ? <Translate content="wallet.has_wallet" /> : null}</p>
+                <Translate style={{textAlign: "left"}} unsafe component="p" content="wallet.create_account_password_text" />
 
                 <Translate style={{textAlign: "left"}} component="p" content="wallet.create_account_text" />
 
                 {firstAccount ?
                     <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> :
                     <Translate style={{textAlign: "left"}} component="p" content="wallet.not_first_account" />}
-
-                {/* {this.state.hide_refcode ? null :
-                    <div>
-                        <RefcodeInput ref="refcode" label="refcode.refcode_optional" expandable={true}/>
-                        <br/>
-                    </div>
-                } */}
             </div>
         );
     }
@@ -287,9 +264,14 @@ class CreateAccount extends React.Component {
     _renderBackup() {
         return (
             <div className="backup-submit">
-                <p><Translate unsafe content="wallet.wallet_crucial" /></p>
+                <p><Translate unsafe content="wallet.password_crucial" /></p>
+
+                <div>
+
+                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><Translate content="settings.password" />: <pre style={{paddingTop: 20}} className="no-overflow">{this.state.pass}</pre></div>}
+                </div>
                 <div className="divider" />
-                <BackupCreate noText downloadCb={this._onBackupDownload}/>
+                <div onClick={() => {this.setState({step: 3});}} className="button"><Translate content="init_error.understand" /></div>
             </div>
         );
     }
@@ -304,8 +286,7 @@ class CreateAccount extends React.Component {
         return (
             <div>
                 <p style={{fontWeight: "bold"}}><Translate content="footer.backup" /></p>
-                <p><Translate content="wallet.wallet_move" unsafe /></p>
-                <p className="txtlabel warning"><Translate unsafe content="wallet.wallet_lose_warning" /></p>
+                <p className="txtlabel warning"><Translate unsafe content="wallet.password_lose_warning" /></p>
             </div>
         );
     }
@@ -356,7 +337,7 @@ class CreateAccount extends React.Component {
             <div>
                 <p style={{fontWeight: "bold"}}><Translate content="wallet.congrat" /></p>
 
-                <p><Translate content="wallet.tips_explore" /></p>
+                <p><Translate content="wallet.tips_explore_pass" /></p>
 
                 <p><Translate content="wallet.tips_header" /></p>
 
@@ -367,7 +348,6 @@ class CreateAccount extends React.Component {
 
     render() {
         let {step} = this.state;
-
         // let my_accounts = AccountStore.getMyAccounts();
         // let firstAccount = my_accounts.length === 0;
         return (
@@ -406,7 +386,7 @@ class CreateAccount extends React.Component {
     }
 }
 
-export default connect(CreateAccount, {
+export default connect(CreateAccountPassword, {
     listenTo() {
         return [AccountStore];
     },
