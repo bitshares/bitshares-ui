@@ -39,7 +39,7 @@ class BitKapital extends React.Component {
     _renderDeposits() {
         return <iframe
             style={{width: "100%", border: 0, minHeight: 800}}
-            src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
+            src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + "&theme=" + ${SettingsStore.getState().settings.get("themes")}}
         >
         </iframe>;
     }
