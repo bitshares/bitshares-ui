@@ -18,8 +18,14 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import { Apis } from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
+import IntlActions from "actions/IntlActions";
+import AccountImage from "../Account/AccountImage";
 
 var logo = require("assets/logo-ico-blue.png");
+
+const FlagImage = ({flag, width = 20, height = 20}) => {
+    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+};
 
 class Header extends React.Component {
 
@@ -71,6 +77,7 @@ class Header extends React.Component {
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
+            nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active
         );
     }
@@ -201,7 +208,8 @@ class Header extends React.Component {
                     return (
                         <li className={name === account_display_name ? "current-account" : ""} key={name}>
                             <a href onClick={this._accountClickHandler.bind(this, name)}>
-                                <span>{name}</span>
+                                <td><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></td>
+                                <td style={{paddingLeft: 10}}><span>{name}</span></td>
                             </a>
                         </li>
                     );
@@ -259,6 +267,29 @@ class Header extends React.Component {
             </ActionSheet.Content>
         </ActionSheet>;
 
+        const flagDropdown = <ActionSheet>
+            <ActionSheet.Button title="">
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <FlagImage flag={this.props.currentLocale} />
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    {this.props.locales.map(locale => {
+                        return (
+                            <li>
+                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}} className={locale === this.props.currentLocale ? "is-active" : ""}>
+                                    <td><FlagImage flag={locale} /></td>
+                                    <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
+
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         return (
@@ -304,9 +335,15 @@ class Header extends React.Component {
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
+
                         {!myAccountCount ? null :<div className="grp-menu-item overflow-visible" >
                             {settingsDropdown}
                         </div>}
+
+                        <div className="grp-menu-item overflow-visible account-drop-down">
+                            {flagDropdown}
+                        </div>
+
                         {lock_unlock}
                     </div>
                 </div>
@@ -328,7 +365,9 @@ export default connect(Header, {
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
             starredAccounts: SettingsStore.getState().starredAccounts,
-            passwordLogin: SettingsStore.getState().settings.get("passwordLogin")
+            passwordLogin: SettingsStore.getState().settings.get("passwordLogin"),
+            currentLocale: SettingsStore.getState().settings.get("locale"),
+            locales: SettingsStore.getState().defaults.locale
         };
     }
 });
