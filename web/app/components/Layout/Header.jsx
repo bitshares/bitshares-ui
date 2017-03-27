@@ -222,14 +222,16 @@ class Header extends React.Component {
         tradingAccounts.length === 1 ?
         (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
-                <Icon className="icon-14px" name="user"/> {account_display_name}
+                <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
             </a>
         </ActionSheet.Button>) :
 
         (<ActionSheet>
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
-                    <AccountImage style={{display: "inline-block", position: "relative", top: 5}} size={{height: 20, width: 20}} account={account_display_name}/> {account_display_name}
+                    <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                    <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
@@ -278,7 +280,7 @@ class Header extends React.Component {
                     {this.props.locales.map(locale => {
                         return (
                             <li key={locale}>
-                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}} className={locale === this.props.currentLocale ? "is-active" : ""}>
+                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}}>
                                     <td><FlagImage flag={locale} /></td>
                                     <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
 
@@ -332,17 +334,21 @@ class Header extends React.Component {
                             {settingsDropdown}
                         </div>}
 
+                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {flagDropdown}
+                        </div>}
+
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
 
-                        {!myAccountCount ? null :<div className="grp-menu-item overflow-visible" >
-                            {settingsDropdown}
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible account-drop-down">
+                            {flagDropdown}
                         </div>}
 
-                        <div className="grp-menu-item overflow-visible account-drop-down">
-                            {flagDropdown}
-                        </div>
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>}
 
                         {lock_unlock}
                     </div>
