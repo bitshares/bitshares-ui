@@ -229,7 +229,7 @@ class Header extends React.Component {
         (<ActionSheet>
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
-                    <Icon className="icon-14px" name="user"/> {account_display_name}
+                    <AccountImage style={{display: "inline-block", position: "relative", top: 5}} size={{height: 20, width: 20}} account={account_display_name}/> {account_display_name}
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
@@ -277,7 +277,7 @@ class Header extends React.Component {
                 <ul className="no-first-element-top-border">
                     {this.props.locales.map(locale => {
                         return (
-                            <li>
+                            <li key={locale}>
                                 <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}} className={locale === this.props.currentLocale ? "is-active" : ""}>
                                     <td><FlagImage flag={locale} /></td>
                                     <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
