@@ -19,7 +19,7 @@ class GatewayStore {
         });
     }
 
-    onFetchCoins({backer, coins, backedCoins}) {
+    onFetchCoins({backer, coins, backedCoins} = {}) {
         if (backer && coins) {
             this.coins = this.coins.set(backer, coins);
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
@@ -28,7 +28,7 @@ class GatewayStore {
         }
     }
 
-    onFetchBridgeCoins({coins, bridgeCoins, wallets}) {
+    onFetchBridgeCoins({coins, bridgeCoins, wallets} = {}) {
         if (coins && bridgeCoins) {
             let coins_by_type = {};
             coins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
