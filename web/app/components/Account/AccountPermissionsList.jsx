@@ -1,17 +1,15 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import AccountImage from "./AccountImage";
-import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Icon from "../Icon/Icon";
-import PrivateKeyView from "components/PrivateKeyView"
+import PrivateKeyView from "components/PrivateKeyView";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import AddressIndex from "stores/AddressIndex"
+import AddressIndex from "stores/AddressIndex";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -29,19 +27,18 @@ class AccountPermissionRow extends React.Component {
     _lookUpPubKeyForAddress(address) {
         var addresses = AddressIndex.getState().addresses;
         var pubkey = addresses.get(address);
-        console.log("pubkey:", pubkey);
         return pubkey;
     }
 
     render() {
         let name, item_id, name_or_key;
         let suffix = "_accounts";
-        let pubKey = this.props.pubkey;;
+        let pubKey = this.props.pubkey;
 
         if (this.props.account) {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
-            name_or_key = <Link to={`account/${name}/permissions`}>{name}</Link>;
+            name_or_key = <Link to={`/account/${name}/permissions`}>{name}</Link>;
         } else if (pubKey) {
             name = item_id = this.props.pubkey;
             name_or_key = <PrivateKeyView pubkey={this.props.pubkey}>{this.props.pubkey}</PrivateKeyView>
@@ -61,7 +58,7 @@ class AccountPermissionRow extends React.Component {
                 : pubKey ? (
                     <div className="account-image">
                         <PrivateKeyView pubkey={pubKey}>
-                            <Icon name="key" size="1x"/>
+                            <Icon name="key" size="4x"/>
                         </PrivateKeyView>
                     </div>)
                 : null}
@@ -77,7 +74,6 @@ class AccountPermissionRow extends React.Component {
     }
 }
 
-@BindToChainState({keep_updating: true})
 class AccountPermissionsList extends React.Component {
 
     static propTypes = {
@@ -219,4 +215,4 @@ class AccountPermissionsList extends React.Component {
 
 }
 
-export default AccountPermissionsList;
+export default BindToChainState(AccountPermissionsList, {keep_updating: true});

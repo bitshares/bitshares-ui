@@ -7,10 +7,11 @@ import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
-import FormattedFee from "../Utility/FormattedFee";
 import AssetName from "../Utility/AssetName";
+import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
+import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
+import {Asset} from "common/MarketClasses";
 
-@BindToChainState({keep_updating: true})
 class BuySell extends React.Component {
 
     static propTypes = {
@@ -28,13 +29,14 @@ class BuySell extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
                 nextProps.amount !== this.props.amount ||
+                nextProps.onBorrow !== this.props.onBorrow ||
                 nextProps.total !== this.props.total ||
                 nextProps.currentPrice !== this.props.currentPrice ||
                 nextProps.price !== this.props.price ||
                 nextProps.balance !== this.props.balance ||
                 nextProps.account !== this.props.account ||
                 nextProps.className !== this.props.className ||
-                nextProps.fee !== this.props.fee ||
+                (nextProps.fee && this.props.fee ? nextProps.fee.ne(this.props.fee) : false) ||
                 nextProps.isPredictionMarket !== this.props.isPredictionMarket ||
                 nextProps.feeAsset !== this.props.feeAsset ||
                 nextProps.isOpen !== this.props.isOpen
@@ -42,10 +44,11 @@ class BuySell extends React.Component {
     }
 
     _addBalance(balance) {
+        console.log("_addBalance:", balance);
         if (this.props.type === "bid") {
-            this.props.totalChange({target: {value: balance.toString()}});
+            this.props.totalChange({target: {value: balance.getAmount({real: true}).toString()}});
         } else {
-            this.props.amountChange({target: {value: balance.toString()}});
+            this.props.amountChange({target: {value: balance.getAmount({real: true}).toString()}});
         }
     }
 
@@ -53,37 +56,46 @@ class BuySell extends React.Component {
         this.props.priceChange({target: {value: price.toString()}});
     }
 
+    _onDeposit(e) {
+        e.preventDefault();
+        this.refs.deposit_modal.show();
+    }
+
+    _onBuy(e) {
+        e.preventDefault();
+        this.refs.bridge_modal.show();
+    }
+
     render() {
         let {type, quote, base, amountChange, fee, isPredictionMarket,
-            priceChange, onSubmit, balance, totalPrecision, totalChange,
-            balancePrecision, quotePrecision, currentPrice, currentPriceObject,
-            feeAsset, feeAssets} = this.props;
+            priceChange, onSubmit, balance, totalChange,
+            balancePrecision, currentPrice, currentPriceObject,
+            feeAsset, feeAssets, backedCoin} = this.props;
         let amount = 0, price = 0, total = 0;
-
         let caret = this.props.isOpen ? <span>&#9660;</span> : <span>&#9650;</span>;
 
         if (this.props.amount) amount = this.props.amount;
         if (this.props.price) price = this.props.price;
         if (this.props.total) total = this.props.total;
 
-        let balanceAmount = balance ? utils.get_asset_amount(balance.get("balance"), {precision: balancePrecision}) : 0;
-        if (!balanceAmount) {
-            balanceAmount = 0;
-        }
+        let balanceAmount = new Asset({amount: balance ? balance.get("balance") : 0, precision: balancePrecision, asset_id: this.props.balanceId});
+        // if (!balanceAmount) {
+        //     balanceAmount = 0;
+        // }
+        const isBid = type === "bid";
+        let hasBalance = isBid ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
 
-        let hasBalance = type === "bid" ? balanceAmount >= parseFloat(total) : balanceAmount >= parseFloat(amount);
+        let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
+        let forceSellText = isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
 
-        let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
-        let forceSellText = type === "bid" ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
-
-        let noBalance = isPredictionMarket ? false : !(balanceAmount > 0 && hasBalance);
+        let noBalance = isPredictionMarket ? false : !(balanceAmount.getAmount() > 0 && hasBalance);
         let invalidPrice = !(price > 0);
         let invalidAmount = !(amount >0);
 
         let disabled = noBalance || invalidPrice || invalidAmount;
 
         let buttonClass = classNames("button buySellButton", type, {disabled: disabled});
-        let balanceSymbol = type === "bid" ? base.get("symbol") : quote.get("symbol");
+        let balanceSymbol = isBid ? base.get("symbol") : quote.get("symbol");
 
         let disabledText = invalidPrice ? counterpart.translate("exchange.invalid_price") :
                            invalidAmount ? counterpart.translate("exchange.invalid_amount") :
@@ -105,11 +117,13 @@ class BuySell extends React.Component {
         let balanceToAdd;
 
         if (this.props.feeAsset.get("symbol") === balanceSymbol) {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount - fee;
+            balanceToAdd = balanceAmount.clone(balanceAmount.getAmount() - fee.getAmount());
         } else {
-            balanceToAdd = balanceAmount === 0 ? 0 : balanceAmount;
+            balanceToAdd = balanceAmount;
         }
 
+        let {name, prefix} = utils.replaceName(this.props[isBid ? "base" : "quote"].get("symbol"), !!this.props[isBid ? "base" : "quote"].get("bitasset"));
+        let buyBorrowDepositName = (prefix ? prefix : "") + name;
         return (
             <div className={this.props.className}>
                 <div className="exchange-bordered buy-sell-container">
@@ -117,7 +131,12 @@ class BuySell extends React.Component {
                         <span>{buttonText} <AssetName name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}
-                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge">{caret}</div>}
+                        {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge" style={{paddingLeft: 10}}>{caret}</div>}
+                        {this.props.currentBridges ? <div className="float-right buy-sell-deposit"><a onClick={this._onBuy.bind(this)}><Translate content="exchange.buy" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
+                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
+                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit"><a onClick={this.props.onBorrow}><Translate content="exchange.borrow" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
+
+
                     </div>
 
                     <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
@@ -147,7 +166,7 @@ class BuySell extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="grid-block no-padding buy-sell-row bottom-row">
+                                <div className="grid-block buy-sell-row bottom-row">
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="exchange.total" />:
                                     </div>
@@ -164,7 +183,7 @@ class BuySell extends React.Component {
                                         <Translate content="transfer.fee" />:
                                     </div>
                                     <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
-                                        <input disabled type="text" id="fee" value={fee} autoComplete="off"/>
+                                        <input disabled type="text" id="fee" value={fee.getAmount({real: true})} autoComplete="off"/>
                                     </div>
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
                                         <select
@@ -190,16 +209,16 @@ class BuySell extends React.Component {
                                                 <td><Translate content="exchange.balance" />:</td>
                                                 <td style={{paddingLeft: 5, textAlign: "right"}}>
                                                     <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._addBalance.bind(this, balanceToAdd)}>
-                                                        {utils.format_number(balanceAmount, balancePrecision)} <AssetName name={balanceSymbol} />
+                                                        {utils.format_number(balanceAmount.getAmount({real: true}), balancePrecision)} <AssetName name={balanceSymbol} />
                                                     </span>
                                                 </td>
                                           </tr>
 
                                           <tr className="buy-sell-info">
-                                                <td style={{paddingTop: 5}}>{this.props.type === "bid" ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
+                                                <td style={{paddingTop: 5}}>{isBid ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}:&nbsp;</td>
                                                 {currentPrice ? (
                                                 <td style={{paddingLeft: 5, textAlign: "right", paddingTop: 5, verticalAlign: "bottom"}}>
-                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject)}>
+                                                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this.props.setPrice.bind(this, type, currentPriceObject.sellPrice())}>
                                                     <PriceText price={currentPrice} quote={quote} base={base} /> <AssetName name={base.get("symbol")} />
                                                     </span>
                                                 </td>) : null}
@@ -209,7 +228,7 @@ class BuySell extends React.Component {
 
                                     {/* BUY/SELL button */}
                                     {disabledText ?
-                                        (<div className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                        (<div className="float-right" data-tip={disabledText} data-place="right">
                                             <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, true)} value={buttonText} />
                                         </div>) :
                                         (<div className="float-right" data-tip={""}>
@@ -219,7 +238,7 @@ class BuySell extends React.Component {
 
                                 {/* SHORT button */}
                                     {disabledText && isPredictionMarket ? (
-                                        <div style={{paddingRight: 10}} className="float-right" data-tip={disabledText} data-place="right" data-type="light">
+                                        <div style={{paddingRight: 10}} className="float-right" data-tip={disabledText} data-place="right">
                                             <input style={{margin: 0}} className={buttonClass} type="submit" onClick={onSubmit.bind(this, false)} value={forceSellText} />
                                         </div>) : isPredictionMarket ? (
                                         <div style={{paddingRight: 10}} className="float-right" data-tip={""}>
@@ -232,9 +251,32 @@ class BuySell extends React.Component {
 
                     </form>
                 </div>
+                <SimpleDepositWithdraw
+                    ref="deposit_modal"
+                    action="deposit"
+                    fiatModal={false}
+                    account={this.props.currentAccount.get("name")}
+                    sender={this.props.currentAccount.get("id")}
+                    asset={this.props[isBid ? "base" : "quote"].get("id")}
+                    modalId={"simple_deposit_modal" + (type === "bid" ? "" : "_ask")}
+                    balances={[this.props.balance]}
+                    {...backedCoin}
+                />
+
+                {/* Bridge modal */}
+                <SimpleDepositBlocktradesBridge
+                    ref="bridge_modal"
+                    action="deposit"
+                    account={this.props.currentAccount.get("name")}
+                    sender={this.props.currentAccount.get("id")}
+                    asset={this.props.balanceId}
+                    modalId={"simple_bridge_modal" + (type === "bid" ? "" : "_ask")}
+                    balances={[this.props.balance]}
+                    bridges={this.props.currentBridges}
+                />
             </div>
         );
     }
 }
 
-export default BuySell;
+export default BindToChainState(BuySell, {keep_updating: true});

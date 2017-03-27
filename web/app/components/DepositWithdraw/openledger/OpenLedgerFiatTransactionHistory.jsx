@@ -1,11 +1,7 @@
 import React from "react";
-import {Link} from "react-router";
-import {ChainStore} from "graphenejs-lib";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import Post from "common/formPost";
 
-@BindToChainState({keep_updating:true})
 class OpenLedgerFiatTransactionHistory extends React.Component {
     static propTypes = {
         rpc_url:               React.PropTypes.string,
@@ -24,20 +20,20 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
 
     onShowOpenLedgerTransactionHistory() {
          let json_rpc_request = {
-          "jsonrpc": "2.0", 
-          "method": "getRequestsList", 
+          "jsonrpc": "2.0",
+          "method": "getRequestsList",
           "params": {
              "bitsharesAccountName": this.props.account.get('name')
-          }, 
-          "id": 1 
+          },
+          "id": 1
          };
          let get_transaction_history_promise = fetch(this.props.rpc_url,
-                                                     {method: 'POST', 
-                                                      headers: new Headers({"Accept": "application/json", 
-                                                      "content-type":"application/x-www-form-urlencoded"}), 
+                                                     {method: 'POST',
+                                                      headers: new Headers({"Accept": "application/json",
+                                                      "content-type":"application/x-www-form-urlencoded"}),
                                                      body: 'rq=' + encodeURIComponent(JSON.stringify(json_rpc_request)) })
                                               .then(response => response.json());
-            
+
          get_transaction_history_promise.then((json_response) => {
                 if ('result' in json_response)
                 {
@@ -103,7 +99,7 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                 for (var i = 0; i < this.state.deposits.length; ++i)
                     openledger_deposit_history_rows.push(<tr>
                                                               <td>{this.state.deposits[i].amount} {this.state.deposits[i].currency}</td>
-                                                              <td><a href={this.state.deposits[i].link} target="_blank">link</a></td>
+                                                              <td><a href={this.state.deposits[i].link} rel="noopener noreferrer" target="_blank">link</a></td>
                                                               <td>{this.state.deposits[i].status}</td>
                                                          </tr>);
                 openledger_deposit_history_fragment = <table className="table">
@@ -123,7 +119,7 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                 openledger_deposit_history_fragment = <p>No deposits</p>;
         }
 
-        
+
 
 
         let openledger_transaction_history_fragment = null;
@@ -145,7 +141,7 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                                                         <br/>
                                                         <h4>Transaction History</h4>
                                                         <button className={"button outline"} onClick={this.onShowOpenLedgerTransactionHistory.bind(this)}> {button_label} </button>
-                                                        {openledger_withdrawal_history_fragment} 
+                                                        {openledger_withdrawal_history_fragment}
                                                         {openledger_deposit_history_fragment}
                                                       </div>;
         }
@@ -154,4 +150,4 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
     }
 }; // OpenLedgerFiatTransactionHistory
 
-export default OpenLedgerFiatTransactionHistory;
+export default BindToChainState(OpenLedgerFiatTransactionHistory, {keep_updating:true});

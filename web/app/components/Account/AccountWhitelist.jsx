@@ -1,5 +1,5 @@
 import React from "react";
-import Tabs, {Tab} from "../Utility/Tabs";
+import {Tabs, Tab} from "../Utility/Tabs";
 import constants from "chain/account_constants.js";
 import AccountSelector from "../Account/AccountSelector";
 import Immutable from "immutable";
@@ -7,12 +7,11 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb.js"
+import WalletApi from "api/WalletApi";
+import WalletDb from "stores/WalletDb.js";
 
 let wallet_api = new WalletApi();
 
-@BindToChainState()
 class AccountRow extends React.Component {
 
     static propTypes = {
@@ -36,6 +35,7 @@ class AccountRow extends React.Component {
         );
     }
 }
+AccountRow = BindToChainState(AccountRow);
 
 class AccountList extends React.Component {
 
@@ -177,10 +177,10 @@ class AccountWhitelist extends React.Component {
                     <Tabs
                         tabsClass="bordered-header no-padding"
                         setting="whitelistTab"
-                        contentClass="grid-content shrink small-vertical medium-horizontal"
+                        contentClass="grid-content shrink small-vertical medium-horizontal no-padding"
                     >
                         <Tab title="account.whitelist.title">
-                            <div style={{paddingBottom: "1rem"}} className="grid-content small-12">
+                            <div style={{paddingBottom: "1rem"}} className="small-12">
                                 <div>
                                     <AccountList
                                         emptyText="account.whitelist.empty"
@@ -209,7 +209,7 @@ class AccountWhitelist extends React.Component {
                         </Tab>
 
                         <Tab title="account.whitelist.black">
-                            <div style={{paddingBottom: "1rem"}} className="grid-content small-12">
+                            <div style={{paddingBottom: "1rem"}} className="small-12">
                                 <div>
                                     <AccountList
                                         emptyText="account.whitelist.empty_black"
@@ -235,7 +235,7 @@ class AccountWhitelist extends React.Component {
                         </Tab>
 
                         <Tab title="account.whitelist.white_by">
-                            <div style={{paddingBottom: "1rem"}} className="grid-content small-12">
+                            <div style={{paddingBottom: "1rem"}} className="small-12">
                                 <div>
                                     <AccountList
                                         emptyText="account.whitelist.empty_white_by"
@@ -247,7 +247,7 @@ class AccountWhitelist extends React.Component {
                         </Tab>
 
                         <Tab title="account.whitelist.black_by">
-                            <div style={{paddingBottom: "1rem"}} className="grid-content small-12">
+                            <div style={{paddingBottom: "1rem"}} className="small-12">
                                 <div>
                                     <AccountList
                                         emptyText="account.whitelist.empty_black_by"

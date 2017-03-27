@@ -8,8 +8,14 @@
     "es": "Español",
     "tr": "Turkish"
   },
+  "sync_fail": {
+    "title": "无法与API服务器同步连接",
+    "sub_text_1": "请确认你的计算机系统时钟正确。",
+    "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
+},
   "header": {
-    "title": "Graphene (石墨烯)钱包",
+    "title": "BitShares (石墨烯)钱包",
+    "account": "账户",
     "dashboard": "概览",
     "explorer": "浏览",
     "exchange": "交易",
@@ -19,16 +25,50 @@
     "current": "当前账户",
     "create_account": "创建账户",
     "create_asset": "创建资产",
+    "update_asset": "更新资产",
     "lock": "锁定钱包",
     "unlock": "解锁",
-    "account": "账户",
     "help": "帮助",
     "locked_tip": "钱包已锁定，点击解锁。",
     "unlocked_tip": "钱包已解锁，点击锁定。",
-    "update_asset": "更新资产"
+    "account_notify": "The active account is now %(account)s"
+  },
+  "tooltip": {
+      "call_limit": "市场中最少抵押率头寸的平仓价",
+      "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+      "settle_price": "清算单执行时将使用的价格",
+      "sign_owner": "如果你是账户的所有人，请检查签名是否正确。这只有在你使用所有者账户，而该账户未包括与活跃权限时需要关注。",
+      "latest_price": "市场最近的成交价",
+      "no_price": "未找到该资产最近的成交价来评估价值",
+      "hide_asset": "从列表中隐藏资产",
+      "show_asset": "在主列表中显示资产",
+      "settle": "使用清算你可以在24小时后以当时的喂价转换你的 %(asset)s 资产为 BTS",
+      "filter_ops": "根据操作类型过滤交易历史",
+      "show_block": "显示收录交易的区块信息 #%(block)s ",
+      "coll_ratio": "头寸抵押率计算公式为：抵押量 * 喂价 / 债务",
+      "call_price": "头寸平仓价。如果喂价低于该价格，头寸将被强制平仓。",
+      "close_position": "平仓。你至少需要 %(amount)s %(asset)s 进行平仓",
+      "update_position": "更新头寸。你可随时更新借款及抵押水平。",
+      "cr_danger": "该头寸目前抵押率不足。请考虑补仓已提高抵押率至少至 %(mr)s 或进行平仓。",
+      "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
+      "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
+      "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。",
+      "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+      "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "account": {
-    "welcome": "欢迎使用 Graphene (石墨烯)系统",
+    "intro_text_title": "欢迎来到比特股去中心化交易所！",
+    "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所，该交易所通称DEX, DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要.",
+    "intro_text_2": "发行用户定义资产（UIA）,也可以买卖通用的数字资产如BTC, ETH等。",
+    "intro_text_3": "来比特股尽情享受交易的乐趣吧！",
+    "intro_text_4": "<br/>官网：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>QQ群：&nbsp;&nbsp;423951676<br/>Github：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+    "trade": "交易",
+    "welcome": "欢迎使用 BitShares (石墨烯)系统",
     "assets": "资产",
     "market_value": "市值",
     "hour_24": "日涨跌幅%",
@@ -161,9 +201,20 @@
       "private": "私钥(WIF - 钱包导入格式)",
       "show": "显示",
       "brain": "脑钱包位置",
-      "from": "已从账户导入"
+      "from": "已从账户导入",
+      "sign_owner": "已所有者身份签名",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy_short": "代理投票",
       "workers_short": "预算项目",
       "proxy": "代理投票账户",
@@ -291,7 +342,8 @@
     "create_new": "创建新账户",
     "estimate_value": "账户价值估算",
     "polo_scam": "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
-    "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。"
+    "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "transfer": {
     "from": "来自",
@@ -684,6 +736,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "市场交易对视角",
     "unit": "显示记账单位",
     "confirmMarketOrder": "市场订单要求确认",
@@ -734,14 +787,16 @@
     "lookup_text": "查看来自BTS 1.0的未领取余额",
     "delete_select": "选择要删除的钱包",
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
-    "restore_key_count": "# of 密钥"
+    "restore_key_count": "# of 密钥",
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "pagination": {
     "newer": "更近",
     "older": "更早"
   },
   "footer": {
-    "title": "Graphene (石墨烯)",
+    "title": "BitShares (石墨烯)",
     "block": "最新区块",
     "loading": "载入中...",
     "backup": "需要备份",
@@ -750,6 +805,23 @@
     "brainkey": "建议备份脑钱包密钥"
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "price_history": "价格历史",
     "order_depth": "市场深度",
     "market_history": "市场历史",
@@ -765,9 +837,10 @@
     "spread": "买卖价差",
     "quantity": "数量",
     "buy": "买入",
+    "buy_min": "Buy at least",
     "sell": "卖出",
-    "confirm_buy": "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，买入 %(buy_amount)s %(buy_symbol)s ",
-    "confirm_sell": "确认订单: 以 %(price_amount)s %(price_symbol)s 的价格，卖出 %(sell_amount)s %(sell_symbol)s ",
+    "confirm_buy": "你的订单价格超出最低卖出价 %(diff)s 倍，你确定么？",
+    "confirm_sell": "你的订单价低于最高买入价 %(diff)s 倍，你确定么？",
     "settle": "喂价",
     "core_rate": "转账手续费汇率",
     "squeeze": "强制平仓价",
@@ -819,7 +892,8 @@
     "zoom_all": "显示全部",
     "settings": "图表选项",
     "featured": "热门市场",
-    "new": "新增"
+    "new": "新增",
+    "market_frozen": "%(asset)s 资产发行人已禁用该资产的市场交易"
   },
   "markets": {
     "title": "交易所",
@@ -877,7 +951,7 @@
     "change": "切换到钱包 (%(name)s)",
     "balance_claims": "余额导入",
     "backup_brainkey": "备份脑钱包密钥",
-    "downoad": "下载",
+    "download": "下载",
     "import_20_notice1": "请先导入你的BTS 2.0+ 钱包备份文件",
     "import_20_notice2": "(如果你有的话)",
     "loading_balances": "余额读取中",
@@ -887,7 +961,6 @@
     "unclaimed": "未导入余额",
     "unclaimed_vesting": "未导入余额 (解冻中)",
     "no_accounts": "没有账户",
-    "brainkey_no_match": "脑钱包密钥不匹配，请重试",
     "reenter_brainkey": "请再输入一遍脑钱包密钥",
     "pwd4brainkey": "输入密码后显示脑钱包密钥",
     "show_brainkey": "显示脑钱包密钥",
@@ -956,7 +1029,28 @@
     "tips_explore": "现在你已经成功创建了一个账户，并且下载了备份文件，让我们开始吧。点击左侧的链接开始探索。",
     "tips_header": "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
     "tips_login": "重要！这里没有登录/注销的概念和功能，当你需要发生交易时解锁钱包，闲置或者手动选择进行钱包锁定。",
-    "import_key_success": "已成功导入 %(count)s 个密钥。"
+    "import_key_success": "已成功导入 %(count)s 个密钥。",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
+    "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",
@@ -965,6 +1059,8 @@
     "adjust": "调整头寸",
     "errors": {
       "below": "保证金率低于维持保证金要求",
+      "close": "你的抵押率已接近 %(mr)s ，这意味着如果价格继续下跌你的头寸将被强制平仓。",
+      "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "可用保证金不足"
     },
     "close": "平仓",
@@ -1021,6 +1117,13 @@
     "enter_refcode": "输入推荐码"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+    },
+    "your_account": "Your account",
     "bridge": "桥接",
     "gateway": "承兑商",
     "symbol": "资产",
@@ -1068,7 +1171,10 @@
     "bridge_text": "桥接能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
     "gateway_text": "网关能让你将BitShares中的资产与外部资产进行互换，比如OPEN.BTC到BTC。",
     "fiat_text": "法币的冲提现服务由CCEDK提供。你必须先行在CCEDK上进行账户注册。下面是支持的货币：",
-    "service": "转账服务"
+    "service": "转账服务",
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   },
   "propose": "提议",
   "cancel": "取消",
@@ -1120,10 +1226,5 @@
     "users": "%(count)s 用户在线",
     "disabled": "聊天室禁用",
     "enable": "启用聊天室"
-  },
-  "sync_fail": {
-    "title": "无法与API服务器同步连接",
-    "sub_text_1": "请确认你的计算机系统时钟正确。",
-    "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
   }
 }

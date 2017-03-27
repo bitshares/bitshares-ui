@@ -24,9 +24,39 @@
     "unlock": "잠금해제",
     "help": "도움말",
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
-    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요."
+    "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
+    "account_notify": "The active account is now %(account)s"
+  },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
+    "hide_asset": "Click here to hide this asset from this list.",
+    "show_asset": "Click here to show this asset in the main list.",
+    "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
+    "filter_ops": "Use this list to filter your history by operation type.",
+    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+    "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+    "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+    "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+    "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+    "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+    "trade": "Trade",
     "welcome": "비트쉐어 2.0 이용을 환영합니다",
     "asset": "자산",
     "market_value": "시장가치",
@@ -94,9 +124,20 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy": "대리투표 계정",
       "no_proxy": "대리투표 사용안함",
       "name": "이름",
@@ -151,7 +192,8 @@
       "premium_name_faucet": "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
       "premium_name_warning": "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
     },
-    "settle": "Settle"
+    "settle": "Settle",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "pagination": {
     "newer": "이전",
@@ -473,6 +515,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",
     "confirmMarketOrder": "주문시 주문확인을 함",
@@ -484,7 +527,9 @@
     "apiServer": "API 연결",
     "add_ws": "새로운 웹소켓 API 추가",
     "remove_ws": "웹소켓 API 제거",
-    "faucet_address": "Faucet Address"
+    "faucet_address": "Faucet Address",
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "비트쉐어 2.0",
@@ -492,6 +537,23 @@
     "loading": "가져오는 중..."
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "price_history": "과거 시세",
     "order_depth": "주문 깊이",
     "market_history": "거래 내역",
@@ -512,15 +574,17 @@
     "spread": "스프레드",
     "quantity": "총량",
     "buy": "매수",
+    "buy_min": "Buy at least",
     "sell": "매도",
     "receive": "Receive",
     "vertical": "수직시세",
     "horizontal": "수평시세",
-    "confirm_buy": "주문 확인: %(buy_amount)s %(buy_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매수",
-    "confirm_sell": "주문 확인: %(sell_amount)s %(sell_symbol)s 을 %(price_amount)s %(price_symbol)s 에 매도",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "종목명",
     "quote_supply": "유통량",
-    "base_supply": "유통량"
+    "base_supply": "유통량",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "markets": {
     "base": "기초 자산",
@@ -571,7 +635,7 @@
     "verify": "확인",
     "invalid_format": "잘못된 포맷",
     "enter_password": "비밀번호를 입력하세요",
-    "downoad": "다운로드",
+    "download": "다운로드",
     "new_wallet_name": "새 지갑 이름",
     "wallet_exist": "지갑이 이미 존재합니다. 새로운 이름을 선택하세요",
     "wallet_exist_with_name": "(%(name)s) 지갑이 이미 존재합니다. 다른 이름을 선택하세요",
@@ -590,7 +654,6 @@
     "unclaimed": "미청구액",
     "unclaimed_vesting": "미청구액 (확정금)",
     "no_accounts": "계정이 없음",
-    "brainkey_no_match": "브레인키가 일치하지 않습니다",
     "reenter_brainkey": "브레인키를 다시 입력하세요",
     "pwd4brainkey": "브레인키를 확인하시려면 비밀번호를 입력하세요",
     "show_brainkey": "브레인키 확인",
@@ -601,7 +664,28 @@
     "last_backup": "Last backup",
     "never_backed_up": "This Wallet has never been backed up",
     "need_backup": "This Wallet needs a backup",
-    "noneed_backup": "No backup is needed"
+    "noneed_backup": "No backup is needed",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
+    "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "Collateral position for %(asset_symbol)s",
@@ -612,7 +696,8 @@
     "close": "Close Position",
     "update": "Update",
     "errors": {
-      "below": "Collateral ratio below maintenance level",
+        "below": "Your collateral ratio is below %(mr)s which is not allowed.",
+        "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Insufficient collateral balance"
     }
   },
@@ -637,6 +722,13 @@
     "not_connected": "연결안됨"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+        },
+    "your_account": "Your account",
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",
@@ -658,6 +750,9 @@
     },
     "meta": {
       "open_website": "Open Website"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   }
 }

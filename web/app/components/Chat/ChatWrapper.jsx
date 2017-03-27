@@ -4,6 +4,22 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 
 export default class ChatWrapper extends React.Component {
+
+    constructor() {
+        super();
+
+        this.state = {
+            delayMount: 3500,
+            readyToMount: false
+        };
+    }
+
+    componentWillMount() {
+        setTimeout(() => {
+            this.setState({readyToMount: true});
+        }, this.state.delayMount);
+    }
+
     onToggleChat(e) {
         e.preventDefault();
         let showChat = !this.props.showChat;
@@ -22,6 +38,7 @@ export default class ChatWrapper extends React.Component {
     }
 
     render() {
+        if (!this.state.readyToMount) return null;
         let {showChat, dockedChat} = this.props;
         let content;
 

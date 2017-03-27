@@ -1,7 +1,6 @@
 import React from "react";
 import {BackupCreate} from "../Wallet/Backup";
 import BackupBrainkey from "../Wallet/BackupBrainkey";
-import Translate from "react-translate-component";
 import counterpart from "counterpart";
 
 export default class BackupSettings extends React.Component {

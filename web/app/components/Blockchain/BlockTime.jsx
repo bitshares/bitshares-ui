@@ -11,7 +11,6 @@ import utils from "common/utils";
  * Note, it doesn't fetch block, just calculates time based on number alone.
  **/
 
-@BindToChainState({keep_updating:true})
 class BlockTime extends React.Component {
 
     static propTypes = {
@@ -59,5 +58,6 @@ class BlockTime extends React.Component {
         );
     }
 }
+BlockTime = BindToChainState(BlockTime, {keep_updating: true});
 
 export default BlockTime;

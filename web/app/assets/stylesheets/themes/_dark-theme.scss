@@ -4,7 +4,7 @@
 
 $light-text-color: #fff;
 $dark-text-color: #444;
-$primary-text-color: #e0e0e0;
+$primary-text-color: #ffffff;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #4A90E2;
 $error-text-color: #E3745B;
@@ -15,6 +15,7 @@ $light-panel-bg-color: #6a6a6a;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
 $button-bg-color: #4A90E2;
 $secondary-button-bg-color: #999999;
+$input-background: lighten($bg-color, 8%);
 
 $alert-color: $error-text-color;
 $info-color: #A0D3E8;
@@ -23,11 +24,11 @@ $warning-color: #FCAB53;
 $fee-color: $secondary-text-color;
 
 // Exchange colors
-$bid-color: #50D2C2;
+$bid-color: #6BA583;
 $ask-color: #E3745B;
 $call-color: #BBBF2B;
-$positive-color: #6EC105;
-$negative-color: #E1424A;
+$positive-color: #258A14;
+$negative-color: #DB0000;
 $row-accent-color: #3C3C3C;
 $header-color: #484848;
 
@@ -59,6 +60,7 @@ $chat-text-color: #191A1F;
     $negative-color,
     $row-accent-color,
     $header-color,
-    $chat-text-color
+    $chat-text-color,
+    $input-background
   );
 }

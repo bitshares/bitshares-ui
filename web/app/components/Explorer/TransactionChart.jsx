@@ -1,6 +1,6 @@
 import React from "react";
-import Highcharts from "highcharts/highstock";
-var ReactHighstock = require("react-highcharts/dist/ReactHighstock");
+// import Highcharts from "highcharts/highstock";
+import ReactHighstock from "react-highcharts/dist/ReactHighstock";
 import counterpart from "counterpart";
 
 class TransactionChart extends React.Component {

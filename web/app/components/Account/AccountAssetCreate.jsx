@@ -4,28 +4,23 @@ import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import {ChainStore, ChainValidation} from "graphenejs-lib";
+import {ChainStore, ChainValidation} from "bitsharesjs/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedPrice from "../Utility/FormattedPrice";
-import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import AccountInfo from "./AccountInfo";
 import big from "bignumber.js";
 import cnames from "classnames";
 import assetUtils from "common/asset_utils";
-import Tabs, {Tab} from "../Utility/Tabs";
+import {Tabs, Tab} from "../Utility/Tabs";
 import AmountSelector from "../Utility/AmountSelector";
 import assetConstants from "chain/asset_constants";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
-@BindToChainState()
 class BitAssetOptions extends React.Component {
-    
+
     static propTypes = {
         backingAsset: ChainTypes.ChainAsset.isRequired,
         isUpdate: React.PropTypes.bool
@@ -52,8 +47,8 @@ class BitAssetOptions extends React.Component {
 
     _onFoundBackingAsset(asset) {
         if (asset) {
-            if (asset.get("id") === "1.3.0" || (asset.get("bitasset_data_id") && !asset.getIn(["bitasset", "is_prediction_market"]))) {       
-                if (asset.get("precision") !== this.props.assetPrecision) {
+            if (asset.get("id") === "1.3.0" || (asset.get("bitasset_data_id") && !asset.getIn(["bitasset", "is_prediction_market"]))) {
+                if (asset.get("precision") !== parseInt(this.props.assetPrecision, 10)) {
                     this.setState({
                         error: counterpart.translate("account.user_issued_assets.error_precision", {asset: this.props.assetSymbol})
                     });
@@ -73,7 +68,7 @@ class BitAssetOptions extends React.Component {
         let {error} = this.state;
 
         return (
-            <div>
+            <div className="small-12 grid-content">
                 <label><Translate content="account.user_issued_assets.feed_lifetime_sec" />
                     <input type="number" value={bitasset_opts.feed_lifetime_sec / 60} onChange={this.props.onUpdate.bind(this, "feed_lifetime_sec")}/>
                 </label>
@@ -110,8 +105,8 @@ class BitAssetOptions extends React.Component {
         );
     }
 }
+BitAssetOptions = BindToChainState(BitAssetOptions);
 
-@BindToChainState()
 class AccountAssetCreate extends React.Component {
 
     static propTypes = {
@@ -137,7 +132,7 @@ class AccountAssetCreate extends React.Component {
         let corePrecision = utils.get_asset_precision(props.core.get("precision"));
 
         let {flagBooleans, permissionBooleans} = this._getPermissions({isBitAsset});
-        
+
         // let flags = assetUtils.getFlags(flagBooleans);
         // let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
         // console.log("all permissions:", permissionBooleans, permissions)
@@ -198,7 +193,7 @@ class AccountAssetCreate extends React.Component {
         e.preventDefault();
         let {update, flagBooleans, permissionBooleans, core_exchange_rate,
             isBitAsset, is_prediction_market, bitasset_opts} = this.state;
-        
+
         let {account} = this.props;
 
         let flags = assetUtils.getFlags(flagBooleans, isBitAsset);
@@ -254,7 +249,7 @@ class AccountAssetCreate extends React.Component {
             case "market":
                 update.description[value] = e;
                 break;
-            
+
             default:
                 update.description[value] = e.target.value;
                 break;
@@ -384,7 +379,7 @@ class AccountAssetCreate extends React.Component {
     }
 
     _onInputCoreAsset(type, asset) {
-       
+
         if (type === "quote") {
             this.setState({
                 quoteAssetInput: asset
@@ -413,7 +408,7 @@ class AccountAssetCreate extends React.Component {
     }
 
     _onInputMarket(asset) {
-       
+
         this.setState({
             marketInput: asset
         });
@@ -423,7 +418,7 @@ class AccountAssetCreate extends React.Component {
         if (asset) {
             this._onUpdateDescription("market", asset.get("symbol"));
         }
-    }  
+    }
 
     _onCoreRateChange(type, e) {
         let amount, asset;
@@ -431,13 +426,13 @@ class AccountAssetCreate extends React.Component {
             amount = utils.limitByPrecision(e.target.value, this.state.update.precision);
             asset = null;
         } else {
-            if (!e || "amount" in e) {
+            if (!e || !("amount" in e)) {
                 return;
             }
-            amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.replace(/,/g, ""), this.props.core.get("precision"));
-            asset = e.asset.get("id")
+            amount = e.amount == "" ? "0" : utils.limitByPrecision(e.amount.toString().replace(/,/g, ""), this.props.core.get("precision"));
+            asset = e.asset.get("id");
         }
-            
+
         let {core_exchange_rate} = this.state;
         core_exchange_rate[type] = {
             amount: amount,
@@ -468,8 +463,8 @@ class AccountAssetCreate extends React.Component {
     }
 
     render() {
-        let {account, account_name, globalObject, core} = this.props;
-        let {errors, isValid, update, assets, flagBooleans, permissionBooleans,
+        let {globalObject, core} = this.props;
+        let {errors, isValid, update, flagBooleans, permissionBooleans,
             core_exchange_rate, is_prediction_market, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset creation fee from the symbol character length
@@ -484,11 +479,6 @@ class AccountAssetCreate extends React.Component {
         else if(symbolLength > 4) {
             createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
         }
-
-        // let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
-        // let precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
-        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
-        let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
         // Loop over flags
         let flags = [];
@@ -539,7 +529,7 @@ class AccountAssetCreate extends React.Component {
                     <Tabs setting="createAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
 
                         <Tab title="account.user_issued_assets.primary">
-                            <div className="small-12 large-6 grid-content">
+                            <div className="small-12 grid-content">
                                 <h3><Translate content="account.user_issued_assets.primary" /></h3>
                                 <label><Translate content="account.user_issued_assets.symbol" />
                                     <input type="text" value={update.symbol} onChange={this._onUpdateInput.bind(this, "symbol")}/>
@@ -554,8 +544,10 @@ class AccountAssetCreate extends React.Component {
 
                                 <label>
                                     <Translate content="account.user_issued_assets.decimals" />
-                                    <input type="number" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
+                                    <input min="0" max="8" step="1" type="range" value={update.precision} onChange={this._onUpdateInput.bind(this, "precision")} />
                                 </label>
+                                <p>{update.precision}</p>
+
                                 <div style={{marginBottom: 10}} className="txtlabel cancel"><Translate content="account.user_issued_assets.precision_warning" /></div>
 
                                 <table className="table" style={{width: "inherit"}}>
@@ -589,13 +581,13 @@ class AccountAssetCreate extends React.Component {
 
                                 {/* CER */}
                                 <Translate component="h3" content="account.user_issued_assets.core_exchange_rate" />
-                                
-                                <label>                                    
+
+                                <label>
                                     <div className="grid-block no-margin">
                                         {errors.quote_asset ? <p className="grid-content has-error">{errors.quote_asset}</p> : null}
                                         {errors.base_asset ? <p className="grid-content has-error">{errors.base_asset}</p> : null}
                                         <div className="grid-block no-margin small-12 medium-6">
-                                            <div className="amount-selector" style={{width: "100%", paddingRight: "10px"}}>    
+                                            <div className="amount-selector" style={{width: "100%", paddingRight: "10px"}}>
                                                 <Translate component="label" content="account.user_issued_assets.quote"/>
                                                 <div className="inline-label">
                                                     <input
@@ -606,11 +598,11 @@ class AccountAssetCreate extends React.Component {
                                                     />
                                                 </div>
                                             </div>
-    
+
                                         </div>
                                         <div className="grid-block no-margin small-12 medium-6">
                                             <AmountSelector
-                                                label="account.user_issued_assets.base" 
+                                                label="account.user_issued_assets.base"
                                                 amount={core_exchange_rate.base.amount}
                                                 onChange={this._onCoreRateChange.bind(this, "base")}
                                                 asset={core_exchange_rate.base.asset_id}
@@ -624,16 +616,21 @@ class AccountAssetCreate extends React.Component {
                                     <div>
                                         <h5>
                                             <Translate content="exchange.price" />
-                                            <span>: {utils.get_asset_price(core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision), {precision: update.precision}, core_exchange_rate.base.amount * utils.get_asset_precision(core), core)}</span>
+                                            <span>: {utils.format_number(utils.get_asset_price(
+                                                core_exchange_rate.quote.amount * utils.get_asset_precision(update.precision),
+                                                {precision: update.precision},
+                                                core_exchange_rate.base.amount * utils.get_asset_precision(core),
+                                                core
+                                            ), 2 + (parseInt(update.precision, 10) || 8))}</span>
                                             <span> {update.symbol}/{core.get("symbol")}</span>
-                                        </h5> 
+                                        </h5>
                                     </div>
                                 </label>
                             </div>
                         </Tab>
 
                         <Tab title="account.user_issued_assets.description">
-                            <div className="small-12 large-8 grid-content">
+                            <div className="small-12 grid-content">
                                 <Translate component="h3" content="account.user_issued_assets.description" />
                                 <label>
                                     <textarea
@@ -686,7 +683,7 @@ class AccountAssetCreate extends React.Component {
                                     </label>
                                 </div>) : null}
 
-                            </div>                                
+                            </div>
                         </Tab>
 
                         {isBitAsset ? (
@@ -701,21 +698,25 @@ class AccountAssetCreate extends React.Component {
                             </Tab>) : null}
 
                         <Tab title="account.permissions">
-                            <div className="small-12 large-6 grid-content">
+                            <div className="small-12 grid-content">
+                                <div style={{maxWidth: 800}}>
                                 <HelpContent
                                     path = {"components/AccountAssetCreate"}
                                     section="permissions"
                                 />
+                                </div>
                                 {permissions}
                             </div>
                         </Tab>
 
                         <Tab title="account.user_issued_assets.flags">
-                            <div className="small-12 large-6 grid-content">
-                                <HelpContent
-                                    path = {"components/AccountAssetCreate"}
-                                    section="flags"
-                                />
+                            <div className="small-12 grid-content">
+                                <div style={{maxWidth: 800}}>
+                                    <HelpContent
+                                        path = {"components/AccountAssetCreate"}
+                                        section="flags"
+                                    />
+                                </div>
                                 {permissionBooleans["charge_market_fee"] ? (
                                     <div>
                                         <Translate component="h3" content="account.user_issued_assets.market_fee" />
@@ -770,6 +771,6 @@ class AccountAssetCreate extends React.Component {
 
 }
 
-AccountAssetCreate.BitAssetOptions = BitAssetOptions;
+AccountAssetCreate = BindToChainState(AccountAssetCreate);
 
-export default AccountAssetCreate;
+export {AccountAssetCreate, BitAssetOptions};

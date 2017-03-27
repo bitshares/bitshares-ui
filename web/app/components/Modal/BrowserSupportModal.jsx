@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -11,9 +11,10 @@ export default class BrowserSupportModal extends React.Component {
     }
 
     _openLink() {
-        window.open("https://www.google.com/chrome/browser/desktop/", "_blank");
+        let newWnd = window.open("https://www.google.com/chrome/browser/desktop/", "_blank");
+        newWnd.opener = null;
     }
-        
+
     render() {
         return (
             <Modal id="browser_modal" overlay={true} ref="browser_modal">
@@ -29,7 +30,7 @@ export default class BrowserSupportModal extends React.Component {
 
                     <div className="button-group no-overflow" style={{paddingTop: 0}}>
                         <Trigger close="browser_modal">
-                            <div onClick={this._openLink} className="button"><Translate content="init_error.understand" /></div>
+                            <div className="button"><Translate content="init_error.understand" /></div>
                         </Trigger>
                     </div>
 

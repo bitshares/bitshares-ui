@@ -1,25 +1,12 @@
 import React from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 
-@connectToStores
-export default class AccountsSettings extends React.Component {
-
-    static getStores() {
-        return [AccountStore];
-    };
-
-    static getPropsFromStores() {
-        return {
-            myAccounts: AccountStore.getMyAccounts(),
-            ignoredAccounts: AccountStore.getState().myIgnoredAccounts
-        };
-    };
-
+class AccountsSettings extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !utils.are_equal_shallow(nextProps.myAccounts, this.props.myAccounts) ||
@@ -75,3 +62,17 @@ export default class AccountsSettings extends React.Component {
         );
     }
 }
+
+AccountsSettings = connect(AccountsSettings, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            myAccounts: AccountStore.getMyAccounts(),
+            ignoredAccounts: AccountStore.getState().myIgnoredAccounts
+        };
+    }
+});
+
+export default AccountsSettings;

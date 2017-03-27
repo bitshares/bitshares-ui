@@ -16,6 +16,7 @@ $light-panel-bg-color: #FFF;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
 $button-bg-color: #2196F3;
 $secondary-button-bg-color: #999999;
+$input-background: darken($bg-color, 8%);
 
 $alert-color: $error-text-color;
 $info-color: #CE7925;
@@ -25,10 +26,10 @@ $fee-color: #7f055e;
 
 // Exchange colors
 $bid-color: #258A14;
-$ask-color: #E3745B;
+$ask-color: #EA340B;
 $call-color: #BBBF2B;
-$positive-color: #6EC105;
-$negative-color: #E1424A;
+$positive-color: rgba(110, 193, 5, 1);
+$negative-color: rgba(225, 66, 74, 1);
 $row-accent-color: #FFFFFF;
 $header-color: #DCDCDC;
 
@@ -60,19 +61,11 @@ $chat-text-color: #191A1F;
     $negative-color,
     $row-accent-color,
     $header-color,
-    $chat-text-color
+    $chat-text-color,
+    $input-background
   );
-  
-  .blocktrades-bridge input, .blocktrades-bridge select{
-    color: $secondary-text-color;
-    background-color: $bg-color !important;
-    border: 1px solid $secondary-text-color;
-      &:hover, &:focus {
-        color: $primary-text-color;
-	      //box-shadow: 1px 2px 3px #000;
-        border: 2px solid #000;
-      }
+
+  .change-up {
+      font-weight: bold;
   }
-
 }
-

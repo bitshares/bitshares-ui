@@ -9,7 +9,7 @@
     "tr": "Turkish"
   },
   "header": {
-    "title": "Graphene UI",
+    "title": "BitShares UI",
     "account": "Konto",
     "dashboard": "Übersicht",
     "explorer": "Explorer",
@@ -25,11 +25,41 @@
     "unlock": "Entsperren",
     "help": "Hilfe",
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
-    "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren."
+    "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
+    "account_notify": "The active account is now %(account)s"
+  },
+  "tooltip": {
+    "call_limit": "This is the call price of the least collateralized margin position in the market.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "settle_price": "This is the price at which settle orders will execute.",
+    "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+    "latest_price": "This is the latest price seen in this market.",
+    "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
+    "hide_asset": "Click here to hide this asset from this list.",
+    "show_asset": "Click here to show this asset in the main list.",
+    "settle": "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
+    "filter_ops": "Use this list to filter your history by operation type.",
+    "show_block": "Click here to show block #%(block)s where this transaction occured.",
+    "coll_ratio": "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+    "call_price": "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+    "close_position": "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+    "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+    "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
+    "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+    "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+    "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+    "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
   },
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "in_open": "This is the amount of %(asset)s you have in open orders.",
+    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "transfer_actions": "Transfer actions",
+    "market_actions": "Market actions",
+    "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+    "trade": "Trade",
     "welcome": "Willkommen",
     "asset": "Asset",
     "market_value": "Marktwert",
@@ -154,9 +184,20 @@
       "warning3": "Account is already in the list",
       "warning4": "Key is already in the list",
       "action": "Action",
-      "acct_or_key": " Account/Key"
+      "acct_or_key": " Account/Key",
+      "sign_owner": "Sign as owner",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
+      "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Worker",
       "proxy": "Proxy Konto",
@@ -238,7 +279,8 @@
     "propose_from": "Vorschlagen von",
     "settle": "Settle",
     "no_orders": "Keine offenen Order",
-    "asset_details": "Asset Details"
+    "asset_details": "Asset Details",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "pagination": {
     "newer": "Jüngere",
@@ -588,6 +630,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "Bevorzugte Marktorientierung",
     "unit": "Bevorzugte Rechnungseinheit",
     "confirmMarketOrder": "Nach Bestätigung für Marktanweisungen fragen",
@@ -603,14 +646,33 @@
     "showSettles": "Settlements in der Depth-Chart anzeigen",
     "yes": "Ja",
     "no": "Nein",
-    "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)"
+    "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
-    "title": "Graphene",
+    "title": "BitShares",
     "block": "Spitzenblock",
     "loading": "Lade..."
   },
   "exchange": {
+    "chart_options": {
+        "tools": "Tools",
+        "title": "Indicators",
+        "sma": "SMA",
+        "ema1": "EMA 1",
+        "ema2": "EMA 2",
+        "smaVolume": "SMA",
+        "macd": "MACD chart",
+        "bb": "Bollinger Bands",
+        "fib": "Draw Fibonacci retracement",
+        "trendline": "Draw trend line",
+        "volume": "Show volume chart",
+        "period": "Period",
+        "height": "Chart height",
+        "price_title": "Price indicators",
+        "volume_title": "Volume indicators"
+    },
     "market": "Markt",
     "price_history": "Preisverlauf",
     "order_depth": "Ordertiefe",
@@ -634,12 +696,13 @@
     "spread": "Spread",
     "quantity": "Quantität",
     "buy": "Kaufen",
+    "buy_min": "Buy at least",
     "sell": "Verkaufen",
     "receive": "Empfangen",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
-    "confirm_buy": "Bestätigen Sie die Anweisung: Kauf von %(buy_amount)s %(buy_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
-    "confirm_sell": "Bestätigen Sie die Anweisung: Verkauf von %(sell_amount)s %(sell_symbol)s zum Preis von %(price_amount)s %(price_symbol)s",
+    "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+    "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
     "market_name": "Meine Märkte",
     "quote_supply": "Quote Verfügbarkeit",
     "base_supply": "Base Verfügbarkeit",
@@ -666,7 +729,8 @@
     "borrow": "Leihen",
     "no_balance": "Ungenügendes Guthaben",
     "invalid_amount": "Ungültiger Betrag",
-    "invalid_price": "Ungültiger Preis"
+    "invalid_price": "Ungültiger Preis",
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
   },
   "fees": {
     "title": "Gebühren"
@@ -719,7 +783,7 @@
     "verify": "Prüfe",
     "invalid_format": "Ungültiges Format",
     "enter_password": "Passwordeingabe",
-    "downoad": "Download",
+    "download": "Download",
     "new_wallet_name": "Names der neuen Geldbörse",
     "wallet_exist": "Gelbdörse existiert bereits. Wählen Sie einen anderen Namen.",
     "wallet_exist_with_name": "Geldbörse (%(name)s) existiert bereits. Wählen Sie einen anderen Namen",
@@ -737,7 +801,6 @@
     "unclaimed": "nicht eingefordert",
     "unclaimed_vesting": "nicht eingefordert (vesting)",
     "no_accounts": "Keine Konten",
-    "brainkey_no_match": "Brainkey stimmt (noch) nicht überein.",
     "reenter_brainkey": "Brainkey bestätigen",
     "pwd4brainkey": "Passwort eingeben um Brainkey anzuzeigen",
     "show_brainkey": "Brainkey anzeigen",
@@ -748,7 +811,28 @@
     "last_backup": "letzte Sicherung",
     "never_backed_up": "Diese Geldbörse wurde noch nie gesichert!",
     "need_backup": "Diese Gelbörse sollte neu gesichert werden!",
-    "noneed_backup": "Kein Sicherung erforderlich"
+    "noneed_backup": "Kein Sicherung erforderlich",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
+    "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "Kollateral Position für %(asset_symbol)s",
@@ -760,6 +844,7 @@
     "update": "Aktualisieren",
     "errors": {
       "below": "Kollateral Ratio unter Aufrechterhaltungslevel",
+      "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Unzureichendes Kollateral"
     }
   },
@@ -802,6 +887,13 @@
     "enter_refcode": "Geben Sie den Referral Code ein"
   },
   "gateway": {
+    "assets": {
+        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+    },
+    "your_account": "Your account",
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",
@@ -823,6 +915,9 @@
     },
     "meta": {
       "open_website": "Webseite öffnen"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   }
 }

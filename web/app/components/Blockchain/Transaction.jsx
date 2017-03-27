@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link as RealLink} from "react-router";
+import {Link as RealLink} from "react-router/es";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -16,9 +16,9 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import MemoText from "./MemoText";
-import {ChainTypes} from "graphenejs-lib";
+import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
+import ReactTooltip from "react-tooltip";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -36,7 +36,7 @@ class OpType extends React.Component {
     render() {
         let trxTypes = counterpart.translate("transaction.trxTypes");
         let labelClass = classNames("txtlabel", this.props.color || "info");
-        
+
         return (
             <tr>
                 <td>
@@ -85,6 +85,10 @@ class OperationTable extends React.Component {
 
 class Transaction extends React.Component {
 
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
+
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
         let Link = this.props.no_links ? NoLinkDecorator : RealLink;
@@ -115,7 +119,7 @@ class Transaction extends React.Component {
 
         let opCount = trx.operations.length;
         let memo = null;
-        
+
         trx.operations.forEach((op, opIndex) => {
 
             let rows = [];
@@ -132,7 +136,7 @@ class Transaction extends React.Component {
                         let {text, isMine} = PrivateKeyStore.decodeMemo(op[1].memo);
 
                         memo = text ? (
-                            <td>{text}</td>
+                            <td className="memo">{text}</td>
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
@@ -172,7 +176,7 @@ class Transaction extends React.Component {
 
                     break;
 
-                case "limit_order_create":
+            case "limit_order_create":
                     color = "warning";
                     // missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
                     // let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
@@ -184,7 +188,9 @@ class Transaction extends React.Component {
                                     base_asset={op[1].amount_to_sell.asset_id}
                                     quote_asset={op[1].min_to_receive.asset_id}
                                     base_amount={op[1].amount_to_sell.amount}
-                                    quote_amount={op[1].min_to_receive.amount} />
+                                    quote_amount={op[1].min_to_receive.amount}
+                                    noPopOver
+                                />
                             </td>
                         </tr>
                     );
@@ -195,10 +201,10 @@ class Transaction extends React.Component {
                             <td><FormattedAsset amount={op[1].amount_to_sell.amount} asset={op[1].amount_to_sell.asset_id} /></td>
                         </tr>
                     );
-                    
+
                     rows.push(
                         <tr key={key++}>
-                            <td><Translate component="span" content="exchange.buy" /></td>
+                            <td data-place="left" data-class="tooltip-zindex" className="tooltip" data-tip={counterpart.translate("tooltip.buy_min")}><Translate component="span" content="exchange.buy_min" /></td>
                             <td><FormattedAsset amount={op[1].min_to_receive.amount} asset={op[1].min_to_receive.asset_id} /></td>
                         </tr>
                     );
@@ -331,52 +337,56 @@ class Transaction extends React.Component {
                     );
                     // let voting_account = ChainStore.getAccount(op[1].new_options.voting_account)
                     // let updating_account = ChainStore.getAccount(op[1].account)
-                    if( op[1].new_options.voting_account )
-                    {
-                       // let proxy_account_name = voting_account.get('name')
-                       rows.push(
-                                   <tr>
-                                       <td><Translate component="span" content="account.votes.proxy" /></td>
-                                       <td>{this.linkToAccount(op[1].new_options.voting_account)}</td>
-                                   </tr>
-                       );
-                    }
-                    else
-                    {
-                       console.log( "num witnesses: ", op[1].new_options.num_witness )
-                       console.log( "===============> NEW: ", op[1].new_options )
-                       rows.push(
-                                   <tr key={key++}>
-                                       <td><Translate component="span" content="account.votes.proxy" /></td>
-                                       <td><Translate component="span" content="account.votes.no_proxy" /></td>
-                                   </tr>
-                       );
-                       rows.push(
-                                   <tr key={key++}>
-                                       <td><Translate component="span" content="account.options.num_committee" /></td>
-                                       <td>{op[1].new_options.num_committee}</td>
-                                   </tr>
-                       );
-                       rows.push(
-                                   <tr key={key++}>
-                                       <td><Translate component="span" content="account.options.num_witnesses" /></td>
-                                       <td>{op[1].new_options.num_witness}</td>
-                                   </tr>
-                       );
-                       rows.push(
-                                   <tr key={key++}>
-                                       <td><Translate component="span" content="account.options.votes" /></td>
-                                       <td>{JSON.stringify( op[1].new_options.votes) }</td>
-                                   </tr>
-                       );
-                    }
-                    rows.push(
+                    if(op[1].new_options) {
+                        if( op[1].new_options.voting_account )
+                        {
+                           // let proxy_account_name = voting_account.get('name')
+                            rows.push(
                                 <tr key={key++}>
-                                    <td><Translate component="span" content="account.options.memo_key" /></td>
-                                   {/* TODO replace with KEY render component that provides a popup */}
-                                    <td>{op[1].new_options.memo_key.substring(0,10)+"..."}</td>
+                                   <td><Translate component="span" content="account.votes.proxy" /></td>
+                                   <td>{this.linkToAccount(op[1].new_options.voting_account)}</td>
                                 </tr>
-                    );
+                           );
+                        }
+                        else
+                        {
+                            console.log( "num witnesses: ", op[1].new_options.num_witness )
+                            console.log( "===============> NEW: ", op[1].new_options )
+                            rows.push(
+                                       <tr key={key++}>
+                                           <td><Translate component="span" content="account.votes.proxy" /></td>
+                                           <td><Translate component="span" content="account.votes.no_proxy" /></td>
+                                       </tr>
+                           );
+                            rows.push(
+                                       <tr key={key++}>
+                                           <td><Translate component="span" content="account.options.num_committee" /></td>
+                                           <td>{op[1].new_options.num_committee}</td>
+                                       </tr>
+                           );
+                            rows.push(
+                                       <tr key={key++}>
+                                           <td><Translate component="span" content="account.options.num_witnesses" /></td>
+                                           <td>{op[1].new_options.num_witness}</td>
+                                       </tr>
+                           );
+                            rows.push(
+                                       <tr key={key++}>
+                                           <td><Translate component="span" content="account.options.votes" /></td>
+                                           <td>{JSON.stringify( op[1].new_options.votes) }</td>
+                                       </tr>
+                           );
+                        }
+
+                        rows.push(
+                            <tr key={key++}>
+                                <td><Translate component="span" content="account.options.memo_key" /></td>
+                               {/* TODO replace with KEY render component that provides a popup */}
+                                <td>{op[1].new_options.memo_key.substring(0,10)+"..."}</td>
+                            </tr>
+                        );
+                    }
+
 
                     rows.push(
                         <tr key={key++}>
@@ -532,6 +542,7 @@ class Transaction extends React.Component {
                                         quote_asset={op[1].new_options.core_exchange_rate.quote.asset_id}
                                         base_amount={op[1].new_options.core_exchange_rate.base.amount}
                                         quote_amount={op[1].new_options.core_exchange_rate.quote.amount}
+                                        noPopOver
                                     />
                                 </td>
                             </tr>
@@ -731,6 +742,7 @@ class Transaction extends React.Component {
                                     quote_asset={feed.core_exchange_rate.quote.asset_id}
                                     base_amount={feed.core_exchange_rate.base.amount}
                                     quote_amount={feed.core_exchange_rate.quote.amount}
+                                    noPopOver
                                 />
                             </td>
                         </tr>
@@ -745,6 +757,7 @@ class Transaction extends React.Component {
                                     quote_asset={feed.settlement_price.quote.asset_id}
                                     base_amount={feed.settlement_price.base.amount}
                                     quote_amount={feed.settlement_price.quote.amount}
+                                    noPopOver
                                 />
                             </td>
                         </tr>
@@ -787,7 +800,7 @@ class Transaction extends React.Component {
                         rows.push(
                             <tr key={key++}>
                                 <td><Translate component="span" content="transaction.new_url" /></td>
-                                <td><a href={op[1].new_url} target="_blank">{op[1].new_url}</a></td>
+                                <td><a href={op[1].new_url} target="_blank" rel="noopener noreferrer">{op[1].new_url}</a></td>
                             </tr>
                         );
                     }
@@ -972,7 +985,7 @@ class Transaction extends React.Component {
                         </tr>
                     )
                     break
-                
+
                 case "proposal_update":
                     let fields = [
                         "active_approvals_to_add", "active_approvals_to_remove",
@@ -1021,7 +1034,7 @@ class Transaction extends React.Component {
                             <td>{this.linkToAccount(op[1].issuer)}</td>
                         </tr>
                     );
-                    
+
                     break;
 
                 case "asset_reserve":
@@ -1048,7 +1061,7 @@ class Transaction extends React.Component {
                             <td><FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} /></td>
                         </tr>
                     );
-                    break;                    
+                    break;
 
                 default:
                     console.log("unimplemented op:", op);

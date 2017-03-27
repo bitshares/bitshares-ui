@@ -1,44 +1,40 @@
 import React from "react";
 import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
 import Translate from "react-translate-component";
-import AccountBalance from "components/Account/AccountBalance";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import RecentTransactions, {TransactionWrapper} from "components/Account/RecentTransactions";
+import { RecentTransactions, TransactionWrapper } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 import cnames from "classnames";
-import AssetName from "components/Utility/AssetName";
-import assetUtils from "common/asset_utils";
-import BindToChainState from "../Utility/BindToChainState";
-import ChainTypes from "../Utility/ChainTypes";
 import LoadingIndicator from "../LoadingIndicator";
 
-@connectToStores
-export default class BlockTradesGateway extends React.Component {
-
-    static getStores() {
-        return [SettingsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        }
-    };
-
+class BlockTradesGateway extends React.Component {
     constructor(props) {
         super();
 
         this.state = {
             activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-            action: "deposit"
+            action: props.viewSettings.get(`${props.provider}Action`, "deposit")
         };
     }
 
     _getActiveCoin(props, state) {
         let cachedCoin = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
-        let activeCoin = cachedCoin ? cachedCoin : props.coins.length ? props.coins[0][state.action === "withdraw" ? "symbol" : "backingCoinType"].toUpperCase() : null;
+		let firstTimeCoin = null;
+		if ((props.provider == 'blocktrades') && (state.action == 'deposit')) {
+			firstTimeCoin = 'BTC';
+		}
+		if ((props.provider == 'openledger') && (state.action == 'deposit')) {
+			firstTimeCoin = 'BTC';
+		}
+		if ((props.provider == 'blocktrades') && (state.action == 'withdraw')) {
+			firstTimeCoin = 'TRADE.BTC';
+		}
+		if ((props.provider == 'openledger') && (state.action == 'withdraw')) {
+			firstTimeCoin = 'OPEN.BTC';
+		}
+        let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
     }
 
@@ -71,25 +67,27 @@ export default class BlockTradesGateway extends React.Component {
     }
 
     changeAction(type) {
-		
+
         let activeCoin = this._getActiveCoin(this.props, {action: type});
+
 
         this.setState({
             action: type,
             activeCoin: activeCoin
         });
+
+        SettingsActions.changeViewSetting({[`${this.props.provider}Action`]: type});
     }
 
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
-
         if (!coins.length) {
             return <LoadingIndicator />;
         }
 
         let filteredCoins = coins.filter(a => {
-            if (!a || !a.backingCoinType) {
+            if (!a || !a.symbol) {
                 return false;
             } else {
                 return true;
@@ -107,6 +105,8 @@ export default class BlockTradesGateway extends React.Component {
             return (action === "deposit" ? coin.backingCoinType.toUpperCase() === activeCoin : coin.symbol === activeCoin);
         })[0];
 
+        if (!coin) coin = filteredCoins[0];
+
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
             openledger: {name: "openledger-wallet", id: "1.2.96397", support: "opensupport@blocktrades.us"}
@@ -119,29 +119,34 @@ export default class BlockTradesGateway extends React.Component {
         return (
 
             <div style={this.props.style}>
-                <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.gateway_text" /></div>
-                <div style={{paddingBottom: 15}}>
-                    <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit")} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
-                    <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
+                <div className="grid-block no-margin vertical medium-horizontal no-padding">
+                    <div className="medium-4">
+                        <div>
+                            <label style={{minHeight: "2rem"}} className="left-label"><Translate content={"gateway.choose_" + action} />: </label>
+                            <select
+                                className="external-coin-types bts-select"
+                                onChange={this.onSelectCoin.bind(this)}
+                                value={activeCoin}
+                            >
+                                {coinOptions}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="medium-6 medium-offset-1">
+                        <label style={{minHeight: "2rem"}} className="left-label"><Translate content="gateway.gateway_text" />:</label>
+                        <div style={{paddingBottom: 15}}>
+                            <ul className="button-group segmented no-margin">
+                            <li className={action === "deposit" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "deposit")}><Translate content="gateway.deposit" /></a></li>
+                            <li className={action === "withdraw" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "withdraw")}><Translate content="gateway.withdraw" /></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                {!coin ? <LoadingIndicator /> :
+                {!coin ? null :
                 <div>
-                    <div>
-                        <span><Translate content={"gateway.choose_" + action} />: </span>
-                        <select
-                            style={{
-                                marginLeft: 5,
-                                display: "inline",
-                                maxWidth: "15rem"
-                            }}
-                            className="external-coin-types bts-select"
-                            onChange={this.onSelectCoin.bind(this)}
-                            value={activeCoin}
-                        >
-                            {coinOptions}
-                        </select>
-                    </div>
+
 
                     <div style={{marginBottom: 15}}>
                         <BlockTradesGatewayDepositRequest
@@ -159,7 +164,8 @@ export default class BlockTradesGateway extends React.Component {
                             supports_output_memos={coin.supportsMemos}
                             action={this.state.action}
                         />
-                        <div style={{padding: 15}}><Translate content="gateway.support_block" /> <a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
+                        <label className="left-label">Support</label>
+                        <div><Translate content="gateway.support_block" /><br /><br /><a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
                     </div>
 
                     {coin && coin.symbol ?
@@ -186,14 +192,13 @@ export default class BlockTradesGateway extends React.Component {
                                 customFilter={{
                                     fields: ["to", "from", "asset_id"],
                                     values: {
-                                            to: to.get("id"),
-                                            from: fromAccount.get("id") ,
-                                            asset_id: asset.get("id")
-                                        }
-
-                                    }}
-                            />
-                            }
+                                        to: to.get("id"),
+                                        from: fromAccount.get("id") ,
+                                        asset_id: asset.get("id")
+                                    }
+                                }}
+                            />;
+                        }
                         }
                     </TransactionWrapper> : null}
                 </div>
@@ -202,3 +207,14 @@ export default class BlockTradesGateway extends React.Component {
         )
     }
 }
+
+export default connect(BlockTradesGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

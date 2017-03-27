@@ -9,9 +9,10 @@ import AmountSelector from "../Utility/AmountSelector";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import RecentTransactions from "../Account/RecentTransactions";
+import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import {ChainStore} from "graphenejs-lib";
+import {ChainStore} from "bitsharesjs/es";
+import {connect} from "alt-react";
 
 class Transfer extends React.Component {
 
@@ -35,7 +36,7 @@ class Transfer extends React.Component {
         }
         if(query.memo) this.state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name && query.to !== currentAccount) this.state.from_name = currentAccount;
+        if (!this.state.from_name) this.state.from_name = currentAccount;
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
@@ -54,7 +55,6 @@ class Transfer extends React.Component {
             propose_account: "",
             feeAsset: null,
             fee_asset_id: "1.3.0"
-
         };
     };
 
@@ -62,22 +62,40 @@ class Transfer extends React.Component {
         this.nestedRef = null;
     }
 
+    shouldComponentUpdate(np, ns) {
+        let { asset_types: current_types } = this._getAvailableAssets();
+        let { asset_types } = this._getAvailableAssets(ns);
+
+        if (asset_types.length === 1 && current_types.length !== 1) {
+            this.onAmountChanged({amount: ns.amount, asset: ChainStore.getAsset(asset_types[0])});
+        }
+        return true;
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.currentAccount !== this.state.from_name && np.currentAccount !== this.props.currentAccount) {
+            this.setState({
+                from_name: np.currentAccount,
+                from_account: ChainStore.getAccount(np.currentAccount)
+            });
+        }
+    }
+
     fromChanged(from_name) {
-        let asset = undefined
-        let amount = undefined
-        this.setState({from_name, error: null, propose: false, propose_account: ""})
+        if (!from_name) this.setState({from_account: null});
+        this.setState({from_name, error: null, propose: false, propose_account: ""});
     }
 
     toChanged(to_name) {
-        this.setState({to_name, error: null})
+        this.setState({to_name, error: null});
     }
 
     onFromAccountChanged(from_account) {
-        this.setState({from_account, error: null})
+        this.setState({from_account, error: null});
     }
 
     onToAccountChanged(to_account) {
-        this.setState({to_account, error: null})
+        this.setState({to_account, error: null});
     }
 
     onAmountChanged({amount, asset}) {
@@ -87,8 +105,8 @@ class Transfer extends React.Component {
         this.setState({amount, asset, asset_id: asset.get("id"), error: null});
     }
 
-    onFeeChanged({amount, asset}) {
-        this.setState({feeAsset: asset, error: null})
+    onFeeChanged({asset}) {
+        this.setState({feeAsset: asset, error: null});
     }
 
     onMemoChanged(e) {
@@ -107,8 +125,8 @@ class Transfer extends React.Component {
     }
 
     onPropose(propose, e) {
-        e.preventDefault()
-        this.setState({ propose, propose_account: null })
+        e.preventDefault();
+        this.setState({ propose, propose_account: null });
     }
 
     onProposeAccount(propose_account) {
@@ -135,8 +153,8 @@ class Transfer extends React.Component {
             TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {
             let msg = e.message ? e.message.split( '\n' )[1] : null;
-            console.log( "error: ", e, msg)
-            this.setState({error: msg})
+            console.log( "error: ", e, msg);
+            this.setState({error: msg});
         } );
     }
 
@@ -144,13 +162,51 @@ class Transfer extends React.Component {
         this.nestedRef = ref;
     }
 
-    _setTotal(asset_id, balance_id, fee, fee_asset_id, e) {
+    _setTotal(asset_id, balance_id, fee, fee_asset_id) {
         let balanceObject = ChainStore.getObject(balance_id);
         let transferAsset = ChainStore.getObject(asset_id);
-        let feeAsset = ChainStore.getObject(fee_asset_id);
         if (balanceObject) {
             let amount = (utils.get_asset_amount(balanceObject.get("balance"), transferAsset) - (asset_id === fee_asset_id ? fee : 0)).toString();
             this.setState({amount});
+        }
+    }
+
+    _getAvailableAssets(state = this.state) {
+        const { from_account, from_error } = state;
+        let asset_types = [], fee_asset_types = [];
+        if (!(from_account && from_account.get("balances") && !from_error)) {
+            return {asset_types, fee_asset_types};
+        }
+        let account_balances = state.from_account.get("balances").toJS();
+        asset_types = Object.keys(account_balances).sort(utils.sortID);
+        fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
+        for (let key in account_balances) {
+            let asset = ChainStore.getObject(key);
+            let balanceObject = ChainStore.getObject(account_balances[key]);
+            if (balanceObject && balanceObject.get("balance") === 0) {
+                asset_types.splice(asset_types.indexOf(key), 1);
+                if (fee_asset_types.indexOf(key) !== -1) {
+                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
+                }
+            }
+
+            if (asset) {
+                if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
+                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
+                }
+            }
+        }
+
+        return {asset_types, fee_asset_types};
+    }
+
+    _onAccountDropdown(account) {
+        let newAccount = ChainStore.getAccount(account);
+        if (newAccount) {
+            this.setState({
+                from_name: account,
+                from_account: ChainStore.getAccount(account)
+            });
         }
     }
 
@@ -158,8 +214,7 @@ class Transfer extends React.Component {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
-
-        let from_my_account = AccountStore.isMyAccount(from_account);
+        let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
 
         if(from_account && ! from_my_account && ! propose ) {
             from_error = <span>
@@ -168,7 +223,7 @@ class Transfer extends React.Component {
             </span>;
         }
 
-        let asset_types = [], fee_asset_types = [];
+        let { asset_types, fee_asset_types } = this._getAvailableAssets();
         let balance = null;
 
         // Estimate fee
@@ -176,25 +231,8 @@ class Transfer extends React.Component {
         let fee = utils.estimateFee(propose ? "proposal_create" : "transfer", null, globalObject);
 
         if (from_account && from_account.get("balances") && !from_error) {
-            let account_balances = from_account.get("balances").toJS();
-            asset_types = Object.keys(account_balances).sort(utils.sortID);
-            fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
-            for (let key in account_balances) {
-                let asset = ChainStore.getObject(key);
-                let balanceObject = ChainStore.getObject(account_balances[key]);
-                if (balanceObject && balanceObject.get("balance") === 0) {
-                    asset_types.splice(asset_types.indexOf(key), 1);
-                    if (fee_asset_types.indexOf(key) !== -1) {
-                        fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                    }
-                }
 
-                if (asset) {
-                    if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
-                        fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                    }
-                }
-            }
+            let account_balances = from_account.get("balances").toJS();
 
             // Finish fee estimation
             let core = ChainStore.getObject("1.3.0");
@@ -211,10 +249,11 @@ class Transfer extends React.Component {
                 fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
             }
 
+            if (asset_types.length === 1) asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>)
+                balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
             } else {
                 balance = "No funds";
             }
@@ -226,76 +265,94 @@ class Transfer extends React.Component {
             }
 
         }
-        let propose_incomplete = propose && ! propose_account
-        let submitButtonClass = "button";
+        let propose_incomplete = propose && ! propose_account;
+        let submitButtonClass = "button float-right no-margin";
         if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
-        accountsList = accountsList.add(from_account)
+        accountsList = accountsList.add(from_account);
         let tabIndex = 1;
 
         return (
             <div className="grid-block vertical">
             <div className="grid-block shrink vertical medium-horizontal" style={{paddingTop: "2rem"}}>
 
-                <form style={{paddingBottom: 20}} className="grid-content medium-6 large-4 large-offset-2 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
+                <form style={{paddingBottom: 20, overflow: "visible"}} className="grid-content small-12 medium-6 large-5 large-offset-1 full-width-content" onSubmit={this.onSubmit.bind(this)} noValidate>
 
-
-                        <Translate content="transfer.header" component="h4" />
+                        <Translate content="transfer.header" component="h2" />
                         {/*  F R O M  */}
                         <div className="content-block">
                             <AccountSelector label="transfer.from" ref="from"
-                                             accountName={from_name}
-                                             onChange={this.fromChanged.bind(this)}
-                                             onAccountChanged={this.onFromAccountChanged.bind(this)}
-                                             account={from_name}
-                                             size={60}
-                                             error={from_error}
-                                             tabIndex={tabIndex++}/>
+                                accountName={from_name}
+                                onChange={this.fromChanged.bind(this)}
+                                onAccountChanged={this.onFromAccountChanged.bind(this)}
+                                account={from_name}
+                                size={60}
+                                error={from_error}
+                                tabIndex={tabIndex++}
+                                onDropdownSelect={this._onAccountDropdown.bind(this)}
+                                dropDownContent={AccountStore.getMyAccounts()}
+                            />
                         </div>
                         {/*  T O  */}
                         <div className="content-block">
-                            <AccountSelector label="transfer.to"
-                                             accountName={to_name}
-                                             onChange={this.toChanged.bind(this)}
-                                             onAccountChanged={this.onToAccountChanged.bind(this)}
-                                             account={to_name}
-                                             size={60}
-                                             tabIndex={tabIndex++}/>
+                            <AccountSelector
+                                label="transfer.to"
+                                accountName={to_name}
+                                onChange={this.toChanged.bind(this)}
+                                onAccountChanged={this.onToAccountChanged.bind(this)}
+                                account={to_name}
+                                size={60}
+                                tabIndex={tabIndex++}
+                            />
                         </div>
                         {/*  A M O U N T   */}
                         <div className="content-block transfer-input">
-                            <AmountSelector label="transfer.amount"
-                                            amount={amount}
-                                            onChange={this.onAmountChanged.bind(this)}
-                                            asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                            assets={asset_types}
-                                            display_balance={balance}
-                                            tabIndex={tabIndex++}/>
+                            <AmountSelector
+                                label="transfer.amount"
+                                amount={amount}
+                                onChange={this.onAmountChanged.bind(this)}
+                                asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                assets={asset_types}
+                                display_balance={balance}
+                                tabIndex={tabIndex++}
+                            />
                         </div>
                         {/*  M E M O  */}
                         <div className="content-block transfer-input">
-                            <label><Translate component="span" content="transfer.memo"/></label>
+                            {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
+                            <Translate className="left-label" component="label" content="transfer.memo"/>
                             <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
-                            <div className="facolor-warning"><Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} /></div>
+                                <div className="error-area" style={{position: "absolute"}}>
+                                    <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
+                                </div>
                             :null}
 
                         </div>
 
                         {/*  F E E   */}
-                        <div className="content-block transfer-input">
-                            <AmountSelector refCallback={this.setNestedRef.bind(this)}
-                                            label="transfer.fee"
-                                            disabled={true}
-                                            amount={fee}
-                                            onChange={this.onFeeChanged.bind(this)}
-                                            asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
-                                            assets={fee_asset_types}
-                                            tabIndex={tabIndex++}
-                                            />
+                        <div className={"content-block transfer-input fee-row" + (this.state.propose ? " proposal" : "")}>
+                            <AmountSelector
+                                refCallback={this.setNestedRef.bind(this)}
+                                label="transfer.fee"
+                                disabled={true}
+                                amount={fee}
+                                onChange={this.onFeeChanged.bind(this)}
+                                asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                assets={fee_asset_types}
+                                tabIndex={tabIndex++}
+                            />
+                            {propose ?
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="propose" />
+                                </button> :
+                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                    <Translate component="span" content="transfer.send" />
+                                </button>
+                            }
                         </div>
 
                         {/* P R O P O S E   F R O M
@@ -304,9 +361,12 @@ class Transfer extends React.Component {
                         */}
                         {propose ?
                         <div className="full-width-content form-group transfer-input">
-                            <label><Translate content="account.propose_from" /></label>
-                            <AccountSelect account_names={AccountStore.getMyAccounts()}
-                                onChange={this.onProposeAccount.bind(this)} tabIndex={tabIndex++}/>
+                            <label className="left-label"><Translate content="account.propose_from" /></label>
+                            <AccountSelect
+                                account_names={AccountStore.getMyAccounts()}
+                                onChange={this.onProposeAccount.bind(this)}
+                                tabIndex={tabIndex++}
+                            />
                         </div>:null}
 
 
@@ -315,21 +375,16 @@ class Transfer extends React.Component {
                         <div>
                             {propose ?
                             <span>
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                    <Translate component="span" content="propose" />
-                                </button>
                                 <button className=" button" onClick={this.onPropose.bind(this, false)} tabIndex={tabIndex++}>
                                     <Translate component="span" content="cancel" />
                                 </button>
-                            </span>:<span>
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
-                                    <Translate component="span" content="transfer.send" />
-                                </button>
-                            </span>}
+                            </span> :
+                            null}
                         </div>
+
                         {/* TODO: show remaining balance */}
                 </form>
-                <div className="grid-content medium-6 large-4 right-column">
+                <div className="grid-content small-12 medium-6 large-4 large-offset-1 right-column">
                 <div className="grid-content no-padding">
                     <RecentTransactions
                         accountsList={accountsList}
@@ -350,4 +405,14 @@ class Transfer extends React.Component {
     }
 }
 
-export default Transfer;
+export default connect(Transfer, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount
+        };
+    }
+});

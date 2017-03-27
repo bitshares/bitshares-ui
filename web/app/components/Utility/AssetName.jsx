@@ -3,8 +3,8 @@ import utils from "common/utils";
 import asset_utils from "common/asset_utils";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import counterpart from "counterpart";
 
-@BindToChainState()
 class AssetName extends React.Component {
 
 	static propTypes = {
@@ -14,7 +14,9 @@ class AssetName extends React.Component {
 	};
 
 	static defaultProps = {
-		replace: true
+		replace: true,
+		noPrefix: false,
+		noTip: false
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -25,8 +27,7 @@ class AssetName extends React.Component {
 	}
 
 	render() {
-		let {name, replace, asset} = this.props;
-
+		let {name, replace, asset, noPrefix} = this.props;
 		let isBitAsset = asset.has("bitasset");
 		let isPredMarket = isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
@@ -34,26 +35,39 @@ class AssetName extends React.Component {
 		// let prefix = isBitAsset && !isPredMarket ? <span>bit</span> :
 		// 			 replacedName !== this.props.name ? <span>{replacedPrefix}</span> : null;
 
-		if (replace && replacedName !== this.props.name) {
+		let excludeList = ["BTWTY", "BANCOR", "BTCSHA", "CROWDFUN", "DRAGON", "TESTME"];
+		let includeBitAssetDescription = isBitAsset && !isPredMarket && excludeList.indexOf(name) === -1;
+
+		if (replace && replacedName !== this.props.name || isBitAsset) {
 			let desc = asset_utils.parseDescription(asset.getIn(["options", "description"]));
-			let tooltip = `<div><strong>${this.props.name}</strong><br />${desc.short ? desc.short : desc.main}</div>`;
+			let realPrefix = name.split(".");
+			realPrefix = realPrefix.length > 1 ? realPrefix[0] : null;
+			if (realPrefix) realPrefix += ".";
+			let	optional = realPrefix || includeBitAssetDescription ? counterpart.translate("gateway.assets." + (isBitAsset ? "bit" : realPrefix.replace(".", "").toLowerCase()), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
+			if (isBitAsset && name === "CNY") {
+				optional = optional + counterpart.translate("gateway.assets.bitcny");
+			}
+			let tooltip = this.props.noTip ? null : `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
+
 			return (
-				<span
-					className="tooltip"
+				<div
+					className="tooltip inline-block"
 					data-tip={tooltip}
 					data-place="bottom"
-					data-type="light"
 					data-html={true}
 				>
 					<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>
-				</span>
+				</div>
 			);
+
 		} else {
-			return <span>{prefix}<span>{name}</span></span>
+			return <span><span className={!noPrefix ? "asset-prefix-replaced" : ""}>{!noPrefix ? prefix : null}</span>{replacedName}</span>;
 		}
 
 	}
 }
+
+AssetName = BindToChainState(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
 

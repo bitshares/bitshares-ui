@@ -1,23 +1,19 @@
 import React from "react";
-import {Link, PropTypes} from "react-router";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "graphenejs-lib";
 import AssetName from "../Utility/AssetName";
-import assetUtils from "common/asset_utils";
 import cnames from "classnames";
 import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
-import connectToStores from "alt/utils/connectToStores";
+import { connect } from "alt-react";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 
-@BindToChainState()
 class MarketCard extends React.Component {
 
     static contextTypes = {
-        history: PropTypes.history
-    };
+        router: React.PropTypes.object.isRequired
+    }
 
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
@@ -33,12 +29,26 @@ class MarketCard extends React.Component {
         super();
 
         this.statsInterval = null;
+
+        this.state = {
+            imgError: false
+        };
     }
 
-
-    shouldComponentUpdate(nextProps) {
+    _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
         return (
-            !utils.are_equal_shallow(nextProps, this.props)
+            newStats.volumeBase !== oldStats.volumeBase ||
+            !utils.are_equal_shallow(newStats.close && newStats.close.base, oldStats.close && oldStats.close.base) ||
+            !utils.are_equal_shallow(newStats.close && newStats.close.quote, oldStats.close && oldStats.close.quote)
+        );
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return (
+            this._checkStats(np.marketStats, this.props.marketStats) ||
+            np.base !== this.props.base ||
+            np.quote !== this.props.quote ||
+            ns.imgError !== this.state.imgError
         );
     }
 
@@ -53,73 +63,79 @@ class MarketCard extends React.Component {
     }
 
     goToMarket(e) {
-      e.preventDefault();
-      this.context.history.pushState(null, `/market/${this.props.base.get("symbol")}_${this.props.quote.get("symbol")}`);
+        e.preventDefault();
+        this.context.router.push(`/market/${this.props.base.get("symbol")}_${this.props.quote.get("symbol")}`);
+    }
+
+    _onError(imgName) {
+        if (!this.state.imgError) {
+            this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";
+            this.setState({
+                imgError: true
+            });
+        }
+
     }
 
     render() {
-        let {base, quote, marketStats} = this.props;
+        let {hide, isLowVolume, base, quote, marketStats} = this.props;
+        if (isLowVolume || hide) return null;
 
-        let desc = assetUtils.parseDescription(base.getIn(["options", "description"]));
-        let name = <AssetName name={base.get("symbol")} />;
-        let imgName = base.get("symbol").split(".");
-        imgName = imgName.length === 2 ? imgName[1] : imgName[0];
-
-        let marketID = base.get("symbol") + "_" + quote.get("symbol");
-        let stats = marketStats.get(marketID);
-        let changeClass = !stats ? "" : parseFloat(stats.change) > 0 ? "change-up" : parseFloat(stats.change) < 0 ? "change-down" : "";
-
-        if ((base.get("issuer") === "1.2.0" ||
-             base.get("issuer") === "1.2.3") &&
-           !(base.get("symbol") != "GOLD" ||
-             base.get("symbol") != "BTC" ||
-             base.get("symbol") != "EUR" ||
-             base.get("symbol") != "USD" ||
-             base.get("symbol") != "CNY")) {
-            imgName = "bts";
+        function getImageName(asset) {
+            let symbol = asset.get("symbol");
+            if (symbol === "OPEN.BTC") return symbol;
+            let imgName = asset.get("symbol").split(".");
+            return imgName.length === 2 ? imgName[1] : imgName[0];
         }
+        let imgName = getImageName(base);
+
+        // let marketID = base.get("symbol") + "_" + quote.get("symbol");
+        // let stats = marketStats;
+        let changeClass = !marketStats ? "" : parseFloat(marketStats.change) > 0 ? "change-up" : parseFloat(marketStats.change) < 0 ? "change-down" : "";
 
         return (
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
-                    <img style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+                    <div className="v-align">
+                        <img className="align-center" ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={"asset-symbols/"+ imgName.toLowerCase() + ".png"} />
+                    </div>
                 </div>
                 <div className="grid-block vertical no-overflow">
-                    <div className="fm-title" style={{visibility: this.props.new ? "visible" : "hidden"}}><Translate content="exchange.new" /></div>
-                    <div className="fm-name">{desc.short_name ? <span>{desc.short_name}</span> : <AssetName name={base.get("symbol")} />}</div>
-                    <div className="fm-volume">{(!stats || !stats.close) ? null : utils.format_price(
-                        stats.close.quote.amount,
+                    <div className="fm-name"><AssetName name={base.get("symbol")} /> : <AssetName name={quote.get("symbol")} /></div>
+                    {/* <div className="fm-volume">price: <div className="float-right">{(!marketStats || !marketStats.close) ? null : utils.format_price(
+                        marketStats.close.quote.amount,
                         base,
-                        stats.close.base.amount,
+                        marketStats.close.base.amount,
                         quote,
                         true,
                         this.props.invert
-                    )}</div>
-                    <div className="fm-volume">{!stats ? null : utils.format_volume(stats.volumeBase, quote.get("precision"))} <AssetName name={quote.get("symbol")} /></div>
-                    <div className={cnames("fm-change", changeClass)}>{!stats ? null : stats.change}%</div>
+                    )}</div></div> */}
+                    <div className="fm-volume"><Translate content="exchange.price" />: <div className="float-right">{marketStats && marketStats.price ? utils.price_text(marketStats.price.toReal(), base, quote) : null}</div></div>
+                    <div className="fm-volume"><Translate content="exchange.volume" />: <div className="float-right">{!marketStats ? null : utils.format_volume(marketStats.volumeBase, quote.get("precision"))}</div></div>
+                    <div className="fm-change"><Translate content="exchange.change" />: <div className={cnames("float-right", changeClass)}>{!marketStats ? null : marketStats.change}%</div></div>
                 </div>
             </div>
         );
     }
 }
 
-@connectToStores
-export default class MarketCardWrapper extends React.Component {
+MarketCard = BindToChainState(MarketCard);
 
-    static getStores() {
-        return [MarketsStore]
-    };
-
-    static getPropsFromStores() {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats
-        }
-    };
-
-  render() {
-
-    return (
-        <MarketCard {...this.props} />
-    );
-  }
+class MarketCardWrapper extends React.Component {
+    render() {
+        return (
+            <MarketCard {...this.props} />
+        );
+    }
 }
+
+export default connect(MarketCardWrapper, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps(props) {
+        return {
+            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId)
+        };
+    }
+});

@@ -1,25 +1,23 @@
 import React, {Component} from "react";
-import {RouteHandler, Link} from "react-router";
-import connectToStores from "alt/utils/connectToStores";
+import {Link} from "react-router/es";
+import { connect } from "alt-react";
 import WalletManagerStore from "stores/WalletManagerStore";
 import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
 import Translate from "react-translate-component";
 
-class ExistingAccountBaseComponent extends Component {
-    static getStores() {
-        return [WalletManagerStore]
+const connectObject = {
+    listenTo() {
+        return [WalletManagerStore];
+    },
+    getProps() {
+        const wallet = WalletManagerStore.getState();
+        return {wallet};
     }
+};
 
-    static getPropsFromStores() {
-        var wallet = WalletManagerStore.getState()
-        return {wallet}
-    }
-}
-
-@connectToStores
-class ExistingAccount extends ExistingAccountBaseComponent {
+class ExistingAccount extends Component {
     render() {
-        var has_wallet = this.props.wallet.wallet_names.count() != 0
+        const has_wallet = this.props.wallet.wallet_names.count() != 0;
         return (
             <div className="grid-container">
                 <div className="grid-content">
@@ -39,12 +37,12 @@ class ExistingAccount extends ExistingAccountBaseComponent {
         );
     }
 }
+ExistingAccount = connect(ExistingAccount, connectObject);
 
-@connectToStores
-export class ExistingAccountOptions extends ExistingAccountBaseComponent {
+class ExistingAccountOptions extends Component {
 
     render() {
-        var has_wallet = this.props.wallet.wallet_names.count() != 0
+        const has_wallet = this.props.wallet.wallet_names.count() != 0;
         return (
             <span>
                 {!has_wallet ? <div>
@@ -52,19 +50,26 @@ export class ExistingAccountOptions extends ExistingAccountBaseComponent {
                     <Link to="existing-account/import-keys"><Translate content="wallet.import_bts1" /></Link><br/><br/>
                     <Link to="existing-account/import-keys"><Translate content="wallet.create_wallet" /></Link><br/>
                     <hr/>
-                </div>:null}
+                </div> : null}
 
-                {!has_wallet ? (null) : <BalanceClaimActive/>}
+                {!has_wallet ? null : <BalanceClaimActive/>}
 
                 {has_wallet ? <span>
-                    <Link to="dashboard"><div className="button outline">
-                        <Translate component="span" content="header.dashboard" /></div></Link>
-                    <Link to="wallet"><div className="button outline">
-                        <Translate content="settings.wallets" /></div></Link>
+                    <Link to="dashboard">
+                        <div className="button outline">
+                            <Translate component="span" content="header.dashboard" />
+                        </div>
+                    </Link>
+                    <Link to="wallet">
+                        <div className="button outline">
+                            <Translate content="settings.wallets" />
+                        </div>
+                    </Link>
                 </span>:null}
             </span>
-        )
+        );
     }
 }
+ExistingAccountOptions = connect(ExistingAccountOptions, connectObject);
 
-export default ExistingAccount;
+export {ExistingAccount, ExistingAccountOptions};

@@ -1,4 +1,10 @@
 .footer {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  pre {
+      font-size: 0.8rem;
+  }
   background-color: #777;
   height: 36px;
   line-height: 36px;
@@ -11,11 +17,19 @@
   }
 
   .logo {
+      padding-right: 0.5rem;
+      border-right: 1px solid $border-color;
+      font-weight: bold;
     font-size: 1.1rem;
     line-height: 2rem;
     .version {
       font-size: 75%;
       vertical-align: baseline;
     }
+  }
+
+  > div > div:last-of-type {
+      padding-left: 0.5rem;
+      border-left: 1px solid $border-color;
   }
 }

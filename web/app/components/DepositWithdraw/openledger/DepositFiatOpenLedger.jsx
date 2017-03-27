@@ -1,35 +1,29 @@
 import React from "react";
-import Trigger from "react-foundation-apps/src/trigger";
-import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
-import AccountActions from "actions/AccountActions";
-import Modal from "react-foundation-apps/src/modal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
-@BindToChainState({keep_updating:true})
 class DepositFiatOpenLedger extends React.Component {
 
-   static propTypes = {
-       account: ChainTypes.ChainAccount.isRequired,
-       issuer_account: ChainTypes.ChainAccount.isRequired,
-       deposit_asset: React.PropTypes.string,
-       receive_asset: ChainTypes.ChainAsset.isRequired,
-       rpc_url: React.PropTypes.string
-   }
+    static propTypes = {
+        account: ChainTypes.ChainAccount.isRequired,
+        issuer_account: ChainTypes.ChainAccount.isRequired,
+        deposit_asset: React.PropTypes.string,
+        receive_asset: ChainTypes.ChainAsset.isRequired,
+        rpc_url: React.PropTypes.string
+    }
 
-   constructor( props ) {
-      super(props);
-      this.state = {
-         deposit_amount: null,
-         deposit_info: null,
-         deposit_error: null
-      }
-   }
+    constructor( props ) {
+        super(props);
+        this.state = {
+            deposit_amount: null,
+            deposit_info: null,
+            deposit_error: null
+        };
+    }
 
    onDepositAmountChange( {amount, asset} ) {
       this.setState( {deposit_amount:amount} );
@@ -83,10 +77,6 @@ class DepositFiatOpenLedger extends React.Component {
       ZfApi.publish(this.props.modal_id, "close");
    }
 
-    onOpenLink() {
-        window.open(this.state.deposit_info.link, "_blank");
-    }
-
     render() {
        if (this.state.deposit_error) // then we've failed to approve them
        {
@@ -115,7 +105,7 @@ class DepositFiatOpenLedger extends React.Component {
                             <h3>Deposit Information</h3>
                          </div>
                          <div className="content-block">
-                           <p>Click <a onClick={this.onOpenLink.bind(this)}>here</a> for deposit instructions</p>
+                           <p>Click <a href={this.state.deposit_info.link} rel="noopener noreferrer" target="_blank">here</a> for deposit instructions</p>
 
                          </div>
                          <div className="content-block">
@@ -191,4 +181,4 @@ class DepositFiatOpenLedger extends React.Component {
 
 };
 
-export default DepositFiatOpenLedger
+export default BindToChainState(DepositFiatOpenLedger, {keep_updating:true});

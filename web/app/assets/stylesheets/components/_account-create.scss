@@ -1,0 +1,41 @@
+div.Account_create {
+    button.submit-button, div.backup-submit .button {
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+
+    label > a {
+        text-decoration: underline;
+    }
+
+    div.divider {
+        max-width: 30rem;
+    }
+}
+
+div.divider {
+    margin: 20px 0;
+    border-bottom: 1px solid $border-color;
+}
+
+.login-selector {
+    justify-content: space-around;
+    > div.box {
+        cursor: pointer;
+        position: relative;
+        padding: 1rem;
+        padding-bottom: 4.5rem;
+        border: 1px solid $border-color;
+        margin-top: 2rem;
+
+        h4 {
+            font-weight: bold;
+        }
+
+        .button {
+            font-size: 1.2rem;
+            position: absolute;
+            bottom: 1rem;
+        }
+    }
+}

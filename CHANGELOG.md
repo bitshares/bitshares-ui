@@ -1,4 +1,226 @@
 ---------------------------------------------------------------------
+Release 2.0.170314
+---------------------------------------------------------------------
+New features
+--------
+- Make the account dropdown a direct link when only one account is present
+- Add a 'choose automatically' option for API server selection.
+- Add tooltips for bitassets, open.x and trade.x assets
+- Add 'to' account to deposit/withdraw summary, and show full asset name
+- Add several markets to dashboard list, filter out low volume markets
+- Implement some design ideas from @etherdesign
+- Refactor Transfer page, add new asset dropdown
+- Refactor AccountLeftPanel using etherdesign's designs
+- Increase max. KAPITAL withdraw limit to 100k
+- Improve the determination of low volume markets
+- Refactor DepositWithdraw layout according to design by @etherdesign
+- Add a dropdown to AccountSelector, use it in Transfer to show your accounts in From field
+- Change Tabs styling to use segmented button class
+- Modify the switch colors to make it very clear what's the checked state
+- Update the header account link behaviour to always switch the active account, add notification
+- Make the header balance value depend on the active account
+- Put Explore, Help and Settings behind a dropdown using the cog icon
+- Move the price chart controls below the chart itself
+- Fetch 3x as much data for price charts
+
+Bug fixes
+--------
+- Make event listeners passive, ensure removal
+- Add theme as query param to BitKapital iframe urls
+- Improve MarketCard shouldComponentUpdate logic
+- Improve the borders and display of market cards in the Dashboard
+- Fix top markets list disappearing due to low volume check
+- Rename 'pay' to 'send to
+- Sort call orders by id for consistent sort in CollateralPosition
+- Move the date in the operation list to a third column
+- Always set the 'from' account in Transfer.jsx
+- Fix account registration without referral id
+- Fix KAPITAL:OPEN.BTC price display in dashboard
+- Fix BuySell input style after Transfer refactor
+- Improve the Identicon question mark color
+- Include accounts with partial authority in list of my accounts
+- Only render mobileMenu on small screens
+- Filter Blocktrades backed coins by active wallets
+- Fix Exchange balance check
+- Fix BuySell balance asset construction
+- Fix withdrawal modal input check for amounts < 0
+- Fix fee subtraction in BuySell
+- Fix removal of ws api nodes in WebSocketAddModal
+- Persist backedCoins in localStorage
+- Persist map of low volume markets
+
+---------------------------------------------------------------------
+Release 2.0.170303
+---------------------------------------------------------------------
+New features
+--------
+- API node hopping: fallback to next API server if current API is down
+- API latency checks: all known API servers are regularly polled for latency, the ranking is used for fallback attempts
+- Notifications for confirmed transactions instead of second OK button
+- Big Russian language update
+- Delay Chat component appearance, default user name is now the first account in the user's wallet
+- Add empty input warning to WithdrawModalBlocktrades
+- Persist BlockTradesGateway deposit/withdraw setting
+
+Bug fixes
+--------
+- Remove redirect from / to /dashboard
+- Store referral account in localStorage, fixes account creation referrals
+- Fix brainkey sequence sync issues with account creation failure, add reset/decrement methods, resolve process_transaction properly on trx inclusion
+- Trigger account ref lookup immediately on AccountStore loadDbData, fixes slow Dashboard load
+- Fix for MyOrders incorrect amounts
+- Fix Exchange insufficient funds message
+- Fix order cancellations not updating properly
+- Filter out OPEN.X coins that are currently unavailable from preset list
+- Modify app init Chain to better handle sync error redirects
+- Add missing getFee method for SimpleDepositWithdraw
+
+---------------------------------------------------------------------
+Release 2.0.170224
+---------------------------------------------------------------------
+New features
+--------
+- New modal for quick deposit/withdraw of OPEN.X assets on account overview page
+- A set of default assets are available for deposits on the account overview page
+- New summary of open orders on account overview page
+- Set precision for bitCNY and bitUSD to 5 in orderbook display
+- Flip CNY:OPEN.BTC market in dashboard
+- Add bitSilver asset icon
+- Add Chinese intro text by bitcrab
+- Add grid lines and y axis labels to the depth chart
+
+Bug fixes
+--------
+- Fix Popover links so they work within the router context
+- Update react-router to v3.0.2
+- Refactor blockTrades withdrawal address caching
+- Scroll orderbook to top when changing markets
+- Don't set feed price in MarketStore for markets without call orders
+- Fix setting of highestBid in MarketStore
+- Update bitsharesjs, fixes vesting balances not loading properly
+- Fix persistence of indicator settings
+- Fix PriceChart resize on switching to/from left orderbook
+- Update Dashboard markets, add loading indication until accounts are ready
+- Fix Operation display of asset_global_settle operation
+
+---------------------------------------------------------------------
+Release 2.0.170215
+---------------------------------------------------------------------
+New features
+- New intro text has been added to the Dashboard for new users
+- Several settings and wallet related parameters have been made dependent on the chain id, and will thus switch accordingly if you connect to the testnet for example.
+- Windows light client installer will now remove personal data properly if checked
+
+Bug fixes
+--------
+- Fix Russian language selection
+- Fix proxy selection
+- Fix committee/witness pages
+- A bug when importing old BTS 1 balances has been fixed
+- App init flow has been improved
+- Fix asset creation precision slider
+- Fix HelpContent links
+- Only trigger MarketCard img onerror update once
+- [Blocktrades] Fix issue with 'calculating crashes' in Blocktrades Bridge
+- [Blocktrades] Disable 'withdraw now' and 'convert now' buttons if no funds
+- [Blocktrades] Move amount from output withdraw section to withdraw dialog in Blocktrades Bridge
+- [Blocktrades] Fix displaying MKR coin
+- [Blocktrades] Add ability to move balance to 'Amount selector' in withdraw dialog on mouse click
+
+---------------------------------------------------------------------
+Release 2.0.170201
+---------------------------------------------------------------------
+New features
+- Charting revamp: new charts using [react-stockchart](https://github.com/rrag/react-stockcharts)
+- Russian language translation thanks to @rusteemitblog and @testzcrypto
+- Add brainkey restoration to create-account, improve brainkey restoration
+- All open orders, collateral and debt are now included when estimating total account value on the account screen
+- A 'Borrow' action added to the account assets table
+- A 'Reset settings' button added to the Settings page
+- Dates have been added to the Chat (requires implementation by other clients like Openledger also)
+- Hide 'OPEN.' prefix from Openledger assets
+- The dashboard market cards have been modified to be more clear
+
+- Hempsweet UIA symbol added ahead of their launch
+
+Bug fixes
+--------
+- Many tweaks and fixes to colors, positioning and more
+- Make sure transfer asset stays synced
+- Fix bug in CER input during asset creation
+- Move 'show hidden accounts' inside DashboardList, improve the layout
+
+---------------------------------------------------------------------
+Release 2.0.170123
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Use relative paths for fetching assets, fixed wallet creation issues
+- Fix some links in the light wallets
+- Fix market flipping for UIAs
+- Fix several bugs related to hash-history react router config
+- Change Graphene to BitShares
+- Replace graphenejs-lib with bitsharesjs
+- Fix npm errors
+- Fix line breaks for memos with very long words
+- Make sure asset actions render properly in AccountOverview
+- Ensure proxy accounts get resolved properly in Voting
+
+---------------------------------------------------------------------
+Release 2.0.170118
+---------------------------------------------------------------------
+
+New features
+--------
+- Helpul tooltips have been added in multiple locations, such as login/unlock, margin mechanics ++
+- Proposed transaction summaries added to transaction history lists
+- Always display settings cog in header
+
+Bug fixes
+--------
+- Fix display of asset page for bit assets with no valid feeds
+- Remove maximum_short_squeeze_ratio requirement for minimum collateral
+- Base Call Order forSale/toReceive calculation on debt instead of collateral
+- Fix TimeAgo tooltip positioning
+- Hide 'show hidden assets' button when no assets are hidden
+- Update Chinese translations
+- Set depth chart xaxis properly when no asks are present
+- Fix price being set when clicking on orderbook order
+- Add a tooltip explaning that buy amounts are minimum to receive
+- Filter call orders on feed update
+
+---------------------------------------------------------------------
+Release 2.0.170116-rc1
+---------------------------------------------------------------------
+
+New features
+--------
+- Major refactor of market handling: improved order matching and market data processing
+- Upgrade to Webpack 2, add ES6 code splitting and dynamic route loading
+- [Blocktrades] Add internal conversion
+- Major package upgrades: react, react-router, alt, file-saver ++
+- Use Roboto font everywhere by default
+- Add Equivalent values to Worker table, improve layout
+- Add a warning for disabled markets and disable buy/sell
+- Only redirect to account creation on direct navigation to "/"
+- Update default markets and add some asset symbols
+
+Bug fixes
+--------
+- [Blocktrades] Fix 'Calculating Internal Server Error'
+- [Blocktrades] Fix displaying 'Deposit limit' for 'Internal conversion'
+- [Blocktrades] Fix copy/paste for memo
+- Fix dropdown font colors
+- Fix missing connection translation key
+- Improve multi-sig signing handling, exclude owner keys if not needed
+- Hide tooltips on navigation
+- Fix Account active state in Header
+- Change 'No price available' to 'Unknown', and add a tooltip
+- Fix account creation and dictionary loading
+- Fix orderbook show more button
+- Fix some invalid JSON
+
+---------------------------------------------------------------------
 Release 2.0.161031
 ---------------------------------------------------------------------
 
@@ -13,7 +235,7 @@ New features
 
 Bug fixes
 --------
-- Add Bitshares bloom filter for BTS 1 account imports
+- Add BitShares bloom filter for BTS 1 account imports
 - Fix a GenesisFilter bug and update ImportKeys flow slightly
 - Fix input of uppercase characters in AccountPermissions
 - Fix Highcharts build issues

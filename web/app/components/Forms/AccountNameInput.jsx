@@ -1,9 +1,9 @@
 import React from "react";
-import {PropTypes, Component} from "react";
+import {PropTypes} from "react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import {ChainValidation} from "graphenejs-lib";
+import {ChainValidation} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";
@@ -125,19 +125,20 @@ class AccountNameInput extends React.Component {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
         let warning = this.state.warning;
-        let {noLabel} = this.props;
+        // let {noLabel} = this.props;
 
         return (
             <div className={class_name}>
-                {noLabel ? null : <label><Translate content="account.name" /></label>}
+                {/* {noLabel ? null : <label><Translate content="account.name" /></label>} */}
                 <section>
+                    <label className="left-label">{this.props.placeholder}</label>
                     <input
                         name="value"
                         type="text"
                         id={this.props.id}
                         ref="input"
                         autoComplete="off"
-                        placeholder={this.props.placeholder}
+                        placeholder={null}
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}
                         value={this.state.account_name || this.props.initial_value}

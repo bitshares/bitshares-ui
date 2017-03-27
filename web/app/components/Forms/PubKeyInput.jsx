@@ -1,9 +1,8 @@
 import React from "react";
-import utils from "common/utils";
 import classnames from "classnames";
 import Translate from "react-translate-component";
 import PrivateKeyView from "components/PrivateKeyView";
-import {PublicKey} from "graphenejs-lib";
+import {PublicKey} from "bitsharesjs/es";
 import Icon from "../Icon/Icon";
 
 /**
@@ -54,18 +53,18 @@ class PubKeyInput extends React.Component {
 
         return (
             <div className="pubkey-input no-overflow">
-                <div className="account-image">
-                    <PrivateKeyView pubkey={this.props.value}>
-                        <Icon name="key" size="4x"/>
-                    </PrivateKeyView>
-                </div>
                 <div className="content-area">
                     <div className="header-area">
-                        {!error && this.props.value && this.isValidPubKey(this.props.value) ?<div className="right-label">Valid Public Key</div> : null}
-                        <Translate component="label" content={this.props.label}/>
+                        {!error && this.props.value && this.isValidPubKey(this.props.value) ?<label className="right-label">Valid Public Key</label> : null}
+                        <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
                       <span className="inline-label">
+                      <div className="account-image">
+                          <PrivateKeyView pubkey={this.props.value}>
+                              <Icon name="key" size="4x"/>
+                          </PrivateKeyView>
+                      </div>
                       <input type="text"
                              value={this.props.value}
                              placeholder={this.props.placeholder || counterpart.translate("account.public_key")}

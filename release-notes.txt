@@ -32,8 +32,8 @@ Release 2.0.160629
 
 New features
 --------
-- Api code moved to new [graphenejs-ws](https://github.com/svk31/graphenejs-ws) library
-- Crypto and blockchain state code moved to [graphenejs-lib](https://github.com/svk31/graphenejs-lib) library
+- Api code moved to new [bitsharesjs-ws](https://github.com/svk31/bitsharesjs-ws) library
+- Crypto and blockchain state code moved to [bitsharesjs](https://github.com/svk31/bitsharesjs) library
 - Add OPEN.MKR deposit/withdrawal
 - Limit chat messages to 140 characters
 - Refactor MyMarkets selection to tabbed layout

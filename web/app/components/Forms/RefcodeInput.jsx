@@ -1,5 +1,4 @@
 import React from "react";
-import utils from "common/utils";
 import classnames from "classnames";
 import Translate from "react-translate-component";
 import cookies from "cookies-js";

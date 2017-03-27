@@ -2,20 +2,13 @@ import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
-import classNames from "classnames";
-import BalanceComponent from "../Utility/BalanceComponent";
-import WalletApi from "rpc_api/WalletApi";
-import WalletDb from "stores/WalletDb";
-import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import AssetActions from "actions/AssetActions";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 
-@BindToChainState()
-export default class IssueModal extends React.Component {
+class IssueModal extends React.Component {
 
     static propTypes = {
         asset_to_issue: ChainTypes.ChainAsset.isRequired
@@ -89,7 +82,7 @@ export default class IssueModal extends React.Component {
 
                 {/* A M O U N T */}
                 <div className="content-block">
-                    <AmountSelector 
+                    <AmountSelector
                         label="modal.issue.amount"
                         amount={this.state.amount}
                         onChange={this.onAmountChanged.bind(this)}
@@ -130,4 +123,4 @@ export default class IssueModal extends React.Component {
     }
 }
 
-export default IssueModal
+export default BindToChainState(IssueModal);

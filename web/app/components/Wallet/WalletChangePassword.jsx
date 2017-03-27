@@ -1,10 +1,11 @@
-import React, {PropTypes, Component} from "react"
-import {Link} from "react-router"
-import Translate from "react-translate-component"
-import notify from "actions/NotificationActions"
-import cname from "classnames"
-import WalletDb from "stores/WalletDb"
-import PasswordConfirm from "./PasswordConfirm"
+import React, {Component} from "react";
+import {Link} from "react-router";
+import Translate from "react-translate-component";
+import notify from "actions/NotificationActions";
+import cname from "classnames";
+import WalletDb from "stores/WalletDb";
+import PasswordConfirm from "./PasswordConfirm";
+import counterpart from "counterpart";
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -128,7 +129,7 @@ class WalletPassword extends Component {
                     <label><Translate content="wallet.existing_password"/></label>
                     <section>
                         <input
-                            placeholder="Current password"
+                            placeholder={counterpart.translate("wallet.current_pass")}
                             type="password"
                             id="password"
                             onChange={this.formChange.bind(this)}

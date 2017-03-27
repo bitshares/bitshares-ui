@@ -9,13 +9,12 @@ import AccountBalance from "../../Account/AccountBalance";
 import TranswiserDepositModal from "./TranswiserDepositModal";
 import TranswiserWithdrawModal from "./TranswiserWithdrawModal";
 
-@BindToChainState({keep_updating: true})
 class TranswiserDepositWithdraw extends React.Component {
 
     static propTypes = {
-        issuerAccount:      ChainTypes.ChainAccount,
-        account:            ChainTypes.ChainAccount,
-        receiveAsset:       ChainTypes.ChainAsset,
+        issuerAccount:      ChainTypes.ChainAccount.isRequired,
+        account:            ChainTypes.ChainAccount.isRequired,
+        receiveAsset:       ChainTypes.ChainAsset.isRequired,
     };
 
     constructor(props) {
@@ -28,7 +27,12 @@ class TranswiserDepositWithdraw extends React.Component {
         // this.apiUrl      = "http://localhost:3000/setting-dev.json";
     }
 
+    componentDidMount() {
+        this.requestDepositUrl();
+    }
+
     requestDepositUrl(){
+        console.log("props:", this.props);
         let pair = this.depositCoin.toLocaleLowerCase() + ":" + this.props.receiveAsset.get('symbol').toLocaleLowerCase();
 
         fetch( this.apiUrl, {
@@ -75,13 +79,13 @@ class TranswiserDepositWithdraw extends React.Component {
     }
 
     render() {
-        let loading = (<tr style={{display:"block"}}><td>loading</td><td></td><td></td><td></td></tr>);
+        let loading = (<tr style={{display:"block"}}><td>loading {this.props.receiveAsset && this.props.receiveAsset.get("symbol")}</td><td></td><td></td><td></td></tr>);
 
         if( !this.props.account || !this.props.issuerAccount || !this.props.receiveAsset )
             return loading;
 
         if (!this.state.depositUrl) {
-            this.requestDepositUrl(); return loading;
+            return loading;
         }
 
         let withdrawModalId = this.getWithdrawModalId();
@@ -129,4 +133,4 @@ class TranswiserDepositWithdraw extends React.Component {
     }
 }
 
-export default TranswiserDepositWithdraw;
+export default BindToChainState(TranswiserDepositWithdraw, {keep_updating: true});

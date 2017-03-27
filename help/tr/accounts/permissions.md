@@ -30,7 +30,7 @@ işe yarar.
 ## (Düz) Çok-İmzalı
 
 Düz çok-imzalı bir şema, işlemin geçerli olabilmesi için aralarından 'N' sayıda kişinin 
-imzası gerekli  toplam 'M' sayıda kişiden oluşur. Şimdi biz, Bitshares'de, 'M' 
+imzası gerekli  toplam 'M' sayıda kişiden oluşur. Şimdi biz, BitShares'de, 'M' 
 ve 'N' yerine *ağırlıklar* ve *alt-sınır*  kullanıyoruz. Şimdi göreceğimiz gibi tamamen 
 aynı sonuca çok daha esnek bir şekilde varacağız.  
 

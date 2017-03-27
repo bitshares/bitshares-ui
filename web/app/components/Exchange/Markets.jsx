@@ -1,17 +1,5 @@
 import React from "react";
-import MarketCard from "./MarketCard";
-import MarketRow from "./MarketRow";
 import MyMarkets from "./MyMarkets";
-import Translate from "react-translate-component";
-import {Link} from "react-router";
-import SettingsActions from "actions/SettingsActions";
-import MarketsActions from "actions/MarketsActions";
-import Immutable from "immutable";
-import AssetActions from "actions/AssetActions";
-import {debounce} from "lodash";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
-import LoadingIndicator from "../LoadingIndicator";
 
 class Markets extends React.Component {
 
@@ -25,7 +13,7 @@ class Markets extends React.Component {
     }
 
     componentWillMount() {
-        window.addEventListener("resize", this._setDimensions, false);
+        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
     }
 
     componentDidMount() {
@@ -33,13 +21,11 @@ class Markets extends React.Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this._setDimensions, false);
+        window.removeEventListener("resize", this._setDimensions);
     }
 
     _setDimensions() {
         let height = this.refs.wrapper.offsetHeight;
-
-        console.log("wrapper height:", this.refs.wrapper.offsetHeight);
 
         if (height !== this.state.height) {
             this.setState({height});
@@ -47,9 +33,6 @@ class Markets extends React.Component {
     }
 
     render() {
-        let {starredMarkets} = this.props;
-        let assets = [];
-
         return (
             <div
                 ref="wrapper"
