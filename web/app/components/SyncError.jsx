@@ -38,7 +38,10 @@ class SyncError extends React.Component {
     render() {
         let options = this.props.apis.map(entry => {
             let onlyDescription = entry.url.indexOf("fake.automatic-selection") !== -1;
-            return <option key={entry.url} value={entry.url}>{entry.location || entry.url} {!onlyDescription && entry.location ? `(${entry.url})` : null}</option>;
+            let {location} = entry;
+            if (typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
+
+            return <option key={entry.url} value={entry.url}>{location || entry.url} {!onlyDescription && location ? `(${entry.url})` : null}</option>;
         });
 
         return (

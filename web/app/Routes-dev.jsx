@@ -32,6 +32,7 @@ import SettingsContainer from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
 import AssetContainer from "./components/Blockchain/AssetContainer";
 import CreateAccount from "./components/Account/CreateAccount";
+import CreateAccountPassword from "./components/Account/CreateAccountPassword";
 import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
 import { WalletCreate , CreateWalletFromBrainkey } from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
@@ -44,6 +45,7 @@ import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
+import LoginSelector from "./components/LoginSelector";
 
 const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
@@ -90,7 +92,10 @@ const routes = (
         <Route path="settings" component={SettingsContainer} />
         <Route path="block/:height" component={BlockContainer} />
         <Route path="asset/:symbol" component={AssetContainer} />
-        <Route path="create-account" component={CreateAccount} />
+        <Route path="create-account" component={LoginSelector}>
+            <Route path="wallet" component={CreateAccount} />
+            <Route path="password" component={CreateAccountPassword} />
+        </Route>
 
         <Route path="existing-account" component={ExistingAccount} >
             <IndexRoute component={BackupRestore} />

@@ -99,7 +99,7 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                 for (var i = 0; i < this.state.deposits.length; ++i)
                     openledger_deposit_history_rows.push(<tr>
                                                               <td>{this.state.deposits[i].amount} {this.state.deposits[i].currency}</td>
-                                                              <td><a href={this.state.deposits[i].link} target="_blank">link</a></td>
+                                                              <td><a href={this.state.deposits[i].link} rel="noopener noreferrer" target="_blank">link</a></td>
                                                               <td>{this.state.deposits[i].status}</td>
                                                          </tr>);
                 openledger_deposit_history_fragment = <table className="table">

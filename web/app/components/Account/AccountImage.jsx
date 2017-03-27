@@ -4,13 +4,14 @@ import {PropTypes, Component} from "react";
 
 class AccountImage extends Component {
     render() {
-        let {account, image} = this.props;
+        let {account, image, style} = this.props;
         let {height, width} = this.props.size;
         let custom_image = image ?
             <img src={image} height={height + "px"} width={width + "px"}/> :
             <Identicon id={account} account={account} size={this.props.size}/>;
+
         return (
-            <div className="account-image">
+            <div style={style} className="account-image">
                 {custom_image}
             </div>
         );
@@ -20,13 +21,15 @@ class AccountImage extends Component {
 AccountImage.defaultProps = {
     src: "",
     account: "",
-    size: {height: 120, width: 120}
+    size: {height: 120, width: 120},
+    style: {}
 };
 
 AccountImage.propTypes = {
     src: PropTypes.string,
     account: PropTypes.string,
-    size: PropTypes.object.isRequired
+    size: PropTypes.object.isRequired,
+    style: PropTypes.object
 };
 
 export default AccountImage;

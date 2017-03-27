@@ -27,7 +27,6 @@ class AccountPermissionRow extends React.Component {
     _lookUpPubKeyForAddress(address) {
         var addresses = AddressIndex.getState().addresses;
         var pubkey = addresses.get(address);
-        console.log("pubkey:", pubkey);
         return pubkey;
     }
 
@@ -39,7 +38,7 @@ class AccountPermissionRow extends React.Component {
         if (this.props.account) {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
-            name_or_key = <Link to={`account/${name}/permissions`}>{name}</Link>;
+            name_or_key = <Link to={`/account/${name}/permissions`}>{name}</Link>;
         } else if (pubKey) {
             name = item_id = this.props.pubkey;
             name_or_key = <PrivateKeyView pubkey={this.props.pubkey}>{this.props.pubkey}</PrivateKeyView>

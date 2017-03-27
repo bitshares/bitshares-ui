@@ -77,10 +77,6 @@ class DepositFiatOpenLedger extends React.Component {
       ZfApi.publish(this.props.modal_id, "close");
    }
 
-    onOpenLink() {
-        window.open(this.state.deposit_info.link, "_blank");
-    }
-
     render() {
        if (this.state.deposit_error) // then we've failed to approve them
        {
@@ -109,7 +105,7 @@ class DepositFiatOpenLedger extends React.Component {
                             <h3>Deposit Information</h3>
                          </div>
                          <div className="content-block">
-                           <p>Click <a onClick={this.onOpenLink.bind(this)}>here</a> for deposit instructions</p>
+                           <p>Click <a href={this.state.deposit_info.link} rel="noopener noreferrer" target="_blank">here</a> for deposit instructions</p>
 
                          </div>
                          <div className="content-block">

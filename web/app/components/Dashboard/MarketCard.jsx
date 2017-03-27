@@ -2,7 +2,6 @@ import React from "react";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import AssetName from "../Utility/AssetName";
-import assetUtils from "common/asset_utils";
 import cnames from "classnames";
 import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
@@ -103,16 +102,17 @@ class MarketCard extends React.Component {
                 </div>
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-name"><AssetName name={base.get("symbol")} /> : <AssetName name={quote.get("symbol")} /></div>
-                    <div className="fm-volume">price: <div className="float-right">{(!marketStats || !marketStats.close) ? null : utils.format_price(
+                    {/* <div className="fm-volume">price: <div className="float-right">{(!marketStats || !marketStats.close) ? null : utils.format_price(
                         marketStats.close.quote.amount,
                         base,
                         marketStats.close.base.amount,
                         quote,
                         true,
                         this.props.invert
-                    )}</div></div>
-                    <div className="fm-volume">volume: <div className="float-right">{!marketStats ? null : utils.format_volume(marketStats.volumeBase, quote.get("precision"))}</div></div>
-                    <div className="fm-change">change: <div className={cnames("float-right", changeClass)}>{!marketStats ? null : marketStats.change}%</div></div>
+                    )}</div></div> */}
+                    <div className="fm-volume"><Translate content="exchange.price" />: <div className="float-right">{marketStats && marketStats.price ? utils.price_text(marketStats.price.toReal(), base, quote) : null}</div></div>
+                    <div className="fm-volume"><Translate content="exchange.volume" />: <div className="float-right">{!marketStats ? null : utils.format_volume(marketStats.volumeBase, quote.get("precision"))}</div></div>
+                    <div className="fm-change"><Translate content="exchange.change" />: <div className={cnames("float-right", changeClass)}>{!marketStats ? null : marketStats.change}%</div></div>
                 </div>
             </div>
         );

@@ -616,7 +616,6 @@ class Chat extends React.Component {
                 </div>
             </div>
         );
-
         return (
             <div
                 id="chatbox"
@@ -635,7 +634,7 @@ class Chat extends React.Component {
                     <div className={"grid-block main-content vertical " + (docked ? "docked" : "flyout")} >
                         <div className="chatbox-title grid-block shrink">
                             <Translate content="chat.title" />
-                            <span>&nbsp;- <Translate content="chat.users" count={this.connections.size + 1} /></span>
+                            <span>&nbsp;- <Translate content="chat.users" userCount={this.connections.size + 1} /></span>
                             <div className="chatbox-pin" onClick={this._onToggleDock.bind(this)}>
                                 {docked ? <Icon className="icon-14px rotate" name="thumb-tack"/> : <Icon className="icon-14px" name="thumb-tack"/>}
                             </div>

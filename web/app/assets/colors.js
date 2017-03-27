@@ -52,7 +52,7 @@ module.exports = {
         callColor: "#BBBF2B",
         settleColor: "rgba(125, 134, 214, 1)",
         settleFillColor: "rgba(125, 134, 214, 0.5)",
-        positiveColor: "rgba(110, 193, 5, 1)",
+        positiveColor: "#528c0a",
         negativeColor: "rgba(225, 66, 74, 1)",
         primaryText: "#242424",
         volumeColor: "#848484",

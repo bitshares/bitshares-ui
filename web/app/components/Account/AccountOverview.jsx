@@ -22,6 +22,7 @@ import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
+import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 
@@ -38,12 +39,17 @@ class AccountOverview extends React.Component {
             showHidden: false,
             depositAsset: null,
             withdrawAsset: null,
+            bridgeAsset: null,
             alwaysShowAssets: [
+                "BTS",
+                "USD",
+                "CNY",
                 "OPEN.BTC",
                 "OPEN.USDT",
                 "OPEN.ETH",
                 "OPEN.MAID",
-                "OPEN.STEEM"
+                "OPEN.STEEM",
+                "OPEN.DASH"
             ]
         };
     }
@@ -76,7 +82,7 @@ class AccountOverview extends React.Component {
     _showDepositWithdraw(action, asset, fiatModal, e) {
         e.preventDefault();
         this.setState({
-            [action === "deposit_modal" ? "depositAsset" : "withdrawAsset"]: asset,
+            [action === "bridge_modal" ? "bridgeAsset" : action === "deposit_modal" ? "depositAsset" : "withdrawAsset"]: asset,
             fiatModal
         }, () => {
             this.refs[action].show();
@@ -114,6 +120,7 @@ class AccountOverview extends React.Component {
             const notCore = asset.get("id") !== "1.3.0";
             let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
             symbol = asset.get("symbol");
+            if (symbol.indexOf("OPEN.") !== -1 && !market) market = "USD";
             let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
 
             /* Table content */
@@ -151,6 +158,8 @@ class AccountOverview extends React.Component {
             const hasOnOrder = !!orders[asset_type];
             const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
+            const canBuy = !!this.props.bridgeCoins.get(symbol);
+
             let onOrders = hasOnOrder ? <FormattedAsset amount={orders[asset_type]} asset={asset_type} /> : null;
 
             if (hasOnOrder) {
@@ -202,6 +211,13 @@ class AccountOverview extends React.Component {
                                 </a>
                             </span>
                         ) : null}
+                        {canBuy && this.props.isMyAccount ?
+                        <span>
+                            {this._getSeparator(hasBalance || hasOnOrder || canDepositWithdraw)}
+                            <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
+                                <Translate content="exchange.buy" />
+                            </a>
+                        </span> : null}
                     </td>
                     <td style={{textAlign: "center"}}>
                         {directMarketLink}
@@ -227,6 +243,9 @@ class AccountOverview extends React.Component {
                         isAvailable = true;
                     }
                 });
+                if (!!this.props.bridgeCoins.get(asset)) {
+                    isAvailable = true;
+                }
                 let keep = true;
                 balances.forEach(a => {
                     if (a.key === asset) keep = false;
@@ -238,6 +257,8 @@ class AccountOverview extends React.Component {
                 if (asset && this.props.isMyAccount) {
                     const includeAsset = !hiddenAssets.includes(asset.get("id"));
 
+                    const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
+                    const canBuy = !!this.props.bridgeCoins.get(asset.get("symbol"));
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
                             <td style={{textAlign: "right"}}>
@@ -245,11 +266,20 @@ class AccountOverview extends React.Component {
                             </td>
                             <td></td>
                             <td colSpan="1" style={{textAlign: "center"}}>
+                                {canDepositWithdraw && this.props.isMyAccount ?
                                 <span>
                                     <a onClick={this._showDepositWithdraw.bind(this, "deposit_modal", a, false)}>
                                         <Translate content="gateway.deposit" />
                                     </a>
-                                </span>
+                                </span> : null}
+
+                                {canBuy  && this.props.isMyAccount ?
+                                <span>
+                                    {this._getSeparator(canDepositWithdraw)}
+                                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", a, false)}>
+                                        <Translate content="exchange.buy" />
+                                    </a>
+                                </span> : null}
                             </td>
                             <td></td>
                             <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
@@ -366,6 +396,7 @@ class AccountOverview extends React.Component {
         const currentWithdrawAsset = this.props.backedCoins.get("OPEN", []).find(c => {
             return c.symbol === this.state.withdrawAsset;
         }) || {};
+        const currentBridges = this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
@@ -480,6 +511,18 @@ class AccountOverview extends React.Component {
                     balances={this.props.balances}
                     {...currentWithdrawAsset}
                 />
+
+                {/* Bridge modal */}
+                <SimpleDepositBlocktradesBridge
+                    ref="bridge_modal"
+                    action="deposit"
+                    account={this.props.account.get("name")}
+                    sender={this.props.account.get("id")}
+                    asset={this.state.bridgeAsset}
+                    modalId="simple_bridge_modal"
+                    balances={this.props.balances}
+                    bridges={currentBridges}
+                />
             </div>
 
         );
@@ -503,6 +546,7 @@ class BalanceWrapper extends React.Component {
     componentWillMount() {
         if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
             GatewayActions.fetchCoins();
+            GatewayActions.fetchBridgeCoins();
         }
     }
 

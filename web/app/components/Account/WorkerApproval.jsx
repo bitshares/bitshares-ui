@@ -106,7 +106,7 @@ class WorkerApproval extends React.Component{
 
                 <td className="hide-column-small">
                     <div><LinkToAccountById account={worker.worker_account} /></div>
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}><a target="_blank" href={worker.url}>{displayURL}</a> </div>
+                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}><a target="_blank" rel="noopener noreferrer" href={worker.url}>{displayURL}</a> </div>
                 </td>
 
                 <td className="hide-column-small">

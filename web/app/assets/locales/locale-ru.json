@@ -32,7 +32,7 @@
     "help":"Помощь",
     "locked_tip":"<br/>Нажмите, чтобы войти, открыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
     "unlocked_tip":"<br/>Нажмите, чтобы выйти, закрыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
-    "account_notify": "The active account is now %(account)s"
+    "account_notify":"Активный аккаунт в настоящее время %(account)s"
   },
   "tooltip":{
     "call_limit":"Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -65,8 +65,8 @@
   "propose":"Предложить",
   "cancel":"Отмена",
   "account":{
-    "intro_text_title":"Добро пожаловать в Bitshares DEX!",
-    "intro_text_1":"<b>BitShares 2.0</b> и её децентрализованная биржа, также известная как DEX - это криптовалютная торговая платформа следующего поколения.",
+    "intro_text_title":"BitShares",
+    "intro_text_1":"<b>Децентрализованная биржа<br/> - это криптовалютная торговая платформа следующего поколения.",
     "intro_text_2":"<b>DEX</b> децентрализована по самой своей сути, что позволяет Вам торговать основным токеном BitShares (BTS) и разнообразными не требующими доверия активами со стабильной, привязанной к рынку ценой, такими как bitUSD, bitCNY, bitBTC, bitGold и многими другими. Все эти активы могут торговаться без связанного с участием контрагентов риска, оставляя контроль над Вашими средствами полностью в Ваших руках.",
     "intro_text_3":"<b>DEX</b> дает возможность создавать выпускаемые пользователем активы (user-issued assets - UIAs), которые могут торговаться с помощью книги ордеров против любого другого актива на платформе, как не требующего доверия, так и выпущенного пользователем. Самым известным эмитентом на платформе является <b>OpenLedger</b>, поддерживающий такие активы, как BTC, ETH, STEEM, DASH, LTC, DOGE и многие другие.",
     "intro_text_4":"Это уникальный микс традиционной и децентрализованной торговли, и всё это в таком знакомом для криптовалютных трейдеров интерфейсе биржи. Удачной торговли!",
@@ -84,6 +84,7 @@
     "recent":"Последние действия",
     "name":"Имя аккаунта",
     "id":"Идентификатор аккаунта",
+    "mine":"Мой аккаунт",
     "more":"показать еще",
     "deposit_withdraw":"Пополнить/Вывести",
     "as_collateral":"Обеспечение",
@@ -99,6 +100,7 @@
     "estimate_value":"Текущая стоимость аккаунта",
     "polo_scam":"Этот аккаунт не является реальным аккаунтом Poloniex, пожалуйста, отправьте на этот аккаунт: poloniexwallet.",
     "bittrex_scam":"Этот аккаунт не является реальным аккаунтом Bittrex, пожалуйста, отправьте на этот аккаунт: bittrex-deposit.",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
     "whitelist":{
       "title":"Белый список",
       "black":"Черный список",
@@ -239,7 +241,16 @@
       "show":"Показать",
       "brain":"Расположение brainkey",
       "from":"Импортирован из аккаунта",
-      "sign_owner":"Подписать как владелец"
+      "sign_owner":"Подписать как владелец",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes":{
       "proxy_current":"Ваш текущий прокси ",
@@ -302,7 +313,7 @@
     "upgrade":"Улучшить аккаунт",
     "unfollow":"Отписаться",
     "follow":"Следовать",
-    "pay":"Заплатить",
+    "pay":"Отправить к",
     "overview":"Обзор",
     "home":"Домой",
     "bts_market":"Рынок",
@@ -725,6 +736,7 @@
     }
   },
   "settings":{
+    "passwordLogin": "Login using the account model",
     "inverseMarket":"Предпочтительная ориентация рынка",
     "unit":"Предпочтительные единицы счета",
     "confirmMarketOrder":"Запрашивать подтверждение рыночных ордеров",
@@ -776,7 +788,8 @@
     "delete_select":"Выберите кошелек для удаления",
     "restore_brainkey_text":"Чтобы восстановиться с помощью brainkey, Вам нужно создать новый кошелек. Пожалуйста, введите пароль и имя нового кошелька в строки ниже, потом введите brainkey.",
     "restore_key_count":"# ключей",
-    "restore_default_success":"Настройки были успешно изменены"
+    "restore_default_success":"Настройки были успешно изменены",
+    "api_closest": "Choose closest automatically"
   },
   "footer":{
     "title":"BitShares",
@@ -872,7 +885,7 @@
     "to_market":"Войти на рынок",
     "zoom_all":"Все",
     "settings":"Параметры графика",
-    "featured":"Популярные рынки",
+    "featured":"Лучшие рынки",
     "new":"Новый",
     "market_frozen":"Владелец %(asset)s запретил торговлю на этом рынке."
   },
@@ -933,7 +946,7 @@
     "verify":"Я записал это",
     "invalid_format":"Недопустимый формат",
     "enter_password":"Введите пароль",
-    "downoad":"Скачать",
+    "download":"Скачать",
     "new_wallet_name":"Новое имя кошелька",
     "wallet_exist":"Кошелек с таким именем уже существует, выберите новое имя",
     "wallet_exist_with_name":"Кошелек с именем (%(name)s) уже существует, пожалуйста, измените имя",
@@ -1013,7 +1026,32 @@
     "tips_explore":"Теперь, когда вы успешно создали учетную запись и сделали резервную копию, пришло время начать работу. Нажмите на одну из ссылок слева, чтобы приступить к изучению.",
     "tips_header":"Эти же ссылки Вы также можете найти в верхнем меню и в раскрывающемся меню рядом с именем вашей учетной записи.",
     "tips_login":"ВАЖНО: здесь отсутствует функциональная возможность Войти/Выйти. Для того, чтобы совершить операцию, просто разблокируйте свой кошелек.",
-    "import_key_success":"Успешно импортированы %(count)s ключей"
+    "import_key_success":"Успешно импортированы %(count)s ключей",
+    "brainkey_seq_reset":"Сбросить brainkey последовательность",
+    "brainkey_seq_reset_text":"Используйте это для сброса счетчика последовательности, применяемого для извлечения приватных ключей из brainkey кошелька.<br />Это может быть использовано для принудительного обновления приватных ключей в кошельке.",
+    "brainkey_seq_reset_button":"Сбросить сейчас",
+    "brainkey_reset_success":"Последовательность сброшена. Чтобы запустить обновление Ваших привантых ключей, перезапустите Ваш браузер, после чего разблокируйте кошелек.",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
+    "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow":{
     "title":"%(asset_symbol)s маржа",
@@ -1068,7 +1106,7 @@
   },
   "init_error":{
     "title":"Проблемы инициализации приложения",
-    "ws_status":"Статус соединения WebSocket",
+    "ws_status":"Состояние подключения полного узла",
     "retry":"Повторить",
     "connected":"Соединение установлено",
     "not_connected":"Отключено",
@@ -1089,13 +1127,13 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
-    "assets": {
-        "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-        "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
-        "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
-        },
-    "your_account": "Your account",
+    "assets":{
+      "open":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",
+      "trade":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
+      "bit":"<br/>Bit%(asset)s - это производное, которое отслеживает реальную стоимость %(backed)s. Он на 100%% децентрализован, не требует доверия и обеспечен залогом, удерживаемым блокчейном в виде смарт-контракта.",
+      "bitcny":"<br/><br/>bitCNY может быть депонирован или выведен в соотношении 1:1 к реальному Юаню с помощью сервиса шлюза от Transwiser. Подробную информацию можно найти здесь https://www.transwiser.com/"
+    },
+    "your_account":"Ваш аккаунт",
     "bitkapital_text":"Выберите актив для для пополнения или вывода:",
     "bitkapital_withdraw":"Вы выводите",
     "bitkapital_receive":"Вы получите",
@@ -1106,7 +1144,7 @@
     "symbol":"Символ",
     "website":"Посетить веб-сайт",
     "deposit_to":"Пожалуйста, отправьте Ваши %(asset)s на адрес ниже",
-    "add_funds":"Вы собираетесь добавить средства на Ваш аккаунт BitShares.",
+    "add_funds":"Быстро и легко добавляйте средства на Ваш аккаунт BitShares <strong>%(account)s</strong>. Эта услуга предоставляется Openledger.",
     "withdraw_funds":"Вы собираетесь вывести средства с Вашего аккаунта BitShares на Ваш внешний %(asset)s аккаунт.",
     "balance_asset":"Текущий баланс %(asset)s",
     "withdraw_placeholder":"Пожалуйста, введите Ваш %(asset)s адрес",
@@ -1141,7 +1179,7 @@
     "convert_coin":"Конвертировать в %(coin)s (%(symbol)s)",
     "limit":"Лимит: %(amount)s %(symbol)s",
     "bridge_text":"Шлюз позволяет Вам “превращать” один актив в другой, например, BTC в BTS",
-    "gateway_text":"Шлюз позволяет вам перемещать средства из BitShares в реальные активы и обратно, как например, OPEN.BTC в BTC",
+    "gateway_text":"Здесь выберите, хотите ли Вы разместить депозит или вывести средства",
     "fiat_text":"Пополнение депозита и вывод фиатных денег производится с помощью CCEDK. Чтобы начать, Вам необходимо завершить процесс регистрации. Доступны следующие виды конверсии:",
     "transwiser":{
       "gateway":"Transwiser\n",
@@ -1154,7 +1192,10 @@
     },
     "meta":{
       "open_website":"Открыть веб-сайт"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   },
   "chat":{
     "title":"Троллбокс",

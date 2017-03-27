@@ -18,8 +18,14 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import { Apis } from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
+import IntlActions from "actions/IntlActions";
+import AccountImage from "../Account/AccountImage";
 
 var logo = require("assets/logo-ico-blue.png");
+
+const FlagImage = ({flag, width = 20, height = 20}) => {
+    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+};
 
 class Header extends React.Component {
 
@@ -66,10 +72,12 @@ class Header extends React.Component {
         return (
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.currentAccount !== this.props.currentAccount ||
+            nextProps.passwordLogin !== this.props.passwordLogin ||
             nextProps.locked !== this.props.locked ||
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
+            nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active
         );
     }
@@ -128,13 +136,11 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts} = this.props;
-        let settings = counterpart.translate("header.settings");
+        let {currentAccount, starredAccounts, passwordLogin} = this.props;
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let tradingAccounts = AccountStore.getMyAccounts();
-        let myAccountCount = tradingAccounts.length;
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -151,6 +157,7 @@ class Header extends React.Component {
 
 
         let myAccounts = AccountStore.getMyAccounts();
+        let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
                             <div className="grp-menu-item header-balance">
@@ -168,14 +175,14 @@ class Header extends React.Component {
         );
 
         let createAccountLink = myAccountCount === 0 ? (
-            <ActionSheet.Button title="">
+            <ActionSheet.Button title="" setActiveState={() => {}}>
                 <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")} style={{padding: "1rem", border: "none"}} >
                     <Icon className="icon-14px" name="user"/> <Translate content="header.create_account" />
                 </a>
             </ActionSheet.Button>
         ) : null;
 
-        let lock_unlock = (this.props.current_wallet && myAccountCount) ? (
+        let lock_unlock = ((this.props.current_wallet && myAccountCount) || passwordLogin) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
                 <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
@@ -189,13 +196,11 @@ class Header extends React.Component {
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null, account_display_name, accountsList;
-
         if (currentAccount) {
             account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0) {
                 tradingAccounts.push(currentAccount);
             }
-
             if (tradingAccounts.length >= 1) {
                 accountsList = tradingAccounts
                 .sort()
@@ -203,7 +208,8 @@ class Header extends React.Component {
                     return (
                         <li className={name === account_display_name ? "current-account" : ""} key={name}>
                             <a href onClick={this._accountClickHandler.bind(this, name)}>
-                                <span>{name}</span>
+                                <td><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></td>
+                                <td style={{paddingLeft: 10}}><span>{name}</span></td>
                             </a>
                         </li>
                     );
@@ -216,14 +222,16 @@ class Header extends React.Component {
         tradingAccounts.length === 1 ?
         (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
-                <Icon className="icon-14px" name="user"/> {account_display_name}
+                <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
             </a>
         </ActionSheet.Button>) :
 
         (<ActionSheet>
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
-                    <Icon className="icon-14px" name="user"/> {account_display_name}
+                    <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                    <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
@@ -234,6 +242,56 @@ class Header extends React.Component {
             </ActionSheet.Content> : null}
         </ActionSheet>);
 
+        let settingsDropdown = <ActionSheet>
+            <ActionSheet.Button title="">
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <Icon className="icon-14px" name="cog"/>
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    <li>
+                        <a href onClick={this._onNavigate.bind(this, "/settings")}>
+                            <span><Translate content="header.settings" /></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href onClick={this._onNavigate.bind(this, "/explorer")}>
+                            <span><Translate content="header.explorer" /></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href onClick={this._onNavigate.bind(this, "/help")}>
+                            <span><Translate content="header.help" /></span>
+                        </a>
+                    </li>
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+
+        const flagDropdown = <ActionSheet>
+            <ActionSheet.Button title="">
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <FlagImage flag={this.props.currentLocale} />
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    {this.props.locales.map(locale => {
+                        return (
+                            <li key={locale}>
+                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}}>
+                                    <td><FlagImage flag={locale} /></td>
+                                    <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
+
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         return (
@@ -243,7 +301,7 @@ class Header extends React.Component {
                         <li><a href onClick={this._triggerMenu}><Icon className="icon-32px" name="menu"/></a></li>
                     </ul>
                 </div>
-                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink">
+                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
                     <ul className="menu-bar">
                         <li>
                             <div style={{marginLeft: "1rem", height: "3rem"}}>
@@ -269,40 +327,29 @@ class Header extends React.Component {
                 </div>
                 <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
+
                         {!myAccountCount || !walletBalance ? null : walletBalance}
+
+                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>}
+
+                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {flagDropdown}
+                        </div>}
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-                        <div className="grp-menu-item" >
-                            <ActionSheet>
-                                <ActionSheet.Button title="">
-                                    <a style={{padding: "1rem", border: "none"}} className="button">
-                                        <Icon className="icon-14px" name="cog"/>
-                                    </a>
-                                </ActionSheet.Button>
-                                <ActionSheet.Content>
-                                    <ul className="no-first-element-top-border">
-                                        <li>
-                                            <a href onClick={this._onNavigate.bind(this, "/settings")}>
-                                                <span><Translate content="header.settings" /></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href onClick={this._onNavigate.bind(this, "/explorer")}>
-                                                <span><Translate content="header.explorer" /></span>
-                                            </a>
-                                        <li>
-                                        </li>
-                                            <a href onClick={this._onNavigate.bind(this, "/help")}>
-                                                <span><Translate content="header.help" /></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </ActionSheet.Content>
-                            </ActionSheet>
-                            {/* <Link className={cnames({active: active.indexOf("settings") !== -1})} style={{padding: "1rem"}} to="/settings" data-tip={settings} data-place="bottom"><Icon className="icon-14px" name="cog"/></Link> */}
-                        </div>
+
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible account-drop-down">
+                            {flagDropdown}
+                        </div>}
+
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>}
+
                         {lock_unlock}
                     </div>
                 </div>
@@ -323,7 +370,10 @@ export default connect(Header, {
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
-            starredAccounts: SettingsStore.getState().starredAccounts
+            starredAccounts: SettingsStore.getState().starredAccounts,
+            passwordLogin: SettingsStore.getState().settings.get("passwordLogin"),
+            currentLocale: SettingsStore.getState().settings.get("locale"),
+            locales: SettingsStore.getState().defaults.locale
         };
     }
 });
