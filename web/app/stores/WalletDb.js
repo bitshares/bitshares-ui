@@ -317,18 +317,33 @@ class WalletDb extends BaseStore {
                     key = this.generateKeyFromPassword(account, role, password);
                 }
 
+                let foundRole = false;
+
                 if (acc) {
                     if (role === "memo") {
                         if (acc.getIn(["options", "memo_key"]) === key.pubKey) {
                             setKey(role, key.privKey, key.pubKey);
+                            foundRole = true;
                         }
                     } else {
                         acc.getIn([role, "key_auths"]).forEach(auth => {
                             if (auth.get(0) === key.pubKey) {
                                 setKey(role, key.privKey, key.pubKey);
+                                foundRole = true;
                                 return false;
                             }
                         });
+
+                        if (!foundRole) {
+                            let alsoCheckRole = role === "active" ? "owner" : "active";
+                            acc.getIn([alsoCheckRole, "key_auths"]).forEach(auth => {
+                                if (auth.get(0) === key.pubKey) {
+                                    setKey(alsoCheckRole, key.privKey, key.pubKey);
+                                    foundRole = true;
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 }
             });

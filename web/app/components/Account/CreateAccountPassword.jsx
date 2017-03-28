@@ -268,7 +268,7 @@ class CreateAccountPassword extends React.Component {
 
                 <div>
 
-                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><Translate content="settings.password" />: <pre style={{paddingTop: 20}} className="no-overflow">{this.state.pass}</pre></div>}
+                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}} className="no-overflow">{this.state.pass}</div></div>}
                 </div>
                 <div className="divider" />
                 <div onClick={() => {this.setState({step: 3});}} className="button"><Translate content="init_error.understand" /></div>
