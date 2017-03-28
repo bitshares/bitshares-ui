@@ -252,7 +252,8 @@
       "new_memo": "New memo key",
       "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
       "use_text": "Use",
-      "remove_text": "Remove"
+      "remove_text": "Remove",
+      "valid_pub": "Valid Public Key"
     },
     "votes": {
       "proxy_current": "Your current proxy is",

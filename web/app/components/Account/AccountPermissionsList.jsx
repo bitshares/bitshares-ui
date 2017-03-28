@@ -10,6 +10,7 @@ import PrivateKeyView from "components/PrivateKeyView";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import AddressIndex from "stores/AddressIndex";
+import PrivateKeyStore from "stores/PrivateKeyStore";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
@@ -35,19 +36,25 @@ class AccountPermissionRow extends React.Component {
         let suffix = "_accounts";
         let pubKey = this.props.pubkey;
 
+        const keys = PrivateKeyStore.getState().keys;
+
+        let has_private = false;
+
         if (this.props.account) {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
             name_or_key = <Link to={`/account/${name}/permissions`}>{name}</Link>;
         } else if (pubKey) {
-            name = item_id = this.props.pubkey;
-            name_or_key = <PrivateKeyView pubkey={this.props.pubkey}>{this.props.pubkey}</PrivateKeyView>
+            name = item_id = pubKey;
+            name_or_key = <PrivateKeyView pubkey={pubKey}>{pubKey}</PrivateKeyView>
             suffix = "_keys";
+            has_private = keys.has(pubKey);
         } else if (this.props.address) {
             pubKey = this._lookUpPubKeyForAddress(this.props.address);
             item_id = this.props.address;
             name_or_key = !pubKey ? this.props.address : <PrivateKeyView pubkey={pubKey}>{pubKey}</PrivateKeyView>;
             suffix = "_addresses";
+            has_private = keys.has(pubKey);
         }
 
         return (
@@ -63,7 +70,7 @@ class AccountPermissionRow extends React.Component {
                     </div>)
                 : null}
                 </td>
-                <td>{name_or_key}</td>
+                <td className={has_private ? "my-key" : ""}>{name_or_key}</td>
                 <td>{this.props.weights[item_id]}</td>
                 <td>
                     <button className="button outline" onClick={this.props.onRemoveItem.bind(this, item_id, suffix)}>
@@ -186,29 +193,33 @@ class AccountPermissionsList extends React.Component {
                     allowUppercase={true}
                 >
                     <input value={this.state.weight_input}
-                           onChange={this.onWeightChanged.bind(this)}
-                           className="weight-input"
-                           type="number"
-                           autoComplete="off"
-                           placeholder={counterpart.translate("account.perm.weight")}
-                           onKeyDown={this.onWeightKeyDown.bind(this)}
-                           tabIndex={this.props.tabIndex + 1}/>
+                        onChange={this.onWeightChanged.bind(this)}
+                        className="weight-input"
+                        type="number"
+                        autoComplete="off"
+                        placeholder={counterpart.translate("account.perm.weight")}
+                        onKeyDown={this.onWeightKeyDown.bind(this)}
+                        tabIndex={this.props.tabIndex + 1}
+                    />
                 </AccountSelector>
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th style={{width: cw[0]}}></th>
-                        <th style={{width: cw[1]}}><Translate content="account.perm.acct_or_key" /></th>
-                        <th style={{width: cw[2]}}><Translate content="account.perm.weight" /></th>
-                        <th style={{width: cw[3]}}><Translate content="account.perm.action" /></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {account_rows}
-                    {key_rows}
-                    {address_rows}
-                    </tbody>
-                </table>
+
+                <div style={{paddingTop: "2rem"}}>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th style={{width: cw[0]}}></th>
+                            <th style={{width: cw[1]}}><Translate content="account.perm.acct_or_key" /></th>
+                            <th style={{width: cw[2]}}><Translate content="account.perm.weight" /></th>
+                            <th style={{width: cw[3]}}><Translate content="account.perm.action" /></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {account_rows}
+                        {key_rows}
+                        {address_rows}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }

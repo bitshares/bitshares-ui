@@ -49,6 +49,7 @@ export default class AccountPermissionsMigrate extends React.Component {
                 active: this.props.account.getIn(["active", "weight_threshold"]),
                 owner: this.props.account.getIn(["owner", "weight_threshold"])
             };
+            console.log("key", this.props[role], "weights", weights, "weight of role:", weights[role]);
             this.props[role === "active" ? "onAddActive" : role === "owner" ? "onAddOwner" : "onSetMemo"](this.props[role], weights[role]);
         }
     }

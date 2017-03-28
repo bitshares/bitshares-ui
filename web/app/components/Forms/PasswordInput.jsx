@@ -90,7 +90,7 @@ class PasswordInput extends Component {
 
         const strength = pw(this.state.value || "");
         /* Require a length of passwordLength + 50% for the max score */
-        const score = strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5));
+        const score = Math.min(5, strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5)));
 
         return (
             <div className="account-selector">
