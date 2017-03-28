@@ -42,13 +42,15 @@ class WalletActions {
     createAccountWithPassword( account_name, password, registrar, referrer, referrer_percent, refcode ) {
         let {privKey : owner_private} = WalletDb.generateKeyFromPassword(account_name, "owner", password);
         let {privKey: active_private} = WalletDb.generateKeyFromPassword(account_name, "active", password);
-        //let memo_private = WalletDb.generateNextKey()
+        console.log("create account:", account_name);
+        console.log("new active pubkey", active_private.toPublicKey().toPublicKeyString());
+        console.log("new owner pubkey", owner_private.toPublicKey().toPublicKeyString());
 
         return new Promise((resolve, reject) => {
             let create_account = () => {
                 return application_api.create_account(
-                    owner_private.private_key.toPublicKey().toPublicKeyString(),
-                    active_private.private_key.toPublicKey().toPublicKeyString(),
+                    owner_private.toPublicKey().toPublicKeyString(),
+                    active_private.toPublicKey().toPublicKeyString(),
                     account_name,
                     registrar, //registrar_id,
                     referrer, //referrer_id,
