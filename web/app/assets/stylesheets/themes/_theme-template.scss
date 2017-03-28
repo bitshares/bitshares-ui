@@ -1223,4 +1223,9 @@
             }
         }
     }
+
+    input.my-key, td.my-key a {
+        font-weight: bold;
+        color: $info-color;
+    }
 }
