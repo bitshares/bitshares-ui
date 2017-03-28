@@ -252,7 +252,8 @@
       "new_memo":"New memo key",
       "memo_warning":"WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
       "use_text":"Use",
-      "remove_text":"Remove"
+      "remove_text":"Remove",
+      "valid_pub":"Valid Public Key"
     },
     "votes":{
       "proxy_current":"Ваш текущий прокси ",
@@ -390,7 +391,7 @@
   "operation":{
     "pending":"ожидающие %(blocks)s блоки",
     "no_recent":"Нет недавних транзакций",
-    "reg_account":"{registrar} зарегестрировать аккаунт {new_account}",
+    "reg_account":"{registrar} зарегистрировал аккаунт {new_account}",
     "transfer":"{from} отправлено {amount} на {to}",
     "proposal_create":"{account} создал предложенную транзакцию",
     "proposal_update":"{account} обновил предложенную транзакцию",
@@ -797,7 +798,7 @@
   },
   "footer":{
     "title":"BitShares",
-    "block":"Начальный блок",
+    "block":"Текущий блок",
     "loading":"Загрузка...",
     "backup":"Необходима резервная копия",
     "nosync":"Блокчейн не синхронизирован, пожалуйста, дождитесь окончания синхронизации..",
