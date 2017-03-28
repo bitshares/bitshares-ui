@@ -332,9 +332,9 @@
       "unknown":"Неизвестный аккаунт",
       "not_yours":"Не Ваш аккаунт"
     },
-    "collaterals":"Гарантийные позиции",
+    "collaterals":"Обеспечение позиций",
     "eq_value":"Эквивалентная стоимость",
-    "no_price":"Неизвестно",
+    "no_price":"Ценность неизвестна",
     "percent":"Процент от общего запаса",
     "please_create_account":"Пожалуйста, создайте аккаунт",
     "create_account":"Создать аккаунт",
@@ -350,7 +350,7 @@
       "premium_name_warning":"Это премиум имя, которое является более дорогостоящим, чем имя, содержащее тире (-) или цифры."
     },
     "propose_from":"Предложение от",
-    "settle":"Установить",
+    "settle":"Закрыть позицию",
     "no_orders":"Нет открытых ордеров",
     "asset_details":"Подробности актива"
   },
@@ -418,8 +418,8 @@
     "blacklisted_by":"{lister} добавил аккаунт {listee} в черный список",
     "transfer_account":"Владение {account} передано {to}",
     "asset_update_feed_producers":"{account} обновил определяющих котировки актива {asset}",
-    "asset_settle":"{account} запросил установление {amount}",
-    "asset_global_settle":"{account} запросил глобальную установку {asset} на уровне {price}",
+    "asset_settle":"{account} запросил погашение {amount}",
+    "asset_global_settle":"{account} запросил глобальное погашение {asset} по цене {price}",
     "witness_create":"{account} был обновлен до статуса заверителя",
     "witness_update":"{account} обновил свою информацию о заверителе",
     "witness_pay":"Вывести выплату заверителя на аккаунт",
@@ -440,7 +440,7 @@
     "status":"Статус",
     "asset_create":"Создать актив %(asset)s, используя аккаунт {account}",
     "asset_update":"Обновить актив %(asset)s, используя аккаунт {account}",
-    "asset_settle":"Запросить расчет",
+    "asset_settle":"Запрос расчета",
     "update":{
       "active_approvals_to_add":"Действующие подтверждения для добавления",
       "active_approvals_to_remove":"Действующие подтверждения для удаления",
