@@ -39,7 +39,7 @@ class InitError extends React.Component {
         let options = this.props.apis.map(entry => {
             let onlyDescription = entry.url.indexOf("fake.automatic-selection") !== -1;
             let {location} = entry;
-            if (typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
+            if (location && typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
 
             return <option key={entry.url} value={entry.url}>{location || entry.url} {!onlyDescription && location ? `(${entry.url})` : null}</option>;
         });
