@@ -102,7 +102,7 @@
     "estimate_value":"Текущая стоимость аккаунта",
     "polo_scam":"Этот аккаунт не является реальным аккаунтом Poloniex, пожалуйста, отправьте на этот аккаунт: poloniexwallet.",
     "bittrex_scam":"Этот аккаунт не является реальным аккаунтом Bittrex, пожалуйста, отправьте на этот аккаунт: bittrex-deposit.",
-    "other_scam":"This account is not known to be an official account, please verify the destination before transferring",
+    "other_scam":"Этот аккаунт не распознается, как официальный аккаунт, пожалуйста, уточните получателя до перевода",
     "whitelist":{
       "title":"Белый список",
       "black":"Черный список",
@@ -454,7 +454,7 @@
     "override_transfer":"Перевести {amount} от {from} к {to} по поручению {issuer}",
     "asset_issue":"Выдать {amount} {to} используя {account}",
     "asset_reserve":"Сжечь {amount} используя аккаунт {account}",
-    "vesting_balance_withdraw":"Withdraw {amount} from vesting balance of {account}"
+    "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}"
   },
   "transaction":{
     "confirm":"Пожалуйста, подтвердите транзакцию",
@@ -1058,7 +1058,7 @@
     "pass_length":"Пароль должен содержать минимум %(minLength)s символов. Рекомендуется использовать пароль длиной 20 или более символов, состоящий из комбинации цифр, специальных символов и букв.",
     "switch_model_wallet":"Переключиться на модель кошелька",
     "switch_model_password":"Переключиться на модель аккаунта",
-    "account_public":"Account Name (Public)",
+    "account_public":"Имя аккаунта (публичное)",
     "current_pass":"Текущий пароль",
     "no_wallet":"У Вас еще нет кошелька"
   },
@@ -1204,7 +1204,7 @@
       "open_website":"Открыть веб-сайт"
     },
     "purchase":"Покупка %(asset)s",
-    "purchase_1":"Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "purchase_1":"Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit":"Лимит на депозиты"
   },
   "chat":{
