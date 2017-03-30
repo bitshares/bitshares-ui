@@ -125,8 +125,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 // lStorage.setItem(`history_address_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
                 let asset = this.props.asset;
                 let precision = utils.get_asset_precision(asset.get("precision"));
-                let amount = this.state.withdraw_amount.replace( /,/g, "" )
-                console.log( "withdraw_amount: ", amount );
+                let amount = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
@@ -170,8 +169,7 @@ class WithdrawModalBlocktrades extends React.Component {
 		// localStorage.setItem(`history_address_last_${this.props.output_wallet_type}`, this.state.withdraw_address);
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
-        let amount = this.state.withdraw_amount.replace( /,/g, "" )
-        console.log( "withdraw_amount: ", amount );
+        let amount = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
         AccountActions.transfer(
             this.props.account.get("id"),
             this.props.issuer.get("id"),
@@ -203,7 +201,8 @@ class WithdrawModalBlocktrades extends React.Component {
     onAccountBalance() {
         if (Object.keys(this.props.account.get("balances").toJS()).includes(this.props.asset.get("id")) ) {
             this.setState({
-                withdraw_amount: this.props.balance.get("balance") / utils.get_asset_precision(this.props.asset.get("precision"))
+                withdraw_amount: this.props.balance.get("balance") / utils.get_asset_precision(this.props.asset.get("precision")),
+                empty_withdraw_value: false
             });
         }
     }

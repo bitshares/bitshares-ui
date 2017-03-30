@@ -6,6 +6,7 @@ import idb_helper from "idb-helper";
 import {cloneDeep} from "lodash";
 
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import SettingsStore from "stores/SettingsStore";
 import {WalletTcomb} from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -14,7 +15,8 @@ import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
 
-let aes_private;
+let aes_private = null;
+let _passwordKey = null;
 // let transaction;
 
 let TRACE = false;
@@ -39,7 +41,7 @@ class WalletDb extends BaseStore {
         // for now many methods need to be exported...
         this._export(
             "checkNextGeneratedKey","getWallet","onLock","isLocked","decryptTcomb_PrivateKey","getPrivateKey","process_transaction","transaction_update","transaction_update_keys","getBrainKey","getBrainKeyPrivate","onCreateWallet","validatePassword","changePassword","generateNextKey","incrementBrainKeySequence","saveKeys","saveKey","setWalletModified","setBackupDate","setBrainkeyBackupDate","_updateWallet","loadDbData",
-            "importKeysWorker", "resetBrainKeySequence", "decrementBrainKeySequence"
+            "importKeysWorker", "resetBrainKeySequence", "decrementBrainKeySequence", "generateKeyFromPassword"
         );
         this.generatingKey = false;
     }
@@ -65,11 +67,12 @@ class WalletDb extends BaseStore {
     }
 
     onLock() {
-        aes_private = null
+        _passwordKey = null;
+        aes_private = null;
     }
 
     isLocked() {
-        return aes_private ? false : true
+        return !(!!aes_private || !!_passwordKey);
     }
 
     decryptTcomb_PrivateKey(private_key_tcomb) {
@@ -81,6 +84,7 @@ class WalletDb extends BaseStore {
 
     /** @return ecc/PrivateKey or null */
     getPrivateKey(public_key) {
+        if (_passwordKey) return _passwordKey[public_key];
         if(! public_key) return null
         if(public_key.Q) public_key = public_key.toPublicKeyString()
         let private_key_tcomb = PrivateKeyStore.getTcomb_byPubkey(public_key)
@@ -89,7 +93,9 @@ class WalletDb extends BaseStore {
     }
 
     process_transaction(tr, signer_pubkeys, broadcast, extra_keys = []) {
-        if(Apis.instance().chain_id !== this.state.wallet.chain_id)
+        const passwordLogin = SettingsStore.getState().settings.get("passwordLogin");
+
+        if(!passwordLogin && Apis.instance().chain_id !== this.state.wallet.chain_id)
             return Promise.reject("Mismatched chain_id; expecting " +
                 this.state.wallet.chain_id + ", but got " +
                 Apis.instance().chain_id)
@@ -269,22 +275,97 @@ class WalletDb extends BaseStore {
         }
     }
 
+    generateKeyFromPassword(accountName, role, password) {
+        let seed = accountName + role + password;
+        let privKey = PrivateKey.fromSeed(seed);
+        let pubKey = privKey.toPublicKey().toString();
+
+        return {privKey, pubKey};
+    }
+
     /** This also serves as 'unlock' */
-    validatePassword( password, unlock = false ) {
-        let wallet = this.state.wallet
-        try {
-            let password_private = PrivateKey.fromSeed( password )
-            let password_pubkey = password_private.toPublicKey().toPublicKeyString()
-            if(wallet.password_pubkey !== password_pubkey) return false
-            if( unlock ) {
-                let password_aes = Aes.fromSeed( password )
-                let encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key )
-                aes_private = Aes.fromSeed( encryption_plainbuffer )
+    validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
+        if (account) {
+            function setKey(role, priv, pub) {
+                if (!_passwordKey) _passwordKey = {};
+                _passwordKey[pub] = priv;
+                PrivateKeyStore.setPasswordLoginKey({
+                    pubkey: pub,
+                    import_account_names: [account],
+                    encrypted_key: null,
+                    id: 1,
+                    brainkey_sequence: null
+                });
             }
-            return true
-        } catch(e) {
-            console.error(e)
-            return false
+
+            /* Check if the user tried to login with a private key */
+            let fromWif;
+            try {
+                fromWif = PrivateKey.fromWif(password);
+            } catch(err) {
+
+            }
+            let acc = ChainStore.getAccount(account);
+            let key;
+            if (fromWif) {
+                key = {privKey: fromWif, pubKey: fromWif.toPublicKey().toString()};
+            }
+
+            /* Test the pubkey for each role against either the wif key, or the password generated keys */
+            roles.forEach(role => {
+                if (!fromWif) {
+                    key = this.generateKeyFromPassword(account, role, password);
+                }
+
+                let foundRole = false;
+
+                if (acc) {
+                    if (role === "memo") {
+                        if (acc.getIn(["options", "memo_key"]) === key.pubKey) {
+                            setKey(role, key.privKey, key.pubKey);
+                            foundRole = true;
+                        }
+                    } else {
+                        acc.getIn([role, "key_auths"]).forEach(auth => {
+                            if (auth.get(0) === key.pubKey) {
+                                setKey(role, key.privKey, key.pubKey);
+                                foundRole = true;
+                                return false;
+                            }
+                        });
+
+                        if (!foundRole) {
+                            let alsoCheckRole = role === "active" ? "owner" : "active";
+                            acc.getIn([alsoCheckRole, "key_auths"]).forEach(auth => {
+                                if (auth.get(0) === key.pubKey) {
+                                    setKey(alsoCheckRole, key.privKey, key.pubKey);
+                                    foundRole = true;
+                                    return false;
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+
+            return !!_passwordKey;
+
+        } else {
+            let wallet = this.state.wallet;
+            try {
+                let password_private = PrivateKey.fromSeed( password );
+                let password_pubkey = password_private.toPublicKey().toPublicKeyString();
+                if(wallet.password_pubkey !== password_pubkey) return false;
+                if( unlock ) {
+                    let password_aes = Aes.fromSeed( password );
+                    let encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key );
+                    aes_private = Aes.fromSeed( encryption_plainbuffer );
+                }
+                return true;
+            } catch(e) {
+                console.error(e);
+                return false;
+            }
         }
     }
 
@@ -330,8 +411,11 @@ class WalletDb extends BaseStore {
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead || 0) + 1)
-        // console.log("generateNextKey, save:", save, "sequence:", sequence, "brainkey_look_ahead:", this.brainkey_look_ahead);
-        for (let i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
+        /* If sequence is 0 this is the first lookup, so check at least the first 10 positions */
+        const loopMax = !sequence ? Math.max(sequence + this.brainkey_look_ahead, 10) : sequence + this.brainkey_look_ahead;
+        // console.log("generateNextKey, save:", save, "sequence:", sequence, "loopMax", loopMax, "brainkey_look_ahead:", this.brainkey_look_ahead);
+
+        for (let i = sequence; i < loopMax; i++) {
             let private_key = key.get_brainPrivateKey( brainkey, i )
             let pubkey =
                 this.generateNextKey_pubcache[i] ?
@@ -341,6 +425,8 @@ class WalletDb extends BaseStore {
 
             let next_key = ChainStore.getAccountRefsOfKey( pubkey );
             // TODO if ( next_key === undefined ) return undefined
+
+            /* If next_key exists, it means the generated private key controls an account, so we need to save it */
             if(next_key && next_key.size) {
                 used_sequence = i
                 console.log("WARN: Private key sequence " + used_sequence + " in-use. " +

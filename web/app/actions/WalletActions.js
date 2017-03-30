@@ -39,6 +39,77 @@ class WalletActions {
         return true;
     }
 
+    createAccountWithPassword( account_name, password, registrar, referrer, referrer_percent, refcode ) {
+        let {privKey : owner_private} = WalletDb.generateKeyFromPassword(account_name, "owner", password);
+        let {privKey: active_private} = WalletDb.generateKeyFromPassword(account_name, "active", password);
+        console.log("create account:", account_name);
+        console.log("new active pubkey", active_private.toPublicKey().toPublicKeyString());
+        console.log("new owner pubkey", owner_private.toPublicKey().toPublicKeyString());
+
+        return new Promise((resolve, reject) => {
+            let create_account = () => {
+                return application_api.create_account(
+                    owner_private.toPublicKey().toPublicKeyString(),
+                    active_private.toPublicKey().toPublicKeyString(),
+                    account_name,
+                    registrar, //registrar_id,
+                    referrer, //referrer_id,
+                    referrer_percent, //referrer_percent,
+                    true //broadcast
+                ).then(resolve).catch(reject);
+            };
+
+            if(registrar) {
+                // using another user's account as registrar
+                return create_account();
+            } else {
+                // using faucet
+
+                let faucetAddress = SettingsStore.getSetting("faucet_address");
+                if (window && window.location && window.location.protocol === "https:") {
+                    faucetAddress = faucetAddress.replace(/http:\/\//, "https://");
+                }
+
+                let create_account_promise = fetch( faucetAddress + "/api/v1/accounts", {
+                    method: "post",
+                    mode: "cors",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "account": {
+                            "name": account_name,
+                            "owner_key": owner_private.toPublicKey().toPublicKeyString(),
+                            "active_key": active_private.toPublicKey().toPublicKeyString(),
+                            "memo_key": active_private.toPublicKey().toPublicKeyString(),
+                            //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
+                            "refcode": refcode,
+                            "referrer": referrer
+                        }
+                    })
+                }).then(r => r.json().then(res => {
+                    if (!res || (res && res.error)) {
+                        reject(res.error);
+                    } else {
+                        resolve(res);
+                    }
+                })).catch(reject);
+
+                return create_account_promise.then(result => {
+                    if (result && result.error) {
+                        reject(result.error);
+                    } else {
+                        resolve(result);
+                    }
+                }).catch(error => {
+                    reject(error);
+                });
+            }
+        });
+
+    }
+
     createAccount( account_name, registrar, referrer, referrer_percent, refcode ) {
         if( WalletDb.isLocked()) {
             let error = "wallet locked";

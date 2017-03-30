@@ -21,9 +21,15 @@ class DashboardContainer extends React.Component {
                     accountsReady: () => {
                         return AccountStore.getState().accountsLoaded && AccountStore.getState().refsLoaded;
                     },
+                    passwordAccount: () => {
+                        return AccountStore.getState().passwordAccount;
+                    },
                     lowVolumeMarkets: () => {
                         return MarketsStore.getState().lowVolumeMarkets;
-                    }
+                    },
+                    // marketStats: () => {
+                    //     return MarketsStore.getState().allMarketStats;
+                    // }
                 }}>
                 <Dashboard {...this.props} />
             </AltContainer>

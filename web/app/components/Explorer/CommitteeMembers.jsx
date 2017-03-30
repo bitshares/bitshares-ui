@@ -81,7 +81,7 @@ class CommitteeMemberRow extends React.Component {
                 <td onClick={this._onRowClick.bind(this)}>{rank}</td>
                 <td onClick={this._onRowClick.bind(this)}>{committee_member.get("name")}</td>
                 <td onClick={this._onRowClick.bind(this)}><FormattedAsset amount={committee_member_data.get('total_votes')} asset="1.3.0" /></td>
-                <td><a href={url} target="_blank">{committee_member_data.get("url")}</a></td>
+                <td><a href={url} rel="noopener noreferrer" target="_blank">{committee_member_data.get("url")}</a></td>
             </tr>
         )
     }

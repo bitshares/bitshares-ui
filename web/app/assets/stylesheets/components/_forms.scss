@@ -55,9 +55,13 @@ div.account-image {
     display: block;
     flex: auto;
   }
+
+  .header-area {
+      margin-left: 3.5rem;
+  }
   .error-area {
       position: absolute;
-      padding-left: 3.8rem;
+      padding-left: 3.5rem;
   }
   .account-image {
     float: left;
@@ -200,24 +204,27 @@ div.transfer-input {
         max-height: 0;
         overflow: hidden;
 
-        li span {
-            font-size: 0.9rem;
-            font-weight: bold;
-            display: block;
-            text-decoration: none;
-            color: #333;
-            padding: 10px 10px;
-            transition: all 0.3s ease-out;
-        }
+        > li {
+            width: 100%;
 
-        li:last-of-type span {
-            border: none;
-        }
+            &:last-of-type span {
+                border: none;
+            }
 
-        li i {
-            margin-right: 5px;
-            color: inherit;
-            vertical-align: middle;
+            span {
+                font-size: 0.9rem;
+                font-weight: bold;
+                display: block;
+                text-decoration: none;
+                color: #333;
+                padding: 10px 10px;
+                transition: all 0.3s ease-out;
+            }
+            i {
+                margin-right: 5px;
+                color: inherit;
+                vertical-align: middle;
+            }
         }
     }
 }
@@ -243,5 +250,17 @@ div.input-wrapper {
         position: absolute;
         right: 0;
         text-align: right;
+    }
+}
+
+div.ok-indicator {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+}
+
+div.dropdown-wrapper.upper-case {
+    > div, > ul > li {
+        text-transform: uppercase;
     }
 }

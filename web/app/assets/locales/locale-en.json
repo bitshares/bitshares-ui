@@ -29,6 +29,8 @@
     "update_asset": "Update Asset",
     "lock": "Log out (lock the wallet)",
     "unlock": "Log in (unlock the wallet)",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "Help",
     "locked_tip": "<br/>Click to login by unlocking your wallet.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out by locking your wallet.<br/><br/>Closing the browser window will also log you out.",
@@ -65,10 +67,10 @@
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
-    "intro_text_title": "BitShares",
-    "intro_text_1": "<b>Decentralized exchange,<br/>next-generation cryptocurrency trading platform.",
-    "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged  assets such as bitUSD, bitCNY, bitBTC, bitGold and more.  These assets can all be traded with zero counter-party risk, putting you in total control of your funds.",
-    "intro_text_3": "<b>The DEX</b> also enables user-issued assets (UIAs), which can be traded via an order book against any other asset on the platform, both trustless and user-issued.  One well-known issuer on the platform is <b>OpenLedger</b>, with a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more.",
+    "intro_text_title": "Welcome to the BitShares DEX",
+    "intro_text_1": "The <b>BitShares</b> decentralized exchange - also known as The DEX - is a next-generation cryptocurrency trading platform.",
+    "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged assets such as bitUSD, bitCNY, bitBTC, bitGold and more. These assets can all be traded with <b>zero</b> counter-party risk, putting you in total control of your funds.",
+    "intro_text_3": "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
     "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
@@ -100,6 +102,7 @@
     "estimate_value": "Estimated account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
     "whitelist": {
       "title": "Whitelist",
       "black": "Blacklist",
@@ -240,7 +243,17 @@
       "show": "show",
       "brain": "Brainkey position",
       "from": "Imported from account",
-      "sign_owner": "Sign as owner"
+      "sign_owner": "Sign as owner",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password and account name, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove",
+      "valid_pub": "Valid Public Key"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
@@ -325,7 +338,8 @@
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",
-    "create_new": "Create New Account",
+    "create_new": "Create A New Account",
+    "password_login": "Login with password",
     "identicon": "Identicon",
     "pay_from": "Pay with account",
     "existing_accounts": "Existing Accounts",
@@ -439,7 +453,8 @@
     "reject": "Reject",
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
-    "asset_reserve": "Reserve (burn) {amount} using {account}"
+    "asset_reserve": "Reserve (burn) {amount} using {account}",
+    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -726,6 +741,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",
@@ -742,7 +758,7 @@
     "showAssetPercent": "Show asset percentages on the account page",
     "yes": "Yes",
     "no": "No",
-    "walletLockTimeout": "Wallet auto-lock time (seconds)",
+    "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
     "themes": "Theme",
     "darkTheme": "Dark theme",
     "lightTheme": "Light theme",
@@ -777,7 +793,8 @@
     "delete_select": "Select wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
     "restore_key_count": "# of keys",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "BitShares",
@@ -934,7 +951,10 @@
     "verify": "I've written it down",
     "invalid_format": "Invalid Format",
     "enter_password": "Enter Password",
-    "downoad": "Download",
+    "confirm_password": "Confirm Password",
+    "pass_incorrect": "Incorrect password",
+    "confirm_error": "The confirmation does not match the password",
+    "download": "Download",
     "new_wallet_name": "New Wallet Name",
     "wallet_exist": "Wallet exists, choose a new name",
     "wallet_exist_with_name": "Wallet (%(name)s) exists, please change the name",
@@ -966,8 +986,9 @@
     "restore": "Restore Wallet from Backup",
     "create_text": "The BitShares wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
     "account_create_wallet_text": "This password will be used to create a new BitShares wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
-    "create_account_text": "Please enter your desired account name. This name will be registered publicly on the blockchain and is your identifer for any transactions you make.",
+    "create_account_text": "The account name you choose needs to be unique, as it will be registered publicly on the blockchain and will be your identifer for any transactions you make.",
     "first_account_paid": "Since this is your first account, a faucet will pay the registration fee for you.",
+    "not_first_account": "Since you already have an account, you will need to pay for this new account yourself. In order to do so, your account needs to have lifetime membership, which can be bought in the account page.",
     "must_be_ltm": "The fee paying account must be a lifetime member to perform that operation.",
     "backup_explain": "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
     "backup_new_account": "Congratulations, you've just created a new account! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
@@ -989,11 +1010,11 @@
     "import_bts": "Import a BTS 0.9.3c key export",
     "import_private_key": "Import a private key",
     "wallet_browser": "Your Web Browser is your Wallet",
-    "has_wallet": "When you create your first BitShares account, a BitShares wallet will be automatically created as well and stored in your browser.",
+    "has_wallet": "When you create your first BitShares account, a BitShares wallet will be automatically created as well and stored in your browser. This wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
     "go_get_started": "See Get Started tips",
-    "wallet_crucial": "Your wallet is only stored in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost!",
-    "wallet_move": "This backup file can also be used to move your wallet to different computers or different browsers.",
-    "wallet_lose_warning": "IMPORTANT: If you lose your wallet or your pass phrase you will be unable to access any of your funds again. Make sure you store the backup somewhere safe, and memorize or write down your password!",
+    "wallet_crucial": "Your wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>Noone else can restore your account if you lose your backup.</strong>",
+    "wallet_move": "This backup file can also be used to move your wallet to different computers or different browsers. In order to restore your wallet using this backup <strong>you will also need your password!</strong>",
+    "wallet_lose_warning": "<strong>IMPORTANT: If you lose your wallet or your pass phrase you will be unable to access any of your funds again. Make sure you store the backup somewhere safe, and memorize or write down your password!</strong>",
     "tips_deposit": "Make a deposit",
     "link_deposit": "Deposits",
     "tips_dashboard": "See your dashboard",
@@ -1007,9 +1028,9 @@
     "create_a": "Create a new account",
     "create_success": "Your wallet has been created",
     "all_set": "You're all set!",
-    "step_1": "Step 1 - Sign up",
-    "step_2": "Step 2 - Create a backup",
-    "step_3": "Step 3 - Get Started",
+    "step_1": "Create a wallet",
+    "step_2": "Create a backup",
+    "step_3": "Get Started",
     "congrat": "Congratulations, you're ready!",
     "tips_explore": "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links on the left to start exploring.",
     "tips_header": "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
@@ -1018,7 +1039,29 @@
     "brainkey_seq_reset": "Reset brainkey sequence",
     "brainkey_seq_reset_text": "Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a refresh of the private keys in the wallet.",
     "brainkey_seq_reset_button": "Reset now",
-    "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet."
+    "brainkey_reset_success": "Sequence reset. In order to trigger a refresh of your private keys, refresh your browser then unlock the wallet.",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys. The wallet model lets you use multiple accounts at the same time.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private keys on the fly. It restricts you to only logging in with one account at a time, in return for ease of use and convenience.",
+    "password_model_2": "The account model lets you login to your wallet from anywhere using only your account name and password, but <strong> your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!</strong>",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password",
+    "no_wallet": "You do not have a wallet yet"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
@@ -1094,6 +1137,7 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "title": "Deposit & Withdraw",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
@@ -1145,7 +1189,7 @@
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
-    "bridge_text": "A bridge lets you 'shapeshift' an asset into another one, for example BTC to BTS.",
+    "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
     "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
     "transwiser": {
@@ -1159,7 +1203,10 @@
     },
     "meta": {
       "open_website": "Open Website"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   },
   "chat": {
     "title": "Trollbox",
@@ -1170,7 +1217,7 @@
     "done": "Done",
     "reconnect": "Reconnect",
     "welcome_user": "Welcome to BitShares",
-    "users": "%(count)s users online",
+    "users": "%(userCount)s users online",
     "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
     "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
     "rate": "Please wait at least 2s before posting a new message",

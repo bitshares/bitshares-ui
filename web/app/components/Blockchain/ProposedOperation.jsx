@@ -621,11 +621,13 @@ class ProposedOperation extends React.Component {
 
             case "vesting_balance_withdraw":
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].owner)}&nbsp;
-                        <Translate component="span" content="proposal.vesting_balance_withdraw" />
-                        &nbsp;<FormattedAsset style={{fontWeight: "bold"}} amount={op[1].amount.amount} asset={op[1].amount.asset_id} />
-                    </span>
+                    <TranslateWithLinks
+                        string={"proposal.vesting_balance_withdraw"}
+                        keys={[
+                            {type: "account", value: op[1].owner, arg: "account"},
+                            {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
                 );
                 break;
 

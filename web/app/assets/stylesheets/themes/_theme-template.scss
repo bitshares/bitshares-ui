@@ -295,7 +295,10 @@
     a:hover {background-color: lighten($panel-bg-color, 4%);}
     a.active {background-color: lighten($panel-bg-color, 4%);}
     li.current-account > a {
-        @include color($info-color, lighten($super-light-panel-bg-color, 4%));
+        color: $info-color;
+        &:hover {
+            color: $info-color;
+        }
         > span { font-weight: bold; }
     }
     svg > path { fill: $secondary-text-color; }
@@ -385,6 +388,12 @@
 
       > span {
           color: inherit;
+      }
+  }
+
+  div.input-wrapper {
+      > div.input-right-symbol {
+          color: $secondary-text-color;
       }
   }
 
@@ -733,7 +742,7 @@
   }
 
   // Block List (section)
-  section input[type="text"], section input[type="password"] {
+  section.block-list input[type="text"], section.block-list input[type="password"] {
     border-bottom: 1px solid $panel-bg-color;
     background-color: transparent;
     color: $primary-text-color;
@@ -1060,6 +1069,10 @@
       height: 3rem;
       font-size: 12px;
     }
+
+    input {
+        color: $chat-text-color;
+    }
   }
 
   // Settings
@@ -1133,7 +1146,8 @@
           background-color: transparent !important;
       }
       > option {
-          background-color: white !important;
+          color: $primary-text-color;
+          background-color: $panel-bg-color !important;
       }
         &:hover, &:focus {
           color: $primary-text-color;
@@ -1163,5 +1177,55 @@
             border: none;
             background-color: lighten($positive-color, 5%);
         }
+    }
+
+    div.Account_create {
+        button.submit-button, div.backup-submit .button {
+            background-color: $warning-color;
+        }
+
+        label > a {
+            color: $secondary-text-color;
+        }
+    }
+
+    div.ok-indicator {
+        color: $secondary-text-color;
+        &.success {
+            color: $success-color;
+        }
+    }
+
+    .login-selector {
+        > div.box {
+            background-color: $panel-bg-color;
+            &:hover {
+                background-color: darken($panel-bg-color, 2%);
+            }
+            a {
+                color: $primary-text-color;
+            }
+        }
+    }
+
+    table.table > tbody > tr.in-use {
+        > td:nth-child(2) {
+            font-weight: bold;
+        }
+    }
+
+    .SimpleDepositBridge__info-row {
+        > div {
+            > div.float-right {
+                &.above-limit {
+                    color: $error-text-color;
+                }
+            }
+        }
+    }
+
+    input.my-key, td.my-key a {
+        font-weight: bold;
+        color: $info-color;
     }
 }

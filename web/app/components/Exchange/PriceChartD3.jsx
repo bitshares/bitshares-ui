@@ -385,7 +385,6 @@ class CandleStickChartWithZoomPan extends React.Component {
 }
 
 CandleStickChartWithZoomPan = fitWidth(CandleStickChartWithZoomPan);
-
 export default class Wrapper extends React.Component {
     constructor() {
         super();
@@ -606,9 +605,9 @@ export default class Wrapper extends React.Component {
         }
 
         return (
-            <div className="grid-block no-margin no-padding vertical" style={{overflow: "visible"}}>
+            <div className="no-margin no-padding" style={{overflow: "visible", width: "100%"}}>
                 <CandleStickChartWithZoomPan ref="FitWidth" {...this.props} />
-                <div style={{paddingTop: 5}}>
+                <div style={{paddingBottom: 10}}>
                     <ul style={{justifyContent: "center"}} className="market-stats stats bottom-stats">
                         {/* Chart controls */}
                             <li className="stat">
@@ -623,48 +622,46 @@ export default class Wrapper extends React.Component {
                                     <span>{bucketOptions}</span>
                                 </span>
                             </li>
-                    </ul>
 
-                    <ul style={{justifyContent: "center", paddingTop: 5, paddingBottom: 15}} className="market-stats stats bottom-stats">
-                        <li className="stat input custom-dropdown">
-                            <div className="v-align indicators clickable" onClick={this._toggleDropdown.bind(this, "indicators")}>
-                                <Translate content="exchange.chart_options.title" />
-                            </div>
-                            {dropdowns.indicators ?
-                            <div className="custom-dropdown-content" onClick={this._stopPropagation}>
-                                <ul>
-                                    <li className="indicator-title"><Translate content="exchange.chart_options.price_title" /></li>
-                                    {indicatorOptionsPrice}
+                            <li className="stat input custom-dropdown">
+                                <div className="v-align indicators clickable" onClick={this._toggleDropdown.bind(this, "indicators")}>
+                                    <Translate content="exchange.chart_options.title" />
+                                </div>
+                                {dropdowns.indicators ?
+                                <div className="custom-dropdown-content" onClick={this._stopPropagation}>
+                                    <ul>
+                                        <li className="indicator-title"><Translate content="exchange.chart_options.price_title" /></li>
+                                        {indicatorOptionsPrice}
 
-                                    {indicatorOptionsVolume.length ? <li className="indicator-title"><Translate content="exchange.chart_options.volume_title" /></li> : null}
-                                    {indicatorOptionsVolume}
-                                </ul>
-                            </div> : null}
-                        </li>
+                                        {indicatorOptionsVolume.length ? <li className="indicator-title"><Translate content="exchange.chart_options.volume_title" /></li> : null}
+                                        {indicatorOptionsVolume}
+                                    </ul>
+                                </div> : null}
+                            </li>
 
-                        <li className="stat input custom-dropdown">
-                            <div className="v-align indicators clickable" onClick={this._toggleDropdown.bind(this, "tools")}>
-                                <Translate content="exchange.chart_options.tools" />
-                            </div>
-                            {dropdowns.tools ?
-                            <div className="custom-dropdown-content"  onClick={this._stopPropagation}>
-                                <ul>
-                                    {toolsOptions}
-                                </ul>
-                            </div> : null}
-                        </li>
+                            <li className="stat input custom-dropdown">
+                                <div className="v-align indicators clickable" onClick={this._toggleDropdown.bind(this, "tools")}>
+                                    <Translate content="exchange.chart_options.tools" />
+                                </div>
+                                {dropdowns.tools ?
+                                <div className="custom-dropdown-content"  onClick={this._stopPropagation}>
+                                    <ul>
+                                        {toolsOptions}
+                                    </ul>
+                                </div> : null}
+                            </li>
 
-                       <li className="stat input custom-dropdown">
-                            <div className="indicators clickable" onClick={this._toggleDropdown.bind(this, "settings")}>
-                                <Icon className="icon-14px settings-cog" name="cog"/>
-                            </div>
-                            {dropdowns.settings ?
-                            <div className="custom-dropdown-content" onClick={this._stopPropagation}>
-                                <ul>
-                                    {settingsOptions}
-                                </ul>
-                            </div> : null}
-                        </li>
+                           <li className="stat input custom-dropdown">
+                                <div className="indicators clickable" onClick={this._toggleDropdown.bind(this, "settings")}>
+                                    <Icon className="icon-14px settings-cog" name="cog"/>
+                                </div>
+                                {dropdowns.settings ?
+                                <div className="custom-dropdown-content" onClick={this._stopPropagation}>
+                                    <ul>
+                                        {settingsOptions}
+                                    </ul>
+                                </div> : null}
+                            </li>
                     </ul>
                 </div>
             </div>

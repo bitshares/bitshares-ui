@@ -125,19 +125,20 @@ class AccountNameInput extends React.Component {
         let error = this.getError() || "";
         let class_name = classNames("form-group", "account-name", {"has-error": false});
         let warning = this.state.warning;
-        let {noLabel} = this.props;
+        // let {noLabel} = this.props;
 
         return (
             <div className={class_name}>
-                {noLabel ? null : <label><Translate content="account.name" /></label>}
+                {/* {noLabel ? null : <label><Translate content="account.name" /></label>} */}
                 <section>
+                    <label className="left-label">{this.props.placeholder}</label>
                     <input
                         name="value"
                         type="text"
                         id={this.props.id}
                         ref="input"
                         autoComplete="off"
-                        placeholder={this.props.placeholder}
+                        placeholder={null}
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}
                         value={this.state.account_name || this.props.initial_value}

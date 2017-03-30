@@ -25,7 +25,8 @@ class SettingsStore {
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            disableChat: false
+            disableChat: false,
+            passwordLogin: false
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -68,6 +69,10 @@ class SettingsStore {
                 "darkTheme",
                 "lightTheme",
                 "olDarkTheme"
+            ],
+            passwordLogin: [
+                {translate: "yes"},
+                {translate: "no"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -143,7 +148,7 @@ class SettingsStore {
                 markets_4018d784: [ // BTS MAIN NET
                     "OPEN.MKR", "BTS", "OPEN.ETH", "ICOO", "BTC", "OPEN.LISK", "BKT",
                     "OPEN.STEEM", "OPEN.GAME", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
-                    "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY",
+                    "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
                     "OPEN.INCNT", "KAPITAL"
                 ],

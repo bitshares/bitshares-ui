@@ -181,7 +181,7 @@ class Asset extends React.Component {
         }
         if (urls && urls.length) {
             urls.forEach(url => {
-                let markdownUrl = `<a target="_blank" href="${url}">${url}</a>`;
+                let markdownUrl = `<a target="_blank" rel="noopener noreferrer" href="${url}">${url}</a>`;
                 desc = desc.replace(url, markdownUrl);
             })
         }

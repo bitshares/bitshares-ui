@@ -125,7 +125,16 @@
       "warning4": "Key is already in the list",
       "action": "Action",
       "acct_or_key": " Account/Key",
-      "sign_owner": "Sign as owner"
+      "sign_owner": "Sign as owner",
+      "password_model": "Account model",
+      "password_model_1": "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+      "password_model_2": "Add password generated keys",
+      "new_active": "New active key",
+      "new_owner": "New owner key",
+      "new_memo": "New memo key",
+      "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+      "use_text": "Use",
+      "remove_text": "Remove"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
@@ -183,7 +192,8 @@
       "premium_name_faucet": "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
       "premium_name_warning": "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
     },
-    "settle": "Settle"
+    "settle": "Settle",
+    "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
   },
   "pagination": {
     "newer": "이전",
@@ -505,6 +515,7 @@
     }
   },
   "settings": {
+    "passwordLogin": "Login using the account model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",
     "confirmMarketOrder": "주문시 주문확인을 함",
@@ -517,7 +528,8 @@
     "add_ws": "새로운 웹소켓 API 추가",
     "remove_ws": "웹소켓 API 제거",
     "faucet_address": "Faucet Address",
-    "restore_default_success": "Settings have been reset successfully"
+    "restore_default_success": "Settings have been reset successfully",
+    "api_closest": "Choose closest automatically"
   },
   "footer": {
     "title": "비트쉐어 2.0",
@@ -623,7 +635,7 @@
     "verify": "확인",
     "invalid_format": "잘못된 포맷",
     "enter_password": "비밀번호를 입력하세요",
-    "downoad": "다운로드",
+    "download": "다운로드",
     "new_wallet_name": "새 지갑 이름",
     "wallet_exist": "지갑이 이미 존재합니다. 새로운 이름을 선택하세요",
     "wallet_exist_with_name": "(%(name)s) 지갑이 이미 존재합니다. 다른 이름을 선택하세요",
@@ -652,7 +664,28 @@
     "last_backup": "Last backup",
     "never_backed_up": "This Wallet has never been backed up",
     "need_backup": "This Wallet needs a backup",
-    "noneed_backup": "No backup is needed"
+    "noneed_backup": "No backup is needed",
+    "wallet_password": "Login anywhere using your password",
+    "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+    "password_crucial": "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+    "password_show": "Show me my password",
+    "tips_explore_pass": "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+    "create_account_password_text": "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+    "create_password": "Create a new account using a password",
+    "login_type": "Login type selection",
+    "wallet_model": "Wallet model",
+    "password_model": "Account model",
+    "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+    "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
+    "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "use_wallet": "Use the wallet model",
+    "use_password": "Use the account model",
+    "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+    "switch_model_wallet": "Switch to wallet model",
+    "switch_model_password": "Switch to account model",
+    "account_public": "Account Name (Public)",
+    "current_pass": "Current password"
   },
   "borrow": {
     "title": "Collateral position for %(asset_symbol)s",
@@ -717,6 +750,9 @@
     },
     "meta": {
       "open_website": "Open Website"
-    }
+    },
+    "purchase": "Purchase %(asset)s",
+    "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "deposit_limit": "Deposit limit"
   }
 }

@@ -672,9 +672,9 @@ describe("LimitOrder", function() {
         let o1 = new LimitOrder(o, assets, "1.3.0");
         let o2 = new LimitOrder(o, assets, "1.3.0");
 
-        o1.sum(o2);
+        let o3 = o1.sum(o2);
 
-        assert.equal(o1.amountForSale().getAmount(), 600548*2, "The amount should equal 1201096");
+        assert.equal(o3.amountForSale().getAmount(), 600548*2, "The amount should equal 1201096");
     });
 
     it("Can be compared to another order with equals / ne", function() {
