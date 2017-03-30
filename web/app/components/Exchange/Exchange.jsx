@@ -771,9 +771,9 @@ class Exchange extends React.Component {
         this.forceUpdate();
     }
 
-    _onInputSell(type, e) {
+    _onInputSell(type, isBid, e) {
         let current = this.state[type];
-        const isBid = type === "bid";
+        // const isBid = type === "bid";
         current.for_sale.setAmount({real: parseFloat(e.target.value) || 0});
 
         if (current.price.isValid()) {
@@ -786,9 +786,9 @@ class Exchange extends React.Component {
         this.forceUpdate();
     }
 
-    _onInputReceive(type, e) {
+    _onInputReceive(type, isBid, e) {
         let current = this.state[type];
-        const isBid = type === "bid";
+        // const isBid = type === "bid";
         current.to_receive.setAmount({real: parseFloat(e.target.value) || 0});
 
         if (current.price.isValid()) {
@@ -967,10 +967,10 @@ class Exchange extends React.Component {
                 total={bid.forSaleText}
                 quote={quote}
                 base={base}
-                amountChange={this._onInputReceive.bind(this, "bid")}
+                amountChange={this._onInputReceive.bind(this, "bid", true)}
                 priceChange={this._onInputPrice.bind(this, "bid")}
                 setPrice={this._currentPriceClick.bind(this)}
-                totalChange={this._onInputSell.bind(this, "bid")}
+                totalChange={this._onInputSell.bind(this, "bid", false)}
                 balance={baseBalance}
                 balanceId={base.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(this, quote, base, baseBalance, coreBalance, buyFeeAsset, "buy")}
@@ -1011,10 +1011,10 @@ class Exchange extends React.Component {
                 total={ask.toReceiveText}
                 quote={quote}
                 base={base}
-                amountChange={this._onInputSell.bind(this, "ask")}
+                amountChange={this._onInputSell.bind(this, "ask", false)}
                 priceChange={this._onInputPrice.bind(this, "ask")}
                 setPrice={this._currentPriceClick.bind(this)}
-                totalChange={this._onInputReceive.bind(this, "ask")}
+                totalChange={this._onInputReceive.bind(this, "ask", true)}
                 balance={quoteBalance}
                 balanceId={quote.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(this, base, quote, quoteBalance, coreBalance, sellFeeAsset, "sell")}

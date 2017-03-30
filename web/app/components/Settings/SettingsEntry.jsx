@@ -85,7 +85,7 @@ export default class SettingsEntry extends React.Component {
                     let latency = this.props.apiLatencies[option.url];
                     let onlyDescription = option.url.indexOf("fake.automatic-selection") !== -1;
                     let {location} = option;
-                    if (typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
+                    if (location && typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
 
                     return (
                         <option value={option.url} key={key.url}>

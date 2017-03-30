@@ -411,8 +411,11 @@ class WalletDb extends BaseStore {
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead || 0) + 1)
-        // console.log("generateNextKey, save:", save, "sequence:", sequence, "brainkey_look_ahead:", this.brainkey_look_ahead);
-        for (let i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
+        /* If sequence is 0 this is the first lookup, so check at least the first 10 positions */
+        const loopMax = !sequence ? Math.max(sequence + this.brainkey_look_ahead, 10) : sequence + this.brainkey_look_ahead;
+        // console.log("generateNextKey, save:", save, "sequence:", sequence, "loopMax", loopMax, "brainkey_look_ahead:", this.brainkey_look_ahead);
+
+        for (let i = sequence; i < loopMax; i++) {
             let private_key = key.get_brainPrivateKey( brainkey, i )
             let pubkey =
                 this.generateNextKey_pubcache[i] ?
@@ -422,6 +425,8 @@ class WalletDb extends BaseStore {
 
             let next_key = ChainStore.getAccountRefsOfKey( pubkey );
             // TODO if ( next_key === undefined ) return undefined
+
+            /* If next_key exists, it means the generated private key controls an account, so we need to save it */
             if(next_key && next_key.size) {
                 used_sequence = i
                 console.log("WARN: Private key sequence " + used_sequence + " in-use. " +
