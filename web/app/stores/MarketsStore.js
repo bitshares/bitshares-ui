@@ -347,7 +347,6 @@ class MarketsStore {
             let didUpdate = false;
             cancellations.forEach(orderID => {
                 if (orderID && this.marketLimitOrders.has(orderID)) {
-                    console.log("removed order", orderID);
                     didUpdate = true;
                     this.marketLimitOrders = this.marketLimitOrders.delete(orderID);
                 }
