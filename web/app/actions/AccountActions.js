@@ -44,6 +44,10 @@ class AccountActions {
         return name;
     }
 
+    tryToSetCurrentAccount() {
+        return true;
+    }
+
     /**
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
      */
