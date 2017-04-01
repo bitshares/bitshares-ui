@@ -292,9 +292,12 @@ class MarketsStore {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
                 order.op.time = order.time;
-                this.activeMarketHistory = this.activeMarketHistory.add(
-                    order.op
-                );
+                /* Only include history objects that aren't 'something for nothing' to avoid confusion */
+                if (!(order.op.receives.amount == 0 || order.op.pays.amount == 0)) {
+                    this.activeMarketHistory = this.activeMarketHistory.add(
+                        order.op
+                    );
+                }
             });
         }
 
@@ -347,7 +350,6 @@ class MarketsStore {
             let didUpdate = false;
             cancellations.forEach(orderID => {
                 if (orderID && this.marketLimitOrders.has(orderID)) {
-                    console.log("removed order", orderID);
                     didUpdate = true;
                     this.marketLimitOrders = this.marketLimitOrders.delete(orderID);
                 }
@@ -965,6 +967,9 @@ class MarketsStore {
             }
 
             change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
+            if (!isFinite(change) || isNaN(change)) {
+                change = 0;
+            }
         }
 
         if (recent && recent.length && recent.length > 1) {

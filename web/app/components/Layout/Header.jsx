@@ -89,8 +89,13 @@ class Header extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        if (WalletDb.isLocked()) WalletUnlockActions.unlock();
-        else WalletUnlockActions.lock();
+        if (WalletDb.isLocked()) {
+            WalletUnlockActions.unlock().then(() => {
+                AccountActions.tryToSetCurrentAccount();
+            });
+        } else {
+            WalletUnlockActions.lock();
+        }
     }
 
     _onNavigate(route, e) {

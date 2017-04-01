@@ -11,6 +11,7 @@ import {WalletTcomb} from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import PrivateKeyActions from "actions/PrivateKeyActions";
+import AccountActions from "actions/AccountActions";
 import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
@@ -101,6 +102,7 @@ class WalletDb extends BaseStore {
                 Apis.instance().chain_id)
 
         return WalletUnlockActions.unlock().then( () => {
+            AccountActions.tryToSetCurrentAccount();
             return Promise.all([
                 tr.set_required_fees(),
                 tr.update_head_block()
