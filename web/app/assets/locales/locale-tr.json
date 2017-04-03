@@ -23,9 +23,12 @@
     "update_asset": "Dijital Varlık Güncelle",
     "lock": "Kilitle",
     "unlock": "Kilidi Aç",
+    "unlock_password": "Giriş yap",
+    "unlock_short": "Giriş",
     "help": "Yardım",
     "locked_tip": "Cüzdan kilitli.<br/>Açmak için tıkla.",
     "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla."
+    "account_notify": "Aktif hesap: %(account)s"
   },
   "tooltip": {
     "call_limit": "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
@@ -58,6 +61,14 @@
   "propose": "Teklif Et",
   "cancel": "İptal",
   "account": {
+    "intro_text_title": "Bitshares'e Hoş Geldiniz",
+    "intro_text_1": "<b>Bitshares Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
+    "intro_text_2": "<b>Bitshares</b>'de al-sat işlemleri herhangi bir aracı olmaksızın, doğrudan kullanıcıların kendi arasında gerçekleşir.",
+    "intro_text_3": "Platform üzerinde kullanıcılar kendi hesaplarının tam kontrolüne sahiptir - hiçbir aracı kurum işlemlerinize müdahale edemez!",
+    "intro_text_4": "Platformda BTC, ETH, STEEM, DASH, LTC, DOGE gibi coin'lerle işlem yapabileceğiniz gibi aynı zamanda kendi coin'inizi oluşturabilir ve hemen ticaretine başlayabilirsiniz.",
+    "in_open": "Bekleyen emirlerinizdeki %(asset)s miktarı: ",
+    "in_open_value": "%(asset)s piyasasındaki bekleyen emirlerin büyüklüğü (anlık değere göre): ",
+    "password_login": "Giriş yap",
     "transfer_actions": "Transfer işlemleri",
     "market_actions": "Takas işlemleri",
     "see_open": "Bekleyen emirler",
