@@ -27,7 +27,7 @@
     "unlock_short": "Giriş",
     "help": "Yardım",
     "locked_tip": "Cüzdan kilitli.<br/>Açmak için tıkla.",
-    "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla."
+    "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
     "account_notify": "Aktif hesap: %(account)s"
   },
   "tooltip": {
