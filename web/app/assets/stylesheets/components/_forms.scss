@@ -49,6 +49,11 @@ div.account-image {
     }
 }
 
+.asset-selector {
+    .error-area {
+        position: absolute;
+    }
+}
 .account-selector, .pubkey-input {
   clear: right;
   input {
