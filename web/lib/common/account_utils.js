@@ -83,6 +83,7 @@ export default class AccountUtils {
         const scamAccountsPolo = [
             "polonie-wallet",
             "polonie-xwallet",
+            "poloniewallet",
             "poloniex-deposit",
             "poloniex-wallet",
             "poloniexwall-et",
