@@ -22,6 +22,10 @@ class SettingsActions {
         return {quote, base};
     }
 
+    setUserMarket(quote, base, value) {
+        return {quote, base, value};
+    }
+
     addStarAccount(account) {
         return account;
     }

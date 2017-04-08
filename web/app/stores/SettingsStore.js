@@ -15,6 +15,23 @@ let ss = new ls(STORAGE_KEY);
 class SettingsStore {
     constructor() {
         this.exportPublicMethods({init: this.init.bind(this), getSetting: this.getSetting.bind(this)});
+
+        this.bindListeners({
+            onChangeSetting: SettingsActions.changeSetting,
+            onChangeViewSetting: SettingsActions.changeViewSetting,
+            onChangeMarketDirection: SettingsActions.changeMarketDirection,
+            onAddStarMarket: SettingsActions.addStarMarket,
+            onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onAddStarAccount: SettingsActions.addStarAccount,
+            onRemoveStarAccount: SettingsActions.removeStarAccount,
+            onAddWS: SettingsActions.addWS,
+            onRemoveWS: SettingsActions.removeWS,
+            onHideAsset: SettingsActions.hideAsset,
+            onClearSettings: SettingsActions.clearSettings,
+            onSwitchLocale: IntlActions.switchLocale,
+            onSetUserMarket: SettingsActions.setUserMarket
+        });
+
         this.initDone = false;
         this.defaultSettings = Immutable.Map({
             locale: "en",
@@ -80,21 +97,6 @@ class SettingsStore {
             // ]
         };
 
-        this.bindListeners({
-            onChangeSetting: SettingsActions.changeSetting,
-            onChangeViewSetting: SettingsActions.changeViewSetting,
-            onChangeMarketDirection: SettingsActions.changeMarketDirection,
-            onAddStarMarket: SettingsActions.addStarMarket,
-            onRemoveStarMarket: SettingsActions.removeStarMarket,
-            onAddStarAccount: SettingsActions.addStarAccount,
-            onRemoveStarAccount: SettingsActions.removeStarAccount,
-            onAddWS: SettingsActions.addWS,
-            onRemoveWS: SettingsActions.removeWS,
-            onHideAsset: SettingsActions.hideAsset,
-            onClearSettings: SettingsActions.clearSettings,
-            onSwitchLocale: IntlActions.switchLocale
-        });
-
         this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
         let savedDefaults = ss.get("defaults_v1", {});
@@ -142,7 +144,8 @@ class SettingsStore {
     init() {
         return new Promise((resolve) => {
             if (this.initDone) resolve();
-            this.marketsString = this._getChainKey("markets");
+            this.starredKey = this._getChainKey("markets");
+            this.marketsKey = this._getChainKey("userMarkets");
             // Default markets setup
             let topMarkets = {
                 markets_4018d784: [ // BTS MAIN NET
@@ -150,7 +153,7 @@ class SettingsStore {
                     "OPEN.STEEM", "OPEN.GAME", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
                     "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
-                    "OPEN.INCNT", "KAPITAL"
+                    "OPEN.INCNT", "KAPITAL", "OPEN.MAID"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"
@@ -167,10 +170,10 @@ class SettingsStore {
             };
 
             let coreAssets = {markets_4018d784: "BTS", markets_39f5e2ed: "TEST"};
-            let coreAsset = coreAssets[this.marketsString] || "BTS";
+            let coreAsset = coreAssets[this.starredKey] || "BTS";
             this.defaults.unit[0] = coreAsset;
 
-            let chainBases = bases[this.marketsString] || bases.markets_4018d784;
+            let chainBases = bases[this.starredKey] || bases.markets_4018d784;
             this.preferredBases = Immutable.List(chainBases);
 
             function addMarkets(target, base, markets) {
@@ -182,12 +185,14 @@ class SettingsStore {
             }
 
             let defaultMarkets = [];
-            let chainMarkets = topMarkets[this.marketsString] || [];
+            let chainMarkets = topMarkets[this.starredKey] || [];
             this.preferredBases.forEach(base => {
                 addMarkets(defaultMarkets, base, chainMarkets);
             });
 
-            this.starredMarkets = Immutable.Map(ss.get(this.marketsString, defaultMarkets));
+            this.defaultMarkets = Immutable.Map(defaultMarkets);
+            this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
+            this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
             this.starredAccounts = Immutable.Map(ss.get(this._getChainKey("starredAccounts")));
 
             this.initDone = true;
@@ -241,14 +246,23 @@ class SettingsStore {
 
     onAddStarMarket(market) {
         let marketID = market.quote + "_" + market.base;
-
         if (!this.starredMarkets.has(marketID)) {
             this.starredMarkets = this.starredMarkets.set(marketID, {quote: market.quote, base: market.base});
 
-            ss.set(this.marketsString, this.starredMarkets.toJS());
+            ss.set(this.starredKey, this.starredMarkets.toJS());
         } else {
             return false;
         }
+    }
+
+    onSetUserMarket(payload) {
+        let marketID = payload.quote + "_" + payload.base;
+        if (payload.value) {
+            this.userMarkets = this.userMarkets.set(marketID, {quote: payload.quote, base: payload.base});
+        } else {
+            this.userMarkets = this.userMarkets.delete(marketID);
+        }
+        ss.set(this.marketsKey, this.userMarkets.toJS());
     }
 
     onRemoveStarMarket(market) {
@@ -256,7 +270,7 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
-        ss.set(this.marketsString, this.starredMarkets.toJS());
+        ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
     onAddStarAccount(account) {

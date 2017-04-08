@@ -269,7 +269,8 @@ class AssetActions {
         return (dispatch) => {
             if (!inProgress[id]) {
                 inProgress[id] = true;
-                Apis.instance().db_api().exec("list_assets", [
+                dispatch({loading: true});
+                return Apis.instance().db_api().exec("list_assets", [
                     start, count
                 ]).then(assets => {
                     let bitAssetIDS = [];
@@ -301,13 +302,16 @@ class AssetActions {
                         dispatch({
                             assets: assets,
                             dynamic_data: results[0],
-                            bitasset_data: results[1]
+                            bitasset_data: results[1],
+                            loading: false
                         });
+                        return assets && assets.length;
 
                     });
                 })
                 .catch(error => {
                     console.log("Error in AssetStore.getAssetList: ", error);
+                    dispatch({loading: false});
                     delete inProgress[id];
                 });
             }

@@ -30,7 +30,8 @@ class MarketHistory extends React.Component {
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
-            nextState.activeTab !== this.state.activeTab
+            nextState.activeTab !== this.state.activeTab ||
+            nextProps.currentAccount !== this.props.currentAccount
         );
     }
 

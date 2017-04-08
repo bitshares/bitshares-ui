@@ -186,17 +186,14 @@ class CreateAccountPassword extends React.Component {
                 />
 
                 {/* Only ask for password if a wallet already exists */}
-                {hasWallet ?
-                    null :
-                        <PasswordInput
-                            ref="password"
-                            confirmation={true}
-                            onChange={this.onPasswordChange.bind(this)}
-                            noLabel
-                            passwordLength={12}
-                            checkStrength
-                        />
-                }
+                <PasswordInput
+                    ref="password"
+                    confirmation={true}
+                    onChange={this.onPasswordChange.bind(this)}
+                    noLabel
+                    passwordLength={12}
+                    checkStrength
+                />
 
                 {/* If this is not the first account, show dropdown for fee payment account */}
                 {
