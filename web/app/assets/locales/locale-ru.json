@@ -240,7 +240,7 @@
       "key_viewer":"Просмотр приватного ключа",
       "public":"Публичный ключ",
       "private":"Приватный ключ (WIF)",
-      "show":"Показать",
+      "show":"показать",
       "brain":"Расположение brainkey",
       "from":"Импортирован из аккаунта",
       "sign_owner":"Подписать как владелец",
@@ -893,10 +893,10 @@
     "featured":"Лучшие рынки",
     "new":"Новый",
     "market_frozen":"Владелец %(asset)s запретил торговлю на этом рынке.",
-    "show_star_1":"Show",
-    "show_star_2":"only",
-    "base":"Base currency",
-    "search":"Search for markets here"
+    "show_star_1":"Показать",
+    "show_star_2":"только",
+    "base":"Базовая валюта",
+    "search":"Поиск рынков здесь"
   },
   "fees":{
     "title":"Расписание Выплат"
