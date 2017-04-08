@@ -892,7 +892,11 @@
     "settings":"Параметры графика",
     "featured":"Лучшие рынки",
     "new":"Новый",
-    "market_frozen":"Владелец %(asset)s запретил торговлю на этом рынке."
+    "market_frozen":"Владелец %(asset)s запретил торговлю на этом рынке.",
+    "show_star_1":"Show",
+    "show_star_2":"only",
+    "base":"Base currency",
+    "search":"Search for markets here"
   },
   "fees":{
     "title":"Расписание Выплат"
