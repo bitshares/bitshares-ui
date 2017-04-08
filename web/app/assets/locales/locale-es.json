@@ -580,7 +580,11 @@
     "horizontal": "Horizontal",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
-    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
+    "show_star_1": "Show",
+    "show_star_2": "only",
+    "base": "Base currency",
+    "search": "Search for markets here"
   },
   "markets": {
     "base": "Activo base",

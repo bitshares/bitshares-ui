@@ -1178,6 +1178,7 @@ class Exchange extends React.Component {
                                     )}
                                     headerStyle={{paddingTop: 0}}
                                     history={activeMarketHistory}
+                                    currentAccount={currentAccount}
                                     myHistory={currentAccount.get("history")}
                                     base={base}
                                     quote={quote}
@@ -1258,6 +1259,14 @@ class Exchange extends React.Component {
                                         {name: "vol", index: 3},
                                         {name: "price", index: 4},
                                         {name: "change", index: 5}
+                                    ]
+                                }
+                                findColumns={
+                                    [
+                                        {name: "market", index: 1},
+                                        {name: "issuer", index: 2},
+                                        {name: "vol", index: 3},
+                                        {name: "add", index: 4}
                                     ]
                                 }
                                 current={`${quoteSymbol}_${baseSymbol}`}

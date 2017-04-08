@@ -2,6 +2,7 @@ import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AccountName from "../Utility/AccountName";
 import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
@@ -165,6 +166,20 @@ class MarketRow extends React.Component {
                         style={{fontWeight: "bold"}}
                         amount={parseInt(base_dynamic_data.get("current_supply"), 10)}
                         asset={base.get("id")}/> : null}
+                    </td>
+                );
+
+            case "issuer":
+                return (
+                    <td onClick={this._onClick.bind(this, marketID)} key={column.index}>
+                        <AccountName account={quote.get("issuer")} />
+                    </td>
+                );
+
+            case "add":
+                return (
+                    <td style={{textAlign: "right"}} key={column.index} onClick={this.props.onCheckMarket.bind(this, marketID)}>
+                        <input type="checkbox" checked={!!this.props.isChecked || this.props.isDefault} disabled={this.props.isDefault} data-tip={this.props.isDefault ? "This market is a default market and cannot be removed" : null}/>
                     </td>
                 );
 

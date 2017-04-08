@@ -88,9 +88,13 @@ class PasswordInput extends Component {
             confirmMatch = true;
         }
 
-        const strength = pw(this.state.value || "");
-        /* Require a length of passwordLength + 50% for the max score */
-        const score = Math.min(5, strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5)));
+        let strength = 0, score;
+        if (this.props.checkStrength) {
+            strength = this.state.value.length > 100 ? {score: 4} : pw(this.state.value || "");
+            /* Require a length of passwordLength + 50% for the max score */
+            score = Math.min(5, strength.score + Math.floor(this.state.value.length / (this.props.passwordLength * 1.5)));
+        }
+
 
         return (
             <div className="account-selector">

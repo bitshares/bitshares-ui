@@ -41,7 +41,6 @@ class Assets extends React.Component {
     }
 
     _checkAssets(assets, force) {
-
         let lastAsset = assets.sort((a, b) => {
             if (a.symbol > b.symbol) {
                 return 1;
@@ -53,16 +52,18 @@ class Assets extends React.Component {
         }).last();
 
         if (assets.size === 0 || force) {
-            AssetActions.getAssetList("A", 100);
+            AssetActions.getAssetList.defer("A", 100);
             this.setState({assetsFetched: 100});
         } else if (assets.size >= this.state.assetsFetched) {
-            AssetActions.getAssetList(lastAsset.symbol, 100);
+            AssetActions.getAssetList.defer(lastAsset.symbol, 100);
             this.setState({assetsFetched: this.state.assetsFetched + 99});
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        this._checkAssets(nextProps.assets);
+        if (nextProps.assets !== this.props.assets) {
+            this._checkAssets(nextProps.assets);
+        }
     }
 
     linkToAccount(name_or_id) {

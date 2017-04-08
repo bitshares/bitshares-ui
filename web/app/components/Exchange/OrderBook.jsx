@@ -95,7 +95,8 @@ class OrderBook extends React.Component {
             scrollToBottom: true,
             flip: props.flipOrderBook,
             showAllBids: false,
-            showAllAsks: false
+            showAllAsks: false,
+            rowCount: 20
         };
 
         this._updateHeight = this._updateHeight.bind(this);
@@ -254,14 +255,14 @@ class OrderBook extends React.Component {
     render() {
         let {combinedBids, combinedAsks, highestBid, lowestAsk, quote, base,
             totalAsks, totalBids, quoteSymbol, baseSymbol, horizontal} = this.props;
-        let {showAllAsks, showAllBids} = this.state;
+        let {showAllAsks, showAllBids, rowCount} = this.state;
 
         let bidRows = null, askRows = null;
 
         if(base && quote) {
             bidRows = combinedBids
             .filter(a => {
-                if (this.state.showAllBids) {
+                if (this.state.showAllBids || combinedBids.length <= rowCount) {
                     return true;
                 }
                 return a.getPrice() >= highestBid.getPrice() / 5;
@@ -291,7 +292,7 @@ class OrderBook extends React.Component {
 
             let tempAsks = combinedAsks
             .filter(a => {
-                if (this.state.showAllAsks) {
+                if (this.state.showAllAsks || combinedBids.length <= rowCount) {
                     return true;
                 }
                 return a.getPrice() <= lowestAsk.getPrice() * 5;
@@ -336,11 +337,11 @@ class OrderBook extends React.Component {
             let totalAsksLength = askRows.length;
 
             if (!showAllBids) {
-                bidRows.splice(10, bidRows.length);
+                bidRows.splice(rowCount, bidRows.length);
             }
 
             if (!showAllAsks) {
-                askRows.splice(10, askRows.length);
+                askRows.splice(rowCount, askRows.length);
             }
 
             let leftHeader = (
@@ -402,7 +403,7 @@ class OrderBook extends React.Component {
                                         </TransitionWrapper>
                                     </table>
                                 </div>
-                                {totalAsksLength > 10 ? (
+                                {totalAsksLength > rowCount ? (
                                 <div className="orderbook-showall">
                                     <a onClick={this._onToggleShowAll.bind(this, "asks")}>
                                         <Translate content={showAllAsks ? "exchange.hide" : "exchange.show_asks"} />
@@ -443,7 +444,7 @@ class OrderBook extends React.Component {
                                         </TransitionWrapper>
                                     </table>
                                 </div>
-                                {totalBidsLength > 10 ? (
+                                {totalBidsLength > rowCount ? (
                                 <div className="orderbook-showall">
                                     <a onClick={this._onToggleShowAll.bind(this, "bids")}>
                                         <Translate content={showAllBids ? "exchange.hide" : "exchange.show_bids"} />

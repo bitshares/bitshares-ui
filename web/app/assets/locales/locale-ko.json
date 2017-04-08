@@ -584,7 +584,11 @@
     "market_name": "종목명",
     "quote_supply": "유통량",
     "base_supply": "유통량",
-    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
+    "show_star_1": "Show",
+    "show_star_2": "only",
+    "base": "Base currency",
+    "search": "Search for markets here"
   },
   "markets": {
     "base": "기초 자산",
