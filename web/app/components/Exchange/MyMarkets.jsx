@@ -20,7 +20,6 @@ import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
-import {ChainStore} from "bitsharesjs";
 
 let lastLookup = new Date();
 
@@ -158,7 +157,7 @@ class MarketGroup extends React.Component {
                 return (
                     <MarketRow
                         key={market.id}
-                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName name={market.quote} />}
+                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName dataPlace="left" name={market.quote} />}
                         quote={market.quote}
                         base={market.base}
                         columns={columns}
@@ -706,7 +705,7 @@ class MyMarkets extends React.Component {
                                 onClick={this.toggleActiveMarketTab.bind(this, index)}
                                 className={cnames("mymarkets-tab", {active: activeMarketTab === index})}
                             >
-                                <AssetName name={base} />
+                                <AssetName name={base} dataPlace="left"/>
                             </li>
                         );
                     })}

@@ -10,13 +10,15 @@ class AssetName extends React.Component {
 	static propTypes = {
 		asset: ChainTypes.ChainAsset.isRequired,
 		replace: React.PropTypes.bool.isRequired,
-		name: React.PropTypes.string.isRequired
+		name: React.PropTypes.string.isRequired,
+		dataPlace: React.PropTypes.string.isRequired
 	};
 
 	static defaultProps = {
 		replace: true,
 		noPrefix: false,
-		noTip: false
+		noTip: false,
+		dataPlace: "bottom"
 	};
 
 	shouldComponentUpdate(nextProps) {
@@ -53,7 +55,7 @@ class AssetName extends React.Component {
 				<div
 					className="tooltip inline-block"
 					data-tip={tooltip}
-					data-place="bottom"
+					data-place={this.props.dataPlace}
 					data-html={true}
 				>
 					<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>
