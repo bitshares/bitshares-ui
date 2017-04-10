@@ -3,6 +3,32 @@ Release 2.0.170327
 ---------------------------------------------------------------------
 New features
 --------
+- Allow the mini depth chart to be hidden by the user
+- Refactor the MyMarkets component, 'show star only' and revamped search
+- Display up to 20 rows of the orderbook by default instead of 10
+- Add Trade and Borrow links to the default assets in AccountOverview
+
+Bug fixes
+--------
+- Fix an issue with blocktrades deposit addresses being set incorrectly
+- Change positioning of some tooltips
+- Fix password score checker freezing on very long passwords
+- Hide 'something for nothing order history items
+- Update bitsharesjs to fix proposals array undefined error
+- Fix 'Cannot use 'in' operator to search for 'translate'' error in api dropdown
+- Fix order rounding when modifying the 'Total' after clicking an order from the orderbook
+- Improve first-time brainkey lookup to check at least 10 positions
+- Log pub keys when creating a new account
+- Fix some Account permissions css issues and add some loggin
+- Also check if generated active key matches owner key and vice versa
+- Fix account create with faucet not rejecting errors properly
+- Fix password strength meter turning red for long passwords
+- Fix gateway actions in progress return
+---------------------------------------------------------------------
+Release 2.0.170327
+---------------------------------------------------------------------
+New features
+--------
 - Add password based login using account+role+password as private key seed
 - Add a Migration option to add password based keys to an existing account
 - Add password strength checker to password input
