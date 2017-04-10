@@ -587,8 +587,8 @@
     "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
     "show_star_1": "Show",
     "show_star_2": "only",
-    "base": "Base currency",
-    "search": "Search for markets here"
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "markets": {
     "base": "기초 자산",

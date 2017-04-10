@@ -896,8 +896,8 @@
     "market_frozen": "%(asset)s 资产发行人已禁用该资产的市场交易",
     "show_star_1": "Show",
     "show_star_2": "only",
-    "base": "Base currency",
-    "search": "Search for markets here"
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "markets": {
     "title": "交易所",
