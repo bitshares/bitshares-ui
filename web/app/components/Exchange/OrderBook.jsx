@@ -347,9 +347,9 @@ class OrderBook extends React.Component {
             let leftHeader = (
                 <thead ref="leftHeader">
                     <tr key="top-header" className="top-header">
-                        <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName name={baseSymbol} />)</span></th>
-                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={baseSymbol} /></span></th>
-                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={quoteSymbol} /></span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName dataPlace="top" name={baseSymbol} />)</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
                         <th style={{width: "25%", textAlign: "right"}}>
                             <Translate className={(this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
                         </th>
@@ -363,9 +363,9 @@ class OrderBook extends React.Component {
                         <th style={{width: "25%", textAlign: "right"}}>
                             <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />
                         </th>
-                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={quoteSymbol} /></span></th>
-                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={baseSymbol} /></span></th>
-                        <th style={{width: "25%", textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName name={baseSymbol} />)</span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
+                        <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
+                        <th style={{width: "25%", textAlign: "right"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName dataPlace="top" name={baseSymbol} />)</span></th>
                     </tr>
                 </thead>
             );

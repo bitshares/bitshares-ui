@@ -14,14 +14,14 @@ import Icon from "../Icon/Icon";
 class TableHeader extends React.Component {
 
     render() {
-        let {buy, baseSymbol, quoteSymbol} = this.props;
+        let {baseSymbol, quoteSymbol} = this.props;
 
         return (
             <thead>
                 <tr>
                     <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={quoteSymbol} /></span> : null}</th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName name={baseSymbol} /></span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span> : null}</th>
+                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
                     <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
                     <th style={{width: "18%"}}></th>
                 </tr>

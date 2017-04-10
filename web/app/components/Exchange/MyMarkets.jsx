@@ -20,7 +20,6 @@ import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
-import {ChainStore} from "bitsharesjs";
 
 let lastLookup = new Date();
 
@@ -158,7 +157,7 @@ class MarketGroup extends React.Component {
                 return (
                     <MarketRow
                         key={market.id}
-                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName name={market.quote} />}
+                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName dataPlace="left" name={market.quote} />}
                         quote={market.quote}
                         base={market.base}
                         columns={columns}
@@ -169,7 +168,7 @@ class MarketGroup extends React.Component {
                         starred={starredMarkets.has(market.id)}
                         current={current === market.id}
                         isChecked={this.props.userMarkets.has(market.id)}
-                        isDefault={this.props.defaultMarkets.has(market.id)}
+                        isDefault={this.props.defaultMarkets && this.props.defaultMarkets.has(market.id)}
                         onCheckMarket={this._onToggleUserMarket.bind(this)}
                     />
                 );
@@ -278,7 +277,7 @@ class MyMarkets extends React.Component {
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
-        this.getAssetList = debounce(AssetActions.getAssetList, 150);
+        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -408,7 +407,7 @@ class MyMarkets extends React.Component {
             lookupBase: base
         });
 
-        SettingsActions.changeViewSetting({
+        SettingsActions.changeViewSetting.defer({
             marketLookupInput: value.toUpperCase()
         });
 
@@ -453,7 +452,7 @@ class MyMarkets extends React.Component {
     render() {
         let {starredMarkets, defaultMarkets, marketStats, columns, searchAssets, assetsLoading,
             preferredBases, core, current, viewSettings, listHeight, onlyStars, userMarkets} = this.props;
-        let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
+        let {activeMarketTab, activeTab, lookupQuote, lookupBase} = this.state;
         let otherMarkets = <tr></tr>;
         const myMarketTab = activeTab === "my-market";
 
@@ -464,7 +463,6 @@ class MyMarkets extends React.Component {
             preferredBases = preferredBases.push(this.state.activeFindBase);
         }
 
-        let coreSymbol = core.get("symbol");
         // Add some default base options
         // let preferredBases = [coreSymbol, "BTC", "USD", "CNY"];
         let baseGroups = {};
@@ -475,6 +473,9 @@ class MyMarkets extends React.Component {
 
         /* By default, show the OPEN.X assets */
         if (!lookupQuote) lookupQuote = "OPEN.";
+
+        /* In the find-market tab, only use market tab 0 */
+        if (!myMarketTab) activeMarketTab = 0;
 
         searchAssets
         .filter(a => {
@@ -606,6 +607,8 @@ class MyMarkets extends React.Component {
             .toArray();
         }
 
+        const hasOthers = otherMarkets && otherMarkets.length;
+
         let hc = "mymarkets-header clickable";
         let starClass = cnames(hc, {inactive: !myMarketTab});
         let allClass = cnames(hc, {inactive: myMarketTab});
@@ -660,8 +663,7 @@ class MyMarkets extends React.Component {
                     <div style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
                         <table>
                         <tr style={{width: "100%"}}>
-                            <td><div style={{position: "relative", top: -15}}><Translate content="exchange.base" />:</div></td>
-                            <td style={{maxWidth: "60%"}}>
+                            <td>
                                 <AssetSelector
                                     onAssetSelect={this._onFoundBaseAsset.bind(this)}
                                     assets={defaultBases}
@@ -669,16 +671,17 @@ class MyMarkets extends React.Component {
                                     asset={this.state.findBaseInput}
                                     assetInput={this.state.findBaseInput}
                                     tabIndex={1}
-                                    style={{width: "100%", paddingBottom: "2.5rem"}}
+                                    style={{width: "100%", paddingBottom: "1.5rem"}}
                                     onFound={this._onFoundBaseAsset.bind(this)}
+                                    label="exchange.base"
                                     noLabel
                                     inputStyle={{fontSize: "0.9rem"}}
                                 />
                             </td>
                         </tr>
                         <tr style={{width: "100%"}}>
-                            <td><Translate content="account.user_issued_assets.name" />:</td>
                             <td>
+                                <label><Translate content="account.user_issued_assets.name" />:</label>
                                 <input
                                     style={{fontSize: "0.9rem", position: "relative", top: 1}}
                                     type="text"
@@ -700,18 +703,18 @@ class MyMarkets extends React.Component {
                             <li
                                 key={base}
                                 onClick={this.toggleActiveMarketTab.bind(this, index)}
-                                className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === index})}
+                                className={cnames("mymarkets-tab", {active: activeMarketTab === index})}
                             >
-                                <AssetName name={base} />
+                                <AssetName name={base} dataPlace="left"/>
                             </li>
                         );
                     })}
-                    {myMarketTab ? (
+                    {myMarketTab && hasOthers ? (
                         <li
                             key={"others"}
                             style={{textTransform: "uppercase"}}
                             onClick={this.toggleActiveMarketTab.bind(this, preferredBases.size + 1)}
-                            className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === (preferredBases.size + 1)})}
+                            className={cnames("mymarkets-tab", {active: activeMarketTab === (preferredBases.size + 1)})}
                         >
                             <Translate content="exchange.others" />
                         </li>) : null}
@@ -723,7 +726,7 @@ class MyMarkets extends React.Component {
                     ref="favorites"
                 >
                     {assetsLoading ? <div style={{position: "absolute", paddingTop: "3rem", textAlign: "center", width: "100%"}}><LoadingIndicator type="three-bounce" /></div> : null}
-                    {preferredBases.filter(a => {return a === preferredBases.get(this.state.activeMarketTab);}).map((base, index) => {
+                    {preferredBases.filter(a => {return a === preferredBases.get(activeMarketTab);}).map((base, index) => {
                         return <MarketGroup
                             userMarkets={this.props.userMarkets}
                             defaultMarkets={this.props.defaultMarkets}
@@ -741,7 +744,7 @@ class MyMarkets extends React.Component {
                             findMarketTab={!myMarketTab}
                         />;
                     })}
-                    {((this.state.activeMarketTab === preferredBases.size + 1) && myMarketTab) ?
+                    {((activeMarketTab === preferredBases.size + 1) && myMarketTab && hasOthers) ?
                     <MarketGroup
                         userMarkets={this.props.userMarkets}
                         index={preferredBases.size}
