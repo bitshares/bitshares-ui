@@ -101,7 +101,7 @@ class MarketCard extends React.Component {
                     </div>
                 </div>
                 <div className="grid-block vertical no-overflow">
-                    <div className="fm-name"><AssetName name={base.get("symbol")} /> : <AssetName name={quote.get("symbol")} /></div>
+                    <div className="fm-name"><AssetName dataPlace="top" name={base.get("symbol")} /> : <AssetName dataPlace="top" name={quote.get("symbol")} /></div>
                     {/* <div className="fm-volume">price: <div className="float-right">{(!marketStats || !marketStats.close) ? null : utils.format_price(
                         marketStats.close.quote.amount,
                         base,
