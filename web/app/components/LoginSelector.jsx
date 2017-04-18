@@ -24,6 +24,8 @@ export default class LoginSelector extends React.Component {
                         <div className="box-content">
                             <Translate content="wallet.wallet_model_1" component="p" />
                             <Translate content="wallet.wallet_model_2" component="p" />
+
+                            <Translate unsafe content="wallet.wallet_model_3" component="ul" />
                         </div>
                         <div className="button"><Link to="/create-account/wallet"><Translate content="wallet.use_wallet" /></Link></div>
 
@@ -36,6 +38,8 @@ export default class LoginSelector extends React.Component {
                         <div className="box-content">
                             <Translate content="wallet.password_model_1" component="p" />
                             <Translate content="wallet.password_model_2" unsafe component="p" />
+
+                            <Translate unsafe content="wallet.password_model_3" component="ul" />
                         </div>
                         <div className="button"><Link to="/create-account/password"><Translate content="wallet.use_password" /></Link></div>
                     </div>
