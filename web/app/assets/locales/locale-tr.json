@@ -871,8 +871,8 @@
     "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
     "show_star_1": "Show",
     "show_star_2": "only",
-    "base": "Base currency",
-    "search": "Search for markets here"
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "fees": {
     "title": "Ücret Tarifesi"
@@ -909,6 +909,7 @@
     "has_wallet": "Bitshares hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
     "create_account_text": "Hesabınıza ait .bin dosyasını kaybetmeniz, veya TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, bir sonraki adımda cüzdanınızı yedeklemeli ve .bin dosyanızı, şifrenizi ve TekAnahtarınızı kesinlikle kaybetmemelisiniz.",
     "first_account_paid": "TekAnahtarınızı, şifrenizi veya .bin dosyasını güvende tutmazsanız, bilgisayarınızda oluşacak herhangi bir sorun ya da güncelleme nedeniyle cüzdanınıza erişimi kaybedebilirsiniz. Bu durumda cüzdanınızdaki dijital varlıkları geri getirmenin hiçbir yolu yoktur.",
+    "not_first_account": "Zaten bir Bitshares hesabı ile giriş yapılmış, bu yüzden yeni oluşturacağınız her hesap için ağ ücreti ödemeniz gerekmektedir.",
     "import_backup_choose": "Lütfen yedekleme dosyasını seçin. Bu işlem esnasında dosya kendi bilgisayarınızdan dışarıya asla aktarılmaz, bütün işlem bilgisayarınızda gerçekleşir.",
     "import_balance": "Bakiyeyi aktar.",
     "import_key_success": "İşleminiz başarıyla tamamlandı!",
@@ -1020,8 +1021,10 @@
     "password_model": "Hesap Sistemi",
     "wallet_model_1": "Cüzdan Sistemi'nde cüzdanınız tarayınızın belleğinde sizin seçtiğiniz şifre ile şifrelenmiş olarak kayıtlı tutulur. Cüzdanı yedeklemek için TekAnahtar ya da .bin dosyası yöntemlerini kullanabilirsiniz.",
     "wallet_model_2": "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
+    "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
     "password_model_1": "Hesap Sistemi ile hesabınıza yalnızca kullanıcı adı ve şifrenizle istediğiniz yerden erişim sağlayabilirsinz.",
     "password_model_2": "Hesap Sistemi'nde ekstradan TekAnahtar ya da .bin dosyasını yedeklemenize gerek yoktur, ancak yalnızca şifreniz kullanılarak hesabınıza erişim elde edilebildiğinden, çok uzun ve güvenli bir şifre seçmeniz gerekmektedir.",
+    "password_model_3": "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
     "use_wallet": "Cüzdan Sistemi'yle devam et",
     "use_password": "Hesap Sistemi'yle devam et",
     "pass_length": "Şifreniz en az %(minLength)s karakter uzunluğunda olmalıdır. İdeal olarak minimum 20 karakterlik bir şifre kullanmalı, ve harf-rakam-sembol kombinasyonlarını içeren bir şifre seçmelisiniz.",

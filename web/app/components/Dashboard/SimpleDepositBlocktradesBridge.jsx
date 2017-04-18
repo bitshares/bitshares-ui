@@ -44,7 +44,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         this._validateAddress(this.state.toAddress, props);
 
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
-        this.addDepositAddress = this.addDepositAddress.bind(this);
     }
 
     componentWillMount() {
@@ -62,6 +61,16 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             this._estimateOutput(np);
             this._getDepositAddress(np);
         }
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return (
+            np.inputCoinType !== this.props.inputCoinType ||
+            np.outputCoinType !== this.props.outputCoinType ||
+            np.sender !== this.props.sender ||
+            np.asset !== this.props.asset ||
+            !utils.are_equal_shallow(ns, this.state)
+        );
     }
 
     _getDepositLimit(props = this.props) {
@@ -104,7 +113,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         );
         if (!receive_address) {
             this.setState({receive_address: null});
-            requestDepositAddress(this._getDepositObject());
+            requestDepositAddress(this._getDepositObject(props));
         } else {
             this.setState({
                 receive_address
@@ -112,23 +121,29 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         }
     }
 
-    _getDepositObject() {
+    _getDepositObject(props = this.props) {
         return {
-            inputCoinType: this.props.inputCoinType.toLowerCase(),
-            outputCoinType: this.props.outputCoinType.toLowerCase(),
-            outputAddress: this.props.sender.get("name"),
+            inputCoinType: props.inputCoinType.toLowerCase(),
+            outputCoinType: props.outputCoinType.toLowerCase(),
+            outputAddress: props.sender.get("name"),
             url: blockTradesAPIs.BASE,
-            stateCallback: this.addDepositAddress
+            stateCallback: (receive_address) => {
+                this.addDepositAddress(
+                    props.inputCoinType.toLowerCase(),
+                    props.outputCoinType.toLowerCase(),
+                    props.sender.get("name"),
+                    receive_address
+                );
+            }
         };
     }
 
-    addDepositAddress( receive_address ) {
-        let account_name = this.props.sender.get("name");
+    addDepositAddress( input_coin_type, output_coin_type, account, receive_address ) {
         this.deposit_address_cache.cacheInputAddress(
             "blocktrades",
-            account_name,
-            this.props.inputCoinType.toLowerCase(),
-            this.props.outputCoinType.toLowerCase(),
+            account,
+            input_coin_type,
+            output_coin_type,
             receive_address.address,
             receive_address.memo
         );
