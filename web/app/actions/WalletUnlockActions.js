@@ -37,6 +37,10 @@ class WalletUnlockActions {
         return true;
     }
 
+    checkLock() {
+        return true;
+    }
+
 }
 
 var WrappedWalletUnlockActions = alt.createActions(WalletUnlockActions);
