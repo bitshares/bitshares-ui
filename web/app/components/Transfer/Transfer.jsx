@@ -66,8 +66,20 @@ class Transfer extends React.Component {
         let { asset_types: current_types } = this._getAvailableAssets();
         let { asset_types } = this._getAvailableAssets(ns);
 
-        if (asset_types.length === 1 && current_types.length !== 1) {
-            this.onAmountChanged({amount: ns.amount, asset: ChainStore.getAsset(asset_types[0])});
+        if (asset_types.length === 1) {
+            let asset = ChainStore.getAsset(asset_types[0]);
+            if (current_types.length !== 1) {
+                this.onAmountChanged({amount: ns.amount, asset});
+            }
+
+            if (asset_types[0] !== this.state.fee_asset_id) {
+                if (asset && this.state.fee_asset_id !== asset_types[0]) {
+                    this.setState({
+                        feeAsset: asset,
+                        fee_asset_id: asset_types[0]
+                    });
+                }
+            }
         }
         return true;
     }
