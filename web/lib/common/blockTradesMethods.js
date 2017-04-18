@@ -2,7 +2,7 @@ import ls from "./localStorage";
 import {blockTradesAPIs} from "api/apiConfig";
 const blockTradesStorage = new ls("");
 
-export function fetchCoins(url = (blockTradesAPIs.BASE + blockTradesAPIs.COINS_LIST)) {
+export function fetchCoins(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.COINS_LIST)) {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;
     })).catch(err => {
@@ -36,7 +36,7 @@ export function estimateOutput(inputAmount, inputCoin, outputCoin, url = (blockT
     });
 }
 
-export function getActiveWallets(url = (blockTradesAPIs.BASE + blockTradesAPIs.ACTIVE_WALLETS)) {
+export function getActiveWallets(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.ACTIVE_WALLETS)) {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;
     })).catch(err => {

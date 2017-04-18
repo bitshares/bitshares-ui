@@ -319,7 +319,7 @@ class CreateAccount extends React.Component {
 
                         <tr>
                             <td><Translate content="wallet.tips_dashboard" />:</td>
-                            <td><Link to="dashboard"><Translate content="header.dashboard" /></Link></td>
+                            <td><Link to="/dashboard"><Translate content="header.dashboard" /></Link></td>
                         </tr>
 
                         <tr>
@@ -329,19 +329,19 @@ class CreateAccount extends React.Component {
 
                         <tr>
                             <td><Translate content="wallet.tips_deposit" />:</td>
-                            <td><Link to="deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
+                            <td><Link to="/deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
                         </tr>
 
 
 
                         <tr>
                             <td><Translate content="wallet.tips_transfer" />:</td>
-                            <td><Link to="transfer"><Translate content="wallet.link_transfer" /></Link></td>
+                            <td><Link to="/transfer"><Translate content="wallet.link_transfer" /></Link></td>
                         </tr>
 
                         <tr>
                             <td><Translate content="wallet.tips_settings" />:</td>
-                            <td><Link to="settings"><Translate content="header.settings" /></Link></td>
+                            <td><Link to="/settings"><Translate content="header.settings" /></Link></td>
                         </tr>
                     </tbody>
 
