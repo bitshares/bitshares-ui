@@ -9,12 +9,8 @@
   margin-bottom: 20px;
 }
 .help-content > table td, help-content > table th {
+    text-align: left;
     border:1px solid;
     padding: 5px;
 }
 
-.help-content > table > thead th {
-    text-align: left;
-    padding: 5px;
-    border: 1px solid;
-}
