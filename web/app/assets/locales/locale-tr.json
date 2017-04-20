@@ -321,7 +321,7 @@
     "errors": {
       "not_found": "%(name)s adında bir hesap yok, doğru yazdığınıza emin misiniz?",
       "invalid": "Geçersiz hesap adı",
-      "unknown": "Bilinmeyan hesap",
+      "unknown": "Hesap kayıtlı değil",
       "not_yours": "Hesap sizin değil"
     },
     "collaterals": "Teminat Pozisyonları",
@@ -1021,10 +1021,10 @@
     "password_model": "Hesap Sistemi",
     "wallet_model_1": "Cüzdan Sistemi'nde cüzdanınız tarayınızın belleğinde sizin seçtiğiniz şifre ile şifrelenmiş olarak kayıtlı tutulur. Cüzdanı yedeklemek için TekAnahtar ya da .bin dosyası yöntemlerini kullanabilirsiniz.",
     "wallet_model_2": "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
-    "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
+    "wallet_model_3": "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
     "password_model_1": "Hesap Sistemi ile hesabınıza yalnızca kullanıcı adı ve şifrenizle istediğiniz yerden erişim sağlayabilirsinz.",
     "password_model_2": "Hesap Sistemi'nde ekstradan TekAnahtar ya da .bin dosyasını yedeklemenize gerek yoktur, ancak yalnızca şifreniz kullanılarak hesabınıza erişim elde edilebildiğinden, çok uzun ve güvenli bir şifre seçmeniz gerekmektedir.",
-    "password_model_3": "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
+    "password_model_3": "<li>Tek hesap</li><li>Kolay giriş</li><li>Orta seviye güvenlik</li>",
     "use_wallet": "Cüzdan Sistemi'yle devam et",
     "use_password": "Hesap Sistemi'yle devam et",
     "pass_length": "Şifreniz en az %(minLength)s karakter uzunluğunda olmalıdır. İdeal olarak minimum 20 karakterlik bir şifre kullanmalı, ve harf-rakam-sembol kombinasyonlarını içeren bir şifre seçmelisiniz.",
