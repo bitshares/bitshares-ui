@@ -73,10 +73,10 @@ class AccountAssets extends React.Component {
         }).last();
 
         if (assets.size === 0 || force) {
-            AssetActions.getAssetList("A", 100);
+            AssetActions.getAssetList.defer("A", 100);
             this.setState({assetsFetched: 100});
         } else if (assets.size >= this.state.assetsFetched) {
-            AssetActions.getAssetList(lastAsset.symbol, 100);
+            AssetActions.getAssetList.defer(lastAsset.symbol, 100);
             this.setState({assetsFetched: this.state.assetsFetched + 99});
         }
     }
