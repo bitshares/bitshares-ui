@@ -1,23 +1,23 @@
-# Decentralized Exchange
+# Децентрализованная биржа
 
 Децентрализованная биржа (далее обозначается как *DEX*) позволяет производить прямой обмен цифровых товаров, торгующихся в экосистеме BitShares.
 
 Децентрализованная биржа обладает весьма определенным набором преимуществ перед традиционными централизованными биржами, о чем мы хотим кратко рассказать ниже. И хотя BitShares DEX включает в себя их все, право использовать эти функции полностью или частично остается за читателем и клиентом.
 
-* **Separation of Powers**: There is no reason why the same entity needs to be responsible for issuing IOUs and for processing the order book. In BitShares, order matching is performed by the protocol, which is unaware of implications concerning the involved assets.
+* **Разделение сил**: Нет такой причины, которая бы обязывала одну и ту же единицу быть ответственной и за выдачу IOU, и за обработку книги ордеров. В BitShares подбор ордеров производится протоколом, который не знает о последствиях, касающихся связанных с ними активов.
 
-* **Global Unified Order Book**: Since BitShares is global, anybody with an internet access can use the DEX for trading. This brings the world's liquidity to a single order book for decentralized trading.
+* **Единая Общая Книга Ордеров**: Так как BitShares глобальна, любой, у кого есть Интернет, может использовать DEX для торговли. Это делает всю ликвидность мира доступной единственной книге ордеров для децентрализованной торговли.
 
-* **Trade Almost Anything**: The BitShares DEX is asset agnostic. Hence you can trade at **any** pair. While some pairs may end up with low liquidity, such as SILVER:GOLD, other pairs such as USD:EUR for FOREX trading will see huge volume.
+* **Торгуй чем угодно**: BitShares DEX - агностик в отношении активов. А значит, Вы можете торговать на **любой** паре. И хотя ликвидность некоторых пар в итоге окажется низкой, как у SILVER:GOLD, другие пары, вроде USD:EUR для торговли на FOREX, будут обладать внушительным объемом.
 
-* **No Limits**: The BitShares protocol is unable to limit your trading experience.
+* **Без ограничений**: Протокол BitShares не в состоянии ограничить Ваш торговый опыт.
 
-* **Decentralized**: The DEX is decentralized across the globe. This not only means that there is no single point of failure, but it also implies that the BitShares exchange is open for trading 24/7 because it's always daytime somewhere.
+* **Децентрализованная**: DEX децентрализована по всему миру. Это не только означает, что не существует ни единого отказа, но и позволяет бирже BitShares работать 24/7, так как где-нибудь на планете всегда день.
 
-* **Secure**: Your funds and trades are secured with industry-grade elliptic curve cryptography. No one will be able to access your funds unless you let them. To further strengthen the security, we allow our customers to setup escrow and multi-signature schemes.
+* **Безопасная**: Безопасность Ваших средств и торгов обеспечивается эллиптической криптографией промышленного уровня. Никто не сможет получить доступ к Вашим средствам, пока Вы им не позволите. Чтобы возвести безопасность на новый уровень, мы позволяем нашим клиентам устанавливать escrow и схемы с мульти-подписью.
 
-* **Fast**: In contrast to other decentralized networks, the BitShares DEX allows for real-time trading and is only limited by the speed of light and the size of the planet.
+* **Быстрая**: В отличие от других децентрализованных сетей, BitShares DEX позволяет торговать в реальном времени, ограничиваясь только скоростью света и размером планеты.
 
-* **Provable Order Matching Algorithm**: What makes the BitShares DEX unique is the provable order matching algorithm. Given a set of orders, you will always be able to provably verify that these orders have been matched properly.
+* **Доказуемый алгоритм подбора ордеров**: Что делает BitShares DEX поистине уникальной, так это доказуемый алгоритм подбора ордеров. Получив набор ордеров, Вы всегда сможете доказуемо проверить, что эти ордера были подобраны правильно.
 
-* **Collateralized Smartcoins**: One of the biggest features of BitShares are its *smartcoins* such as bitUSD, bitEUR, bitCNY, and others. For the sake of convenience, these assets are denotes simply as USD, EUR, CNY, etc. in the wallet. These digital tokens represent the same value as their underlaying physical asset. Hence 1 USD in this wallet is worth $1 and can be redeemed as such. Any of these tokens is backed by BitShares' company shares (BTS) being locked up as collateral and being available for settlement at its current price.
+* **Обеспеченные Smartcoins**: Одно из самых больших новшеств BitShares - это *smartcoins*, такие как bitUSD, bitEUR, bitCNY и другие. Ради удобства эти активы обозначены просто как USD, EUR, CNY и т. д. в кошельке. Эти цифровые токены обладают той же ценностью, что и прикрепленные к ним физические активы. Поэтому 1 USD в таком кошельке стоит $1 и может использоваться как таковой. Любой из этих токенов обеспечен долями компании BitShares (BTS), которые заморожены в качестве обеспечения залога и доступны для сделок по своей текущей цене.
