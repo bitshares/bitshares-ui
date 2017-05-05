@@ -20,6 +20,8 @@ export const settingsAPIs = {
         {url: "wss://bitshares.dacplay.org:8089/ws", location:  "Hangzhou, China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
+        {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
+        {url: "wss://altcap.io/ws", location: "Paris, France"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
     DEFAULT_FAUCET: "https://bitshares.openledger.info",
