@@ -794,7 +794,10 @@
     "restore_brainkey_text":"Чтобы восстановиться с помощью brainkey, Вам нужно создать новый кошелек. Пожалуйста, введите пароль и имя нового кошелька в строки ниже, потом введите brainkey.",
     "restore_key_count":"# ключей",
     "restore_default_success":"Настройки были успешно изменены",
-    "api_closest":"Автоматически выбирать ближайший"
+    "api_closest":"Автоматически выбирать ближайший",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer":{
     "title":"BitShares",
@@ -1227,6 +1230,7 @@
     "disconnected":"В данный момент Вы не подключены ни к одному из узлов или центральному серверу, пожалуйста, нажмите кнопку ниже, чтобы подключиться снова. Если подключиться не удается, это может означать, что сервер не работает, пожалуйста, повторите попытку позже.",
     "rate":"Пожалуйста, подождите как минимум две секунды перед отправкой нового сообщения",
     "disabled":"Чат отключен",
-    "enable":"Включить чат"
+    "enable":"Включить чат",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }
