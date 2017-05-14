@@ -648,7 +648,10 @@
     "no": "Nein",
     "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
     "restore_default_success": "Settings have been reset successfully",
-    "api_closest": "Choose closest automatically"
+    "api_closest": "Choose closest automatically",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer": {
     "title": "BitShares",
@@ -925,5 +928,22 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
+  },
+  "chat": {
+    "title": "Trollbox",
+    "button": "Chat",
+    "send": "Send",
+    "color": "Username color",
+    "user": "Username",
+    "done": "Done",
+    "reconnect": "Reconnect",
+    "welcome_user": "Welcome to BitShares",
+    "users": "%(userCount)s users online",
+    "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
+    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
+    "rate": "Please wait at least 2s before posting a new message",
+    "disabled": "Chat disabled",
+    "enable": "Enable chat now",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }

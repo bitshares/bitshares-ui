@@ -78,7 +78,10 @@ class WalletDb extends BaseStore {
 
     decryptTcomb_PrivateKey(private_key_tcomb) {
         if( ! private_key_tcomb) return null
-        if( ! aes_private) throw new Error("wallet locked")
+        if( this.isLocked() ) throw new Error("wallet locked")
+        if (_passwordKey && _passwordKey[private_key_tcomb.pubkey]) {
+            return _passwordKey[private_key_tcomb.pubkey];
+        }
         let private_key_hex = aes_private.decryptHex(private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
     }

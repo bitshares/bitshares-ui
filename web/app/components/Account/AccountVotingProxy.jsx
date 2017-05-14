@@ -152,19 +152,18 @@ class AccountVotingProxy extends React.Component {
                     </div>
                 </div> :
                 <AccountSelector
-                    label="account.votes.proxy"
+                     label="account.votes.proxy"
                      error={error}
                      account={this.state.current_proxy_input}
                      accountName={this.state.current_proxy_input}
                      onChange={this.onProxyChange}
                      onAccountChanged={this.onProxyAccountChange}
-                     ref="proxy_selector" tabIndex={1}
-                     onAction={this._onNavigate.bind(this, `/account/${this.state.current_proxy_input}/voting/`)}
-                     action_label="account.votes.go_proxy"
+                     tabIndex={1}
+                     size={60}
                 />}
                 {!isDisabled && knownProxies.length ? (
                 <div>
-                    <Translate component="h4" content="account.votes.proxy_known" />
+                    <Translate component="h5" content="account.votes.proxy_known" />
                     <table className="table">
                         <tbody>
                             {proxies}

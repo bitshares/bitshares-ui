@@ -786,7 +786,10 @@
     "delete_select": "Silinecek cüzdanı seçin",
     "restore_key_count": "Anahtar sayısı",
     "restore_default_success": "Ayarlar başarıyla sıfırlanmıştır.",
-    "api_closest": "En yakın API'yi otomatik seç."
+    "api_closest": "En yakın API'yi otomatik seç.",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer": {
     "title": "Bitshares",
@@ -1181,6 +1184,7 @@
     "users": "%(count)s kullanıcı çevrimiçi",
     "welcome": "Bu yöneticisi olmayan ve kullanıcı adlarının gerçek olmama ihtimali olan P2P bir sohbet odasıdır. Ayarlardan kapatılabilir. 2 saniyede 1 mesaj olarak sınırlıdır. Mevcut komutlar için /help yazın.",
     "disconnected": "Şu anda hiçbir ağa ya da sunucuya bağlı değilsiniz, lütfen aşağı tıklayarak tekrar bağlanınız. Bağlanamıyorsanız, bu sunucu çalışmıyor demektir, lütfen sonra tekrar deneyiniz.",
-    "rate": "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin."
+    "rate": "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin.",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }
