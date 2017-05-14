@@ -259,8 +259,8 @@
       "proxy_current":"Ваш текущий прокси",
       "proxy_short":"Прокси",
       "workers_short":"Работники",
-      "proxy":"Manually enter an account as your proxy",
-      "no_proxy":"Не задан",
+      "proxy":"Вручную введите аккаунт в качестве своего прокси",
+      "no_proxy":"Без прокси",
       "clear_proxy":"Убрать прокси",
       "go_proxy":"Перейти к",
       "name":"Имя",
@@ -305,7 +305,7 @@
       "cm_approved_by":"Члены комитета, утверждённые %(account)s",
       "cm_not_approved_by":"Члены комитета, не утверждённые %(account)s",
       "already":"Аккаунт уже в списке",
-      "proxy_known":"Or choose an account as your proxy",
+      "proxy_known":"Или выберите аккаунт в качестве Вашего прокси",
       "expired":"Работники с истекшим сроком действия"
     },
     "options":{
