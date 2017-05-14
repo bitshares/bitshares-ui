@@ -259,7 +259,7 @@
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Workers",
-      "proxy": "Proxy Voting Account",
+      "proxy": "Manually enter an account as your proxy",
       "no_proxy": "No Proxy",
       "clear_proxy": "Remove proxy",
       "go_proxy": "Go to",
@@ -305,7 +305,7 @@
       "cm_approved_by": "Committee members approved by %(account)s",
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
-      "proxy_known": "Known proxies",
+      "proxy_known": "Or choose an account as your proxy",
       "expired": "Expired workers"
     },
     "options": {
