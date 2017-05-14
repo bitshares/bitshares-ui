@@ -1107,6 +1107,13 @@
       "title": "你输入的地址似乎不正确，确定要提现到该地址么？",
       "accept": "是",
       "cancel": "否"
+    },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
     }
   },
   "init_error": {

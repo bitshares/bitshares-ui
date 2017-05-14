@@ -454,7 +454,8 @@
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
     "asset_reserve": "Reserve (burn) {amount} using {account}",
-    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -1120,6 +1121,13 @@
       "title": "The address you entered does not appear valid, are you sure you want to make the withdrawal?",
       "accept": "Yes",
       "cancel": "No"
+    },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
     },
     "ok": "OK"
   },

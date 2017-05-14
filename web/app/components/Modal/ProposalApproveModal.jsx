@@ -125,11 +125,9 @@ class ProposalApproveModal extends React.Component {
 
         let keyNames = [];
         let keyMap = {};
-
         if (this.props.keys.length) {
             this.props.keys.forEach(key => {
                 let isMine = AccountStore.isMyKey(key);
-
                 if (isMine && !proposal.get("available_key_approvals").includes(key)) {
                     keyMap[key] = true;
                     keyNames.push(key);
@@ -157,7 +155,7 @@ class ProposalApproveModal extends React.Component {
 
                     <div className="content-block full-width-content">
                        <div className="full-width-content form-group">
-                            <label>Pay with account</label>
+                           <Translate content="modal.proposals.pay_with" component="label" />
                             <AccountSelect
                                 account_names={myAccounts}
                                 onChange={this.onChangePayee.bind(this)}
@@ -166,7 +164,7 @@ class ProposalApproveModal extends React.Component {
 
                         {accountNames.length || keyNames.length ? (
                         <div className="full-width-content form-group">
-                            <label>Approval to {isAdd ? "add" : "remove"}</label>
+                            <Translate content={`modal.proposals.approval_${isAdd ? "add" : "remove"}`} component="label" />
                             <AccountSelect
                                 account_names={accountNames.concat(keyNames)}
                                 onChange={this.onActiveAccount.bind(this, accountMap, keyMap, type)}
@@ -175,7 +173,7 @@ class ProposalApproveModal extends React.Component {
 
                         {false && keyNames.length ? (
                         <div className="full-width-content form-group">
-                            <label>Key approval to {isAdd ? "add" : "remove"}</label>
+                            <Translate content={`modal.proposals.key_approval_${isAdd ? "add" : "remove"}`} component="label" />
                             <AccountSelect
                                 account_names={keyNames}
                                 onChange={this.onActiveAccount.bind(this, keyMap, "key")}
@@ -241,10 +239,8 @@ class FirstLevel extends React.Component {
     }
 
     render() {
-        let {account, action} = this.props;
-
+        let {action} = this.props;
         let {requiredPermissions, available, availableKeys, type} = this.state;
-
         let finalRequired = [];
 
         requiredPermissions.forEach(account => {
