@@ -736,7 +736,7 @@
       "type":"Тип комиссии",
       "fee":"Стандартная комиссия",
       "feeeq":"(эквивалент)",
-      "feeltm":"Lifetime/Annual Member Fee",
+      "feeltm":"Комиссия за Пожизненное/Годовое членство",
       "feeltmeq":"(эквивалент)"
     }
   },
@@ -795,9 +795,9 @@
     "restore_key_count":"# ключей",
     "restore_default_success":"Настройки были успешно изменены",
     "api_closest":"Автоматически выбирать ближайший",
-    "wallet_required":"Wallet model required",
-    "wallet_required_text":"In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-    "enable_wallet":"Enable wallet model"
+    "wallet_required":"Требуется модель кошелька",
+    "wallet_required_text":"Чтобы восстановить резервную копию, Вам нужно сначала переключиться на модель кошелька; чтобы это сделать, нажмите кнопку ниже",
+    "enable_wallet":"Переключиться на модель кошелька"
   },
   "footer":{
     "title":"BitShares",
