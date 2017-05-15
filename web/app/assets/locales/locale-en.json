@@ -259,7 +259,7 @@
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Workers",
-      "proxy": "Proxy Voting Account",
+      "proxy": "Manually enter an account as your proxy",
       "no_proxy": "No Proxy",
       "clear_proxy": "Remove proxy",
       "go_proxy": "Go to",
@@ -305,7 +305,7 @@
       "cm_approved_by": "Committee members approved by %(account)s",
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
-      "proxy_known": "Known proxies",
+      "proxy_known": "Or choose an account as your proxy",
       "expired": "Expired workers"
     },
     "options": {
@@ -736,7 +736,7 @@
       "type": "Fee Type",
       "fee": "Standard Fee",
       "feeeq": "(equivalent)",
-      "feeltm": "Lifetime/Anual Member Fee",
+      "feeltm": "Lifetime/Annual Member Fee",
       "feeltmeq": "(equivalent)"
     }
   },
@@ -794,7 +794,10 @@
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
     "restore_key_count": "# of keys",
     "restore_default_success": "Settings have been reset successfully",
-    "api_closest": "Choose closest automatically"
+    "api_closest": "Choose closest automatically",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer": {
     "title": "BitShares",
@@ -1228,6 +1231,7 @@
     "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
     "rate": "Please wait at least 2s before posting a new message",
     "disabled": "Chat disabled",
-    "enable": "Enable chat now"
+    "enable": "Enable chat now",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }

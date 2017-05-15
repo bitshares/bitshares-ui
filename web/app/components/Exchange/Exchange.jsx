@@ -809,17 +809,17 @@ class Exchange extends React.Component {
         let baseBlackList = baseAsset.getIn(["options", "blacklist_markets"]).toJS();
         let quoteBlackList = quoteAsset.getIn(["options", "blacklist_markets"]).toJS();
 
-        if (quoteWhiteList.length && quoteWhiteList.indexOf(baseAsset.get("id") === -1)) {
+        if (quoteWhiteList.length && quoteWhiteList.indexOf(baseAsset.get("id")) === -1) {
             return {isFrozen: true, frozenAsset: quoteAsset.get("symbol")};
         }
-        if (baseWhiteList.length && baseWhiteList.indexOf(quoteAsset.get("id") === -1)) {
+        if (baseWhiteList.length && baseWhiteList.indexOf(quoteAsset.get("id")) === -1) {
             return {isFrozen: true, frozenAsset: baseAsset.get("symbol")};
         }
 
-        if (quoteBlackList.length && quoteBlackList.indexOf(baseAsset.get("id") !== -1)) {
+        if (quoteBlackList.length && quoteBlackList.indexOf(baseAsset.get("id")) !== -1) {
             return {isFrozen: true, frozenAsset: quoteAsset.get("symbol")};
         }
-        if (baseBlackList.length && baseBlackList.indexOf(quoteAsset.get("id") !== -1)) {
+        if (baseBlackList.length && baseBlackList.indexOf(quoteAsset.get("id")) !== -1) {
             return {isFrozen: true, frozenAsset: baseAsset.get("symbol")};
         }
 

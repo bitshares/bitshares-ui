@@ -4,6 +4,7 @@ import ImportKeys from "../Wallet/ImportKeys";
 import {CreateWalletFromBrainkey} from "../Wallet/WalletCreate";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import SettingsActions from "actions/SettingsActions";
 
 export default class RestoreSettings extends React.Component {
 
@@ -15,6 +16,13 @@ export default class RestoreSettings extends React.Component {
         };
     }
 
+    _setWalletMode() {
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: false
+        });
+    }
+
     _changeType(e) {
 
         this.setState({
@@ -23,6 +31,18 @@ export default class RestoreSettings extends React.Component {
     }
 
     render() {
+        let {passwordLogin} = this.props;
+
+        if (passwordLogin) {
+            return (
+                <div>
+                    <Translate content="settings.wallet_required" component="h4" />
+                    <p><Translate content="settings.wallet_required_text" />:</p>
+
+                    <button className="button" onClick={this._setWalletMode}><Translate content="settings.enable_wallet" /></button>
+                </div>
+            );
+        }
         let {types, restoreType} = this.state;
         let options = types.map(type => {
             return <option key={type} value={type}>{counterpart.translate(`settings.backup_${type}`)} </option>;

@@ -127,24 +127,6 @@ class BitKapital extends React.Component {
         let {action} = this.state;
         // console.log("jianjolly:", jianjolly.toJS(), "asset:", asset.toJS());
 
-        let isWhiteListed = jianjolly.get("whitelisted_accounts").includes(account.get("id")) || onay.get("whitelisted_accounts").includes(account.get("id"));
-
-        // console.log(account.get("name"), "isWhiteListed", isWhiteListed);
-
-        if (!isWhiteListed) {
-            return (
-                <div className="BitKapital">
-                    <div className="content-block">
-                        <iframe
-                            style={{width: "100%", border: 0, minHeight: 1730}}
-                            src={"https://www.123contactform.com/sf.php?s=123contactform-2315816&control23748168=" + account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
-                        >
-                        </iframe>
-                    </div>
-                </div>
-            );
-        }
-
         return (
             <div className="BitKapital">
                 <div className="content-block">

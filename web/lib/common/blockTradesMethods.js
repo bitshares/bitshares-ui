@@ -10,7 +10,8 @@ export function fetchCoins(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.COIN
     });
 }
 
-export function fetchBridgeCoins(url = (blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS)) {
+export function fetchBridgeCoins(baseurl = (blockTradesAPIs.BASE)) {
+    let url = baseurl + blockTradesAPIs.TRADING_PAIRS;
     return fetch(url, {method: "get", headers: new Headers({"Accept": "application/json"})}).then(reply => reply.json().then(result => {
         return result;
     })).catch(err => {
@@ -74,18 +75,31 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
     });
 }
 
-export function getBackedCoins({allCoins, backer}) {
+export function getBackedCoins({allCoins, tradingPairs, backer}) {
     let coins_by_type = {};
     allCoins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
+
+    let allowed_outputs_by_input = {};
+    tradingPairs.forEach(pair => {
+        if (!allowed_outputs_by_input[pair.inputCoinType])
+            allowed_outputs_by_input[pair.inputCoinType] = {};
+        allowed_outputs_by_input[pair.inputCoinType][pair.outputCoinType] = true;
+    });
+
     let blocktradesBackedCoins = [];
     allCoins.forEach(coin_type => {
         if (coin_type.walletSymbol.startsWith(backer + ".") && coin_type.backingCoinType && coins_by_type[coin_type.backingCoinType]) {
+            let isDepositAllowed = allowed_outputs_by_input[coin_type.backingCoinType] && allowed_outputs_by_input[coin_type.backingCoinType][coin_type.coinType];
+            let isWithdrawalAllowed = allowed_outputs_by_input[coin_type.coinType] && allowed_outputs_by_input[coin_type.coinType][coin_type.backingCoinType];
+
             blocktradesBackedCoins.push({
                 name: coins_by_type[coin_type.backingCoinType].name,
                 walletType: coins_by_type[coin_type.backingCoinType].walletType,
                 backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
                 symbol: coin_type.walletSymbol,
-                supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos
+                supportsMemos: coins_by_type[coin_type.backingCoinType].supportsOutputMemos,
+                depositAllowed: isDepositAllowed,
+                withdrawalAllowed: isWithdrawalAllowed
             });
         }});
     return blocktradesBackedCoins;
