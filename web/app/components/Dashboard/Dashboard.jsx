@@ -17,25 +17,28 @@ class Dashboard extends React.Component {
         super();
         let marketsByChain = {
             "4018d784":[
+                ["USD", "BTS"],
+                ["USD", "OPEN.BTC"],
+                ["USD", "OPEN.USDT"],
+                ["USD", "OPEN.ETH"],
+                ["USD", "OPEN.DASH"],
                 ["BTS", "CNY"],
                 ["CNY", "OPEN.BTC"],
                 ["CNY", "USD"],
-                ["USD", "BTS"],
+                ["CNY", "OPEN.ETH"],
                 ["OPEN.BTC", "BTS"],
-                ["USD", "OPEN.BTC"],
-                ["USD", "OPEN.USDT"],
                 ["OPEN.BTC", "OPEN.DASH"],
-                ["USD", "OPEN.DASH"],
                 ["BTS", "GOLD"],
                 ["BTS", "BLOCKPAY"],
                 ["OPEN.BTC", "BLOCKPAY"],
+                ["BTS", "BTWTY"],
                 ["BTS", "OBITS"],
                 ["KAPITAL", "OPEN.BTC"],
                 ["BTS", "SILVER"],
                 ["OPEN.BTC", "OPEN.DGD"],
                 ["USD", "OPEN.STEEM"],
-                ["USD", "OPEN.ETH"],
-                ["BTS", "BTWTY"],
+                ["USD", "OPEN.MAID"],
+                ["USD", "GOLD"],
                 ["BTS", "OPEN.ETH"],
                 ["BTS", "ICOO"],
                 ["OPEN.BTC", "OPEN.STEEM"],
@@ -48,7 +51,7 @@ class Dashboard extends React.Component {
                 ["BTS", "OPEN.INCENT"],
                 ["OPEN.BTC", "OBITS"],
                 ["HEMPSWEET", "OPEN.BTC"],
-                ["KAPITAL", "BTS"]
+                ["KAPITAL", "BTS"],
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -171,6 +174,10 @@ class Dashboard extends React.Component {
     render() {
         let { linkedAccounts, myIgnoredAccounts, accountsReady, passwordAccount } = this.props;
         let {width, showIgnored, featuredMarkets, newAssets} = this.state;
+
+        if (passwordAccount && !linkedAccounts.has(passwordAccount)) {
+            linkedAccounts = linkedAccounts.add(passwordAccount);
+        }
         let names = linkedAccounts.toArray().sort();
         if (passwordAccount && names.indexOf(passwordAccount) === -1) names.push(passwordAccount);
         let ignored = myIgnoredAccounts.toArray().sort();
@@ -275,7 +282,7 @@ class Dashboard extends React.Component {
 
                     {accountCount ? <RecentTransactions
                         style={{marginBottom: 20, marginTop: 20}}
-                        accountsList={this.props.linkedAccounts}
+                        accountsList={linkedAccounts}
                         limit={10}
                         compactView={false}
                         fullHeight={true}

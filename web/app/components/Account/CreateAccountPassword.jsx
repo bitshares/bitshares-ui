@@ -16,6 +16,7 @@ import {ChainStore, FetchChain} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -89,6 +90,7 @@ class CreateAccountPassword extends React.Component {
 
     _unlockAccount(name, password) {
         WalletDb.validatePassword(password, true, name);
+        WalletUnlockActions.checkLock.defer();
     }
 
     createAccount(name, password) {
@@ -97,6 +99,7 @@ class CreateAccountPassword extends React.Component {
         this.setState({loading: true});
 
         AccountActions.createAccountWithPassword(name, password, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
+            AccountActions.setPasswordAccount(name);
             // User registering his own account
             if(this.state.registrar_account) {
                 FetchChain("getAccount", name).then(() => {
@@ -186,17 +189,14 @@ class CreateAccountPassword extends React.Component {
                 />
 
                 {/* Only ask for password if a wallet already exists */}
-                {hasWallet ?
-                    null :
-                        <PasswordInput
-                            ref="password"
-                            confirmation={true}
-                            onChange={this.onPasswordChange.bind(this)}
-                            noLabel
-                            passwordLength={12}
-                            checkStrength
-                        />
-                }
+                <PasswordInput
+                    ref="password"
+                    confirmation={true}
+                    onChange={this.onPasswordChange.bind(this)}
+                    noLabel
+                    passwordLength={12}
+                    checkStrength
+                />
 
                 {/* If this is not the first account, show dropdown for fee payment account */}
                 {
@@ -268,7 +268,7 @@ class CreateAccountPassword extends React.Component {
 
                 <div>
 
-                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><Translate content="settings.password" />: <pre style={{paddingTop: 20}} className="no-overflow">{this.state.pass}</pre></div>}
+                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}} className="no-overflow">{this.state.pass}</div></div>}
                 </div>
                 <div className="divider" />
                 <div onClick={() => {this.setState({step: 3});}} className="button"><Translate content="init_error.understand" /></div>
@@ -300,7 +300,7 @@ class CreateAccountPassword extends React.Component {
 
                         <tr>
                             <td><Translate content="wallet.tips_dashboard" />:</td>
-                            <td><Link to="dashboard"><Translate content="header.dashboard" /></Link></td>
+                            <td><Link to="/dashboard"><Translate content="header.dashboard" /></Link></td>
                         </tr>
 
                         <tr>
@@ -310,19 +310,19 @@ class CreateAccountPassword extends React.Component {
 
                         <tr>
                             <td><Translate content="wallet.tips_deposit" />:</td>
-                            <td><Link to="deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
+                            <td><Link to="/deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
                         </tr>
 
 
 
                         <tr>
                             <td><Translate content="wallet.tips_transfer" />:</td>
-                            <td><Link to="transfer"><Translate content="wallet.link_transfer" /></Link></td>
+                            <td><Link to="/transfer"><Translate content="wallet.link_transfer" /></Link></td>
                         </tr>
 
                         <tr>
                             <td><Translate content="wallet.tips_settings" />:</td>
-                            <td><Link to="settings"><Translate content="header.settings" /></Link></td>
+                            <td><Link to="/settings"><Translate content="header.settings" /></Link></td>
                         </tr>
                     </tbody>
 

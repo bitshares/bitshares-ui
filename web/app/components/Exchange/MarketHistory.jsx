@@ -30,7 +30,8 @@ class MarketHistory extends React.Component {
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
-            nextState.activeTab !== this.state.activeTab
+            nextState.activeTab !== this.state.activeTab ||
+            nextProps.currentAccount !== this.props.currentAccount
         );
     }
 
@@ -165,8 +166,8 @@ class MarketHistory extends React.Component {
                             <thead>
                                 <tr>
                                     <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={quoteSymbol} /></span></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName name={baseSymbol} /></span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
+                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
                                     <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
                                 </tr>
                             </thead>

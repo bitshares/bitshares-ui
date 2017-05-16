@@ -11,6 +11,7 @@ import {WalletTcomb} from "./tcomb_structs";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import PrivateKeyActions from "actions/PrivateKeyActions";
+import AccountActions from "actions/AccountActions";
 import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
@@ -77,7 +78,10 @@ class WalletDb extends BaseStore {
 
     decryptTcomb_PrivateKey(private_key_tcomb) {
         if( ! private_key_tcomb) return null
-        if( ! aes_private) throw new Error("wallet locked")
+        if( this.isLocked() ) throw new Error("wallet locked")
+        if (_passwordKey && _passwordKey[private_key_tcomb.pubkey]) {
+            return _passwordKey[private_key_tcomb.pubkey];
+        }
         let private_key_hex = aes_private.decryptHex(private_key_tcomb.encrypted_key)
         return PrivateKey.fromBuffer(new Buffer(private_key_hex, 'hex'))
     }
@@ -101,6 +105,7 @@ class WalletDb extends BaseStore {
                 Apis.instance().chain_id)
 
         return WalletUnlockActions.unlock().then( () => {
+            AccountActions.tryToSetCurrentAccount();
             return Promise.all([
                 tr.set_required_fees(),
                 tr.update_head_block()
@@ -317,18 +322,33 @@ class WalletDb extends BaseStore {
                     key = this.generateKeyFromPassword(account, role, password);
                 }
 
+                let foundRole = false;
+
                 if (acc) {
                     if (role === "memo") {
                         if (acc.getIn(["options", "memo_key"]) === key.pubKey) {
                             setKey(role, key.privKey, key.pubKey);
+                            foundRole = true;
                         }
                     } else {
                         acc.getIn([role, "key_auths"]).forEach(auth => {
                             if (auth.get(0) === key.pubKey) {
                                 setKey(role, key.privKey, key.pubKey);
+                                foundRole = true;
                                 return false;
                             }
                         });
+
+                        if (!foundRole) {
+                            let alsoCheckRole = role === "active" ? "owner" : "active";
+                            acc.getIn([alsoCheckRole, "key_auths"]).forEach(auth => {
+                                if (auth.get(0) === key.pubKey) {
+                                    setKey(alsoCheckRole, key.privKey, key.pubKey);
+                                    foundRole = true;
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -396,8 +416,11 @@ class WalletDb extends BaseStore {
         // Skip ahead in the sequence if any keys are found in use
         // Slowly look ahead (1 new key per block) to keep the wallet fast after unlocking
         this.brainkey_look_ahead = Math.min(10, (this.brainkey_look_ahead || 0) + 1)
-        // console.log("generateNextKey, save:", save, "sequence:", sequence, "brainkey_look_ahead:", this.brainkey_look_ahead);
-        for (let i = sequence; i < sequence + this.brainkey_look_ahead; i++) {
+        /* If sequence is 0 this is the first lookup, so check at least the first 10 positions */
+        const loopMax = !sequence ? Math.max(sequence + this.brainkey_look_ahead, 10) : sequence + this.brainkey_look_ahead;
+        // console.log("generateNextKey, save:", save, "sequence:", sequence, "loopMax", loopMax, "brainkey_look_ahead:", this.brainkey_look_ahead);
+
+        for (let i = sequence; i < loopMax; i++) {
             let private_key = key.get_brainPrivateKey( brainkey, i )
             let pubkey =
                 this.generateNextKey_pubcache[i] ?
@@ -407,6 +430,8 @@ class WalletDb extends BaseStore {
 
             let next_key = ChainStore.getAccountRefsOfKey( pubkey );
             // TODO if ( next_key === undefined ) return undefined
+
+            /* If next_key exists, it means the generated private key controls an account, so we need to save it */
             if(next_key && next_key.size) {
                 used_sequence = i
                 console.log("WARN: Private key sequence " + used_sequence + " in-use. " +

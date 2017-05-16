@@ -460,6 +460,10 @@ class MarketsActions {
         };
     }
 
+    toggleStars() {
+        return true;
+    }
+
 }
 
 export default alt.createActions(MarketsActions);

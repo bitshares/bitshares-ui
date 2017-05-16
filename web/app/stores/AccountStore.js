@@ -30,6 +30,7 @@ class AccountStore extends BaseStore {
             onLinkAccount: AccountActions.linkAccount,
             onUnlinkAccount: AccountActions.unlinkAccount,
             onAccountSearch: AccountActions.accountSearch,
+            tryToSetCurrentAccount: AccountActions.tryToSetCurrentAccount,
             onSetPasswordAccount: AccountActions.setPasswordAccount,
             onChangeSetting: SettingsActions.changeSetting
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]

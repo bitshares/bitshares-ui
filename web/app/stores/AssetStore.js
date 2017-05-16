@@ -2,7 +2,7 @@ import BaseStore from "./BaseStore";
 import Immutable from "immutable";
 import alt from "alt-instance";
 import AssetActions from "actions/AssetActions";
-import {Asset} from "./tcomb_structs";
+// import {Asset} from "./tcomb_structs";
 import utils from "common/utils";
 
 
@@ -13,6 +13,7 @@ class AssetStore extends BaseStore {
         this.asset_symbol_to_id = {};
         this.searchTerms = {};
         this.lookupResults = [];
+        this.assetsLoading = false;
 
         this.bindListeners({
             onGetAssetList: AssetActions.getAssetList,
@@ -31,37 +32,39 @@ class AssetStore extends BaseStore {
         if (!payload) {
             return false;
         }
-        
-        payload.assets.forEach(asset => {
+        this.assetsLoading = payload.loading;
 
-            for (var i = 0; i < payload.dynamic_data.length; i++) {
-                if (payload.dynamic_data[i].id === asset.dynamic_asset_data_id) {
-                    asset.dynamic_data = payload.dynamic_data[i];
-                    break;
-                }
-            }
+        if (payload.assets) {
+            payload.assets.forEach(asset => {
 
-            if (asset.bitasset_data_id) {
-                asset.market_asset = true;
-
-                for (var i = 0; i < payload.bitasset_data.length; i++) {
-                    if (payload.bitasset_data[i].id === asset.bitasset_data_id) {
-                        asset.bitasset_data = payload.bitasset_data[i];
+                for (var i = 0; i < payload.dynamic_data.length; i++) {
+                    if (payload.dynamic_data[i].id === asset.dynamic_asset_data_id) {
+                        asset.dynamic_data = payload.dynamic_data[i];
                         break;
                     }
                 }
-            } else {
-                asset.market_asset = false;
-            }
 
-            this.assets = this.assets.set(
-                asset.id,
-                Asset(asset)
-            );
+                if (asset.bitasset_data_id) {
+                    asset.market_asset = true;
 
-            this.asset_symbol_to_id[asset.symbol] = asset.id;
-        });
+                    for (var i = 0; i < payload.bitasset_data.length; i++) {
+                        if (payload.bitasset_data[i].id === asset.bitasset_data_id) {
+                            asset.bitasset_data = payload.bitasset_data[i];
+                            break;
+                        }
+                    }
+                } else {
+                    asset.market_asset = false;
+                }
 
+                this.assets = this.assets.set(
+                    asset.id,
+                    asset
+                );
+
+                this.asset_symbol_to_id[asset.symbol] = asset.id;
+            });
+        }
     }
 
     onGetAsset(payload) {

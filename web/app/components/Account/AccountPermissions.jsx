@@ -146,6 +146,7 @@ class AccountPermissions extends React.Component {
         // console.log("-- AccountPermissions.onPublish -->", updateObject, s.memo_key);
         var tr = wallet_api.new_transaction();
         tr.add_type_operation("account_update", updateObject);
+        console.log("transaction:", JSON.stringify(tr.serialize()));
         WalletDb.process_transaction(tr, null ,true);
     }
 
@@ -205,7 +206,6 @@ class AccountPermissions extends React.Component {
     }
 
     onMemoKeyChanged(memo_key) {
-        console.log("onMemoKeyChanged", memo_key);
         this.setState({memo_key});
     }
 
@@ -321,12 +321,16 @@ class AccountPermissions extends React.Component {
 
                     <Tab title="account.perm.memo_key">
                         <HelpContent style={{maxWidth: "800px"}} path="components/AccountPermMemo" />
-                        <PubKeyInput ref="memo_key" value={this.state.memo_key}
+                        <PubKeyInput
+                            ref="memo_key"
+                            value={this.state.memo_key}
                             label="account.perm.memo_public_key"
                             placeholder="Public Key"
                             onChange={this.onMemoKeyChanged.bind(this)}
                             tabIndex={7}
                         />
+
+
 
                     </Tab>
 
@@ -370,7 +374,7 @@ class AccountPermissions extends React.Component {
                 />
 
             </div>
-        )
+        );
     }
 }
 

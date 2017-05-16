@@ -4,6 +4,35 @@ import {ChainValidation} from "bitsharesjs/es";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import counterpart from "counterpart";
+import FloatingDropdown from "./FloatingDropdown";
+import FormattedAsset from "./FormattedAsset";
+import Immutable from "immutable";
+import utils from "common/utils";
+
+class AssetDropdown extends React.Component {
+
+    static propTypes = {
+        assets: ChainTypes.ChainAssetsList,
+        value: React.PropTypes.string, // asset id
+        onChange: React.PropTypes.func
+    };
+
+    render() {
+        if(this.props.assets.length === 0 || !this.props.value) return null;
+
+
+
+        return <FloatingDropdown
+            entries={this.props.assets.map(a => a && a.get("symbol")).filter(a => !!a)}
+            values={this.props.assets.reduce((map, a) => {if (a && a.get("symbol")) map[a.get("symbol")] = a; return map;}, {})}
+            singleEntry={this.props.assets[0] ? <FormattedAsset asset={this.props.assets[0].get("id")} amount={0} hide_amount={true}/> : null}
+            value={""}
+            onChange={this.props.onChange}
+        />;
+    }
+}
+
+AssetDropdown = BindToChainState(AssetDropdown);
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -16,7 +45,7 @@ import counterpart from "counterpart";
 class AssetSelector extends React.Component {
 
     static propTypes = {
-        label: React.PropTypes.string.isRequired, // a translation key for the label
+        label: React.PropTypes.string, // a translation key for the label
         error: React.PropTypes.string, // the error message override
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         onChange: React.PropTypes.func, // a method to be called any time user input changes
@@ -51,7 +80,7 @@ class AssetSelector extends React.Component {
     }
 
     onInputChanged(event) {
-        let value = event.target.value.trim().toUpperCase(); //.toLowerCase();
+        let value = event.target.value.trim().substr(0, 16).toUpperCase(); //.toLowerCase();
         if (this.props.onChange && value !== this.props.assetInput) this.props.onChange(value);
     }
 
@@ -77,8 +106,15 @@ class AssetSelector extends React.Component {
         }
     }
 
+    onAssetSelect(selected_asset) {
+        if (selected_asset) {
+            this.props.onFound(selected_asset);
+            this.props.onChange(selected_asset.get("symbol"));
+        }
+    }
+
     render() {
-        let {disabled} = this.props;
+        let {disabled, noLabel} = this.props;
         let error; // = this.getError();
         let lookup_display;
         if (!disabled) {
@@ -89,29 +125,39 @@ class AssetSelector extends React.Component {
             }
         }
         return (
-            <div className="account-selector no-overflow" style={this.props.style}>
-
+            <div className="asset-selector" style={this.props.style}>
                 <div>
                     <div className="header-area">
-                        {error ? null : <label className="right-label">&nbsp; <span>{lookup_display}</span></label>}
+                        {error || noLabel ? null : <label className="right-label">&nbsp; <span>{lookup_display}</span></label>}
                         <Translate component="label" content={this.props.label}/>
                     </div>
                     <div className="input-area">
-                      <span className="inline-label">
-                      <input
-                             disabled={this.props.disabled}
-                             type="text"
-                             value={this.props.assetInput || ""}
-                             placeholder={counterpart.translate("explorer.assets.symbol")}
-                             ref="user_input"
-                             onChange={this.onInputChanged.bind(this)}
-                             onKeyDown={this.onKeyDown.bind(this)}
-                             tabIndex={this.props.tabIndex}/>
-                          { this.props.children }
-                      </span>
+                      <div className="inline-label input-wrapper">
+                        <input
+                            style={this.props.inputStyle}
+                            disabled={this.props.disabled}
+                            type="text"
+                            value={this.props.assetInput || ""}
+                            placeholder={counterpart.translate("explorer.assets.symbol")}
+                            ref="user_input"
+                            onChange={this.onInputChanged.bind(this)}
+                            onKeyDown={this.onKeyDown.bind(this)}
+                            tabIndex={this.props.tabIndex}
+                        />
+                        <div className="form-label select floating-dropdown">
+                            {this.props.asset ? (
+                                <AssetDropdown
+                                    ref={this.props.refCallback}
+                                    value={this.props.asset.get("symbol")}
+                                    assets={Immutable.List(this.props.assets)}
+                                    onChange={this.onAssetSelect.bind(this)}
+                                />) : null}
+                        </div>
+                        { this.props.children }
+                    </div>
                     </div>
                     <div className="error-area" style={{paddingBottom: "10px"}}>
-                        <span>{error}</span>
+                        <span style={{wordBreak: "break-all"}}>{error}</span>
                     </div>
                 </div>
             </div>

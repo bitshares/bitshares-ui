@@ -28,7 +28,6 @@ class WalletUnlockStore {
         // if (timeoutSetting) {
         //     this.walletLockTimeout = timeoutSetting;
         // }
-
     }
 
     onUnlock({resolve, reject}) {
@@ -100,6 +99,10 @@ class WalletUnlockStore {
 
     _getTimeout() {
         return parseInt(ss.get("lockTimeout", 600), 10);
+    }
+
+    onCheckLock() {
+        this.setState({locked: WalletDb.isLocked()});
     }
 }
 

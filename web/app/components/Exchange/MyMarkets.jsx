@@ -13,8 +13,13 @@ import BindToChainState from "../Utility/BindToChainState";
 import AssetName from "../Utility/AssetName";
 import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
+import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import {debounce} from "lodash";
+import Icon from "../Icon/Icon";
+import AssetSelector from "../Utility/AssetSelector";
+import counterpart from "counterpart";
+import LoadingIndicator from "../LoadingIndicator";
 
 let lastLookup = new Date();
 
@@ -30,7 +35,7 @@ class MarketGroup extends React.Component {
     }
 
     _getInitialState(props) {
-        let open = props.forceOpen ? true : props.viewSettings.get(`myMarketsBase_${props.index}`);
+        let open = props.findMarketTab ? true : props.viewSettings.get(`myMarketsBase_${props.index}`);
         return {
             open: open !== undefined ? open : true,
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
@@ -39,7 +44,7 @@ class MarketGroup extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.forceOpen !== this.props.forceOpen) {
+        if (nextProps.findMarketTab !== this.props.findMarketTab) {
             this.setState(this._getInitialState(nextProps));
         }
     }
@@ -52,7 +57,8 @@ class MarketGroup extends React.Component {
             !utils.are_equal_shallow(nextState, this.state) ||
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
-            nextProps.marketStats !== this.props.marketStats
+            nextProps.marketStats !== this.props.marketStats ||
+            nextProps.userMarkets !== this.props.userMarkets
         );
     }
 
@@ -86,7 +92,7 @@ class MarketGroup extends React.Component {
     // }
 
     _onToggle(e) {
-        if (!this.props.forceOpen) {
+        if (!this.props.findMarketTab) {
             let open = !this.state.open;
             this.setState({
                 open: open
@@ -98,9 +104,15 @@ class MarketGroup extends React.Component {
         }
     }
 
+    _onToggleUserMarket(market) {
+        let [base, quote] = market.split("_");
+        let newValue = !this.props.userMarkets.get(market);
+        SettingsActions.setUserMarket(base, quote, newValue);
+    }
+
     render() {
         let {columns, markets, base, marketStats, starredMarkets,
-            current, maxRows} = this.props;
+            current, findMarketTab} = this.props;
         let {sortBy, inverseSort, open} = this.state;
 
         if (!markets || !markets.length) {
@@ -127,6 +139,12 @@ class MarketGroup extends React.Component {
             case "change":
                 return <th key={header.name} className="clickable" onClick={this._changeSort.bind(this, "change")} style={{textAlign: "right"}}><Translate content="exchange.change" /></th>;
 
+            case "issuer":
+                return <th key={header.name}><Translate content="explorer.assets.issuer" /></th>;
+
+            case "add":
+                return <th key={header.name}></th>;
+
             default:
                 return <th key={header.name}></th>;
             }
@@ -139,7 +157,7 @@ class MarketGroup extends React.Component {
                 return (
                     <MarketRow
                         key={market.id}
-                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName name={market.quote} />}
+                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName dataPlace="left" name={market.quote} />}
                         quote={market.quote}
                         base={market.base}
                         columns={columns}
@@ -149,6 +167,9 @@ class MarketGroup extends React.Component {
                         stats={marketStats.get(market.id)}
                         starred={starredMarkets.has(market.id)}
                         current={current === market.id}
+                        isChecked={this.props.userMarkets.has(market.id)}
+                        isDefault={this.props.defaultMarkets && this.props.defaultMarkets.has(market.id)}
+                        onCheckMarket={this._onToggleUserMarket.bind(this)}
                     />
                 );
             }).filter(a => {
@@ -204,7 +225,6 @@ class MarketGroup extends React.Component {
 
         return (
             <div style={{paddingRight: 10}}>
-
                 {open ? (
                 <table className="table table-hover text-right">
                     <thead>
@@ -226,7 +246,7 @@ class MyMarkets extends React.Component {
     };
 
     static defaultProps = {
-        activeTab: "starred",
+        activeTab: "my-market",
         core: "1.3.0",
         setMinWidth: false
     };
@@ -238,7 +258,7 @@ class MyMarkets extends React.Component {
     constructor(props) {
         super();
 
-        let inputValue = props.viewSettings.get("marketLookupInput", null);
+        let inputValue = null; // props.viewSettings.get("marketLookupInput", null);
         let symbols = inputValue ? inputValue.split(":") : [null];
         let quote = symbols[0];
         let base = symbols.length === 2 ? symbols[1] : null;
@@ -246,39 +266,40 @@ class MyMarkets extends React.Component {
         this.state = {
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
             sortBy: props.viewSettings.get("myMarketsSort", "volume"),
-            activeTab: props.viewSettings.get("favMarketTab", "starred"),
+            activeTab: props.viewSettings.get("favMarketTab", "my-market"),
             activeMarketTab: props.viewSettings.get("activeMarketTab", 0),
             lookupQuote: quote,
             lookupBase: base,
             inputValue: inputValue,
-            minWidth: "100%"
+            minWidth: "100%",
+            findBaseInput: "USD",
+            activeFindBase: "USD"
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
-        this.getAssetList = debounce(AssetActions.getAssetList, 150);
+        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.state.activeTab !== "all" && nextState.activeTab === "all" && this.state.inputValue) {
-            this._lookupAssets({target: {value: this.state.inputValue}}, true);
+        /* Trigger a lookup when switching tabs to find-market */
+        if (this.state.activeTab !== "find-market" && nextState.activeTab === "find-market" && !nextProps.searchAssets.size) {
+            this._lookupAssets("OPEN.", true);
         }
 
         return (
-            !Immutable.is(nextProps.assets, this.props.assets) ||
             !Immutable.is(nextProps.searchAssets, this.props.searchAssets) ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
             !Immutable.is(nextProps.starredMarkets, this.props.starredMarkets) ||
+            !Immutable.is(nextProps.defaultMarkets, this.props.defaultMarkets) ||
             !Immutable.is(nextProps.marketStats, this.props.marketStats) ||
-            nextState.activeMarketTab !== this.state.activeMarketTab ||
-            nextState.inverseSort !== this.state.inverseSort ||
-            nextState.sortBy !== this.state.sortBy ||
-            nextState.activeTab !== this.state.activeTab ||
-            nextState.lookupQuote !== this.state.lookupQuote ||
-            nextState.lookupBase !== this.state.lookupBase ||
+            !utils.are_equal_shallow(nextState, this.state) ||
             nextProps.current !== this.props.current ||
             nextProps.minWidth !== this.props.minWidth ||
             nextProps.listHeight !== this.props.listHeight ||
-            nextProps.preferredBases !== this.props.preferredBases
+            nextProps.preferredBases !== this.props.preferredBases ||
+            nextProps.onlyStars !== this.props.onlyStars ||
+            nextProps.assetsLoading !== this.props.assetsLoading ||
+            nextProps.userMarkets !== this.props.userMarkets
         );
     }
 
@@ -288,8 +309,8 @@ class MyMarkets extends React.Component {
 
         this._setMinWidth();
 
-        if (this.state.activeTab === "all" && this.state.inputValue) {
-            this._lookupAssets({target: {value: this.state.inputValue}}, true);
+        if (this.state.activeTab === "find-market") {
+            this._lookupAssets("OPEN.", true);
         }
 
     }
@@ -307,7 +328,7 @@ class MyMarkets extends React.Component {
     }
 
     _setMinWidth() {
-        if (this.props.setMinWidth && this.refs.favorites && this.props.activeTab === "starred") {
+        if (this.props.setMinWidth && this.refs.favorites && this.props.activeTab === "my-market") {
 
             if (this.state.minWidth !== this.refs.favorites.offsetWidth) {
                 this.setState({
@@ -361,35 +382,43 @@ class MyMarkets extends React.Component {
         this._setMinWidth();
     }
 
-    _lookupAssets(e, force = false) {
-        console.log("lookup assets");
-        if (!e.target.value && e.target.value !== "") {
+    _onInputName(e) {
+        let inputValue = e.target.value.toUpperCase();
+        this.setState({
+            inputValue
+        });
+
+        this._lookupAssets(inputValue);
+    }
+
+    _lookupAssets(value, force = false) {
+        console.log("__lookupAssets", value, force);
+        if (!value && value !== "") {
             return;
         }
         let now = new Date();
 
-        let symbols = e.target.value.toUpperCase().split(":");
+        let symbols = value.toUpperCase().split(":");
         let quote = symbols[0];
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.setState({
             lookupQuote: quote,
-            lookupBase: base,
-            inputValue: e.target.value.toUpperCase()
+            lookupBase: base
         });
 
-        SettingsActions.changeViewSetting({
-            marketLookupInput: e.target.value.toUpperCase()
+        SettingsActions.changeViewSetting.defer({
+            marketLookupInput: value.toUpperCase()
         });
 
         if (this.state.lookupQuote !== quote || force) {
-            if (quote.length < 2 || now - lastLookup <= 250) {
+            if (quote.length < 1 || now - lastLookup <= 250) {
                 return false;
             }
             this.getAssetList(quote, 50);
         } else {
             if (base && this.state.lookupBase !== base) {
-                if (base.length < 2 || now - lastLookup <= 250) {
+                if (base.length < 1 || now - lastLookup <= 250) {
                     return false;
                 }
                 this.getAssetList(base, 50);
@@ -407,13 +436,33 @@ class MyMarkets extends React.Component {
         });
     }
 
-    render() {
-        let {starredMarkets, marketStats, columns, searchAssets,
-            preferredBases, core, current, viewSettings, listHeight} = this.props;
-        let {inverseSort, activeTab, sortBy, lookupQuote, lookupBase} = this.state;
-        let otherMarkets = <tr></tr>;
+    _onInputBaseAsset(asset) {
+        this.setState({
+            findBaseInput: asset.toUpperCase(),
+            error: null
+        });
+    }
 
-        let coreSymbol = core.get("symbol");
+    _onFoundBaseAsset(asset) {
+        if (asset) {
+            this.setState({activeFindBase: asset.get("symbol")});
+        }
+    }
+
+    render() {
+        let {starredMarkets, defaultMarkets, marketStats, columns, searchAssets, assetsLoading,
+            preferredBases, core, current, viewSettings, listHeight, onlyStars, userMarkets} = this.props;
+        let {activeMarketTab, activeTab, lookupQuote, lookupBase} = this.state;
+        let otherMarkets = <tr></tr>;
+        const myMarketTab = activeTab === "my-market";
+
+        let defaultBases = preferredBases.map(a => a);
+
+        if (!myMarketTab) {
+            preferredBases = preferredBases.clear();
+            preferredBases = preferredBases.push(this.state.activeFindBase);
+        }
+
         // Add some default base options
         // let preferredBases = [coreSymbol, "BTC", "USD", "CNY"];
         let baseGroups = {};
@@ -421,6 +470,12 @@ class MyMarkets extends React.Component {
         let bases = [
             // coreSymbol, "BTC", "CNY", "USD"
         ];
+
+        /* By default, show the OPEN.X assets */
+        if (!lookupQuote) lookupQuote = "OPEN.";
+
+        /* In the find-market tab, only use market tab 0 */
+        if (!myMarketTab) activeMarketTab = 0;
 
         searchAssets
         .filter(a => {
@@ -496,15 +551,28 @@ class MyMarkets extends React.Component {
         });
 
         allMarkets = Immutable.Map(allMarkets);
-        let activeMarkets = activeTab === "starred" ? starredMarkets : allMarkets;
+        let activeMarkets = myMarketTab ? defaultMarkets : allMarkets;
+        if (myMarketTab && userMarkets.size) {
+            userMarkets.forEach((market, key) => {
+                activeMarkets = activeMarkets.set(key, market);
+            });
+        }
 
         if (activeMarkets.size > 0) {
             otherMarkets = activeMarkets
             .filter(a => {
-                if (activeTab === "all") {
-                    if (lookupQuote.length < 2) {return false; }
+                if (!myMarketTab) {
+                    if (lookupQuote.length < 1) {return false; }
+
                     return a.quote.indexOf(lookupQuote) !== -1;
                 } else {
+                    const ID = a.quote + "_" + a.base;
+                    if (!!this.state.myMarketFilter) {
+                        return ID.indexOf(this.state.myMarketFilter) !== -1;
+                    }
+                    if (onlyStars && !starredMarkets.has(ID)) {
+                        return false;
+                    }
                     return true;
                 }
             })
@@ -535,16 +603,19 @@ class MyMarkets extends React.Component {
             }).filter(a => {
                 return a !== null;
             })
-            .take(activeTab === "starred" ? 100 : 20)
+            .take(myMarketTab ? 100 : 20)
             .toArray();
         }
 
+        const hasOthers = otherMarkets && otherMarkets.length;
+
         let hc = "mymarkets-header clickable";
-        let starClass = cnames(hc, {inactive: activeTab === "all"});
-        let allClass = cnames(hc, {inactive: activeTab === "starred"});
+        let starClass = cnames(hc, {inactive: !myMarketTab});
+        let allClass = cnames(hc, {inactive: myMarketTab});
 
         let listStyle = {
-            minWidth: this.state.minWidth
+            minWidth: this.state.minWidth,
+            minHeight: "6rem"
         };
         if (listHeight) {
             listStyle.height = listHeight;
@@ -556,39 +627,97 @@ class MyMarkets extends React.Component {
                     style={this.props.headerStyle}
                     className="grid-block shrink left-orderbook-header bottom-header"
                 >
-                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "starred")}>
+                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "my-market")}>
                         <Translate content="exchange.market_name" />
                     </div>
-                    <div className={allClass} onClick={this._changeTab.bind(this, "all")} >
+                    <div className={allClass} onClick={this._changeTab.bind(this, "find-market")} >
                         <Translate content="exchange.more" />
                     </div>
                 </div>
 
-                {activeTab === "all" || this.props.controls ? (
+                {this.props.controls ? (
                     <div className="small-12 medium-6" style={{padding: "1rem 0"}}>
                         {this.props.controls ? <div style={{paddingBottom: "0.5rem"}}>{this.props.controls}</div> : null}
-                        {activeTab === "all" ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null}
+                        {/* {!myMarketTab ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null} */}
                     </div> ) : null}
+
+                {myMarketTab ?
+                    <div className="grid-block shrink" style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
+                        <label className="no-margin">
+                            <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onClick={() => {MarketsActions.toggleStars();}}/>
+                            <span>&nbsp;<Translate content="exchange.show_star_1" /><Icon className="gold-star" name="fi-star"/> <Translate content="exchange.show_star_2" /></span>
+                        </label>
+                        <div className="float-right" style={{paddingLeft: 20}}>
+                        <input
+                            style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}}
+                            className="no-margin"
+                            type="text"
+                            placeholder="Filter"
+                            value={this.state.myMarketFilter}
+                            onChange={(e) => {this.setState({myMarketFilter: e.target.value && e.target.value.toUpperCase()});}}
+                        />
+                        </div>
+
+                    </div> :
+
+                    <div style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
+                        <table>
+                        <tr style={{width: "100%"}}>
+                            <td>
+                                <AssetSelector
+                                    onAssetSelect={this._onFoundBaseAsset.bind(this)}
+                                    assets={defaultBases}
+                                    onChange={this._onInputBaseAsset.bind(this)}
+                                    asset={this.state.findBaseInput}
+                                    assetInput={this.state.findBaseInput}
+                                    tabIndex={1}
+                                    style={{width: "100%", paddingBottom: "1.5rem"}}
+                                    onFound={this._onFoundBaseAsset.bind(this)}
+                                    label="exchange.base"
+                                    noLabel
+                                    inputStyle={{fontSize: "0.9rem"}}
+                                />
+                            </td>
+                        </tr>
+                        <tr style={{width: "100%"}}>
+                            <td>
+                                <label><Translate content="account.user_issued_assets.name" />:</label>
+                                <input
+                                    style={{fontSize: "0.9rem", position: "relative", top: 1}}
+                                    type="text"
+                                    value={this.state.inputValue}
+                                    onChange={this._onInputName.bind(this)}
+                                    placeholder={counterpart.translate("exchange.search")}
+                                />
+                            </td>
+                        </tr>
+                        </table>
+                    </div>
+                    }
+
 
                 <ul className="mymarkets-tabs">
                     {preferredBases.map((base, index) => {
+                        if (!base) return null;
                         return (
                             <li
                                 key={base}
                                 onClick={this.toggleActiveMarketTab.bind(this, index)}
-                                className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === index})}
+                                className={cnames("mymarkets-tab", {active: activeMarketTab === index})}
                             >
-                                <AssetName name={base} />
+                                <AssetName name={base} dataPlace="left"/>
                             </li>
                         );
                     })}
-                    <li
-                        style={{textTransform: "uppercase"}}
-                        onClick={this.toggleActiveMarketTab.bind(this, preferredBases.size + 1)}
-                        className={cnames("mymarkets-tab", {active: this.state.activeMarketTab === (preferredBases.size + 1)})}
-                    >
-                        <Translate content="exchange.others" />
-                    </li>
+                    {myMarketTab && hasOthers ? (
+                        <li
+                            key={"others"}
+                            style={{textTransform: "uppercase"}}
+                            onClick={this.toggleActiveMarketTab.bind(this, preferredBases.size + 1)}
+                            className={cnames("mymarkets-tab", {active: activeMarketTab === (preferredBases.size + 1)})}
+                        >
+                            <Translate content="exchange.others" />
+                        </li>) : null}
                 </ul>
 
                 <div
@@ -596,9 +725,11 @@ class MyMarkets extends React.Component {
                     className="table-container grid-block vertical mymarkets-list"
                     ref="favorites"
                 >
-
-                    {preferredBases.filter(a => {return a === preferredBases.get(this.state.activeMarketTab);}).map((base, index) => {
+                    {assetsLoading ? <div style={{position: "absolute", paddingTop: "3rem", textAlign: "center", width: "100%"}}><LoadingIndicator type="three-bounce" /></div> : null}
+                    {preferredBases.filter(a => {return a === preferredBases.get(activeMarketTab);}).map((base, index) => {
                         return <MarketGroup
+                            userMarkets={this.props.userMarkets}
+                            defaultMarkets={this.props.defaultMarkets}
                             index={index}
                             allowChange={false}
                             key={base}
@@ -606,15 +737,16 @@ class MyMarkets extends React.Component {
                             starredMarkets={starredMarkets}
                             marketStats={marketStats}
                             viewSettings={viewSettings}
-                            columns={columns}
+                            columns={myMarketTab ? columns : (this.props.findColumns || columns)}
                             markets={baseGroups[base]}
                             base={base}
-                            maxRows={activeTab === "starred" ? 20 : 10}
-                            forceOpen={activeTab === "all"}
+                            maxRows={myMarketTab ? 20 : 10}
+                            findMarketTab={!myMarketTab}
                         />;
                     })}
-                    {this.state.activeMarketTab === preferredBases.size + 1 ?
+                    {((activeMarketTab === preferredBases.size + 1) && myMarketTab && hasOthers) ?
                     <MarketGroup
+                        userMarkets={this.props.userMarkets}
                         index={preferredBases.size}
                         current={current}
                         starredMarkets={starredMarkets}
@@ -623,8 +755,8 @@ class MyMarkets extends React.Component {
                         columns={columns}
                         markets={otherMarkets}
                         base="others"
-                        maxRows={activeTab === "starred" ? 20 : 10}
-                        forceOpen={activeTab === "all"}
+                        maxRows={myMarketTab ? 20 : 10}
+                        findMarketTab={!myMarketTab}
                     /> : null}
                 </div>
             </div>
@@ -650,10 +782,14 @@ export default connect(MyMarketsWrapper, {
     getProps() {
         return {
             starredMarkets: SettingsStore.getState().starredMarkets,
+            defaultMarkets: SettingsStore.getState().defaultMarkets,
             viewSettings: SettingsStore.getState().viewSettings,
             preferredBases: SettingsStore.getState().preferredBases,
             marketStats: MarketsStore.getState().allMarketStats,
-            searchAssets: AssetStore.getState().assets
+            userMarkets: SettingsStore.getState().userMarkets,
+            searchAssets: AssetStore.getState().assets,
+            onlyStars: MarketsStore.getState().onlyStars,
+            assetsLoading: AssetStore.getState().assetsLoading
         };
     }
 });

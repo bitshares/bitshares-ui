@@ -19,7 +19,7 @@ class GatewayStore {
         });
     }
 
-    onFetchCoins({backer, coins, backedCoins}) {
+    onFetchCoins({backer, coins, backedCoins} = {}) {
         if (backer && coins) {
             this.coins = this.coins.set(backer, coins);
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
@@ -28,12 +28,12 @@ class GatewayStore {
         }
     }
 
-    onFetchBridgeCoins({coins, bridgeCoins, wallets}) {
+    onFetchBridgeCoins({coins, bridgeCoins, wallets} = {}) {
         if (coins && bridgeCoins) {
             let coins_by_type = {};
             coins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
             bridgeCoins = bridgeCoins.filter(a => {
-                return a && (
+                return a && coins_by_type[a.outputCoinType] && (
                     wallets.indexOf(coins_by_type[a.outputCoinType].walletType) !== -1 && // Remove inactive wallets
                     coins_by_type[a.outputCoinType].walletType === "bitshares2" && // Only use bitshares2 wallet types
                     this.bridgeInputs.indexOf(a.inputCoinType) !== -1 // Only use coin types defined in bridgeInputs

@@ -789,7 +789,10 @@
     "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。你为新钱包提供一个密码，然后输入你的脑钱包密钥。",
     "restore_key_count": "# of 密钥",
     "restore_default_success": "Settings have been reset successfully",
-    "api_closest": "Choose closest automatically"
+    "api_closest": "Choose closest automatically",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "pagination": {
     "newer": "更近",
@@ -893,7 +896,11 @@
     "settings": "图表选项",
     "featured": "热门市场",
     "new": "新增",
-    "market_frozen": "%(asset)s 资产发行人已禁用该资产的市场交易"
+    "market_frozen": "%(asset)s 资产发行人已禁用该资产的市场交易",
+    "show_star_1": "Show",
+    "show_star_2": "only",
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "markets": {
     "title": "交易所",
@@ -1042,8 +1049,10 @@
     "password_model": "Account model",
     "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
     "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
     "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
     "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "password_model_3": "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
     "use_wallet": "Use the wallet model",
     "use_password": "Use the account model",
     "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
@@ -1098,6 +1107,13 @@
       "title": "你输入的地址似乎不正确，确定要提现到该地址么？",
       "accept": "是",
       "cancel": "否"
+    },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
     }
   },
   "init_error": {
@@ -1225,6 +1241,7 @@
     "reconnect": "重新连接",
     "users": "%(count)s 用户在线",
     "disabled": "聊天室禁用",
-    "enable": "启用聊天室"
+    "enable": "启用聊天室",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }

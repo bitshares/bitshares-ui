@@ -37,7 +37,13 @@ class Settings extends React.Component {
 
     componentWillReceiveProps(np) {
         if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
+            const currentEntries = this._getMenuEntries(this.props);
             const menuEntries = this._getMenuEntries(np);
+            if (currentEntries.length < menuEntries.length) {
+                this.setState({
+                    activeSetting: this.state.activeSetting + (menuEntries.length - currentEntries.length)
+                });
+            }
             this.setState({
                 menuEntries
             });
@@ -188,7 +194,7 @@ class Settings extends React.Component {
             break;
 
         case "restore":
-            entries = <RestoreSettings />;
+            entries = <RestoreSettings passwordLogin={this.props.settings.get("passwordLogin")} />;
             break;
 
         default:

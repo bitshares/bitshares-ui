@@ -528,7 +528,10 @@
     "remove_ws": "Remover API websocket",
     "faucet_address": "Faucet Address",
     "restore_default_success": "Settings have been reset successfully",
-    "api_closest": "Choose closest automatically"
+    "api_closest": "Choose closest automatically",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer": {
     "title": "BitShares",
@@ -580,7 +583,11 @@
     "horizontal": "Horizontal",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
-    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
+    "show_star_1": "Show",
+    "show_star_2": "only",
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "markets": {
     "base": "Activo base",
@@ -671,8 +678,10 @@
     "password_model": "Account model",
     "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
     "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
     "password_model_1": "The account model uses a password in combination with your account name to generate your private key on the fly.",
     "password_model_2": "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
+    "password_model_3": "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
     "use_wallet": "Use the wallet model",
     "use_password": "Use the account model",
     "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
@@ -754,5 +763,22 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
+  },
+  "chat": {
+    "title": "Trollbox",
+    "button": "Chat",
+    "send": "Send",
+    "color": "Username color",
+    "user": "Username",
+    "done": "Done",
+    "reconnect": "Reconnect",
+    "welcome_user": "Welcome to BitShares",
+    "users": "%(userCount)s users online",
+    "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
+    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
+    "rate": "Please wait at least 2s before posting a new message",
+    "disabled": "Chat disabled",
+    "enable": "Enable chat now",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }

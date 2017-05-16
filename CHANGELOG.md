@@ -1,4 +1,78 @@
 ---------------------------------------------------------------------
+Release 2.0.170327
+---------------------------------------------------------------------
+New features
+--------
+- Allow the mini depth chart to be hidden by the user
+- Refactor the MyMarkets component, 'show star only' and revamped search
+- Display up to 20 rows of the orderbook by default instead of 10
+- Add Trade and Borrow links to the default assets in AccountOverview
+
+Bug fixes
+--------
+- Fix an issue with blocktrades deposit addresses being set incorrectly
+- Change positioning of some tooltips
+- Fix password score checker freezing on very long passwords
+- Hide 'something for nothing order history items
+- Update bitsharesjs to fix proposals array undefined error
+- Fix 'Cannot use 'in' operator to search for 'translate'' error in api dropdown
+- Fix order rounding when modifying the 'Total' after clicking an order from the orderbook
+- Improve first-time brainkey lookup to check at least 10 positions
+- Log pub keys when creating a new account
+- Fix some Account permissions css issues and add some loggin
+- Also check if generated active key matches owner key and vice versa
+- Fix account create with faucet not rejecting errors properly
+- Fix password strength meter turning red for long passwords
+- Fix gateway actions in progress return
+---------------------------------------------------------------------
+Release 2.0.170327
+---------------------------------------------------------------------
+New features
+--------
+- Add password based login using account+role+password as private key seed
+- Add a Migration option to add password based keys to an existing account
+- Add password strength checker to password input
+- Update account creation using password login method
+- Use AccountImage in header instead of User icon
+- Add language selection dropdown with flag symbols to Header
+- Add a 'Quick buy' modal for blocktrades bridge deposit requests
+- Add blocktrades bridge deposits to the Exchange Buy/Sell box
+- Make OPEN.X trade links default to X_USD pair
+- Add CSP policies for improved security
+- Allow users to disable auto-lock by setting timeout to 0
+- Include OPEN.DASH as one of the default assets available for deposits
+- Restore the small depth chart
+- Move the 'borrow X' buttons to the Buy/Sell boxes
+
+Bug fixes
+--------
+- Add a wallet creation link to WalletUnlockModal
+- Fix some missing translation
+- Ensure all href links have window.opener clobbered
+- Remove TCNY deposits
+- Add vesting_balance_withdraw to ProposedOperation.jsx
+- Fix the calling of calcMarketStats in onSubscribeMarket
+- Improve how low volume markets are determined, add OPEN.DASH
+- Fix some pricechart resizing issues, put all controls on the same line
+- Tweak the dropdown css
+- Improve the price calculation of getMarketStats
+- Add missing translation of deposit withdraw title
+- Refactor Create account layout, add some text
+- Fix some minor header and Chat issues
+- Add missing translation key for supposed scammer accounts
+- Fix some possible issues in BlocktradesMethods and WithdrawModalBlocktrades
+- Wrap localStorage 'get' in try/catch to catch parsing errors, fixes Deposit/Withdraw issues for some accounts
+- Adjust the xAxis range for depth charts with no bids but asks
+- Fix blocktrades dropdown colors
+- Make the openledger fiat registration open in a separate browser
+- Fix some minor issues in Header and WithdrawModal
+- Fix transfer asset selection dropdown not showing more than 9 assets
+- Adjust the positioning of the cog header dropdown
+- Remove the borders in the electron header navigation buttons
+- Use default cursor to indicate account is not clickable with 1 account
+- Fix error when clicking on Header account with only 1 account present
+
+---------------------------------------------------------------------
 Release 2.0.170314
 ---------------------------------------------------------------------
 New features

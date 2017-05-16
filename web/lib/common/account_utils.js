@@ -83,13 +83,15 @@ export default class AccountUtils {
         const scamAccountsPolo = [
             "polonie-wallet",
             "polonie-xwallet",
+            "poloniewallet",
             "poloniex-deposit",
             "poloniex-wallet",
             "poloniexwall-et",
             "poloniexwallett",
             "poloniexwall-t",
             "poloniexwalle",
-            "poloniex"
+            "poloniex",
+            "poloneix"
         ];
 
         const scamAccountsBittrex = [
@@ -97,11 +99,25 @@ export default class AccountUtils {
             "bittrex-deposi",
             "bittrex-depositt",
             "bittrex-dposit",
-            "bittrex"
+            "bittrex",
+            "bittrex-deposits"
         ];
 
         const scamAccountsOther = [
-            "coinbase"
+            "coinbase",
+            "blocktrade",
+            "locktrades",
+            "yun.bts",
+            "transwiser-walle",
+            "transwiser-wallets",
+            "ranswiser-wallet",
+            "yun.btc",
+            "pay.coinbase.com",
+            "pay.bts.com",
+            "btc38.com",
+            "yunbi.com",
+            "coinbase.com",
+            "ripple.com"
         ];
 
         let scamMessage = null;

@@ -18,8 +18,14 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import { Apis } from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
+import IntlActions from "actions/IntlActions";
+import AccountImage from "../Account/AccountImage";
 
 var logo = require("assets/logo-ico-blue.png");
+
+const FlagImage = ({flag, width = 20, height = 20}) => {
+    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+};
 
 class Header extends React.Component {
 
@@ -71,6 +77,7 @@ class Header extends React.Component {
             nextProps.current_wallet !== this.props.current_wallet ||
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
+            nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active
         );
     }
@@ -82,8 +89,13 @@ class Header extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        if (WalletDb.isLocked()) WalletUnlockActions.unlock();
-        else WalletUnlockActions.lock();
+        if (WalletDb.isLocked()) {
+            WalletUnlockActions.unlock().then(() => {
+                AccountActions.tryToSetCurrentAccount();
+            });
+        } else {
+            WalletUnlockActions.lock();
+        }
     }
 
     _onNavigate(route, e) {
@@ -201,7 +213,8 @@ class Header extends React.Component {
                     return (
                         <li className={name === account_display_name ? "current-account" : ""} key={name}>
                             <a href onClick={this._accountClickHandler.bind(this, name)}>
-                                <span>{name}</span>
+                                <td><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></td>
+                                <td style={{paddingLeft: 10}}><span>{name}</span></td>
                             </a>
                         </li>
                     );
@@ -214,14 +227,16 @@ class Header extends React.Component {
         tradingAccounts.length === 1 ?
         (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
-                <Icon className="icon-14px" name="user"/> {account_display_name}
+                <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
             </a>
         </ActionSheet.Button>) :
 
         (<ActionSheet>
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
-                    <Icon className="icon-14px" name="user"/> {account_display_name}
+                    <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
+                    <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
@@ -255,6 +270,29 @@ class Header extends React.Component {
                             <span><Translate content="header.help" /></span>
                         </a>
                     </li>
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+
+        const flagDropdown = <ActionSheet>
+            <ActionSheet.Button title="">
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <FlagImage flag={this.props.currentLocale} />
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    {this.props.locales.map(locale => {
+                        return (
+                            <li key={locale}>
+                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}}>
+                                    <td><FlagImage flag={locale} /></td>
+                                    <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
+
+                                </a>
+                            </li>
+                        );
+                    })}
                 </ul>
             </ActionSheet.Content>
         </ActionSheet>;
@@ -301,12 +339,22 @@ class Header extends React.Component {
                             {settingsDropdown}
                         </div>}
 
+                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {flagDropdown}
+                        </div>}
+
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
-                        {!myAccountCount ? null :<div className="grp-menu-item overflow-visible" >
+
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible account-drop-down">
+                            {flagDropdown}
+                        </div>}
+
+                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible" >
                             {settingsDropdown}
                         </div>}
+
                         {lock_unlock}
                     </div>
                 </div>
@@ -323,12 +371,14 @@ export default connect(Header, {
         const chainID = Apis.instance().chain_id;
         return {
             linkedAccounts: AccountStore.getState().linkedAccounts,
-            currentAccount: AccountStore.getState().currentAccount,
+            currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
             starredAccounts: SettingsStore.getState().starredAccounts,
-            passwordLogin: SettingsStore.getState().settings.get("passwordLogin")
+            passwordLogin: SettingsStore.getState().settings.get("passwordLogin"),
+            currentLocale: SettingsStore.getState().settings.get("locale"),
+            locales: SettingsStore.getState().defaults.locale
         };
     }
 });

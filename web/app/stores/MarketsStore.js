@@ -69,6 +69,7 @@ class MarketsStore {
 
         this.allMarketStats = Immutable.Map();
         this.lowVolumeMarkets = Immutable.Map(marketStorage.get("lowVolumeMarkets", {}));
+        this.onlyStars = marketStorage.get("onlyStars", false);
 
         this.baseAsset = {
             id: "1.3.0",
@@ -94,7 +95,8 @@ class MarketsStore {
             onGetMarketStats: MarketsActions.getMarketStats,
             onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
             onSwitchMarket: MarketsActions.switchMarket,
-            onFeedUpdate: MarketsActions.feedUpdate
+            onFeedUpdate: MarketsActions.feedUpdate,
+            onToggleStars: MarketsActions.toggleStars
         });
     }
 
@@ -120,6 +122,11 @@ class MarketsStore {
 
     onChangeBucketSize(size) {
         this._setBucketSize(size);
+    }
+
+    onToggleStars() {
+        this.onlyStars = !this.onlyStars;
+        marketStorage.set("onlyStars", this.onlyStars);
     }
 
     onUnSubscribeMarket(payload) {
@@ -292,9 +299,12 @@ class MarketsStore {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
                 order.op.time = order.time;
-                this.activeMarketHistory = this.activeMarketHistory.add(
-                    order.op
-                );
+                /* Only include history objects that aren't 'something for nothing' to avoid confusion */
+                if (!(order.op.receives.amount == 0 || order.op.pays.amount == 0)) {
+                    this.activeMarketHistory = this.activeMarketHistory.add(
+                        order.op
+                    );
+                }
             });
         }
 
@@ -347,7 +357,6 @@ class MarketsStore {
             let didUpdate = false;
             cancellations.forEach(orderID => {
                 if (orderID && this.marketLimitOrders.has(orderID)) {
-                    console.log("removed order", orderID);
                     didUpdate = true;
                     this.marketLimitOrders = this.marketLimitOrders.delete(orderID);
                 }
@@ -965,6 +974,9 @@ class MarketsStore {
             }
 
             change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
+            if (!isFinite(change) || isNaN(change)) {
+                change = 0;
+            }
         }
 
         if (recent && recent.length && recent.length > 1) {

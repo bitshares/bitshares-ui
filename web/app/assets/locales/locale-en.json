@@ -252,13 +252,14 @@
       "new_memo": "New memo key",
       "memo_warning": "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
       "use_text": "Use",
-      "remove_text": "Remove"
+      "remove_text": "Remove",
+      "valid_pub": "Valid Public Key"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
       "workers_short": "Workers",
-      "proxy": "Proxy Voting Account",
+      "proxy": "Manually enter an account as your proxy",
       "no_proxy": "No Proxy",
       "clear_proxy": "Remove proxy",
       "go_proxy": "Go to",
@@ -304,7 +305,7 @@
       "cm_approved_by": "Committee members approved by %(account)s",
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
-      "proxy_known": "Known proxies",
+      "proxy_known": "Or choose an account as your proxy",
       "expired": "Expired workers"
     },
     "options": {
@@ -453,7 +454,8 @@
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
     "asset_reserve": "Reserve (burn) {amount} using {account}",
-    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -735,7 +737,7 @@
       "type": "Fee Type",
       "fee": "Standard Fee",
       "feeeq": "(equivalent)",
-      "feeltm": "Lifetime/Anual Member Fee",
+      "feeltm": "Lifetime/Annual Member Fee",
       "feeltmeq": "(equivalent)"
     }
   },
@@ -793,7 +795,10 @@
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new wallet. Please provide a password and name for your new wallet below, then enter your brainkey.",
     "restore_key_count": "# of keys",
     "restore_default_success": "Settings have been reset successfully",
-    "api_closest": "Choose closest automatically"
+    "api_closest": "Choose closest automatically",
+    "wallet_required": "Wallet model required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+    "enable_wallet": "Enable wallet model"
   },
   "footer": {
     "title": "BitShares",
@@ -891,7 +896,11 @@
     "settings": "Chart options",
     "featured": "Top Markets",
     "new": "New",
-    "market_frozen": "The owner of %(asset)s has disabled trading in this market."
+    "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
+    "show_star_1": "Show",
+    "show_star_2": "only",
+    "base": "Base currency:",
+    "search": "Search for more markets here"
   },
   "fees": {
     "title": "Fee Schedule"
@@ -1051,8 +1060,10 @@
     "password_model": "Account model",
     "wallet_model_1": "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys. The wallet model lets you use multiple accounts at the same time.",
     "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+    "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
     "password_model_1": "The account model uses a password in combination with your account name to generate your private keys on the fly. It restricts you to only logging in with one account at a time, in return for ease of use and convenience.",
     "password_model_2": "The account model lets you login to your wallet from anywhere using only your account name and password, but <strong> your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!</strong>",
+    "password_model_3": "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
     "use_wallet": "Use the wallet model",
     "use_password": "Use the account model",
     "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
@@ -1110,6 +1121,13 @@
       "title": "The address you entered does not appear valid, are you sure you want to make the withdrawal?",
       "accept": "Yes",
       "cancel": "No"
+    },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
     },
     "ok": "OK"
   },
@@ -1221,6 +1239,7 @@
     "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
     "rate": "Please wait at least 2s before posting a new message",
     "disabled": "Chat disabled",
-    "enable": "Enable chat now"
+    "enable": "Enable chat now",
+    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   }
 }

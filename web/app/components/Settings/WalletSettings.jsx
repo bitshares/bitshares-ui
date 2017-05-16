@@ -18,7 +18,7 @@ export default class WalletSettings extends React.Component {
 
     onLookup() {
         this.setState({
-            lookupActive: !this.state.lookupActive
+            lookupActive: true
         });
     }
 
