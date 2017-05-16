@@ -1156,6 +1156,9 @@
       "deposit_title": "充值人民币到 %(asset)s",
       "withdraw_title": "提现 %(asset)s 到人民币",
       "alipay": "支付宝账户名",
+      "memo": "备注",
+      "alipay_account_name_notice": "支付宝账户名，一般为用户名或手机号。",
+      "alipay_realname_notice": "提现到支付宝请在备注栏输入真实姓名以供校验",
       "withdraw_note": "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到您的支付宝账户中",
       "you_will_receive": "您将收到 %(amount)s 元人民币"
     },

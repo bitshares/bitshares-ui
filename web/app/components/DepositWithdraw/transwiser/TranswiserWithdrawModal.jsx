@@ -26,14 +26,15 @@ class TranswiserWithdrawModal extends React.Component {
          withdraw_amount:null,
          withdraw_address:null,
          withdraw_amount_after_fee:null,
-         balance_error: false
+         balance_error:false,
+         memo:""
       }
 
       let balanceAmount = null;
    }
 
    onWithdrawAmountChange( {amount, asset} ) {
-      if (!this.balanceAmount || this.balanceAmount == 0 || !amount || !asset) {
+       if (!this.balanceAmount || this.balanceAmount == 0 || !amount || !asset) {
           this.setState( {
               withdraw_amount: 0,
               withdraw_amount_after_fee: 0,
@@ -46,10 +47,14 @@ class TranswiserWithdrawModal extends React.Component {
           this.setState( {
               withdraw_amount: amount,
               withdraw_amount_after_fee: should_receive,
-              balance_error: amount > this.balanceAmount
+              balance_error: amount.replace( /,/g, "" ) > this.balanceAmount
           } );
       }
 
+   }
+
+   onWithdrawMemoChanged( e ){
+       this.setState({ memo:e.target.value });
    }
 
    onWithdrawAddressChanged( e ) {
@@ -65,7 +70,7 @@ class TranswiserWithdrawModal extends React.Component {
          this.props.issuerAccount.get("id"),
          parseInt(amount * precision, 10),
          asset.get("id"),
-         (this.props.memo_prefix || "") + this.state.withdraw_address
+         new Buffer((this.props.memo_prefix || "") + this.state.withdraw_address + (this.state.memo != "" ? " (" + this.state.memo + ")" : ""), "utf-8")
      )
    }
 
@@ -94,7 +99,6 @@ class TranswiserWithdrawModal extends React.Component {
            this.balanceAmount = 0;
        }
 
-
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
                    <div className="content-block">
@@ -111,8 +115,13 @@ class TranswiserWithdrawModal extends React.Component {
                                      placeholder="0.0"
                                      onChange={this.onWithdrawAmountChange.bind(this)}
                                      display_balance={balance}
+                                     tabIndex="1"
                                      />
-                                     { this.state.balance_error ? <div className="has-error"><Translate content="transfer.errors.insufficient" /></div> : null }
+                                     {
+                                         this.state.balance_error ?
+                                         <div className="has-error"><Translate content="transfer.errors.insufficient" /></div> :
+                                         null
+                                     }
                         <br />
                         <div className="grid-block">
                             <Translate content="transfer.fee" />: {this.displayFee()}
@@ -121,7 +130,17 @@ class TranswiserWithdrawModal extends React.Component {
                    </div>
                    <div className="content-block full-width-content">
                        <label><Translate component="span" content="gateway.transwiser.alipay"/></label>
-                       <input type="text" value={this.state.withdraw_address || ""} tabIndex="4" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
+                       <input type="text" value={this.state.withdraw_address || ""} tabIndex="2" onChange={this.onWithdrawAddressChanged.bind(this)} autoComplete="off"/>
+                       <div className="grid-block">
+                           <Translate content="gateway.transwiser.alipay_account_name_notice" />
+                       </div>
+                   </div>
+                   <div className="content-block full-width-content">
+                       <label><Translate component="span" content="gateway.transwiser.memo"/></label>
+                       <input type="text" value={this.state.memo || ""} tabIndex="3" onChange={this.onWithdrawMemoChanged.bind(this)} autoComplete="off"/>
+                       <div className="grid-block">
+                           <Translate content="gateway.transwiser.alipay_realname_notice" />
+                       </div>
                    </div>
 
                    <div className="content-block">
