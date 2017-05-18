@@ -71,7 +71,7 @@ class BuySell extends React.Component {
             priceChange, onSubmit, balance, totalChange,
             balancePrecision, currentPrice, currentPriceObject,
             feeAsset, feeAssets, backedCoin} = this.props;
-        let amount = 0, price = 0, total = 0;
+        let amount, price, total;
         let caret = this.props.isOpen ? <span>&#9660;</span> : <span>&#9650;</span>;
 
         if (this.props.amount) amount = this.props.amount;

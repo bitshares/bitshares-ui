@@ -877,6 +877,13 @@
       "amount": "Menge für das Settlement",
       "submit": "Settlement durchführen"
     },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
+    },
     "ok": "OK"
   },
   "init_error": {
