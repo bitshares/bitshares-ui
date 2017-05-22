@@ -20,8 +20,8 @@ class AccountVotingProxy extends React.Component {
     static defaultProps = {
         knownProxies: List(
             [
-                "xeroc", "baozi", "bitcrab", "laomao", "bitshares-munich-wallet",
-                "bts1988", "harvey", "fav", "jonnybitcoin", "bitsharesblocks"
+                "xeroc", "baozi", "bitcrab", "laomao", "bitshares-munich-wallet", "abit", "dahu",
+                "bts1988", "harvey", "fav", "jonnybitcoin", "bitsharesblocks", "customminer"
             ]
         ),
         existingProxy: "1.2.5" // proxy-to-self
@@ -121,6 +121,9 @@ class AccountVotingProxy extends React.Component {
                 a.get("name") !== currentProxyName
             );
         })
+        .sort((a, b) => {
+            return (a.get("name") > b.get("name") ? 1 : a.get("name") < b.get("name") ? -1 : 0);
+        })
         .map(proxy => {
             return (
                 <tr key={proxy.get("id")}>
@@ -131,7 +134,7 @@ class AccountVotingProxy extends React.Component {
                             custom_image={null}
                         />
                     </td>
-                    <td>{proxy.get("name")}</td>
+                    <td><Link to={`/account/${proxy.get("name")}`}>{proxy.get("name")}</Link></td>
                     <td className="text-right"><button className="button" onClick={this.onProxyChange.bind(this, proxy.get("name"))}>Set</button></td>
                 </tr>
             );
@@ -162,7 +165,7 @@ class AccountVotingProxy extends React.Component {
                      size={60}
                 />}
                 {!isDisabled && knownProxies.length ? (
-                <div>
+                <div style={{paddingTop: 20}}>
                     <Translate component="h5" content="account.votes.proxy_known" />
                     <table className="table">
                         <tbody>
