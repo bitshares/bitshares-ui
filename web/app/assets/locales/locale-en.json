@@ -362,7 +362,7 @@
     "header": "Transfer details",
     "from": "From",
     "pay_from": "Pay From",
-    "amount": "Amount",
+    "amount": "Quantity",
     "to": "To",
     "memo": "Memo",
     "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
