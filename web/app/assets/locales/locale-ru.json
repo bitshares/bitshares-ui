@@ -362,7 +362,7 @@
     "header":"Детали транзакции",
     "from":"От",
     "pay_from":"Оплатить с",
-    "amount":"Сумма",
+    "amount":"Quantity",
     "to":"Кому",
     "memo":"Примечание",
     "warn_name_unable_read_memo":"Предупреждение: %(name)s не сможет прочесть это примечание",
@@ -454,7 +454,8 @@
     "override_transfer":"Перевести {amount} от {from} к {to} по поручению {issuer}",
     "asset_issue":"Выпустить {amount} {to}, используя {account}",
     "asset_reserve":"Сжечь {amount} используя аккаунт {account}",
-    "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}"
+    "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}",
+    "feed_producer":"Update the feed producers for the asset {asset} using the account {account}"
   },
   "transaction":{
     "confirm":"Пожалуйста, подтвердите транзакцию",
@@ -1120,6 +1121,13 @@
       "accept":"Да",
       "cancel":"Нет"
     },
+    "proposals":{
+      "pay_with":"Pay with account",
+      "approval_add":"Approval to add",
+      "approval_remove":"Approval to remove",
+      "key_approval_add":"Key approval to add",
+      "key_approval_remove":"Key approval to remove"
+    },
     "ok":"ОК"
   },
   "init_error":{
@@ -1192,7 +1200,7 @@
     "withdraw_to":"Нажмите кнопку ниже, чтобы открыть вывод %(asset)s",
     "intermediate":"Промежуточный аккаунт",
     "asset_to_withdraw":"Актив для вывода:",
-    "support_block":"Чтобы получить поддержку, пожалуйста, обратитесь в Blocktrades на:",
+    "support_block":"For support, please contact OpenLedger at:",
     "valid_address":"Пожалуйста, введите действительный %(coin_type)s адрес",
     "withdraw_coin":"Вывести %(coin)s (%(symbol)s)",
     "convert_coin":"Конвертировать в %(coin)s (%(symbol)s)",
@@ -1206,6 +1214,9 @@
       "deposit_title":"Внести юани (RMB) в %(asset)s",
       "withdraw_title":"Вывести %(asset)s в юанях (RMB)",
       "alipay":"Имя аккаунта в ALIPAY",
+      "memo":"Memo",
+      "alipay_account_name_notice":"Normally it's your Alipay account username or mobile phone number",
+      "alipay_realname_notice":"Withdraw to Alipay, please provide real name in MEMO field to verify",
       "withdraw_note":"В данный момент поддерживается только вывод средств с помощью ALIPAY. Ваш актив будет конвертирован в юани (RMB) в соотношении 1:1 и отправлен на Ваш ALIPAY аккаунт",
       "you_will_receive":"Вы получите %(amount)s юани (RMB)"
     },
