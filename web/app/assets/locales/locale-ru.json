@@ -455,7 +455,7 @@
     "asset_issue":"Выпустить {amount} {to}, используя {account}",
     "asset_reserve":"Сжечь {amount} используя аккаунт {account}",
     "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}",
-    "feed_producer":"Update the feed producers for the asset {asset} using the account {account}"
+    "feed_producer":"Обновить поставщиков котировок для актива {asset} используя аккаунт {account}"
   },
   "transaction":{
     "confirm":"Пожалуйста, подтвердите транзакцию",
@@ -1122,11 +1122,11 @@
       "cancel":"Нет"
     },
     "proposals":{
-      "pay_with":"Pay with account",
-      "approval_add":"Approval to add",
-      "approval_remove":"Approval to remove",
-      "key_approval_add":"Key approval to add",
-      "key_approval_remove":"Key approval to remove"
+      "pay_with":"Оплатить с аккаунта",
+      "approval_add":"Подтверждение для добавления",
+      "approval_remove":"Подтверждение для исключения",
+      "key_approval_add":"Подтверждение ключей на добавление",
+      "key_approval_remove":"Подтверждение ключей на удаление"
     },
     "ok":"ОК"
   },
@@ -1215,8 +1215,8 @@
       "withdraw_title":"Вывести %(asset)s в юанях (RMB)",
       "alipay":"Имя аккаунта в ALIPAY",
       "memo":"Примечание",
-      "alipay_account_name_notice":"Normally it's your Alipay account username or mobile phone number",
-      "alipay_realname_notice":"Withdraw to Alipay, please provide real name in MEMO field to verify",
+      "alipay_account_name_notice":"Обычно это ваше имя аккаунта на Alipay или номер мобильного телефона",
+      "alipay_realname_notice":"Для вывода на Alipay, пожалуйста предоставьте ваше настоящее имя в поле ПРИМЕЧАНИЯ для подтверждения",
       "withdraw_note":"В данный момент поддерживается только вывод средств с помощью ALIPAY. Ваш актив будет конвертирован в юани (RMB) в соотношении 1:1 и отправлен на Ваш ALIPAY аккаунт",
       "you_will_receive":"Вы получите %(amount)s юани (RMB)"
     },
