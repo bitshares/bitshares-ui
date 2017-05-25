@@ -7,8 +7,8 @@ let KeyAuth = function(auth) {
 
     this.isAvailable = (auths) => {
         return auths.includes ? auths.includes(this.id) : auths.indexOf(this) !== -1;
-    }
-}
+    };
+};
 
 let permissionUtils = {
 
@@ -27,46 +27,59 @@ let permissionUtils = {
 
         this._sumWeights = (auths) => {
 
-            if (!this.isNested()) {
+            if (!this.isNested() && !this.isMultiSig()) {
                 return this.isAvailable(auths) ? this.weight : 0;
             } else {
                 let sum = this.accounts.reduce((status, account) => {
                     return status + (account._sumWeights(auths) ? account.weight : 0);
                 }, 0);
 
-                return Math.floor((sum / this.threshold)); 
+                return Math.floor((sum / this.threshold));
             }
-        }
+        };
 
         this.getStatus = (auths, keyAuths) => {
             if (!this.isNested()) {
-                return this._sumWeights(auths)
+                let sum = this._sumWeights(auths);
+                if (this.isMultiSig()) {
+                    sum += this.sumKeys(keyAuths);
+                }
+                return sum;
             } else {
                 let sum = this.accounts.reduce((status, account) => {
                     return status + account._sumWeights(auths);
                 }, 0);
 
                 if (this.keys.length) {
-                    let keySum = this.keys.reduce((s, key) => {
-                        return s + (key.isAvailable(keyAuths) ? key.weight : 0);
-                    }, 0);
-
-                    sum += keySum;
+                    sum += this.sumKeys(keyAuths);
                 }
 
                 return sum;
             }
-        }
+        };
+
+        this.sumKeys = (keyAuths) => {
+            let keySum = this.keys.reduce((s, key) => {
+                return s + (key.isAvailable(keyAuths) ? key.weight : 0);
+            }, 0);
+            return keySum;
+        };
 
         this.isNested = () => {
             return this.accounts.length > 0;
-        }
+        };
+
+        this.isMultiSig = () => {
+            return this.keys.reduce((final, key) => {
+                return final || key.weight < this.threshold;
+            }, false);
+        };
 
         this.getMissingSigs = (auths) => {
             let missing  = [];
             let nested = [];
             if (this.isNested()) {
-                nested = this.accounts.reduce((a, account) => {                    
+                nested = this.accounts.reduce((a, account) => {
                     return a.concat(account.getMissingSigs(auths));
                 }, []);
             } else if (!this.isAvailable(auths)) {
@@ -74,12 +87,12 @@ let permissionUtils = {
             }
 
             return missing.concat(nested);
-        }
+        };
 
         this.getMissingKeys = (auths) => {
             let missing = [];
             let nested = [];
-            if (this.keys.length && this.isNested()) {
+            if (this.keys.length && (this.isNested() || this.isMultiSig())) {
                 this.keys.forEach(key => {
                     if (!key.isAvailable(auths)) {
                         missing.push(key.id);
@@ -88,7 +101,7 @@ let permissionUtils = {
             }
 
             if (this.isNested()) {
-                nested = this.accounts.reduce((a, account) => {                    
+                nested = this.accounts.reduce((a, account) => {
                     return a.concat(account.getMissingKeys(auths));
                 }, []);
             };
@@ -118,8 +131,8 @@ let permissionUtils = {
                     if (nestedAccount) {
                         accountPermission.accounts.push(this.unravel(new this.AccountPermission(nestedAccount, auth.get(1), type), type, recursive_count + 1));
                     }
-                })
-            } 
+                });
+            }
         }
 
         return accountPermission;
@@ -145,7 +158,7 @@ let permissionUtils = {
 
         auths.forEach(owner => {
             if (!existingAuths.includes(owner.get(0))) {
-                existingAuths = existingAuths.push(owner.get(0)); 
+                existingAuths = existingAuths.push(owner.get(0));
             }
         });
         return existingAuths;

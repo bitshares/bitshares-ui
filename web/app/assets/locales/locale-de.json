@@ -23,6 +23,8 @@
     "update_asset": "Asset ändern",
     "lock": "Sperren",
     "unlock": "Entsperren",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "Hilfe",
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
     "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
@@ -876,6 +878,13 @@
       "title": "Settlement für %(asset)s durchführen",
       "amount": "Menge für das Settlement",
       "submit": "Settlement durchführen"
+    },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
     },
     "ok": "OK"
   },

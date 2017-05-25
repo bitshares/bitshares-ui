@@ -22,6 +22,8 @@
     "create_asset": "자산 생성",
     "lock": "잠금",
     "unlock": "잠금해제",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "도움말",
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
     "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
