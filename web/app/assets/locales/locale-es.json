@@ -22,6 +22,8 @@
     "create_asset": "Crear Activo",
     "lock": "Bloquear",
     "unlock": "Desbloquear",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "Ayuda",
     "locked_tip": "Billetera bloqueada. Click para desbloquear.",
     "unlocked_tip": "Billetera desbloqueada. Click para bloquear",

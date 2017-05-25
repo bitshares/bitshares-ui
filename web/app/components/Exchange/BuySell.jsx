@@ -146,11 +146,13 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="exchange.price" />:
                                     </div>
-                                    <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
                                         <input type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={base.get("symbol")} />
+                                        &nbsp;/&nbsp;
+                                        <AssetName dataPlace="right" name={quote.get("symbol")} />
                                     </div>
                                 </div>
 
@@ -158,10 +160,10 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="transfer.amount" />:
                                     </div>
-                                    <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
                                         <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={quote.get("symbol")} />
                                     </div>
                                 </div>
@@ -170,10 +172,10 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="exchange.total" />:
                                     </div>
-                                    <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
                                         <input type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box">
+                                    <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={base.get("symbol")} />
                                     </div>
                                 </div>
@@ -182,10 +184,10 @@ class BuySell extends React.Component {
                                     <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
                                         <Translate content="transfer.fee" />:
                                     </div>
-                                    <div className="grid-block small-6 no-margin no-overflow buy-sell-input">
+                                    <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
                                         <input disabled type="text" id="fee" value={fee.getAmount({real: true})} autoComplete="off"/>
                                     </div>
-                                    <div className="grid-block small-3 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
+                                    <div className="grid-block small-4 no-margin no-overflow buy-sell-box" style={{paddingLeft: feeAssets.length !== 1 ? 0 : 5}}>
                                         <select
                                             style={feeAssets.length === 1 ? {background: "none"} : null}
                                             disabled={feeAssets.length === 1}

@@ -21,6 +21,8 @@
     "create_asset": "Créér un actif",
     "lock": "Vérouiller",
     "unlock": "Dévérouiller",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "account_notify": "The active account is now %(account)s"
   },
   "tooltip": {

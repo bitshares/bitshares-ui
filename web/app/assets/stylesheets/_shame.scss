@@ -348,6 +348,7 @@ select {
 select.bts-select {
     border-radius: 5px;
     cursor:pointer;
+    height: 2em;
     border: none;
     background: none;
     background-color: transparent;
@@ -356,7 +357,6 @@ select.bts-select {
     -webkit-appearance: menulist;
     -moz-appearance: menulist;
     appearance: menulist;
-    height: inherit;
 }
 
 @media screen and (min-width: 900px) {
