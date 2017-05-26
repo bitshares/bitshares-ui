@@ -12,6 +12,7 @@ import AccountSelect from "../Forms/AccountSelect";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
@@ -184,7 +185,7 @@ class CreateAccountPassword extends React.Component {
                     cheapNameOnly={!!firstAccount}
                     onChange={this.onAccountNameChange.bind(this)}
                     accountShouldNotExist={true}
-                    placeholder="Account Name (Public)"
+                    placeholder={counterpart.translate("wallet.account_public")}
                     noLabel
                 />
 
