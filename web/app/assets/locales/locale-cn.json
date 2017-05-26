@@ -28,8 +28,8 @@
     "update_asset": "更新资产",
     "lock": "锁定钱包",
     "unlock": "解锁",
-    "unlock_password": "Log in using a password",
-    "unlock_short": "Login",
+    "unlock_password": "使用密码登录",
+    "unlock_short": "登录",
     "help": "帮助",
     "locked_tip": "钱包已锁定，点击解锁。",
     "unlocked_tip": "钱包已解锁，点击锁定。",
@@ -55,8 +55,8 @@
       "cr_warning": "该头寸接近强制平仓价，如果抵押率低于 %(mr)s，将被强制平仓，请考虑补仓或平仓。",
       "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
       "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。",
-      "buy_min": "您将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
-      "borrow": "从系统借出 %(asset)s 。这将创建一个智能合约，冻结您的抵押物，直到您调整仓位或进行平仓。"
+      "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
+      "borrow": "从系统借出 %(asset)s 。这将创建一个智能合约，冻结你的抵押物，直到你调整仓位或进行平仓。"
   },
   "account": {
     "intro_text_title": "欢迎来到比特股去中心化交易所！",
@@ -68,7 +68,7 @@
     "in_open_value": "这是你委单中 %(asset)s 资产的大致价值。",
     "transfer_actions": "转账操作",
     "market_actions": "市场操作",
-    "total_estimate": "这是您所有资产的估值， 包含了在界面中设置了隐藏的资产、委单中的资产、债仓及抵押物。估值采用实时获得的区块链上的价格，可能并不那么精确。",
+    "total_estimate": "这是你所有资产的估值， 包含了在界面中设置了隐藏的资产、委单中的资产、债仓及抵押物。估值采用实时获得的区块链上的价格，可能并不那么精确。",
     "trade": "交易",
     "welcome": "欢迎使用 BitShares (石墨烯)系统",
     "assets": "资产",
@@ -342,6 +342,7 @@
     "home": "首页",
     "no_price": "无可用价格信息",
     "create_new": "创建新账户",
+    "password_login": "使用密码登录",
     "estimate_value": "账户价值估算",
     "polo_scam": "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
     "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。",
@@ -949,6 +950,9 @@
     "verify": "验证",
     "invalid_format": "文件内容格式不符",
     "enter_password": "请输入密码",
+    "confirm_password": "确认密码",
+    "pass_incorrect": "密码错误",
+    "confirm_error": "两次输入的密码不相同",
     "download": "下载",
     "new_wallet_name": "新钱包名字",
     "wallet_exist": "同名钱包已存在，请选择不同名字",
@@ -1038,6 +1042,10 @@
     "tips_header": "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
     "tips_login": "重要！这里没有登录/注销的概念和功能，当你需要发生交易时解锁钱包，闲置或者手动选择进行钱包锁定。",
     "import_key_success": "已成功导入 %(count)s 个密钥。",
+    "brainkey_seq_reset": "重置脑秘钥序号",
+    "brainkey_seq_reset_text": "脑密钥序号是用来协助钱包脑秘钥衍生私钥。<br />重置序号也可以用来强制刷新钱包内的私钥。",
+    "brainkey_seq_reset_button": "重置",
+    "brainkey_reset_success": "脑秘钥序号已成功重置。为了重新刷新你的私钥，请点击浏览器刷新按钮刷新页面，并解锁钱包。",
     "wallet_password": "使用密码从任何地方登录",
     "password_lose_warning": "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
     "password_crucial": "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户, <strong>我们没有办法帮助你恢复</strong>.",
@@ -1060,7 +1068,8 @@
     "switch_model_wallet": "切换到钱包模式",
     "switch_model_password": "切换到账户模式",
     "account_public": "账户名称（公开可见）",
-    "current_pass": "当前密码"
+    "current_pass": "当前密码",
+    "no_wallet": "你还没有钱包"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",
@@ -1159,8 +1168,8 @@
       "memo": "备注",
       "alipay_account_name_notice": "支付宝账户名，一般为用户名或手机号。",
       "alipay_realname_notice": "提现到支付宝请在备注栏输入真实姓名以供校验",
-      "withdraw_note": "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到您的支付宝账户中",
-      "you_will_receive": "您将收到 %(amount)s 元人民币"
+      "withdraw_note": "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到你的支付宝账户中",
+      "you_will_receive": "你将收到 %(amount)s 元人民币"
     },
     "meta": {
       "open_website": "访问官网"
@@ -1242,7 +1251,7 @@
     "disconnected": "你已从聊天室断开链接，请点击下方重新连接。",
     "rate": "请等待至少2秒发送新消息。",
     "reconnect": "重新连接",
-    "users": "%(count)s 用户在线",
+    "users": "%(userCount)s 用户在线",
     "disabled": "聊天室禁用",
     "enable": "启用聊天室",
     "telegram_link": "参与更加活跃的讨论，请加人 Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"

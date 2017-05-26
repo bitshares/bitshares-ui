@@ -962,7 +962,6 @@
     "confirm_password": "Confirm Password",
     "pass_incorrect": "Incorrect password",
     "confirm_error": "The confirmation does not match the password",
-    "download": "Download",
     "new_wallet_name": "New Wallet Name",
     "wallet_exist": "Wallet exists, choose a new name",
     "wallet_exist_with_name": "Wallet (%(name)s) exists, please change the name",
