@@ -38,6 +38,7 @@ class Dashboard extends React.Component {
                 ["BTS", "CNY"],
                 ["BTS", "ICOO"],
                 ["BTS", "HERO"],
+                ["BTS", "RUBLE"],
                 ["BTS", "GOLD"],
                 ["BTS", "BLOCKPAY"],
                 ["BTS", "BTWTY"],

@@ -962,7 +962,6 @@
     "confirm_password": "Confirm Password",
     "pass_incorrect": "Incorrect password",
     "confirm_error": "The confirmation does not match the password",
-    "download": "Download",
     "new_wallet_name": "New Wallet Name",
     "wallet_exist": "Wallet exists, choose a new name",
     "wallet_exist_with_name": "Wallet (%(name)s) exists, please change the name",
@@ -1226,7 +1225,8 @@
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit": "Deposit limit"
+    "deposit_limit": "Deposit limit",
+    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s"
   },
   "chat": {
     "title": "Trollbox",
