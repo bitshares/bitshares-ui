@@ -90,7 +90,6 @@ export default class AccountUtils {
             "poloniexwallett",
             "poloniexwall-t",
             "poloniexwalle",
-            "poloniex",
             "poloneix"
         ];
 
