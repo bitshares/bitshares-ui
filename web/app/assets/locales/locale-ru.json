@@ -1225,7 +1225,8 @@
     },
     "purchase":"Покупка %(asset)s",
     "purchase_1":"Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit":"Лимит на депозиты"
+    "deposit_limit":"Лимит на депозиты",
+    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s"
   },
   "chat":{
     "title":"Троллбокс",
