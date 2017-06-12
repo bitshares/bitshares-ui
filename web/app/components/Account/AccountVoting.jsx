@@ -556,8 +556,12 @@ class AccountVoting extends React.Component {
 
                         <Tab title="account.votes.workers_short">
 
-                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                            <div className={cnames("content-block")}>
                                 <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
+
+                                <div style={{paddingBottom: 20}}>
+                                    <Link to="/create-worker"><div className="button">Create a new worker</div></Link>
+                                </div>
                                 <table>
                                     <tbody>
                                         <tr>
