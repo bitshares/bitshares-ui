@@ -153,7 +153,8 @@ class SettingsStore {
                     "OPEN.STEEM", "OPEN.GAME", "PEERPLAYS", "USD", "CNY", "BTSR", "OBITS",
                     "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
-                    "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC"
+                    "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
+                    "YOYOW", "EOS", "HERO", "RUBLE"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"

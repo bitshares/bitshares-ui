@@ -21,10 +21,11 @@ class AccountPermissionTree extends React.Component {
     };
 
     render() {
-        let {account, accounts, available, availableKeys, permission, threshold} = this.props;
+        let {account, available, availableKeys, permission, threshold} = this.props;
 
         let isOK = permission.isAvailable(available);
         let isNested = permission.isNested();
+        let isMultiSig = permission.isMultiSig();
 
         let status = [];
 
@@ -50,7 +51,7 @@ class AccountPermissionTree extends React.Component {
                     <LinkToAccountById subpage="permissions" account={account.get("id")} />
                 </div>
                 <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
-                    {!isNested ? (
+                    {!isNested && !isMultiSig ? (
                     <span>
                         {isOK ? <Icon name="checkmark-circle" size="1x" className="success"/> :
                                 <Icon name="cross-circle" size="1x" className="error"/>}
@@ -63,7 +64,7 @@ class AccountPermissionTree extends React.Component {
             </div>
         );
 
-        if (permission.isNested) {
+        if (isNested || isMultiSig) {
             permission.accounts.forEach(subAccount => {
                 status.push(
                     <BoundAccountPermissionTree
@@ -79,7 +80,7 @@ class AccountPermissionTree extends React.Component {
                 );
             })
 
-            if (permission.keys.length && permission.isNested()) {
+            if (permission.keys.length) {
                 permission.keys.forEach(key => {
                     status.push(
                         <KeyPermissionBranch

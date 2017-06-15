@@ -1041,7 +1041,7 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr key={key++}>
-                            <td style={{textTranform: "capitalize"}}>
+                            <td>
                                 <Translate component="span" content="modal.reserve.from" />
                             </td>
                             <td>{this.linkToAccount(op[1].payer)}</td>
@@ -1061,6 +1061,59 @@ class Transaction extends React.Component {
                             <td><FormattedAsset amount={op[1].amount_to_reserve.amount} asset={op[1].amount_to_reserve.asset_id} /></td>
                         </tr>
                     );
+                    break;
+
+                case "worker_create":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="explorer.workers.title" />
+                            </td>
+                            <td>{op[1].name}</td>
+                        </tr>
+                    );
+
+                    let startDate = counterpart.localize(new Date(op[1].work_begin_date), { type: "date" });
+                    let endDate = counterpart.localize(new Date(op[1].work_end_date), { type: "date" });
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="explorer.workers.period" />
+                            </td>
+                            <td>{startDate} - {endDate}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="explorer.workers.daily_pay" />
+                            </td>
+                            <td><FormattedAsset amount={op[1].daily_pay} asset="1.3.0" /></td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="explorer.workers.website" />
+                            </td>
+                            <td>{op[1].url}</td>
+                        </tr>
+                    );
+
+                    if (op[1].initializer[1]) {
+                        rows.push(
+                            <tr key={key++}>
+                                <td>
+                                    <Translate component="span" content="explorer.workers.vesting_pay" />
+                                </td>
+                                <td>{op[1].initializer[1].pay_vesting_period_days}</td>
+                            </tr>
+                        );
+                    }
+
                     break;
 
                 default:

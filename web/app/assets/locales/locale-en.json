@@ -362,7 +362,7 @@
     "header": "Transfer details",
     "from": "From",
     "pay_from": "Pay From",
-    "amount": "Amount",
+    "amount": "Quantity",
     "to": "To",
     "memo": "Memo",
     "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
@@ -454,7 +454,8 @@
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
     "asset_reserve": "Reserve (burn) {amount} using {account}",
-    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+    "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -557,7 +558,7 @@
       "committee_member_update_global_parameters": "Global parameters update",
       "vesting_balance_create": "Create vesting balance",
       "vesting_balance_withdraw": "Withdraw vesting balance",
-      "worker_create": "Create budget item",
+      "worker_create": "Create worker",
       "custom": "Custom",
       "assert": "Assert operation",
       "balance_claim": "Claim balance",
@@ -724,7 +725,19 @@
       "title": "Committee member"
     },
     "workers": {
-      "title": "Budget Items"
+      "title": "Worker name",
+      "period": "Worker duration",
+      "daily_pay": "Daily pay (BTS)",
+      "website": "Website",
+      "vesting_pay": "Salary vesting period (days)",
+      "create": "Create a new worker proposal",
+      "create_text_1": "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
+      "create_text_2": "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
+      "name_text": "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
+      "date_text": "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
+      "pay_text": "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
+      "url_text": "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
+      "vesting_text": "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
     },
     "proposals": {
       "title": "Proposed transactions"
@@ -961,7 +974,6 @@
     "confirm_password": "Confirm Password",
     "pass_incorrect": "Incorrect password",
     "confirm_error": "The confirmation does not match the password",
-    "download": "Download",
     "new_wallet_name": "New Wallet Name",
     "wallet_exist": "Wallet exists, choose a new name",
     "wallet_exist_with_name": "Wallet (%(name)s) exists, please change the name",
@@ -1121,6 +1133,13 @@
       "accept": "Yes",
       "cancel": "No"
     },
+    "proposals": {
+        "pay_with": "Pay with account",
+        "approval_add": "Approval to add",
+        "approval_remove": "Approval to remove",
+        "key_approval_add": "Key approval to add",
+        "key_approval_remove": "Key approval to remove"
+    },
     "ok": "OK"
   },
   "init_error": {
@@ -1193,7 +1212,7 @@
     "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
     "intermediate": "Intermediate account",
     "asset_to_withdraw": "Asset to withdraw:",
-    "support_block": "For support, please contact Blocktrades at:",
+    "support_block": "For support, please contact OpenLedger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
@@ -1207,6 +1226,9 @@
       "deposit_title": "Deposit RMB to %(asset)s",
       "withdraw_title": "Withdraw %(asset)s to RMB",
       "alipay": "ALIPAY Account Name",
+      "memo": "Memo",
+      "alipay_account_name_notice": "Normally it's your Alipay account username or mobile phone number",
+      "alipay_realname_notice": "Withdraw to Alipay, please provide real name in MEMO field to verify",
       "withdraw_note": "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
       "you_will_receive": "You will receive %(amount)s RMB"
     },
@@ -1215,7 +1237,8 @@
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit": "Deposit limit"
+    "deposit_limit": "Deposit limit",
+    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s"
   },
   "chat": {
     "title": "Trollbox",
