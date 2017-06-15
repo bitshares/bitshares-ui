@@ -217,7 +217,7 @@
     },
     "perm":{
       "active":"Действующие права доступа",
-      "owner":"Права доступа владелеца",
+      "owner":"Права доступа владельца",
       "memo_key":"Ключ примечания",
       "publish":"Опубликовать изменения",
       "reset":"Отменить изменения",
@@ -558,7 +558,7 @@
       "committee_member_update_global_parameters":"Обновление глобальных параметров",
       "vesting_balance_create":"Создание вестингового баланса",
       "vesting_balance_withdraw":"Вывод вестингового баланса",
-      "worker_create":"Создание элемента бюджета",
+      "worker_create":"Создать работника",
       "custom":"Специальная",
       "assert":"Операция подтверждения",
       "balance_claim":"Взыскание баланса",
@@ -725,19 +725,19 @@
       "title":"Член комитета"
     },
     "workers":{
-      "title":"Элементы бюджета",
-      "period": "Worker duration",
-      "daily_pay": "Daily pay (BTS)",
-      "website": "Website",
-      "vesting_pay": "Salary vesting period (days)",
-      "create": "Create a new worker proposal",
-      "create_text_1": "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
-      "create_text_2": "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
-      "name_text": "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
-      "date_text": "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
-      "pay_text": "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
-      "url_text": "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
-      "vesting_text": "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
+      "title":"Имя работника",
+      "period":"Продолжительность работы",
+      "daily_pay":"Ежедневная плата (BTS)",
+      "website":"Веб-сайт",
+      "vesting_pay":"Вестинговый период зарплаты (дней)",
+      "create":"Создать предложение о работе",
+      "create_text_1":"Чтобы создать нового работника, пожалуйста, заполните форму ниже. Работник будет создан с использованием Вашего текущего активного аккаунта, который уже должен обладать пожизненным членством.",
+      "create_text_2":"Тщательно продумайте параметры, которые выбираете, так как они не могут быть изменены после того, как Вы опубликовали своего работника.",
+      "name_text":"Имя Вашего работника должно быть коротким и описующим, нечто вроде \"Цель работника - Имя аккаунта\"",
+      "date_text":"Дата начала должна быть назначена как минимум на неделю вперед, чтобы у людей было время найти, оценить и проголосовать за Вашего работника.",
+      "pay_text":"Ежедневная плата определяет, сколько Вы хотите получать в день, и указывется в BTS. В настоящее время сложилась практика указания зарплаты в USD/CNY и сжигания любых излишков, полученных в результате роста цены BTS. До тех пор, пока Ваш работник активен и имеет достаточно голосов, чтобы быть выше работника по возвратам, Вы будете продолжать получать эту зарплату.",
+      "url_text":"Вы должны предоставить ссылку на веб-сайт, документ в github или google docs, где более детально описывается цель создания работника и то, как Вы будете расходовать его зарплату.",
+      "vesting_text":"Вестинговый период определяет число дней, которые будет веститься зарплата работника, прежде чем стать полностью доступной для востребования."
     },
     "proposals":{
       "title":"Предложенные транзакции"
