@@ -38,3 +38,4 @@ require("file-loader?name=asset-symbols/[name].png!./eos.png");
 require("file-loader?name=asset-symbols/[name].png!./yoyow.png");
 require("file-loader?name=asset-symbols/[name].png!./hero.png");
 require("file-loader?name=asset-symbols/[name].png!./ruble.png");
+require("file-loader?name=asset-symbols/[name].png!./oct.png");
