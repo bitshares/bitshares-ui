@@ -294,14 +294,17 @@ class WalletDb extends BaseStore {
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
         if (account) {
+            let id = 0;
             function setKey(role, priv, pub) {
                 if (!_passwordKey) _passwordKey = {};
                 _passwordKey[pub] = priv;
+
+                id++;
                 PrivateKeyStore.setPasswordLoginKey({
                     pubkey: pub,
                     import_account_names: [account],
                     encrypted_key: null,
-                    id: 1,
+                    id,
                     brainkey_sequence: null
                 });
             }
