@@ -255,7 +255,10 @@ class WalletDb extends BaseStore {
                 let end = idb_helper.on_transaction_end(transaction).then( () => {
                     this.state.wallet = wallet
                     this.setState({ wallet })
-                    if(unlock) aes_private = local_aes_private
+                    if(unlock) {
+                        aes_private = local_aes_private;
+                        WalletUnlockActions.unlock();
+                    }
                 })
                 Promise.all([ add, end ]).then(() => {
                     resolve();
