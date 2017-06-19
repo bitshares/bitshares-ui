@@ -35,6 +35,7 @@ class WalletUnlockStore {
         //
         this._setLockTimeout();
         if( ! WalletDb.isLocked()) {
+            this.setState({locked: false});
             resolve();
             return;
         }

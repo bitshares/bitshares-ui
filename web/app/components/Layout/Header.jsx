@@ -187,7 +187,7 @@ class Header extends React.Component {
             </ActionSheet.Button>
         ) : null;
 
-        let lock_unlock = ((this.props.current_wallet && myAccountCount) || passwordLogin) ? (
+        let lock_unlock = ((!!this.props.current_wallet) || passwordLogin) ? (
             <div className="grp-menu-item" >
             { this.props.locked ?
                 <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>

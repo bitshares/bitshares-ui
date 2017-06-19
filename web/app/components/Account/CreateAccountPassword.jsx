@@ -4,7 +4,6 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
-import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
 import {Link} from "react-router/es";
@@ -12,7 +11,8 @@ import AccountSelect from "../Forms/AccountSelect";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
-import {ChainStore, FetchChain} from "bitsharesjs/es";
+import counterpart from "counterpart";
+import {ChainStore, FetchChain, key} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
@@ -30,7 +30,11 @@ class CreateAccountPassword extends React.Component {
             hide_refcode: true,
             show_identicon: false,
             step: 1,
-            showPass: false
+            showPass: false,
+            generatedPassword: "P" + key.get_random_key().toWif(),
+            confirm_password: "",
+            understand_1: false,
+            understand_2: false
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
@@ -61,7 +65,7 @@ class CreateAccountPassword extends React.Component {
         if (!firstAccount) {
             valid = valid && this.state.registrar_account;
         }
-        return valid;
+        return valid && this.state.understand_1 && this.state.understand_2;
     }
 
     onAccountNameChange(e) {
@@ -70,10 +74,6 @@ class CreateAccountPassword extends React.Component {
         if(e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
         this.setState(state);
-    }
-
-    onPasswordChange(e) {
-        this.setState({validPassword: e.valid, pass: e.value});
     }
 
     onFinishConfirm(confirm_store_state) {
@@ -141,7 +141,7 @@ class CreateAccountPassword extends React.Component {
         // if (WalletDb.getWallet()) {
         //     this.createAccount(account_name);
         // } else {
-        let password = this.refs.password.value();
+        let password = this.state.generatedPassword;
         this.createAccount(account_name, password);
     }
 
@@ -153,6 +153,13 @@ class CreateAccountPassword extends React.Component {
     //     e.preventDefault();
     //     this.setState({hide_refcode: false});
     // }
+
+    _onInput(value, e) {
+        this.setState({
+            [value]: value === "confirm_password" ? e.target.value : !this.state[value],
+            validPassword: value === "confirm_password" ? e.target.value === this.state.generatedPassword : this.state.validPassword
+        });
+    }
 
     _renderAccountCreateForm() {
 
@@ -173,72 +180,93 @@ class CreateAccountPassword extends React.Component {
         let buttonClass = classNames("submit-button button no-margin", {disabled: (!valid || (registrar_account && !isLTM))});
 
         return (
-            <form
-                style={{maxWidth: "40rem"}}
-                onSubmit={this.onSubmit.bind(this)}
-                noValidate
-            >
-                <p style={{fontWeight: "bold"}}><Translate content="wallet.create_password" /></p>
-                <AccountNameInput
-                    ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
-                    cheapNameOnly={!!firstAccount}
-                    onChange={this.onAccountNameChange.bind(this)}
-                    accountShouldNotExist={true}
-                    placeholder="Account Name (Public)"
-                    noLabel
-                />
+            <div>
 
-                {/* Only ask for password if a wallet already exists */}
-                <PasswordInput
-                    ref="password"
-                    confirmation={true}
-                    onChange={this.onPasswordChange.bind(this)}
-                    noLabel
-                    passwordLength={12}
-                    checkStrength
-                />
+                <form
+                    style={{maxWidth: "60rem"}}
+                    onSubmit={this.onSubmit.bind(this)}
+                    noValidate
+                >
+                    <p style={{fontWeight: "bold"}}><Translate content="wallet.create_password" /></p>
+                    <AccountNameInput
+                        ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
+                        cheapNameOnly={!!firstAccount}
+                        onChange={this.onAccountNameChange.bind(this)}
+                        accountShouldNotExist={true}
+                        placeholder={counterpart.translate("wallet.account_public")}
+                        noLabel
+                    />
 
-                {/* If this is not the first account, show dropdown for fee payment account */}
-                {
-                firstAccount ? null : (
-                    <div className="full-width-content form-group no-overflow">
-                        <label><Translate content="account.pay_from" /></label>
-                        <AccountSelect
-                            account_names={my_accounts}
-                            onChange={this.onRegistrarAccountChange.bind(this)}
+                <section>
+                    <label className="left-label"><Translate content="wallet.generated" /></label>
+                    <div style={{padding: "0.25rem"}}>
+                        <p>{this.state.generatedPassword}</p>
+                    </div>
+                </section>
 
-                        />
-                        {(registrar_account && !isLTM) ? <div style={{textAlign: "left"}} className="facolor-error"><Translate content="wallet.must_be_ltm" /></div> : null}
-                    </div>)
-                }
+                <section>
+                    <label className="left-label"><Translate content="wallet.confirm_password" /></label>
+                    <input type="password" value={this.state.confirm_password} onChange={this._onInput.bind(this, "confirm_password")}/>
+                    {this.state.confirm_password && this.state.confirm_password !== this.state.generatedPassword ?
+                    <div className="has-error"><Translate content="wallet.confirm_error" /></div> : null}
+            </section>
 
-                <div className="divider" />
+                <br />
+                <div onClick={this._onInput.bind(this, "understand_1")}>
+                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_1}/>
+                    <label><Translate content="wallet.understand_1" /></label>
+                </div>
+                <br />
 
-                {/* Submit button */}
-                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
+                <div onClick={this._onInput.bind(this, "understand_2")}>
+                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_2}/>
+                    <label><Translate content="wallet.understand_2" /></label>
+                </div>
+                    {/* If this is not the first account, show dropdown for fee payment account */}
+                    {
+                    firstAccount ? null : (
+                        <div className="full-width-content form-group no-overflow" style={{paddingTop: 30}}>
+                            <label><Translate content="account.pay_from" /></label>
+                            <AccountSelect
+                                account_names={my_accounts}
+                                onChange={this.onRegistrarAccountChange.bind(this)}
+                            />
+                            {(registrar_account && !isLTM) ? <div style={{textAlign: "left"}} className="facolor-error"><Translate content="wallet.must_be_ltm" /></div> : null}
+                        </div>)
+                    }
 
-                {/* Backup restore option */}
-                {/* <div style={{paddingTop: 40}}>
-                    <label>
-                        <Link to="/existing-account">
-                            <Translate content="wallet.restore" />
-                        </Link>
-                    </label>
+                    <div className="divider" />
 
-                    <label>
-                        <Link to="/create-wallet-brainkey">
-                            <Translate content="settings.backup_brainkey" />
-                        </Link>
-                    </label>
-                </div> */}
+                    {/* Submit button */}
+                    {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
 
-                {/* Skip to step 3 */}
-                {/* {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
-                    <label>
-                        <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
-                    </label>
-                </div>} */}
-            </form>
+                    {/* Backup restore option */}
+                    {/* <div style={{paddingTop: 40}}>
+                        <label>
+                            <Link to="/existing-account">
+                                <Translate content="wallet.restore" />
+                            </Link>
+                        </label>
+
+                        <label>
+                            <Link to="/create-wallet-brainkey">
+                                <Translate content="settings.backup_brainkey" />
+                            </Link>
+                        </label>
+                    </div> */}
+
+                    {/* Skip to step 3 */}
+                    {/* {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
+                        <label>
+                            <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
+                        </label>
+                    </div>} */}
+                </form>
+                <br />
+                <p>
+                    <Translate content="wallet.bts_rules" unsafe />
+                </p>
+            </div>
         );
     }
 
@@ -255,7 +283,7 @@ class CreateAccountPassword extends React.Component {
                 <Translate style={{textAlign: "left"}} component="p" content="wallet.create_account_text" />
 
                 {firstAccount ?
-                    <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> :
+                    null :
                     <Translate style={{textAlign: "left"}} component="p" content="wallet.not_first_account" />}
             </div>
         );
@@ -268,7 +296,7 @@ class CreateAccountPassword extends React.Component {
 
                 <div>
 
-                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}} className="no-overflow">{this.state.pass}</div></div>}
+                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}} className="no-overflow">{this.state.generatedPassword}</div></div>}
                 </div>
                 <div className="divider" />
                 <div onClick={() => {this.setState({step: 3});}} className="button"><Translate content="init_error.understand" /></div>
@@ -352,7 +380,7 @@ class CreateAccountPassword extends React.Component {
         // let firstAccount = my_accounts.length === 0;
         return (
             <div className="grid-block vertical page-layout Account_create">
-                <div className="grid-block shrink small-12 medium-10 medium-offset-2">
+                <div className="grid-block shrink small-12 medium-10 medium-offset-1">
                     <div className="grid-content" style={{paddingTop: 20}}>
                         <Translate content="wallet.wallet_new" component="h2" />
                         {/* <h4 style={{paddingTop: 20}}>
@@ -365,18 +393,19 @@ class CreateAccountPassword extends React.Component {
                     </div>
                 </div>
                 <div className="grid-block wrap">
-                    <div className="grid-content small-12 medium-4 medium-offset-2">
+                    <div className="grid-content small-12 large-6 large-offset-1">
                         {step !== 1 ? <p style={{fontWeight: "bold"}}>
                             <Translate content={"wallet.step_" + step} />
                         </p> : null}
 
-                        {step === 1 ? this._renderAccountCreateForm() : step === 2 ? this._renderBackup() :
+                        {step === 1 ? (<div>{this._renderAccountCreateText()}
+                    <br />{this._renderAccountCreateForm()}</div>) : step === 2 ? this._renderBackup() :
                             this._renderGetStarted()
                         }
                     </div>
 
-                    <div className="grid-content small-12 medium-4 medium-offset-1">
-                        {step === 1 ? this._renderAccountCreateText() : step === 2 ? this._renderBackupText() :
+                    <div className="grid-content small-12 large-5">
+                        {step === 1 ? null : step === 2 ? this._renderBackupText() :
                             this._renderGetStartedText()
                         }
                     </div>

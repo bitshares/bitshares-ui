@@ -23,6 +23,8 @@
     "update_asset": "Asset ändern",
     "lock": "Sperren",
     "unlock": "Entsperren",
+    "unlock_password": "Log in using a password",
+    "unlock_short": "Login",
     "help": "Hilfe",
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
     "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
@@ -613,7 +615,19 @@
       "title": "Kommitteemitglied"
     },
     "workers": {
-      "title": "Budgetpunkte"
+      "title": "Budgetpunkte",
+      "period": "Worker duration",
+      "daily_pay": "Daily pay (BTS)",
+      "website": "Website",
+      "vesting_pay": "Salary vesting period (days)",
+      "create": "Create a new worker proposal",
+      "create_text_1": "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
+      "create_text_2": "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
+      "name_text": "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
+      "date_text": "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
+      "pay_text": "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
+      "url_text": "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
+      "vesting_text": "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
     },
     "proposals": {
       "title": "Vorschlag"
@@ -841,7 +855,11 @@
     "switch_model_wallet": "Switch to wallet model",
     "switch_model_password": "Switch to account model",
     "account_public": "Account Name (Public)",
-    "current_pass": "Current password"
+    "current_pass": "Current password",
+    "generated": "Generated password",
+    "understand_1": "I understand that no one can recover my password if I lose or forget it",
+    "understand_2": "I have written down or oherwise stored my password",
+    "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
   },
   "borrow": {
     "title": "Kollateral Position für %(asset_symbol)s",

@@ -198,6 +198,9 @@ const routes = (
         <Route path="deposit-withdraw" getComponent={(location, cb) => {
             System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
         }}/>
+        <Route path="create-worker" getComponent={(location, cb) => {
+            System.import("components/Account/CreateWorker").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
         <Route path="/init-error" getComponent={(location, cb) => {
             System.import("components/InitError").then(loadRoute(cb)).catch(errorLoading);
         }}/>

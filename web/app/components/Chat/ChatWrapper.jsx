@@ -68,9 +68,7 @@ export default class ChatWrapper extends React.Component {
                                     textAlign: "center",
                                     paddingTop: 120
                                 }}>
-                                <div onClick={this._onEnableChat.bind(this)} className="button">
-                                    <Translate content="chat.enable" />
-                                </div>
+                                <Translate component="p" unsafe content="chat.telegram_link" />
                             </div>
                         </div>
                     </div>

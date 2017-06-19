@@ -56,23 +56,24 @@ class App extends React.Component {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
 
-            // ChainStore.init().then(() => {
 
-
-            Promise.all([
-                AccountStore.loadDbData(Apis.instance().chainId)
-            ]).then(() => {
-                AccountStore.tryToSetCurrentAccount();
-                this.setState({loading: false});
+            ChainStore.init().then(() => {
+                this.setState({synced: true});
+                Promise.all([
+                    AccountStore.loadDbData(Apis.instance().chainId)
+                ]).then(() => {
+                    AccountStore.tryToSetCurrentAccount();
+                    this.setState({loading: false});
+                }).catch(error => {
+                    console.log("[App.jsx] ----- ERROR ----->", error);
+                    this.setState({loading: false});
+                });
             }).catch(error => {
-                console.log("[App.jsx] ----- ERROR ----->", error);
-                this.setState({loading: false});
+                console.log("[App.jsx] ----- ChainStore.init error ----->", error);
+                let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+
+                this.setState({loading: false, synced: false, syncFail});
             });
-            // }).catch(error => {
-            //     console.log("[App.jsx] ----- ChainStore.init error ----->", error);
-            //
-            //     this.setState({loading: false, syncFail});
-            // });
         } catch(e) {
             console.error("e:", e);
         }
@@ -165,7 +166,7 @@ class App extends React.Component {
                             {isMobile ? null :
                                 <Chat
                                     showChat={showChat}
-                                    disable={disableChat}
+                                    disable={true /* disableChat */}
                                     footerVisible={showFooter}
                                     dockedChat={dockedChat}
                                 />}

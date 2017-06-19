@@ -217,7 +217,7 @@
     },
     "perm":{
       "active":"Действующие права доступа",
-      "owner":"Права доступа владелеца",
+      "owner":"Права доступа владельца",
       "memo_key":"Ключ примечания",
       "publish":"Опубликовать изменения",
       "reset":"Отменить изменения",
@@ -350,7 +350,7 @@
       "premium_name_warning":"Это премиум имя, которое является более дорогостоящим, чем имя, содержащее тире (-) или цифры."
     },
     "propose_from":"Предложить от",
-    "settle":"Закрыть позицию",
+    "settle":"Запросить расчет",
     "no_orders":"Нет открытых ордеров",
     "asset_details":"Детали актива"
   },
@@ -362,7 +362,7 @@
     "header":"Детали транзакции",
     "from":"От",
     "pay_from":"Оплатить с",
-    "amount":"Сумма",
+    "amount":"Количество",
     "to":"Кому",
     "memo":"Примечание",
     "warn_name_unable_read_memo":"Предупреждение: %(name)s не сможет прочесть это примечание",
@@ -440,7 +440,7 @@
     "status":"Статус",
     "asset_create":"Создать актив %(asset)s, используя аккаунт {account}",
     "asset_update":"Обновить актив %(asset)s, используя аккаунт {account}",
-    "asset_settle":"Запросить погашение",
+    "asset_settle":"Запросить расчет",
     "update":{
       "active_approvals_to_add":"Действующие подтверждения для добавления",
       "active_approvals_to_remove":"Действующие подтверждения для удаления",
@@ -454,7 +454,8 @@
     "override_transfer":"Перевести {amount} от {from} к {to} по поручению {issuer}",
     "asset_issue":"Выпустить {amount} {to}, используя {account}",
     "asset_reserve":"Сжечь {amount} используя аккаунт {account}",
-    "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}"
+    "vesting_balance_withdraw":"Вывести {amount} с вестингового баланса {account}",
+    "feed_producer":"Обновить поставщиков котировок для актива {asset} используя аккаунт {account}"
   },
   "transaction":{
     "confirm":"Пожалуйста, подтвердите транзакцию",
@@ -557,7 +558,7 @@
       "committee_member_update_global_parameters":"Обновление глобальных параметров",
       "vesting_balance_create":"Создание вестингового баланса",
       "vesting_balance_withdraw":"Вывод вестингового баланса",
-      "worker_create":"Создание элемента бюджета",
+      "worker_create":"Создать работника",
       "custom":"Специальная",
       "assert":"Операция подтверждения",
       "balance_claim":"Взыскание баланса",
@@ -568,11 +569,11 @@
       "asset_claim_fees":"Взыскание комиссий с активов"
     },
     "feeGroups":{
-      "general":"Главный",
-      "asset":"Актив-ориентированный",
-      "market":"Рынок-ориентированный",
-      "account":"Аккаунт-ориентированный",
-      "business":"Бизнес администрация"
+      "general":"Основные",
+      "asset":"Относящиеся к активам",
+      "market":"Относящиеся к бирже",
+      "account":"Относящиеся к аккаунтам",
+      "business":"Обслуживающие бизнес-процессы"
     },
     "feeTypes":{
       "_none":"Без комиссий",
@@ -582,9 +583,9 @@
       "premium_fee":"Комиссия для Премиум Имен",
       "membership_annual_fee":"Годовое Членство",
       "membership_lifetime_fee":"Пожизненное Членство",
-      "symbol3":"Символы с тремя знаками",
-      "symbol4":"Символы с четырьмя знаками",
-      "long_symbol":"Длинные символы"
+      "symbol3":"Тикеры с тремя знаками",
+      "symbol4":"Тикеры с четырьмя знаками",
+      "long_symbol":"Длинные тикеры"
     },
     "whitelist_states":{
       "no_listing":"Не внесен в списки",
@@ -724,7 +725,19 @@
       "title":"Член комитета"
     },
     "workers":{
-      "title":"Элементы бюджета"
+      "title":"Имя работника",
+      "period":"Продолжительность работы",
+      "daily_pay":"Ежедневная плата (BTS)",
+      "website":"Веб-сайт",
+      "vesting_pay":"Вестинговый период зарплаты (дней)",
+      "create":"Создать предложение о работе",
+      "create_text_1":"Чтобы создать нового работника, пожалуйста, заполните форму ниже. Работник будет создан с использованием Вашего текущего активного аккаунта, который уже должен обладать пожизненным членством.",
+      "create_text_2":"Тщательно продумайте параметры, которые выбираете, так как они не могут быть изменены после того, как Вы опубликовали своего работника.",
+      "name_text":"Имя Вашего работника должно быть коротким и описующим, нечто вроде \"Цель работника - Имя аккаунта\"",
+      "date_text":"Дата начала должна быть назначена как минимум на неделю вперед, чтобы у людей было время найти, оценить и проголосовать за Вашего работника.",
+      "pay_text":"Ежедневная плата определяет, сколько Вы хотите получать в день, и указывется в BTS. В настоящее время сложилась практика указания зарплаты в USD/CNY и сжигания любых излишков, полученных в результате роста цены BTS. До тех пор, пока Ваш работник активен и имеет достаточно голосов, чтобы быть выше работника по возвратам, Вы будете продолжать получать эту зарплату.",
+      "url_text":"Вы должны предоставить ссылку на веб-сайт, документ в github или google docs, где более детально описывается цель создания работника и то, как Вы будете расходовать его зарплату.",
+      "vesting_text":"Вестинговый период определяет число дней, которые будет веститься зарплата работника, прежде чем стать полностью доступной для востребования."
     },
     "proposals":{
       "title":"Предложенные транзакции"
@@ -736,7 +749,7 @@
       "type":"Тип комиссии",
       "fee":"Стандартная комиссия",
       "feeeq":"(эквивалент)",
-      "feeltm":"Комиссия за Пожизненное/Годовое членство",
+      "feeltm":"Комиссия для обладателей Пожизненного/Годового членства",
       "feeltmeq":"(эквивалент)"
     }
   },
@@ -754,7 +767,7 @@
     "add_ws":"Добавить новый WebSocket API",
     "remove_ws":"Удалить WebSocket API",
     "faucet_address":"Адрес сервера-крана (faucet)",
-    "showSettles":"Показать установленные ордера на графике глубины",
+    "showSettles":"Показать ордера на погашение ордера на графике глубины",
     "showAssetPercent":"Показать процентное соотношение активов на на странице аккаунтов",
     "yes":"Да",
     "no":"Нет",
@@ -902,7 +915,7 @@
     "search":"Искать здесь другие рынки"
   },
   "fees":{
-    "title":"Расписание Выплат"
+    "title":"Прейскурант Комиссионных Сборов"
   },
   "markets":{
     "title":"Рынки",
@@ -1069,7 +1082,11 @@
     "switch_model_password":"Переключиться на модель аккаунта",
     "account_public":"Имя аккаунта (публичное)",
     "current_pass":"Текущий пароль",
-    "no_wallet":"У Вас еще нет кошелька"
+    "no_wallet":"У Вас еще нет кошелька",
+    "generated": "Generated password",
+    "understand_1": "I understand that no one can recover my password if I lose or forget it",
+    "understand_2": "I have written down or oherwise stored my password",
+    "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
   },
   "borrow":{
     "title":"%(asset_symbol)s маржа",
@@ -1119,6 +1136,13 @@
       "title":"Введенный Вами адрес недействителен. Вы уверены, что хотите выполнить снятие со счета?",
       "accept":"Да",
       "cancel":"Нет"
+    },
+    "proposals":{
+      "pay_with":"Оплатить с аккаунта",
+      "approval_add":"Подтверждение для добавления",
+      "approval_remove":"Подтверждение для исключения",
+      "key_approval_add":"Подтверждение ключей на добавление",
+      "key_approval_remove":"Подтверждение ключей на удаление"
     },
     "ok":"ОК"
   },
@@ -1192,7 +1216,7 @@
     "withdraw_to":"Нажмите кнопку ниже, чтобы открыть вывод %(asset)s",
     "intermediate":"Промежуточный аккаунт",
     "asset_to_withdraw":"Актив для вывода:",
-    "support_block":"Чтобы получить поддержку, пожалуйста, обратитесь в Blocktrades на:",
+    "support_block":"Для получения поддержки, пожалуйста, свяжитесь с OpenLedger по адресу:",
     "valid_address":"Пожалуйста, введите действительный %(coin_type)s адрес",
     "withdraw_coin":"Вывести %(coin)s (%(symbol)s)",
     "convert_coin":"Конвертировать в %(coin)s (%(symbol)s)",
@@ -1206,6 +1230,9 @@
       "deposit_title":"Внести юани (RMB) в %(asset)s",
       "withdraw_title":"Вывести %(asset)s в юанях (RMB)",
       "alipay":"Имя аккаунта в ALIPAY",
+      "memo":"Примечание",
+      "alipay_account_name_notice":"Обычно это имя Вашего аккаунта на Alipay или номер мобильного телефона",
+      "alipay_realname_notice":"Для вывода на Alipay, пожалуйста, укажите в поле ПРИМЕЧАНИЕ Ваше настоящее имя для проверки",
       "withdraw_note":"В данный момент поддерживается только вывод средств с помощью ALIPAY. Ваш актив будет конвертирован в юани (RMB) в соотношении 1:1 и отправлен на Ваш ALIPAY аккаунт",
       "you_will_receive":"Вы получите %(amount)s юани (RMB)"
     },
@@ -1214,7 +1241,8 @@
     },
     "purchase":"Покупка %(asset)s",
     "purchase_1":"Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit":"Лимит на депозиты"
+    "deposit_limit":"Лимит на депозиты",
+    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s"
   },
   "chat":{
     "title":"Троллбокс",

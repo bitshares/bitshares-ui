@@ -46,6 +46,7 @@ import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import LoginSelector from "./components/LoginSelector";
+import CreateWorker from "./components/Account/CreateWorker";
 
 const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
@@ -121,6 +122,7 @@ const routes = (
         </Route>
 
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
+        <Route path="create-worker" component={CreateWorker} />
         <Route path="/init-error" component={InitError} />
         <Route path="/help" component={Help} >
             <Route path=":path1" component={Help} >

@@ -634,7 +634,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     cacheInputAddress(input_coin_type, output_coin_type, address, memo)
     {
         let account_name = this.props.account.get('name');
-        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type, address);
+        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type, address, memo);
     }
 
     getCachedOrGeneratedInputAddress(input_coin_type, output_coin_type)
@@ -1103,6 +1103,13 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         <th ><Translate content="gateway.deposit_to" /></th>
                     </tr>
                 </thead>;
+                
+                let deposit_address_and_memo_element = null;
+                if (input_address_and_memo.memo)
+                    deposit_address_and_memo_element = <Translate unsafe content="gateway.address_with_memo" address={input_address_and_memo.address} memo={input_address_and_memo.memo} />;
+                else
+                    deposit_address_and_memo_element = <span>{input_address_and_memo.address}</span>;
+                //<span><span className="blocktrades-with-memo">with memo</span> {input_address_and_memo.memo}</span>;
 
                 deposit_body =
                     <tbody>
@@ -1127,7 +1134,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 <AccountBalance account={this.props.account.get('name')} asset={this.state.coins_by_type[this.state.deposit_output_coin_type].walletSymbol} />
                             </td>
                             <td>
-                                {input_address_and_memo.address}<br/>
+                                {deposit_address_and_memo_element}<br/>
                                 {deposit_limit_element}
                             </td>
                         </tr>

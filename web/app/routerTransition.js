@@ -99,7 +99,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
             } catch(err) {
                 console.log("db init error:", err);
             }
-            return Promise.all([db, SettingsStore.init(), ChainStore.init("willTransitionTo !init-error")]).then(() => {
+            return Promise.all([db, SettingsStore.init()]).then(() => {
                 return Promise.all([
                     PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
                     WalletDb.loadDbData().then(() => {
@@ -111,6 +111,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
                         }
                     }).catch((error) => {
                         console.error("----- WalletDb.willTransitionTo error ----->", error);
+                        replaceState("/init-error");
                     }),
                     WalletManagerStore.init()
                 ]).then(()=> {

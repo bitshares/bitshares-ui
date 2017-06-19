@@ -636,9 +636,7 @@ class Chat extends React.Component {
                 }}
             >
                 {!showChat ?
-                <a className="toggle-controlbox" onClick={this.onToggleChat.bind(this)}>
-                    <span className="chat-toggle"><Translate content="chat.button" /></span>
-                </a> : null}
+                <div>Chat is disabled</div> : null}
 
                 <div style={chatStyle} className={"chatbox"}>
                     <div className={"grid-block main-content vertical " + (docked ? "docked" : "flyout")} >

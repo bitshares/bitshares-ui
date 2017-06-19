@@ -29,7 +29,7 @@ class Settings extends React.Component {
             menuEntries,
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
-                "disableChat", "showAssetPercent", "passwordLogin", "reset"],
+                "showAssetPercent", "passwordLogin", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
@@ -69,6 +69,7 @@ class Settings extends React.Component {
 
         if (props.settings.get("passwordLogin")) {
             menuEntries.splice(4, 1);
+            menuEntries.splice(3, 1);
             menuEntries.splice(1, 1);
         }
         return menuEntries;
