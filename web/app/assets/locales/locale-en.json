@@ -1219,22 +1219,36 @@
     "support_block": "For support, please contact OpenLedger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
-	"convert_coin": "Convert to %(coin)s (%(symbol)s)",
+	  "convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
     "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
     "transwiser": {
+      "channel": {
+        "withdraw": {
+          "alipay": "ALIPAY",
+          "weixin_pay": "Wechat Pay",
+          "bank_wire": "Bank Wire"
+        }
+      },
+      "fee": "Fee",
+      "fee_min": "Minimum",
       "gateway": "Transwiser",
       "visit_weidian": "Visit to deposit",
       "deposit_title": "Deposit RMB to %(asset)s",
-      "withdraw_title": "Withdraw %(asset)s to RMB",
-      "alipay": "ALIPAY Account Name",
+      "withdraw_title": "Withdraw %(asset)s to %(channel)s",
+      "alipay_account": "ALIPAY Account Name",
       "memo": "Memo",
       "alipay_account_name_notice": "Normally it's your Alipay account username or mobile phone number",
+      "alipay_realname": "Real Name",
       "alipay_realname_notice": "Withdraw to Alipay, please provide real name in MEMO field to verify",
       "withdraw_note": "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
-      "you_will_receive": "You will receive %(amount)s RMB"
+      "you_will_receive": "You will receive %(amount)s RMB",
+      "bank_name": "Bank Name",
+      "bank_branch": "Branch",
+      "bank_account": "Account NO",
+      "bank_holder": "Holder Name"
     },
     "meta": {
       "open_website": "Open Website"

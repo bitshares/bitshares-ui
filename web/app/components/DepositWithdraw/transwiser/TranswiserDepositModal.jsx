@@ -14,7 +14,8 @@ class TranswiserDepositModal extends React.Component {
         qr:                React.PropTypes.string.isRequired,
         fee:               React.PropTypes.number.isRequired,
         modalId:           React.PropTypes.string.isRequired,
-        inventoryAsset:    ChainTypes.ChainAsset.isRequired
+        inventoryAsset:    ChainTypes.ChainAsset.isRequired,
+        onModalComplete:   React.PropTypes.func
     }
 
    constructor( props ) {
@@ -29,7 +30,7 @@ class TranswiserDepositModal extends React.Component {
                    <div className="content-block">
                        <h3><Translate content="gateway.transwiser.deposit_title" asset={this.props.inventoryAsset.get('symbol')} /></h3>
                     </div>
-                    <div className="content-block">
+                    <div className="content-block hide">
                        <label><Translate content="gateway.inventory" /></label>
                        <AccountBalance account={this.props.issuerAccount.get('name')} asset={this.props.inventoryAsset.get('symbol')} />
                     </div>
