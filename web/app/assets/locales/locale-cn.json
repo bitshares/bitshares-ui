@@ -1180,7 +1180,7 @@
         "withdraw": {
           "alipay": "支付宝",
           "weixin_pay": "微信支付",
-          "bank_wire": "网银"
+          "bank_wire": "银行账户"
         }
       },
       "fee": "手续费",

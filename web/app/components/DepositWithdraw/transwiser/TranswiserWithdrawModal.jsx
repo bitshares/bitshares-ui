@@ -156,7 +156,7 @@ class TranswiserWithdrawModal extends React.Component {
        return (<form className="grid-block vertical full-width-content">
                  <div className="grid-container">
                    <div className="content-block">
-                      <h3><Translate content="gateway.transwiser.withdraw_title" channel={this.props.channel.toUpperCase()} asset={this.props.sellAsset.get('symbol')} /></h3>
+                      <h3><Translate content="gateway.transwiser.withdraw_title" channel={counterpart.translate("gateway.transwiser.channel.withdraw."+this.props.channel)} asset={this.props.sellAsset.get('symbol')} /></h3>
                    </div>
                    <div className="content-block hide">
                        <p><Translate content="gateway.transwiser.withdraw_note" /></p>
