@@ -166,7 +166,7 @@ class App extends React.Component {
                             {isMobile ? null :
                                 <Chat
                                     showChat={showChat}
-                                    disable={disableChat}
+                                    disable={true /* disableChat */}
                                     footerVisible={showFooter}
                                     dockedChat={dockedChat}
                                 />}

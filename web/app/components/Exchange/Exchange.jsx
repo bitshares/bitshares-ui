@@ -215,8 +215,7 @@ class Exchange extends React.Component {
             const cerPrice = new Price({
                 base: cerBase, quote: cerQuote
             });
-            const convertedFee = coreFee.times(cerPrice);
-
+            const convertedFee = coreFee.times(cerPrice, true);
             return convertedFee;
         }
         catch(err) {

@@ -255,7 +255,10 @@ class WalletDb extends BaseStore {
                 let end = idb_helper.on_transaction_end(transaction).then( () => {
                     this.state.wallet = wallet
                     this.setState({ wallet })
-                    if(unlock) aes_private = local_aes_private
+                    if(unlock) {
+                        aes_private = local_aes_private;
+                        WalletUnlockActions.unlock();
+                    }
                 })
                 Promise.all([ add, end ]).then(() => {
                     resolve();
@@ -291,14 +294,17 @@ class WalletDb extends BaseStore {
     /** This also serves as 'unlock' */
     validatePassword( password, unlock = false, account = null, roles = ["active", "owner", "memo"] ) {
         if (account) {
+            let id = 0;
             function setKey(role, priv, pub) {
                 if (!_passwordKey) _passwordKey = {};
                 _passwordKey[pub] = priv;
+
+                id++;
                 PrivateKeyStore.setPasswordLoginKey({
                     pubkey: pub,
                     import_account_names: [account],
                     encrypted_key: null,
-                    id: 1,
+                    id,
                     brainkey_sequence: null
                 });
             }
