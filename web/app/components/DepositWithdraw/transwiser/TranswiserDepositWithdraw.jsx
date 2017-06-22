@@ -21,8 +21,9 @@ class TranswiserDepositWithdraw extends React.Component {
         super(props);
         this.state = { depositUrl: null, qr: null, deposit_fee:null, withdraw_fee:null };
 
-        this.depositCoin = "rmb";
-        this.apiUrl      = "https://bitshares.dacplay.org/transwiser/setting.json";
+        this.depositCoin      = "rmb";
+        this.apiUrl           = "https://bitshares.dacplay.org/transwiser/setting.json";
+        this.withdrawChannels = ["alipay", "bank_wire"];
         // this.apiUrl      = "http://www.transwiser.com/setting.json";
         // this.apiUrl      = "http://localhost:3000/setting-dev.json";
     }
@@ -46,7 +47,8 @@ class TranswiserDepositWithdraw extends React.Component {
                         depositUrl: setting.depositURL,
                         qr: setting.qr,
                         deposit_fee: setting.fee.deposit,
-                        withdraw_fee: setting.fee.withdraw
+                        withdraw_fee: setting.fee.withdraw,
+                        withdraw_fee_min: setting.fee.withdraw_min || 0
                     })
             }, error => {
                 console.log( "error: ",error  );
@@ -57,8 +59,8 @@ class TranswiserDepositWithdraw extends React.Component {
         });
     }
 
-    getWithdrawModalId() {
-        return "withdraw" + this.getModalId();
+    getWithdrawModalId(channel="") {
+        return "withdraw" + channel + this.getModalId();
     }
 
     getDepositModalId() {
@@ -69,13 +71,16 @@ class TranswiserDepositWithdraw extends React.Component {
         return "_asset_"+this.props.issuerAccount.get('name') + "_"+this.props.receiveAsset.get('symbol');
     }
 
-    onWithdraw() {
-        // console.log('onWithdraw', this.getWithdrawModalId());
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+    onWithdraw(channel="") {
+        ZfApi.publish(this.getWithdrawModalId(channel), "open");
     }
 
     onDeposit() {
         ZfApi.publish(this.getDepositModalId(), "open");
+    }
+
+    onModalComplete = (modalId) => {
+        ZfApi.publish(modalId, "close");
     }
 
     render() {
@@ -88,8 +93,31 @@ class TranswiserDepositWithdraw extends React.Component {
             return loading;
         }
 
-        let withdrawModalId = this.getWithdrawModalId();
         let depositModalId  = this.getDepositModalId();
+
+        let withdrawBtns = this.withdrawChannels.map(channel => {
+            let withdrawModalId = this.getWithdrawModalId(channel);
+            return <span key={`wc${channel}`}>
+                <button className={"button outline"} onClick={this.onWithdraw.bind(this, channel)}> <Translate content={"gateway.transwiser.channel.withdraw."+channel} /> </button>
+                <Modal id={withdrawModalId} overlay={true}>
+                    <Trigger close={withdrawModalId}>
+                        <a href="#" className="close-button">&times;</a>
+                    </Trigger>
+                    <br/>
+                    <div className="grid-block vertical">
+                        <TranswiserWithdrawModal
+                            channel={channel}
+                            account={this.props.account.get('name')}
+                            issuerAccount={this.props.issuerAccount.get('name')}
+                            sellAsset={this.props.receiveAsset.get('symbol')}
+                            fee={this.state.withdraw_fee}
+                            fee_min={this.state.withdraw_fee_min}
+                            modalId={withdrawModalId}
+                            onModalComplete={this.onModalComplete} />
+                    </div>
+                </Modal>
+            </span>
+        })
 
         return <tr>
             <td>{this.props.receiveAsset.get('symbol')} </td>
@@ -107,28 +135,13 @@ class TranswiserDepositWithdraw extends React.Component {
                             qr={this.state.qr}
                             fee={this.state.deposit_fee}
                             inventoryAsset={this.props.receiveAsset.get('symbol')}
-                            modalId={depositModalId} />
+                            modalId={depositModalId}
+                            onModalComplete={this.onModalComplete} />
                     </div>
                 </Modal>
             </td>
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receiveAsset.get('symbol')} /> </td>
-            <td>
-                <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
-                <Modal id={withdrawModalId} overlay={true}>
-                    <Trigger close={withdrawModalId}>
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
-                    <br/>
-                    <div className="grid-block vertical">
-                        <TranswiserWithdrawModal
-                            account={this.props.account.get('name')}
-                            issuerAccount={this.props.issuerAccount.get('name')}
-                            sellAsset={this.props.receiveAsset.get('symbol')}
-                            fee={this.state.withdraw_fee}
-                            modalId={withdrawModalId} />
-                    </div>
-                </Modal>
-            </td>
+            <td>{withdrawBtns}</td>
         </tr>
     }
 }
