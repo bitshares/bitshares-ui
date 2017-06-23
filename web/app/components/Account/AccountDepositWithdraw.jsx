@@ -277,7 +277,7 @@ class AccountDepositWithdraw extends React.Component {
                             <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
                         </div>
                         <div className="medium-5 medium-offset-1">
-                            <HelpContent path="components/DepositWithdraw" section="receive"/>
+                            <HelpContent account={account.get("name")} path="components/DepositWithdraw" section="receive"/>
                         </div>
                     </div>
                     <div>
@@ -289,7 +289,7 @@ class AccountDepositWithdraw extends React.Component {
                                 </select>
                             </div>
                             <div className="medium-5 medium-offset-1 small-order-1 medium-order-2" style={{paddingBottom: 20}}>
-                                <label className="left-label" content="gateway.yours">Your account</label>
+                                <Translate component="label" className="left-label" content="gateway.your_account" />
                                 <div className="inline-label">
                                     <AccountImage
                                         size={{height: 40, width: 40}}

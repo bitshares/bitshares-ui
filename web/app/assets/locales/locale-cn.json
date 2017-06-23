@@ -723,18 +723,18 @@
     },
     "workers": {
       "title": "预算项目",
-      "period": "Worker duration",
-      "daily_pay": "Daily pay (BTS)",
-      "website": "Website",
-      "vesting_pay": "Salary vesting period (days)",
-      "create": "Create a new worker proposal",
-      "create_text_1": "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
-      "create_text_2": "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
-      "name_text": "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
-      "date_text": "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
-      "pay_text": "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
-      "url_text": "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
-      "vesting_text": "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
+      "period": "周期",
+      "daily_pay": "每日支付(BTS)",
+      "website": "网站",
+      "vesting_pay": "工资解冻周期(天)",
+      "create": "创建一个新的预算项目提案",
+      "create_text_1": "请填写下表创建新的预算项目。项目将由你当前活跃账户的名义创建，它必须已取得终身会籍。",
+      "create_text_2": "设置参数前请仔细估量，发布后将无法修改。",
+      "name_text": "预算项目的名字应该简短明了，比如'目标：改进账户名体系'",
+      "date_text": "开始时间应该至少设置在一周以后，这样留有足够的时间让用户股东们发现、评估并投票。",
+      "pay_text": "每日支付设定的是每天你希望收到的酬劳，以BTS计价。目前的最佳实践是设定以美元或人民币计价的工资，并承诺销毁由于BTS升值导致的溢价部分。只要你的预算项目还是有效的，并且拥有足够的赞成票超过'回购项目'，那你就能每日持续收到工资。",
+      "url_text": "你应该提供一个网址，github文档或者google文档来详细描述你的工作目标和资金使用计划。",
+      "vesting_text": "解冻周期设定工作收入需要经过多少天的线性释放才能达到完全解冻并领取完毕。"
     },
     "proposals": {
       "title": "提案"
@@ -1082,10 +1082,10 @@
     "account_public": "账户名称（公开可见）",
     "current_pass": "当前密码",
     "no_wallet": "你还没有钱包",
-    "generated": "Generated password",
-    "understand_1": "I understand that no one can recover my password if I lose or forget it",
-    "understand_2": "I have written down or oherwise stored my password",
-    "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+    "generated": "已创建密码",
+    "understand_1": "我理解如果我忘记或丢失了密码，将没有任何人能够帮助我恢复",
+    "understand_2": "我已经写下了或者用其它方式保存了我的密码",
+    "bts_rules": "比特股法则第一条: 不要弄丢自己的密码。<br/>第二条法则: 不要弄丢自己的密码。<br />第三条法则: 没有人能帮你恢复。<br />第四条法则: 如果你仅凭脑力就能记住自己的密码，那通常来说它不够强。<br />第五条法则: 只用随机生成的密码。<br />第六条法则: 别告诉别人你的密码。<br />第七条法则: 总是备份你的密码。"
   },
   "borrow": {
     "title": "%(asset_symbol)s 保证金头寸",
@@ -1161,10 +1161,10 @@
     "assets": {
         "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
         "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
-        "bit": "<br/>bit%(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",
+        "bit": "<br/>bit %(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",
         "bitcny": "<br/><br/>bitCNY 可以通过 Transwiser 提供的网关服务进行充值提现。更多信息请访问 https://www.transwiser.com/"
     },
-    "your_account": "我的账户",
+    "your_account": "你的账户",
     "bridge": "桥接",
     "gateway": "承兑商",
     "symbol": "资产",
@@ -1176,16 +1176,30 @@
     "inventory": "库存",
     "scan_qr": "扫描二维码，手机支付",
     "transwiser": {
+      "channel": {
+        "withdraw": {
+          "alipay": "支付宝",
+          "weixin_pay": "微信支付",
+          "bank_wire": "银行账户"
+        }
+      },
+      "fee": "手续费",
+      "fee_min": "最低",
       "gateway": "Transwiser",
       "visit_weidian": "访问网店进行充值",
       "deposit_title": "充值人民币到 %(asset)s",
-      "withdraw_title": "提现 %(asset)s 到人民币",
-      "alipay": "支付宝账户名",
+      "withdraw_title": "提现 %(asset)s 到 %(channel)s",
+      "alipay_account": "支付宝账户",
       "memo": "备注",
-      "alipay_account_name_notice": "支付宝账户名，一般为用户名或手机号。",
+      "alipay_account_name_notice": "支付宝账户名，一般为邮箱或手机号。",
+      "alipay_realname": "支付宝账户实名",
       "alipay_realname_notice": "提现到支付宝请在备注栏输入真实姓名以供校验",
       "withdraw_note": "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到你的支付宝账户中",
-      "you_will_receive": "你将收到 %(amount)s 元人民币"
+      "you_will_receive": "你将收到 %(amount)s 元人民币",
+      "bank_name": "银行名称",
+      "bank_branch": "分行/支行名",
+      "bank_account": "收款人账号",
+      "bank_holder": "收款人户名"
     },
     "meta": {
       "open_website": "访问官网"
