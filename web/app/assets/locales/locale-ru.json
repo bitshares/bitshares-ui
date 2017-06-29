@@ -1086,7 +1086,7 @@
     "generated":"Сгенерированный пароль",
     "understand_1":"Я понимаю, что никто не сможет восстановить мой пароль, если я потеряю или забуду его",
     "understand_2":"Я записал или еще как-либо сохранил свой пароль",
-    "bts_rules":"The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+    "bts_rules":"Первое правило BitShares: не потеряйте свой пароль.<br/>Второе правило BitShares: не потеряйте свой пароль.<br />Третье правило BitShares: мы не можем восстановить Ваш пароль.<br />Четвертое правило: если Вы помните пароль наизусть, он небезопасен.<br />Пятое правило: используйте только рандомно сгенерированные пароли.<br />Шестое правило: никому не говорите свой пароль.<br />Седьмое правило: всегда храните копию своего пароля."
   },
   "borrow":{
     "title":"%(asset_symbol)s маржа",
@@ -1232,13 +1232,13 @@
           "bank_wire":"Bank Wire"
         }
       },
-      "fee":"Fee",
-      "fee_min":"Minimum",
+      "fee":"Комиссия",
+      "fee_min":"Минимум",
       "gateway":"Transwiser\n",
       "visit_weidian":"Посетить депозит",
       "deposit_title":"Внести юани (RMB) в %(asset)s",
       "withdraw_title":"Withdraw %(asset)s to %(channel)s",
-      "alipay_account":"ALIPAY Account Name",
+      "alipay_account":"Имя аккаунта в ALIPAY",
       "memo":"Примечание",
       "alipay_account_name_notice":"Обычно это имя Вашего аккаунта на Alipay или номер мобильного телефона",
       "alipay_realname":"Real Name",
