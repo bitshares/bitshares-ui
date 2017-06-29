@@ -17,7 +17,7 @@ export const settingsAPIs = {
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://bts.transwiser.com/ws", location: "Hangzhou, China"},
-        {url: "wss://bitshares.dacplay.org:8089/ws", location:  "Hangzhou, China"},
+        {url: "wss://bitshares.dacplay.org/ws", location:  "Hangzhou, China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},

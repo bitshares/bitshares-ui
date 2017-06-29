@@ -45,7 +45,10 @@ class AssetName extends React.Component {
 			let realPrefix = name.split(".");
 			realPrefix = realPrefix.length > 1 ? realPrefix[0] : null;
 			if (realPrefix) realPrefix += ".";
-			let	optional = realPrefix || includeBitAssetDescription ? counterpart.translate("gateway.assets." + (isBitAsset ? "bit" : realPrefix.replace(".", "").toLowerCase()), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
+			let optional = "";
+			try {
+				optional = realPrefix || includeBitAssetDescription ? counterpart.translate("gateway.assets." + (isBitAsset ? "bit" : realPrefix.replace(".", "").toLowerCase()), {asset: name, backed: includeBitAssetDescription ? desc.main : replacedName}) : "";
+			} catch (e){}
 			if (isBitAsset && name === "CNY") {
 				optional = optional + counterpart.translate("gateway.assets.bitcny");
 			}
