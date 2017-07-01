@@ -2,7 +2,7 @@
 
 ### Получение BTS
 
-In order to receive BTS from another person or from an exchange, simply give them your account name: **{account}**
+Для того, чтобы получить BTS от другого лица или биржи, просто сообщите им имя Вашего аккаунта: **{account}**
 
 [# deposit-short]
 
