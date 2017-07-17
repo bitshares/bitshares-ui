@@ -34,7 +34,7 @@ npm install
 
 ## Running the dev server
 
-The dev server uses Express in combination with Wepback 2.
+The dev server uses Express in combination with Webpack 2.
 
 Once all the packages have been installed you can start the development server by going to the `web` folder and running:
 ```
