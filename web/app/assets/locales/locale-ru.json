@@ -1225,16 +1225,30 @@
     "gateway_text":"Здесь выберите, хотите ли Вы разместить депозит или вывести средства",
     "fiat_text":"Пополнение депозита и вывод фиатных денег производится с помощью OpenLedger. Чтобы начать, Вам необходимо завершить процесс регистрации. Доступны следующие виды конверсии:",
     "transwiser":{
+      "channel":{
+        "withdraw":{
+          "alipay":"ALIPAY",
+          "weixin_pay":"WeChat Pay",
+          "bank_wire":"Банковский перевод"
+        }
+      },
+      "fee":"Комиссия",
+      "fee_min":"Минимум",
       "gateway":"Transwiser\n",
       "visit_weidian":"Посетить депозит",
       "deposit_title":"Внести юани (RMB) в %(asset)s",
-      "withdraw_title":"Вывести %(asset)s в юанях (RMB)",
-      "alipay":"Имя аккаунта в ALIPAY",
+      "withdraw_title":"Вывести %(asset)s на %(channel)s",
+      "alipay_account":"Имя аккаунта в ALIPAY",
       "memo":"Примечание",
       "alipay_account_name_notice":"Обычно это имя Вашего аккаунта на Alipay или номер мобильного телефона",
+      "alipay_realname":"Настоящее имя",
       "alipay_realname_notice":"Для вывода на Alipay, пожалуйста, укажите в поле ПРИМЕЧАНИЕ Ваше настоящее имя для проверки",
       "withdraw_note":"В данный момент поддерживается только вывод средств с помощью ALIPAY. Ваш актив будет конвертирован в юани (RMB) в соотношении 1:1 и отправлен на Ваш ALIPAY аккаунт",
-      "you_will_receive":"Вы получите %(amount)s юани (RMB)"
+      "you_will_receive":"Вы получите %(amount)s юани (RMB)",
+      "bank_name":"Название банка",
+      "bank_branch":"Филиал",
+      "bank_account":"Номер счета",
+      "bank_holder":"Имя владельца"
     },
     "meta":{
       "open_website":"Открыть веб-сайт"
