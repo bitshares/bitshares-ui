@@ -15,6 +15,7 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
+import { ModalClose } from "../../keyboard";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -438,6 +439,15 @@ export default class SimpleDepositWithdrawModal extends React.Component {
         super();
 
         this.state = {open: false};
+    }
+
+    componentDidMount(){
+        this.modalClose = ModalClose(this, ZfApi);
+        this.modalClose.bindListener();
+    }
+
+    componentWillUnmount(){
+        this.modalClose.unbindListener();
     }
 
     show() {
