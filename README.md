@@ -72,7 +72,7 @@ For more info, please contact one of the following people:
 - bitsharesblocks@gmail.com
 - valentine@cryptonomex.com
 
-There's also a very active [Telegram chatroom](https://web.telegram.org/#/im?p=g33416306)
+There's also a very active [Telegram chatroom](https://t.me/BitSharesDEX)
 
 ## Development process
 
