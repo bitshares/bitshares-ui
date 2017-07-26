@@ -1,1 +1,0 @@
-export ModalClose from './ModalClose';

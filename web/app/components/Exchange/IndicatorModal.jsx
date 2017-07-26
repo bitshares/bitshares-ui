@@ -1,6 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 
@@ -59,10 +59,7 @@ export default class IndicatorModal extends React.Component {
 
 
         return (
-            <Modal id={"modal_indicators"} overlay={true}>
-                <Trigger close={"modal_indicators"}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id={"modal_indicators"} overlay={true}>
                 <Translate component="h3" content="exchange.indicators" />
                 <div className="grid-block vertical">
                     {toggles}
@@ -72,7 +69,7 @@ export default class IndicatorModal extends React.Component {
                         </Trigger>
                     </div>
                 </div>
-            </Modal>
+            </BaseModal>
         );
     }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import { Asset } from "common/MarketClasses";
@@ -15,7 +15,6 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
-import { ModalClose } from "../../keyboard";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -441,15 +440,6 @@ export default class SimpleDepositWithdrawModal extends React.Component {
         this.state = {open: false};
     }
 
-    componentDidMount(){
-        this.modalClose = ModalClose(this, ZfApi);
-        this.modalClose.bindListener();
-    }
-
-    componentWillUnmount(){
-        this.modalClose.unbindListener();
-    }
-
     show() {
         this.setState({open: true}, () => {
             ZfApi.publish(this.props.modalId, "open");
@@ -462,12 +452,9 @@ export default class SimpleDepositWithdrawModal extends React.Component {
 
     render() {
         return (
-            <Modal className="test" onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
-                <Trigger close={this.props.modalId}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal className="test" onClose={this.onClose.bind(this)} overlay={true} id={this.props.modalId}>
                 {this.state.open ? <DepositWithdrawContent {...this.props} open={this.state.open} /> : null}
-            </Modal>
+            </BaseModal>
         );
     }
 }

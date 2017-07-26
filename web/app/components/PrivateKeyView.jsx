@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "./Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletDb from "stores/WalletDb";
@@ -42,8 +42,7 @@ export default class PrivateKeyView extends Component {
         var key = keys.get(this.props.pubkey);
         return <span>
             <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
-            <Modal ref={modalId} id={modalId} overlay={true} overlayClose={false}>
-                <a onClick={this.onClose.bind(this)} className="close-button">&times;</a>
+            <BaseModal ref={modalId} id={modalId} overlay={true} overlayClose={false}>
                 <h3><Translate content="account.perm.key_viewer" /></h3>
                 <div className="grid-block vertical">
                     <div className="content-block">
@@ -86,7 +85,7 @@ export default class PrivateKeyView extends Component {
                 <div className="button-group">
                     <div onClick={this.onClose.bind(this)} className=" button"><Translate content="transfer.close" /></div>
                 </div>
-            </Modal>
+            </BaseModal>
         </span>
     }
 

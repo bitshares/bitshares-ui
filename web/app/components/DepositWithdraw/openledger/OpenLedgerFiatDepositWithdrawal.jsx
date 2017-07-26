@@ -3,7 +3,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WalletDb from "stores/WalletDb";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../../Modal/BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
@@ -74,7 +74,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
             deposit_fragment =
                             <td>
                                 <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
-                                <Modal id={deposit_modal_id} overlay={true}>
+                                <BaseModal id={deposit_modal_id} overlay={true}>
                                     <Trigger close={deposit_modal_id}>
                                         <a href="#" className="close-button">&times;</a>
                                     </Trigger>
@@ -88,7 +88,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                                             deposit_asset={this.props.deposit_asset}
                                             modal_id={deposit_modal_id} />
                                     </div>
-                                </Modal>
+                                </BaseModal>
                             </td>;
         }
         else
