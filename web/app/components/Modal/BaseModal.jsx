@@ -23,10 +23,6 @@ class BaseModal extends React.Component {
         document.removeEventListener("keydown", this.modalEscapeListener);
     }
 
-    show() {
-        ZfApi.publish(this.props.id, "open");
-    }
-
     render() {
         const { props } = this;
 
@@ -49,7 +45,9 @@ BaseModal.propTypes = {
     id: PropTypes.string.isRequired,
     onClose: PropTypes.func,
     className: PropTypes.string,
-    overlay: PropTypes.bool
+    overlay: PropTypes.bool,
+    overlayClose: PropTypes.bool,
+    noCloseBtn: PropTypes.bool
 };
 
 export default BaseModal;
