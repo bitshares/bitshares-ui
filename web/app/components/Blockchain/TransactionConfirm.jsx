@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Transaction from "./Transaction";
 import Translate from "react-translate-component";
@@ -169,7 +169,7 @@ class TransactionConfirm extends React.Component {
 
         return (
             <div ref="transactionConfirm">
-                <Modal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!broadcasting}>
+                <BaseModal id="transaction_confirm_modal" ref="modal" overlay={true} overlayClose={!broadcasting} noCloseBtn={true}>
                 <div style={{minHeight: 350}} className="grid-block vertical no-padding no-margin">
                     {!broadcasting ? <div className="close-button" onClick={this.onCloseClick.bind(this)}>&times;</div> : null}
                     {header}
@@ -208,7 +208,7 @@ class TransactionConfirm extends React.Component {
                     </div>
                     </div>
 
-                </Modal>
+                </BaseModal>
             </div>
         );
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import Trigger from "react-foundation-apps/src/trigger";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SettingsActions from "actions/SettingsActions";
 
@@ -79,10 +79,7 @@ class WebsocketAddModal extends React.Component {
 
     _renderAddModal() {
         return (
-            <Modal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
-                <Trigger close="">
-                    <div className="close-button">&times;</div>
-                </Trigger>
+            <BaseModal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
                 <div className="grid-content">
                     <Translate component="h3" content="settings.add_ws" />
                     <form onSubmit={this.onAddSubmit.bind(this)} noValidate>
@@ -103,7 +100,7 @@ class WebsocketAddModal extends React.Component {
                         </div>
                     </form>
                 </div>
-            </Modal>
+            </BaseModal>
         )
     }
 
@@ -120,10 +117,7 @@ class WebsocketAddModal extends React.Component {
         });
 
         return (
-            <Modal id="ws_modal_remove" ref="ws_modal_remove" overlay={true} overlayClose={false}>
-                <Trigger close="">
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id="ws_modal_remove" ref="ws_modal_remove" overlay={true} overlayClose={false}>
                 <div className="grid-content no-overflow">
                     <Translate component="h3" content="settings.remove_ws" />
                     <section className="block-list">
@@ -148,7 +142,7 @@ class WebsocketAddModal extends React.Component {
                         </div>
                     </form>
                 </div>
-            </Modal>
+            </BaseModal>
         )
     }
 

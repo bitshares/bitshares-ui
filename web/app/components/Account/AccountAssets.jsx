@@ -6,7 +6,7 @@ import AssetActions from "actions/AssetActions";
 import AssetStore from "stores/AssetStore";
 import AccountActions from "actions/AccountActions";
 import Trigger from "react-foundation-apps/src/trigger";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import FormattedAsset from "../Utility/FormattedAsset";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
@@ -266,10 +266,7 @@ class AccountAssets extends React.Component {
                         <Link to={`/account/${account_name}/create-asset/`}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
                     </div>
 
-                    <Modal id="issue_asset" overlay={true}>
-                        <Trigger close="issue_asset">
-                            <a href="#" className="close-button">&times;</a>
-                        </Trigger>
+                    <BaseModal id="issue_asset" overlay={true}>
                         <br/>
                         <div className="grid-block vertical">
                             <IssueModal
@@ -277,12 +274,9 @@ class AccountAssets extends React.Component {
                                 onClose={() => {ZfApi.publish("issue_asset", "close")}}
                             />
                         </div>
-                    </Modal>
+                    </BaseModal>
 
-                    <Modal id="reserve_asset" overlay={true}>
-                        <Trigger close="reserve_asset">
-                            <a href="#" className="close-button">&times;</a>
-                        </Trigger>
+                    <BaseModal id="reserve_asset" overlay={true}>
                         <br/>
                         <div className="grid-block vertical">
                             <ReserveAssetModal
@@ -291,7 +285,7 @@ class AccountAssets extends React.Component {
                                 onClose={() => {ZfApi.publish("reserve_asset", "close")}}
                             />
                         </div>
-                    </Modal>
+                    </BaseModal>
             </div>
         );
     }

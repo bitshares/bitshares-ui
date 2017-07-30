@@ -8,7 +8,7 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 
@@ -248,10 +248,7 @@ class WithdrawModalBlocktrades extends React.Component {
 
             invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_type} /></div>;
 		    confirmation =
-			    <Modal id={withdrawModalId} overlay={true}>
-                    <Trigger close={withdrawModalId}>
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
+			    <BaseModal id={withdrawModalId} overlay={true}>
                     <br/>
 					<label><Translate content="modal.confirmation.title"/></label>
 		 		    <br/>
@@ -263,7 +260,7 @@ class WithdrawModalBlocktrades extends React.Component {
                             <a href className="secondary button"><Translate content="modal.confirmation.cancel" /></a>
                         </Trigger>
                     </div>
-		        </Modal>;
+		        </BaseModal>;
 		    }
             // if (this.state.withdraw_address_is_valid)
             //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;

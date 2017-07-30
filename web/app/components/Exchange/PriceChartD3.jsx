@@ -81,9 +81,11 @@ class CandleStickChartWithZoomPan extends React.Component {
             }
             case 27: { // ESC
                 if (ref) ref.terminate();
-                this.setState({
-                    [enableFib]: false
-                });
+                try { // modal uses escape event as well, and this line throws an exception
+                  this.setState({
+                      [enableFib]: false
+                  });
+                } catch(e){}
                 break;
             }
         }

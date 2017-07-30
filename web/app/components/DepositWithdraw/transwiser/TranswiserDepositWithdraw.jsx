@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../../Modal/BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
@@ -99,10 +99,7 @@ class TranswiserDepositWithdraw extends React.Component {
             let withdrawModalId = this.getWithdrawModalId(channel);
             return <span key={`wc${channel}`}>
                 <button className={"button outline"} onClick={this.onWithdraw.bind(this, channel)}> <Translate content={"gateway.transwiser.channel.withdraw."+channel} /> </button>
-                <Modal id={withdrawModalId} overlay={true}>
-                    <Trigger close={withdrawModalId}>
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
+                <BaseModal id={withdrawModalId} overlay={true}>
                     <br/>
                     <div className="grid-block vertical">
                         <TranswiserWithdrawModal
@@ -115,7 +112,7 @@ class TranswiserDepositWithdraw extends React.Component {
                             modalId={withdrawModalId}
                             onModalComplete={this.onModalComplete} />
                     </div>
-                </Modal>
+                </BaseModal>
             </span>
         })
 
@@ -123,10 +120,7 @@ class TranswiserDepositWithdraw extends React.Component {
             <td>{this.props.receiveAsset.get('symbol')} </td>
             <td>
                 <button className={"button outline"} onClick={this.onDeposit.bind(this)}> <Translate content="gateway.deposit" /> </button>
-                <Modal id={depositModalId} overlay={true}>
-                    <Trigger close={depositModalId}>
-                        <a href="#" className="close-button">&times;</a>
-                    </Trigger>
+                <BaseModal id={depositModalId} overlay={true}>
                     <br/>
                     <div className="grid-block vertical">
                         <TranswiserDepositModal
@@ -138,7 +132,7 @@ class TranswiserDepositWithdraw extends React.Component {
                             modalId={depositModalId}
                             onModalComplete={this.onModalComplete} />
                     </div>
-                </Modal>
+                </BaseModal>
             </td>
             <td> <AccountBalance account={this.props.account.get('name')} asset={this.props.receiveAsset.get('symbol')} /> </td>
             <td>{withdrawBtns}</td>
