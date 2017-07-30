@@ -11,6 +11,7 @@ import AssetName from "../Utility/AssetName";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Asset} from "common/MarketClasses";
+import ExchangeInput from "./ExchangeInput";
 
 class BuySell extends React.Component {
 
@@ -147,7 +148,7 @@ class BuySell extends React.Component {
                                         <Translate content="exchange.price" />:
                                     </div>
                                     <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
-                                        <input type="number" id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0"/>
+                                        <ExchangeInput id="buyPrice" value={price} onChange={priceChange} autoComplete="off" placeholder="0.0" />
                                     </div>
                                     <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={base.get("symbol")} />
@@ -161,7 +162,7 @@ class BuySell extends React.Component {
                                         <Translate content="transfer.amount" />:
                                     </div>
                                     <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
-                                        <input type="number" id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
+                                        <ExchangeInput id="buyAmount" value={amount} onChange={amountChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
                                     <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={quote.get("symbol")} />
@@ -173,7 +174,7 @@ class BuySell extends React.Component {
                                         <Translate content="exchange.total" />:
                                     </div>
                                     <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
-                                        <input type="number" id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
+                                        <ExchangeInput id="buyAmount" value={total} onChange={totalChange} autoComplete="off" placeholder="0.0"/>
                                     </div>
                                     <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
                                         <AssetName dataPlace="right" name={base.get("symbol")} />
