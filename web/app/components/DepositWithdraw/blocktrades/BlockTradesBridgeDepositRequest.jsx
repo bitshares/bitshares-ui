@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../../Modal/BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
@@ -185,10 +185,7 @@ class ButtonWithdraw extends React.Component {
                     <span>
                         <button className={button_class} onClick={this.onWithdraw.bind(this)}><Translate content="" /><Translate content="gateway.withdraw_now" /> </button>
                     </span>
-                    <Modal id={withdraw_modal_id} overlay={true}>
-                        <Trigger close={withdraw_modal_id}>
-                            <a href="#" className="close-button">&times;</a>
-                        </Trigger>
+                    <BaseModal id={withdraw_modal_id} overlay={true}>
                         <br/>
                         <div className="grid-block vertical">
                             <WithdrawModalBlocktrades
@@ -206,7 +203,7 @@ class ButtonWithdraw extends React.Component {
                                 output_wallet_type={this.props.output_wallet_type}
                                 balance={this.props.account.get("balances").toJS()[this.props.asset.get('id')]} />
                         </div>
-                    </Modal>
+                    </BaseModal>
                 </span>);
     }
 }
