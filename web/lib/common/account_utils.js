@@ -117,7 +117,10 @@ export default class AccountUtils {
             "btc38.com",
             "yunbi.com",
             "coinbase.com",
-            "ripple.com"
+            "ripple.com",
+            "livecoi-net",
+            "livecoin.net",
+            "livecoinnet"
         ];
 
         let scamMessage = null;
