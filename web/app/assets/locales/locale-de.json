@@ -970,5 +970,8 @@
     "disabled": "Chat disabled",
     "enable": "Enable chat now",
     "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+  },
+  "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+      }
 }

@@ -1274,5 +1274,8 @@
     "disabled": "Chat disabled",
     "enable": "Enable chat now",
     "telegram_link": "The trollbox has been disabled due to performance issues, please visit the Bitshares Telegram group instead: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+    },
+    "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+    }
 }
