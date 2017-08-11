@@ -109,7 +109,7 @@ class BlockTradesGateway extends React.Component {
 
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
-            openledger: {name: "openledger-wallet", id: "1.2.96397", support: "support@openledger.info"}
+            openledger: {name: coin.intermediateAccount, id: "1.2.96397", support: "support@openledger.info"}
         };
 
         let issuer = issuers[provider];
