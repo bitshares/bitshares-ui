@@ -120,13 +120,13 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - To claim an issue, simply leave a comment with your request to claim.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
 </br>
- - 开发目标上标记的日期，是预计发表时间
- - 修补漏洞优先于项目改进
- - 开发者需要根据一个被标好数字（这个数字对应一个问题`git checkout -b 123`）的分叉（branch），对每个问题进行开发。
- - 我们对已经被预算好的问题进行**悬赏**。一个被预算好的问题会被标记上前缀，像这样`[2] An nasty bug`。在这一例子中，这个问题被视作价值两个小时的工作时间（125美刀一小时）。如果你能通过这些指南修改这一问题，并且你的修改要求（Pull Request）被接受，你便会得到250 bitUSD。你必须拥有一个比特股钱包和比特股账号用来接收这一支付。
- - 如果问题已经被认领（指派），不要尝试认领它。外部开发者认领问题意味着 wmbutler的指派，但是我会在评论里提及这一开发者的github账户。
- - 简单地留下一条你要求认领的评论（comment），便能认领问题。
- - 不要认领一个在开发目标上所写规定时间内完成不了的问题。列如 开发目标170901 需要在2017年9月1日前被推进完成.
+- 开发目标上标记的日期，是预计发表时间
+- 修补漏洞优先于项目改进
+- 开发者需要根据一个被标好数字（这个数字对应一个问题`git checkout -b 123`）的分叉（branch），对每个问题进行开发。
+- 我们对已经被预算好的问题进行**悬赏**。一个被预算好的问题会被标记上前缀，像这样`[2] An nasty bug`。在这一例子中，这个问题被视作价值两个小时的工作时间（125美刀一小时）。如果你能通过这些指南修改这一问题，并且你的修改要求（Pull Request）被接受，你便会得到250 bitUSD。你必须拥有一个比特股钱包和比特股账号用来接收这一支付。
+- 如果问题已经被认领（指派），不要尝试认领它。外部开发者认领问题意味着 wmbutler的指派，但是我会在评论里提及这一开发者的github账户。
+- 简单地留下一条你要求认领的评论（comment），便能认领问题。
+- 不要认领一个在开发目标上所写规定时间内完成不了的问题。列如 开发目标170901 需要在2017年9月1日前被推进完成.
 ### Coding style guideline&emsp;代码风格
 
 Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript), with few exceptions:
