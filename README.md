@@ -19,7 +19,7 @@ On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version M
 
 To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 
-BitShares-UI依赖于Node.js, 需要版本号v6以上。目前还没有被版本号v7测试。
+>BitShares-UI依赖于Node.js, 需要版本号v6以上。目前还没有被版本号v7测试。
 
 在Ubuntu和OSX，安装Node最简单的方式是用[NVM](https://github.com/creationix/nvm)。
 
@@ -32,7 +32,7 @@ nvm use v6
 
 Once you have Node installed, you can clone the repo:
 
-一旦你把节点安装完毕，你就可以克隆这一版本库:
+>一旦你把节点安装完毕，你就可以克隆这一版本库:
 ```
 git clone https://github.com/bitshares/bitshares-ui.git
 cd bitshares-ui
@@ -40,7 +40,7 @@ cd bitshares-ui
 
 Before launching the GUI you will need to install the npm packages for each subdirectory:
 
-在装载GUI前，你需要为每一子目录安装npm包:
+>在装载GUI前，你需要为每一子目录安装npm包:
 ```
 cd web
 npm install
@@ -52,40 +52,40 @@ The dev server uses Express in combination with Webpack 2.
 
 Once all the packages have been installed you can start the development server by going to the `web` folder and running:
 
-开发服务器使用了EXPRSS和Webpack 2.
+>开发服务器使用了EXPRSS和Webpack 2.
 
-一旦所有的封包被安装了，你就可以通过'web'文件夹并且输入下列代码，开始启动开发服务器
+>一旦所有的封包被安装了，你就可以通过'web'文件夹并且输入下列代码，开始启动开发服务器
 ```
 npm start
 ```
 
 Once the compilation is done the GUI will be available in your browser at: `localhost:8080` or `127.0.0.1:8080`. Hot Reloading is enabled so the browser will live update as you edit the source files.
 
-一旦编译成功，GUI会在你的浏览器上成功部署，链接是`localhost:8080` 或者`127.0.0.1:8080`。我们加载了热重载机制，只要你编辑源文件，浏览器便会实时更新。
+>一旦编译成功，GUI会在你的浏览器上成功部署，链接是`localhost:8080` 或者`127.0.0.1:8080`。我们加载了热重载机制，只要你编辑源文件，浏览器便会实时更新。
 
 ### Testnet&emsp;测试网络
 By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
 
 The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
 
-通过默认设置，bitshares-ui会连接到实时比特股网络，但要想切换到由Xeroc创建的测试网络也很容易。步骤是，在浏览器中打开UI，到设置（Settings）界面，在出入口(Access)下面，在下拉条里选择公共测试网络服务器。如果你想要建立一个账户，你也需要切换水龙头，测试网络的水龙头地址https://testnet.bitshares.eu 。
+>通过默认设置，bitshares-ui会连接到实时比特股网络，但要想切换到由Xeroc创建的测试网络也很容易。步骤是，在浏览器中打开UI，到设置（Settings）界面，在出入口(Access)下面，在下拉条里选择公共测试网络服务器。如果你想要建立一个账户，你也需要切换水龙头，测试网络的水龙头地址https://testnet.bitshares.eu 。
 
-UI就会重载并连接至测试网络。在这里你就可以用水龙头创建一个账户并收到一些用于测试的BTS。
+>UI就会重载并连接至测试网络。在这里你就可以用水龙头创建一个账户并收到一些用于测试的BTS。
 
 ![image](https://cloud.githubusercontent.com/assets/6890015/22055747/f8e15e68-dd5c-11e6-84cd-692749b578d8.png)
 
 ## Production&emsp;产品
 If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
 
-如果你想要做主机来持有你自己的钱包，你需要建立一个生产构件，并通过NGINX或者Apache做主机。为了建立一个bundle，只用简单地运行下列命令:
+>如果你想要做主机来持有你自己的钱包，你需要建立一个生产构件，并通过NGINX或者Apache做主机。为了建立一个bundle，只用简单地运行下列命令:
 ```
 npm run build
 ```
 This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
 
-这样就能在建立一个/dist目录下建立一个bundle,让你选择的网络服务器来主持它。
+>这样就能在建立一个/dist目录下建立一个bundle,让你选择的网络服务器来主持它。
 
-### Installable wallets&emsp;可安装钱包
+### Installable wallets
 We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform.
 
 ### 可安装钱包
@@ -134,7 +134,7 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - 简单地留下一条你要求认领的评论（comment），便能认领问题。
 - 不要认领一个在开发目标上所写规定时间内完成不了的问题。列如 开发目标170901 需要在2017年9月1日前被推进完成.
 
-### Coding style guideline
+## Coding style guideline
 
 Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript), with few exceptions:
 
@@ -145,7 +145,7 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
-### 代码风格
+## 代码风格
 我们的代码指南基于[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript),不过有一些例外：
 
  - 字符串需要被双引
