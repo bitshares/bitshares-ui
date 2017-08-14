@@ -66,8 +66,9 @@ Once the compilation is done the GUI will be available in your browser at: `loca
 ### Testnet&emsp;测试网络
 By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
 
-通过默认设置，bitshares-ui会连接到实时比特股网络，但要想切换到由Xeroc创建的测试网络也很容易。步骤是，在浏览器中打开UI，到设置（Settings）界面，在出入口(Access)下面，在下拉条里选择公共测试网络服务器。如果你想要建立一个账户，你也需要切换水龙头，测试网络的水龙头地址https://testnet.bitshares.eu 。
 The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
+
+通过默认设置，bitshares-ui会连接到实时比特股网络，但要想切换到由Xeroc创建的测试网络也很容易。步骤是，在浏览器中打开UI，到设置（Settings）界面，在出入口(Access)下面，在下拉条里选择公共测试网络服务器。如果你想要建立一个账户，你也需要切换水龙头，测试网络的水龙头地址https://testnet.bitshares.eu 。
 
 UI就会重载并连接至测试网络。在这里你就可以用水龙头创建一个账户并收到一些用于测试的BTS。
 
