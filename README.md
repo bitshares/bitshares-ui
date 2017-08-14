@@ -1,8 +1,6 @@
 BitShares-UI
 ============
 
-[![Slack](http://slack.bitshares.org/badge.svg)](http://slack.bitshares.org/)
-
 This is a light wallet that connects to a BitShares API provided by the *witness_node* executable.
 
 It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
@@ -61,23 +59,25 @@ This will create a bundle in the /dist folder that can be hosted with the web se
 We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform.
 
 ## Contributing
-BitShares-UI is open source and anyone is free to contribute. PR's are welcomed and will be reviewed in a timely manner, and long-term contributors will be given access to the repo.
 
-If you would like to get involved, we have a Slack channel where you can ask questions and get help.
+The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation. 
 
-For more info, please contact one of the following people:
+If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help.
 
-- fabian@bitshares.org
-- cass@bitshares.org
-- bitsharesblocks@gmail.com
-- valentine@cryptonomex.com
-
-There's also a very active [Telegram chatroom](https://t.me/BitSharesDEX)
+- Coordinator: Bill Butler, @billbutler
+- Lead Developer: Sigve Kvalsvik, @sigvek
+- Developer: Calvin Froedge, @calvin
+- Code Review: Fabian Schuh, @xeroc
 
 ## Development process
 
+- Milestones are numbered YYMMDD and refer to the **anticipated release date**.
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
+- We pay **bounties** for issues that have been estimated. An estimated issue is prefixed with a number in brackets like this: `[2] An nasty bug`. In this example, the bug is valued at two hours ($125 per hour). If you fix this issue according to these guidelines and your PR is accepted, this will earn you $250 bitUSD. You must have a Bitshares wallet and a Bitshares account to receive payment.
+- If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
+- To claim an issue, simply leave a comment with your request to claim.
+- Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
 
 ### Coding style guideline
 
