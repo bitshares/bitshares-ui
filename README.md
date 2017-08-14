@@ -15,15 +15,15 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 BitShares-UI depends node Node.js, and version 6+ is required. It has not yet been tested with v7.
 
-BitShares-UI依赖于Node.js, 需要版本号v6以上。目前还没有被版本号v7测试。
-
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
-
-在Ubuntu和OSX，安装Node最简单的方式是用[NVM](https://github.com/creationix/nvm)。
 
 To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 
-为了安装Linux/OSX的NVM，只需要简单地把下列的代码复制粘贴进命令控制终端
+BitShares-UI依赖于Node.js, 需要版本号v6以上。目前还没有被版本号v7测试。
+
+在Ubuntu和OSX，安装Node最简单的方式是用[NVM](https://github.com/creationix/nvm)。
+
+为了安装Linux/OSX的NVM，只需要简单地把下列的代码复制粘贴进命令控制终端:
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
 nvm install v6
@@ -32,7 +32,7 @@ nvm use v6
 
 Once you have Node installed, you can clone the repo:
 
-一旦你把节点安装完毕，你就可以克隆这一版本库
+一旦你把节点安装完毕，你就可以克隆这一版本库:
 ```
 git clone https://github.com/bitshares/bitshares-ui.git
 cd bitshares-ui
@@ -40,7 +40,7 @@ cd bitshares-ui
 
 Before launching the GUI you will need to install the npm packages for each subdirectory:
 
-在装载GUI前，你需要为每一子目录安装npm包
+在装载GUI前，你需要为每一子目录安装npm包:
 ```
 cd web
 npm install
@@ -50,9 +50,9 @@ npm install
 
 The dev server uses Express in combination with Webpack 2.
 
-开发服务器使用了EXPRSS和Webpack 2.
-
 Once all the packages have been installed you can start the development server by going to the `web` folder and running:
+
+开发服务器使用了EXPRSS和Webpack 2.
 
 一旦所有的封包被安装了，你就可以通过'web'文件夹并且输入下列代码，开始启动开发服务器
 ```
@@ -76,7 +76,7 @@ UI就会重载并连接至测试网络。在这里你就可以用水龙头创建
 ## Production&emsp;产品
 If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
 
-如果你想要做主机来持有你自己的钱包，你需要建立一个生产构件，并通过NGINX或者Apache做主机。为了建立一个bundle，只用简单地运行下列命令。
+如果你想要做主机来持有你自己的钱包，你需要建立一个生产构件，并通过NGINX或者Apache做主机。为了建立一个bundle，只用简单地运行下列命令:
 ```
 npm run build
 ```
@@ -93,19 +93,21 @@ We use Electron to provide installable wallets, available for Windows, OSX and L
 
 The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation. 
 
-Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbutler/translated-by-zhaomu-l)支持。它提供用来支付协调者，悬赏金和比特股基金的资金。
-
 If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help.
 
-如果你想参与贡献，我们有一个[Telegram 聊天室](https://t.me/BitSharesDEX)，在这里你可以问问题并得到帮助。
 - Coordinator: Bill Butler, @billbutler
 - Lead Developer: Sigve Kvalsvik, @sigvek
 - Developer: Calvin Froedge, @calvin
 - Code Review: Fabian Schuh, @xeroc
- - 协调者: Bill Butler, @billbutler
- - 主程序员: Sigve Kvalsvik, @sigvek
- - 程序员: Calvin Froedge, @calvin
- - 代码审核: Fabian Schuh, @xeroc
+
+Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbutler/translated-by-zhaomu-l)支持。它提供用来支付协调者，悬赏金和比特股基金的资金。
+
+如果你想参与贡献，我们有一个[Telegram 聊天室](https://t.me/BitSharesDEX)，在这里你可以问问题并得到帮助。
+
+- 协调者: Bill Butler, @billbutler
+- 主程序员: Sigve Kvalsvik, @sigvek
+- 程序员: Calvin Froedge, @calvin
+- 代码审核: Fabian Schuh, @xeroc
 
 ## Development process&emsp;开发流程
 
@@ -116,6 +118,8 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 - If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
 - To claim an issue, simply leave a comment with your request to claim.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
+
+##
  - 开发目标上标记的日期，是预计发表时间
  - 修补漏洞优先于项目改进
  - 开发者需要根据一个被标好数字（这个数字对应一个问题`git checkout -b 123`）的分叉（branch），对每个问题进行开发。
@@ -127,19 +131,19 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript), with few exceptions:
 
-我们的代码指南基于'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript)，不过有一些例外：
-
 - Strings are double quoted
 - Additional trailing comma (in arrays and objects declaration) is optional
 - 4 spaces tabs
 - Spaces inside curly braces are optional
+
+We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
+
+我们的代码指南基于'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript)，不过有一些例外：
+
  - 字符串需要被双引
  - 额外的尾随逗号（在定义数组和对象时）是随意的
  - 四个空格的缩进
  - 在花括号里的空格是随意的
-
-
-We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
 我们强烈鼓励用  _eslint_ 确保代码依附于我们的代码风格指南
 
