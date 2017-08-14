@@ -152,9 +152,16 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _updateAmount(amount) {
+        let fee = this._getFee();
+        let gateFee = parseFloat(this.props.gateFee);
+        let feeToSubtract = this.state.to_withdraw.asset_id !== fee.asset ? 0 : fee.amount;
+        let fee_precision = this.state.to_withdraw.precision;
         this.state.to_withdraw.setAmount({sats: amount});
+
+        let total_minus_fee = this.state.to_withdraw.getAmount({real: true}) - gateFee - (feeToSubtract/Math.pow(10,fee_precision))*1.095; //@#>
+
         this.setState({
-            withdrawValue: this.state.to_withdraw.getAmount({real: true}),
+            withdrawValue: total_minus_fee<0?0:total_minus_fee,
             amountError: null
         });
     }

@@ -159,6 +159,7 @@ class BlockTradesGateway extends React.Component {
                             deposit_coin_type={coin.backingCoinType.toLowerCase()}
                             deposit_account={coin.depositAccount}
                             deposit_wallet_type={coin.walletType}
+                            gateFee={coin.gateFee}
                             receive_asset={coin.symbol}
                             receive_coin_type={coin.symbol.toLowerCase()}
                             supports_output_memos={coin.supportsMemos}
