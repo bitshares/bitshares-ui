@@ -10,7 +10,7 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 >它把*所有的密钥存储在本地浏览器上*，*绝对不要把你的密钥暴露给任何人*，因为它会先在本地签署交易，再传到API服务器上，最后广播至区块链网络。这个钱包被一个你选择的密码加密，也会被浏览器数据库加密。
 
-### Getting started&emsp;项目部署
+## Getting started&emsp;项目部署
 
 BitShares-UI depends node Node.js, and version 6+ is required. It has not yet been tested with v7.
 
@@ -45,7 +45,7 @@ cd web
 npm install
 ```
 
-### Running the dev server&emsp;运行开发服务器
+## Running the dev server&emsp;运行开发服务器
 
 The dev server uses Express in combination with Webpack 2.
 
@@ -62,7 +62,7 @@ Once the compilation is done the GUI will be available in your browser at: `loca
 
 >一旦编译成功，GUI会在你的浏览器上成功部署，链接是`localhost:8080` 或者`127.0.0.1:8080`。我们加载了热重载机制，只要你编辑源文件，浏览器便会实时更新。
 
-### Testnet&emsp;测试网络
+## Testnet&emsp;测试网络
 By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
 
 The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
@@ -84,10 +84,10 @@ This will create a bundle in the /dist folder that can be hosted with the web se
 
 >这样就能在建立一个/dist目录下建立一个bundle,让你选择的网络服务器来主持它。
 
-### Installable wallets
+## Installable wallets
 We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform.
 
-### 可安装钱包
+## 可安装钱包
 我们使用Electron来提供可安装钱包，Windows, OSX 和Linux平台如Ubuntu都可以使用。首先，在'electron'文件夹里安装需要的封包。然后到'web'文件夹里运行`npm run electron`。这样就会在编译UI的同时针对Electron做一些特殊的改进，并将结果粘贴至根文件夹 `electron/build`。现在，为了创建一个钱包到你的平台上，回到`electron`文件夹并运行`npm run release`。
 
 
