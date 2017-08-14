@@ -30,7 +30,7 @@ cd web
 npm install
 ```
 
-## Running the dev server
+### Running the dev server
 
 The dev server uses Express in combination with Webpack 2.
 
