@@ -88,9 +88,11 @@ This will create a bundle in the /dist folder that can be hosted with the web se
 ### Installable wallets&emsp;可安装钱包
 We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform.
 
+### 可安装钱包
 我们使用Electron来提供可安装钱包，Windows, OSX 和Linux平台如Ubuntu都可以使用。首先，在'electron'文件夹里安装需要的封包。然后到'web'文件夹里运行`npm run electron`。这样就会在编译UI的同时针对Electron做一些特殊的改进，并将结果粘贴至根文件夹 `electron/build`。现在，为了创建一个钱包到你的平台上，回到`electron`文件夹并运行`npm run release`。
 
-## Contributing&emsp;贡献
+
+## Contributing
 
 The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation. 
 
@@ -101,6 +103,8 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 - Developer: Calvin Froedge, @calvin
 - Code Review: Fabian Schuh, @xeroc
 
+## 贡献
+
 Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbutler/translated-by-zhaomu-l)支持。它提供用来支付协调者，悬赏金和比特股基金的资金。
 
 如果你想参与贡献，我们有一个[Telegram 聊天室](https://t.me/BitSharesDEX)，在这里你可以问问题并得到帮助。
@@ -110,7 +114,7 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - 程序员: Calvin Froedge, @calvin
 - 代码审核: Fabian Schuh, @xeroc
 
-## Development process&emsp;开发流程
+## Development process
 
 - Milestones are numbered YYMMDD and refer to the **anticipated release date**.
 - Bugs are always worked before enhancements
@@ -119,7 +123,9 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
 - To claim an issue, simply leave a comment with your request to claim.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
-</br>
+
+## 开发流程
+
 - 开发目标上标记的日期，是预计发表时间
 - 修补漏洞优先于项目改进
 - 开发者需要根据一个被标好数字（这个数字对应一个问题`git checkout -b 123`）的分叉（branch），对每个问题进行开发。
@@ -127,7 +133,8 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - 如果问题已经被认领（指派），不要尝试认领它。外部开发者认领问题意味着 wmbutler的指派，但是我会在评论里提及这一开发者的github账户。
 - 简单地留下一条你要求认领的评论（comment），便能认领问题。
 - 不要认领一个在开发目标上所写规定时间内完成不了的问题。列如 开发目标170901 需要在2017年9月1日前被推进完成.
-### Coding style guideline&emsp;代码风格
+
+### Coding style guideline
 
 Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript), with few exceptions:
 
@@ -138,6 +145,7 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
+### 代码风格
 我们的代码指南基于[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript),不过有一些例外：
 
  - 字符串需要被双引
