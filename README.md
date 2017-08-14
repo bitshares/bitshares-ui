@@ -119,8 +119,7 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 - If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
 - To claim an issue, simply leave a comment with your request to claim.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
-
-##
+</br>
  - 开发目标上标记的日期，是预计发表时间
  - 修补漏洞优先于项目改进
  - 开发者需要根据一个被标好数字（这个数字对应一个问题`git checkout -b 123`）的分叉（branch），对每个问题进行开发。
@@ -139,7 +138,7 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
-我们的代码指南基于[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript）,不过有一些例外：
+我们的代码指南基于[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript),不过有一些例外：
 
  - 字符串需要被双引
  - 额外的尾随逗号（在定义数组和对象时）是随意的
