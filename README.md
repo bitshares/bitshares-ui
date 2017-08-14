@@ -6,10 +6,9 @@ This is a light wallet that connects to a BitShares API provided by the *witness
 
 It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
 
-这是一个链接Bitsahres API的轻钱包，而Bitashares API由可执行的 *witness_node*  提供
+>这是一个链接Bitsahres API的轻钱包，而Bitashares API由可执行的 *witness_node*  提供
 
-
-它把*所有的密钥存储在本地浏览器上*，*绝对不要把你的密钥暴露给任何人*，因为它会先在本地签署交易，再传到API服务器上，最后广播至区块链网络。这个钱包被一个你选择的密码加密，也会被浏览器数据库加密。
+>它把*所有的密钥存储在本地浏览器上*，*绝对不要把你的密钥暴露给任何人*，因为它会先在本地签署交易，再传到API服务器上，最后广播至区块链网络。这个钱包被一个你选择的密码加密，也会被浏览器数据库加密。
 
 ### Getting started&emsp;项目部署
 
@@ -21,9 +20,9 @@ To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 
 >BitShares-UI依赖于Node.js, 需要版本号v6以上。目前还没有被版本号v7测试。
 
-在Ubuntu和OSX，安装Node最简单的方式是用[NVM](https://github.com/creationix/nvm)。
+>在Ubuntu和OSX，安装Node最简单的方式是用[NVM](https://github.com/creationix/nvm)。
 
-为了安装Linux/OSX的NVM，只需要简单地把下列的代码复制粘贴进命令控制终端:
+>为了安装Linux/OSX的NVM，只需要简单地把下列的代码复制粘贴进命令控制终端:
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
 nvm install v6
