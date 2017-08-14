@@ -11,6 +11,38 @@ import AccountActions from "actions/AccountActions";
 import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
+import AccountStore from "stores/AccountStore";
+import {ChainStore} from "bitsharesjs/es";
+import Modal from "react-foundation-apps/src/modal";
+
+
+let gate_fees = {
+    AGRS: 0.00032,
+    AMP: 0.00032,
+    BTC: 0.00030,
+    DASH: 0.00010,
+    DGD: 0.00150,
+    DOGE: 1.00000,
+    EMC: 0.30000,
+    ETH: 0.00150,
+    USDT: 0.00032,
+    GAME: 0.00010,
+    GRC: 0.00020,
+    INCNT: 0.00100,
+    LSK: 0.10000,
+    LTC: 0.00300,
+    MAID: 0.00032,
+    MUSE: 8.00000,
+    NBT: 0.01000,
+    NSR: 1.00000,
+    NXC: 0.00150,
+    OMNI: 0.00032,
+    PPC: 0.00010,
+    SBD: 0.00000,
+    STEEM: 0.00000,
+    WAVES: 0.00100
+};
+
 
 class WithdrawModalBlocktrades extends React.Component {
 
