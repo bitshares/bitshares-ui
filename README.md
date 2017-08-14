@@ -139,7 +139,7 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
 
-我们的代码指南基于'Airbnb JavaScript Style Guide' (https://github.com/airbnb/javascript)，不过有一些例外：
+我们的代码指南基于[Airbnb JavaScript Style Guide] (https://github.com/airbnb/javascript),不过有一些例外：
 
  - 字符串需要被双引
  - 额外的尾随逗号（在定义数组和对象时）是随意的
