@@ -115,7 +115,6 @@
       "explain": "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır."
     },
     "member": {
-      "claim_all": "Tamamını çek",
       "stats": "Üyelik Bilgileri",
       "join": "Katılma tarihi",
       "registrar": "Kaydı yapan",
