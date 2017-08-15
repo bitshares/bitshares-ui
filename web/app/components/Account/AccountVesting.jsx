@@ -75,7 +75,6 @@ class VestingBalance extends React.Component {
                                 <tr>
                                     <td colSpan="2" style={{textAlign: "right"}}>
                                         <button onClick={this._onClaim.bind(this, false)} className="button outline"><Translate content="account.member.claim" /></button>
-                                        <button onClick={this._onClaim.bind(this, true)} className="button outline"><Translate content="account.member.claim_all" /></button>
                                     </td>
                                 </tr>
                             </tbody>
