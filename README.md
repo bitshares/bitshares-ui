@@ -56,7 +56,20 @@ npm run build
 This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
 
 ### Installable wallets
-We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, install the required packages in the `electron` folder. Then go to the `web` folder and run `npm run electron`. This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. Now go back to the `electron` folder and run `npm run release` in order to build a wallet for your platform.
+We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, make sure your local python version is 2.7.x, as a dependency requires this.
+
+OSX / Linux instructions:
+
+```
+cd electron
+npm install
+cd ../web
+npm run electron
+cd ../electron
+npm run release
+```
+
+This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. 
 
 ## Contributing
 
