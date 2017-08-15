@@ -140,6 +140,14 @@ class OrderBook extends React.Component {
             if (this.refs.bidTransition) {
                 this.refs.bidTransition.resetAnimation();
             }
+
+            if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+        }
+
+        if (nextProps.combinedAsks !== this.props.combinedAsks || nextProps.combinedBids !== this.props.combinedBids) {
+            this.setState({}, () => {
+                this.psUpdate();
+            });
         }
     }
 
