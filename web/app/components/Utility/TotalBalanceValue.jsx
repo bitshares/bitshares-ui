@@ -192,7 +192,7 @@ class TotalValue extends React.Component {
         balances.forEach(balance => {
             let fromAsset = assets[balance.asset_id];
             if (fromAsset) {
-                let eqValue = this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset);
+                let eqValue = fromAsset !== toAsset ? this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset) : balance.amount;
                 totalValue += eqValue;
                 assetValues = this._assetValues(assetValues, eqValue, fromAsset.get("id"));
             }
