@@ -54,7 +54,6 @@ class OrderBookRowHorizontal extends React.Component {
         const isBid = order.isBid();
         const isCall = order.isCall();
 
-
         let integerClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
 
         let price = <PriceText price={order.getPrice()} quote={quote} base={base} />;
@@ -127,7 +126,7 @@ class OrderBook extends React.Component {
         }
 
         // Change of market or direction
-        if (nextProps.base.get('id') !== this.props.base.get('id') || nextProps.quote.get('id')  !== this.props.quote.get('id') ) {
+        if (nextProps.base.get('id') !== this.props.base.get('id') || nextProps.quote.get('id') !== this.props.quote.get('id')) {
             this.setState({
                 scrollToBottom: true
             });
