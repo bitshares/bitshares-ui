@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {PropTypes} from "react";
 import {Link} from "react-router/es";
 import Immutable from "immutable";
@@ -55,7 +54,7 @@ class MarketHistory extends React.Component {
         });
 
         // Ensure that focus goes back to top of scrollable container when tab is changed
-        let historyNode = ReactDOM.findDOMNode(this.refs.history);
+        let historyNode = this.refs.history;
         historyNode.scrollTop = 0;
         Ps.update(historyNode);
     }
