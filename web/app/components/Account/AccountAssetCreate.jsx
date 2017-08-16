@@ -345,7 +345,7 @@ class AccountAssetCreate extends React.Component {
             this.setState({update: update}, () => {
                 if(shouldRestoreCursor) {
                     const selectionStart = caret - (inputValue.length - update[value].length)
-                  target.setSelectionRange(selectionStart, selectionStart);
+                    target.setSelectionRange(selectionStart, selectionStart);
                 }
             });
             this._validateEditFields(update);
