@@ -41,6 +41,9 @@ class DepositWithdrawContent extends React.Component {
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue:"",
             amountError: null,
+            symbol:props.asset.get("symbol"),
+            intermediateAccount: props.asset.get("intermediateAccount"),
+            gateFee: props.asset.get("gateFee"),
             to_withdraw: new Asset({
                 asset_id: props.asset.get("id"),
                 precision: props.asset.get("precision")
@@ -64,6 +67,9 @@ class DepositWithdrawContent extends React.Component {
                     asset_id: np.asset.get("id"),
                     precision: np.asset.get("precision")
                 }),
+                gateFee: np.asset.get("gateFee"),
+                intermediateAccount: np.asset.get("intermediateAccount"),
+                symbol:np.asset.get("symbol"),
                 memo: "",
                 withdrawValue: "",
                 receive_address: null,
@@ -136,6 +142,7 @@ class DepositWithdrawContent extends React.Component {
         AccountActions.transfer(
             this.props.sender.get("id"),
             this.props.issuer.get("id"),
+            this.props.intermediateAccount,
             this.state.to_withdraw.getAmount() - feeToSubtract,
             this.state.to_withdraw.asset_id,
             this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
@@ -145,9 +152,16 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _updateAmount(amount) {
+        let fee = this._getFee();
+        let gateFee = parseFloat(this.props.gateFee);
+        let feeToSubtract = this.state.to_withdraw.asset_id !== fee.asset ? 0 : fee.amount;
+        let fee_precision = this.state.to_withdraw.precision;
         this.state.to_withdraw.setAmount({sats: amount});
+
+        let total_minus_fee = this.state.to_withdraw.getAmount({real: true}) - gateFee - (feeToSubtract/Math.pow(10,fee_precision))*1.095; //@#>
+
         this.setState({
-            withdrawValue: this.state.to_withdraw.getAmount({real: true}),
+            withdrawValue: total_minus_fee<0?0:total_minus_fee,
             amountError: null
         });
     }

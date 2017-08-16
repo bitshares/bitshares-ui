@@ -50,24 +50,11 @@ class AmountSelector extends React.Component {
     }
 
     formatAmount(v) {
-        // TODO: use asset's precision to format the number
+        /*// TODO: use asset's precision to format the number*/
         if (!v) v = "";
         if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
-        // value = utils.limitByPrecision(value, this.props.asset.get("precision"));
-        while (value.substring(0, 2) == "00")
-            value = value.substring(1);
-        if (value[0] === ".") value = "0" + value;
-        else if (value.length) {
-            let n = Number(value)
-            if (isNaN(n)) {
-                value = parseFloat(value);
-                if (isNaN(value)) return "";
-            }
-            let parts = (value + "").split('.');
-            value = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            if (parts.length > 1) value += "." + parts[1];
-        }
+
         return value;
     }
 

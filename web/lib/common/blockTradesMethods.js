@@ -94,6 +94,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
 
             blocktradesBackedCoins.push({
                 name: coins_by_type[coin_type.backingCoinType].name,
+                intermediateAccount: coins_by_type[coin_type.backingCoinType].intermediateAccount,
+                gateFee: coins_by_type[coin_type.backingCoinType].gateFee,
                 walletType: coins_by_type[coin_type.backingCoinType].walletType,
                 backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
                 symbol: coin_type.walletSymbol,

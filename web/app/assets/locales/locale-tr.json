@@ -368,7 +368,9 @@
       "pos": "Miktar pozitif olmak zorundadır.",
       "valid": "Lütfen geçerli bir değer giriniz.",
       "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
-      "insufficient": "Yetersiz bakiye"
+      "insufficient": "Yetersiz bakiye",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "GERİ",
     "confirm": "ONAYLA",
@@ -1121,6 +1123,7 @@
     "fee_paying_account": "Ücreti ödeyen hesap"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "title": "Yatır & Çek",
     "assets": {
         "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",

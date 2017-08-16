@@ -361,7 +361,9 @@
       "pos": "数量必须大于0",
       "valid": "请输入一个合法的大于0的半角数字",
       "balance": "最终余额必须大于0",
-      "insufficient": "余额不足"
+      "insufficient": "余额不足",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "返回",
     "confirm": "确认发送",
@@ -1157,7 +1159,8 @@
     "enter_refcode": "输入推荐码"
   },
   "gateway": {
-    "assets": {
+      "fee": "Gateway fee",
+      "assets": {
         "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
         "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
         "bit": "<br/>bit %(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",

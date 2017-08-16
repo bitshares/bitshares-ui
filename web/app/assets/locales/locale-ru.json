@@ -375,7 +375,9 @@
       "pos":"Сумма должна быть положительной",
       "valid":"Пожалуйста, введите правильное, положительное число",
       "balance":"Окончательный баланс должен быть больше нуля",
-      "insufficient":"Недостаточный баланс"
+      "insufficient":"Недостаточный баланс",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back":"НАЗАД",
     "confirm":"ПОДТВЕРДИТЬ",
@@ -1168,6 +1170,7 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
+    "fee": "Gateway fee",
     "title":"Пополнение и Вывод",
     "assets":{
       "open":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",

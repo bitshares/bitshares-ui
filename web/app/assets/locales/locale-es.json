@@ -217,7 +217,9 @@
       "pos": "El monto debe ser positivo",
       "valid": "Por favor ingresar un número positivo válido",
       "balance": "El balance final debe ser mayor a 0",
-      "insufficient": "Insufficient Balance"
+      "insufficient": "Insufficient Balance",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "VOLVER",
     "confirm": "CONFIRMAR",
@@ -749,6 +751,7 @@
     "enter_refcode": "Enter referral code"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
