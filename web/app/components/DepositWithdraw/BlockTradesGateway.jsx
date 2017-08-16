@@ -13,9 +13,10 @@ class BlockTradesGateway extends React.Component {
     constructor(props) {
         super();
 
+        const action = props.viewSettings.get(`${props.provider}Action`, "deposit");
         this.state = {
-            activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-            action: props.viewSettings.get(`${props.provider}Action`, "deposit")
+            activeCoin: this._getActiveCoin(props, {action}),
+            action
         };
     }
 
