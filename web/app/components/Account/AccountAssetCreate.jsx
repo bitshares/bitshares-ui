@@ -291,53 +291,63 @@ class AccountAssetCreate extends React.Component {
     _onUpdateInput(value, e) {
         let {update} = this.state;
         let updateState = true;
+        let shouldRestoreCursor = false;
         let precision = utils.get_asset_precision(this.state.update.precision);
+        const target = e.target;
+        const caret = target.selectionStart;
+        const inputValue = target.value;
 
         switch (value) {
             case "market_fee_percent":
-                update[value] = this._forcePositive(e.target.value);
+                update[value] = this._forcePositive(target.value);
                 break;
 
             case "max_market_fee":
-                if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
+                if ((new big(inputValue)).times(precision).gt(MAX_SAFE_INT)) {
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
-                e.target.value = utils.limitByPrecision(e.target.value, this.state.update.precision);
-                update[value] = e.target.value;
+                target.value = utils.limitByPrecision(target.value, this.state.update.precision);
+                update[value] = target.value;
                 break;
 
             case "precision":
                 // Enforce positive number
-                update[value] = this._forcePositive(e.target.value);
+                update[value] = this._forcePositive(target.value);
                 break;
 
             case "max_supply":
-                if ((new big(e.target.value)).times(precision).gt(MAX_SAFE_INT)) {
+                if ((new big(target.value)).times(precision).gt(MAX_SAFE_INT)) {
                     return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
                 }
-                e.target.value = utils.limitByPrecision(e.target.value, this.state.update.precision);
-                update[value] = e.target.value;
+                target.value = utils.limitByPrecision(target.value, this.state.update.precision);
+                update[value] = target.value;
                 break;
 
             case "symbol":
                 // Enforce uppercase
-                e.target.value = e.target.value.toUpperCase();
+                shouldRestoreCursor = true
+                const symbol = target.value.toUpperCase();
                 // Enforce characters
                 let regexp = new RegExp("^[\.A-Z]+$");
-                if (e.target.value !== "" && !regexp.test(e.target.value)) {
+                if (symbol !== "" && !regexp.test(symbol)) {
                     break;
                 }
-                ChainStore.getAsset(e.target.value);
-                update[value] = this._forcePositive(e.target.value);
+                ChainStore.getAsset(symbol);
+                update[value] = this._forcePositive(symbol);
                 break;
 
             default:
-                update[value] = e.target.value;
+                update[value] = target.value;
                 break;
         }
 
         if (updateState) {
-            this.setState({update: update});
+            this.setState({update: update}, () => {
+                if(shouldRestoreCursor) {
+                    const selectionStart = caret - (inputValue.length - update[value].length)
+                    target.setSelectionRange(selectionStart, selectionStart);
+                }
+            });
             this._validateEditFields(update);
         }
     }
