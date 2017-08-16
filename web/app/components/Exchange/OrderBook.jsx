@@ -144,7 +144,10 @@ class OrderBook extends React.Component {
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
         }
 
-        if (nextProps.combinedAsks !== this.props.combinedAsks || nextProps.combinedBids !== this.props.combinedBids) {
+        if (
+          !utils.are_equal_shallow(nextProps.combinedAsks, this.props.combinedAsks) ||
+          !utils.are_equal_shallow(nextProps.combinedBids, this.props.combinedBids)
+        ) {
             this.setState({}, () => {
                 this.psUpdate();
             });
