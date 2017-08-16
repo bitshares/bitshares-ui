@@ -52,6 +52,11 @@ class MarketHistory extends React.Component {
         this.setState({
             activeTab: tab
         });
+
+        // Ensure that focus goes back to top of scrollable container when tab is changed
+        let historyNode = this.refs.history;
+        historyNode.scrollTop = 0;
+        Ps.update(historyNode);
     }
 
     render() {
