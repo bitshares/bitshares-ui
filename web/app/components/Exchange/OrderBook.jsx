@@ -126,7 +126,7 @@ class OrderBook extends React.Component {
         }
 
         // Change of market or direction
-        if (nextProps.base.get('id') !== this.props.base.get('id') || nextProps.quote.get('id') !== this.props.quote.get('id')) {
+        if (nextProps.base.get("id") !== this.props.base.get("id") || nextProps.quote.get("id") !== this.props.quote.get("id")) {
             this.setState({
                 scrollToBottom: true
             });
