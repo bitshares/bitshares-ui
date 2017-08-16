@@ -47,17 +47,24 @@ class WithdrawModalBlocktrades extends React.Component {
             withdraw_address_first: true,
             empty_withdraw_value: false,
             from_account: ChainStore.getAccount(AccountStore.getState().currentAccount),
-            asset: null,
-            feeAsset: ChainStore.getAsset("1.3.0"),
             fee_asset_id: "1.3.0"
         };
 
 
         this._validateAddress(this.state.withdraw_address, props);
+
+        this._checkBalance = this._checkBalance.bind(this);
     }
 
     componentWillMount() {
         checkFeePayment({accountID: this.props.account.get("id"), feeID: this.state.fee_asset_id}).then(({fee, hasBalance, hasPoolBalance}) => {
+
+            // TEMP //
+            // Hack to account for memo fee //
+            fee.plus(fee.clone(Math.floor(fee.getAmount() * 0.095)));
+
+            // /TEMP //
+
             this.setState({
                 feeAmount: fee,
                 hasBalance,
@@ -74,7 +81,7 @@ class WithdrawModalBlocktrades extends React.Component {
         this.setState({
             withdraw_amount: amount,
             empty_withdraw_value: amount !== undefined && !parseFloat(amount)
-        });
+        }, this._checkBalance);
     }
 
     onSelectChanged(index) {
@@ -115,6 +122,43 @@ class WithdrawModalBlocktrades extends React.Component {
             });
     }
 
+    _checkBalance() {
+        const {feeAmount, withdraw_amount} = this.state;
+        const {asset} = this.props;
+
+        if (!withdraw_amount) return;
+
+        let amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
+        let sendAmount = new Asset({
+            asset_id: asset.get("id"),
+            precision: asset.get("precision"),
+            real: amount
+        });
+        let balance = sendAmount.clone(this.props.balance.get("balance"));
+
+        if (balance.lt(sendAmount)) {
+            this.setState({
+                balanceError: true
+            });
+            return false;
+        }
+
+        if (sendAmount.asset_id === feeAmount.asset_id) {
+            sendAmount.plus(feeAmount);
+            if (balance.lt(sendAmount)) {
+                this.setState({
+                    balanceError: true
+                });
+                return false;
+            }
+        }
+
+        this.setState({
+            balanceError: false
+        });
+        return true;
+    }
+
     onSubmit() {
 
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
@@ -134,19 +178,24 @@ class WithdrawModalBlocktrades extends React.Component {
                 }
                 WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: this.state.withdraw_address});
                 let asset = this.props.asset;
-                let precision = utils.get_asset_precision(asset.get("precision"));
-                let amount = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
 
-                let {feeAsset} = this.state;
+                const {feeAmount} = this.state;
+
+                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                let sendAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: amount
+                });
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
                     this.props.issuer.get("id"),
-                    parseInt(amount * precision, 10),
+                    sendAmount.getAmount(),
                     asset.get("id"),
                     this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
                     null,
-                    feeAsset ? feeAsset.get("id") : "1.3.0"
+                    feeAmount ? feeAmount.asset_id : "1.3.0"
                 );
 
                 this.setState({
@@ -180,7 +229,7 @@ class WithdrawModalBlocktrades extends React.Component {
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
 
-        let {feeAsset} = this.state;
+        const {feeAmount} = this.state;
 
         AccountActions.transfer(
             this.props.account.get("id"),
@@ -189,7 +238,7 @@ class WithdrawModalBlocktrades extends React.Component {
             asset.get("id"),
             this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
             null,
-            feeAsset ? feeAsset.get("id") : "1.3.0"
+            feeAmount ? feeAmount.asset_id : "1.3.0"
         );
     }
 
@@ -232,7 +281,7 @@ class WithdrawModalBlocktrades extends React.Component {
             this.setState({
                 withdraw_amount: total.getAmount({real: true}),
                 empty_withdraw_value: false
-            });
+            }, this._checkBalance);
         }
     }
 
@@ -240,28 +289,21 @@ class WithdrawModalBlocktrades extends React.Component {
         this.nestedRef = ref;
     }
 
-    _setTotal(asset_id, balance_id, fee, fee_asset_id) {
-
-        const gateFee = parseInt(this.props.gateFee);
-
-        let balanceObject = ChainStore.getObject(balance_id);
-        let transferAsset = ChainStore.getObject(asset_id);
-        if (balanceObject) {
-            let amount = (utils.get_asset_amount(balanceObject.get("balance"), transferAsset) - gateFee - (asset_id === fee_asset_id ? fee : 0)).toString();
-            this.setState({amount});
-        }
-    }
-
     onFeeChanged({asset}) {
         checkFeePayment({accountID: this.props.account.get("id"), feeID: asset.get("id")}).then(({fee, hasBalance, hasPoolBalance}) => {
+            // TEMP //
+            // Hack to account for memo fee //
+            fee.plus(fee.clone(Math.floor(fee.getAmount() * 0.095)));
+
+            // /TEMP //
+
             this.setState({
                 feeAmount: fee,
                 hasBalance,
                 hasPoolBalance,
-                feeAsset: asset,
                 error: (!hasBalance || !hasPoolBalance),
                 fee_asset_id: asset.get("id")
-            });
+            }, this._checkBalance);
         });
     }
 
@@ -359,12 +401,6 @@ class WithdrawModalBlocktrades extends React.Component {
         // Estimate fee VARIABLES
         let { fee_asset_types } = this._getAvailableAssets();
 
-        // let fee_asset_choosen= "1.3.0";
-        //
-        // if(fee_asset_types.indexOf(fee_asset_choosen)==-1){
-        //     feeAsset =  ChainStore.getAsset(fee_asset_types[0]);
-        // }
-
         if (asset_types.length > 0) {
             let current_asset_id = this.props.asset.get("id");
             if( current_asset_id ){
@@ -400,6 +436,7 @@ class WithdrawModalBlocktrades extends React.Component {
                         display_balance={balance}
                     />
                     {this.state.empty_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.valid" /></p>:null}
+                    {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
                 </div>
 
                 {/* Fee selection */}
@@ -454,7 +491,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 
