@@ -190,15 +190,11 @@ class TotalValue extends React.Component {
 
         // Balance value
         balances.forEach(balance => {
-            if (balance.asset_id === toAsset.get("id")) {
-                totalValue += balance.amount;
-            } else {
-                let fromAsset = assets[balance.asset_id];
-                if (fromAsset) {
-                    let eqValue = this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset);
-                    totalValue += eqValue;
-                    assetValues = this._assetValues(assetValues, eqValue, fromAsset.get("id"));
-                }
+            let fromAsset = assets[balance.asset_id];
+            if (fromAsset) {
+                let eqValue = fromAsset !== toAsset ? this._convertValue(balance.amount, fromAsset, toAsset, marketStats, coreAsset) : balance.amount;
+                totalValue += eqValue;
+                assetValues = this._assetValues(assetValues, eqValue, fromAsset.get("id"));
             }
         });
 
