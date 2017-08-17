@@ -218,7 +218,7 @@ class Settings extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block main-content wrap" style={{marginTop: "1rem"}}>
+                <div className="grid-block main-content wrap">
                     <div className="grid-content large-offset-2 shrink" style={{paddingRight: "4rem"}}>
                         <Translate style={{paddingBottom: 20}} className="bottom-border" component="h4" content="header.settings" />
 
