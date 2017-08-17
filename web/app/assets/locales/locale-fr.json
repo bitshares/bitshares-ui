@@ -182,7 +182,9 @@
       "pos": "Le montant doit étre positif",
       "valid": "Veuillez rentrer un chiffre positif",
       "balance": "Le solde final doit être superieur à 0",
-      "insufficient": "Insufficient Balance"
+      "insufficient": "Insufficient Balance",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "REVENIR",
     "confirm": "CONFIRMER",
@@ -457,6 +459,8 @@
     "sell": "Vendre",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
     "show_star_1": "Show",
     "show_star_2": "only",
@@ -509,6 +513,7 @@
     "enter_refcode": "Enter referral code"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",

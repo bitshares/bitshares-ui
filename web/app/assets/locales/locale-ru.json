@@ -151,7 +151,6 @@
       "required":"Требуется монето-дней",
       "remaining":"Осталось дней вестингового периода",
       "claim":"Востребовать сейчас",
-      "claim_all":"Попытаться востребовать всё",
       "available":"Доступно к востребованию",
       "referral_link":"Ваша реферальная ссылка",
       "referral_text":"Дайте эту ссылку людям, которых Вы хотите пригласить в BitShares"
@@ -376,7 +375,9 @@
       "pos":"Сумма должна быть положительной",
       "valid":"Пожалуйста, введите правильное, положительное число",
       "balance":"Окончательный баланс должен быть больше нуля",
-      "insufficient":"Недостаточный баланс"
+      "insufficient":"Недостаточный баланс",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back":"НАЗАД",
     "confirm":"ПОДТВЕРДИТЬ",
@@ -875,6 +876,8 @@
     "change":"Изменение",
     "confirm_buy":"Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
     "confirm_sell":"Ваш ордер в %(diff)s раз ниже, чем самая высокая ставка, Вы уверены?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "indicators":"Индикаторы",
     "rsi":"Индекс относительной прочности",
     "ema":"Экспоненциальная скользящая средняя",
@@ -1169,6 +1172,7 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
+    "fee": "Gateway fee",
     "title":"Пополнение и Вывод",
     "assets":{
       "open":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",

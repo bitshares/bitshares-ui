@@ -126,7 +126,7 @@ class OrderBook extends React.Component {
         }
 
         // Change of market or direction
-        if (nextProps.base !== this.props.base || nextProps.quote !== this.props.quote) {
+        if (nextProps.base.get("id") !== this.props.base.get("id") || nextProps.quote.get("id") !== this.props.quote.get("id")) {
             this.setState({
                 scrollToBottom: true
             });
@@ -140,6 +140,17 @@ class OrderBook extends React.Component {
             if (this.refs.bidTransition) {
                 this.refs.bidTransition.resetAnimation();
             }
+
+            if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+        }
+
+        if (
+          !utils.are_equal_shallow(nextProps.combinedAsks, this.props.combinedAsks) ||
+          !utils.are_equal_shallow(nextProps.combinedBids, this.props.combinedBids)
+        ) {
+            this.setState({}, () => {
+                this.psUpdate();
+            });
         }
     }
 

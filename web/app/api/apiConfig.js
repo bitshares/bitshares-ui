@@ -1,6 +1,7 @@
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
-    BASE_OL: "https://api.blocktrades.us/ol/v2",
+    // BASE_OL: "https://api.blocktrades.us/ol/v2",
+    BASE_OL: "https://ol-api1.openledger.info/api/v0/ol/support",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs",
@@ -18,7 +19,7 @@ export const settingsAPIs = {
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://bts.transwiser.com/ws", location: "Hangzhou, China"},
         {url: "wss://bitshares.dacplay.org/ws", location:  "Hangzhou, China"},
-        {url: "wss://bitshares.wancloud.io/ws", location:  "China"},
+        {url: "wss://bitshares-api.wancloud.io/ws", location:  "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {url: "wss://secure.freedomledger.com/ws", location: "Toronto, Canada"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
