@@ -60,8 +60,7 @@ module.exports = function(env) {
             __BASE_URL__: JSON.stringify("baseUrl" in env ? env.baseUrl : "/"),
             __UI_API__: JSON.stringify(env.apiUrl || "https://ui.bitshares.eu/api"),
             __TESTNET__: !!env.testnet
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin()
+        })
     ];
 
     if (env.prod) {
@@ -97,6 +96,7 @@ module.exports = function(env) {
             minimize: true,
             debug: false
         }));
+        plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
         if (!env.noUgly) {
 
             plugins.push(new webpack.optimize.UglifyJsPlugin({
