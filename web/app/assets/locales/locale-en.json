@@ -375,7 +375,7 @@
       "pos": "Amount must be positive",
       "valid": "Please enter a valid, positive number",
       "balance": "The final balance must be larger than 0",
-      "insufficient": "Insufficient Balance",
+      "insufficient": "Insufficient funds",
       "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
       "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },

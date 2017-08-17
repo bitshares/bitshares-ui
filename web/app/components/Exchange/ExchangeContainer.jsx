@@ -104,11 +104,13 @@ class ExchangeSubscriber extends React.Component {
     static propTypes = {
         currentAccount: ChainTypes.ChainAccount.isRequired,
         quoteAsset: ChainTypes.ChainAsset.isRequired,
-        baseAsset: ChainTypes.ChainAsset.isRequired
+        baseAsset: ChainTypes.ChainAsset.isRequired,
+        coreAsset: ChainTypes.ChainAsset.isRequired
     };
 
     static defaultProps = {
-        currentAccount: "1.2.3"
+        currentAccount: "1.2.3",
+        coreAsset: "1.3.0"
     };
 
     constructor() {

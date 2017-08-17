@@ -547,6 +547,9 @@
       }
   }
 
+  .buy-sell-input > input.no-balance {
+      color: $alert-color;
+   }
 
   // Account page
   .account-left-panel {

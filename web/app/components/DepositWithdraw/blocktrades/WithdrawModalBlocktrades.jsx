@@ -13,7 +13,7 @@ import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
-import {checkFeePayment} from "common/asyncTransferHelper";
+import {checkFeeStatus} from "common/asyncTransferHelper";
 import {Asset} from "common/MarketClasses";
 
 class WithdrawModalBlocktrades extends React.Component {
@@ -57,7 +57,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     componentWillMount() {
-        checkFeePayment({accountID: this.props.account.get("id"), feeID: this.state.fee_asset_id}).then(({fee, hasBalance, hasPoolBalance}) => {
+        checkFeeStatus({accountID: this.props.account.get("id"), feeID: this.state.fee_asset_id}).then(({fee, hasBalance, hasPoolBalance}) => {
 
             // TEMP //
             // Hack to account for memo fee //
@@ -290,7 +290,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onFeeChanged({asset}) {
-        checkFeePayment({accountID: this.props.account.get("id"), feeID: asset.get("id")}).then(({fee, hasBalance, hasPoolBalance}) => {
+        checkFeeStatus({accountID: this.props.account.get("id"), feeID: asset.get("id")}).then(({fee, hasBalance, hasPoolBalance}) => {
             // TEMP //
             // Hack to account for memo fee //
             fee.plus(fee.clone(Math.floor(fee.getAmount() * 0.095)));

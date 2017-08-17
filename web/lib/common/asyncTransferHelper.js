@@ -27,7 +27,7 @@ function checkFeePool({assetID, type = "transfer", options = null} = {}) {
     });
 }
 
-function checkFeePayment({accountID, feeID = "1.3.0", type = "transfer", options = null} = {}) {
+function checkFeeStatus({accountID, feeID = "1.3.0", type = "transfer", options = null} = {}) {
     return new Promise((res, rej) => {
         Promise.all([
             estimateFee(type, options),
@@ -38,9 +38,19 @@ function checkFeePayment({accountID, feeID = "1.3.0", type = "transfer", options
         ])
         .then(result => {
             let [coreFee, hasPoolBalance, account, coreAsset, feeAsset] = result;
+            let hasBalance = false;
             if (feeID === "1.3.0") feeAsset = coreAsset;
-            FetchChain("getObject", account.getIn(["balances", feeID])).then(balance => {
-                let hasBalance = false;
+            let coreBalanceID = account.getIn(["balances", "1.3.0"]),
+                feeBalanceID = account.getIn(["balances", feeID]);
+
+            if (feeID === "1.3.0" && !coreBalanceID) return res({fee: new Asset({amount: coreFee}), hasBalance, hasPoolBalance});
+
+            Promise.all([
+                coreBalanceID ? FetchChain("getObject", coreBalanceID) : null,
+                feeBalanceID ? FetchChain("getObject", feeBalanceID) : null
+            ])
+            .then(balances => {
+                const [coreBalance, feeBalance] = balances;
                 let fee = new Asset({amount: coreFee});
 
                 /*
@@ -48,9 +58,6 @@ function checkFeePayment({accountID, feeID = "1.3.0", type = "transfer", options
                 ** pool and convert the amount using the CER
                 */
                 if (feeID !== "1.3.0") {
-                    // Check the fee pool of the asset
-                    // if (parseInt(feeAsset.getIn(["dynamic", "fee_pool"]), 10) >= coreFee) hasPoolBalance = true;
-
                     // Convert the amount using the CER
                     let cer = feeAsset.getIn(["options", "core_exchange_rate"]);
                     let b = cer.get("base").toJS();
@@ -61,13 +68,20 @@ function checkFeePayment({accountID, feeID = "1.3.0", type = "transfer", options
                     q.precision = q.asset_id === feeID ? feeAsset.get("precision") : coreAsset.get("precision");
                     let quote = new Asset(q);
 
-                    let price = new Price({base, quote});
-                    fee = fee.times(price, true);
-                } else {
-                    hasPoolBalance = true; // Core asset needs no pool balance, set to true for logic
+                    /*
+                    ** If the CER is incorrectly configured, the multiplication
+                    ** will fail, so catch the error and default to core
+                    */
+                    try {
+                        let price = new Price({base, quote});
+                        fee = fee.times(price, true);
+                    } catch(err) {
+                        fee = coreFee;
+                        balance = coreBalance;
+                    }
                 }
 
-                if (balance.get("balance") >= fee.getAmount()) hasBalance = true;
+                if (feeBalance && feeBalance.get("balance") >= fee.getAmount()) hasBalance = true;
 
                 res({fee, hasBalance, hasPoolBalance});
             });
@@ -78,5 +92,5 @@ function checkFeePayment({accountID, feeID = "1.3.0", type = "transfer", options
 export {
     estimateFee,
     checkFeePool,
-    checkFeePayment
+    checkFeeStatus
 };
