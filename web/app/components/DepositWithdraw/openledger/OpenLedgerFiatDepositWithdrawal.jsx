@@ -100,7 +100,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
             withdraw_fragment =
                             <td>
                                 <button className={"button outline"} onClick={this.onWithdraw.bind(this)}> <Translate content="gateway.withdraw" /> </button>
-                                <Modal id={withdraw_modal_id} overlay={true}>
+                                <BaseModal id={withdraw_modal_id} overlay={true}>
                                     <Trigger close={withdraw_modal_id}>
                                         <a href="#" className="close-button">&times;</a>
                                     </Trigger>
@@ -114,7 +114,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                                             deposit_asset={this.props.deposit_asset}
                                             modal_id={withdraw_modal_id} />
                                     </div>
-                                </Modal>
+                                </BaseModal>
                             </td>;
         }
         else
