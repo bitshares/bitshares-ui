@@ -376,8 +376,6 @@
       border-top: 1px solid $border-color;
     }
     header {
-      margin-left: 0;
-      margin-bottom: 1rem;
       color: $secondary-text-color;
     }
   }
@@ -1078,9 +1076,7 @@
 
   // Settings
   .settings-menu {
-      margin-left: 0;
       > li {
-          padding: 0 1rem;
           &:hover {
                 background-color: darken($light-panel-bg-color, 5%);
           }

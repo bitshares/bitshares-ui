@@ -536,7 +536,7 @@ class AccountAssetCreate extends React.Component {
             <div className="grid-block">
                 <div className="grid-content">
                     <h3><Translate content="header.create_asset" /></h3>
-                    <Tabs setting="createAssetTab" contentClass="grid-block shrink small-vertical medium-horizontal">
+                    <Tabs setting="createAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
 
                         <Tab title="account.user_issued_assets.primary">
                             <div className="small-12 grid-content">
