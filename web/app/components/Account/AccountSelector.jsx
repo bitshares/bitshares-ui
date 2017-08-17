@@ -131,6 +131,7 @@ class AccountSelector extends React.Component {
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}
                                     tabIndex={this.props.tabIndex}
+                                    style={{margin: '0 .5rem'}}
                                 />
                                 {this.props.dropDownContent ? <div className="form-label select floating-dropdown">
                                     <FloatingDropdown
