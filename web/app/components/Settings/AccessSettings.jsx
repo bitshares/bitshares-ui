@@ -3,6 +3,12 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 
+import ls from "common/localStorage";
+const STORAGE_KEY = "__graphene__";
+let ss = new ls(STORAGE_KEY);
+
+const autoSelectAPI = "wss://fake.automatic-selection.com";
+
 class ApiNode extends React.Component {
     constructor(props){
         super(props);
@@ -92,20 +98,25 @@ class AccessSettings extends React.Component {
         super(props);
     }
 
-    onChange(key){
+    getNodeIndexByURL(url){
+        const { props } = this;
 
+        var index = null;
+
+        for(var i=0;i<props.nodes.length;i++){
+            let node = props.nodes[i];
+            if(node.url == url){
+                index = i;
+                break;
+            }
+        }
+
+        return index;
     }
 
     getCurrentNodeIndex(){
         const { props } = this;
-        let currentNode = null;
-        for(var i=0;i<props.nodes.length;i++){
-            let node = props.nodes[i];
-            if(node.url == props.currentNode){
-                currentNode = i;
-                break;
-            }
-        }
+        let currentNode = this.getNodeIndexByURL.call(this, props.currentNode);
 
         return currentNode;
     }
@@ -124,7 +135,7 @@ class AccessSettings extends React.Component {
     renderNode(node, allowActivation){
         const { props } = this;
 
-        let automatic = node.url === "wss://fake.automatic-selection.com";
+        let automatic = node.url === autoSelectAPI;
 
         let displayUrl = automatic ? "..." : node.url;
 
@@ -145,8 +156,13 @@ class AccessSettings extends React.Component {
             return getNode(node)
         });
 
-
         let activeNode = getNode(props.nodes[currentNodeIndex] || props.nodes[0]);
+
+        if(activeNode.url == autoSelectAPI){
+            let nodeUrl = ss.get("activeNode");
+            currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
+            activeNode = getNode(props.nodes[currentNodeIndex]);
+        }
 
         nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1));
 
