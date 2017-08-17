@@ -468,7 +468,7 @@ class AccountVoting extends React.Component {
 
         return (
             <div className="grid-content">
-                <HelpContent path="components/AccountVoting" />
+                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
 
                 <div className="content-block">
                     <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
@@ -483,7 +483,7 @@ class AccountVoting extends React.Component {
 
                         <Tab title="account.votes.proxy_short">
                             <div className="content-block">
-                                <HelpContent path="components/AccountVotingProxy" />
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
                                 <AccountVotingProxy
                                     ref="voting_proxy"
                                     existingProxy={this.props.account.getIn(["options", "voting_account"])}
@@ -496,7 +496,7 @@ class AccountVoting extends React.Component {
 
                         <Tab title="explorer.witnesses.title">
                             <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                                <HelpContent path="components/AccountVotingWitnesses" />
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
                                 <AccountsList
                                     type="witness"
                                     label="account.votes.add_witness_label"
@@ -526,7 +526,7 @@ class AccountVoting extends React.Component {
 
                         <Tab title="explorer.committee_members.title">
                             <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                                <HelpContent path="components/AccountVotingCommittee" />
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
                                 <AccountsList
                                     type="committee"
                                     label="account.votes.add_committee_label"
@@ -557,7 +557,7 @@ class AccountVoting extends React.Component {
                         <Tab title="account.votes.workers_short">
 
                             <div className={cnames("content-block")}>
-                                <HelpContent path="components/AccountVotingWorkers" />
+                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
 
                                 <div style={{paddingBottom: 20}}>
                                     <Link to="/create-worker"><div className="button">Create a new worker</div></Link>

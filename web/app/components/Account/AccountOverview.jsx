@@ -201,7 +201,7 @@ class AccountOverview extends React.Component {
                 );
             }
             balances.push(
-                <tr key={asset.get("symbol")}>
+                <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} assetInfo={assetInfoLinks}/> : null}
                     </td>

@@ -64,10 +64,10 @@ export default class AccountPermissionsMigrate extends React.Component {
 
         return (
                 <div>
-                    <p><Translate content="account.perm.password_model_1" /></p>
+                    <p style={{maxWidth: "800px"}}><Translate content="account.perm.password_model_1" /></p>
 
-                    <p><Translate content="wallet.password_model_1" /></p>
-                    <p><Translate unsafe content="wallet.password_model_2" /></p>
+                    <p style={{maxWidth: "800px"}}><Translate content="wallet.password_model_1" /></p>
+                    <p style={{maxWidth: "800px"}}><Translate unsafe content="wallet.password_model_2" /></p>
 
                     <div className="divider" />
 
@@ -112,7 +112,7 @@ export default class AccountPermissionsMigrate extends React.Component {
                         </tbody>
                     </table>
 
-                    {memoInUse ? <p style={{paddingTop: 10}} className="has-error"><Translate content="account.perm.memo_warning" /></p> : null}
+                    {memoInUse ? <p style={{maxWidth: "800px", paddingTop: 10}} className="has-error"><Translate content="account.perm.memo_warning" /></p> : null}
 
 
                 </div>

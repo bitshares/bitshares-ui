@@ -141,7 +141,7 @@ class AccountVotingProxy extends React.Component {
         });
 
         return (
-            <div className="content-block">
+            <div className="content-block" style={{maxWidth: "600px"}}>
                 {isDisabled ? null :<Translate component="h3" content="account.votes.proxy_short" />}
                 {isDisabled ? <div>
                     <p>
