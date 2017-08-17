@@ -1203,6 +1203,7 @@ class Exchange extends React.Component {
                                     ref="buy"
                                     onForce={this._forceBuy.bind(this, "buy", buyFeeAsset, baseBalance, coreBalance)}
                                     diff={buyDiff}
+                                    hasOrders={combinedAsks.length > 0}
                                 />
 
                                 <ConfirmOrderModal
@@ -1210,6 +1211,7 @@ class Exchange extends React.Component {
                                     ref="sell"
                                     onForce={this._forceSell.bind(this, "sell", sellFeeAsset, quoteBalance, coreBalance)}
                                     diff={sellDiff}
+                                    hasOrders={combinedBids.length > 0}
                                 />
 
                                 {marketLimitOrders.size > 0 && base && quote ? (

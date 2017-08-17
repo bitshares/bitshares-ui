@@ -876,6 +876,8 @@
     "change": "Change",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "indicators": "Indicators",
     "rsi": "Relative Strength Index",
     "ema": "Exponential Moving Average",
