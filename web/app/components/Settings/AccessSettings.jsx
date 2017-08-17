@@ -183,9 +183,6 @@ class AccessSettings extends React.Component {
                     })
                 }
             </div>
-
-            <h3><Translate content="settings.faucet_address" /></h3>
-            <input type="text" defaultValue={props.faucet} onChange={this.props.onChange.bind(this, 'faucet_address')}/>
         </div> 
     }
 }
