@@ -28,7 +28,7 @@ import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
-import { checkFeeStatus } from "common/asyncTransferHelper";
+import { checkFeeStatusAsync } from "common/trxHelper";
 
 Highcharts.setOptions({
     global: {
@@ -170,7 +170,7 @@ class Exchange extends React.Component {
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
-            p.push(checkFeeStatus({accountID: account.get("id"), feeID: a.get("id"), type: "limit_order_create"}));
+            p.push(checkFeeStatusAsync({accountID: account.get("id"), feeID: a.get("id"), type: "limit_order_create"}));
         });
         Promise.all(p).then(status => {
             assets.forEach((a, idx) => {
