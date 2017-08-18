@@ -10,7 +10,7 @@ import WalletSettings from "./WalletSettings";
 import PasswordSettings from "./PasswordSettings";
 import RestoreSettings from "./RestoreSettings";
 import BackupSettings from "./BackupSettings";
-
+import AccessSettings from "./AccessSettings";
 
 class Settings extends React.Component {
 
@@ -64,7 +64,8 @@ class Settings extends React.Component {
             "password",
             "backup",
             "restore",
-            "access"
+            "access",
+            "faucet_address"
         ];
 
         if (props.settings.get("passwordLogin")) {
@@ -75,8 +76,8 @@ class Settings extends React.Component {
         return menuEntries;
     }
 
-    triggerModal(e) {
-        this.refs.ws_modal.show(e);
+    triggerModal(e, ...args) {
+        this.refs.ws_modal.show(e, ...args);
     }
 
     _onChangeSetting(setting, e) {
@@ -198,6 +199,12 @@ class Settings extends React.Component {
             entries = <RestoreSettings passwordLogin={this.props.settings.get("passwordLogin")} />;
             break;
 
+        case "access":
+            entries = <AccessSettings currentNode={settings.get("apiServer")} faucet={settings.get("faucet_address")} nodes={defaults.apiServer} onChange={this._onChangeSetting.bind(this)} apiLatencies={this.props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
+            break;
+        case "faucet_address":
+            entries = <input type="text" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
+            break;
         default:
             entries = settingEntries[activeEntry].map(setting => {
                 return (
@@ -208,9 +215,7 @@ class Settings extends React.Component {
                         defaults={defaults[setting]}
                         onChange={this._onChangeSetting.bind(this)}
                         locales={this.props.localesObject}
-                        triggerModal={this.triggerModal.bind(this)}
                         {...this.state}
-                        apiLatencies={this.props.apiLatencies}
                     />);
             });
             break;
@@ -232,7 +237,7 @@ class Settings extends React.Component {
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
                         <div className="grid-block small-12 medium-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
-                            <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />
+                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />}
                             {entries}
                         </div>
                     </div>

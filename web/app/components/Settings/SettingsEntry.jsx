@@ -13,19 +13,6 @@ export default class SettingsEntry extends React.Component {
         };
     }
 
-    _onConfirm() {
-        SettingsActions.changeSetting({setting: "apiServer", value: this.props.apiServer });
-        setTimeout(this._onReloadClick, 250);
-    }
-
-    _onReloadClick() {
-        if (window.electron) {
-            window.location.hash = "";
-            window.remote.getCurrentWindow().reload();
-        }
-        else window.location.href = __BASE_URL__;
-    }
-
     _setMessage(key) {
         this.setState({
             message: counterpart.translate(key)
@@ -73,74 +60,9 @@ export default class SettingsEntry extends React.Component {
                 value = null;
                 break;
 
-            case "apiServer":
-                // console.log("defaults:", defaults, apiServer);
-                // value = defaults.indexOf(apiServer) !== -1 ? apiServer : ;
-                value = defaults.reduce((final, entry) => {
-                    return entry.url === apiServer ? apiServer : final;
-                }, null) || defaults[0];
-                options = defaults.map(entry => {
-                    let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
-                    let key = entry.translate ? entry.translate : entry;
-                    let latency = this.props.apiLatencies[option.url];
-                    let onlyDescription = option.url.indexOf("fake.automatic-selection") !== -1;
-                    let {location} = option;
-                    if (location && typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
-
-                    return (
-                        <option value={option.url} key={key.url}>
-                            {location || option.url}
-                            {location && !onlyDescription ? ` (${option.url})` : null}
-                            {latency && !onlyDescription ? ` - Latency: ${latency}ms` : null}
-                        </option>
-                    );
-                });
-
-                confirmButton = (
-                    <div className="button-group" style={{padding: "10px"}}>
-                        <div onClick={this._onConfirm.bind(this)} className="button outline">
-                            <Translate content="transfer.confirm" />
-                        </div>
-
-                        <div
-                            onClick={this.props.triggerModal}
-                            className="button outline"
-                            id="add"
-                        >
-                                <Translate id="add_text" content="settings.add_api" />
-                        </div>
-
-                        <div
-                            onClick={this.props.triggerModal}
-                            id="remove"
-                            className="button outline"
-                        >
-                            <Translate id="remove_text" content="settings.remove_api" />
-                        </div>
-
-                    </div>
-                );
-
-                optional = (
-                    <div style={{position: "absolute", right: 0, top: "0.2rem"}}>
-
-
-                    </div>);
-
-                break;
-
             case "walletLockTimeout":
                 value = selected;
                 input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
-                break;
-
-            case "faucet_address":
-                if (!selected) {
-                    value = "https://";
-                } else {
-                    value = selected;
-                }
-                input = <input type="text" defaultValue={value} onChange={this.props.onChange.bind(this, setting)}/>;
                 break;
 
             case "reset":
