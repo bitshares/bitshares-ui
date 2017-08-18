@@ -2,7 +2,7 @@ import { FetchChain } from "bitsharesjs/es";
 import { Price, Asset } from "common/MarketClasses";
 import utils from "common/utils";
 
-function estimateFee(type, options = null) {
+function estimateFeeAsync(type, options = null) {
     return new Promise((res, rej) => {
         FetchChain("getObject", "2.0.0").then(obj => {
             res(utils.estimateFee(type, options, obj));
@@ -10,13 +10,13 @@ function estimateFee(type, options = null) {
     });
 }
 
-function checkFeePool({assetID, type = "transfer", options = null} = {}) {
+function checkFeePoolAsync({assetID, type = "transfer", options = null} = {}) {
     return new Promise(res => {
         if (assetID === "1.3.0") {
             res(true);
         } else {
             Promise.all([
-                estimateFee(type, options),
+                estimateFeeAsync(type, options),
                 FetchChain("getAsset", assetID)
             ])
             .then(result => {
@@ -27,11 +27,11 @@ function checkFeePool({assetID, type = "transfer", options = null} = {}) {
     });
 }
 
-function checkFeeStatus({accountID, feeID = "1.3.0", type = "transfer", options = null} = {}) {
+function checkFeeStatusAsync({accountID, feeID = "1.3.0", type = "transfer", options = null} = {}) {
     return new Promise((res, rej) => {
         Promise.all([
-            estimateFee(type, options),
-            checkFeePool({assetID: feeID, type, options}),
+            estimateFeeAsync(type, options),
+            checkFeePoolAsync({assetID: feeID, type, options}),
             FetchChain("getAccount", accountID),
             FetchChain("getAsset", "1.3.0"),
             feeID !== "1.3.0" ? FetchChain("getAsset", feeID) : null
@@ -90,7 +90,7 @@ function checkFeeStatus({accountID, feeID = "1.3.0", type = "transfer", options 
 }
 
 export {
-    estimateFee,
-    checkFeePool,
-    checkFeeStatus
+    estimateFeeAsync,
+    checkFeePoolAsync,
+    checkFeeStatusAsync
 };
