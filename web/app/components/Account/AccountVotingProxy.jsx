@@ -58,6 +58,22 @@ class AccountVotingProxy extends React.Component {
     //     }
     // }
 
+    /*
+    * Ensure that state is cleared when new proxy props are passed down
+    */
+    componentWillUpdate(nextProps){
+        let newProxy = nextProps.existingProxy.get("name");
+        let oldProxy = this.props.existingProxy.get("name");
+
+        if(newProxy !== oldProxy){
+            if(newProxy === "proxy-to-self"){
+              this.setState({current_proxy_input: "", new_proxy_account: null});
+            } else {
+                this.setState({current_proxy_input: newProxy, new_proxy_account: null});
+            }
+        }
+    }
+
     onResetProxy() {
         const defaultInput = this.props.existingProxy.get("id") === "1.2.5" ? "" : this.props.existingProxy.get("name");
         this.setState({
