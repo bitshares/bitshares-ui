@@ -91,6 +91,7 @@ class Asset {
     minus(asset) {
         if (asset.asset_id !== this.asset_id) throw new Error("Assets are not the same type");
         this.amount -= asset.amount;
+        this.amount = Math.max(0, this.amount);
         this._clearCache();
     }
 
