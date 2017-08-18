@@ -5,6 +5,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
 import FloatingDropdown from "./FloatingDropdown";
 import Immutable from "immutable";
+import counterpart from "counterpart";
 
 class AssetSelector extends React.Component {
 
@@ -38,7 +39,8 @@ class AmountSelector extends React.Component {
         amount: React.PropTypes.any,
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
-        tabIndex: React.PropTypes.number
+        tabIndex: React.PropTypes.number,
+        error: React.PropTypes.string
     };
 
     static defaultProps = {
@@ -68,7 +70,7 @@ class AmountSelector extends React.Component {
     }
 
     render() {
-        let value = this.formatAmount(this.props.amount);
+        let value = this.props.error ? counterpart.translate(this.props.error) : this.formatAmount(this.props.amount);
         return (
             <div className="amount-selector" style={this.props.style}>
                 <label className="right-label">{this.props.display_balance}</label>

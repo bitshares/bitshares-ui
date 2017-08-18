@@ -15,6 +15,7 @@ import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync } from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
+import { debounce } from "lodash";
 
 class WithdrawModalBlocktrades extends React.Component {
 
@@ -54,27 +55,34 @@ class WithdrawModalBlocktrades extends React.Component {
         this._validateAddress(this.state.withdraw_address, props);
 
         this._checkBalance = this._checkBalance.bind(this);
+        this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
 
     componentWillMount() {
-        checkFeeStatusAsync({accountID: this.props.account.get("id"), feeID: this.state.fee_asset_id}).then(({fee, hasBalance, hasPoolBalance}) => {
+        this._updateFee();
+    }
 
-            // TEMP //
-            // Hack to account for memo fee //
-            fee.plus(fee.clone(Math.floor(fee.getAmount() * 0.095)));
-
-            // /TEMP //
-
+    _updateFee(fee_asset_id = this.state.fee_asset_id) {
+        checkFeeStatusAsync(
+            {accountID: this.props.account.get("id"),
+            feeID: fee_asset_id,
+            options: ["price_per_kbyte"],
+            data: {
+                type: "memo",
+                content: this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + this.state.memo : "")
+            }})
+        .then(({fee, hasBalance, hasPoolBalance}) => {
             this.setState({
                 feeAmount: fee,
                 hasBalance,
-                hasPoolBalance
-            });
+                hasPoolBalance,
+                error: (!hasBalance || !hasPoolBalance)
+            }, this._checkBalance);
         });
     }
 
     onMemoChanged( e ) {
-        this.setState( {memo: e.target.value} );
+        this.setState( {memo: e.target.value}, this._updateFee);
     }
 
     onWithdrawAmountChange( {amount} ) {
@@ -290,21 +298,9 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onFeeChanged({asset}) {
-        checkFeeStatusAsync({accountID: this.props.account.get("id"), feeID: asset.get("id")}).then(({fee, hasBalance, hasPoolBalance}) => {
-            // TEMP //
-            // Hack to account for memo fee //
-            fee.plus(fee.clone(Math.floor(fee.getAmount() * 0.095)));
-
-            // /TEMP //
-
-            this.setState({
-                feeAmount: fee,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance),
-                fee_asset_id: asset.get("id")
-            }, this._checkBalance);
-        });
+        this.setState({
+            fee_asset_id: asset.get("id")
+        }, this._updateFee);
     }
 
     _getAvailableAssets(state = this.state) {
