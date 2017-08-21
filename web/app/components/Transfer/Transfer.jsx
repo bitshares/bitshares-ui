@@ -75,19 +75,19 @@ class Transfer extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         let { asset_types: current_types } = this._getAvailableAssets();
-        let { asset_types } = this._getAvailableAssets(ns);
+        let { asset_types: next_asset_types } = this._getAvailableAssets(ns);
 
-        if (asset_types.length === 1) {
-            let asset = ChainStore.getAsset(asset_types[0]);
+        if (next_asset_types.length === 1) {
+            let asset = ChainStore.getAsset(next_asset_types[0]);
             if (current_types.length !== 1) {
                 this.onAmountChanged({amount: ns.amount, asset});
             }
 
-            if (asset_types[0] !== this.state.fee_asset_id) {
-                if (asset && this.state.fee_asset_id !== asset_types[0]) {
+            if (next_asset_types[0] !== this.state.fee_asset_id) {
+                if (asset && this.state.fee_asset_id !== next_asset_types[0]) {
                     this.setState({
                         feeAsset: asset,
-                        fee_asset_id: asset_types[0]
+                        fee_asset_id: next_asset_types[0]
                     });
                 }
             }
@@ -99,17 +99,26 @@ class Transfer extends React.Component {
         if (np.currentAccount !== this.state.from_name && np.currentAccount !== this.props.currentAccount) {
             this.setState({
                 from_name: np.currentAccount,
-                from_account: ChainStore.getAccount(np.currentAccount)
-            }, this._updateFee);
+                from_account: ChainStore.getAccount(np.currentAccount),
+                feeStatus: {},
+                fee_asset_id: "1.3.0",
+                feeAmount: new Asset({amount: 0})
+            }, () => {this._updateFee(); this._checkFeeStatus(ChainStore.getAccount(np.currentAccount));});
         }
     }
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
+        const balanceID = from_account.getIn(["balances", asset.get("id")]);
+        const feeBalanceID = from_account.getIn(["balances", feeAmount.asset_id]);
         if (!asset || ! from_account) return;
-        let balanceObject = ChainStore.getObject(from_account.getIn(["balances", asset.get("id")]));
+        if (!balanceID) return this.setState({balanceError: true});
+        let balanceObject = ChainStore.getObject(balanceID);
+        let feeBalanceObject = feeBalanceID ? ChainStore.getObject(feeBalanceID) : null;
+        if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
+            this._updateFee("1.3.0");
+        }
         const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
-        console.log("hasBalance:", hasBalance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
     }
@@ -160,6 +169,7 @@ class Transfer extends React.Component {
         .then(({fee, hasBalance, hasPoolBalance}) => {
             this.setState({
                 feeAmount: fee,
+                fee_asset_id: fee.asset_id,
                 hasBalance,
                 hasPoolBalance,
                 error: (!hasBalance || !hasPoolBalance)
@@ -309,7 +319,7 @@ class Transfer extends React.Component {
 
     render() {
         let from_error = null;
-        let {propose, from_account, to_account, asset, asset_id, propose_account,
+        let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
 
@@ -415,7 +425,7 @@ class Transfer extends React.Component {
                                 disabled={true}
                                 amount={fee}
                                 onChange={this.onFeeChanged.bind(this)}
-                                asset={fee_asset_types.length && feeAsset ? feeAsset.get("id") : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                asset={fee_asset_types.length && feeAmount ? feeAmount.asset_id : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                 assets={fee_asset_types}
                                 tabIndex={tabIndex++}
                                 error={!this.state.hasPoolBalance ? "transfer.errors.insufficient" : null}
