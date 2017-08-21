@@ -156,9 +156,40 @@ function estimateFee(op_type, options, globalObject, data = {}) {
     return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
 }
 
+function checkBalance(amount, sendAsset, feeAmount, balance) {
+
+    if (!amount) return null;
+    if (typeof amount === "string") amount = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
+
+    if (!balance || balance.get("balance") === 0) return false;
+
+    let sendAmount = new Asset({
+        asset_id: sendAsset.get("id"),
+        precision: sendAsset.get("precision"),
+        real: amount
+    });
+    let balanceAmount = sendAmount.clone(balance.get("balance"));
+
+    /* Insufficient balance */
+    if (balanceAmount.lt(sendAmount)) {
+        return false;
+    }
+
+    /* Check if enough remains to pay the fee */
+    if (sendAmount.asset_id === feeAmount.asset_id) {
+        sendAmount.plus(feeAmount);
+        if (balanceAmount.lt(sendAmount)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 export {
     estimateFee,
     estimateFeeAsync,
     checkFeePoolAsync,
-    checkFeeStatusAsync
+    checkFeeStatusAsync,
+    checkBalance
 };

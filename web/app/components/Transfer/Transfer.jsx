@@ -13,7 +13,7 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
-import { checkFeeStatusAsync } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import { debounce } from "lodash";
 import { Asset } from "common/MarketClasses";
 
@@ -44,6 +44,7 @@ class Transfer extends React.Component {
 
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this._checkBalance = this._checkBalance.bind(this);
     }
 
     static getInitialState() {
@@ -103,6 +104,16 @@ class Transfer extends React.Component {
         }
     }
 
+    _checkBalance() {
+        const {feeAmount, amount, from_account, asset} = this.state;
+        if (!asset || ! from_account) return;
+        let balanceObject = ChainStore.getObject(from_account.getIn(["balances", asset.get("id")]));
+        const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
+        console.log("hasBalance:", hasBalance);
+        if (hasBalance === null) return;
+        this.setState({balanceError: !hasBalance});
+    }
+
     _checkFeeStatus(account = this.state.from_account) {
         if (!account) return;
 
@@ -129,6 +140,7 @@ class Transfer extends React.Component {
                     feeStatus
                 });
             }
+            this._checkBalance();
         }).catch(err => {
             console.error(err);
         });
@@ -176,7 +188,7 @@ class Transfer extends React.Component {
         if (!asset) {
             return;
         }
-        this.setState({amount, asset, asset_id: asset.get("id"), error: null});
+        this.setState({amount, asset, asset_id: asset.get("id"), error: null}, this._checkBalance);
     }
 
     onFeeChanged({asset}) {
@@ -246,7 +258,7 @@ class Transfer extends React.Component {
             if (feeAmount.asset_id === balance.asset_id) {
                 balance.minus(feeAmount);
             }
-            this.setState({amount: balance.getAmount({real: true})});
+            this.setState({amount: balance.getAmount({real: true})}, this._checkBalance);
         }
     }
 
@@ -298,7 +310,7 @@ class Transfer extends React.Component {
     render() {
         let from_error = null;
         let {propose, from_account, to_account, asset, asset_id, propose_account,
-            amount, error, to_name, from_name, memo, feeAsset, fee_asset_id} = this.state;
+            amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
 
         if(from_account && ! from_my_account && ! propose ) {
@@ -311,31 +323,11 @@ class Transfer extends React.Component {
         let { asset_types, fee_asset_types } = this._getAvailableAssets();
         let balance = null;
 
-        console.log("hasBalance", this.state.hasBalance, "hasPoolBalance", this.state.hasPoolBalance);
-
         // Estimate fee
-        // let globalObject = ChainStore.getObject("2.0.0");
-        // let fee = estimateFee(propose ? "proposal_create" : "transfer", ["price_per_kbyte"], globalObject, {type: "memo", content: this.state.memo});
         let fee = this.state.feeAmount.getAmount({real: true});
         if (from_account && from_account.get("balances") && !from_error) {
 
             let account_balances = from_account.get("balances").toJS();
-        //
-        //     // Finish fee estimation
-        //     let core = ChainStore.getObject("1.3.0");
-        //     if (feeAsset && feeAsset.get("id") !== "1.3.0" && core) {
-        //
-        //         let price = utils.convertPrice(core, feeAsset.getIn(["options", "core_exchange_rate"]).toJS(), null, feeAsset.get("id"));
-        //         fee = utils.convertValue(price, fee, core, feeAsset);
-        //
-        //         if (parseInt(fee, 10) !== fee) {
-        //             fee += 1; // Add 1 to round up;
-        //         }
-        //     }
-        //     if (core) {
-        //         fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
-        //     }
-        //
             if (asset_types.length === 1) asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
@@ -344,17 +336,11 @@ class Transfer extends React.Component {
             } else {
                 balance = "No funds";
             }
-        // } else {
-        //     let core = ChainStore.getObject("1.3.0");
-        //     fee_asset_types = ["1.3.0"];
-        //     if (core) {
-        //         fee = utils.limitByPrecision(utils.get_asset_amount(fee, feeAsset || core), feeAsset ? feeAsset.get("precision") : core.get("precision"));
-        //     }
         }
 
         let propose_incomplete = propose && ! propose_account;
         let submitButtonClass = "button float-right no-margin";
-        if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete)
+        if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete || balanceError)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
@@ -405,6 +391,7 @@ class Transfer extends React.Component {
                                 display_balance={balance}
                                 tabIndex={tabIndex++}
                             />
+                            {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
                         </div>
                         {/*  M E M O  */}
                         <div className="content-block transfer-input">

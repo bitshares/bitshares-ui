@@ -13,7 +13,7 @@ import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
-import { checkFeeStatusAsync } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 import { debounce } from "lodash";
 
@@ -63,14 +63,15 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     _updateFee(fee_asset_id = this.state.fee_asset_id) {
-        checkFeeStatusAsync(
-            {accountID: this.props.account.get("id"),
+        checkFeeStatusAsync({
+            accountID: this.props.account.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
                 content: this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + this.state.memo : "")
-            }})
+            }
+        })
         .then(({fee, hasBalance, hasPoolBalance}) => {
             this.setState({
                 feeAmount: fee,
@@ -134,37 +135,10 @@ class WithdrawModalBlocktrades extends React.Component {
         const {feeAmount, withdraw_amount} = this.state;
         const {asset} = this.props;
 
-        if (!withdraw_amount) return;
-
-        let amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
-        let sendAmount = new Asset({
-            asset_id: asset.get("id"),
-            precision: asset.get("precision"),
-            real: amount
-        });
-        let balance = sendAmount.clone(this.props.balance.get("balance"));
-
-        if (balance.lt(sendAmount)) {
-            this.setState({
-                balanceError: true
-            });
-            return false;
-        }
-
-        if (sendAmount.asset_id === feeAmount.asset_id) {
-            sendAmount.plus(feeAmount);
-            if (balance.lt(sendAmount)) {
-                this.setState({
-                    balanceError: true
-                });
-                return false;
-            }
-        }
-
-        this.setState({
-            balanceError: false
-        });
-        return true;
+        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, this.props.balance);
+        if (hasBalance === null) return;
+        this.setState({balanceError: !hasBalance});
+        return hasBalance;
     }
 
     onSubmit() {
@@ -402,7 +376,7 @@ class WithdrawModalBlocktrades extends React.Component {
             if( current_asset_id ){
                 let current = account_balances[current_asset_id];
                 balance = (
-                    <span>
+                    <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}}>
                         <Translate component="span" content="transfer.available"/>&nbsp;:&nbsp;
                         <span className="set-cursor" onClick={this.onAccountBalance.bind(this)}>
                             {current ? <BalanceComponent balance={account_balances[current_asset_id]}/> : 0}
