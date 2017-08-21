@@ -255,9 +255,6 @@ class WithdrawModalBlocktrades extends React.Component {
             // Subtract the fee if it is using the same asset
             if(total.asset_id === feeAmount.asset_id) {
                 total.minus(feeAmount);
-                // if(total_minus_fee<0){
-                //     total_minus_fee=0;
-                // }
             }
 
             this.setState({
