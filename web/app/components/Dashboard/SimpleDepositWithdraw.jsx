@@ -1,7 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "../Modal/BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import { Asset } from "common/MarketClasses";
 import utils from "common/utils";
@@ -15,6 +14,10 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
+import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import AssetName from "../Utility/AssetName";
+import { ChainStore } from "bitsharesjs/es";
+import { debounce } from "lodash";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -23,7 +26,6 @@ class DepositWithdrawContent extends React.Component {
 
     static propTypes = {
         sender: ChainTypes.ChainAccount.isRequired,
-        issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
         globalObject: ChainTypes.ChainAsset.isRequired
@@ -32,7 +34,6 @@ class DepositWithdrawContent extends React.Component {
     static defaultProps = {
         coreAsset: "1.3.0",
         globalObject: "2.0.0",
-        issuer: "openledger-wallet"
     }
 
     constructor(props) {
@@ -47,17 +48,27 @@ class DepositWithdrawContent extends React.Component {
             to_withdraw: new Asset({
                 asset_id: props.asset.get("id"),
                 precision: props.asset.get("precision")
-            })
+            }),
+            fee_asset_id: "1.3.0",
+            feeStatus: {}
         };
 
         this._validateAddress(this.state.toAddress, props);
 
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
+        this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this._checkBalance = this._checkBalance.bind(this);
+        this._getCurrentBalance = this._getCurrentBalance.bind(this);
+        this._getFee = this._getFee.bind(this);
+        this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
 
     componentWillMount() {
         this._getDepositAddress();
+
+        this._updateFee();
+        this._checkFeeStatus();
     }
 
     componentWillReceiveProps(np) {
@@ -132,50 +143,124 @@ class DepositWithdrawContent extends React.Component {
             });
         }
 
-        if (!this.props.issuer) return;
+        if (!this.props.intermediateAccount) return;
 
         let fee = this._getFee();
-
-        let feeToSubtract = this.state.to_withdraw.asset_id !== fee.asset ? 0 :
-            fee.amount;
-
         AccountActions.transfer(
             this.props.sender.get("id"),
-            this.props.issuer.get("id"),
             this.props.intermediateAccount,
-            this.state.to_withdraw.getAmount() - feeToSubtract,
+            this.state.to_withdraw.getAmount(),
             this.state.to_withdraw.asset_id,
             this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
             null,
-            fee.asset
+            fee.asset_id
         );
     }
 
-    _updateAmount(amount) {
-        let fee = this._getFee();
-        let gateFee = parseFloat(this.props.gateFee);
-        let feeToSubtract = this.state.to_withdraw.asset_id !== fee.asset ? 0 : fee.amount;
-        let fee_precision = this.state.to_withdraw.precision;
-        this.state.to_withdraw.setAmount({sats: amount});
+    _updateAmount() {
+        const feeAmount = this._getFee();
+        const currentBalance = this._getCurrentBalance();
 
-        let total_minus_fee = this.state.to_withdraw.getAmount({real: true}) - gateFee - (feeToSubtract/Math.pow(10,fee_precision))*1.095; //@#>
+        let total = new Asset({
+            amount: currentBalance ? currentBalance.get("balance") : 0,
+            asset_id: this.props.asset.get("id"),
+            precision: this.props.asset.get("precision")
+        });
 
+        // Subtract the fee if it is using the same asset
+        if(total.asset_id === feeAmount.asset_id) {
+            total.minus(feeAmount);
+        }
+
+        this.state.to_withdraw.setAmount({sats: total.getAmount()});
         this.setState({
-            withdrawValue: total_minus_fee<0?0:total_minus_fee,
+            withdrawValue: total.getAmount({real: true}),
             amountError: null
+        }, this._checkBalance);
+    }
+
+    _checkFeeStatus(account = this.props.sender) {
+        if (!account) return;
+
+        const assets = ["1.3.0", this.state.to_withdraw.asset_id];
+        let feeStatus = {};
+        let p = [];
+        assets.forEach(a => {
+            p.push(checkFeeStatusAsync({
+                accountID: account.get("id"),
+                feeID: a,
+                options: ["price_per_kbyte"],
+                data: {
+                    type: "memo",
+                    content: this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + this.state.memo : "")
+                }
+            }));
+        });
+        Promise.all(p).then(status => {
+            assets.forEach((a, idx) => {
+                feeStatus[a] = status[idx];
+            });
+            if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
+                this.setState({
+                    feeStatus
+                });
+            }
+            this._checkBalance();
+        }).catch(err => {
+            console.error(err);
         });
     }
 
-    _getFee() {
-        let {globalObject, asset, coreAsset, balances} = this.props;
-        return utils.getFee({
-            opType: "transfer",
-            options: [],
-            globalObject,
-            asset,
-            coreAsset,
-            balances
+    _updateFee(fee_asset_id = this.state.fee_asset_id) {
+        if (!this.props.sender) return null;
+        checkFeeStatusAsync({
+            accountID: this.props.sender.get("id"),
+            feeID: fee_asset_id,
+            options: ["price_per_kbyte"],
+            data: {
+                type: "memo",
+                content: this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + this.state.memo : "")
+            }
+        })
+        .then(({fee, hasBalance, hasPoolBalance}) => {
+            this.setState({
+                feeAmount: fee,
+                hasBalance,
+                hasPoolBalance,
+                error: (!hasBalance || !hasPoolBalance)
+            }, this._checkFeeStatus);
         });
+    }
+
+    _getCurrentBalance() {
+        return this.props.balances.find(b => {
+            return b && b.get("asset_type") === this.props.asset.get("id");
+        });
+    }
+
+    _checkBalance() {
+        const {feeAmount, to_withdraw} = this.state;
+        const {asset} = this.props;
+        const balance = this._getCurrentBalance();
+
+        const hasBalance = checkBalance(to_withdraw.getAmount({real: true}), asset, feeAmount, balance);
+        if (hasBalance === null) return;
+        this.setState({balanceError: !hasBalance});
+        return hasBalance;
+    }
+
+    _getFee() {
+        const defaultFee = {getAmount: function() {return 0;}, asset_id: this.state.fee_asset_id};
+
+        if (!this.state.feeStatus || !this.state.feeAmount) return defaultFee;
+
+        const coreStatus = this.state.feeStatus["1.3.0"];
+        const withdrawAssetStatus = this.state.feeStatus[this.state.to_withdraw.asset_id];
+        if (coreStatus && coreStatus.hasBalance) return coreStatus.fee;
+        if (coreStatus && !coreStatus.hasBalance && withdrawAssetStatus && withdrawAssetStatus.hasBalance) {
+            return withdrawAssetStatus.fee;
+        }
+        return coreStatus ? coreStatus.fee : defaultFee;
     }
 
     _onInputAmount(e) {
@@ -186,7 +271,7 @@ class DepositWithdrawContent extends React.Component {
             this.setState({
                 withdrawValue: e.target.value,
                 amountError: null
-            });
+            }, this._checkBalance);
         } catch(err) {
             console.error("err:", err);
         }
@@ -206,7 +291,7 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _onMemoChanged(e) {
-        this.setState({memo: e.target.value});
+        this.setState({memo: e.target.value}, this._updateFee);
     }
 
     _validateAddress(address, props = this.props) {
@@ -248,6 +333,10 @@ class DepositWithdrawContent extends React.Component {
         //     }
         // }
 
+        const currentFee = this._getFee();
+        const feeStatus = this.state.feeStatus[currentFee.asset_id];
+        const feeAsset = ChainStore.getAsset(currentFee.asset_id);
+
         return (
             <div>
                 <p><Translate content="gateway.withdraw_funds" asset={assetName} /></p>
@@ -255,40 +344,60 @@ class DepositWithdrawContent extends React.Component {
                 {this._renderCurrentBalance()}
 
                 <div className="SimpleTrade__withdraw-row">
-                    <label>
-                        {counterpart.translate("modal.withdraw.amount")}
-                        <span className="inline-label">
+                        <label className="left-label">{counterpart.translate("modal.withdraw.amount")}</label>
+                        <div className="inline-label input-wrapper">
                             <input tabIndex={tabIndex++} type="text" value={this.state.withdrawValue} onChange={this._onInputAmount.bind(this)} />
-                            <span className="form-label">{assetName}</span>
-                        </span>
-                    </label>
+                            <div className="form-label select floating-dropdown">
+                                <div className="dropdown-wrapper inactive">
+                                    <div>{assetName}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
                 </div>
 
                 <div className="SimpleTrade__withdraw-row">
-                    <label>
-                        {counterpart.translate("modal.withdraw.address")}
-                        <span className="inline-label">
+                    <label className="left-label">{counterpart.translate("transfer.fee")}</label>
+                        <div className="inline-label input-wrapper">
+                            <input type="text" value={currentFee.getAmount({real: true})} />
+
+                            <div className="form-label select floating-dropdown">
+                                <div className="dropdown-wrapper inactive">
+                                    <div>{feeAsset ? <AssetName name={feeAsset.get("symbol")} /> : null}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {feeStatus && !feeStatus.hasBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
+                </div>
+
+                <div className="SimpleTrade__withdraw-row">
+                    <label className="left-label">{counterpart.translate("modal.withdraw.address")}</label>
+                        <div className="inline-label input-wrapper">
                             <input placeholder={counterpart.translate("gateway.withdraw_placeholder", {asset: assetName})} tabIndex={tabIndex++} type="text" value={this.state.toAddress} onChange={this._onInputTo.bind(this)} />
-                            <span data-place="right" data-tip={counterpart.translate("tooltip.withdraw_address", {asset: assetName})} className="form-label"><Icon name="question-circle" className="fill-black" /></span>
-                        </span>
-                    </label>
+
+                            <div className="form-label select floating-dropdown">
+                                <div className="dropdown-wrapper inactive">
+                                    <div data-place="right" data-tip={counterpart.translate("tooltip.withdraw_address", {asset: assetName})}>
+                                        ?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {!this.state.validAddress && this.state.toAddress ? <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={assetName} /></div> : null}
                 </div>
 
                 {supportsMemos ? (
                     <div className="SimpleTrade__withdraw-row">
-                        <label>
-                            {counterpart.translate("transfer.memo")}
-                            <span className="inline-label">
+                        <label className="left-label">{counterpart.translate("transfer.memo")}</label>
+                            <div className="inline-label input-wrapper">
                                 <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
-                            </span>
-                        </label>
+                            </div>
                         {!this.state.validAddress && this.state.toAddress ? <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={assetName} /></div> : null}
                     </div>
                 ) : null}
 
                 <div className="button-group SimpleTrade__withdraw-row">
-                    <button tabIndex={tabIndex++} className="button" onClick={this.onSubmit.bind(this)} type="submit" >
+                    <button tabIndex={tabIndex++} className={"button" + ((feeStatus && !feeStatus.hasBalance) || this.state.balanceError ? " disabled" : "")} onClick={this.onSubmit.bind(this)} type="submit" >
                         <Translate content="gateway.withdraw_now" />
                     </button>
                 </div>
@@ -365,9 +474,7 @@ class DepositWithdrawContent extends React.Component {
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         const isDeposit = this.props.action === "deposit";
 
-        let currentBalance = this.props.balances.find(b => {
-            return b && b.get("asset_type") === this.props.asset.get("id");
-        });
+        let currentBalance = this._getCurrentBalance();
 
         let asset = currentBalance ? new Asset({
             asset_id: currentBalance.get("asset_type"),
