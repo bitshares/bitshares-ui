@@ -207,7 +207,7 @@ function BindToChainState(Component, options = {}) {
                 let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                 if(prop) {
                     let new_obj = ChainStore.getAsset(prop);
-                    if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
+                    if ((new_obj === undefined || new_obj === null) && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
                     else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                     ++all_objects_counter;
                     if (new_obj !== undefined) ++resolved_objects_counter;
