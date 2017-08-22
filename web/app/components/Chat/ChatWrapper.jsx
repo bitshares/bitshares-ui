@@ -61,14 +61,10 @@ export default class ChatWrapper extends React.Component {
                         </div>
 
                         <div className="grid-block vertical no-overflow chatbox-content">
-                            <div
-                                className="grid-content"
-                                ref="chatbox"
-                                style={{
-                                    textAlign: "center",
-                                    paddingTop: 120
-                                }}>
-                                <Translate component="p" unsafe content="chat.telegram_link" />
+                            <div className="grid-content v-align" ref="chatbox">
+                                <div className="text-center align-center">
+                                    <Translate component="p" unsafe content="chat.telegram_link" />
+                                </div>
                             </div>
                         </div>
                     </div>

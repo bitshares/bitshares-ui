@@ -496,29 +496,32 @@ class Asset extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="grid-block vertical" style={{overflow:"visible"}}>
-                    <div className="grid-block small-12 shrink" style={{ overflow:"visible"}}>
-                        {this.renderAboutBox(asset)}
-                    </div>
-                    <div className="grid-block small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
-                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {this.renderSummary(asset)}
-                        </div>
-                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {priceFeed ? priceFeed : this.renderPermissions(asset)}
-                        </div>
-                    </div>
-                    <div className="grid-block small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
-                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {this.renderFeePool(asset)}
-                        </div>
-                        <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                            {priceFeed ? this.renderPermissions(asset) : null}
-                        </div>
-                    </div>
+                <div className="grid-block main-content vertical" style={{overflow:"visible"}}>
+                    <div className="grid-container">
+                        <div className="grid-content">
+                            <div className="grid-block no-margin small-12 shrink" style={{ overflow:"visible"}}>
+                                {this.renderAboutBox(asset)}
+                            </div>
+                            <div className="grid-block no-margin small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
+                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                                    {this.renderSummary(asset)}
+                                </div>
+                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                                  {priceFeed ? priceFeed : this.renderPermissions(asset)}
+                                </div>
+                            </div>
+                            <div className="grid-block no-margin small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
+                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                                    {this.renderFeePool(asset)}
+                                </div>
+                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
+                                    {priceFeed ? this.renderPermissions(asset) : null}
+                                </div>
+                            </div>
 
-                    {priceFeedData}
-
+                            {priceFeedData}
+                        </div>
+                    </div>
                 </div>
             </div>
         );

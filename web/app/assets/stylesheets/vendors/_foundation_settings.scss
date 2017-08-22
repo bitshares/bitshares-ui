@@ -233,8 +233,8 @@ $breakpoint-classes: (small medium large xlarge);
 // - - - - - - - - - - - - - - - - - - - -
 
 $container-width: 75rem;
-// $block-padding: $global-padding;
-   $total-columns: 12;
+$block-padding: 1.5rem;
+$total-columns: 12;
 // $block-grid-max-size: 6;
 
 // 6. Accordion
