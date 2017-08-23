@@ -33,6 +33,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         supports_output_memos: React.PropTypes.bool.isRequired
     };
 
+    static defaultProps = {
+        autosubscribe: false
+    };
+
     constructor(props) {
         super(props);
         this.deposit_address_cache = new BlockTradesDepositAddressCache();

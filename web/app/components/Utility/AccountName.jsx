@@ -12,7 +12,11 @@ class AccountName extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainObject.isRequired
-    }
+    };
+
+    static defaultProps = {
+        autosubscribe: false
+    };
 
     render() {
         if (!this.props.account) return null;
