@@ -33,7 +33,11 @@ class AccountSelector extends React.Component {
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: React.PropTypes.bool // use it if you need to allow uppercase letters
-    }
+    };
+
+    static defaultProps = {
+        autosubscribe: false
+    };
 
     // can be used in parent component: this.refs.account_selector.getAccount()
     getAccount() {

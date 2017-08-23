@@ -150,7 +150,7 @@ class Asset extends React.Component {
 
 
     renderAboutBox(asset) {
-        var issuer = ChainStore.getObject(asset.issuer);
+        var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get('name') : '';
 
         var icon = (<Icon name="asset" className="asset" size="4x"/>);

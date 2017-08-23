@@ -152,7 +152,7 @@ function BindToChainState(Component, options = {}) {
             {
                 let prop = props[key] || this.dynamic_props[key] || this.default_props[key];
                 if(prop) {
-                    let new_obj = ChainStore.getObject(prop);
+                    let new_obj = ChainStore.getObject(prop, false, this.default_props["autosubscribe"]);
                     if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
                     else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                     ++all_objects_counter;
@@ -167,7 +167,7 @@ function BindToChainState(Component, options = {}) {
                 if(prop) {
                     if(prop[0] === "#" && Number.parseInt(prop.substring(1)))
                         prop = "1.2." + prop.substring(1);
-                    let new_obj = ChainStore.getAccount(prop);
+                    let new_obj = ChainStore.getAccount(prop, this.default_props["autosubscribe"]);
                     if (new_obj === undefined && this.required_props.indexOf(key) === -1 && new_obj !== this.state[key]) new_state[key] = new_obj;
                     else if (new_obj && new_obj !== this.state[key]) new_state[key] = new_obj;
                     ++all_objects_counter;
@@ -232,7 +232,8 @@ function BindToChainState(Component, options = {}) {
                         ++index;
                         //console.log("-- Wrapper.chain_objects_list item -->", obj_id, index);
                         if(obj_id) {
-                            let new_obj = ChainStore.getObject(obj_id);
+
+                            let new_obj = ChainStore.getObject(obj_id, false, this.default_props["autosubscribe"]);
                             if(new_obj) ++resolved_objects_counter;
                             if(prop_prev_state[index] !== new_obj) {
                                 changes = true;
@@ -266,7 +267,7 @@ function BindToChainState(Component, options = {}) {
                     prop.forEach( obj_id => {
                         //console.log("-- Wrapper.chain_accounts_list item -->", obj_id, index);
                         if(obj_id) {
-                            let new_obj = ChainStore.getAccount(obj_id);
+                            let new_obj = ChainStore.getAccount(obj_id, this.default_props["autosubscribe"]);
                             if(new_obj) ++resolved_objects_counter;
                             if(prop_prev_state[index] !== new_obj) {
                                 changes = true;
