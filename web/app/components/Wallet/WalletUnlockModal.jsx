@@ -1,6 +1,6 @@
 import React from "react";
 import Trigger from "react-foundation-apps/src/trigger";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
 import notify from "actions/NotificationActions";
@@ -244,15 +244,12 @@ class WalletUnlockModal extends React.Component {
         // https://github.com/akiran/react-foundation-apps/issues/34
         return (
             // U N L O C K
-            <Modal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
-                <Trigger close="">
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <h3>
                     <Translate content={"header.unlock" + (passwordLogin ? "_password" : "")} />
                 </h3>
                 {passwordLogin ? this.renderPasswordLogin() : this.renderWalletLogin()}
-            </Modal>
+            </BaseModal>
         );
     }
 

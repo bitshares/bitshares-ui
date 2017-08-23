@@ -1,5 +1,6 @@
 import alt from "alt-instance";
 import {ChainConfig} from "bitsharesjs-ws";
+import counterpart from "counterpart";
 
 class TransactionConfirmActions {
 
@@ -12,7 +13,13 @@ class TransactionConfirmActions {
             dispatch({broadcasting: true, closed: true});
 
             let broadcast_timeout = setTimeout(() => {
-                this.actions.error("Your transaction has expired without being confirmed, please try again later.");
+                dispatch({
+                    broadcast: false,
+                    broadcasting: false,
+                    error: counterpart.translate("trx_error.expire"),
+                    closed: false
+                });
+                if (reject) reject();
             }, ChainConfig.expire_in_secs * 2000);
 
             transaction.broadcast(() => {

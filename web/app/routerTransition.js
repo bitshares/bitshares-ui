@@ -115,6 +115,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
                     }),
                     WalletManagerStore.init()
                 ]).then(()=> {
+                    ss.set("activeNode", connectionManager.url);
                     callback();
                 });
             });

@@ -17,6 +17,10 @@ class AccountBalance extends React.Component {
         asset: ChainTypes.ChainAsset.isRequired
     }
 
+    static defaultProps = {
+        autosubscribe: false
+    }
+
     render() {
         let asset_id = this.props.asset.get("id");
         let balance_id = this.props.account.getIn( ["balances", asset_id] );

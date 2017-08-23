@@ -75,7 +75,6 @@ class VestingBalance extends React.Component {
                                 <tr>
                                     <td colSpan="2" style={{textAlign: "right"}}>
                                         <button onClick={this._onClaim.bind(this, false)} className="button outline"><Translate content="account.member.claim" /></button>
-                                        <button onClick={this._onClaim.bind(this, true)} className="button outline"><Translate content="account.member.claim_all" /></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -98,8 +97,21 @@ class AccountVesting extends React.Component {
     }
 
     componentWillMount() {
+        this.retrieveVestingBalances.call(this, this.props.account.get("id"));
+    }
+
+    componentWillUpdate(nextProps){
+        let newId = nextProps.account.get("id");
+        let oldId = this.props.account.get("id");
+
+        if(newId !== oldId){
+            this.retrieveVestingBalances.call(this, newId);
+        }
+    }
+
+    retrieveVestingBalances(accountId){
         Apis.instance().db_api().exec("get_vesting_balances", [
-            this.props.account.get("id")
+            accountId
         ]).then(vbs => {
             this.setState({vbs});
         }).catch(err => {
@@ -125,14 +137,11 @@ class AccountVesting extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
-
-                <div className="grid-content">
-                    <Translate content="account.vesting.explain" component="p" />
-                    {!balances.length ? (
-                    <h4 style={{paddingTop: "1rem"}}>
-                        <Translate content={"account.vesting.no_balances"}/>
-                    </h4>) : balances}
-                </div>
+                <Translate content="account.vesting.explain" component="p" />
+                {!balances.length ? (
+                <h4 style={{paddingTop: "1rem"}}>
+                    <Translate content={"account.vesting.no_balances"}/>
+                </h4>) : balances}
             </div>
 );
     }

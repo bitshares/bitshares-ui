@@ -1,6 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
@@ -133,14 +133,11 @@ class SettleModal extends React.Component {
 
     render() {
         return (
-            <Modal id="settlement_modal" overlay={true} ref="settlement_modal">
-                <Trigger close="settlement_modal">
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id="settlement_modal" overlay={true} ref="settlement_modal">
                 <div className="grid-block vertical">
                     <ModalContent {...this.props} />
                 </div>
-            </Modal>
+            </BaseModal>
         );
     }
 }

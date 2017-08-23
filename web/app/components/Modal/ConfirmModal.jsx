@@ -1,7 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
@@ -41,10 +41,7 @@ class ConfirmModal extends React.Component {
 
     render() {
         return (
-            <Modal id={this.props.modalId} overlay={true}>
-                <Trigger close={this.props.modalId}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id={this.props.modalId} overlay={true}>
                 <div className="grid-block vertical">
                         {this.state.content}
 
@@ -63,7 +60,7 @@ class ConfirmModal extends React.Component {
                         </Trigger>
                     </div>
                 </div>
-            </Modal>
+            </BaseModal>
         );
     }
 }

@@ -5,6 +5,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "./FormattedAsset";
 import FloatingDropdown from "./FloatingDropdown";
 import Immutable from "immutable";
+import counterpart from "counterpart";
 
 class AssetSelector extends React.Component {
 
@@ -38,7 +39,8 @@ class AmountSelector extends React.Component {
         amount: React.PropTypes.any,
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
-        tabIndex: React.PropTypes.number
+        tabIndex: React.PropTypes.number,
+        error: React.PropTypes.string
     };
 
     static defaultProps = {
@@ -50,24 +52,11 @@ class AmountSelector extends React.Component {
     }
 
     formatAmount(v) {
-        // TODO: use asset's precision to format the number
+        /*// TODO: use asset's precision to format the number*/
         if (!v) v = "";
         if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
-        // value = utils.limitByPrecision(value, this.props.asset.get("precision"));
-        while (value.substring(0, 2) == "00")
-            value = value.substring(1);
-        if (value[0] === ".") value = "0" + value;
-        else if (value.length) {
-            let n = Number(value)
-            if (isNaN(n)) {
-                value = parseFloat(value);
-                if (isNaN(value)) return "";
-            }
-            let parts = (value + "").split('.');
-            value = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            if (parts.length > 1) value += "." + parts[1];
-        }
+
         return value;
     }
 
@@ -81,7 +70,7 @@ class AmountSelector extends React.Component {
     }
 
     render() {
-        let value = this.formatAmount(this.props.amount);
+        let value = this.props.error ? counterpart.translate(this.props.error) : this.formatAmount(this.props.amount);
         return (
             <div className="amount-selector" style={this.props.style}>
                 <label className="right-label">{this.props.display_balance}</label>

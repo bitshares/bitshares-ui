@@ -3,7 +3,7 @@ var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {ChainTypes} from "bitsharesjs/es";
-var {object_type, operations} = ChainTypes;
+var {object_type} = ChainTypes;
 
 var Utils = {
     get_object_id: (obj_id) => {
@@ -318,25 +318,6 @@ var Utils = {
         //     return 0;
         // }
         // return value;
-    },
-
-    estimateFee: function(op_type, options, globalObject) {
-        if (!globalObject) return 0;
-        let op_code = operations[op_type];
-        let currentFees = globalObject.getIn(["parameters", "current_fees", "parameters", op_code, 1]).toJS();
-
-        let fee = 0;
-        if (currentFees.fee) {
-            fee += currentFees.fee;
-        }
-
-        if (options) {
-            for (let option of options) {
-                fee += currentFees[option];
-            }
-        }
-
-        return fee * globalObject.getIn(["parameters", "current_fees", "scale"]) / 10000;
     },
 
     getFee: function({opType, options, globalObject, asset, coreAsset, balances}) {

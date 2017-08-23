@@ -1,6 +1,6 @@
 import React, {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
@@ -465,10 +465,7 @@ export default class ModalWrapper extends React.Component {
         }
 
         return (
-            <Modal id={modalId} overlay={true} ref={modalId}>
-                <Trigger close={modalId}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id={modalId} overlay={true} ref={modalId}>
                 <div className="grid-block vertical">
                     <BorrowModalContent
                         quote_asset={quote_asset}
@@ -482,7 +479,7 @@ export default class ModalWrapper extends React.Component {
                         account={account}
                     />
                 </div>
-            </Modal>
+            </BaseModal>
             );
     }
 }

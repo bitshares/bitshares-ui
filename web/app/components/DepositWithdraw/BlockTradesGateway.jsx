@@ -13,9 +13,10 @@ class BlockTradesGateway extends React.Component {
     constructor(props) {
         super();
 
+        const action = props.viewSettings.get(`${props.provider}Action`, "deposit");
         this.state = {
-            activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-            action: props.viewSettings.get(`${props.provider}Action`, "deposit")
+            activeCoin: this._getActiveCoin(props, {action}),
+            action
         };
     }
 
@@ -109,7 +110,7 @@ class BlockTradesGateway extends React.Component {
 
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
-            openledger: {name: "openledger-wallet", id: "1.2.96397", support: "support@openledger.info"}
+            openledger: {name: coin.intermediateAccount, id: "1.2.96397", support: "support@openledger.info"}
         };
 
         let issuer = issuers[provider];
@@ -159,6 +160,7 @@ class BlockTradesGateway extends React.Component {
                             deposit_coin_type={coin.backingCoinType.toLowerCase()}
                             deposit_account={coin.depositAccount}
                             deposit_wallet_type={coin.walletType}
+                            gateFee={coin.gateFee}
                             receive_asset={coin.symbol}
                             receive_coin_type={coin.symbol.toLowerCase()}
                             supports_output_memos={coin.supportsMemos}

@@ -151,7 +151,6 @@
       "required": "Coin days required",
       "remaining": "Days left of vesting period",
       "claim": "Claim now",
-      "claim_all": "Try to claim all",
       "available": "Available to claim",
       "referral_link": "Your referral link",
       "referral_text": "Give this to link to people you want to refer to BitShares"
@@ -376,7 +375,9 @@
       "pos": "Amount must be positive",
       "valid": "Please enter a valid, positive number",
       "balance": "The final balance must be larger than 0",
-      "insufficient": "Insufficient Balance"
+      "insufficient": "Insufficient funds",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "BACK",
     "confirm": "CONFIRM",
@@ -764,9 +765,10 @@
     "always_confirm": "Always ask for confirmation",
     "wallets": "Wallets",
     "apiServer": "Full node API server",
-    "add_ws": "Add new websocket API",
-    "remove_ws": "Remove websocket API",
-    "faucet_address": "Faucet Address",
+    "add_ws": "Add Node",
+    "remove_ws": "Remove Node",
+    "faucet_address": "Faucet",
+    "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
     "showSettles": "Show settle orders in depth chart",
     "showAssetPercent": "Show asset percentages on the account page",
     "yes": "Yes",
@@ -792,10 +794,8 @@
     "password_text": "Change your password.",
     "backup_text": "Create backups here.",
     "restore_text": "Restore from a backup or import keys.",
-    "access_text": "Choose which full node you want to connect to.<br/><br/>The faucet is used to pay the registration fee for new users.",
+    "access_text": "",
     "view_keys": "View keys",
-    "add_api": "Add API",
-    "remove_api": "Remove API",
     "backup_backup": "Restore from a backup file (.bin)",
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
@@ -810,7 +810,17 @@
     "api_closest": "Choose closest automatically",
     "wallet_required": "Wallet model required",
     "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-    "enable_wallet": "Enable wallet model"
+    "enable_wallet": "Enable wallet model",
+    "active_node": "Active Node",
+    "node_up": "UP",
+    "node_down": "DOWN",
+    "available_nodes": "Available Nodes",
+    "add_api": "Add Node",
+    "remove_api": "Remove Node",
+    "remove": "Remove",
+    "activate": "Activate",
+    "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
+    "valid_node_url": "Node URL must begin with ws:// or wss://"
   },
   "footer": {
     "title": "BitShares",
@@ -875,6 +885,8 @@
     "change": "Change",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "indicators": "Indicators",
     "rsi": "Relative Strength Index",
     "ema": "Exponential Moving Average",
@@ -1169,6 +1181,7 @@
     "fee_paying_account": "Fee paying account"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
@@ -1274,5 +1287,8 @@
     "disabled": "Chat disabled",
     "enable": "Enable chat now",
     "telegram_link": "The trollbox has been disabled due to performance issues, please visit the Bitshares Telegram group instead: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+    },
+    "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+    }
 }

@@ -376,6 +376,8 @@
       border-top: 1px solid $border-color;
     }
     header {
+      margin-left: 0;
+      margin-bottom: 1rem;
       color: $secondary-text-color;
     }
   }
@@ -547,6 +549,9 @@
       }
   }
 
+  .buy-sell-input > input.no-balance {
+      color: $alert-color;
+   }
 
   // Account page
   .account-left-panel {
@@ -1035,11 +1040,10 @@
       border-top: 2px solid $panel-bg-color;
   }
 
-  select.bts-select, select.native-coin-types, , select.external-coin-types {
+  select.bts-select, select.native-coin-types, select.external-coin-types {
       color: $secondary-text-color;
       background-color: $input-background;
       border: 0;
-      color: $primary-text-color;
       &:hover, &:focus, &:active {
         background-color: $input-background;
       }
@@ -1077,7 +1081,9 @@
 
   // Settings
   .settings-menu {
+      margin-left: 0;
       > li {
+          padding: .2rem 1rem;
           &:hover {
                 background-color: darken($light-panel-bg-color, 5%);
           }
@@ -1085,7 +1091,6 @@
           &.active {
                 color: $link-text-color;
           }
-
       }
   }
 
@@ -1228,4 +1233,22 @@
         font-weight: bold;
         color: $info-color;
     }
+}
+
+.olDarkTheme .gate_fee .amount-selector {
+  width: 74%;
+  display: inline-block;
+}
+
+.olDarkTheme .gate_fee .right-selector {
+  text-align: right;
+  width: 26%;
+  display: inline-block;
+  color: #adadad;
+  text-transform: uppercase;
+}
+
+.olDarkTheme .gate_fee .right-selector .right-selector-input {
+  text-align: right;
+  width: 100%;
 }

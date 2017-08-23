@@ -28,6 +28,7 @@ import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
+import { checkFeeStatusAsync } from "common/trxHelper";
 
 Highcharts.setOptions({
     global: {
@@ -42,6 +43,7 @@ class Exchange extends React.Component {
         this.state = this._initialState(props);
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
+        this._checkFeeStatus = this._checkFeeStatus.bind(this);
     }
 
     _initialState(props) {
@@ -141,6 +143,8 @@ class Exchange extends React.Component {
             GatewayActions.fetchCoins.defer();
             GatewayActions.fetchBridgeCoins.defer();
         }
+
+        this._checkFeeStatus();
     }
 
     componentDidMount() {
@@ -162,6 +166,24 @@ class Exchange extends React.Component {
         return true;
     };
 
+    _checkFeeStatus(assets = [this.props.coreAsset, this.props.baseAsset, this.props.quoteAsset], account = this.props.currentAccount) {
+        let feeStatus = {};
+        let p = [];
+        assets.forEach(a => {
+            p.push(checkFeeStatusAsync({accountID: account.get("id"), feeID: a.get("id"), type: "limit_order_create"}));
+        });
+        Promise.all(p).then(status => {
+            assets.forEach((a, idx) => {
+                feeStatus[a.get("id")] = status[idx];
+            });
+            if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
+                this.setState({
+                    feeStatus
+                });
+            }
+        });
+    }
+
     _getWindowSize() {
         let { innerHeight, innerWidth } = window;
         if (innerHeight !== this.state.height || innerWidth !== this.state.width) {
@@ -173,6 +195,12 @@ class Exchange extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (
+            nextProps.quoteAsset !== this.props.quoteAsset ||
+            nextProps.baseAsset !== this.props.baseAsset ||
+            nextProps.currentAccount !== this.props.currentAccount) {
+            this._checkFeeStatus([nextProps.coreAsset, nextProps.baseAsset, nextProps.quoteAsset], nextProps.currentAccount);
+        }
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
             this.setState(this._initialState(nextProps));
 
@@ -190,37 +218,86 @@ class Exchange extends React.Component {
         window.removeEventListener("resize", this._getWindowSize);
     }
 
-    _getFee(asset) {
-        let fee = utils.estimateFee("limit_order_create", [], ChainStore.getObject("2.0.0")) || 0;
-        const coreFee = new Asset({
-            amount: fee
-        });
-        if (!asset || asset.get("id") === "1.3.0") return coreFee;
+    _getFeeAssets(quote, base, coreAsset) {
+        let { currentAccount } = this.props;
+        const { feeStatus } = this.state;
 
-        const cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
+        function addMissingAsset(target, asset) {
+            if (target.indexOf(asset) === -1) {
+                target.push(asset);
+            }
+        }
 
-        if (cer.base.asset_id === cer.quote.asset_id) return coreFee;
+        function hasFeePoolBalance(id) {
+            return feeStatus[id] && feeStatus[id].hasPoolBalance;
+        }
 
-        const cerBase = new Asset({
-            asset_id: cer.base.asset_id,
-            amount: cer.base.amount,
-            precision: ChainStore.getAsset(cer.base.asset_id).get("precision")
+        function hasBalance(id) {
+            return feeStatus[id] && feeStatus[id].hasBalance;
+        }
+
+        let sellAssets = [coreAsset, quote === coreAsset ? base : quote];
+        addMissingAsset(sellAssets, quote);
+        addMissingAsset(sellAssets, base);
+        // let sellFeeAsset;
+
+        let buyAssets = [coreAsset, base === coreAsset ? quote : base];
+        addMissingAsset(buyAssets, quote);
+        addMissingAsset(buyAssets, base);
+        // let buyFeeAsset;
+
+        let balances = {};
+
+        currentAccount.get("balances", []).filter((balance, id) => {
+            return (["1.3.0", quote.get("id"), base.get("id")].indexOf(id) >= 0);
+        }).forEach((balance, id) => {
+            let balanceObject = ChainStore.getObject(balance);
+            balances[id] = {
+                balance: balanceObject ? parseInt(balanceObject.get("balance"), 10) : 0,
+                fee: this._getFee(ChainStore.getAsset(id))
+            };
         });
-        const cerQuote = new Asset({
-            asset_id: cer.quote.asset_id,
-            amount: cer.quote.amount,
-            precision: ChainStore.getAsset(cer.quote.asset_id).get("precision")
-        });
-        try {
-            const cerPrice = new Price({
-                base: cerBase, quote: cerQuote
+
+        function filterAndDefault(assets, balances, idx) {
+            let asset;
+            /* Only keep assets for which the user has a balance larger than the fee, and for which the fee pool is valid */
+            assets = assets.filter(a => {
+                if (!balances[a.get("id")]) {
+                    return false;
+                };
+                return hasFeePoolBalance(a.get("id")) && hasBalance(a.get("id"));
             });
-            const convertedFee = coreFee.times(cerPrice, true);
-            return convertedFee;
+
+            /* If the user has no valid balances, default to core fee */
+            if (!assets.length) {
+                asset = coreAsset;
+                assets.push(coreAsset);
+            /* If the user has balances, use the stored idx value unless that asset is no longer available*/
+            } else {
+                asset = assets[Math.min(assets.length - 1, idx)];
+            }
+
+            return {assets, asset};
         }
-        catch(err) {
-            return coreFee;
-        }
+
+        let {assets: sellFeeAssets, asset: sellFeeAsset} = filterAndDefault(sellAssets, balances, this.state.sellFeeAssetIdx);
+        let {assets: buyFeeAssets, asset: buyFeeAsset} = filterAndDefault(buyAssets, balances, this.state.buyFeeAssetIdx);
+
+        let sellFee = this._getFee(sellFeeAsset);
+        let buyFee = this._getFee(buyFeeAsset);
+
+        return {
+            sellFeeAsset,
+            sellFeeAssets,
+            sellFee,
+            buyFeeAsset,
+            buyFeeAssets,
+            buyFee
+        };
+    }
+
+    _getFee(asset = this.props.coreAsset) {
+        return this.state.feeStatus[asset.get("id")] && this.state.feeStatus[asset.get("id")].fee;
     }
 
     _verifyFee(fee, sellAmount, sellBalance, coreBalance) {
@@ -626,7 +703,7 @@ class Exchange extends React.Component {
     }
 
     onChangeChartHeight({value, increase}) {
-        let newHeight = value ? value : this.state.chartHeight + (increase ? 20 : -20);
+        const newHeight = value ? value : this.state.chartHeight + (increase ? 20 : -20);
         console.log("newHeight", newHeight);
         this.setState({
             chartHeight: newHeight
@@ -635,80 +712,6 @@ class Exchange extends React.Component {
         SettingsActions.changeViewSetting({
             "chartHeight": newHeight
         });
-    }
-
-    _getFeeAssets(quote, base, coreAsset) {
-        let { currentAccount } = this.props;
-
-        function addMissingAsset(target, asset) {
-            if (target.indexOf(asset) === -1) {
-                target.push(asset);
-            }
-        }
-
-        let sellFeeAssets = [coreAsset, quote === coreAsset ? base : quote];
-        addMissingAsset(sellFeeAssets, quote);
-        addMissingAsset(sellFeeAssets, base);
-        let sellFeeAsset;
-
-        let buyFeeAssets = [coreAsset, base === coreAsset ? quote : base];
-        addMissingAsset(buyFeeAssets, quote);
-        addMissingAsset(buyFeeAssets, base);
-        let buyFeeAsset;
-
-        let balances = {};
-
-        currentAccount.get("balances", []).filter((balance, id) => {
-            return (["1.3.0", quote.get("id"), base.get("id")].indexOf(id) >= 0);
-        }).forEach((balance, id) => {
-            let balanceObject = ChainStore.getObject(balance);
-            balances[id] = {
-                balance: balanceObject ? parseInt(balanceObject.get("balance"), 10) : 0,
-                fee: this._getFee(ChainStore.getAsset(id))
-            };
-        });
-
-        // Sell asset fee
-        sellFeeAssets = sellFeeAssets.filter(a => {
-            if (!balances[a.get("id")]) {
-                return false;
-            };
-            return balances[a.get("id")].balance > balances[a.get("id")].fee.getAmount();
-        });
-
-        if (!sellFeeAssets.length) {
-            sellFeeAsset = coreAsset;
-            sellFeeAssets.push(coreAsset);
-        } else {
-            sellFeeAsset = sellFeeAssets[Math.min(sellFeeAssets.length - 1, this.state.sellFeeAssetIdx)];
-        }
-
-        // Buy asset fee
-        buyFeeAssets = buyFeeAssets.filter(a => {
-            if (!balances[a.get("id")]) {
-                return false;
-            };
-            return balances[a.get("id")].balance > balances[a.get("id")].fee.getAmount();
-        });
-
-        if (!buyFeeAssets.length) {
-            buyFeeAsset = coreAsset;
-            buyFeeAssets.push(coreAsset);
-        } else {
-            buyFeeAsset = buyFeeAssets[Math.min(buyFeeAssets.length - 1, this.state.buyFeeAssetIdx)];
-        }
-
-        let sellFee = this._getFee(sellFeeAsset);
-        let buyFee = this._getFee(buyFeeAsset);
-
-        return {
-            sellFeeAsset,
-            sellFeeAssets,
-            sellFee,
-            buyFeeAsset,
-            buyFeeAssets,
-            buyFee
-        };
     }
 
     _toggleBuySellPosition() {
@@ -835,7 +838,7 @@ class Exchange extends React.Component {
         let { currentAccount, marketLimitOrders, marketCallOrders, marketData, activeMarketHistory,
             invertedCalls, starredMarkets, quoteAsset, baseAsset, lowestCallPrice,
             marketStats, marketReady, marketSettleOrders, bucketSize, totals,
-            feedPrice, buckets } = this.props;
+            feedPrice, buckets, coreAsset } = this.props;
 
         const {combinedBids, combinedAsks, lowestAsk, highestBid,
             flatBids, flatAsks, flatCalls, flatSettles} = marketData;
@@ -918,8 +921,7 @@ class Exchange extends React.Component {
         }
 
         // Fees
-        let coreAsset = ChainStore.getAsset("1.3.0");
-        if (!coreAsset) {
+        if (!coreAsset || !this.state.feeStatus) {
             return null;
         }
 
@@ -949,7 +951,11 @@ class Exchange extends React.Component {
         }
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
-
+        const minChartHeight = 300
+        const height = Math.max(
+            this.state.height > 1100 ? chartHeight : chartHeight - 125,
+            minChartHeight
+        );
 
         let buyForm = isFrozen ? null : (
             <BuySell
@@ -986,6 +992,7 @@ class Exchange extends React.Component {
                 currentPriceObject={lowestAsk}
                 account={currentAccount.get("name")}
                 fee={buyFee}
+                hasFeeBalance={this.state.feeStatus[buyFee.asset_id].hasBalance}
                 feeAssets={buyFeeAssets}
                 feeAsset={buyFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
@@ -1030,6 +1037,7 @@ class Exchange extends React.Component {
                 currentPriceObject={highestBid}
                 account={currentAccount.get("name")}
                 fee={sellFee}
+                hasFeeBalance={this.state.feeStatus[sellFee.asset_id].hasBalance}
                 feeAssets={sellFeeAssets}
                 feeAsset={sellFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
@@ -1076,7 +1084,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical no-overflow")} >
+                    <div style={{paddingTop: 0}} className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
                         <ExchangeHeader
@@ -1104,7 +1112,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1100 ? chartHeight : chartHeight - 125}
+                                    height={height}
                                     leftOrderBook={leftOrderBook}
                                     marketReady={marketReady}
                                     indicators={indicators}
@@ -1156,7 +1164,7 @@ class Exchange extends React.Component {
                                     totalAsks={totals.ask}
                                     base={base}
                                     quote={quote}
-                                    height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
+                                    height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
@@ -1199,6 +1207,7 @@ class Exchange extends React.Component {
                                     ref="buy"
                                     onForce={this._forceBuy.bind(this, "buy", buyFeeAsset, baseBalance, coreBalance)}
                                     diff={buyDiff}
+                                    hasOrders={combinedAsks.length > 0}
                                 />
 
                                 <ConfirmOrderModal
@@ -1206,6 +1215,7 @@ class Exchange extends React.Component {
                                     ref="sell"
                                     onForce={this._forceSell.bind(this, "sell", sellFeeAsset, quoteBalance, coreBalance)}
                                     diff={sellDiff}
+                                    hasOrders={combinedBids.length > 0}
                                 />
 
                                 {marketLimitOrders.size > 0 && base && quote ? (

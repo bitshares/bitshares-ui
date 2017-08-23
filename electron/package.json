@@ -12,7 +12,6 @@
     "yargs": "^6.6.0"
   },
   "optionalDependencies": {
-    "appdmg": "^0.4.5",
     "rcedit": "^0.7.0"
   },
   "scripts": {
@@ -21,6 +20,7 @@
     "start": "node ./tasks/start"
   },
   "dependencies": {
+    "appdmg": "^0.4.5",
     "electron": "^1.4.15"
   }
 }
