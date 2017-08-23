@@ -60,11 +60,11 @@ class AccountMembership extends React.Component {
 
         let account = this.props.account.toJS();
 
-        let ltr = ChainStore.getAccount( account.lifetime_referrer );
+        let ltr = ChainStore.getAccount( account.lifetime_referrer, false );
         if( ltr ) account.lifetime_referrer_name = ltr.get('name');
-        let ref = ChainStore.getAccount( account.referrer );
+        let ref = ChainStore.getAccount( account.referrer, false );
         if( ref ) account.referrer_name = ref.get('name');
-        let reg = ChainStore.getAccount( account.registrar );
+        let reg = ChainStore.getAccount( account.registrar, false );
         if( reg ) account.registrar_name = reg.get('name');
 
         let account_name = account.name;

@@ -15,7 +15,8 @@ class AccountRow extends React.Component {
     };
 
     static defaultProps = {
-        tempComponent: "tr"
+        tempComponent: "tr",
+        autosubscribe: false
     };
 
     render() {

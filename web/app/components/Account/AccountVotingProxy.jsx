@@ -24,7 +24,8 @@ class AccountVotingProxy extends React.Component {
                 "bts1988", "harvey", "fav", "jonnybitcoin", "bitsharesblocks", "customminer"
             ]
         ),
-        existingProxy: "1.2.5" // proxy-to-self
+        existingProxy: "1.2.5", // proxy-to-self
+        autosubscribe: false
     };
 
     static contextTypes = {

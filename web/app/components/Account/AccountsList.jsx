@@ -82,7 +82,8 @@ class AccountsList extends React.Component {
 
     static defaultProps = {
         action: "remove",
-        withSelector: true
+        withSelector: true,
+        autosubscribe: false
     };
 
     constructor(props) {
