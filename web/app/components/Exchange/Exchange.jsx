@@ -1084,7 +1084,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical no-overflow")} >
+                    <div style={{paddingTop: 0}} className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
                         <ExchangeHeader
