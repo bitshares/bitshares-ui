@@ -653,6 +653,7 @@ class MyMarkets extends React.Component {
                             className="no-margin"
                             type="text"
                             placeholder="Filter"
+                            maxLength="16"
                             value={this.state.myMarketFilter}
                             onChange={(e) => {this.setState({myMarketFilter: e.target.value && e.target.value.toUpperCase()});}}
                         />
@@ -688,6 +689,7 @@ class MyMarkets extends React.Component {
                                     value={this.state.inputValue}
                                     onChange={this._onInputName.bind(this)}
                                     placeholder={counterpart.translate("exchange.search")}
+                                    maxLength="16"
                                 />
                             </td>
                         </tr>
