@@ -7,7 +7,7 @@ import {ChainStore} from "bitsharesjs/es";
 import {debounce} from "lodash";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import Peer from "peerjs";
+//import Peer from "peerjs";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -17,16 +17,16 @@ import {FetchChainObjects} from "bitsharesjs/es";
 import TimeAgo from "../Utility/TimeAgo";
 
 const PROD = true;
-const hostConfig = PROD ? { // Prod config
-    host: "bitshares.openledger.info",
-    path: "/trollbox",
-    secure: true,
-    port: 443
-} : { // Dev config
-    host: "localhost",
-    path: "/trollbox",
-    port: 9000
-};
+//const hostConfig = PROD ? { // Prod config
+//    host: "bitshares.openledger.info",
+//    path: "/trollbox",
+//    secure: true,
+//    port: 443
+//} : { // Dev config
+//    host: "localhost",
+//    path: "/trollbox",
+//    port: 9000
+//};
 
 class Comment extends React.Component {
 
