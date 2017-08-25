@@ -23,7 +23,6 @@ export default class ChatWrapper extends React.Component {
     onToggleChat(e) {
         e.preventDefault();
         let showChat = !this.props.showChat;
-
         SettingsActions.changeViewSetting({
             showChat: showChat
         });
