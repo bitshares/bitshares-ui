@@ -1,5 +1,7 @@
+// Issue #219 trollbox removed Aug 2017; 
+// wrapper left for possible re-purposed use  
+
 import React from "react";
-import Chat from "./Chat";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 
@@ -7,17 +9,7 @@ export default class ChatWrapper extends React.Component {
 
     constructor() {
         super();
-
-        this.state = {
-            delayMount: 3500,
-            readyToMount: false
-        };
-    }
-
-    componentWillMount() {
-        setTimeout(() => {
-            this.setState({readyToMount: true});
-        }, this.state.delayMount);
+ 
     }
 
     onToggleChat(e) {
@@ -28,29 +20,18 @@ export default class ChatWrapper extends React.Component {
         });
     }
 
-    _onEnableChat(e) {
-        e.preventDefault();
-        SettingsActions.changeSetting({
-            setting: "disableChat",
-            value: false
-        });
-    }
-
     render() {
-        if (!this.state.readyToMount) return null;
         let {showChat, dockedChat} = this.props;
         let content;
-
         let chatStyle = {
-            display: !showChat ? "none" : !dockedChat ?"block" : "inherit",
-            float: !dockedChat ? "right" : null,
-            height: !dockedChat ? 35 : null,
-            margin: !dockedChat ? "0 .5em" : null,
-            width: !dockedChat ? 350 : 300,
-            marginRight: !dockedChat ? "1rem" : null
+            display: !showChat ? "none" : "block",
+            float: "right",
+            height: 35,
+            margin: "0 .5em",
+            width: 350,
+            marginRight: "1rem"
         };
 
-        if (this.props.disable) {
             content = showChat ?
                 (<div className="chatbox">
                     <div className="grid-block main-content vertical flyout" >
@@ -73,17 +54,11 @@ export default class ChatWrapper extends React.Component {
                 </a>
             );
 
-        } else {
-            content = <Chat {...this.props} />;
-        }
-
         return (
-            <div
-                id="chatbox"
-                className={dockedChat ? "chat-docked grid-block" : "chat-floating"}
+            <div id="chatbox" className={"chat-floating"}
                 style={{
-                    bottom: this.props.footerVisible && !dockedChat ? 36 : null,
-                    height: !dockedChat ? 35 : null
+                    bottom: this.props.footerVisible ? 36 : null,
+                    height: 35
                 }}
             >
                 {content}
