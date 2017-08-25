@@ -26,25 +26,8 @@ class Chat extends React.Component {
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
             shouldScroll: true,
             loading: true,
-            docked: props.viewSettings.get("dockedChat", false),
-            hasFetchedHistory: false
+            docked: props.viewSettings.get("dockedChat", false)
         };
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-
-    }
-
-    componentDidUpdate(prevProps) {
-
-    }
-
-    componentWillMount() {
-
-    }
-
-    componentWillUnmount() {
-
     }
 
     _scrollToBottom() {
@@ -112,7 +95,7 @@ class Chat extends React.Component {
 
     render() {
 
-        let {userName, loading, docked} = this.state;
+        let {loading, docked} = this.state;
 
         let {showChat, showSettings, connected} = this.state;
 
@@ -182,11 +165,6 @@ class Chat extends React.Component {
                                 {!showSettings ? <div>{messages}</div> : settings}
                             </div>
                         </div>)}
-
-                        {!showSettings && connected && !loading ? (
-                        <div className="grid-block shrink">
-          
-                        </div>) : null}
 
                     </div>
                 </div>
