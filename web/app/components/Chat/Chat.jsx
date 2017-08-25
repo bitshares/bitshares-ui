@@ -3,9 +3,7 @@ import { connect } from "alt-react";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 import SettingsActions from "actions/SettingsActions";
-import SettingsStore from "stores/SettingsStore";
 import counterpart from "counterpart";
-import LoadingIndicator from "../LoadingIndicator";
 
 class Chat extends React.Component {
     constructor(props) {
@@ -21,30 +19,13 @@ class Chat extends React.Component {
                 message: "chat.telegram_link",
                 color: "black"
             }],
-            connected: false,
+            //connected: false,
             showChat: props.viewSettings.get("showChat", true),
             myColor: props.viewSettings.get("chatColor", "#904E4E"),
             shouldScroll: true,
             loading: true,
             docked: props.viewSettings.get("dockedChat", false)
         };
-    }
-
-    _scrollToBottom() {
-        if (this.refs.chatbox && this.state.shouldScroll) {
-            this.refs.chatbox.scrollTop = this.refs.chatbox.scrollHeight;
-        }
-    }
-
-    _onScroll(e) {
-        let {scrollTop, scrollHeight, clientHeight} = this.refs.chatbox;
-
-        let shouldScroll = scrollHeight - scrollTop <= clientHeight;
-        if (shouldScroll !== this.state.shouldScroll) {
-            this.setState({
-                shouldScroll: shouldScroll
-            });
-        }
     }
 
     onToggleChat(e) {
@@ -97,7 +78,7 @@ class Chat extends React.Component {
 
         let {loading, docked} = this.state;
 
-        let {showChat, showSettings, connected} = this.state;
+        let {showChat, showSettings} = this.state;
 
         let chatStyle = {
             display: !showChat ? "none" : !docked ?"block" : "inherit",
@@ -110,23 +91,7 @@ class Chat extends React.Component {
 
         let settings = (
             <div style={{padding: 10}}>
-                {/* Username */}
-                <div className="settings-title"><Translate content="chat.user" />: </div>
-                {/* Color */}
-                <div className="settings-title">
-                    <Translate content="chat.color" />:
-                </div>
 
-                <div onClick={this.disableChat.bind(this)} className="button">
-                    <Translate content="settings.disableChat" />
-                </div>
-
-                {/* Done button */}
-                <div style={{position: "absolute", bottom: 5, right: 0}}>
-                    <div onClick={this.onToggleSettings.bind(this)} className="button">
-                        <Translate content="chat.done" />
-                    </div>
-                </div>
             </div>
         );
         return (
@@ -154,18 +119,6 @@ class Chat extends React.Component {
                             </div>
                             <a onClick={this.onToggleChat.bind(this)} className="chatbox-close">&times;</a>
                         </div>
-
-                        {loading ? <div><LoadingIndicator /></div> : !connected ? (
-                        <div className="grid-block vertical chatbox">
-                            
-                        </div>) : (
-
-                        <div className="grid-block vertical no-overflow chatbox-content"  onScroll={this._onScroll.bind(this)}>
-                            <div className="grid-content" ref="chatbox">
-                                {!showSettings ? <div>{messages}</div> : settings}
-                            </div>
-                        </div>)}
-
                     </div>
                 </div>
             </div>
@@ -182,9 +135,7 @@ class SettingsContainer extends React.Component {
 }
 
 export default connect(SettingsContainer, {
-    listenTo() {
 
-    },
     getProps() {
 
     }
