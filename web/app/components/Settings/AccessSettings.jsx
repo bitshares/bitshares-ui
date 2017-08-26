@@ -101,7 +101,7 @@ class AccessSettings extends React.Component {
         let isDefaultNode = {};
 
         settingsAPIs.WS_NODE_LIST.forEach((node)=>{
-          isDefaultNode[node.url] = true;
+            isDefaultNode[node.url] = true;
         });
 
         this.isDefaultNode = isDefaultNode;
@@ -174,21 +174,21 @@ class AccessSettings extends React.Component {
         }
 
         nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1)).sort(function(a,b){
-          if(a.url == autoSelectAPI){
-            return -1;
-          } else if(a.up && b.up){
-            if(a.ping < b.ping) return -1;
-            if(a.ping === b.ping) return 0;
-            if(a.ping > b.ping) return 1;
-          } else if(!a.up && !b.up){
-            return 0;
-          } else if(a.up && !b.up){
-            return -1;
-          } else if(b.up && !a.up){
-            return -1;
-          }
+            if(a.url == autoSelectAPI){
+                return -1;
+            } else if(a.up && b.up){
+                if(a.ping < b.ping) return -1;
+                if(a.ping === b.ping) return 0;
+                if(a.ping > b.ping) return 1;
+            } else if(!a.up && !b.up){
+                return 0;
+            } else if(a.up && !b.up){
+                return -1;
+            } else if(b.up && !a.up){
+                return -1;
+            }
 
-          return 0;
+            return 0;
         });
 
         return <div style={{paddingTop: "1em"}}>
