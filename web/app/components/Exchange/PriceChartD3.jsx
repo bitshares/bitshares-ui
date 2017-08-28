@@ -347,6 +347,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
                 xExtents={[filteredData[0].date, filteredData[filteredData.length - 1].date]}
                 type="hybrid"
+                clamp={true}
                 className="ps-child no-overflow Stockcharts__wrapper ps-must-propagate"
                 drawMode={enableTrendLine || enableFib}>
             >
