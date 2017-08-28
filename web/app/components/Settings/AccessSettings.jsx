@@ -2,6 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
+import { settingsAPIs } from "../../api/apiConfig";
 
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
@@ -71,7 +72,7 @@ class ApiNode extends React.Component {
 
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
-            {allowActivation && allowRemoval && !automatic && !state.hovered && Status}
+            {allowActivation && !automatic && !state.hovered && Status}
 
             {(allowActivation || allowRemoval) && state.hovered && 
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
@@ -96,6 +97,14 @@ ApiNode.defaultProps = {
 class AccessSettings extends React.Component {
     constructor(props){
         super(props);
+
+        let isDefaultNode = {};
+
+        settingsAPIs.WS_NODE_LIST.forEach((node)=>{
+            isDefaultNode[node.url] = true;
+        });
+
+        this.isDefaultNode = isDefaultNode;
     }
 
     getNodeIndexByURL(url){
@@ -140,14 +149,14 @@ class AccessSettings extends React.Component {
         let displayUrl = automatic ? "..." : node.url;
 
         let name = typeof(node.name) === "object" ? <Translate component="span" content={node.name.translate} /> : node.name;
-        let allowRemoval = !automatic ? true : false;
+
+        let allowRemoval = (!automatic && !this.isDefaultNode[node.url]) ? true : false;
 
         return <ApiNode {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />
     }
 
     render(){
         const { props } = this;
-
         let getNode = this.getNode.bind(this);   
         let renderNode = this.renderNode.bind(this);    
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
@@ -164,7 +173,23 @@ class AccessSettings extends React.Component {
             activeNode = getNode(props.nodes[currentNodeIndex]);
         }
 
-        nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1));
+        nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1)).sort(function(a,b){
+            if(a.url == autoSelectAPI){
+                return -1;
+            } else if(a.up && b.up){
+                if(a.ping < b.ping) return -1;
+                if(a.ping === b.ping) return 0;
+                if(a.ping > b.ping) return 1;
+            } else if(!a.up && !b.up){
+                return 0;
+            } else if(a.up && !b.up){
+                return -1;
+            } else if(b.up && !a.up){
+                return -1;
+            }
+
+            return 0;
+        });
 
         return <div style={{paddingTop: "1em"}}>
             <Translate component="p" content="settings.active_node" />
