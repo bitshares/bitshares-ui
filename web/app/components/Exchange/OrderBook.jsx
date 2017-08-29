@@ -40,12 +40,11 @@ class OrderBookRowVertical extends React.Component {
 }
 
 class OrderBookRowHorizontal extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.order.market_base !== this.props.order.market_base) return false;
+    shouldComponentUpdate(np) {
         return (
-            nextProps.order.ne(this.props.order) ||
-            nextProps.position !== this.props.position ||
-            nextProps.index !== this.props.index
+            np.order.ne(this.props.order) ||
+            np.position !== this.props.position ||
+            np.index !== this.props.index
         );
     }
 
@@ -269,7 +268,6 @@ class OrderBook extends React.Component {
         let {showAllAsks, showAllBids, rowCount} = this.state;
 
         let bidRows = null, askRows = null;
-
         if(base && quote) {
             bidRows = combinedBids
             .filter(a => {
