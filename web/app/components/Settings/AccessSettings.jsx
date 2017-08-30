@@ -199,9 +199,9 @@ class AccessSettings extends React.Component {
 
             <div className="available-nodes" style={{position: "relative", marginBottom: "2em"}}>
                 <Translate component="p" content="settings.available_nodes" />
-                <a href="#" onClick={props.triggerModal.bind(this)} style={{position: "absolute", right: 0, top: "5px"}} >
+                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#4A90E2"}} >
                     <Translate id="add" component="span" content="settings.add_api" />
-                </a>
+                </span>
                 { 
                     nodes.map((node)=>{ 
                         return renderNode(node, true);
