@@ -213,8 +213,8 @@ class Header extends React.Component {
                     return (
                         <li className={name === account_display_name ? "current-account" : ""} key={name}>
                             <a href onClick={this._accountClickHandler.bind(this, name)}>
-                                <td><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></td>
-                                <td style={{paddingLeft: 10}}><span>{name}</span></td>
+                                <div className="table-cell"><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></div>
+                                <div className="table-cell" style={{paddingLeft: 10}}><span>{name}</span></div>
                             </a>
                         </li>
                     );
@@ -227,16 +227,16 @@ class Header extends React.Component {
         tradingAccounts.length === 1 ?
         (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
-                <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
-                <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
+                <div className="table-cell"><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></div>
+                <div className="table-cell" style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></div>
             </a>
         </ActionSheet.Button>) :
 
         (<ActionSheet>
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
-                    <td><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></td>
-                    <td style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></td>
+                    <div className="table-cell"><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></div>
+                    <div className="table-cell" style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></div>
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
@@ -286,8 +286,8 @@ class Header extends React.Component {
                         return (
                             <li key={locale}>
                                 <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale);}}>
-                                    <td><FlagImage flag={locale} /></td>
-                                    <td style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></td>
+                                    <div className="table-cell"><FlagImage flag={locale} /></div>
+                                    <div className="table-cell" style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></div>
 
                                 </a>
                             </li>
