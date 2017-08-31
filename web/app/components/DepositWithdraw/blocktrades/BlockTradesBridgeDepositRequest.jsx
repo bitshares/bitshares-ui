@@ -55,6 +55,10 @@ class ButtonConversion extends React.Component {
         this._checkFeeStatus();
     }
 
+    componentWillUnmount() {
+        this.unMounted = true;
+    }
+
     componentWillReceiveProps(np) {
         if (!np.amount.equals(this.props.amount) || np.account_id !== this.props.account_id) {
             this._updateFee();
@@ -74,6 +78,8 @@ class ButtonConversion extends React.Component {
                 }
             })
             .then(({fee, hasBalance, hasPoolBalance}) => {
+                if (this.unMounted) return;
+
                 this.setState({
                     feeAmount: fee,
                     hasBalance,
@@ -104,6 +110,8 @@ class ButtonConversion extends React.Component {
                 }));
             });
             Promise.all(p).then(status => {
+                if (this.unMounted) return;
+
                 assets.forEach((a, idx) => {
                     feeStatus[a] = status[idx];
                 });
@@ -566,6 +574,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 			let conversion_estimated_output_amount = this.getAndUpdateOutputEstimate("conversion", conversion_input_coin_type, conversion_output_coin_type, this.state.conversion_estimated_input_amount);
 			let conversion_limit = this.getCachedOrFreshDepositLimit("conversion", conversion_input_coin_type, conversion_output_coin_type);
 
+            if (this.unMounted) return;
+            
             this.setState({
                 coin_info_request_state: this.coin_info_request_states.request_complete,
                 coins_by_type: coins_by_type,
@@ -703,6 +713,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     componentWillUnmount()
     {
         clearInterval(this.update_timer);
+        this.unMounted = true;
     }
 
     // functions for managing input addresses
@@ -809,6 +820,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                           {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                     .then(response => response.json());
         deposit_limit_promise.then(reply => {
+            if (this.unMounted) return;
             console.assert(reply.inputCoinType == input_coin_type &&
                            reply.outputCoinType == output_coin_type,
                            "unexpected reply from deposit-limits");
@@ -832,6 +844,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateOutputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, input_amount)
     {
+        if (this.unMounted) return;
         if (deposit_withdraw_or_convert == 'deposit') {
             this.setState({failed_calculate_deposit: null});
         }
@@ -850,6 +863,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                             {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                       .then(response => response.json());
         estimate_output_promise.then(reply => {
+            if (this.unMounted) return;
             // console.log("Reply: ", reply);
             if (reply.error)
             {
@@ -901,6 +915,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     getAndUpdateInputEstimate(deposit_withdraw_or_convert, input_coin_type, output_coin_type, output_amount)
     {
+        if (this.unMounted) return;
         if (deposit_withdraw_or_convert == 'deposit') {
             this.setState({failed_calculate_deposit: null});
         }
@@ -919,6 +934,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                             {method: 'get', headers: new Headers({"Accept": "application/json"})})
                                       .then(response => response.json());
         estimate_input_promise.then(reply => {
+            if (this.unMounted) return;
+
             console.assert(reply.inputCoinType == input_coin_type &&
                            reply.outputCoinType == output_coin_type &&
                            reply.outputAmount == output_amount,

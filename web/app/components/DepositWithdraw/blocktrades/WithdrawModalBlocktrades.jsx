@@ -62,6 +62,10 @@ class WithdrawModalBlocktrades extends React.Component {
         this._updateFee();
     }
 
+    componentWillUnmount() {
+        this.unMounted = true;
+    }
+
     _updateFee(fee_asset_id = this.state.fee_asset_id) {
         checkFeeStatusAsync({
             accountID: this.props.account.get("id"),
@@ -73,6 +77,8 @@ class WithdrawModalBlocktrades extends React.Component {
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
+            if (this.unMounted) return;
+
             this.setState({
                 feeAmount: fee,
                 hasBalance,
