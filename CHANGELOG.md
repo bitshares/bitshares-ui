@@ -1,5 +1,37 @@
 ---------------------------------------------------------------------
-Release 2.0.170327
+Release 2.0.170829
+---------------------------------------------------------------------
+New features
+--------
+- Add memo fee estimation to WithdrawModalBlockTrades and Transfer
+- Show status of all API servers
+- Add WanCloud API servers
+- Allow Modal Close with Keyboard Control
+- Transwiser: add bankwire withdraw option
+- Force very strong generated password on account creation
+
+Bug fixes
+--------
+- Fix #188: Total calculation (BTS) is not displayed correctly
+- Add localStorage fallback to BlockTradesDepositAddressCache, fix #327
+- Update BindToChainState for getAccount autosubscribe option, fix #202
+- Ensure proxy props changing updates component state
+- Ensure that vesting balances are updated when hot switching accounts
+- Improve exchange fee calc with pool and balance checks, prevent placing orders when fees are not payable
+- Add balance and fee pool checks to withdrawals
+- Ensure primary asset shows up in balance calculations
+- Add balance and fee pool checks to withdrawals, remove dead code
+- Fix 'unknown value' displayed for 0 amount
+- Fix error message for expired transactions
+- Fix broken telegram chat room link
+- Disable the trollbox, remove password change entry in settings for password logins
+- Fix a rounding issue when estimating non-BTS fees in the exchange
+- Fix Header not showing unlock state properly after wallet/account creation
+- Add a worker creation form
+- Fix depth chart for markets with extreme spreads
+
+---------------------------------------------------------------------
+Release 2.0.170410
 ---------------------------------------------------------------------
 New features
 --------

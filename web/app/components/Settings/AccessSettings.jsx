@@ -15,7 +15,7 @@ class ApiNode extends React.Component {
         super(props);
 
         this.state = {
-            hovered: false  
+            hovered: false
         };
     }
 
@@ -61,10 +61,10 @@ class ApiNode extends React.Component {
           {!up && <span style={{color: "red"}}>__</span>}
         </div>
 
-        return <div 
-            className="api-node" 
-            style={{border: "1px solid #fff", position: "relative", padding: "0.5em 1em 0.5em 1em"}} 
-            onMouseEnter={this.setHovered.bind(this)} 
+        return <div
+            className="api-node"
+            style={{border: "1px solid #fff", position: "relative", padding: "0.5em 1em 0.5em 1em"}}
+            onMouseEnter={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
@@ -74,7 +74,7 @@ class ApiNode extends React.Component {
 
             {allowActivation && !automatic && !state.hovered && Status}
 
-            {(allowActivation || allowRemoval) && state.hovered && 
+            {(allowActivation || allowRemoval) && state.hovered &&
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
                     {allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
                     {allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
@@ -134,11 +134,11 @@ class AccessSettings extends React.Component {
         const { props } = this;
 
         return {
-            name: node.location,
+            name: node.location || "Unknown location",
             url: node.url,
             up: node.url in props.apiLatencies,
             ping: props.apiLatencies[node.url]
-        }
+        };
     }
 
     renderNode(node, allowActivation){
@@ -148,7 +148,7 @@ class AccessSettings extends React.Component {
 
         let displayUrl = automatic ? "..." : node.url;
 
-        let name = typeof(node.name) === "object" ? <Translate component="span" content={node.name.translate} /> : node.name;
+        let name = !!node.name && typeof(node.name) === "object" && ("translate" in node.name) ? <Translate component="span" content={node.name.translate} /> : node.name;
 
         let allowRemoval = (!automatic && !this.isDefaultNode[node.url]) ? true : false;
 
@@ -157,8 +157,8 @@ class AccessSettings extends React.Component {
 
     render(){
         const { props } = this;
-        let getNode = this.getNode.bind(this);   
-        let renderNode = this.renderNode.bind(this);    
+        let getNode = this.getNode.bind(this);
+        let renderNode = this.renderNode.bind(this);
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
 
         let nodes = props.nodes.map((node)=>{
@@ -177,15 +177,13 @@ class AccessSettings extends React.Component {
             if(a.url == autoSelectAPI){
                 return -1;
             } else if(a.up && b.up){
-                if(a.ping < b.ping) return -1;
-                if(a.ping === b.ping) return 0;
-                if(a.ping > b.ping) return 1;
+                return a.ping - b.ping;
             } else if(!a.up && !b.up){
-                return 0;
+                return 1;
             } else if(a.up && !b.up){
                 return -1;
             } else if(b.up && !a.up){
-                return -1;
+                return 1;
             }
 
             return 0;
@@ -199,16 +197,16 @@ class AccessSettings extends React.Component {
 
             <div className="available-nodes" style={{position: "relative", marginBottom: "2em"}}>
                 <Translate component="p" content="settings.available_nodes" />
-                <a href="#" onClick={props.triggerModal.bind(this)} style={{position: "absolute", right: 0, top: "5px"}} >
+                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#4A90E2"}} >
                     <Translate id="add" component="span" content="settings.add_api" />
-                </a>
-                { 
-                    nodes.map((node)=>{ 
+                </span>
+                {
+                    nodes.map((node)=>{
                         return renderNode(node, true);
                     })
                 }
             </div>
-        </div> 
+        </div>
     }
 }
 

@@ -51,7 +51,8 @@ class Row extends React.Component {
     };
 
     static defaultProps = {
-        dynGlobalObject: "2.1.0"
+        dynGlobalObject: "2.1.0",
+        tempComponent: "tr"
     };
 
     constructor(props) {

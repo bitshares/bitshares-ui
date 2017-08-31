@@ -109,6 +109,7 @@ class Transfer extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
+        if (!asset) return;
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn(["balances", feeAmount.asset_id]);
         if (!asset || ! from_account) return;
@@ -428,7 +429,7 @@ class Transfer extends React.Component {
                                 asset={fee_asset_types.length && feeAmount ? feeAmount.asset_id : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
                                 assets={fee_asset_types}
                                 tabIndex={tabIndex++}
-                                error={!this.state.hasPoolBalance ? "transfer.errors.insufficient" : null}
+                                error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
                             />
                             {propose ?
                                 <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
