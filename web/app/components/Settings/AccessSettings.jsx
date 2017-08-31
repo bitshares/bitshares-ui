@@ -177,15 +177,13 @@ class AccessSettings extends React.Component {
             if(a.url == autoSelectAPI){
                 return -1;
             } else if(a.up && b.up){
-                if(a.ping < b.ping) return -1;
-                if(a.ping === b.ping) return 0;
-                if(a.ping > b.ping) return 1;
+                return a.ping - b.ping;
             } else if(!a.up && !b.up){
-                return 0;
+                return 1;
             } else if(a.up && !b.up){
                 return -1;
             } else if(b.up && !a.up){
-                return -1;
+                return 1;
             }
 
             return 0;
