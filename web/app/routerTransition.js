@@ -16,6 +16,7 @@ const latencyChecks = ss.get("latencyChecks", 1);
 let apiLatenciesCount = Object.keys(apiLatencies).length;
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
+import SettingsActions from "actions/SettingsActions";
 
 ChainStore.setDispatchFrequency(20);
 
@@ -45,8 +46,8 @@ const filterAndSortURLs = (count, latencies) => {
 };
 
 const willTransitionTo = (nextState, replaceState, callback) => {
-    if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 25 connect attempts we refresh the api latency list
-    if (latencyChecks >= 25) {
+    if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
+    if (latencyChecks >= 15) {
         apiLatenciesCount = 0;
         ss.set("latencyChecks", 0);
     }
@@ -91,8 +92,17 @@ const willTransitionTo = (nextState, replaceState, callback) => {
             urls = filterAndSortURLs(0, latencies);
             ss.set("apiLatencies", latencies);
             connectionManager.urls = urls;
+            /* Update the latencies object */
+            SettingsActions.updateLatencies(latencies);
         }
+        let latencies = ss.get("apiLatencies", {});
+        let connectionStart = new Date().getTime();
         connectionManager.connectWithFallback(connect).then(() => {
+            /* Update the latencies object and current active node */
+            latencies[connectionManager.url] = new Date().getTime() - connectionStart;
+            SettingsActions.changeSetting({setting: "apiServer", value: connectionManager.url});
+            SettingsActions.updateLatencies(latencies);
+
             var db;
             try {
                 db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
@@ -138,10 +148,11 @@ const willTransitionTo = (nextState, replaceState, callback) => {
     }));
 
 
-    // Every 25 connections we check the latencies of the full list of nodes
+    // Every 15 connections we check the latencies of the full list of nodes
     if (connect && !apiLatenciesCount && !connectionCheckPromise) connectionManager.checkConnections().then((res) => {
         console.log("Connection latencies:", res);
         ss.set("apiLatencies", res);
+        SettingsActions.updateLatencies(res);
     });
 };
 
