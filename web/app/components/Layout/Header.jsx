@@ -297,7 +297,8 @@ class Header extends React.Component {
             </ActionSheet.Content>
         </ActionSheet>;
 
-        const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
+        //const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
+	const enableDepositWithdraw = "4018d784";
 
         return (
             <div className="header menu-group primary">
