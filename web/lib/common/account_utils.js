@@ -1,6 +1,7 @@
 import {ChainStore} from "bitsharesjs/es";
 import utils from "./utils";
 import counterpart from "counterpart";
+import { estimateFee } from "./trxHelper";
 
 export default class AccountUtils {
 
@@ -33,7 +34,7 @@ export default class AccountUtils {
 
         let globalObject = ChainStore.getObject("2.0.0");
 
-        let fee = utils.estimateFee(operation, null, globalObject);
+        let fee = estimateFee(operation, null, globalObject);
 
         let accountBalances = account.get("balances");
         if (!accountBalances) {
@@ -117,7 +118,10 @@ export default class AccountUtils {
             "btc38.com",
             "yunbi.com",
             "coinbase.com",
-            "ripple.com"
+            "ripple.com",
+            "livecoi-net",
+            "livecoin.net",
+            "livecoinnet"
         ];
 
         let scamMessage = null;

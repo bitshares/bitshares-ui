@@ -15,12 +15,14 @@ function split_into_sections(str) {
     let sections = str.split(/\[#\s?(.+?)\s?\]/);
     if (sections.length === 1) return sections[0];
     if (sections[0].length < 4) sections.splice(0, 1);
-    sections = reduce(sections, (result, n) => {
-        let last = result.length > 0 ? result[result.length-1] : null;
-        if (!last || last.length === 2) { last = [n]; result.push(last); }
-        else last.push(n);
-        return result;
-    }, []);
+
+    for (let i = sections.length - 1; i >= 1; i -= 2) {
+        // remove extra </p> and <p>
+        sections[i] = sections[i].replace(/(^<\/p>|<p>$)/g, '');
+        sections[i - 1] = [sections[i - 1], sections[i]];
+        sections.splice(i, 1);
+    }
+
     return zipObject(sections);
 }
 

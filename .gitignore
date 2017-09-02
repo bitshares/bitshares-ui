@@ -14,3 +14,5 @@ web/dist-prod
 web/stats*
 web/hash-history
 docs/_build/
+*.swp
+*.python-version

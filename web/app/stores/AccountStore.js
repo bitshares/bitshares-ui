@@ -400,7 +400,7 @@ class AccountStore extends BaseStore {
 
         // Add to unFollow
         this.state.unFollowedAccounts = this.state.unFollowedAccounts.add(name);
-        this.checkAccountRefs();
+        this._addIgnoredAccount(name);
         // Limit to maxEntries accounts
         let maxEntries = 50;
         if (this.state.unFollowedAccounts.size > maxEntries) {
@@ -412,8 +412,9 @@ class AccountStore extends BaseStore {
         // Update current account if no accounts are linked
         if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
+        } else {
+            this.setCurrentAccount(this.state.linkedAccounts.first());
         }
-
     }
 
     checkAccountRefs() {

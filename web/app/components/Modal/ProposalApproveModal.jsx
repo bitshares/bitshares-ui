@@ -1,6 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import Modal from "react-foundation-apps/src/modal";
+import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
@@ -291,17 +291,14 @@ export default class ModalWrapper extends React.Component {
         let {modalId, proposal} = this.props;
 
         return (
-            <Modal id={modalId} overlay={true} ref={modalId}>
-                <Trigger close={modalId}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>
+            <BaseModal id={modalId} overlay={true} ref={modalId}>
                 {this.state.open ? (
                 <div className="grid-block vertical">
                     <FirstLevel
                         {...this.props}
                     />
                 </div>) : null}
-            </Modal>
+            </BaseModal>
         );
     }
 }

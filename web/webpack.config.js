@@ -73,13 +73,14 @@ module.exports = function(env) {
 
         // WRAP INTO CSS FILE
         const extractCSS = new ExtractTextPlugin("app.css");
-        cssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
-            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+        cssLoaders = ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
                 plugins: [require("autoprefixer")]
             }}]}
         );
-        scssLoaders = extractCSS.extract({fallbackLoader: "style-loader",
-            loader: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
+        scssLoaders = ExtractTextPlugin.extract({fallback: "style-loader",
+            use: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
                 plugins: [require("autoprefixer")]
             }}, {loader: "sass-loader", options: {outputStyle: "expanded"}}]}
         );
@@ -95,6 +96,7 @@ module.exports = function(env) {
             minimize: true,
             debug: false
         }));
+        plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
         if (!env.noUgly) {
 
             plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -167,7 +169,7 @@ module.exports = function(env) {
                 { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
                 {
                     test: /\.css$/,
-                    loader: cssLoaders
+                    use: cssLoaders
                 },
 
                 // var cssLoaders = "style-loader!css-loader!postcss-loader",
@@ -175,7 +177,7 @@ module.exports = function(env) {
 
                 {
                     test: /\.scss$/,
-                    loader: scssLoaders
+                    use: scssLoaders
                 },
                 {
                     test: /\.png$/,

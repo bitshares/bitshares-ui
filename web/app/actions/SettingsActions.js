@@ -54,6 +54,10 @@ class SettingsActions {
             });
         };
     }
+
+    updateLatencies(latencies) {
+        return latencies;
+    }
 }
 
 export default alt.createActions(SettingsActions);

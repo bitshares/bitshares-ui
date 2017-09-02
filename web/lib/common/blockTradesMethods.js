@@ -94,6 +94,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
 
             blocktradesBackedCoins.push({
                 name: coins_by_type[coin_type.backingCoinType].name,
+                intermediateAccount: coins_by_type[coin_type.backingCoinType].intermediateAccount,
+                gateFee: coins_by_type[coin_type.backingCoinType].gateFee,
                 walletType: coins_by_type[coin_type.backingCoinType].walletType,
                 backingCoinType: coins_by_type[coin_type.backingCoinType].walletSymbol,
                 symbol: coin_type.walletSymbol,
@@ -115,7 +117,35 @@ export function validateAddress({url = blockTradesAPIs.BASE, walletType, newAddr
         }).then(reply => reply.json().then( json => json.isValid))
         .catch(err => {
             console.log("validate error:", err);
-        })
+        });
+}
+
+let _conversionCache = {};
+export function getConversionJson(inputs) {
+    const { input_coin_type, output_coin_type, url, account_name } = inputs;
+    if (!input_coin_type || !output_coin_type) return Promise.reject();
+    const body = JSON.stringify({
+        inputCoinType: input_coin_type,
+        outputCoinType: output_coin_type,
+        outputAddress: account_name,
+        inputMemo: "blocktrades conversion: " + input_coin_type + "to" + output_coin_type
+    });
+
+    const _cacheString = url + input_coin_type + output_coin_type + account_name;
+    return new Promise((resolve, reject) => {
+        if (_conversionCache[_cacheString]) return resolve(_conversionCache[_cacheString]);
+        fetch(url + "/simple-api/initiate-trade", {
+            method:"post",
+            headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
+            body: body
+        }).then(reply => { reply.json()
+            .then( json => {
+                _conversionCache[_cacheString] = json;
+                resolve(json);
+            }, reject)
+            .catch(reject);
+        }).catch(reject);
+    });
 }
 
 function hasWithdrawalAddress(wallet) {

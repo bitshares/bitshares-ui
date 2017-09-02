@@ -359,6 +359,10 @@ select.bts-select {
     appearance: menulist;
 }
 
+.windows select.bts-select {
+    height: 2.35em;
+}
+
 @media screen and (min-width: 900px) {
     .column-show-small {
         display: none !important;

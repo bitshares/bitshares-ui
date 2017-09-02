@@ -521,7 +521,7 @@ class AccountAssetUpdate extends React.Component {
                 <div className="grid-content">
                     <h3><Translate content="header.update_asset" />: {symbol}</h3>
 
-                        <Tabs setting="updateAssetTab" style={{maxWidth: "800px"}} contentClass="grid-block shrink small-vertical medium-horizontal">
+                        <Tabs setting="updateAssetTab" contentClass="grid-block shrink small-vertical medium-horizontal">
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-8 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>

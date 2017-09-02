@@ -81,9 +81,11 @@ class CandleStickChartWithZoomPan extends React.Component {
             }
             case 27: { // ESC
                 if (ref) ref.terminate();
-                this.setState({
-                    [enableFib]: false
-                });
+                try { // modal uses escape event as well, and this line throws an exception
+                  this.setState({
+                      [enableFib]: false
+                  });
+                } catch(e){}
                 break;
             }
         }
@@ -411,6 +413,7 @@ export default class Wrapper extends React.Component {
             !utils.are_equal_shallow(np.tools, this.props.tools) ||
             !utils.are_equal_shallow(ns, this.state) ||
             np.height !== this.props.height ||
+            np.chartHeight !== this.props.chartHeight ||
             np.width !== this.props.width ||
             np.leftOrderBook !== this.props.leftOrderBook ||
             np.zoom !== this.props.zoom ||

@@ -437,7 +437,7 @@ class AccountOverview extends React.Component {
                                 style={{position: "absolute", top: 0, right: 0}}
                                 onClick={this._toggleHiddenAssets.bind(this)}
                             >
-                                <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.length - 1})</span>
+                                <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.reduce((count, a) => {if (a.key.indexOf("hidden") === -1) return count + 1; return count;}, 0)})</span>
                             </div> : null}
                         </div>
                         <table className="table">

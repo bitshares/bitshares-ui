@@ -151,7 +151,6 @@
       "required":"Требуется монето-дней",
       "remaining":"Осталось дней вестингового периода",
       "claim":"Востребовать сейчас",
-      "claim_all":"Попытаться востребовать всё",
       "available":"Доступно к востребованию",
       "referral_link":"Ваша реферальная ссылка",
       "referral_text":"Дайте эту ссылку людям, которых Вы хотите пригласить в BitShares"
@@ -376,7 +375,9 @@
       "pos":"Сумма должна быть положительной",
       "valid":"Пожалуйста, введите правильное, положительное число",
       "balance":"Окончательный баланс должен быть больше нуля",
-      "insufficient":"Недостаточный баланс"
+      "insufficient":"Недостаточный баланс",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back":"НАЗАД",
     "confirm":"ПОДТВЕРДИТЬ",
@@ -768,7 +769,7 @@
     "remove_ws":"Удалить WebSocket API",
     "faucet_address":"Адрес сервера-крана (faucet)",
     "showSettles":"Показать ордера на погашение ордера на графике глубины",
-    "showAssetPercent":"Показать процентное соотношение активов на на странице аккаунтов",
+    "showAssetPercent":"Показать процентное соотношение активов на странице аккаунтов",
     "yes":"Да",
     "no":"Нет",
     "walletLockTimeout":"Время автоблокировки кошелька (в секундах, 0 - для отключения)",
@@ -875,6 +876,8 @@
     "change":"Изменение",
     "confirm_buy":"Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
     "confirm_sell":"Ваш ордер в %(diff)s раз ниже, чем самая высокая ставка, Вы уверены?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "indicators":"Индикаторы",
     "rsi":"Индекс относительной прочности",
     "ema":"Экспоненциальная скользящая средняя",
@@ -1169,6 +1172,7 @@
     "fee_paying_account":"Аккаунт, платящий комиссию"
   },
   "gateway":{
+    "fee": "Gateway fee",
     "title":"Пополнение и Вывод",
     "assets":{
       "open":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",
@@ -1225,16 +1229,30 @@
     "gateway_text":"Здесь выберите, хотите ли Вы разместить депозит или вывести средства",
     "fiat_text":"Пополнение депозита и вывод фиатных денег производится с помощью OpenLedger. Чтобы начать, Вам необходимо завершить процесс регистрации. Доступны следующие виды конверсии:",
     "transwiser":{
+      "channel":{
+        "withdraw":{
+          "alipay":"ALIPAY",
+          "weixin_pay":"WeChat Pay",
+          "bank_wire":"Банковский перевод"
+        }
+      },
+      "fee":"Комиссия",
+      "fee_min":"Минимум",
       "gateway":"Transwiser\n",
       "visit_weidian":"Посетить депозит",
       "deposit_title":"Внести юани (RMB) в %(asset)s",
-      "withdraw_title":"Вывести %(asset)s в юанях (RMB)",
-      "alipay":"Имя аккаунта в ALIPAY",
+      "withdraw_title":"Вывести %(asset)s на %(channel)s",
+      "alipay_account":"Имя аккаунта в ALIPAY",
       "memo":"Примечание",
       "alipay_account_name_notice":"Обычно это имя Вашего аккаунта на Alipay или номер мобильного телефона",
+      "alipay_realname":"Настоящее имя",
       "alipay_realname_notice":"Для вывода на Alipay, пожалуйста, укажите в поле ПРИМЕЧАНИЕ Ваше настоящее имя для проверки",
       "withdraw_note":"В данный момент поддерживается только вывод средств с помощью ALIPAY. Ваш актив будет конвертирован в юани (RMB) в соотношении 1:1 и отправлен на Ваш ALIPAY аккаунт",
-      "you_will_receive":"Вы получите %(amount)s юани (RMB)"
+      "you_will_receive":"Вы получите %(amount)s юани (RMB)",
+      "bank_name":"Название банка",
+      "bank_branch":"Филиал",
+      "bank_account":"Номер счета",
+      "bank_holder":"Имя владельца"
     },
     "meta":{
       "open_website":"Открыть веб-сайт"
@@ -1260,5 +1278,8 @@
     "disabled":"Чат отключен",
     "enable":"Включить чат",
     "telegram_link":"Более активное обсуждение ведется в группе BitShares в Telegram: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+  },
+  "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+      }
 }
