@@ -44,11 +44,10 @@ class BitKapital extends React.Component {
  //       </iframe>;
 
 	// interim maintenance tout per issue #341 
-	return (
+	return 
 		<div style={{width: "100%", border: 0, minHeight: 600}}>
 		Onarim / Under Maintenance 
-		</div>
-	);
+		</div>;
     }
 
     _renderWithdrawals() {
