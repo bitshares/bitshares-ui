@@ -228,7 +228,7 @@ class Header extends React.Component {
         (<ActionSheet.Button title="" setActiveState={() => {}}>
             <a onClick={this._accountClickHandler.bind(this, account_display_name)} style={{cursor: "default", padding: "1rem", border: "none"}} className="button">
                 <div className="table-cell"><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></div>
-                <div className="table-cell" style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></div>
+                <div className="table-cell" style={{paddingLeft: 5, paddingBottom: 5}}><div className="inline-block"><span style={{textTransform: "lowercase"}}>{account_display_name}</span></div></div> 
             </a>
         </ActionSheet.Button>) :
 
@@ -236,7 +236,7 @@ class Header extends React.Component {
             <ActionSheet.Button title="">
                 <a style={{padding: "1rem", border: "none"}} className="button">
                     <div className="table-cell"><AccountImage style={{display: "inline-block"}} size={{height: 20, width: 20}} account={account_display_name}/></div>
-                    <div className="table-cell" style={{paddingLeft: 5}}><div className="inline-block"><span>{account_display_name}</span></div></div>
+                    <div className="table-cell" style={{paddingLeft: 5, paddingBottom: 5}}><div className="inline-block"><span style={{textTransform: "lowercase"}}>{account_display_name}</span></div></div>
                 </a>
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
