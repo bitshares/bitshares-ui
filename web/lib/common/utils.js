@@ -159,7 +159,7 @@ var Utils = {
         }  else if (fixedPrecisionAssets[quoteID]) {
             priceText = this.format_number(price, fixedPrecisionAssets[quoteID]);
         } else {
-            priceText = this.format_number(price, Math.min(maxDecimals, quotePrecision + basePrecision));
+            priceText = this.format_number(price, Math.min(maxDecimals, Math.max(quotePrecision + basePrecision, 2)));
         }
         return priceText;
     },
@@ -172,7 +172,6 @@ var Utils = {
         if (price === Infinity) {
             price = 0;
         }
-        let precision;
         let priceText;
 
         if (forcePrecision) {
