@@ -345,7 +345,6 @@ class BorrowModalContent extends React.Component {
                                     <span className="borrow-price-label"><Translate content="transaction.feed_price" />:&nbsp;</span>
                                     <FormattedPrice
                                         decimals={2}
-                                        callPrice
                                         noPopOver
                                         quote_amount={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
                                         quote_asset={quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "asset_id"])}
@@ -375,7 +374,6 @@ class BorrowModalContent extends React.Component {
                                 {this.state.newPosition ?
                                     <FormattedPrice
                                         decimals={2}
-                                        callPrice
                                         noPopOver
                                         quote_amount={maintenanceRatio * this.state.short_amount * quotePrecision}
                                         quote_asset={quote_asset.get("id")}
