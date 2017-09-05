@@ -1,5 +1,5 @@
 import React from "react";
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
 export default class TransitionWrapper extends React.Component {
 
@@ -50,7 +50,7 @@ export default class TransitionWrapper extends React.Component {
             return React.createElement(this.props.component);
         } else {
             return (
-                <ReactCSSTransitionGroup
+                <CSSTransitionGroup
                     className={this.props.className}
                     component={this.props.component}
                     transitionName={this.props.transitionName}
@@ -59,7 +59,7 @@ export default class TransitionWrapper extends React.Component {
                     transitionLeave={false}
                 >
                     {this.props.children}
-                </ReactCSSTransitionGroup>
+                </CSSTransitionGroup>
             );
         }
     }
