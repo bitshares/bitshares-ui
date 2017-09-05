@@ -1,4 +1,5 @@
 import React, {PropTypes} from "react";
+import {isFinite} from "lodash";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -47,12 +48,10 @@ class BorrowModalContent extends React.Component {
 
     _initialState(props) {
         let currentPosition = props ? this._getCurrentPosition(props) : {};
-        let isPredictionMarket = this._isPredictionMarket(props);
 
         if (currentPosition.collateral) {
             let debt = utils.get_asset_amount(currentPosition.debt, props.quote_asset);
             let collateral = utils.get_asset_amount(currentPosition.collateral, props.backing_asset);
-
             return {
                 short_amount: debt ? debt.toString() : null,
                 collateral: collateral ? collateral.toString() : null,
@@ -68,7 +67,7 @@ class BorrowModalContent extends React.Component {
             return {
                 short_amount: 0,
                 collateral: 0,
-                collateral_ratio: isPredictionMarket ? 1 : 0,
+                collateral_ratio: this._getInitialCollateralRatio(props),
                 errors: this._getInitialErrors(),
                 isValid: false,
                 original_position: {
@@ -136,6 +135,7 @@ class BorrowModalContent extends React.Component {
         let amount = e.amount.replace( /,/g, "" );
 
         let feed_price = this._getFeedPrice();
+        const collateralRatio = amount / (this.state.short_amount / feed_price);
 
         let newState = this._isPredictionMarket(this.props) ? {
             short_amount: amount,
@@ -144,7 +144,7 @@ class BorrowModalContent extends React.Component {
         } : {
             short_amount: this.state.short_amount,
             collateral: amount,
-            collateral_ratio: amount / (this.state.short_amount / feed_price)
+            collateral_ratio: isFinite(collateralRatio) ? collateralRatio : this._getInitialCollateralRatio(this.props),
         }
 
         this.setState(newState);
@@ -262,6 +262,10 @@ class BorrowModalContent extends React.Component {
             this.props.quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"]),
             this.props.quote_asset
         );
+    }
+
+    _getInitialCollateralRatio(props) {
+        return this._isPredictionMarket(props) ? 1 : 0
     }
 
     _getCollateralRatio(debt, collateral) {
