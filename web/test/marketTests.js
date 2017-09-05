@@ -107,6 +107,16 @@ describe("Asset", function() {
         assert.equal(asset.hasAmount(), false, "Price should not be valid");
     });
 
+    it("Parses string amounts to numbers", function() {
+        let asset = new Asset();
+        asset.setAmount({sats: "123"});
+
+        assert.equal(asset.getAmount(), 123);
+
+        asset.setAmount({real: "123.23223"});
+        assert.equal(asset.getAmount(), 12323223);
+    });
+
     it("Throws when setAmount args are not set or incorrect", function() {
         let asset = new Asset();
 
@@ -115,11 +125,11 @@ describe("Asset", function() {
         }, Error);
 
         assert.throws(function() {
-            asset.setAmount({real: "2.2323"});
+            asset.setAmount({});
         }, Error);
 
         assert.throws(function() {
-            asset.setAmount({sats: "2.2323"});
+            asset.setAmount({real: undefined});
         }, Error);
     });
 
