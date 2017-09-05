@@ -48,9 +48,8 @@ class OrderRow extends React.Component {
 
     render() {
         let {base, quote, order, showSymbols} = this.props;
-        let {value, price, amount} = market_utils.parseOrder(order, base, quote);
-        let isAskOrder = market_utils.isAsk(order, base);
-        let tdClass = classNames({orderHistoryBid: !isAskOrder, orderHistoryAsk: isAskOrder});
+        const isBid = order.isBid();
+        let tdClass = classNames({orderHistoryBid: isBid, orderHistoryAsk: !isBid});
 
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
@@ -59,11 +58,11 @@ class OrderRow extends React.Component {
         return (
             <tr key={order.id}>
                 <td style={{width: "18%"}} className={tdClass}>
-                    <PriceText preFormattedPrice={price} />
+                    <PriceText price={order.getPrice()} base={base} quote={quote} />
                     {priceSymbol}
                 </td>
-                <td style={{width: "18%"}}>{utils.format_number(amount, quote.get("precision"))} {amountSymbol}</td>
-                <td style={{width: "18%"}}>{utils.format_number(value, base.get("precision"))} {valueSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
                 <td style={{width: "28%"}}><FormattedDate
                     value={order.expiration}
                     format="short"
