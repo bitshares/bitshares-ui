@@ -660,6 +660,7 @@
     "asset": {
       "title": "资产",
       "not_found": "资产 %(name)s 不存在",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "资产类型",
         "issuer": "发行人",

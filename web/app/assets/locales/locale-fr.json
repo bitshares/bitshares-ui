@@ -370,7 +370,8 @@
     },
     "asset": {
       "title": "Actif",
-      "not_found": "L'actif %(name)s n'existe pas"
+      "not_found": "L'actif %(name)s n'existe pas",
+      "invalid": "The asset name %(name)s is invalid"
     },
     "witnesses": {
       "title": "Témoins"

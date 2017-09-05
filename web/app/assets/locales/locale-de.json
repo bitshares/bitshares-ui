@@ -554,6 +554,7 @@
     "asset": {
       "title": "Asset",
       "not_found": "Das Asset %(name)s existiert nicht",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Asset Typ",
         "issuer": "herausgeber",

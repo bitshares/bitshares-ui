@@ -20,6 +20,7 @@ import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
+import {ChainValidation} from "bitsharesjs/es";
 
 let lastLookup = new Date();
 
@@ -384,11 +385,23 @@ class MyMarkets extends React.Component {
     }
 
     _onInputName(e) {
-        let inputValue = e.target.value.toUpperCase();
+        let inputValue = e.target.value.trim().toUpperCase();
+        let isValidName = !ChainValidation.is_valid_symbol_error(inputValue, true);
+
         this.setState({
             inputValue
         });
 
+        /* Don't lookup invalid asset names */
+        if (inputValue && inputValue.length >= 3 && !isValidName) {
+            return this.setState({
+                assetNameError: true
+            });
+        } else {
+            this.setState({
+                assetNameError: false
+            });
+        }
         this._lookupAssets(inputValue);
     }
 
@@ -693,6 +706,10 @@ class MyMarkets extends React.Component {
                                             placeholder={counterpart.translate("exchange.search")}
                                             maxLength="16"
                                         />
+                                        {this.state.assetNameError ?
+                                            <div className="error-area" style={{paddingTop: 10}}>
+                                                <span style={{wordBreak: "break-all"}}><Translate content="explorer.asset.invalid" name={this.state.inputValue} /></span>
+                                            </div> : null}
                                     </td>
                                 </tr>
                             </tbody>
