@@ -663,6 +663,7 @@
     "asset": {
       "title": "Asset",
       "not_found": "The asset %(name)s does not exist",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Asset type",
         "issuer": "Issuer",

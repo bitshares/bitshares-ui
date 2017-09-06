@@ -449,6 +449,7 @@
     "asset": {
       "title": "자산",
       "not_found": "자산 %(name)s이 존재하지 않음",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "자산 종류",
         "issuer": "발행자",

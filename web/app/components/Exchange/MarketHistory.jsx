@@ -85,7 +85,7 @@ class MarketHistory extends React.Component {
                 return hasQuote && hasBase;
             })
             .sort((a, b) => {
-                return a.get("block_num") - a.get("block_num");
+                return b.get("block_num") - a.get("block_num");
             })
             .map(trx => {
                 let order  = trx.toJS().op[1];

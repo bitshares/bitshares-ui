@@ -654,6 +654,7 @@
     "asset": {
       "title": "Aktif",
       "not_found": "%(name)s diye bir dijital varlık mevcut değil",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Dijital varlık türü",
         "issuer": "İhraç Eden",

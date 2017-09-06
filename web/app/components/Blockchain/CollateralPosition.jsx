@@ -10,7 +10,6 @@ import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import {Link} from "react-router";
 
 const wallet_api = new WalletApi();
 /**
@@ -163,7 +162,6 @@ class CollateralPosition extends React.Component {
                 <td data-place="bottom" data-tip={this._getCRTip()} className={"center-content "+ statusClass} >{utils.format_number(cr, 2)}</td>
                 <td className={"center-content column-hide-small"}>
                     <FormattedPrice
-                        callPrice
                         decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}

@@ -448,6 +448,7 @@
     "asset": {
       "title": "Activo",
       "not_found": "El activo %(name)s no existe",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Tipo de Activo",
         "issuer": "Emisor",

@@ -80,7 +80,6 @@ class OrderBookRowHorizontal extends React.Component {
                     {price}
                 </td>
                 }
-
             </tr>
         );
 
@@ -354,7 +353,7 @@ class OrderBook extends React.Component {
             }
 
             let leftHeader = (
-                <thead ref="leftHeader">
+                <thead>
                     <tr key="top-header" className="top-header">
                         <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName dataPlace="top" name={baseSymbol} />)</span></th>
                         <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
@@ -367,7 +366,7 @@ class OrderBook extends React.Component {
             );
 
             let rightHeader = (
-                <thead ref="rightHeader">
+                <thead>
                     <tr key="top-header" className="top-header">
                         <th style={{width: "25%", textAlign: "right"}}>
                             <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />

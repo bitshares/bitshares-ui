@@ -7,7 +7,6 @@ import counterpart from "counterpart";
 import FloatingDropdown from "./FloatingDropdown";
 import FormattedAsset from "./FormattedAsset";
 import Immutable from "immutable";
-import utils from "common/utils";
 
 class AssetDropdown extends React.Component {
 
@@ -65,10 +64,10 @@ class AssetSelector extends React.Component {
         return this.props.asset;
     }
 
-    getError() {
+    getError(input = this.props.assetInput) {
         let error = this.props.error;
-        if (!error && this.props.assetInput && !this.getNameType(this.props.assetInput))
-            error = counterpart.translate("asset.errors.invalid");
+        if (!error && input && !this.getNameType(input))
+            error = counterpart.translate("explorer.asset.invalid", {name: input});
         return error;
     }
 
@@ -115,7 +114,7 @@ class AssetSelector extends React.Component {
 
     render() {
         let {disabled, noLabel} = this.props;
-        let error; // = this.getError();
+        let error = this.getError();
         let lookup_display;
         if (!disabled) {
             if (this.props.asset) {

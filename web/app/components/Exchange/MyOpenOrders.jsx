@@ -123,7 +123,7 @@ class MyOpenOrders extends React.Component {
                 return b_price.full - a_price.full;
             }).map(order => {
                 let {price} = market_utils.parseOrder(order, base, quote);
-                return <OrderRow price={price.full} ref="orderRow" key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
             }).toArray();
 
             asks = orders.filter(a => {
@@ -140,7 +140,7 @@ class MyOpenOrders extends React.Component {
 
         } else {
             return (
-                <div key="open_orders" className="grid-content text-center ps-container" ref="orders">
+                <div key="open_orders" className="grid-content text-center ps-container">
                     <table className="table order-table my-orders text-right table-hover">
                         <tbody>
                             {emptyRow}
@@ -179,7 +179,7 @@ class MyOpenOrders extends React.Component {
                 style={{marginBottom: "15px"}}
                 key="open_orders"
                 className={this.props.className}
-                ref="orders">
+            >
 
                 <div className="exchange-bordered small-12" style={{height: 266}}>
                     <div className="exchange-content-header">
