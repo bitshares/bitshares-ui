@@ -783,7 +783,7 @@ class MarketsStore {
         combinedBids.sort((a, b) => {
             return b.getPrice() - a.getPrice();
         }).forEach(a => {
-            totalToReceive.plus(a.amountToReceive(false));
+            totalToReceive.plus(a.amountToReceive(true));
             totalForSale.plus(a.amountForSale());
 
             a.setTotalForSale(totalForSale.clone());
@@ -804,7 +804,7 @@ class MarketsStore {
             return a.getPrice() - b.getPrice();
         }).forEach(a => {
             totalForSale.plus(a.amountForSale());
-            totalToReceive.plus(a.amountToReceive(true));
+            totalToReceive.plus(a.amountToReceive(false));
             a.setTotalForSale(totalForSale.clone());
             a.setTotalToReceive(totalToReceive.clone());
         });
