@@ -1,6 +1,6 @@
 {
-    "name": "BitShares-UI",
-    "version": "1.1.0",
+    "name": "BitShares2-light",
+    "version": "2.0.170907",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -69,12 +69,15 @@
     },
     "browsersList": "electron 1.7",
     "build": {
-        "productName": "BitShares2-light",
+        "productName": "BitShares Light Wallet",
         "appId": "org.bitshares.graphene",
         "files": [
             "build/electron",
             "!node_modules"
         ],
+        "mac": {
+            "category": "public.app-category.finance"
+        },
         "dmg": {
             "contents": [
                 {
@@ -95,11 +98,12 @@
             ]
         },
         "linux": {
-            "category": "Test",
+            "category": "Finance",
             "target": [
                 "deb",
                 "AppImage"
-            ]
+            ],
+            "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
         },
         "directories": {
             "buildResources": "resources",
