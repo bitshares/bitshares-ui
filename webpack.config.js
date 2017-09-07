@@ -66,10 +66,10 @@ module.exports = function(env) {
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron ? "electron" : env.hash ? "hash-history" : "dist";
-        outputPath = path.join(root_dir, outputDir);
+        outputPath = path.join(root_dir, "release", outputDir);
 
         // DIRECTORY CLEANER
-        var cleanDirectories = [outputDir];
+        var cleanDirectories = [outputPath];
 
         // WRAP INTO CSS FILE
         const extractCSS = new ExtractTextPlugin("app.css");
@@ -142,7 +142,7 @@ module.exports = function(env) {
             rules: [
                 {
                     test: /\.jsx$/,
-                    include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps"), "/home/sigve/Dev/graphene/react-foundation-apps"],
+                    include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps")],
                     use: [
                         {
                             loader: "babel-loader",
@@ -161,7 +161,7 @@ module.exports = function(env) {
                 {
                     test: /\.json/, loader: "json-loader",
                     exclude: [
-                        path.resolve(root_dir, "lib/common"),
+                        path.resolve(root_dir, "app/lib/common"),
                         path.resolve(root_dir, "app/assets/locales")
                     ]
                 },
@@ -171,10 +171,6 @@ module.exports = function(env) {
                     test: /\.css$/,
                     use: cssLoaders
                 },
-
-                // var cssLoaders = "style-loader!css-loader!postcss-loader",
-                //   scssLoaders =  "style-loader!css-loader!postcss-loader!sass-loader?outputStyle=expanded";
-
                 {
                     test: /\.scss$/,
                     use: scssLoaders
@@ -228,25 +224,13 @@ module.exports = function(env) {
         resolve: {
             modules: [
                 path.resolve(root_dir, "app"),
-                path.resolve(root_dir, "lib"),
+                path.resolve(root_dir, "app/lib"),
                 "node_modules"
             ],
-            extensions: [".js", ".jsx", ".coffee", ".json"],
-            // fallback: [path.resolve(root_dir, "./node_modules")]
-        },
-        resolveLoader: {
-            modules: [path.join(root_dir, "node_modules")],
-            // fallback: [path.resolve(root_dir, "./node_modules")]
+            extensions: [".js", ".jsx", ".coffee", ".json"]
         },
         plugins: plugins
     };
-
-    // if(env.prod) config.entry.vendors = [
-    //     "classnames", "react-router", "highcharts/highstock", "counterpart", "react-translate-component",
-    //     "perfect-scrollbar", "jdenticon", "react-notification-system", "react-tooltip",
-    //     "whatwg-fetch", "alt", "react-json-inspector",
-    //     "immutable", "bitsharesjs"
-    // ];
 
     return config;
 };
