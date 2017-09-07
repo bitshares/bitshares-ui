@@ -66,7 +66,7 @@ module.exports = function(env) {
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron ? "electron" : env.hash ? "hash-history" : "dist";
-        outputPath = path.join(root_dir, "release", outputDir);
+        outputPath = path.join(root_dir, "build", outputDir);
 
         // DIRECTORY CLEANER
         var cleanDirectories = [outputPath];
