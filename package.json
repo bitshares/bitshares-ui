@@ -33,7 +33,7 @@
     "build": "cross-env NODE_ENV=production webpack --env.prod --colors",
     "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl='' --colors",
     "build-github": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl='/wallet/' --colors",
-    "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash --display-error-details --colors",
+    "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash --colors",
     "build-electron-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
     "prepare-electron": "copyfiles -f resources/*.js build/electron/",
     "postbuild-electron": "npm run prepare-electron",
