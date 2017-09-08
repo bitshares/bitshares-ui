@@ -4,10 +4,11 @@
     var app = require('electron').app;
     var BrowserWindow = require('electron').BrowserWindow;
     var Menu = require("electron").Menu;
-    var env = require('./vendor/electron_boilerplate/env_config');
-    var devHelper = require('./vendor/electron_boilerplate/dev_helper');
-    var windowStateKeeper = require('./vendor/electron_boilerplate/window_state');
+    var env = require('./env_config');
+    var devHelper = require('./dev_helper');
+    var windowStateKeeper = require('./window_state');
     var fs = require('fs');
+    // var git = require("git-rev-sync");
 
     var mainWindow;
 
@@ -17,7 +18,7 @@
         height: 800
     });
     global.guid = mainWindowState.guid;
-    global.version = JSON.parse(fs.readFileSync(__dirname + "/package.json")).version;
+    // global.version = JSON.stringify(git.tag());
 
     app.on('ready', function () {
 
