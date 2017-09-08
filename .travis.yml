@@ -2,9 +2,10 @@ language: node_js
 node_js: 7
 matrix:
   include:
-    - os: osx
-    osx_image: xcode8.3
     - os: linux
+      dist: trusty
+    - os: osx
+      osx_image: xcode8.3
 env:
   global:
   - GITHUB_REPO: bitshares/bitshares-ui
