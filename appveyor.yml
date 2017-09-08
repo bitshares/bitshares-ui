@@ -37,5 +37,4 @@ deploy:
   draft: true
   force_update: true
   on:
-    branch: 224-build-automation
     appveyor_repo_tag: true

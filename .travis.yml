@@ -40,5 +40,4 @@ deploy:
   draft: true
   on:
     repo: bitshares/bitshares-ui
-    branch: 224-build-automation
     tags: true
