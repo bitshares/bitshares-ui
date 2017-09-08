@@ -36,6 +36,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         this.state = {
             enableTrendLine: false,
             enableFib: false,
+            clampEnabled: true,
             tools: [],
             priceFormat,
             timeFormatter,
@@ -209,7 +210,7 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
 
     _renderCandleStickChart(chartMultiplier, maCalcs) {
-        const { height, width, showVolumeChart, indicators } = this.props;
+        const { height, width, showVolumeChart, indicators, enableChartClamp } = this.props;
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
             enableFib, calculators } = this.state;
         const { positiveColor, negativeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
@@ -309,7 +310,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 
     render() {
         const { width, priceData, height, ratio, theme, zoom,
-            indicators, showVolumeChart } = this.props;
+            indicators, showVolumeChart, enableChartClamp } = this.props;
         const { timeFormatter, enableFib, enableTrendLine, margin, calculators } = this.state;
         const themeColors = colors[theme];
         const { axisLineColor, indicatorLineColor} = themeColors;
@@ -343,6 +344,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 ratio={ratio} width={width - 20} height={height}
                 seriesName="PriceChart"
                 margin={margin}
+                clamp={enableChartClamp}
                 data={filteredData} calculator={calc}
                 xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
                 xExtents={[filteredData[0].date, filteredData[filteredData.length - 1].date]}
@@ -417,7 +419,8 @@ export default class Wrapper extends React.Component {
             np.width !== this.props.width ||
             np.leftOrderBook !== this.props.leftOrderBook ||
             np.zoom !== this.props.zoom ||
-            np.showVolumeChart !== this.props.showVolumeChart
+            np.showVolumeChart !== this.props.showVolumeChart ||
+            np.enableChartClamp !== this.props.enableChartClamp
         );
     }
 
@@ -559,7 +562,7 @@ export default class Wrapper extends React.Component {
 		});
 
 		/* Tools dropdown */
-		const settingsOptions = ["volume", "height"].map(i => {
+		const settingsOptions = ["volume", "height", "clamp_chart"].map(i => {
 			let content;
 			switch (i) {
 				case "height": {
@@ -580,6 +583,16 @@ export default class Wrapper extends React.Component {
 					content = (
 						<li className="clickable indicator" key={i} onClick={this.props.onToggleVolume}>
 							<input type="checkbox" checked={this.props.showVolumeChart} />
+							<div><Translate content={`exchange.chart_options.${i}`} /></div>
+						</li>
+					);
+					break;
+				}
+
+				case "clamp_chart": {
+					content = (
+						<li className="clickable indicator" key={i} onClick={this.props.onToggleChartClamp}>
+							<input type="checkbox" checked={this.props.enableChartClamp} />
 							<div><Translate content={`exchange.chart_options.${i}`} /></div>
 						</li>
 					);
