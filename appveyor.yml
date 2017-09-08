@@ -1,0 +1,12 @@
+version: 1.0.{build}
+build:
+  verbosity: minimal
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: F/9ssjiE7swLmbl4JXtgpgv40kr3u6q+nbcNCs+Rw2S0VEMYBAXDwmKHQuAH8uDB
+  artifact: build\binaries\*.exe
+  draft: true
+  force_update: true
+  on:
+    branch: 224-build-automation
