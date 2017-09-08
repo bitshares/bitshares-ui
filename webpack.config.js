@@ -9,9 +9,9 @@ require("es6-promise").polyfill();
 var root_dir = path.resolve(__dirname);
 
 module.exports = function(env) {
-    if (!env.profile) {
-        console.log("env:", env);
-    }
+    // if (!env.profile) {
+    //     console.log("env:", env);
+    // }
     // console.log(env.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = [
