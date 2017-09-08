@@ -14,16 +14,12 @@ cache:
 before_package:
   echo Before package
 after_test:
-  echo After test
-  7z a build\html_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  7z a build\html_dist_hash_history_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
+  - 7z a build\html_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
+  - 7z a build\html_dist_hash_history_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
 test_script:
   - npm run package
   - npm run build
   - npm run build-hash
-after_build:
-  7z a build\html_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  7z a build\html_dist_hash_history_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
 artifacts:
   - path: build\binaries\*.exe
     name: WindowsApp
