@@ -1,5 +1,9 @@
 language: node_js
 node_js: 7
+matrix:
+  include:
+    - os: osx
+    - os: linux
 env:
   global:
   - GITHUB_REPO: bitshares/bitshares-ui
