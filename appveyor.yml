@@ -9,6 +9,14 @@ install:
 build: off
 platform:
   - x64
+cache:
+  - node_modules
+before_package:
+  echo Before package
+after_test:
+  echo After test
+  7z a build\html_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
+  7z a build\html_dist_hash_history_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
 test_script:
   - npm run package
   - npm run build
@@ -23,8 +31,8 @@ artifacts:
     name: html
 deploy:
   provider: GitHub
-  release: $(appveyor_repo_tag_name)
-  description: "GUI release"
+  release: $APPVEYOR_REPO_TAG_NAME
+  description: "Automated GUI release"
   auth_token:
     secure: F/9ssjiE7swLmbl4JXtgpgv40kr3u6q+nbcNCs+Rw2S0VEMYBAXDwmKHQuAH8uDB
   artifact: WindowsApp, html
