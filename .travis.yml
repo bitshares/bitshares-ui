@@ -13,7 +13,7 @@
 #
 
 language: node_js
-node_js: 6
+node_js: 7
 env:
   global:
   - GITHUB_REPO: bitshares/bitshares-ui
@@ -26,6 +26,9 @@ addons:
     packages:
     - gcc-4.8
     - g++-4.8
+    - icnsutils
+    - graphicsmagick
+    - xz-utils
 before_install: "./install.sh"
 script: "./build.sh"
 after_success: "./deploy.sh"
