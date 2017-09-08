@@ -40,10 +40,10 @@
     "postbuild-electron-nougly": "npm run prepare-electron",
     "build-win32": "cross-env NODE_ENV=production && webpack --env.prod --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'",
     "prepackage": "npm run build-electron",
-    "package": "build",
-    "package-deb": "npm run prepackage && build --linux deb",
-    "package-win": "npm run prepackage && build --windows",
-    "package-mac": "npm run prepackage && build --mac dmg"
+    "package": "build -p never",
+    "package-deb": "npm run prepackage && build  -p never --linux deb",
+    "package-win": "npm run prepackage && build  -p never --windows",
+    "package-mac": "npm run prepackage && build  -p never --mac dmg"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",

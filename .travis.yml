@@ -20,7 +20,6 @@ script: "./build.sh"
 after_success: "./deploy.sh"
 deploy:
   provider: releases
-  tag_name: $TRAVIS_TAG
   api_key:
     secure: K+62i3Rky9rXJyO6UMTLyY+GHfQtRMpEX9bLQFyZERSdmPK5l0Xq3ivBfESczoGsIxoPuVvWLOx/ZAh+I+67izS28i5LowQKLFQQ1h1b82ilexlprkj+Gf5QE3CWk04rR4OiIv4eXJLShqnGOQ7SuyI/UHW7iwTqAOt22YWWWPazlM75JwXQBYdHZ5vY2axXW493WGnRcLqzmRBwo2Ggkieqt8QiYYtvdk4yA81qbtIK6TxLzz6pc9fW/q+r+HoB0s81djlHmOByughEgc/mW+7xB3mM2uB8katNVbGa2qgZ/NS031b04ZSe8V8JHzC6UIBU8IKuFrxm3cpFN7onYDDfKs+6x+u5LCavw3VanHCgTd4dA4Jisew2Q19YhqymYYHmhMuwLh8y8XW8V7BrNNi9qjknKodaB8SFN1PZYe29LnG07hmZWwnBkVEIXf2QwcL+yfZtJ9NmLWyktnCpj4urtz3qQOG4nkbrn9mGx+jINgfzk4bpN6jNk0wwe9yqFy7nsZxow8vHf31hICwZZl8borz6fZhW9WVDqS9bZs/Ts4Qk3U4WREdmB24eIV8W5DIliSH/5qFh0RIRDCHKisom8r2XdBATe7hJ1t+YZR0N80q2IPwgTPdVtUuHTE1YkPcu0eILgA/YUAWNu1yoSNQUYScKA2i382gOBl06CS0=
   file_glob: true
