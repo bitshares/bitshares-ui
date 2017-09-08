@@ -91,11 +91,14 @@ On Linux you will need to install the following packages to handle icon generati
 
 `sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils`
 
-OSX / Linux / Windows instructions:
+For building, each architecture has it's own script that you can use to build your native binary:
 
-```
-npm run package
-```
+__Linux__
+`npm run package-deb`
+__Windows__
+`npm run package-win`
+__Mac__
+`npm run package-mac`
 
 This will compile the UI with some special modifications for use with Electron, generate installable binaries with Electron and copy the result to the root `build/binaries` folder.
 
