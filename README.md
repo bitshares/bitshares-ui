@@ -2,7 +2,7 @@ BitShares-UI
 ============
 
 This is a light wallet that connects to a BitShares API provided by the *witness_node* executable.
- 
+
 
 It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
 
@@ -37,11 +37,10 @@ git clone https://github.com/bitshares/bitshares-ui.git
 cd bitshares-ui
 ```
 
-Before launching the GUI you will need to install the npm packages for each subdirectory:
+Before launching the GUI you will need to install the npm packages:
 
 >在装载GUI前，你需要为每一子目录安装npm包:
 ```
-cd web
 npm install
 ```
 
@@ -88,18 +87,17 @@ This will create a bundle in the /dist folder that can be hosted with the web se
 ### Installable wallets
 We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, make sure your local python version is 2.7.x, as a dependency requires this.
 
-OSX / Linux instructions:
+On Linux you will need to install the following packages to handle icon generation:
+
+`sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils`
+
+OSX / Linux / Windows instructions:
 
 ```
-cd electron
-npm install
-cd ../web
-npm run electron
-cd ../electron
-npm run release
+npm run package
 ```
 
-This will compile the UI with some special modifications for use with Electron, and copy the result to the root `electron/build` folder. 
+This will compile the UI with some special modifications for use with Electron, generate installable binaries with Electron and copy the result to the root `build/binaries` folder.
 
 ## 可安装钱包
 我们使用Electron来提供可安装钱包，Windows, OSX 和Linux平台如Ubuntu都可以使用。首先，在'electron'文件夹里安装需要的封包。然后到'web'文件夹里运行`npm run electron`。这样就会在编译UI的同时针对Electron做一些特殊的改进，并将结果粘贴至根文件夹 `electron/build`。现在，为了创建一个钱包到你的平台上，回到`electron`文件夹并运行`npm run release`。
@@ -107,7 +105,7 @@ This will compile the UI with some special modifications for use with Electron, 
 
 ## Contributing
 
-The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation. 
+The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
 
 If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help. You may also join [BitShares on Discord](https://discord.gg/GsjQfAJ)
 
@@ -167,4 +165,3 @@ We strongly encourage to use _eslint_ to make sure the code adhere to our style 
  - 在花括号里的空格是随意的
 
 我们强烈鼓励用  _eslint_ 确保代码依附于我们的代码风格指南
-
