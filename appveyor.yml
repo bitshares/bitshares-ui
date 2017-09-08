@@ -7,10 +7,13 @@ install:
   # install modules
   - npm install
 build: off
+platform:
+  - x64
 test_script:
-  - npm run package-win
+  - npm run package
 deploy:
   provider: GitHub
+  description: "GUI release"
   auth_token:
     secure: F/9ssjiE7swLmbl4JXtgpgv40kr3u6q+nbcNCs+Rw2S0VEMYBAXDwmKHQuAH8uDB
   artifact: build\binaries\*.exe
@@ -18,3 +21,4 @@ deploy:
   force_update: true
   on:
     branch: 224-build-automation
+    appveyor_repo_tag: false
