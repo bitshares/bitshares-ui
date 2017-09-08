@@ -25,6 +25,8 @@ deploy:
   file_glob: true
   file: build/binaries/BitShares*
   skip_cleanup: true
+  draft: true
   on:
     repo: bitshares/bitshares-ui
     branch: 224-build-automation
+    tags: false

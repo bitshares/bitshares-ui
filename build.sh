@@ -1,3 +1,2 @@
 cd $TRAVIS_BUILD_DIR
-npm run-script build-github
-npm run-script build
+npm run-script package
