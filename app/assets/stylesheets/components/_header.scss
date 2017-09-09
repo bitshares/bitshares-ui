@@ -1,0 +1,110 @@
+.header.menu-group {
+  justify-content: flex-start;
+}
+
+.icon > svg {
+  > path {
+    fill : #fff;
+  }
+}
+
+.float-left > span.icon.user {
+    top: 0;
+}
+
+.header {
+    .electron-navigation > ul > li {
+        border: none;
+    }
+    &.primary {
+        border-bottom: 1px solid $border-color;
+    }
+  padding-left: 0 !important;
+  min-height: 66px;
+  text-transform: uppercase;
+  .menu-bar > li {
+
+    display: list-item;
+    padding: 0;
+    border-right: 1px solid $border-color;
+    > a {
+      font-weight: bold;
+      line-height: 2rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      font-size: 0.9rem;
+      @include breakpoint(large) {
+        padding-left: 1.75rem;
+        padding-right: 1.75rem;
+      }
+    }
+  }
+}
+
+div.header-balance {
+    a {
+        font-size: 90%;
+        font-weight: bold;
+        &:hover {
+            background-color: transparent !important;
+        };
+    }
+}
+
+div.account-drop-down {
+    font-size: 90%;
+    .dropdown-divider {
+        padding-bottom: 10px;
+    }
+  a.button {
+      font-weight: bold;
+      font-size: 90%;
+      background-color: transparent;
+  }
+  a:active.button, a:hover.button {
+    background-color: transparent !important;
+  }
+}
+
+div.header-right-menu {
+    > .grp-menu-item {
+        border-left: 1px solid $border-color;
+        line-height: 2rem;
+
+        > a {
+            @include breakpoint(large) {
+              padding-left: 1.25rem;
+              padding-right: 1.25rem;
+            }
+        }
+    }
+}
+
+.grp-menu-items-group {
+  flex-flow: row nowrap;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.grp-menu-item {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  > a, .button {
+    padding: 0.5rem;
+    @include breakpoint(large) {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+    font-size: 1rem;
+  }
+}
+
+.user-icon > a {
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
+.lower-case {
+  text-transform: lowercase;
+}
