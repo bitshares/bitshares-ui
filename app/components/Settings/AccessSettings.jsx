@@ -6,8 +6,6 @@ import { settingsAPIs } from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 import { withRouter } from "react-router/es";
 
-console.log('willTransitionTo', willTransitionTo);
-
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
