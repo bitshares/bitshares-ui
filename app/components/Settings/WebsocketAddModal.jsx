@@ -43,6 +43,8 @@ class WebsocketAddModal extends React.Component {
     }
 
     show(e, url, name) {
+      console.log('target is', e.target);
+      console.log('show called', e.target.id);
         let state = {}
         if (e.target.id.indexOf("add") !== -1) {
             state.type = "add";
@@ -52,7 +54,7 @@ class WebsocketAddModal extends React.Component {
         }
         
         this.setState(state);
-
+        console.log('state.type is', state.type);
         ZfApi.publish("ws_modal_" + state.type, "open")
     }
 
