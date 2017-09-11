@@ -7,25 +7,28 @@
 ############
 #echo "Cloning wallet repo"
 unamestr=`uname`
-if [[ "$unamestr" == 'Linux' ]]; then
-    git clone https://github.com:${GITHUB_TOKEN}@github.com/${WALLET_REPO} /wallet
+echo $unamestr
+echo $TRAVIS_TAG
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG ]]
+then
+    git clone https://github.com:${GITHUB_TOKEN}@github.com/${WALLET_REPO} $TRAVIS_BUILD_DIR/wallet
 
     # Copy new compile files
     ########################
     #echo "Copying compiled files over to repo"
     #ls -al $TRAVIS_BUILD_DIR/web/dist/
     #ls -al /gh-pages/
-    rm -rf /wallet/wallet/*
-    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* /wallet/wallet/
+    rm -rf $TRAVIS_BUILD_DIR/wallet/wallet/*
+    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* $TRAVIS_BUILD_DIR/wallet/wallet/
 
     # Commit Changes
     ################
     echo "Pushing new wallet repo"
-    cd /wallet
+    cd $TRAVIS_BUILD_DIR/wallet
     #git config user.email "travis@bitshares.org"
     #git config user.name "BitShares Wallet Build Automation"
     git add -A
-    git commit -a -m "Travis #$TRAVIS_BUILD_NUMBER"
+    git commit -a -m "Update wallet by Travis: v$TRAVIS_TAG"
 
     # Push Changes
     ##############
