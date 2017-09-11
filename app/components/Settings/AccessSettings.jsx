@@ -3,6 +3,10 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import { settingsAPIs } from "../../api/apiConfig";
+import willTransitionTo from "../../routerTransition";
+import { withRouter } from "react-router/es";
+
+console.log('willTransitionTo', willTransitionTo);
 
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
@@ -28,14 +32,11 @@ class ApiNode extends React.Component {
     }
 
     activate(){
-        SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
-        setTimeout(this._onReloadClick, 250);
-
-        if (window.electron) {
-            window.location.hash = "";
-            window.remote.getCurrentWindow().reload();
-        }
-        else window.location.href = __BASE_URL__;
+        let action = SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
+      
+        setTimeout(function(){
+            willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);
+        }.bind(this), 50);
     }
 
     remove(url, name, e){
@@ -93,6 +94,8 @@ ApiNode.defaultProps = {
     allowActivation: false,
     allowRemoval: false
 }
+
+const ApiNodeWithRouter = withRouter(ApiNode);
 
 class AccessSettings extends React.Component {
     constructor(props){
@@ -152,7 +155,7 @@ class AccessSettings extends React.Component {
 
         let allowRemoval = (!automatic && !this.isDefaultNode[node.url]) ? true : false;
 
-        return <ApiNode {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />
+        return <ApiNodeWithRouter {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />
     }
 
     render(){
