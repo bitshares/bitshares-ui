@@ -62,7 +62,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     if (!connectionString) connectionString = urls[0].url;
     if (connectionString.indexOf("fake.automatic-selection") !== -1) connectionString = urls[0];
 
-    var onReset = () => {
+    var onConnect = () => {
         var db;
         try {
             db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
@@ -70,10 +70,24 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             console.log("db init error:", err);
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
-            return callback();
-        }).catch((err) => {
-            console.log("err:", err);
-            return callback();
+            return Promise.all([
+                PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
+                WalletDb.loadDbData().then(() => {
+                    // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
+                    //     replaceState("/dashboard");
+                    // }
+                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
+                        replaceState("/dashboard");
+                    }
+                }).catch((error) => {
+                    console.error("----- WalletDb.willTransitionTo error ----->", error);
+                    replaceState("/init-error");
+                }),
+                WalletManagerStore.init()
+            ]).then(()=> {
+                ss.set("activeNode", connectionManager.url);
+                callback();
+            });
         });
     }
 
@@ -85,7 +99,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     connectionManager = new Manager({url: connectionString, urls});
     if (nextState.location.pathname === "/init-error") {
         return Apis.reset(connectionString, true).init_promise
-        .then(onReset).catch(onResetError);
+        .then(onConnect).catch(onResetError);
 
     }
     let connectionCheckPromise = !apiLatenciesCount ? connectionManager.checkConnections() : null;
@@ -109,32 +123,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                 SettingsActions.changeSetting({setting: "apiServer", value: connectionManager.url});
                 SettingsActions.updateLatencies(latencies);
 
-                var db;
-                try {
-                    db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-                } catch(err) {
-                    console.log("db init error:", err);
-                }
-                return Promise.all([db, SettingsStore.init()]).then(() => {
-                    return Promise.all([
-                        PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
-                        WalletDb.loadDbData().then(() => {
-                            // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                            //     replaceState("/dashboard");
-                            // }
-                            if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                                replaceState("/dashboard");
-                            }
-                        }).catch((error) => {
-                            console.error("----- WalletDb.willTransitionTo error ----->", error);
-                            replaceState("/init-error");
-                        }),
-                        WalletManagerStore.init()
-                    ]).then(()=> {
-                        ss.set("activeNode", connectionManager.url);
-                        callback();
-                    });
-                });
+                onConnect();
             }).catch( error => {
                 console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
                 if(error.name === "InvalidStateError") {
@@ -149,7 +138,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                 }
             });
         } else {
-            Apis.reset(connectionManager.url, true).init_promise.then(onReset).catch(onResetError);
+            Apis.reset(connectionManager.url, true).init_promise.then(onConnect).catch(onResetError);
         }
 
         /* Only try initialize the API with connect = true on the first onEnter */
