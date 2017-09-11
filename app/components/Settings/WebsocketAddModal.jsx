@@ -52,7 +52,7 @@ class WebsocketAddModal extends React.Component {
         }
         
         this.setState(state);
-        console.log('state.type is', state.type);
+
         ZfApi.publish("ws_modal_" + state.type, "open")
     }
 
