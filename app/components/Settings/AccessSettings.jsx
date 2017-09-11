@@ -71,12 +71,12 @@ class ApiNode extends React.Component {
 
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
-            {allowActivation && !automatic && !state.hovered && Status}
+            {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
 
             {(allowActivation || allowRemoval) && state.hovered &&
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
-                    {allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
-                    {allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
+                    { allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
+                    {(automatic ? true : up) && allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
                 </div>
             }
         </div>
