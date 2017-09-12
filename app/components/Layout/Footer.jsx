@@ -30,33 +30,16 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {};
+    }
 
+    componentDidMount() {
         this.checkNewVersionAvailable.call(this);
 
         this.downloadLink = "https://bitshares.org/download";
 
-        this.copyListener = function(e){
-            if(!this.state.clipboardText) return;
-
-            try {
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-                e.preventDefault();
-            } catch(err) {
-                console.error(err);
-            }
-        }.bind(this);
-
-        document.addEventListener("copy", this.copyListener);
-    }
-
-    componentDidMount() {
         setTimeout(() => {
             ReactTooltip.rebuild();
         }, 1250);
-    }
-
-    componentWillUnmount(){
-        document.removeEventListener("copy", this.copyListener);
     }
 
     shouldComponentUpdate(nextProps) {
