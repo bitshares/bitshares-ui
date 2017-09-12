@@ -23,6 +23,7 @@ ChainStore.setDispatchFrequency(20);
 
 let connect = true;
 let connectionManager;
+let oldChain = null;
 
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState().defaults.apiServer
@@ -148,7 +149,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                     } else {
                         alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
                     }
-                    callback();
                 } else {
                     replaceState("/init-error");
                     callback();
