@@ -2,7 +2,7 @@
 
 import React from "react";
 
-let icons = ["user", "trash", "chevron-down", "menu", "database", "search",
+let icons = ["user", "trash", "chevron-down", "menu", "database", "download", "search",
     "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo",
     "accounts", "witnesses", "assets", "proposals", "blocks", "committee_members", "workers", "key",
     "checkmark-circle", "checkmark", "piggy", "locked", "unlocked" , "markets", "fi-star" ,"fees",
@@ -22,7 +22,7 @@ class Icon extends React.Component {
         if(this.props.className) {
             classes += " " + this.props.className;
         }
-        return <span className={classes} dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}}/>;
+        return <span className={classes} style={this.props.style || {}} dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}}/>;
     }
 }
 

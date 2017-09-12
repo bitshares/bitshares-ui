@@ -62,7 +62,8 @@
     "deposit_tip": "To complete the deposit, go to your %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
     "copy_tip": "Click to copy the text",
     "withdraw_full": "Click to withdraw the full balance",
-    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
+    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
+    "footer_copy_download": "Copy download address to your clipboard."
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -830,7 +831,8 @@
     "backup": "A Backup is Required",
     "nosync": "Blockchain is out of sync, please wait until it's synchronized..",
     "connection": "No Blockchain connection",
-    "brainkey": "Backup brainkey recommended"
+    "brainkey": "Backup brainkey recommended",
+    "update_available": "UPDATE AVAILBLE"
   },
   "exchange": {
     "chart_options": {
