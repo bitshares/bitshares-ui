@@ -32,10 +32,12 @@ class AccountRefsStore extends BaseStore {
     }
 
     loadDbData() {
-        this.setState(this._getInitialState())
+        // this.setState(this._getInitialState())
+        this.chainstore_account_ids_by_key = null;
+        this.state = {account_refs: Immutable.Set()};
         return loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
-            .then( ()=> this.chainStoreUpdate() )
+            .then( ()=> this.chainStoreUpdate() );
     }
 
     chainStoreUpdate() {
