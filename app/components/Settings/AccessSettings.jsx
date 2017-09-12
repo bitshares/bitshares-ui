@@ -1,14 +1,16 @@
 import React from "react";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import { settingsAPIs } from "../../api/apiConfig";
+import willTransitionTo from "../../routerTransition";
+import { withRouter } from "react-router/es";
 
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
+const testnetAPI = settingsAPIs.WS_NODE_LIST.find(a => a.url.indexOf("node.testnet.bitshares.eu") !== -1);
 
 class ApiNode extends React.Component {
     constructor(props){
@@ -28,14 +30,11 @@ class ApiNode extends React.Component {
     }
 
     activate(){
-        SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
-        setTimeout(this._onReloadClick, 250);
+        let action = SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
 
-        if (window.electron) {
-            window.location.hash = "";
-            window.remote.getCurrentWindow().reload();
-        }
-        else window.location.href = __BASE_URL__;
+        setTimeout(function(){
+            willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);
+        }.bind(this), 50);
     }
 
     remove(url, name, e){
@@ -59,7 +58,13 @@ class ApiNode extends React.Component {
           <Translate style={{color: up ? green : red, marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
           {up && <span style={{color}}>{ping}ms</span>}
           {!up && <span style={{color: "red"}}>__</span>}
-        </div>
+        </div>;
+
+        /*
+        * The testnet latency is not checked in the connection manager,
+        * so we force enable activation of it even though it shows as 'down'
+        */
+        const forceAllow = url === testnetAPI.url;
 
         return <div
             className="api-node"
@@ -72,12 +77,12 @@ class ApiNode extends React.Component {
 
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
-            {allowActivation && !automatic && !state.hovered && Status}
+            {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
 
             {(allowActivation || allowRemoval) && state.hovered &&
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
-                    {allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
-                    {allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
+                    { allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
+                    {(automatic || forceAllow ? true : up) && allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
                 </div>
             }
         </div>
@@ -93,6 +98,8 @@ ApiNode.defaultProps = {
     allowActivation: false,
     allowRemoval: false
 }
+
+const ApiNodeWithRouter = withRouter(ApiNode);
 
 class AccessSettings extends React.Component {
     constructor(props){
@@ -152,7 +159,7 @@ class AccessSettings extends React.Component {
 
         let allowRemoval = (!automatic && !this.isDefaultNode[node.url]) ? true : false;
 
-        return <ApiNode {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />
+        return <ApiNodeWithRouter {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />;
     }
 
     render(){
