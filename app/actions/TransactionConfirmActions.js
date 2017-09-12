@@ -40,9 +40,9 @@ class TransactionConfirmActions {
                 console.error(error);
                 clearTimeout(broadcast_timeout);
                 // messages of length 1 are local exceptions (use the 1st line)
-                // longer messages are remote API exceptions (use the 2nd line)
+                // longer messages are remote API exceptions (use the 1st line)
                 let splitError = error.message.split( "\n" );
-                let message = splitError[splitError.length === 1 ? 0 : 1];
+                let message = splitError[0];
                 dispatch({
                     broadcast: false,
                     broadcasting: false,
