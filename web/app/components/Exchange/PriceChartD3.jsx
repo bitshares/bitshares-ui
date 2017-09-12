@@ -36,7 +36,6 @@ class CandleStickChartWithZoomPan extends React.Component {
         this.state = {
             enableTrendLine: false,
             enableFib: false,
-            clampEnabled: true,
             tools: [],
             priceFormat,
             timeFormatter,
