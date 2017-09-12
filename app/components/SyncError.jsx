@@ -41,7 +41,7 @@ class SyncError extends React.Component {
 
     render() {
         const { props } = this;
-        let options = this.props.apis.map(entry => {
+        let options = props.apis.map(entry => {
             let onlyDescription = entry.url.indexOf("fake.automatic-selection") !== -1;
             let {location} = entry;
             if (location && typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
@@ -52,7 +52,7 @@ class SyncError extends React.Component {
         return (
 
             <div className="grid-frame vertical">
-                <div className="grid-container text-center" style={{paddingTop: "5rem", maxWidth: "90%", overflowY: "auto"}}>
+                <div className="grid-container text-center" style={{padding: "5rem 10% 0 10%", maxWidth: "100%", overflowY: "auto", margin: "0 !important"}}>
 
                     <h2><Translate content="sync_fail.title" /></h2>
                     <br />
@@ -62,10 +62,10 @@ class SyncError extends React.Component {
                     <p><Translate unsafe content="sync_fail.sub_text_2" /></p>
                     <hr />
 
-                    <AccessSettings currentNode={props.apiServer} nodes={props.apis} onChange={this.onChangeWS.bind(this)} apiLatencies={this.props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
+                    <AccessSettings currentNode={props.apiServer} nodes={props.apis} onChange={this.onChangeWS.bind(this)} apiLatencies={props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
                 </div>
 
-                <WebsocketAddModal ref="ws_modal" apis={this.props.apis} api={props.apiServer} />
+                <WebsocketAddModal ref="ws_modal" apis={props.apis} api={props.apiServer} />
             </div>
         );
     }
