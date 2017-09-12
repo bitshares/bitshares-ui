@@ -7,6 +7,7 @@ import AccountRefsStore from "stores/AccountRefsStore";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
+import AccountStore from "stores/AccountStore";
 
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
@@ -45,6 +46,8 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
+let oldChain = "";
+
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when node is manually selected in access settings
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 15) {
@@ -63,15 +66,21 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     if (connectionString.indexOf("fake.automatic-selection") !== -1) connectionString = urls[0];
 
     var onConnect = () => {
+        const currentChain = Apis.instance().chain_id
+        const chainChanged = oldChain && oldChain !== currentChain;
+        oldChain = currentChain;
         var db;
         try {
+            iDB.close();
             db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
         } catch(err) {
             console.log("db init error:", err);
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
             return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
+                PrivateKeyActions.loadDbData().then(()=> {
+                    AccountRefsStore.loadDbData();
+                }),
                 WalletDb.loadDbData().then(() => {
                     // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
                     //     replaceState("/dashboard");
@@ -79,7 +88,16 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                     if (nextState.location.pathname.indexOf("/auth/") === 0) {
                         replaceState("/dashboard");
                     }
-                }).catch((error) => {
+                }).then(() => {
+                    if (chainChanged) {
+                        ChainStore.clearCache();
+                        ChainStore.subscribed = false;
+                        ChainStore.init().then(() => {
+                            AccountStore.loadDbData(currentChain);
+                        });
+                    }
+                })
+                .catch((error) => {
                     console.error("----- WalletDb.willTransitionTo error ----->", error);
                     replaceState("/init-error");
                 }),
