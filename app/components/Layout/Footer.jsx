@@ -107,7 +107,6 @@ class Footer extends React.Component {
 
     render() {
         const { state } = this;
-        console.log('state is', state);
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
         // console.log("block_time", block_time)
