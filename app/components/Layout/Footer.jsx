@@ -10,9 +10,6 @@ import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
 import oneoff from "../../api/oneoff";
-import _ from "lodash";
-import counterpart from "counterpart";
-import ReactTooltip from "react-tooltip";
 
 class Footer extends React.Component {
 
@@ -89,20 +86,14 @@ class Footer extends React.Component {
     }
 
     downloadVersion(){
-        if(__ELECTRON__){
-            this.setState({clipboardText: this.downloadLink});
-            setTimeout(()=>{
-                document.execCommand("copy");
-            }, 50);
-        } else {
-            var a = document.createElement("a");
-            a.href = this.downloadLink;
-            a.target = "_blank";
-            a.style = "display: none;";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        var a = document.createElement("a");
+        a.href = this.downloadLink;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.style = "display: none;";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 
     render() {
@@ -116,15 +107,19 @@ class Footer extends React.Component {
         let version = version_match ? `.${version_match[1]}` : ` ${APP_VERSION}`;
         let updateStyles = {display: "inline-block", verticalAlign: "top"}
         let logoProps = {};
-        if(__ELECTRON__){
-            logoProps['data-tip'] = counterpart.translate("tooltip.footer_copy_download");
-        }
 
         return (
             <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
                     <div className="grid-block">
-                        <div className="logo" style={{fontSize: state.newVersion ? "0.9em" : "1em", cursor: state.newVersion ? "pointer" : "normal", marginTop: "-5px", overflow: "hidden"}} onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
+                        <div className="logo" style={
+                            {
+                              fontSize: state.newVersion ? "0.9em" : "1em", 
+                              cursor: state.newVersion ? "pointer" : "normal", 
+                              marginTop: state.newVersion ? "-5px" : "0px", 
+                              overflow: "hidden"
+                            }
+                        } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
                             {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
                             <span style={updateStyles}>
                               <Translate content="footer.title"  />                             

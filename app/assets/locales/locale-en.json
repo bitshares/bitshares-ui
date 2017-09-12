@@ -62,8 +62,7 @@
     "deposit_tip": "To complete the deposit, go to your %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
     "copy_tip": "Click to copy the text",
     "withdraw_full": "Click to withdraw the full balance",
-    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-    "footer_copy_download": "Copy download address to your clipboard."
+    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
   },
   "propose": "Propose",
   "cancel": "Cancel",
