@@ -46,6 +46,7 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
+let oldChain = "";
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 15) {
@@ -64,7 +65,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     if (connectionString.indexOf("fake.automatic-selection") !== -1) connectionString = urls[0];
 
     var onConnect = () => {
-        const currentChain = Apis.instance().chain_id
+        const currentChain = Apis.instance().chain_id;
         const chainChanged = oldChain && oldChain !== currentChain;
         oldChain = currentChain;
         var db;
