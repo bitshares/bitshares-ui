@@ -137,6 +137,7 @@ const willTransitionTo = (nextState, replaceState, callback) => {
                 } else {
                     alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
                 }
+                callback();
             } else {
                 replaceState("/init-error");
                 callback();

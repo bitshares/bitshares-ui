@@ -21,6 +21,8 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Incognito from "./components/Layout/Incognito";
+import { isIncognito } from "./lib/feature_detect";
 
 class App extends React.Component {
 
@@ -53,9 +55,12 @@ class App extends React.Component {
 
     componentDidMount() {
         try {
+            isIncognito(function(incognito){
+                this.setState({incognito});
+            }.bind(this));
+
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
-
 
             ChainStore.init().then(() => {
                 this.setState({synced: true});
@@ -140,12 +145,16 @@ class App extends React.Component {
     // }
 
     render() {
-        let {disableChat, isMobile, showChat, dockedChat, theme} = this.state;
+        let {disableChat, isMobile, showChat, dockedChat, theme, incognito} = this.state;
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
 
-        if (this.state.syncFail) {
+        if(incognito){
+            content = (
+                <Incognito />
+            )
+        } else if (this.state.syncFail) {
             content = (
                 <SyncError />
             );
