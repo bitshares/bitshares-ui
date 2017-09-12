@@ -81,9 +81,9 @@ class Footer extends React.Component {
                 let json = JSON.parse(request.responseText);
                 let oldVersion = String(json.tag_name);
                 let newVersion = String(APP_VERSION);
-                //if(oldVersion !== newVersion){
+                if(oldVersion !== newVersion){
                     this.setState({newVersion});
-                //}
+                }
             } catch(e){}
         }.bind(this), false);
     }
