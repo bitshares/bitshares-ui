@@ -35,7 +35,7 @@
     "locked_tip": "<br/>Click to login by unlocking your wallet.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out by locking your wallet.<br/><br/>Closing the browser window will also log you out.",
     "account_notify": "The active account is now %(account)s",
-    "account_value": "ACCOUNT VALUE"
+    "account_value": "Account value"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -100,7 +100,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
-    "estimate_value": "Estimated ACCOUNT VALUE",
+    "estimate_value": "Estimated Account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
     "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
