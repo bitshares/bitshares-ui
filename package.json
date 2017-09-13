@@ -96,14 +96,14 @@
     },
     "win": {
       "target": [
-          {
-            "target": "nsis",
-            "arch": [
-              "x64",
-              "ia32"
-            ]
-          }
-        ]
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "category": "Finance",
@@ -147,7 +147,7 @@
     "react-clipboard.js": "^1.0.1",
     "react-dom": "^15.6.1",
     "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
-    "react-highcharts": "^10.0.0",
+    "react-highcharts": "^12.0.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-interpolate-component": "^0.10.0",
     "react-intl": "^2.2.2",
