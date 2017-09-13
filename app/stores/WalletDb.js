@@ -316,7 +316,7 @@ class WalletDb extends BaseStore {
             } catch(err) {
 
             }
-            let acc = ChainStore.getAccount(account);
+            let acc = ChainStore.getAccount(account, false);
             let key;
             if (fromWif) {
                 key = {privKey: fromWif, pubKey: fromWif.toPublicKey().toString()};
