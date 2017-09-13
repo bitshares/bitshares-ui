@@ -21,10 +21,8 @@
   },
   "main": "build/electron/index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
-    "test:wallet": "cross-env NODE_ENV=test NODE_PATH=../app mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register",
-    "test:market": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./test/marketTests --watch",
-    "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
+    "test:market": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./app/test/marketTests --watch",
+    "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
     "profile-dev": "webpack --env.dev --env.profile --profile --json > stats-dev.json",
     "profile-build": "cross-env NODE_ENV=production webpack --env.prod --env.profile --profile --json > stats-prod.json",
     "profile-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.noUgly --profile --json > stats-prod-nougly.json",
