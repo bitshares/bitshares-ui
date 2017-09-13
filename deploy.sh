@@ -6,24 +6,28 @@
 # Clone Repo
 ############
 #echo "Cloning wallet repo"
-#git clone -b gh-pages https://github.com:${GITHUB_TOKEN}@github.com/${GITHUB_REPO} /gh-pages
+unamestr=`uname`
+if [[ "$unamestr" == 'Linux' ]]; then
+    git clone https://github.com:${GITHUB_TOKEN}@github.com/${WALLET_REPO} /wallet
 
-# Copy new compile files
-########################
-#echo "Copying compiled files over to repo"
-#ls -al $TRAVIS_BUILD_DIR/web/dist/
-#ls -al /gh-pages/
-#cp -Rv $TRAVIS_BUILD_DIR/web/dist/* /gh-pages/
+    # Copy new compile files
+    ########################
+    #echo "Copying compiled files over to repo"
+    #ls -al $TRAVIS_BUILD_DIR/web/dist/
+    #ls -al /gh-pages/
+    rm -rf /wallet/wallet/*
+    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* /wallet/wallet/
 
-# Commit Changes
-################
-#echo "Pushing new wallet repo"
-#cd /gh-pages
-#git config user.email "travis@bitshares.org"
-#git config user.name "BitShares Wallet Build Automation"
-#git add .
-#git commit -a -m "Travis #$TRAVIS_BUILD_NUMBER"
+    # Commit Changes
+    ################
+    echo "Pushing new wallet repo"
+    cd /wallet
+    #git config user.email "travis@bitshares.org"
+    #git config user.name "BitShares Wallet Build Automation"
+    git add -A
+    git commit -a -m "Travis #$TRAVIS_BUILD_NUMBER"
 
-# Push Changes
-##############
-#git push origin gh-pages
+    # Push Changes
+    ##############
+    git push
+fi
