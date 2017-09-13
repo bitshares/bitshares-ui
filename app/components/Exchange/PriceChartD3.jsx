@@ -26,20 +26,15 @@ class CandleStickChartWithZoomPan extends React.Component {
     constructor(props) {
         super();
 
-        const pricePrecision = props.base.get("precision");
-        const volumePrecision = props.quote.get("precision");
-
-        const priceFormat = format(`.${pricePrecision}f`);
         const timeFormatter = timeFormat("%Y-%m-%d %H:%M");
-        const volumeFormat = format(`.${volumePrecision}r`);
-
+        const {volumeFormat, priceFormat} = this._getFormats(props);
         this.state = {
             enableTrendLine: false,
             enableFib: false,
             tools: [],
-            priceFormat,
             timeFormatter,
             volumeFormat,
+            priceFormat,
             margin: {left: 75, right: 75, top:20, bottom: 30},
             calculators: this._getCalculators(props)
         };
@@ -47,6 +42,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         this.onTrendLineComplete = this.onTrendLineComplete.bind(this);
         this.onFibComplete = this.onFibComplete.bind(this);
         this.onKeyPress = this.onKeyPress.bind(this);
+
     }
 
     componentDidMount() {
@@ -54,6 +50,15 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
     componentWillUnmount() {
         document.removeEventListener("keyup", this.onKeyPress);
+    }
+
+    _getFormats(props = this.props) {
+        const pricePrecision = props.base.get("precision");
+        const volumePrecision = props.quote.get("precision");
+
+        const priceFormat = format(`.${pricePrecision}f`);
+        const volumeFormat = format(`.${volumePrecision}r`);
+        return {priceFormat, volumeFormat};
     }
 
     onTrendLineComplete() {
@@ -92,6 +97,10 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
 
     componentWillReceiveProps(np) {
+        if (np.base !== this.props.base || np.quote !== this.props.quote) {
+            this.setState(this._getFormats(np));
+        }
+
         let tools = cloneDeep(this.state.tools);
         if (np.tools && np.tools.trendline) {
             this.setState({enableTrendLine: true});
