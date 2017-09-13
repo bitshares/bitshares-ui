@@ -663,6 +663,7 @@
     "asset": {
       "title": "Asset",
       "not_found": "The asset %(name)s does not exist",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Asset type",
         "issuer": "Issuer",
@@ -765,9 +766,10 @@
     "always_confirm": "Always ask for confirmation",
     "wallets": "Wallets",
     "apiServer": "Full node API server",
-    "add_ws": "Add new websocket API",
-    "remove_ws": "Remove websocket API",
-    "faucet_address": "Faucet Address",
+    "add_ws": "Add Node",
+    "remove_ws": "Remove Node",
+    "faucet_address": "Faucet",
+    "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
     "showSettles": "Show settle orders in depth chart",
     "showAssetPercent": "Show asset percentages on the account page",
     "yes": "Yes",
@@ -793,10 +795,8 @@
     "password_text": "Change your password.",
     "backup_text": "Create backups here.",
     "restore_text": "Restore from a backup or import keys.",
-    "access_text": "Choose which full node you want to connect to.<br/><br/>The faucet is used to pay the registration fee for new users.",
+    "access_text": "",
     "view_keys": "View keys",
-    "add_api": "Add API",
-    "remove_api": "Remove API",
     "backup_backup": "Restore from a backup file (.bin)",
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
@@ -811,7 +811,17 @@
     "api_closest": "Choose closest automatically",
     "wallet_required": "Wallet model required",
     "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-    "enable_wallet": "Enable wallet model"
+    "enable_wallet": "Enable wallet model",
+    "active_node": "Active Node",
+    "node_up": "UP",
+    "node_down": "DOWN",
+    "available_nodes": "Available Nodes",
+    "add_api": "Add Node",
+    "remove_api": "Remove Node",
+    "remove": "Remove",
+    "activate": "Activate",
+    "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
+    "valid_node_url": "Node URL must begin with ws:// or wss://"
   },
   "footer": {
     "title": "BitShares",
@@ -1263,7 +1273,7 @@
     "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s"
   },
   "chat": {
-    "title": "Trollbox",
+    "title": "Chat",
     "button": "Chat",
     "send": "Send",
     "color": "Username color",
@@ -1272,12 +1282,12 @@
     "reconnect": "Reconnect",
     "welcome_user": "Welcome to BitShares",
     "users": "%(userCount)s users online",
-    "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
+    "welcome": "Please visit BitShares via Telegram or Discord!",
     "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
     "rate": "Please wait at least 2s before posting a new message",
-    "disabled": "Chat disabled",
+    "disabled": "Chat Options",
     "enable": "Enable chat now",
-    "telegram_link": "The trollbox has been disabled due to performance issues, please visit the Bitshares Telegram group instead: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
+    "telegram_link": "<p>Please visit the BitShares Telegram group on: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a></p><p>BitShares is also on Discord: <a href='https://discord.gg/GsjQfAJ' target='blank' rel='noopener noreferrer'>https://discord.gg/GsjQfAJ</a></p>"
     },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

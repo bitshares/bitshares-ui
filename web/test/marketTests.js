@@ -107,6 +107,16 @@ describe("Asset", function() {
         assert.equal(asset.hasAmount(), false, "Price should not be valid");
     });
 
+    it("Parses string amounts to numbers", function() {
+        let asset = new Asset();
+        asset.setAmount({sats: "123"});
+
+        assert.equal(asset.getAmount(), 123);
+
+        asset.setAmount({real: "123.23223"});
+        assert.equal(asset.getAmount(), 12323223);
+    });
+
     it("Throws when setAmount args are not set or incorrect", function() {
         let asset = new Asset();
 
@@ -115,11 +125,11 @@ describe("Asset", function() {
         }, Error);
 
         assert.throws(function() {
-            asset.setAmount({real: "2.2323"});
+            asset.setAmount({});
         }, Error);
 
         assert.throws(function() {
-            asset.setAmount({sats: "2.2323"});
+            asset.setAmount({real: undefined});
         }, Error);
     });
 
@@ -621,6 +631,24 @@ describe("LimitOrder", function() {
         ,"deferred_fee":14676
     };
 
+    const o5 = {
+        "id":"1.7.69372",
+        "expiration":"2017-12-13T14:14:09",
+        "seller":"1.2.132823",
+        "for_sale":1,
+        "sell_price": {
+            "base":{
+                "amount": 6470,
+                "asset_id":"1.3.0"
+            },
+            "quote": {
+                "amount":20113,
+                "asset_id":"1.3.121"
+            },
+        }
+        ,"deferred_fee":14676
+    };
+
     it("Instantiates", function() {
         let order = new LimitOrder(o, assets, "1.3.0");
         assert(order.id === o.id);
@@ -653,11 +681,13 @@ describe("LimitOrder", function() {
         let order4 = new LimitOrder(o4, assets, "1.3.121");
         let order5 = new LimitOrder(o3, assets, "1.3.0");
         let order6 = new LimitOrder(o4, assets, "1.3.0");
+        let order7 = new LimitOrder(o5, assets, "1.3.121");
 
         assert.equal(order3.amountToReceive().getAmount(), 3154, "As an ask, amountToReceive should equal 3154");
         assert.equal(order4.amountToReceive().getAmount(), 1, "Order4 should equal 1");
         assert.equal(order5.amountToReceive().getAmount(), 3155, "As a bid, amountToReceive should equal 3155");
         assert.equal(order6.amountToReceive().getAmount(), 1, "Order6 should equal 1");
+        assert.equal(order7.amountToReceive().getAmount(), 4, "Order7 should equal 4");
 
     });
 

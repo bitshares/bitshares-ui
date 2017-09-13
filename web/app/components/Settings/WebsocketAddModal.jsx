@@ -5,6 +5,9 @@ import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SettingsActions from "actions/SettingsActions";
 
+const ws = "ws://";
+const wss = "wss://";
+
 class WebsocketAddModal extends React.Component {
 
     constructor() {
@@ -13,32 +16,44 @@ class WebsocketAddModal extends React.Component {
         let protocol = window.location.protocol;
         this.state = {
             protocol: protocol,
-            ws: protocol === "https:" ? "wss://" : "ws://",
-            type: "remove"
+            ws: wss,
+            name: "My node",
+            type: "remove",
+            remove: {},
+            addError: null
         };
     }
 
-    onInput(e) {
-        if (this.state.protocol === "https:") {
-            e.target.value = e.target.value.replace("ws://", "wss://")
+    onServerInput(e) {
+        let state = {
+            ws: e.target.value  
         }
-        if (e.target.value.indexOf("ws://") !== -1 || e.target.value.indexOf("wss://") !== -1) {
-            this.setState({ws: e.target.value});
+
+        if(state.ws.indexOf(wss) !== 0 && state.ws.indexOf(ws) !== 0){
+            state.addError = true;
+        } else {
+            state.addError = null;
         }
+
+        this.setState(state);
     }
 
-    show(e) {
-        console.log("show", e.target.id);
-        let target;
+    onNameInput(e){
+        this.setState({name: e.target.value});
+    }
+
+    show(e, url, name) {
+        let state = {}
         if (e.target.id.indexOf("add") !== -1) {
-            target = "add";
+            state.type = "add";
         } else if (e.target.id.indexOf("remove") !== -1) {
-            target = "remove";
+            state.type = "remove";
+            state.remove = {url, name};
         }
-        this.setState({
-            type: target
-        });
-        ZfApi.publish("ws_modal_" + target, "open")
+        
+        this.setState(state);
+
+        ZfApi.publish("ws_modal_" + state.type, "open")
     }
 
     close() {
@@ -47,10 +62,12 @@ class WebsocketAddModal extends React.Component {
 
     onAddSubmit(e) {
         e.preventDefault();
-        SettingsActions.addWS(this.state.ws);
+
+        SettingsActions.addWS({location: this.state.name, url: this.state.ws});
 
         this.setState({
-            ws: this.state.protocol === "https:" ? "wss://" : "ws://"
+            ws: this.state.protocol === "https:" ? wss : ws,
+            name: ""
         });
         this.close();
     }
@@ -59,7 +76,7 @@ class WebsocketAddModal extends React.Component {
         e.preventDefault();
         let removeIndex;
         this.props.apis.forEach((api, index) => {
-            if (api.url === this.refs.select.value) {
+            if (api.url === this.state.remove.url) {
                 removeIndex = index;
             }
         });
@@ -78,6 +95,8 @@ class WebsocketAddModal extends React.Component {
     }
 
     _renderAddModal() {
+        let labelStyle = {padding: 0, color: "white"}
+
         return (
             <BaseModal id="ws_modal_add" ref="ws_modal_add" overlay={true} overlayClose={false}>
                 <div className="grid-content">
@@ -85,13 +104,19 @@ class WebsocketAddModal extends React.Component {
                     <form onSubmit={this.onAddSubmit.bind(this)} noValidate>
                         <section className="block-list">
                         <ul>
+                            <li className="with-dropdown" style={{marginBottom: "1em"}}>
+                                <label style={labelStyle}>Name</label>
+                                <input type="text" onChange={this.onNameInput.bind(this)} value={this.state.name} />
+                            </li>
                             <li className="with-dropdown">
-                                <input type="text" onChange={this.onInput.bind(this)} value={this.state.ws} />
+                                <label style={labelStyle}>Address</label>
+                                <input type="text" onChange={this.onServerInput.bind(this)} defaultValue={this.state.ws} />
                             </li>
                         </ul>
+                        {this.state.addError && <p style={{marginBottom: '1em'}}><Translate content="settings.valid_node_url" /></p>}
                         </section>
                         <div className="button-group">
-                            <button type="submit" className={"button"} onClick={this.onAddSubmit.bind(this)}>
+                            <button type="submit" className={"button " + (this.state.addError ? "disabled" : "")} onClick={this.onAddSubmit.bind(this)} disabled={this.state.addError} >
                                 <Translate content="transfer.confirm" />
                             </button>
                             <Trigger close={"ws_modal_add"}>
@@ -108,30 +133,15 @@ class WebsocketAddModal extends React.Component {
         if (!this.props.api) {
             return null;
         }
-        let options = this.props.apis.map((entry, index) => {
-            if (index > 0) {
-                return <option value={entry.url} key={entry.url}>{entry.location || entry.url} {entry.location ? `(${entry.url})` : null}</option>;
-            }
-        }).filter(a => {
-            return !!a;
-        });
 
         return (
             <BaseModal id="ws_modal_remove" ref="ws_modal_remove" overlay={true} overlayClose={false}>
                 <div className="grid-content no-overflow">
                     <Translate component="h3" content="settings.remove_ws" />
                     <section className="block-list">
-                        <header><Translate component="span" content={"settings.apiServer"} /></header>
-                        <ul>
-                            <li className="with-dropdown">
-                                <select ref="select">
-                                    {options}
-                                </select>
-                            </li>
-                        </ul>
+                        <p><Translate component="span" content="settings.confirm_remove" with={{name: this.state.remove.name}} /></p>
                     </section>
                     <form onSubmit={this.onRemoveSubmit.bind(this)} noValidate>
-
                         <div className="button-group">
                             <button type="submit" className={"button"} onClick={this.onRemoveSubmit.bind(this)}>
                                 <Translate content="transfer.confirm" />

@@ -85,7 +85,7 @@ class FormattedAsset extends React.Component {
 
         }
 
-        let issuer = ChainStore.getObject(asset.issuer);
+        let issuer = ChainStore.getObject(asset.issuer, false, false);
         let issuerName = issuer ? issuer.get('name') : '';
 
         let description = assetUtils.parseDescription(asset.options.description);

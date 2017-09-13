@@ -663,6 +663,7 @@
     "asset":{
       "title":"Актив",
       "not_found":"Актив %(name)s не существует",
+      "invalid": "The asset name %(name)s is invalid",
       "summary":{
         "asset_type":"Тип актива",
         "issuer":"Эмитент",

@@ -46,7 +46,6 @@ class BuySell extends React.Component {
     }
 
     _addBalance(balance) {
-        console.log("_addBalance:", balance);
         if (this.props.type === "bid") {
             this.props.totalChange({target: {value: balance.getAmount({real: true}).toString()}});
         } else {

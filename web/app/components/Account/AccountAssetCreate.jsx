@@ -16,6 +16,7 @@ import assetUtils from "common/asset_utils";
 import {Tabs, Tab} from "../Utility/Tabs";
 import AmountSelector from "../Utility/AmountSelector";
 import assetConstants from "chain/asset_constants";
+import { estimateFee } from "common/trxHelper";
 
 let MAX_SAFE_INT = new big("9007199254740991");
 
@@ -481,13 +482,13 @@ class AccountAssetCreate extends React.Component {
         let symbolLength = update.symbol.length, createFee = "N/A";
 
         if(symbolLength === 3) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol3"], globalObject)} asset={"1.3.0"} />;
+            createFee = <FormattedAsset amount={estimateFee("asset_create", ["symbol3"], globalObject)} asset={"1.3.0"} />;
         }
         else if(symbolLength === 4) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["symbol4"], globalObject)} asset={"1.3.0"} />;
+            createFee = <FormattedAsset amount={estimateFee("asset_create", ["symbol4"], globalObject)} asset={"1.3.0"} />;
         }
         else if(symbolLength > 4) {
-            createFee = <FormattedAsset amount={utils.estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
+            createFee = <FormattedAsset amount={estimateFee("asset_create", ["long_symbol"], globalObject)} asset={"1.3.0"} />;
         }
 
         // Loop over flags

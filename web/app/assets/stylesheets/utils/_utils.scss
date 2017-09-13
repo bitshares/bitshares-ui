@@ -9,9 +9,9 @@
 }
 
 //buttons
-  @mixin button-focus($color, $bg-color, $number) {
-    color: lighten($color, $number);
-    background-color: lighten($bg-color, $number);
-    //not good in dark theme
-    //border-color: lighten($color, $number);
-   }
+@mixin button-focus($color, $bg-color, $number) {
+  color: lighten($color, $number);
+  background-color: lighten($bg-color, $number);
+  //not good in dark theme
+  //border-color: lighten($color, $number);
+}

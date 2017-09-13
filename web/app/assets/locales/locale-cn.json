@@ -112,7 +112,7 @@
       "claim": "立即领取",
       "available": "可领取数量",
       "referral_link": "你的推荐链接",
-      "referral_text": "分享此链接给你的朋友参与引荐计划",
+      "referral_text": "分享此链接给你的朋友参与引荐计划"
     },
     "connections": {
       "known": "识别为",
@@ -660,6 +660,7 @@
     "asset": {
       "title": "资产",
       "not_found": "资产 %(name)s 不存在",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "资产类型",
         "issuer": "发行人",

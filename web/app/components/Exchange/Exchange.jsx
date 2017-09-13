@@ -28,7 +28,7 @@ import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
-import { checkFeeStatus } from "common/asyncTransferHelper";
+import { checkFeeStatusAsync } from "common/trxHelper";
 
 Highcharts.setOptions({
     global: {
@@ -170,7 +170,7 @@ class Exchange extends React.Component {
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
-            p.push(checkFeeStatus({accountID: account.get("id"), feeID: a.get("id"), type: "limit_order_create"}));
+            p.push(checkFeeStatusAsync({accountID: account.get("id"), feeID: a.get("id"), type: "limit_order_create"}));
         });
         Promise.all(p).then(status => {
             assets.forEach((a, idx) => {
@@ -703,7 +703,7 @@ class Exchange extends React.Component {
     }
 
     onChangeChartHeight({value, increase}) {
-        let newHeight = value ? value : this.state.chartHeight + (increase ? 20 : -20);
+        const newHeight = value ? value : this.state.chartHeight + (increase ? 20 : -20);
         console.log("newHeight", newHeight);
         this.setState({
             chartHeight: newHeight
@@ -951,7 +951,11 @@ class Exchange extends React.Component {
         }
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
-
+        const minChartHeight = 300
+        const height = Math.max(
+            this.state.height > 1100 ? chartHeight : chartHeight - 125,
+            minChartHeight
+        );
 
         let buyForm = isFrozen ? null : (
             <BuySell
@@ -1080,7 +1084,7 @@ class Exchange extends React.Component {
                     </div>) : null}
 
                     {/* Center Column */}
-                    <div className={cnames("grid-block main-content vertical no-overflow")} >
+                    <div style={{paddingTop: 0}} className={cnames("grid-block main-content vertical no-overflow")} >
 
                         {/* Top bar with info */}
                         <ExchangeHeader
@@ -1108,7 +1112,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    height={this.state.height > 1100 ? chartHeight : chartHeight - 125}
+                                    height={height}
                                     leftOrderBook={leftOrderBook}
                                     marketReady={marketReady}
                                     indicators={indicators}
@@ -1160,7 +1164,7 @@ class Exchange extends React.Component {
                                     totalAsks={totals.ask}
                                     base={base}
                                     quote={quote}
-                                    height={this.state.height > 1100 ? this.state.chartHeight : this.state.chartHeight - 125}
+                                    height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
                                     settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}

@@ -97,8 +97,21 @@ class AccountVesting extends React.Component {
     }
 
     componentWillMount() {
+        this.retrieveVestingBalances.call(this, this.props.account.get("id"));
+    }
+
+    componentWillUpdate(nextProps){
+        let newId = nextProps.account.get("id");
+        let oldId = this.props.account.get("id");
+
+        if(newId !== oldId){
+            this.retrieveVestingBalances.call(this, newId);
+        }
+    }
+
+    retrieveVestingBalances(accountId){
         Apis.instance().db_api().exec("get_vesting_balances", [
-            this.props.account.get("id")
+            accountId
         ]).then(vbs => {
             this.setState({vbs});
         }).catch(err => {

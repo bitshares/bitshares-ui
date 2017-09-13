@@ -39,10 +39,7 @@ class Asset {
     constructor({asset_id = "1.3.0", amount = 0, precision = 5, real = null} = {}) {
         this.satoshi = precisionToRatio(precision);
         this.asset_id = asset_id;
-        if (real && typeof real === "number") {
-            amount = this.toSats(real);
-        }
-        this.amount = Math.floor(amount);
+        this.setAmount({sats: amount, real});
         this.precision = precision;
     }
 
@@ -55,10 +52,14 @@ class Asset {
     }
 
     setAmount({sats, real}) {
+        if (typeof sats === "string") sats = parseInt(sats, 10);
+        if (typeof real === "string") real = parseFloat(real);
+
         if (typeof sats !== "number" && typeof real !== "number") {
             throw new Error("Invalid arguments for setAmount");
         }
-        if (typeof real !== "undefined" && typeof real === "number") {
+        if (real && typeof real !== "undefined") {
+            if (typeof real !== "number" || isNaN(real)) throw new Error("Invalid argument 'real' for setAmount");
             this.amount = this.toSats(real);
             this._clearCache();
         } else if(typeof sats === "number") {
@@ -91,6 +92,7 @@ class Asset {
     minus(asset) {
         if (asset.asset_id !== this.asset_id) throw new Error("Assets are not the same type");
         this.amount -= asset.amount;
+        this.amount = Math.max(0, this.amount);
         this._clearCache();
     }
 
