@@ -9,7 +9,6 @@ import {ChainStore} from "bitsharesjs/es";
 import WalletDb from "stores/WalletDb";
 import TimeAgo from "../Utility/TimeAgo";
 import Icon from "../Icon/Icon";
-import oneoff from "../../api/oneoff";
 
 class Footer extends React.Component {
 
@@ -36,10 +35,6 @@ class Footer extends React.Component {
         this.checkNewVersionAvailable.call(this);
 
         this.downloadLink = "https://bitshares.org/download";
-
-        setTimeout(() => {
-            ReactTooltip.rebuild();
-        }, 1250);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -52,20 +47,15 @@ class Footer extends React.Component {
     }
 
     checkNewVersionAvailable(){
-        let request = oneoff();
-
-        request.open("GET", "https://api.github.com/repos/bitshares/bitshares-ui/releases/latest", true);
-        request.send(null);
-        request.addEventListener("load", function(){
-            try {
-                let json = JSON.parse(request.responseText);
-                let oldVersion = String(json.tag_name);
-                let newVersion = String(APP_VERSION);
-                if(oldVersion !== newVersion){
-                    this.setState({newVersion});
-                }
-            } catch(e){}
-        }.bind(this), false);
+        fetch("https://api.github.com/repos/bitshares/bitshares-ui/releases/latest").then((res)=>{
+            return res.json()
+        }).then(function(json){
+            let oldVersion = String(json.tag_name);
+            let newVersion = String(APP_VERSION);
+            if((oldVersion !== newVersion) && __ELECTRON__){
+                this.setState({newVersion});
+            }
+        }.bind(this));
     }
 
     downloadVersion(){
