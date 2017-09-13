@@ -754,6 +754,13 @@ class Exchange extends React.Component {
         return false;
     }
 
+    _setPriceText(state, isBid) {
+        state.priceText = new Price({
+            base: state[isBid ? "for_sale" : "to_receive"],
+            quote: state[isBid ? "to_receive" : "for_sale"],
+        }).toReal().toString();
+    }
+
     _onInputPrice(type, e) {
         let current = this.state[type];
         const isBid = type === "bid";
@@ -785,6 +792,8 @@ class Exchange extends React.Component {
         }
 
         current.forSaleText = e.target.value;
+        this._setPriceText(current, type === "bid");
+
         this.forceUpdate();
     }
 
@@ -800,6 +809,7 @@ class Exchange extends React.Component {
         }
 
         current.toReceiveText = e.target.value;
+        this._setPriceText(current, type === "bid");
         this.forceUpdate();
     }
 
