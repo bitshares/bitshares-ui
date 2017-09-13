@@ -32,6 +32,7 @@ module.exports = {
         settleFillColor: "rgba(125, 134, 214, 0.5)",
         positiveColor: "#258A14",
         negativeColor: "#DB0000",
+        strokeColor: "#FFFF00",
         primaryText: "#e0e0e0",
         volumeColor: "#848484",
 
@@ -54,6 +55,7 @@ module.exports = {
         settleFillColor: "rgba(125, 134, 214, 0.5)",
         positiveColor: "#528c0a",
         negativeColor: "rgba(225, 66, 74, 1)",
+        strokeColor: "#000000",
         primaryText: "#242424",
         volumeColor: "#848484",
 
