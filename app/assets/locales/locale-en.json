@@ -10,7 +10,8 @@
     "ru": "Русский"
   },
   "incognito": {
-    "no_support": "The Bitshares Wallet does not support Incognito Mode"
+    "no_support": "All features of the BitShares Wallet may not fully support Incognito Mode",
+    "ignore": "I understand, continue."
   },
   "sync_fail": {
     "title": "Failed to sync with the API server",
