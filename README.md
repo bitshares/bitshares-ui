@@ -12,7 +12,7 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 ## Getting started&emsp;项目部署
 
-BitShares-UI depends node Node.js, and version 6+ is required. It has not yet been tested with v7.
+BitShares-UI depends node Node.js, and version 6+ is required.
 
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
 
@@ -48,7 +48,7 @@ npm install
 
 The dev server uses Express in combination with Webpack 2.
 
-Once all the packages have been installed you can start the development server by going to the `web` folder and running:
+Once all the packages have been installed you can start the development server by running:
 
 >开发服务器使用了EXPRSS和Webpack 2.
 
@@ -107,6 +107,7 @@ This will compile the UI with some special modifications for use with Electron, 
 
 
 ## Contributing
+Please work off the staging branch and make pull requests to that branch. The master branch will only be updated for new releases.
 
 The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
 

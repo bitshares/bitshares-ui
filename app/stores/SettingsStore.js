@@ -155,7 +155,7 @@ class SettingsStore {
                     "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
                     "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
-                    "YOYOW", "HERO", "RUBLE"
+                    "YOYOW", "HERO", "RUBLE", "SMOKE"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"
