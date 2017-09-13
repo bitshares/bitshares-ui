@@ -150,7 +150,7 @@ class App extends React.Component {
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
-        console.log('incognito', incognito);
+
         if(incognito){
             content = (
                 <Incognito />
