@@ -25,6 +25,18 @@ class Footer extends React.Component {
         router: React.PropTypes.object
     };
 
+    constructor(props){
+        super(props);
+
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.checkNewVersionAvailable.call(this);
+
+        this.downloadLink = "https://bitshares.org/download";
+    }
+
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
@@ -34,8 +46,33 @@ class Footer extends React.Component {
        );
     }
 
-    render() {
+    checkNewVersionAvailable(){
+        if (__ELECTRON__) {
+            fetch("https://api.github.com/repos/bitshares/bitshares-ui/releases/latest").then((res)=>{
+                return res.json();
+            }).then(function(json){
+                let oldVersion = String(json.tag_name);
+                let newVersion = String(APP_VERSION);
+                if((oldVersion !== newVersion)){
+                    this.setState({newVersion});
+                }
+            }.bind(this));
+        }
+    }
 
+    downloadVersion(){
+        var a = document.createElement("a");
+        a.href = this.downloadLink;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.style = "display: none;";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    render() {
+        const { state } = this;
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
         // console.log("block_time", block_time)
@@ -43,12 +80,28 @@ class Footer extends React.Component {
         let now = new Date().getTime() / 1000;
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
         let version = version_match ? `.${version_match[1]}` : ` ${APP_VERSION}`;
+        let updateStyles = {display: "inline-block", verticalAlign: "top"}
+        let logoProps = {};
+
         return (
             <div className="show-for-medium grid-block shrink footer">
                 <div className="align-justify grid-block">
                     <div className="grid-block">
-                        <div className="logo">
-                            <Translate content="footer.title" /><span className="version">{version}</span>
+                        <div className="logo" style={
+                            {
+                              fontSize: state.newVersion ? "0.9em" : "1em",
+                              cursor: state.newVersion ? "pointer" : "normal",
+                              marginTop: state.newVersion ? "-5px" : "0px",
+                              overflow: "hidden"
+                            }
+                        } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
+                            {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
+                            <span style={updateStyles}>
+                              <Translate content="footer.title"  />
+                              <span className="version">{version}</span>
+                            </span>
+
+                            {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}
                         </div>
                     </div>
                     {this.props.synced ? null : <div className="grid-block shrink txtlabel error"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
