@@ -33,7 +33,8 @@
     "help": "帮助",
     "locked_tip": "钱包已锁定，点击解锁。",
     "unlocked_tip": "钱包已解锁，点击锁定。",
-    "account_notify": "当前活跃账户为 %(account)s"
+    "account_notify": "当前活跃账户为 %(account)s",
+    "account_value": "账户价值"
   },
   "tooltip": {
       "call_limit": "市场中最少抵押率头寸的平仓价",
