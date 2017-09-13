@@ -31,16 +31,15 @@ export default function(cb){
     } else if(name === "chrome" || name === "opera"){
         var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
         if (!fs) {
-            console.log("FS check failed..");
-            cb(true);
+            cb(false);
             return;
         }
 
-        fs(window.TEMPORARY, 100, function (fs) {
-            cb(false);
-        }, function (err) {
+        fs(window.TEMPORARY, 100, function (err) {
             //Incognito mode
             cb(true);
+        }, function (fs) {
+            cb(false);
         });
     } else if(name === "ie"){
         if(!window.indexedDB && (window.PointerEvent || window.MSPointerEvent)){

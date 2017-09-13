@@ -43,8 +43,7 @@ class App extends React.Component {
             showChat: SettingsStore.getState().viewSettings.get("showChat", false),
             dockedChat: SettingsStore.getState().viewSettings.get("dockedChat", false),
             isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
-            incognito: false,
-            incognitoWarningDismissed: false
+            incognito: false
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
@@ -92,10 +91,6 @@ class App extends React.Component {
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
-    }
-
-    _onIgnoreIncognitoWarning(){
-        this.setState({incognitoWarningDismissed: true});
     }
 
     _rebuildTooltips() {
@@ -151,14 +146,14 @@ class App extends React.Component {
     // }
 
     render() {
-        let {disableChat, isMobile, showChat, dockedChat, theme, incognito, incognitoWarningDismissed } = this.state;
+        let {disableChat, isMobile, showChat, dockedChat, theme, incognito } = this.state;
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
-
-        if(incognito && !incognitoWarningDismissed){
+        console.log('incognito', incognito);
+        if(incognito){
             content = (
-                <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)} />
+                <Incognito />
             )
         } else if (this.state.syncFail) {
             content = (

@@ -1,20 +1,8 @@
 import React from "react";
 import {Link} from "react-router";
 import Translate from "react-translate-component";
-import { isIncognito } from "feature_detect";
 
 export default class LoginSelector extends React.Component {
-    constructor(props){
-        super(props);
-
-        this.state = {}
-    }
-
-    componentDidMount(){
-        isIncognito((incognito)=>{
-            this.setState({incognito});
-        })
-    }
 
     onSelect(route) {
         this.props.router.push("/create-account/" + route);
@@ -29,7 +17,7 @@ export default class LoginSelector extends React.Component {
                 <h2 className="text-center"><Translate content="wallet.login_type" /></h2>
 
                 <div className="grid-block no-margin no-padding vertical medium-horizontal no-overflow login-selector">
-                    {this.state.incognito ? null : <div className="box small-12 medium-5 large-4" onClick={this.onSelect.bind(this, "wallet")}>
+                    <div className="box small-12 medium-5 large-4" onClick={this.onSelect.bind(this, "wallet")}>
                         <div className="block-content-header" style={{position: "relative"}}>
                             <Translate content="wallet.wallet_model" component="h4" />
                         </div>
@@ -41,7 +29,7 @@ export default class LoginSelector extends React.Component {
                         </div>
                         <div className="button"><Link to="/create-account/wallet"><Translate content="wallet.use_wallet" /></Link></div>
 
-                    </div>}
+                    </div>
 
                     <div className="box small-12 medium-5 large-4 vertical" onClick={this.onSelect.bind(this, "password")}>
                         <div className="block-content-header" style={{position: "relative"}}>

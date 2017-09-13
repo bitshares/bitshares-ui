@@ -10,8 +10,7 @@
     "ru": "Русский"
   },
   "incognito": {
-    "no_support": "All features of the BitShares Wallet may not fully support Incognito Mode",
-    "ignore": "I understand, continue."
+    "no_support": "This Bitshares Wallet relies on Local Storage which is not persistent with Incognito. Please launch a regular browsing session."
   },
   "sync_fail": {
     "title": "Failed to sync with the API server",
