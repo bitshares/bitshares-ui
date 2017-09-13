@@ -539,6 +539,9 @@ class Exchange extends React.Component {
         this._setForSale(bid, true) || this._setReceive(bid, true);
         this._setReceive(ask) || this._setForSale(ask);
 
+        this._setPriceText(bid, true);
+        this._setPriceText(ask, false);
+        // if (bid.for_sale.)
         this.setState(newState);
     }
 
@@ -755,10 +758,14 @@ class Exchange extends React.Component {
     }
 
     _setPriceText(state, isBid) {
-        state.priceText = new Price({
-            base: state[isBid ? "for_sale" : "to_receive"],
-            quote: state[isBid ? "to_receive" : "for_sale"],
-        }).toReal().toString();
+        const currentBase = state[isBid ? "for_sale" : "to_receive"];
+        const currentQuote = state[isBid ? "to_receive" : "for_sale"];
+        if (currentBase.hasAmount() && currentQuote.hasAmount()) {
+            state.priceText = new Price({
+                base: currentBase,
+                quote: currentQuote,
+            }).toReal().toString();
+        }
     }
 
     _onInputPrice(type, e) {
