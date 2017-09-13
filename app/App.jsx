@@ -22,7 +22,7 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Incognito from "./components/Layout/Incognito";
-import { isIncognito } from "./lib/feature_detect";
+import { isIncognito } from "feature_detect";
 
 class App extends React.Component {
 
