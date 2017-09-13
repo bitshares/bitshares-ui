@@ -306,7 +306,13 @@
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
       "proxy_known": "Or choose an account as your proxy",
-      "expired": "Expired workers"
+      "expired": "Expired workers",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",

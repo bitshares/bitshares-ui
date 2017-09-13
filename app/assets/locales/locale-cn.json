@@ -266,7 +266,13 @@
       "cm_not_approved_by": "账户%(account)s反对的理事会成员",
       "already": "账户已存在列表中",
       "proxy_known": "已知投票代理",
-      "expired": "已过期预算项目"
+      "expired": "已过期预算项目",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "信任见证人",

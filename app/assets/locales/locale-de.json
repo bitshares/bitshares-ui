@@ -240,7 +240,13 @@
       "recycled": "Recycelt",
       "funding": "Auszahlend",
       "total_budget": "Gesamtes Worker Budget",
-      "unused_budget": "Ungenutztes Worker Budget"
+      "unused_budget": "Ungenutztes Worker Budget",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Gewünschte Anzahl Witnesses",

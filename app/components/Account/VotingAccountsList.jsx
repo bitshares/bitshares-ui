@@ -19,10 +19,10 @@ function getWitnessOrCommittee(type, acct) {
 
     url = account ? account.get("url") : url;
     votes = account ? account.get("total_votes") : votes;
-
     return {
         url,
-        votes
+        votes,
+        id: account.get("id")
     };
 }
 
@@ -33,7 +33,12 @@ class AccountItemRow extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.account !== this.props.account;
+        return (
+            nextProps.account !== this.props.account ||
+            nextProps.action !== this.props.action ||
+            nextProps.isActive !== this.props.isActive ||
+            nextProps.idx !== this.props.idx
+        );
     }
 
     onAction(item_id){
@@ -41,32 +46,34 @@ class AccountItemRow extends React.Component {
     }
 
     render() {
-        let {account, type} = this.props;
+        let {account, type, action, isActive} = this.props;
         let name = account.get("name");
         let item_id = account.get("id");
 
         let {url, votes} = getWitnessOrCommittee(type, account);
 
         let link = url && url.length > 0 && url.indexOf("http") === -1 ? "http://" + url : url;
-
+        const isSupported = action === "remove";
         return (
             <tr>
+                <td style={{textAlign: "center", backgroundColor: isSupported ? "green" : null}}><Translate content={`settings.${isSupported ? "yes" : "no"}`}/></td>
                 <td>
                     <AccountImage size={{height: 30, width: 30}} account={name}/>
                 </td>
                 <td><LinkToAccountById account={account.get("id")} /></td>
                 <td><a href={link} target="_blank" rel="noopener noreferrer">{url.length < 45 ? url : url.substr(0, 45) + "..."}</a></td>
                 <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} /></td>
+                <td><Translate content={`account.votes.${isActive ? "active" : "inactive"}`} /></td>
                 <td>
                     <button className="button outline" onClick={this.onAction.bind(this, item_id)}>
-                        <Translate content={`account.votes.${this.props.action}_witness`}/></button>
+                        <Translate content="account.votes.toggle"/></button>
                 </td>
             </tr>
         );
     }
 }
 
-class AccountsList extends React.Component {
+class VotingAccountsList extends React.Component {
 
     static propTypes = {
         items: ChainTypes.ChainObjectsList,
@@ -77,7 +84,7 @@ class AccountsList extends React.Component {
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         action: React.PropTypes.string,
-        withSelector: React.PropTypes.bool,
+        withSelector: React.PropTypes.bool
     };
 
     static defaultProps = {
@@ -92,7 +99,7 @@ class AccountsList extends React.Component {
             selected_item: null,
             item_name_input: "",
             error: null
-        }
+        };
         this.onItemChange = this.onItemChange.bind(this);
         this.onItemAccountChange = this.onItemAccountChange.bind(this);
         this.onAddItem = this.onAddItem.bind(this);
@@ -146,15 +153,19 @@ class AccountsList extends React.Component {
                 return 0;
             }
         })
-        .map(i => {
+        .map((i, idx) => {
+            let action = this.props.supported && this.props.supported.includes(i.get("id")) ? "remove" : "add";
+            let isActive = this.props.active.includes(getWitnessOrCommittee(this.props.type, i).id);
             return (
                 <AccountItemRow
+                    idx={idx}
                     key={i.get("name")}
                     account={i}
                     type={this.props.type}
-                    onAction={this.props.action === "add" ? this.props.onAddItem : this.props.onRemoveItem}
+                    onAction={action === "add" ? this.props.onAddItem : this.props.onRemoveItem}
                     isSelected={this.props.items.indexOf(i) !== -1}
-                    action={this.props.action}
+                    action={action}
+                    isActive={isActive}
                 />
             );
         });
@@ -187,11 +198,12 @@ class AccountsList extends React.Component {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th style={{width: cw[0]}}></th>
-                            <th style={{width: cw[1]}}><Translate content="account.votes.name"/></th>
-                            <th style={{width: cw[2]}}><Translate content="account.votes.url"/></th>
-                            <th style={{width: cw[3]}}><Translate content="account.votes.votes" /></th>
-                            <th style={{width: cw[4]}}><Translate content="account.perm.action" /></th>
+                            <th style={{maxWidth: cw[0]}}><Translate content="account.votes.supported"/></th>
+                            <th colSpan="2" style={{maxWidth: cw[1]}}><Translate content={`account.votes.${this.props.type}`}/></th>
+                            <th style={{maxWidth: cw[2]}}><Translate content="account.votes.url"/></th>
+                            <th style={{maxWidth: cw[3]}}><Translate content="account.votes.votes" /></th>
+                            <th style={{maxWidth: cw[4]}}><Translate content="account.votes.status.title" /></th>
+                            <th style={{maxWidth: cw[5]}}><Translate content="account.perm.action" /></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -204,4 +216,4 @@ class AccountsList extends React.Component {
 
 }
 
-export default BindToChainState(AccountsList, {keep_updating: true});
+export default BindToChainState(VotingAccountsList, {keep_updating: true});

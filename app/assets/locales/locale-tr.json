@@ -297,7 +297,13 @@
       "cm_not_approved_by": "Kurul üyeleri %(account)s tarafından onaylanmadı",
       "already": "Hesap zaten listede",
       "proxy_known": "Bilinen proksiler",
-      "expired": "Süresi bitmiş geliştirmeler"
+      "expired": "Süresi bitmiş geliştirmeler",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Gerekli Tanıklar",

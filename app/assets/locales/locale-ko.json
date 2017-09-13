@@ -157,7 +157,13 @@
       "add_committee_label": "위원",
       "add_witness_label": "증인",
       "approve_worker": "Approve worker proposal",
-      "reject_worker": "Reject worker proposal"
+      "reject_worker": "Reject worker proposal",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "선호 증인 수",
