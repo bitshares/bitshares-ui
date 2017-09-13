@@ -47,15 +47,17 @@ class Footer extends React.Component {
     }
 
     checkNewVersionAvailable(){
-        fetch("https://api.github.com/repos/bitshares/bitshares-ui/releases/latest").then((res)=>{
-            return res.json()
-        }).then(function(json){
-            let oldVersion = String(json.tag_name);
-            let newVersion = String(APP_VERSION);
-            if((oldVersion !== newVersion) && __ELECTRON__){
-                this.setState({newVersion});
-            }
-        }.bind(this));
+        if (__ELECTRON__) {
+            fetch("https://api.github.com/repos/bitshares/bitshares-ui/releases/latest").then((res)=>{
+                return res.json();
+            }).then(function(json){
+                let oldVersion = String(json.tag_name);
+                let newVersion = String(APP_VERSION);
+                if((oldVersion !== newVersion)){
+                    this.setState({newVersion});
+                }
+            }.bind(this));
+        }
     }
 
     downloadVersion(){
@@ -87,15 +89,15 @@ class Footer extends React.Component {
                     <div className="grid-block">
                         <div className="logo" style={
                             {
-                              fontSize: state.newVersion ? "0.9em" : "1em", 
-                              cursor: state.newVersion ? "pointer" : "normal", 
-                              marginTop: state.newVersion ? "-5px" : "0px", 
+                              fontSize: state.newVersion ? "0.9em" : "1em",
+                              cursor: state.newVersion ? "pointer" : "normal",
+                              marginTop: state.newVersion ? "-5px" : "0px",
                               overflow: "hidden"
                             }
                         } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
                             {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
                             <span style={updateStyles}>
-                              <Translate content="footer.title"  />                             
+                              <Translate content="footer.title"  />
                               <span className="version">{version}</span>
                             </span>
 
