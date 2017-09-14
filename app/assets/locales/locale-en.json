@@ -9,6 +9,10 @@
     "tr": "Turkish",
     "ru": "Русский"
   },
+  "incognito": {
+    "no_support": "This Bitshares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
+    "ignore": "I understand, continue."
+  },
   "sync_fail": {
     "title": "Failed to sync with the API server",
     "sub_text_1" : "Please verify that your computer clock is correct.",

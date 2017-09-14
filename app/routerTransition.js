@@ -23,6 +23,7 @@ ChainStore.setDispatchFrequency(20);
 
 let connect = true;
 let connectionManager;
+let oldChain = null;
 
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState().defaults.apiServer
