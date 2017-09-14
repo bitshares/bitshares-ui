@@ -63,7 +63,7 @@ class AccountItemRow extends React.Component {
                 <td><LinkToAccountById account={account.get("id")} /></td>
                 <td><a href={link} target="_blank" rel="noopener noreferrer">{url.length < 45 ? url : url.substr(0, 45) + "..."}</a></td>
                 <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} /></td>
-                <td><Translate content={`account.votes.${isActive ? "active" : "inactive"}`} /></td>
+                <td><Translate content={`account.votes.${isActive ? "active_short" : "inactive"}`} /></td>
                 <td>
                     <button className="button outline" onClick={this.onAction.bind(this, item_id)}>
                         <Translate content="account.votes.toggle"/></button>

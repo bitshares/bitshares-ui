@@ -302,7 +302,7 @@
       "committee": "Committee member name",
       "toggle": "Toggle vote",
       "supported": "Supported",
-      "active": "Active",
+      "active_short": "Active",
       "inactive": "Inactive"
     },
     "options": {
