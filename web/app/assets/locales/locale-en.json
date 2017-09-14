@@ -845,6 +845,7 @@
         "fib": "Draw Fibonacci retracement",
         "trendline": "Draw trend line",
         "volume": "Show volume chart",
+        "clamp_chart": "Clamp chart edge",
         "period": "Period",
         "height": "Chart height",
         "price_title": "Price indicators",
