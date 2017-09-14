@@ -1,0 +1,44 @@
+language: node_js
+node_js: 7
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+    - os: osx
+      osx_image: xcode8.3
+env:
+  global:
+  - GITHUB_REPO: bitshares/bitshares-ui
+  - WALLET_REPO: bitshares/bitshares.github.io
+  - CXX=g++-4.8
+  - secure: g+Q6hF5/zJnFlk1KrI0VABR+0efzGQqtIj3XlmqTLLWCyopxNQoBOsUsK5wBqLYA3LGMTtAsOLhhItx1CSF7/Ij/uDEOluXrxLYASziIzYF4cJ5YRALZ2k/mgrUw2dSSMZ7iL4DIDH/8UTiw0Ld1mrbHn+W/Dkgkct7egDJmn93N4tI1gKJ+AArSUNIFLKzEbPnjVHX9n64KIlNs8tuwfaXOzy8WdIWxsbwzRWmrcrBOG52o3MgtClaSO8pD13Cz1F3ES4clxH7s104EF5LttTmqz3bpM3CtRAjQ6rwX8E/x5K6L8GCpeeYM5cCPbttap1olD1f4GP+nSzqP/L1OKIuzCwK4qknlbfNlDG4WhsXDzTTmu1goQKuUU8w9K0aGTgI1NPJaxFrijZ/ofSOSHz3RH8xd6XLsFTyJllnY7/Y6oyul9RNd29yLcJVCko9tM1LoUhvEH45yWCTc4R5Ow+E4+IYTm0RniGQtgW+gPYquveALFPHzGkAwcShcYNDWpCyMQq3QWFu8GWK3PWp0GtLe02Rryjy08tasQR0DRRmFUESMSZPikyTM75M+bKrIFlsf9Q3H2uDc8Z4qcG5vrYFVdB6qeekwdkae4C1yC872AHvDvu+CnB1VZ7qvuDJkFBn3FrxzKgZ9rVWvVb7X6y+a95Wey32KzSqKvU+E4ec=
+cache:
+  directories:
+    - "node_modules"
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - icnsutils
+    - graphicsmagick
+    - xz-utils
+before_install: "./install.sh"
+script: "./build.sh"
+after_success: "./deploy.sh"
+deploy:
+  provider: releases
+  tag_name: $TRAVIS_TAG
+  name: $TRAVIS_TAG
+  body: Automated release from Travis CI with added files from AppVeyor build
+  api_key:
+    secure: K+62i3Rky9rXJyO6UMTLyY+GHfQtRMpEX9bLQFyZERSdmPK5l0Xq3ivBfESczoGsIxoPuVvWLOx/ZAh+I+67izS28i5LowQKLFQQ1h1b82ilexlprkj+Gf5QE3CWk04rR4OiIv4eXJLShqnGOQ7SuyI/UHW7iwTqAOt22YWWWPazlM75JwXQBYdHZ5vY2axXW493WGnRcLqzmRBwo2Ggkieqt8QiYYtvdk4yA81qbtIK6TxLzz6pc9fW/q+r+HoB0s81djlHmOByughEgc/mW+7xB3mM2uB8katNVbGa2qgZ/NS031b04ZSe8V8JHzC6UIBU8IKuFrxm3cpFN7onYDDfKs+6x+u5LCavw3VanHCgTd4dA4Jisew2Q19YhqymYYHmhMuwLh8y8XW8V7BrNNi9qjknKodaB8SFN1PZYe29LnG07hmZWwnBkVEIXf2QwcL+yfZtJ9NmLWyktnCpj4urtz3qQOG4nkbrn9mGx+jINgfzk4bpN6jNk0wwe9yqFy7nsZxow8vHf31hICwZZl8borz6fZhW9WVDqS9bZs/Ts4Qk3U4WREdmB24eIV8W5DIliSH/5qFh0RIRDCHKisom8r2XdBATe7hJ1t+YZR0N80q2IPwgTPdVtUuHTE1YkPcu0eILgA/YUAWNu1yoSNQUYScKA2i382gOBl06CS0=
+  file_glob: true
+  file: build/binaries/BitShares*
+  skip_cleanup: true
+  draft: true
+  on:
+    repo: bitshares/bitshares-ui
+    tags: true

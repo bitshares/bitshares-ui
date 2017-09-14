@@ -1,4 +1,46 @@
 ---------------------------------------------------------------------
+Release 2.0.170914
+---------------------------------------------------------------------
+New features
+--------
+- Issue #315 - Add Chart Clamp To Settings Dropdown (#373)
+- Issue #364 - Present an error message that disallows the use of Incognito with the BTS wallet (#394)
+- Issue #311 - Allow for hiding user issued assets (#397)
+- Iss #43 - Notification for new version availability (#382)
+- Display all committee members and witnesses, fix #53
+- #224 build automation (#371)
+- Iss #279 - When selecting a new Node under Settings -> Access, don't hard reload the browser (#380)
+
+Bug fixes
+--------
+- fixed #392 (#401)
+- Fix password manager issue and ChainStore account fetching for logins close #403
+- Fix edge and tooltip formats when switching between markets
+- fix issue #385 make height is same with open orders (#396)
+- Make sure period will be placed when selected text has period keyed (#395)
+- Iss 351 - Failed to Sync with API Server UI (#381)
+- Update display price when changing amounts to stay consistent with confirmation screen fix #314
+- Fix #374 (#375)
+- Use only the first part of the remote API errors when broadcasting trx fails #342
+- Fix worker creation submit error close #366
+- Improve order matching when clicking orderbook orders #200
+- Fix #358 (#363)
+- Fix values displayed in MyOpenOrders
+- Remove special treatment of call pricing making it non-invertable #204
+- Fix find market invalid asset warnings close #292
+- Enforce at least 2 decimals for price text #186
+- fix collateral ratios is NAN issue (#362)
+- Fix #345 (#357)
+- Fix Issue #341 (#355)
+- Fix some setState on unmounted component errors
+- Fix MyMarkets console errors
+- Fix 'span cannot appear as child of tbody' error
+- Fix warning in header (td in a) (#338)
+- Update bitsharesjs, #346, fix #304
+- Update apiLatencies after connection
+- Fix API nodes sorting #346
+
+---------------------------------------------------------------------
 Release 2.0.170829
 ---------------------------------------------------------------------
 New features
