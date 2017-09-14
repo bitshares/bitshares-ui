@@ -23,7 +23,7 @@ ChainStore.setDispatchFrequency(20);
 
 let connect = true;
 let connectionManager;
-let oldChain = null;
+let oldChain = "";
 
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState().defaults.apiServer
@@ -47,7 +47,6 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
-let oldChain = "";
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 15) {
