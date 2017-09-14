@@ -137,9 +137,9 @@ var iDB = (function () {
         },
 
         close: function () {
-            if (_instance) _instance.db().close()
-            idb_helper.set_graphene_db(null)
-            _instance = undefined
+            if (_instance && _instance.db()) _instance.db().close();
+            idb_helper.set_graphene_db(null);
+            _instance = undefined;
         },
 
         add_to_store: function (store_name, value) {
