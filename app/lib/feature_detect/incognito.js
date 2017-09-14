@@ -8,11 +8,11 @@ export default function(cb){
     let name = browser();
     if(name === "firefox"){
         var db = indexedDB.open("test");
-        db.onerror = function(){ 
-            cb(true) 
+        db.onerror = function(){
+            cb(true);
         };
-        db.onsuccess =function(){ 
-            cb(false) 
+        db.onsuccess =function(){
+            cb(false);
         };
     } else if(name === "safari"){
         var storage = window.sessionStorage;
@@ -35,11 +35,12 @@ export default function(cb){
             return;
         }
 
-        fs(window.TEMPORARY, 100, function (err) {
-            //Incognito mode
-            cb(true);
-        }, function (fs) {
+        fs(window.TEMPORARY, 100, function (fs) {
+            // Not incognito mode
             cb(false);
+        }, function (err) {
+            // Incognito mode
+            cb(true);
         });
     } else if(name === "ie"){
         if(!window.indexedDB && (window.PointerEvent || window.MSPointerEvent)){
