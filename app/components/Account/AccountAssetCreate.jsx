@@ -251,6 +251,10 @@ class AccountAssetCreate extends React.Component {
                 update.description[value] = e;
                 break;
 
+            case "visible":
+                update.description[value] = !update.description[value];
+                break;
+
             default:
                 update.description[value] = e.target.value;
                 break;
@@ -493,44 +497,59 @@ class AccountAssetCreate extends React.Component {
 
         // Loop over flags
         let flags = [];
+        let getFlag = (key, onClick, isChecked)=>{
+            return <table key={"table_" + key} className="table">
+                <tbody>
+                    <tr>
+                        <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                        <td style={{border: "none"}}>
+                            <div className="switch" style={{marginBottom: "10px"}} onClick={onClick}>
+                                <input type="checkbox" checked={isChecked} />
+                                <label />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>;
+        };
         for (let key in permissionBooleans) {
             if (permissionBooleans[key] && key !== "charge_market_fee") {
                 flags.push(
-                    <table key={"table_" + key} className="table">
-                        <tbody>
-                            <tr>
-                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                                <td style={{border: "none"}}>
-                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onFlagChange.bind(this, key)}>
-                                        <input type="checkbox" checked={flagBooleans[key]} />
-                                        <label />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                )
+                    getFlag(
+                        key,
+                        this._onFlagChange.bind(this, key),
+                        flagBooleans[key]
+                    )
+                );
             }
         }
+
+        flags.push(
+            getFlag(
+                "visible",
+                this._onUpdateDescription.bind(this, "visible"),
+                update.description.visible ? false : (update.description.visible === false ? true : false)
+            )
+        );
 
         // Loop over permissions
         let permissions = [];
         for (let key in permissionBooleans) {
-                permissions.push(
-                    <table key={"table_" + key} className="table">
-                        <tbody>
-                            <tr>
-                                <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
-                                <td style={{border: "none"}}>
-                                    <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
-                                        <input type="checkbox" checked={permissionBooleans[key]} onChange={() => {}}/>
-                                        <label />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                )
+            permissions.push(
+                <table key={"table_" + key} className="table">
+                    <tbody>
+                        <tr>
+                            <td style={{border: "none", width: "80%"}}><Translate content={`account.user_issued_assets.${key}`} />:</td>
+                            <td style={{border: "none"}}>
+                                <div className="switch" style={{marginBottom: "10px"}} onClick={this._onPermissionChange.bind(this, key)}>
+                                    <input type="checkbox" checked={permissionBooleans[key]} onChange={() => {}}/>
+                                    <label />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            )
         }
 
         return (
