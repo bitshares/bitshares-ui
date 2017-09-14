@@ -539,6 +539,15 @@ class MyMarkets extends React.Component {
         if (searchAssets.size) {
             searchAssets
             .filter(a => {
+                try {
+                    if(a.options.description){
+                        let description = JSON.parse(a.options.description);
+                        if("visible" in description){
+                            if(!description.visible) return false;
+                        }
+                    }
+                } catch(e){}
+
                 return (
                     a.symbol.indexOf(lookupQuote) !== -1 &&
                     a.symbol.length >= lookupQuote.length
