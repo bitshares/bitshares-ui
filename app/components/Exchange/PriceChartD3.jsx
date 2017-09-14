@@ -212,7 +212,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         const { height, width, showVolumeChart, indicators } = this.props;
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
             enableFib, calculators } = this.state;
-        const { positiveColor, negativeColor, strokeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
+        const { positiveColor, negativeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
 
         let gridHeight = height - margin.top - margin.bottom;
         let gridWidth = width - margin.left - margin.right;
@@ -254,7 +254,6 @@ class CandleStickChartWithZoomPan extends React.Component {
             <CandlestickSeries
                 wickStroke={d => d.close > d.open ? positiveColor : negativeColor}
                 fill={d => d.close > d.open ? positiveColor : negativeColor}
-                stroke={d => Math.abs(d.close - d.open) <= 0.0015 ? (strokeColor || '#000') : '#000'}
                 opacity={0.8}
             />
             {indicators.bb ? <BollingerSeries calculator={calculators.bb} /> : null}
