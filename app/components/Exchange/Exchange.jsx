@@ -872,6 +872,7 @@ class Exchange extends React.Component {
         let isNullAccount = currentAccount.get("id") === "1.2.3";
 
         const showVolumeChart = this.props.viewSettings.get("showVolumeChart", true);
+        const enableChartClamp = this.props.viewSettings.get("enableChartClamp", true);
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset;
@@ -1139,6 +1140,7 @@ class Exchange extends React.Component {
                                     zoom={this.state.currentPeriod}
                                     tools={tools}
                                     showVolumeChart={showVolumeChart}
+                                    enableChartClamp={enableChartClamp}
 
                                     buckets={buckets} bucketSize={bucketSize}
                                     currentPeriod={this.state.currentPeriod}
@@ -1162,6 +1164,7 @@ class Exchange extends React.Component {
                                     onChangeChartHeight={this.onChangeChartHeight.bind(this)}
                                     chartHeight={chartHeight}
                                     onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
+                                    onToggleChartClamp={() => {SettingsActions.changeViewSetting({enableChartClamp: !enableChartClamp});}}
                                     onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
                                 />
                             </div>) : (
