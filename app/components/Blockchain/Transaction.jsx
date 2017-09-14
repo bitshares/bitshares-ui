@@ -998,7 +998,14 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
                             <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
                         </tr>
-                    )
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.id" /></td>
+                            <td>{op[1].proposal}</td>
+                        </tr>
+                    );
 
                     fields.forEach((field) => {
                         if (op[1][field].length) {
