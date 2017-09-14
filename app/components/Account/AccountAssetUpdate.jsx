@@ -438,16 +438,18 @@ class AccountAssetUpdate extends React.Component {
                         </td>
                     </tr>
                 </tbody>
-            </table>
-        }
+            </table>;
+        };
 
         for (let key in originalPermissions) {
             if (originalPermissions[key] && key !== "charge_market_fee") {
                 flags.push(
-                    getFlag(key),
-                    this._onFlagChange.bind(this, key),
-                    flagBooleans[key]
-                )
+                    getFlag(
+                        key,
+                        this._onFlagChange.bind(this, key),
+                        flagBooleans[key]
+                    )
+                );
             }
         }
 
