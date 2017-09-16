@@ -44,7 +44,7 @@ class AccountOrders extends React.Component {
                 let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
                 let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
 
-                let limitOrder = new LimitOrder(order, assets, base.get("id"));
+                let limitOrder = new LimitOrder(order, assets, quoteID > baseID ? quote.get("id") : base.get("id"));
 
                 let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
@@ -61,6 +61,7 @@ class AccountOrders extends React.Component {
                         };
                     }
                 }
+
 
                 let marketBase = ChainStore.getAsset(markets[marketID].base.id);
                 let marketQuote = ChainStore.getAsset(markets[marketID].quote.id);
