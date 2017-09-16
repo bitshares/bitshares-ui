@@ -244,7 +244,7 @@ class TotalValue extends React.Component {
             totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
         totalsTip += "</tbody></table>";
-        
+
         if (!inHeader) {
             return(
                 <span>
@@ -379,7 +379,7 @@ class AccountWrapper extends React.Component {
             }
         });
 
-        if (!balanceList.size) {
+        if (!balanceList.size && !Object.keys(openOrders).length && !Object.keys(debt).length) {
             return(
                 <span>
                     {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null} 0
