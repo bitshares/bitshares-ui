@@ -282,7 +282,7 @@ class MarketsStore {
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
-                            new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                            callOrder
                         );
                     }
                 } catch(err) {

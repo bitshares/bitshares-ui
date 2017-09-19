@@ -1248,13 +1248,14 @@ class Exchange extends React.Component {
                                     )}
                                     key="open_orders"
                                     orders={marketLimitOrders}
-                                    currentAccount={currentAccount.get("id")}
+                                    currentAccount={currentAccount}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                    feedPrice={this.props.feedPrice}
                                 />) : null}
                             </div>
 

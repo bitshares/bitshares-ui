@@ -1193,7 +1193,8 @@
     "review_period": "Review period begin",
     "expiration_time": "Expiration time",
     "proposed_operations": "Proposed operations",
-    "fee_paying_account": "Fee paying account"
+    "fee_paying_account": "Fee paying account",
+    "id": "Proposal object id"
   },
   "gateway": {
     "fee": "Gateway fee",

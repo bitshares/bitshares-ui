@@ -19,7 +19,8 @@ class AccountRefsStore extends BaseStore {
     }
 
     _getInitialState() {
-        this.chainstore_account_ids_by_key = null
+        this.chainstore_account_ids_by_key = null;
+        this.chainstore_account_ids_by_account = null;
         return {
             account_refs: Immutable.Set()
             // loading_account_refs: false
@@ -34,6 +35,7 @@ class AccountRefsStore extends BaseStore {
     loadDbData() {
         // this.setState(this._getInitialState())
         this.chainstore_account_ids_by_key = null;
+        this.chainstore_account_ids_by_account = null;
         this.state = {account_refs: Immutable.Set()};
         return loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
@@ -41,17 +43,21 @@ class AccountRefsStore extends BaseStore {
     }
 
     chainStoreUpdate() {
-        if(this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key) return
-        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key
-        this.checkPrivateKeyStore()
+        if(
+            this.chainstore_account_ids_by_key === ChainStore.account_ids_by_key &&
+            this.chainstore_account_ids_by_account === ChainStore.account_ids_by_account
+        ) return;
+        this.chainstore_account_ids_by_key = ChainStore.account_ids_by_key;
+        this.chainstore_account_ids_by_account = ChainStore.account_ids_by_account;
+        this.checkPrivateKeyStore();
     }
 
     checkPrivateKeyStore() {
-        var no_account_refs = this.no_account_refs
-        var account_refs = Immutable.Set()
+        let no_account_refs = this.no_account_refs
+        let account_refs = Immutable.Set()
         PrivateKeyStore.getState().keys.keySeq().forEach( pubkey => {
             if(no_account_refs.has(pubkey)) return
-            var refs = ChainStore.getAccountRefsOfKey(pubkey)
+            let refs = ChainStore.getAccountRefsOfKey(pubkey)
             if(refs === undefined) return
             if( ! refs.size) {
                 // Performance optimization...
@@ -61,7 +67,7 @@ class AccountRefsStore extends BaseStore {
                 {
                     // Do Not block brainkey generated keys.. Those are new and
                     // account references may be pending.
-                    var private_key_object = PrivateKeyStore.getState().keys.get(pubkey)
+                    let private_key_object = PrivateKeyStore.getState().keys.get(pubkey)
                     if( typeof private_key_object.brainkey_sequence === 'number' ) {
                         return
                     }
@@ -71,7 +77,16 @@ class AccountRefsStore extends BaseStore {
             }
             account_refs = account_refs.add(refs.valueSeq())
         })
-        account_refs = account_refs.flatten()
+        account_refs = account_refs.flatten();
+
+        /* Discover accounts referenced by account name in permissions */
+        account_refs.forEach(account => {
+            let refs = ChainStore.getAccountRefsOfAccount(account);
+            if(refs === undefined) return;
+            if( ! refs.size) return;
+            account_refs = account_refs.add(refs.valueSeq());
+        });
+        account_refs = account_refs.flatten();
         if( ! this.state.account_refs.equals(account_refs)) {
             // console.log("AccountRefsStore account_refs",account_refs.size);
             this.setState({account_refs})
