@@ -135,10 +135,10 @@ class MarketsActions {
                         // Only check for call and settle orders if either the base or quote is the CORE asset
                         if (isMarketAsset) {
                             callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                                marketAsset.id, 200
+                                marketAsset.id, 300
                             ]);
                             settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                                marketAsset.id, 200
+                                marketAsset.id, 300
                             ]);
                         }
 
@@ -159,7 +159,7 @@ class MarketsActions {
                         // of operations received in the subscription update
                         Promise.all([
                             Apis.instance().db_api().exec("get_limit_orders", [
-                                base.get("id"), quote.get("id"), 200
+                                base.get("id"), quote.get("id"), 300
                             ]),
                             onlyLimitOrder ? null : callPromise,
                             onlyLimitOrder ? null : settlePromise,
@@ -210,10 +210,10 @@ class MarketsActions {
 
                 if (isMarketAsset) {
                     callPromise = Apis.instance().db_api().exec("get_call_orders", [
-                        marketAsset.id, 200
+                        marketAsset.id, 300
                     ]);
                     settlePromise = Apis.instance().db_api().exec("get_settle_orders", [
-                        marketAsset.id, 200
+                        marketAsset.id, 300
                     ]);
                 }
 
@@ -233,7 +233,7 @@ class MarketsActions {
                         subscription, base.get("id"), quote.get("id")
                     ]),
                     Apis.instance().db_api().exec("get_limit_orders", [
-                        base.get("id"), quote.get("id"), 200
+                        base.get("id"), quote.get("id"), 300
                     ]),
                     callPromise,
                     settlePromise,
