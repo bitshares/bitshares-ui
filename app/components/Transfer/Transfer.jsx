@@ -282,10 +282,12 @@ class Transfer extends React.Component {
     _getAvailableAssets(state = this.state) {
         const { feeStatus } = this.state;
         function hasFeePoolBalance(id) {
+            if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasPoolBalance;
         }
 
         function hasBalance(id) {
+            if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasBalance;
         }
 
