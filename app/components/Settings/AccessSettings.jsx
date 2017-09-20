@@ -30,7 +30,7 @@ class ApiNode extends React.Component {
     }
 
     activate(){
-        let action = SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
+        SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
 
         setTimeout(function(){
             willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);

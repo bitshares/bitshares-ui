@@ -92,6 +92,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                         ChainStore.clearCache();
                         ChainStore.subscribed = false;
                         ChainStore.init().then(() => {
+                            AccountStore.reset();
                             AccountStore.loadDbData(currentChain);
                         });
                     }
