@@ -200,7 +200,7 @@ class Settings extends React.Component {
             break;
 
         case "access":
-            entries = <AccessSettings currentNode={settings.get("apiServer")} faucet={settings.get("faucet_address")} nodes={defaults.apiServer} onChange={this._onChangeSetting.bind(this)} apiLatencies={this.props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
+            entries = <AccessSettings faucet={settings.get("faucet_address")} nodes={defaults.apiServer} onChange={this._onChangeSetting.bind(this)} triggerModal={this.triggerModal.bind(this)} />;
             break;
         case "faucet_address":
             entries = <input type="text" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
