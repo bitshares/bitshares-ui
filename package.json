@@ -73,7 +73,7 @@
   },
   "browsersList": "electron 1.7",
   "build": {
-    "productName": "BitShares Light Wallet",
+    "productName": "BitShares",
     "appId": "org.bitshares.graphene",
     "files": [
       "build/electron",
