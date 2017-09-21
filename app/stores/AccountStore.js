@@ -43,10 +43,17 @@ class AccountStore extends BaseStore {
             "getMyAccounts",
             "isMyAccount",
             "getMyAuthorityForAccount",
-            "isMyKey"
+            "isMyKey",
+            "reset"
         );
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
+        this.chainStoreUpdate = this.chainStoreUpdate.bind(this);
+    }
+
+    reset() {
+        if (this.state.subbed) ChainStore.unsubscribe(this.chainStoreUpdate);
+        this.state = this._getInitialState();
     }
 
     _getInitialState() {
@@ -131,18 +138,16 @@ class AccountStore extends BaseStore {
                     accountsLoaded: true
                 });
                 Promise.all(accountPromises).then(() => {
-                    ChainStore.subscribe(this.chainStoreUpdate.bind(this));
+                    ChainStore.subscribe(this.chainStoreUpdate);
+                    this.state.subbed = true;
+                    this.emitChange();
                     this.chainStoreUpdate();
-                    this.setState({
-                        subbed: true
-                    });
                     resolve();
                 }).catch(err => {
-                    ChainStore.subscribe(this.chainStoreUpdate.bind(this));
+                    ChainStore.subscribe(this.chainStoreUpdate);
+                    this.state.subbed = true;
+                    this.emitChange();
                     this.chainStoreUpdate();
-                    this.setState({
-                        subbed: true
-                    });
                     reject(err);
                 });
             }).catch(err => {
@@ -327,12 +332,12 @@ class AccountStore extends BaseStore {
         if (this.state.passwordAccount) name = this.state.passwordAccount;
         const key = this._getCurrentAccountKey();
         if (!name) {
-            this.state.currentAccount = null;
-        } else {
-            this.state.currentAccount = name;
+            name = null;
         }
 
-        accountStorage.set(key, this.state.currentAccount);
+        this.setState({currentAccount: name});
+
+        accountStorage.set(key, name || null);
     }
 
     onSetCurrentAccount(name) {

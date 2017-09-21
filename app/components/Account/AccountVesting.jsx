@@ -14,7 +14,7 @@ class VestingBalance extends React.Component {
     }
 
     render() {
-        let {account, vb} = this.props;
+        let {vb} = this.props;
         if (!this.props.vb) {
             return null;
         }
@@ -23,18 +23,15 @@ class VestingBalance extends React.Component {
         //     return null;
         // }
 
-        let cvbAsset, vestingPeriod, remaining, earned, secondsPerDay = 60 * 60 * 24,
+        let cvbAsset, vestingPeriod, earned, secondsPerDay = 60 * 60 * 24,
             availablePercent, balance;
         if (vb) {
             balance = vb.balance.amount;
             cvbAsset = ChainStore.getAsset(vb.balance.asset_id);
             earned = vb.policy[1].coin_seconds_earned;
             vestingPeriod = vb.policy[1].vesting_seconds;
-
-            availablePercent = earned / (vestingPeriod * balance);
+            availablePercent = vestingPeriod === 0 ? 1 : earned / (vestingPeriod * balance);
         }
-
-        let account_name = account.name;
 
         if (!cvbAsset) {
             return null;
@@ -66,7 +63,7 @@ class VestingBalance extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><Translate content="account.member.remaining" /></td>
-                                    <td>{utils.format_number(vestingPeriod * (1 -  availablePercent) / secondsPerDay, 2)} days</td>
+                                    <td>{utils.format_number(vestingPeriod * (1 -  availablePercent) / secondsPerDay || 0, 2)} days</td>
                                 </tr>
                                 <tr>
                                     <td><Translate content="account.member.available" /></td>

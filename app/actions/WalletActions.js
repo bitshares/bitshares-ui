@@ -196,7 +196,7 @@ class WalletActions {
         let balance = cvb.balance.amount,
             earned = cvb.policy[1].coin_seconds_earned,
             vestingPeriod = cvb.policy[1].vesting_seconds,
-            availablePercent = forceAll ? 1 : earned / (vestingPeriod * balance);
+            availablePercent = (forceAll || vestingPeriod) === 0 ? 1 : earned / (vestingPeriod * balance);
 
         tr.add_type_operation("vesting_balance_withdraw", {
             fee: { amount: "0", asset_id: "1.3.0"},

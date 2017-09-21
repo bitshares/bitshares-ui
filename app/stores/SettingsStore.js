@@ -328,6 +328,7 @@ class SettingsStore {
     }
 
     onUpdateLatencies(latencies) {
+        ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
     }
 }

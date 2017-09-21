@@ -62,7 +62,11 @@ class SyncError extends React.Component {
                     <p><Translate unsafe content="sync_fail.sub_text_2" /></p>
                     <hr />
 
-                    <AccessSettings currentNode={props.apiServer} nodes={props.apis} onChange={this.onChangeWS.bind(this)} apiLatencies={props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
+                    <AccessSettings
+                        nodes={props.apis}
+                        onChange={this.onChangeWS.bind(this)}
+                        triggerModal={this.triggerModal.bind(this)}
+                    />
                 </div>
 
                 <WebsocketAddModal ref="ws_modal" apis={props.apis} api={props.apiServer} />
