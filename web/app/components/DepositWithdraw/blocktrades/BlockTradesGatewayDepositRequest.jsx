@@ -33,6 +33,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         supports_output_memos: React.PropTypes.bool.isRequired
     };
 
+    static defaultProps = {
+        autosubscribe: false
+    };
+
     constructor(props) {
         super(props);
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
@@ -116,6 +120,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             return emptyRow;
 
         let account_balances_object = this.props.account.get("balances");
+
+        const { gateFee } = this.props;
 
         let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of)
@@ -309,6 +315,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 asset={this.props.receive_asset.get("symbol")}
                                 url={this.state.url}
                                 output_coin_name={this.props.deposit_asset_name}
+                                gateFee={gateFee}
                                 output_coin_symbol={this.props.deposit_asset}
                                 output_coin_type={this.props.deposit_coin_type}
                                 output_wallet_type={this.props.deposit_wallet_type}

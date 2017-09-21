@@ -74,11 +74,11 @@ class FormattedPrice extends React.Component {
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount, callPrice,
+        let {base_asset, quote_asset, base_amount, quote_amount,
           marketDirections, marketId, hide_symbols, noPopOver} = this.props;
 
         let invertPrice = marketDirections.get(marketId);
-        if( (invertPrice && !callPrice) || this.props.invert) {
+        if( (invertPrice) || this.props.invert) {
             let tmp = base_asset;
             base_asset = quote_asset;
             quote_asset = tmp;
@@ -109,11 +109,11 @@ class FormattedPrice extends React.Component {
             );
         }
         let symbols = hide_symbols ? "" :
-                      (<span data-place="bottom" data-tip={noPopOver && !callPrice ? "Click to invert the price" : null} className={noPopOver && !callPrice ? "clickable inline-block" : ""} onClick={noPopOver && !callPrice ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+                      (<span data-place="bottom" data-tip={noPopOver ? "Click to invert the price" : null} className={noPopOver ? "clickable inline-block" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
 
         const currency_popover_body = !noPopOver && !hide_symbols ? (
           <div>
-            {!callPrice ? <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div> : null}
+            <div className="button" onClick={this.onFlip.bind(this)}><Translate content="exchange.invert" /></div>
             <div className="button" onClick={this.goToMarket.bind(this)}><Translate content="exchange.to_market" /></div>
           </div>
         ) : null;

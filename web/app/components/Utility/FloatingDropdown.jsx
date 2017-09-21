@@ -88,12 +88,12 @@ class Dropdown extends React.Component {
         if(entries.length === 0) return null;
         if(entries.length == 1) {
             return (
-               <div className={"dropdown-wrapper inactive" + (this.props.upperCase ? " upper-case" : "")}>
-                   <div>
-                       {this.props.singleEntry ? this.props.singleEntry : entries[0]}
-                   </div>
-               </div>
-           );
+                <div className={"dropdown-wrapper inactive" + (this.props.upperCase ? " upper-case" : "")}>
+                    <div>
+                        {this.props.singleEntry ? this.props.singleEntry : entries[0]}
+                    </div>
+                </div>
+            );
         } else {
             let options = entries.map(value => {
                 return <li className={this.props.upperCase ? "upper-case" : ""} key={value} onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>;
@@ -105,7 +105,7 @@ class Dropdown extends React.Component {
                         {options}
                     </ul>
                 </div>
-                );
+            );
         }
     }
 }

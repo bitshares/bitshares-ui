@@ -275,18 +275,15 @@ class ApplicationApi {
     }
 
     createWorker(options, account) {
-
-        console.log("template:", TransactionHelper.template("worker_create"));
         return new Promise((resolve, reject) => {
             let tr = new TransactionBuilder();
-            console.log("ops:", ops["worker_initializer"], ops["vesting_balance_worker_initializer"].toObject(undefined));
             const core = ChainStore.getAsset("1.3.0");
             if (!core) reject(new Error("Can't find core asset, please try again"));
             let precision = Math.pow(10, core.get("precision"));
 
             const owner = ChainStore.getAccount(account).get("id");
             if (!owner) reject(new Error("Can't find the owner account, please try again"));
-            
+
             try {
                 tr.add_type_operation("worker_create", {
                     fee: {

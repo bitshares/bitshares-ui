@@ -11,7 +11,8 @@ class LinkToAccountById extends React.Component {
     };
 
     static defaultProps = {
-        subpage: "overview"
+        subpage: "overview",
+        autosubscribe: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -26,7 +27,7 @@ class LinkToAccountById extends React.Component {
         if (!account_name) {
             return <span>{this.props.account.get("id")}</span>;
         }
-        
+
         return <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>;
     }
 }

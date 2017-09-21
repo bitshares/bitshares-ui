@@ -112,8 +112,7 @@
       "claim": "立即领取",
       "available": "可领取数量",
       "referral_link": "你的推荐链接",
-      "referral_text": "分享此链接给你的朋友参与引荐计划",
-      "claim_all": "尝试领取所有"
+      "referral_text": "分享此链接给你的朋友参与引荐计划"
     },
     "connections": {
       "known": "识别为",
@@ -362,7 +361,9 @@
       "pos": "数量必须大于0",
       "valid": "请输入一个合法的大于0的半角数字",
       "balance": "最终余额必须大于0",
-      "insufficient": "余额不足"
+      "insufficient": "余额不足",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "返回",
     "confirm": "确认发送",
@@ -659,6 +660,7 @@
     "asset": {
       "title": "资产",
       "not_found": "资产 %(name)s 不存在",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "资产类型",
         "issuer": "发行人",
@@ -859,6 +861,8 @@
     "sell": "卖出",
     "confirm_buy": "你的订单价格超出最低卖出价 %(diff)s 倍，你确定么？",
     "confirm_sell": "你的订单价低于最高买入价 %(diff)s 倍，你确定么？",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "settle": "喂价",
     "core_rate": "转账手续费汇率",
     "squeeze": "强制平仓价",
@@ -1158,7 +1162,8 @@
     "enter_refcode": "输入推荐码"
   },
   "gateway": {
-    "assets": {
+      "fee": "Gateway fee",
+      "assets": {
         "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
         "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
         "bit": "<br/>bit %(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",
@@ -1285,5 +1290,8 @@
     "disabled": "聊天室禁用",
     "enable": "启用聊天室",
     "telegram_link": "参与更加活跃的讨论，请加人 Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+  },
+    "trx_error": {
+      "expire": "Your transaction has expired without being confirmed, please try again later."
+    }
 }

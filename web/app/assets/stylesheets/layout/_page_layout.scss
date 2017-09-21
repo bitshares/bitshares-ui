@@ -1,5 +1,4 @@
 .page-layout {
-
   > .grid-block {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
@@ -13,6 +12,7 @@
   }
 
   .main-content {
+    padding-top: 1.5rem;
     background-color: #f3f3f3;
   }
 
@@ -21,9 +21,8 @@
   }
 
   .regular-padding {
-    padding: 1rem 1.75rem 1rem 1.75rem !important;
+    padding: 2rem 1.75rem !important;
   }
-
 }
 
 #account-notify {
@@ -81,4 +80,8 @@ div.bordered-header {
   @include breakpoint(small only) {
       font-size: 1.125rem;
   }
+}
+
+.table-cell{
+  display: table-cell;
 }

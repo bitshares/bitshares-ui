@@ -20,6 +20,7 @@ import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
+import {ChainValidation} from "bitsharesjs/es";
 
 let lastLookup = new Date();
 
@@ -39,7 +40,8 @@ class MarketGroup extends React.Component {
         return {
             open: open !== undefined ? open : true,
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
-            sortBy: props.viewSettings.get("myMarketsSort", "volume")
+            sortBy: props.viewSettings.get("myMarketsSort", "volume"),
+            inputValue: ""
         };
     }
 
@@ -258,19 +260,19 @@ class MyMarkets extends React.Component {
     constructor(props) {
         super();
 
-        let inputValue = null; // props.viewSettings.get("marketLookupInput", null);
-        let symbols = inputValue ? inputValue.split(":") : [null];
-        let quote = symbols[0];
-        let base = symbols.length === 2 ? symbols[1] : null;
+        // let inputValue = null; // props.viewSettings.get("marketLookupInput", null);
+        // let symbols = inputValue ? inputValue.split(":") : [null];
+        // let quote = symbols[0];
+        // let base = symbols.length === 2 ? symbols[1] : null;
 
         this.state = {
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
             sortBy: props.viewSettings.get("myMarketsSort", "volume"),
             activeTab: props.viewSettings.get("favMarketTab", "my-market"),
             activeMarketTab: props.viewSettings.get("activeMarketTab", 0),
-            lookupQuote: quote,
-            lookupBase: base,
-            inputValue: inputValue,
+            lookupQuote: null,
+            lookupBase: null,
+            inputValue: "",
             minWidth: "100%",
             findBaseInput: "USD",
             activeFindBase: "USD"
@@ -383,16 +385,28 @@ class MyMarkets extends React.Component {
     }
 
     _onInputName(e) {
-        let inputValue = e.target.value.toUpperCase();
+        let inputValue = e.target.value.trim().toUpperCase();
+        let isValidName = !ChainValidation.is_valid_symbol_error(inputValue, true);
+
         this.setState({
             inputValue
         });
 
+        /* Don't lookup invalid asset names */
+        if (inputValue && inputValue.length >= 3 && !isValidName) {
+            return this.setState({
+                assetNameError: true
+            });
+        } else {
+            this.setState({
+                assetNameError: false
+            });
+        }
         this._lookupAssets(inputValue);
     }
 
     _lookupAssets(value, force = false) {
-        console.log("__lookupAssets", value, force);
+        // console.log("__lookupAssets", value, force);
         if (!value && value !== "") {
             return;
         }
@@ -644,7 +658,7 @@ class MyMarkets extends React.Component {
                 {myMarketTab ?
                     <div className="grid-block shrink" style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
                         <label className="no-margin">
-                            <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onClick={() => {MarketsActions.toggleStars();}}/>
+                            <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onChange={() => {MarketsActions.toggleStars();}}/>
                             <span>&nbsp;<Translate content="exchange.show_star_1" /><Icon className="gold-star" name="fi-star"/> <Translate content="exchange.show_star_2" /></span>
                         </label>
                         <div className="float-right" style={{paddingLeft: 20}}>
@@ -653,6 +667,7 @@ class MyMarkets extends React.Component {
                             className="no-margin"
                             type="text"
                             placeholder="Filter"
+                            maxLength="16"
                             value={this.state.myMarketFilter}
                             onChange={(e) => {this.setState({myMarketFilter: e.target.value && e.target.value.toUpperCase()});}}
                         />
@@ -662,35 +677,42 @@ class MyMarkets extends React.Component {
 
                     <div style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
                         <table>
-                        <tr style={{width: "100%"}}>
-                            <td>
-                                <AssetSelector
-                                    onAssetSelect={this._onFoundBaseAsset.bind(this)}
-                                    assets={defaultBases}
-                                    onChange={this._onInputBaseAsset.bind(this)}
-                                    asset={this.state.findBaseInput}
-                                    assetInput={this.state.findBaseInput}
-                                    tabIndex={1}
-                                    style={{width: "100%", paddingBottom: "1.5rem"}}
-                                    onFound={this._onFoundBaseAsset.bind(this)}
-                                    label="exchange.base"
-                                    noLabel
-                                    inputStyle={{fontSize: "0.9rem"}}
-                                />
-                            </td>
-                        </tr>
-                        <tr style={{width: "100%"}}>
-                            <td>
-                                <label><Translate content="account.user_issued_assets.name" />:</label>
-                                <input
-                                    style={{fontSize: "0.9rem", position: "relative", top: 1}}
-                                    type="text"
-                                    value={this.state.inputValue}
-                                    onChange={this._onInputName.bind(this)}
-                                    placeholder={counterpart.translate("exchange.search")}
-                                />
-                            </td>
-                        </tr>
+                            <tbody>
+                                <tr style={{width: "100%"}}>
+                                    <td>
+                                        <AssetSelector
+                                            onAssetSelect={this._onFoundBaseAsset.bind(this)}
+                                            assets={defaultBases}
+                                            onChange={this._onInputBaseAsset.bind(this)}
+                                            asset={this.state.findBaseInput}
+                                            assetInput={this.state.findBaseInput}
+                                            tabIndex={1}
+                                            style={{width: "100%", paddingBottom: "1.5rem"}}
+                                            onFound={this._onFoundBaseAsset.bind(this)}
+                                            label="exchange.base"
+                                            noLabel
+                                            inputStyle={{fontSize: "0.9rem"}}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr style={{width: "100%"}}>
+                                    <td>
+                                        <label><Translate content="account.user_issued_assets.name" />:</label>
+                                        <input
+                                            style={{fontSize: "0.9rem", position: "relative", top: 1}}
+                                            type="text"
+                                            value={this.state.inputValue}
+                                            onChange={this._onInputName.bind(this)}
+                                            placeholder={counterpart.translate("exchange.search")}
+                                            maxLength="16"
+                                        />
+                                        {this.state.assetNameError ?
+                                            <div className="error-area" style={{paddingTop: 10}}>
+                                                <span style={{wordBreak: "break-all"}}><Translate content="explorer.asset.invalid" name={this.state.inputValue} /></span>
+                                            </div> : null}
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                     }

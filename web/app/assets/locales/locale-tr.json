@@ -115,7 +115,6 @@
       "explain": "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır."
     },
     "member": {
-      "claim_all": "Tamamını çek",
       "stats": "Üyelik Bilgileri",
       "join": "Katılma tarihi",
       "registrar": "Kaydı yapan",
@@ -369,7 +368,9 @@
       "pos": "Miktar pozitif olmak zorundadır.",
       "valid": "Lütfen geçerli bir değer giriniz.",
       "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
-      "insufficient": "Yetersiz bakiye"
+      "insufficient": "Yetersiz bakiye",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "GERİ",
     "confirm": "ONAYLA",
@@ -653,6 +654,7 @@
     "asset": {
       "title": "Aktif",
       "not_found": "%(name)s diye bir dijital varlık mevcut değil",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Dijital varlık türü",
         "issuer": "İhraç Eden",
@@ -843,6 +845,8 @@
     "horizontal": "Yatay",
     "confirm_buy": "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
     "confirm_sell": "Emri teyit et: Sat %(sell_amount)s %(sell_symbol)s fiyat %(price_amount)s %(price_symbol)s",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "market_name": "Piyasalarım",
     "quote_supply": "Karşıt arzı",
     "base_supply": "Taban arzı",
@@ -1122,6 +1126,7 @@
     "fee_paying_account": "Ücreti ödeyen hesap"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "title": "Yatır & Çek",
     "assets": {
         "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
@@ -1202,5 +1207,8 @@
     "disconnected": "Şu anda hiçbir ağa ya da sunucuya bağlı değilsiniz, lütfen aşağı tıklayarak tekrar bağlanınız. Bağlanamıyorsanız, bu sunucu çalışmıyor demektir, lütfen sonra tekrar deneyiniz.",
     "rate": "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin.",
     "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+  },
+  "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+      }
 }

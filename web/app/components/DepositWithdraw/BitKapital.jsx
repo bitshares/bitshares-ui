@@ -37,11 +37,17 @@ class BitKapital extends React.Component {
     }
 
     _renderDeposits() {
-        return <iframe
-            style={{width: "100%", border: 0, minHeight: 800}}
-            src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
-        >
-        </iframe>;
+ //       return <iframe
+ //           style={{width: "100%", border: 0, minHeight: 800}}
+ //           src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
+ //       >
+ //       </iframe>;
+
+	// interim maintenance tout per issue #341 
+	return 
+		<div style={{width: "100%", border: 0, minHeight: 600}}>
+		Onarim / Under Maintenance 
+		</div>;
     }
 
     _renderWithdrawals() {

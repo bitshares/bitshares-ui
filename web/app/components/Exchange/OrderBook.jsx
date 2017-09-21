@@ -40,12 +40,11 @@ class OrderBookRowVertical extends React.Component {
 }
 
 class OrderBookRowHorizontal extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.order.market_base !== this.props.order.market_base) return false;
+    shouldComponentUpdate(np) {
         return (
-            nextProps.order.ne(this.props.order) ||
-            nextProps.position !== this.props.position ||
-            nextProps.index !== this.props.index
+            np.order.ne(this.props.order) ||
+            np.position !== this.props.position ||
+            np.index !== this.props.index
         );
     }
 
@@ -81,7 +80,6 @@ class OrderBookRowHorizontal extends React.Component {
                     {price}
                 </td>
                 }
-
             </tr>
         );
 
@@ -126,7 +124,7 @@ class OrderBook extends React.Component {
         }
 
         // Change of market or direction
-        if (nextProps.base !== this.props.base || nextProps.quote !== this.props.quote) {
+        if (nextProps.base.get("id") !== this.props.base.get("id") || nextProps.quote.get("id") !== this.props.quote.get("id")) {
             this.setState({
                 scrollToBottom: true
             });
@@ -140,6 +138,17 @@ class OrderBook extends React.Component {
             if (this.refs.bidTransition) {
                 this.refs.bidTransition.resetAnimation();
             }
+
+            if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+        }
+
+        if (
+          !utils.are_equal_shallow(nextProps.combinedAsks, this.props.combinedAsks) ||
+          !utils.are_equal_shallow(nextProps.combinedBids, this.props.combinedBids)
+        ) {
+            this.setState({}, () => {
+                this.psUpdate();
+            });
         }
     }
 
@@ -258,7 +267,6 @@ class OrderBook extends React.Component {
         let {showAllAsks, showAllBids, rowCount} = this.state;
 
         let bidRows = null, askRows = null;
-
         if(base && quote) {
             bidRows = combinedBids
             .filter(a => {
@@ -345,7 +353,7 @@ class OrderBook extends React.Component {
             }
 
             let leftHeader = (
-                <thead ref="leftHeader">
+                <thead>
                     <tr key="top-header" className="top-header">
                         <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.total" /><span className="header-sub-title"> (<AssetName dataPlace="top" name={baseSymbol} />)</span></th>
                         <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
@@ -358,7 +366,7 @@ class OrderBook extends React.Component {
             );
 
             let rightHeader = (
-                <thead ref="rightHeader">
+                <thead>
                     <tr key="top-header" className="top-header">
                         <th style={{width: "25%", textAlign: "right"}}>
                             <Translate className={(!this.state.flip ? "ask-total" : "bid-total") + " header-sub-title"} content="exchange.price" />

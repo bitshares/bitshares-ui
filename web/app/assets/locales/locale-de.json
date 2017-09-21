@@ -304,7 +304,9 @@
       "pos": "Betrag darf nicht negativ sein",
       "valid": "Bitte geben Sie einen positiven Betrag ein",
       "balance": "Ihr abschließendes Guthaben kann nicht negativ sein!",
-      "insufficient": "Ungenügende Bilanz"
+      "insufficient": "Ungenügende Bilanz",
+      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
     },
     "back": "ZURÜCK",
     "confirm": "BESTÄTIGEN",
@@ -552,6 +554,7 @@
     "asset": {
       "title": "Asset",
       "not_found": "Das Asset %(name)s existiert nicht",
+      "invalid": "The asset name %(name)s is invalid",
       "summary": {
         "asset_type": "Asset Typ",
         "issuer": "herausgeber",
@@ -720,6 +723,8 @@
     "horizontal": "Horizontal",
     "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
     "confirm_sell": "Your order is %(diff)s times lower than the highest bid, are you sure?",
+    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
     "market_name": "Meine Märkte",
     "quote_supply": "Quote Verfügbarkeit",
     "base_supply": "Base Verfügbarkeit",
@@ -804,7 +809,6 @@
     "verify": "Prüfe",
     "invalid_format": "Ungültiges Format",
     "enter_password": "Passwordeingabe",
-    "download": "Download",
     "new_wallet_name": "Names der neuen Geldbörse",
     "wallet_exist": "Gelbdörse existiert bereits. Wählen Sie einen anderen Namen.",
     "wallet_exist_with_name": "Geldbörse (%(name)s) existiert bereits. Wählen Sie einen anderen Namen",
@@ -921,6 +925,7 @@
     "enter_refcode": "Geben Sie den Referral Code ein"
   },
   "gateway": {
+    "fee": "Gateway fee",
     "assets": {
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
@@ -970,5 +975,8 @@
     "disabled": "Chat disabled",
     "enable": "Enable chat now",
     "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
-  }
+  },
+  "trx_error": {
+        "expire": "Your transaction has expired without being confirmed, please try again later."
+      }
 }

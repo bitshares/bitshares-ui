@@ -141,10 +141,13 @@ a {
   }
 }
 
-
-
 code {
   color: inherit;
   background-color: inherit;
   border: none;
+}
+
+// expand the container to fit the maximum width by default
+.grid-container {
+  width: 100%;
 }

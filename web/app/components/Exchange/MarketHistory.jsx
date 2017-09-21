@@ -52,6 +52,11 @@ class MarketHistory extends React.Component {
         this.setState({
             activeTab: tab
         });
+
+        // Ensure that focus goes back to top of scrollable container when tab is changed
+        let historyNode = this.refs.history;
+        historyNode.scrollTop = 0;
+        Ps.update(historyNode);
     }
 
     render() {
@@ -80,7 +85,7 @@ class MarketHistory extends React.Component {
                 return hasQuote && hasBase;
             })
             .sort((a, b) => {
-                return a.get("block_num") - a.get("block_num");
+                return b.get("block_num") - a.get("block_num");
             })
             .map(trx => {
                 let order  = trx.toJS().op[1];
