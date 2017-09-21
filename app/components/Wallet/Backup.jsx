@@ -170,7 +170,11 @@ class NewWalletName extends Component {
     componentWillMount() {
         let has_current_wallet = !!this.props.wallet.current_wallet
         if( ! has_current_wallet) {
-            WalletManagerStore.setNewWallet("default")
+            let walletName = "default";
+            if (this.props.backup.name) {
+                walletName = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
+            }
+            WalletManagerStore.setNewWallet(walletName)
             this.setState({accept: true})
         }
         if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
