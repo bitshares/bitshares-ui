@@ -22,8 +22,6 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
-            onAddStarAccount: SettingsActions.addStarAccount,
-            onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -195,7 +193,6 @@ class SettingsStore {
             this.defaultMarkets = Immutable.Map(defaultMarkets);
             this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
             this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
-            this.starredAccounts = Immutable.Map(ss.get(this._getChainKey("starredAccounts")));
 
             this.initDone = true;
             resolve();
@@ -273,23 +270,6 @@ class SettingsStore {
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
         ss.set(this.starredKey, this.starredMarkets.toJS());
-    }
-
-    onAddStarAccount(account) {
-        if (!this.starredAccounts.has(account)) {
-            this.starredAccounts = this.starredAccounts.set(account, {name: account});
-
-            ss.set(this._getChainKey("starredAccounts"), this.starredAccounts.toJS());
-        } else {
-            return false;
-        }
-    }
-
-    onRemoveStarAccount(account) {
-
-        this.starredAccounts = this.starredAccounts.delete(account);
-
-        ss.set(this._getChainKey("starredAccounts"), this.starredAccounts.toJS());
     }
 
     onAddWS(ws) {

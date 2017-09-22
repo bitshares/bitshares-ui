@@ -185,6 +185,12 @@ class ChangeActiveWallet extends Component {
         this.setState({current_wallet});
     }
 
+    componentWillReceiveProps(np) {
+        if (np.current_wallet !== this.state.current_wallet) {
+            this.setState({current_wallet: np.current_wallet});
+        }
+    }
+
     render() {
         let state = WalletManagerStore.getState();
 
@@ -333,7 +339,7 @@ class WalletDelete extends Component {
     }
 
     onConfirm2() {
-        WalletManagerStore.onDeleteWallet(this.state.selected_wallet);
+        WalletActions.deleteWallet(this.state.selected_wallet);
         this._onCancel();
         // window.history.back()
     }

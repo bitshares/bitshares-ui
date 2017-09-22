@@ -3,13 +3,13 @@ import Immutable from "immutable";
 import alt from "alt-instance";
 import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
+import WalletActions from "actions/WalletActions";
 import iDB from "idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore";
 import {ChainStore, ChainValidation, FetchChain} from "bitsharesjs/es";
 import {Apis} from "bitsharesjs-ws";
 import AccountRefsStore from "stores/AccountRefsStore";
 import AddressIndex from "stores/AddressIndex";
-import SettingsStore from "stores/SettingsStore";
 import ls from "common/localStorage";
 
 let accountStorage = new ls("__graphene__");
@@ -22,7 +22,6 @@ let accountStorage = new ls("__graphene__");
 class AccountStore extends BaseStore {
     constructor() {
         super();
-        this.state = this._getInitialState();
 
         this.bindListeners({
             onSetCurrentAccount: AccountActions.setCurrentAccount,
@@ -32,7 +31,10 @@ class AccountStore extends BaseStore {
             onAccountSearch: AccountActions.accountSearch,
             tryToSetCurrentAccount: AccountActions.tryToSetCurrentAccount,
             onSetPasswordAccount: AccountActions.setPasswordAccount,
-            onChangeSetting: SettingsActions.changeSetting
+            onChangeSetting: SettingsActions.changeSetting,
+            onSetWallet: WalletActions.setWallet,
+            onAddStarAccount: AccountActions.addStarAccount,
+            onRemoveStarAccount: AccountActions.removeStarAccount
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
 
@@ -44,16 +46,46 @@ class AccountStore extends BaseStore {
             "isMyAccount",
             "getMyAuthorityForAccount",
             "isMyKey",
-            "reset"
+            "reset",
+            "setWallet"
         );
+
+        this.state = {
+            subbed: false,
+            linkedAccounts: Immutable.Set(),
+            myIgnoredAccounts: Immutable.Set(),
+            unFollowedAccounts: Immutable.Set(),
+            currentAccount: null,
+            passwordAccount: null
+        };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
         this.chainStoreUpdate = this.chainStoreUpdate.bind(this);
+        this._getStorageKey = this._getStorageKey.bind(this);
+        this.setWallet = this.setWallet.bind(this);
     }
 
     reset() {
         if (this.state.subbed) ChainStore.unsubscribe(this.chainStoreUpdate);
-        this.state = this._getInitialState();
+        this.setState(this._getInitialState());
+    }
+
+    onSetWallet({wallet_name}) {
+        this.setWallet(wallet_name);
+    }
+
+    setWallet(wallet_name) {
+        if (wallet_name !== this.state.wallet_name) {
+            this.setState({
+                wallet_name: wallet_name,
+                passwordAccount: accountStorage.get(this._getStorageKey("passwordAccount", {wallet_name}), null),
+                starredAccounts: Immutable.Map(accountStorage.get(this._getStorageKey("starredAccounts", {wallet_name}))),
+                linkedAccounts: Immutable.Set(),
+                myIgnoredAccounts: Immutable.Set(),
+                unFollowedAccounts: Immutable.Set()
+            });
+            this.tryToSetCurrentAccount();
+        }
     }
 
     _getInitialState() {
@@ -80,6 +112,8 @@ class AccountStore extends BaseStore {
             accountStorage.remove("referralAccount");
         }
 
+        const wallet_name = this.state.wallet_name || "";
+        let starredAccounts = Immutable.Map(accountStorage.get(this._getStorageKey("starredAccounts", {wallet_name})));
         return {
             update: false,
             subbed: false,
@@ -87,17 +121,37 @@ class AccountStore extends BaseStore {
             refsLoaded: false,
             currentAccount: null,
             referralAccount: accountStorage.get("referralAccount", ""),
-            passwordAccount: accountStorage.get(this._getCurrentAccountKey("passwordAccount"), ""),
+            passwordAccount: accountStorage.get(this._getStorageKey("passwordAccount", {wallet_name}), ""),
             linkedAccounts: Immutable.Set(),
             myIgnoredAccounts: Immutable.Set(),
             unFollowedAccounts: Immutable.Set(accountStorage.get("unfollowed_accounts", [])),
             searchAccounts: Immutable.Map(),
-            searchTerm: ""
+            searchTerm: "",
+            wallet_name,
+            starredAccounts
         };
     }
 
+    onAddStarAccount(account) {
+        if (!this.state.starredAccounts.has(account)) {
+            let starredAccounts = this.state.starredAccounts.set(account, {name: account});
+            this.setState({starredAccounts});
+
+            accountStorage.set(this._getStorageKey("starredAccounts"), starredAccounts.toJS());
+        } else {
+            return false;
+        }
+    }
+
+    onRemoveStarAccount(account) {
+
+        let starredAccounts = this.state.starredAccounts.delete(account);
+        this.setState({starredAccounts});
+        accountStorage.set(this._getStorageKey("starredAccounts"), starredAccounts.toJS());
+    }
+
     onSetPasswordAccount(account) {
-        let key = this._getCurrentAccountKey("passwordAccount");
+        let key = this._getStorageKey("passwordAccount");
         if (!account) {
             accountStorage.remove(key);
         } else {
@@ -110,7 +164,8 @@ class AccountStore extends BaseStore {
 
     _addIgnoredAccount(name) {
         if (this.state.unFollowedAccounts.includes(name) && !this.state.myIgnoredAccounts.has(name)) {
-            this.state.myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
+            let myIgnoredAccounts = this.state.myIgnoredAccounts.add(name);
+            this.setState({myIgnoredAccounts});
         }
     }
 
@@ -138,13 +193,13 @@ class AccountStore extends BaseStore {
                     accountsLoaded: true
                 });
                 Promise.all(accountPromises).then(() => {
-                    ChainStore.subscribe(this.chainStoreUpdate);
+                    if (!this.state.subbed) ChainStore.subscribe(this.chainStoreUpdate);
                     this.state.subbed = true;
                     this.emitChange();
                     this.chainStoreUpdate();
                     resolve();
                 }).catch(err => {
-                    ChainStore.subscribe(this.chainStoreUpdate);
+                    if (!this.state.subbed) ChainStore.subscribe(this.chainStoreUpdate);
                     this.state.subbed = true;
                     this.emitChange();
                     this.chainStoreUpdate();
@@ -303,23 +358,24 @@ class AccountStore extends BaseStore {
         });
     }
 
-    _getCurrentAccountKey(key = "currentAccount") {
+    _getStorageKey(key = "currentAccount", state = this.state) {
+        const wallet = state.wallet_name;
         const chainId = Apis.instance().chain_id;
-        return key + (chainId ? `_${chainId.substr(0, 8)}` : "");
+        return key + (chainId ? `_${chainId.substr(0, 8)}` : "") + (wallet ? `_${wallet}` : "");
     }
 
     tryToSetCurrentAccount() {
-        const passwordAccountKey = this._getCurrentAccountKey("passwordAccount");
-        const key = this._getCurrentAccountKey();
+        const passwordAccountKey = this._getStorageKey("passwordAccount");
+        const currentAccountKey = this._getStorageKey("currentAccount");
         if (accountStorage.has(passwordAccountKey)) {
             const acc = accountStorage.get(passwordAccountKey, null);
             this.setState({passwordAccount: acc});
             return this.setCurrentAccount(acc);
-        } else if (accountStorage.has(key)) {
-            return this.setCurrentAccount(accountStorage.get(key, null));
+        } else if (accountStorage.has(currentAccountKey)) {
+            return this.setCurrentAccount(accountStorage.get(currentAccountKey, null));
         }
 
-        let {starredAccounts} = SettingsStore.getState();
+        let {starredAccounts} = this.state;
         if (starredAccounts.size) {
             return this.setCurrentAccount(starredAccounts.first().name);
         }
@@ -330,7 +386,7 @@ class AccountStore extends BaseStore {
 
     setCurrentAccount(name) {
         if (this.state.passwordAccount) name = this.state.passwordAccount;
-        const key = this._getCurrentAccountKey();
+        const key = this._getStorageKey();
         if (!name) {
             name = null;
         }
@@ -444,7 +500,7 @@ class AccountStore extends BaseStore {
     onChangeSetting(payload) {
         if (payload.setting === "passwordLogin" && payload.value === false) {
             this.onSetPasswordAccount(null);
-            accountStorage.remove(this._getCurrentAccountKey());
+            accountStorage.remove(this._getStorageKey());
         }
     }
 }

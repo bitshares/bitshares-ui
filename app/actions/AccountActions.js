@@ -48,6 +48,14 @@ class AccountActions {
         return true;
     }
 
+    addStarAccount(account) {
+        return account;
+    }
+
+    removeStarAccount(account) {
+        return account;
+    }
+
     /**
      *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
      */
