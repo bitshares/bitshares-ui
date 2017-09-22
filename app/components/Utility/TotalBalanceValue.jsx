@@ -10,6 +10,7 @@ import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -243,6 +244,8 @@ class TotalValue extends React.Component {
         if (missingData)
             totalsTip += `<tr><td>&nbsp;</td><td style="text-align: right;">${noDataSymbol} no data</td></tr>`;
 
+        totalsTip += '<tr><td colSpan="2">&nbsp;</td></tr>';
+        totalsTip += `<tr><td colSpan="2">${counterpart.translate("account.total_estimate")}</td></tr>`;
         totalsTip += "</tbody></table>";
 
         if (!inHeader) {

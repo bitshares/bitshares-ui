@@ -55,7 +55,7 @@
   },
   "account": {
     "in_open": "This is the amount of %(asset)s you have in open orders.",
-    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
     "market_actions": "Market actions",
     "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
@@ -189,7 +189,7 @@
       "not_yours": "소유 계정이 아님"
     },
     "collaterals": "보증금 포지션",
-    "eq_value": "Equivalent Value",
+    "eq_value": "Estimated Value",
     "please_create_account": "계정을 생성해주세요",
     "create_account": "계정 생성",
     "identicon": "아이덴티콘",

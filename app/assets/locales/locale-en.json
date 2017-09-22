@@ -78,7 +78,7 @@
     "intro_text_3": "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
     "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
-    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
     "market_actions": "Market actions",
     "see_open": "See open orders",
@@ -344,7 +344,7 @@
       "not_yours": "Not your account"
     },
     "collaterals": "Margin Positions",
-    "eq_value": "Equivalent Value",
+    "eq_value": "Estimated Value",
     "no_price": "Unknown value",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
