@@ -38,6 +38,18 @@ class DepthHighChart extends React.Component {
 		}
 	}
 
+	componentWillUpdate() {
+		if (this.props.centerRef) {
+			this.tempScroll = this.props.centerRef.scrollTop;
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.centerRef) {
+			this.props.centerRef.scrollTop = this.tempScroll;
+		}
+	}
+
 	reflowChart(timeout) {
 		setTimeout(() => {
 			if (this.refs.depthChart) {

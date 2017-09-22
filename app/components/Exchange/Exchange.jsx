@@ -1194,6 +1194,7 @@ class Exchange extends React.Component {
                                     noFrame={false}
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
+                                    centerRef={this.refs.center}
                                 />
                             </div>)}
 
