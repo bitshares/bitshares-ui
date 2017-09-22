@@ -655,7 +655,8 @@
       "max_margin_period_sec":"Максимальный маржинальный период (сек)",
       "call_limit":"Предел запроса",
       "short_limit":"Предел шорта",
-      "settlement_price":"Расчетная цена"
+      "settlement_price":"Расчетная цена",
+      "go_to": "Go to block"
     },
     "assets":{
       "title":"Активы",

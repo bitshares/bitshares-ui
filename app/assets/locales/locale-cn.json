@@ -652,7 +652,8 @@
       "call_limit": "Call limit",
       "short_limit": "Short limit",
       "settlement_price": "喂价",
-      "time": "时间"
+      "time": "时间",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "资产",

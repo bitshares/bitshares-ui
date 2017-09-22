@@ -547,7 +547,8 @@
       "max_margin_period_sec": "Max Margin Periode (s)",
       "call_limit": "Call-Limit",
       "short_limit": "Short-Limit",
-      "settlement_price": "Settlement-Preis"
+      "settlement_price": "Settlement-Preis",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "Assets",

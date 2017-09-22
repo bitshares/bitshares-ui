@@ -364,7 +364,8 @@
       "max_margin_period_sec": "Periode max de marge (s)",
       "call_limit": "Limite de couverture",
       "short_limit": "Limite de short",
-      "settlement_price": "Prix de règlement"
+      "settlement_price": "Prix de règlement",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "Actifs",

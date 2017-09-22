@@ -442,7 +442,8 @@
       "max_margin_period_sec": "Max margin period (s)",
       "call_limit": "콜 한도",
       "short_limit": "공매도 한도",
-      "settlement_price": "강제청산 가격"
+      "settlement_price": "강제청산 가격",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "자산",

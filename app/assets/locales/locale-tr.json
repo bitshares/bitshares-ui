@@ -646,7 +646,8 @@
       "max_margin_period_sec": "Maksimum marjin periodları (s)",
       "call_limit": "Çağrı Sınırı",
       "short_limit": "Kısa pozisyon limit",
-      "settlement_price": "Uzlaşma"
+      "settlement_price": "Uzlaşma",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "Dijital Varlıklar",
