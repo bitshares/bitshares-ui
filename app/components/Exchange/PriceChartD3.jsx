@@ -218,21 +218,19 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
 
     _renderCandleStickChart(chartMultiplier, maCalcs, last) {
-        const { height, width, showVolumeChart, indicators, enableChartClamp } = this.props;
+        const { height, width, showVolumeChart, indicators } = this.props;
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
             enableFib, calculators } = this.state;
         const { positiveColor, negativeColor, strokeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
 
-        let gridHeight = height - margin.top - margin.bottom;
         let gridWidth = width - margin.left - margin.right;
 
         let showGrid = false;
         let yGrid = showGrid ? { innerTickSize: -1 * gridWidth, tickStrokeOpacity: 0.1 } : {};
-        let xGrid = showGrid ? { innerTickSize: -1 * gridHeight, tickStrokeOpacity: 0.1 } : {};
 
         return <Chart
             id={1}
-            height={height * ((chartMultiplier ? 1 : 0.9) - (0.20 * chartMultiplier))}
+            height={height * ((chartMultiplier ? 1 : 0.883) - (0.20 * chartMultiplier))}
             yExtents={[d => [d.high, d.low], calculators.ema1.accessor(), calculators.ema2.accessor(), calculators.sma.accessor()]}
             padding={{ top: 10, bottom: 20 }}
         >
