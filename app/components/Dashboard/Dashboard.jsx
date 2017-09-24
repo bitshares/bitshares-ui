@@ -59,7 +59,7 @@ class Dashboard extends React.Component {
                 ["BTS", "OPEN.HEAT"],
                 ["BTS", "OPEN.INCENT"],
                 ["HEMPSWEET", "OPEN.BTC"],
-                ["KAPITAL", "BTS"],
+                ["KAPITAL", "BTS"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
