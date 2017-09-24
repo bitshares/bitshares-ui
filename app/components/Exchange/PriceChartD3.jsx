@@ -55,9 +55,8 @@ class CandleStickChartWithZoomPan extends React.Component {
     _getFormats(props = this.props) {
         const pricePrecision = props.base.get("precision");
         const volumePrecision = props.quote.get("precision");
-
-        const priceFormat = format(`.${pricePrecision}f`);
-        const volumeFormat = format(`.${volumePrecision}r`);
+        const priceFormat = format(`.${props.latest && props.latest.full && props.latest.full >= 0.8 ? 2 : Math.min(6, pricePrecision)}f`);
+        const volumeFormat = format(`.${Math.min(6, volumePrecision)}f`);
         return {priceFormat, volumeFormat};
     }
 
@@ -173,6 +172,8 @@ class CandleStickChartWithZoomPan extends React.Component {
         const { timeFormatter, volumeFormat, calculators } = this.state;
         const { axisLineColor, volumeColor, indicatorLineColor } = this._getThemeColors();
 
+        console.log("volumeFormat", volumeFormat);
+
         return <Chart id={2}
             yExtents={[d => d.volume, calculators.smaVolume.accessor()]}
             height={height * 0.2}
@@ -180,7 +181,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         >
 
             {indicators.macd ? null : <XAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="bottom" orient="bottom" opacity={0.5}/>}
-            <YAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4} tickFormat={volumeFormat}/>
+            <YAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4}/>
 
             {indicators.macd ? null : <MouseCoordinateX id={1}
                 rectWidth={125}
@@ -210,6 +211,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 yAccessor={d => d.volume} displayFormat={volumeFormat} fill="#0F0F0F"/>
             <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="last" orient="right" edgeAt="right"
                 yAccessor={d => d.volume} displayFormat={volumeFormat} fill="#0F0F0F"/>
+
             {indicators.smaVolume ? <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="first" orient="left" edgeAt="left"
                 yAccessor={calculators.smaVolume.accessor()} displayFormat={volumeFormat} fill={calculators.smaVolume.fill()}/> : null}
             {indicators.smaVolume ? <EdgeIndicator lineStroke={indicatorLineColor} rectWidth={65} itemType="last" orient="right" edgeAt="right"
