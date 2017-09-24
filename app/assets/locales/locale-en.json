@@ -845,7 +845,7 @@
     "nosync": "Blockchain is out of sync, please wait until it's synchronized..",
     "connection": "No Blockchain connection",
     "brainkey": "Backup brainkey recommended",
-    "update_available": "UPDATE AVAILBLE"
+    "update_available": "UPDATE AVAILABLE"
   },
   "exchange": {
     "chart_options": {
