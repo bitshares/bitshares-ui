@@ -305,6 +305,18 @@ class MyMarkets extends React.Component {
         );
     }
 
+    componentWillMount() {
+        if (this.props.setMinWidth) {
+            window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
+        }
+
+        const currentBase = this.props.current.split("_")[1];
+        const currentIndex = this.props.preferredBases.findIndex(a => a === currentBase);
+        if (currentIndex !== -1 && currentIndex !== this.state.activeMarketTab) {
+            this.setState({activeMarketTab: currentIndex});
+        }
+    }
+
     componentDidMount() {
         let historyContainer = this.refs.favorites;
         Ps.initialize(historyContainer);
@@ -314,14 +326,9 @@ class MyMarkets extends React.Component {
         if (this.state.activeTab === "find-market") {
             this._lookupAssets("OPEN.", true);
         }
-
     }
 
-    componentWillMount() {
-        if (this.props.setMinWidth) {
-            window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
-        }
-    }
+
 
     componetWillUnmount() {
         if (this.props.setMinWidth) {
