@@ -9,6 +9,10 @@
     "tr":"Turkish",
     "ru":"Русский"
   },
+  "incognito":{
+    "no_support":"Этот кошелек Bitshares полагается на локальное хранилище и IndexedDB, которые не сохраняются при использовании режима инкогнито. Мы рекомендуем использовать обычный режим просмотра.",
+    "ignore":"Я понимаю, продолжить."
+  },
   "sync_fail":{
     "title":"Невозможно синхронизоваться с API сервером",
     "sub_text_1":"Пожалуйста убедитесь, что часы вашего компьютера точны.",
@@ -35,7 +39,7 @@
     "locked_tip":"<br/>Нажмите, чтобы войти, открыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
     "unlocked_tip":"<br/>Нажмите, чтобы выйти, закрыв кошелек.<br/><br/>Закрыв окно браузера Вы также выйдете из аккаунта.",
     "account_notify":"Активный аккаунт в настоящее время %(account)s",
-    "account_value": "Cтоимость счета"
+    "account_value":"Cтоимость счета"
   },
   "tooltip":{
     "call_limit":"Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -64,7 +68,7 @@
     "copy_tip":"Нажмите, чтобы скопировать текст",
     "withdraw_full":"Нажмите, чтобы вывести баланс целиком",
     "withdraw_address":"Если у Вас еще нет %(asset)s адреса, то для того чтобы завершить вывод средств, пожалуйста, найдите подходящего провайдера кошелька и создайте его.",
-    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
+    "memo_tip":"В поле примечания Вы можете включить любое сообщение. Примечание необязательно, но обычно необходимо для перевода на биржи."
   },
   "propose":"Предложить",
   "cancel":"Отменить",
@@ -210,7 +214,8 @@
       "error_precision":"Этот актив не обладает той же точностью, что и %(asset)s",
       "error_invalid":"Этот актив не может быть использован",
       "market":"Предпочтительные рыночные пары",
-      "precision_warning":"Предупреждение: количество знаков после запятой не может быть изменено после создания"
+      "precision_warning":"Предупреждение: количество знаков после запятой не может быть изменено после создания",
+      "visible":"Не отображать актив в поиске и в рынках"
     },
     "connections":{
       "known":"Известен по",
@@ -308,12 +313,12 @@
       "already":"Аккаунт уже в списке",
       "proxy_known":"Или выберите аккаунт в качестве Вашего прокси",
       "expired":"Работники с истекшим сроком действия",
-      "witness": "Witness name",
-      "committee": "Committee member name",
-      "toggle": "Toggle vote",
-      "supported": "Supported",
-      "active_short": "Active",
-      "inactive": "Inactive"
+      "witness":"Имя заверителя",
+      "committee":"Имя члена комитета",
+      "toggle":"Переключить голос",
+      "supported":"Поддерживаемые",
+      "active_short":"Активные",
+      "inactive":"Неактивные"
     },
     "options":{
       "num_witnesses":"Желаемые заверители",
@@ -384,8 +389,8 @@
       "valid":"Пожалуйста, введите правильное, положительное число",
       "balance":"Окончательный баланс должен быть больше нуля",
       "insufficient":"Недостаточный баланс",
-      "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
+      "noFeeBalance":"Средств на Вашем балансе недостаточно для оплаты комиссии с использованием данного актива, пожалуйста, выберите другой актив для оплаты комиссии",
+      "noPoolBalance":"Средств на балансе пула комиссий этого актива недостаточно для оплаты комиссий. Пожалуйста, сообщите об этом владельцу актива или выберите другой актив для оплаты комиссий."
     },
     "back":"НАЗАД",
     "confirm":"ПОДТВЕРДИТЬ",
@@ -657,7 +662,7 @@
       "call_limit":"Предел запроса",
       "short_limit":"Предел шорта",
       "settlement_price":"Расчетная цена",
-      "go_to": "Go to block"
+      "go_to":"Перейти к блоку"
     },
     "assets":{
       "title":"Активы",
@@ -672,7 +677,7 @@
     "asset":{
       "title":"Актив",
       "not_found":"Актив %(name)s не существует",
-      "invalid": "The asset name %(name)s is invalid",
+      "invalid":"Недопустимое имя %(name)s актива",
       "summary":{
         "asset_type":"Тип актива",
         "issuer":"Эмитент",
@@ -778,6 +783,7 @@
     "add_ws":"Добавить новый WebSocket API",
     "remove_ws":"Удалить WebSocket API",
     "faucet_address":"Адрес сервера-крана (faucet)",
+    "faucet_address_text":"Адрес сервера-крана (faucet) который используется для оплаты регистрационного сбора для новых пользователей.",
     "showSettles":"Показать ордера на погашение ордера на графике глубины",
     "showAssetPercent":"Показать процентное соотношение активов на странице аккаунтов",
     "yes":"Да",
@@ -803,10 +809,8 @@
     "password_text":"Поменяйте пароль.",
     "backup_text":"Создать резервные копии.",
     "restore_text":"Восстановить из резервной копии или импортировать ключи.",
-    "access_text":"Выберите полный узел, к которому Вы хотите подключиться.<br/><br/>Сервер-кран (faucet) используется для оплаты регистрационного взноса для новых пользователей.",
+    "access_text":"",
     "view_keys":"Просмотреть ключи",
-    "add_api":"Добавить API",
-    "remove_api":"Удалить API",
     "backup_backup":"Восстановить из файла резервной копии (.bin)",
     "backup_key":"Импортировать приватный ключ",
     "backup_legacy":"Импортировать экспорт-файл (.json) ключа BTS 0.9.3c",
@@ -821,7 +825,17 @@
     "api_closest":"Автоматически выбирать ближайший",
     "wallet_required":"Требуется модель кошелька",
     "wallet_required_text":"Чтобы восстановить резервную копию, Вам нужно сначала переключиться на модель кошелька; чтобы это сделать, нажмите кнопку ниже",
-    "enable_wallet":"Переключиться на модель кошелька"
+    "enable_wallet":"Переключиться на модель кошелька",
+    "active_node":"Активный узел",
+    "node_up":"ВВЕРХ",
+    "node_down":"ВНИЗ",
+    "available_nodes":"Доступные узлы",
+    "add_api":"Добавить API",
+    "remove_api":"Удалить API",
+    "remove":"Удалить",
+    "activate":"Активировать",
+    "confirm_remove":"Вы уверены, что хотите удалить %(name)s из Вашего списка доступных узлов?",
+    "valid_node_url":"URL-адрес узла должен начинаться с ws:// или wss://"
   },
   "footer":{
     "title":"BitShares",
@@ -830,7 +844,8 @@
     "backup":"Необходима резервная копия",
     "nosync":"Блокчейн не синхронизирован, пожалуйста, дождитесь окончания синхронизации..",
     "connection":"Нет соединения с блокчейном",
-    "brainkey":"Рекомендуется резервная копия brainkey"
+    "brainkey":"Рекомендуется резервная копия brainkey",
+    "update_available":"ДОСТУПНО ОБНОВЛЕНИЕ"
   },
   "exchange":{
     "chart_options":{
@@ -845,6 +860,7 @@
       "fib":"Нарисовать линии коррекции Фибоначчи",
       "trendline":"Нарисовать линию тренда",
       "volume":"Показать график объема",
+      "clamp_chart":"Зажмите край диаграммы",
       "period":"Период",
       "height":"Высота Диаграммы",
       "price_title":"Индикаторы цены",
@@ -886,8 +902,8 @@
     "change":"Изменение",
     "confirm_buy":"Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
     "confirm_sell":"Ваш ордер в %(diff)s раз ниже, чем самая высокая ставка, Вы уверены?",
-    "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
-    "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
+    "confirm_no_orders_buy":"Вы размещаете ордер на покупку на рынке, где нет открытых ордеров на продажу. Вы уверены, что хотите продолжить?",
+    "confirm_no_orders_sell":"Вы размещаете ордер на продажу на рынке, где нет открытых ордеров на покупку. Вы уверены, что хотите продолжить?",
     "indicators":"Индикаторы",
     "rsi":"Индекс относительной прочности",
     "ema":"Экспоненциальная скользящая средняя",
@@ -1179,10 +1195,11 @@
     "review_period":"Начало отчетного периода",
     "expiration_time":"Окончание срока действия",
     "proposed_operations":"Предлагаемые операции",
-    "fee_paying_account":"Аккаунт, платящий комиссию"
+    "fee_paying_account":"Аккаунт, платящий комиссию",
+    "id":"Идентификатор предложения"
   },
   "gateway":{
-    "fee": "Gateway fee",
+    "fee":"Комиссия шлюза",
     "title":"Пополнение и Вывод",
     "assets":{
       "open":"<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",
@@ -1289,7 +1306,7 @@
     "enable":"Включить чат",
     "telegram_link":"Более активное обсуждение ведется в группе BitShares в Telegram: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   },
-  "trx_error": {
-        "expire": "Your transaction has expired without being confirmed, please try again later."
-      }
+  "trx_error":{
+    "expire":"Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."
+  }
 }
