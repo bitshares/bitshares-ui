@@ -37,15 +37,19 @@
 
 .order-table {
 	width: 100%;
-    > thead > tr > th {
-        font-size: 14px;
-        padding: 5px 5px;
-    }
+  table-layout: fixed;
+  text-align: right;
 
-    > tbody > tr > td {
-        font-size: 12px;
-        padding-bottom: 4px;
-    }
+  > thead > tr > th {
+      font-size: 14px;
+      padding: 5px 5px;
+      text-align: right;
+  }
+
+  > tbody > tr > td {
+      font-size: 12px;
+      padding-bottom: 4px;
+  }
 }
 
 .my-orders {
