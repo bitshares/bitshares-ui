@@ -539,6 +539,9 @@ class Exchange extends React.Component {
         this._setForSale(bid, true) || this._setReceive(bid, true);
         this._setReceive(ask) || this._setForSale(ask);
 
+        this._setPriceText(bid, true);
+        this._setPriceText(ask, false);
+        // if (bid.for_sale.)
         this.setState(newState);
     }
 
@@ -754,6 +757,17 @@ class Exchange extends React.Component {
         return false;
     }
 
+    _setPriceText(state, isBid) {
+        const currentBase = state[isBid ? "for_sale" : "to_receive"];
+        const currentQuote = state[isBid ? "to_receive" : "for_sale"];
+        if (currentBase.hasAmount() && currentQuote.hasAmount()) {
+            state.priceText = new Price({
+                base: currentBase,
+                quote: currentQuote,
+            }).toReal().toString();
+        }
+    }
+
     _onInputPrice(type, e) {
         let current = this.state[type];
         const isBid = type === "bid";
@@ -785,6 +799,8 @@ class Exchange extends React.Component {
         }
 
         current.forSaleText = e.target.value;
+        this._setPriceText(current, type === "bid");
+
         this.forceUpdate();
     }
 
@@ -800,6 +816,7 @@ class Exchange extends React.Component {
         }
 
         current.toReceiveText = e.target.value;
+        this._setPriceText(current, type === "bid");
         this.forceUpdate();
     }
 
@@ -855,6 +872,7 @@ class Exchange extends React.Component {
         let isNullAccount = currentAccount.get("id") === "1.2.3";
 
         const showVolumeChart = this.props.viewSettings.get("showVolumeChart", true);
+        const enableChartClamp = this.props.viewSettings.get("enableChartClamp", true);
 
         if (quoteAsset.size && baseAsset.size && currentAccount.size) {
             base = baseAsset;
@@ -1122,6 +1140,7 @@ class Exchange extends React.Component {
                                     zoom={this.state.currentPeriod}
                                     tools={tools}
                                     showVolumeChart={showVolumeChart}
+                                    enableChartClamp={enableChartClamp}
 
                                     buckets={buckets} bucketSize={bucketSize}
                                     currentPeriod={this.state.currentPeriod}
@@ -1145,6 +1164,7 @@ class Exchange extends React.Component {
                                     onChangeChartHeight={this.onChangeChartHeight.bind(this)}
                                     chartHeight={chartHeight}
                                     onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
+                                    onToggleChartClamp={() => {SettingsActions.changeViewSetting({enableChartClamp: !enableChartClamp});}}
                                     onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
                                 />
                             </div>) : (

@@ -27,7 +27,8 @@
     "help": "도움말",
     "locked_tip": "지갑이 잠겨있습니다. 잠금해제를 눌러주세요.",
     "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
-    "account_notify": "The active account is now %(account)s"
+    "account_notify": "The active account is now %(account)s",
+    "account_value": "계정 값"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -156,7 +157,13 @@
       "add_committee_label": "위원",
       "add_witness_label": "증인",
       "approve_worker": "Approve worker proposal",
-      "reject_worker": "Reject worker proposal"
+      "reject_worker": "Reject worker proposal",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active_short": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "선호 증인 수",

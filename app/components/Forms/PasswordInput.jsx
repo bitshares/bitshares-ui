@@ -105,7 +105,8 @@ class PasswordInput extends Component {
                         <input
                             style={{marginBottom: this.props.checkStrength ? 0 : null}}
                             name="password"
-                            type="password"
+                            type="text"
+                            onFocus={() => {this.refs.password.setAttribute("type", "password");}}
                             ref="password"
                             autoComplete="off"
                             onChange={this.handleChange}
@@ -125,8 +126,9 @@ class PasswordInput extends Component {
                     <section style={{position: "relative", maxWidth: "30rem"}}>
                         <input
                             name="confirm_password"
-                            type="password"
+                            type="text"
                             ref="confirm_password"
+                            onFocus={() => {this.refs.confirm_password.setAttribute("type", "password");}}
                             autoComplete="off"
                             onChange={this.handleChange}
                         />

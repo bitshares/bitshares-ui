@@ -1,6 +1,6 @@
 {
   "name": "BitShares2-light",
-  "version": "2.0.170907",
+  "version": "2.0.170915",
   "description": "Advanced wallet interface for the BitShares financial blockchain.",
   "homepage": "https://github.com/bitshares/bitshares-ui",
   "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -21,10 +21,8 @@
   },
   "main": "build/electron/index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
-    "test:wallet": "cross-env NODE_ENV=test NODE_PATH=../app mocha --compilers coffee:coffee-script,js:babel/register --require coffee-script/register",
-    "test:market": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./test/marketTests --watch",
-    "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
+    "test:market": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./app/test/marketTests --watch",
+    "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
     "profile-dev": "webpack --env.dev --env.profile --profile --json > stats-dev.json",
     "profile-build": "cross-env NODE_ENV=production webpack --env.prod --env.profile --profile --json > stats-prod.json",
     "profile-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.noUgly --profile --json > stats-prod-nougly.json",
@@ -40,7 +38,9 @@
     "postbuild-electron-nougly": "npm run prepare-electron",
     "build-win32": "cross-env NODE_ENV=production && webpack --env.prod --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'",
     "prepackage": "npm run build-electron",
+    "prepackage-no-ugly": "npm run build-electron-nougly",
     "package": "build -p never",
+    "package-no-ugly": "build -p never",
     "package-deb": "npm run prepackage && build  -p never --linux deb",
     "package-win": "npm run prepackage && build  -p never --windows",
     "package-mac": "npm run prepackage && build  -p never --mac dmg"
@@ -98,14 +98,14 @@
     },
     "win": {
       "target": [
-          {
-            "target": "nsis",
-            "arch": [
-              "x64",
-              "ia32"
-            ]
-          }
-        ]
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "linux": {
       "category": "Finance",
@@ -149,7 +149,7 @@
     "react-clipboard.js": "^1.0.1",
     "react-dom": "^15.6.1",
     "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
-    "react-highcharts": "^10.0.0",
+    "react-highcharts": "^12.0.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-interpolate-component": "^0.10.0",
     "react-intl": "^2.2.2",

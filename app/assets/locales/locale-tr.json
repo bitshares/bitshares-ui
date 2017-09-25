@@ -28,7 +28,8 @@
     "help": "Yardım",
     "locked_tip": "Cüzdan kilitli.<br/>Açmak için tıkla.",
     "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
-    "account_notify": "Aktif hesap: %(account)s"
+    "account_notify": "Aktif hesap: %(account)s",
+    "account_value": "Hesap değeri"
   },
   "tooltip": {
     "call_limit": "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
@@ -296,7 +297,13 @@
       "cm_not_approved_by": "Kurul üyeleri %(account)s tarafından onaylanmadı",
       "already": "Hesap zaten listede",
       "proxy_known": "Bilinen proksiler",
-      "expired": "Süresi bitmiş geliştirmeler"
+      "expired": "Süresi bitmiş geliştirmeler",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active_short": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Gerekli Tanıklar",

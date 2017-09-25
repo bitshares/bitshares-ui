@@ -7,6 +7,7 @@ import AccountRefsStore from "stores/AccountRefsStore";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
+import AccountStore from "stores/AccountStore";
 
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
@@ -22,6 +23,7 @@ ChainStore.setDispatchFrequency(20);
 
 let connect = true;
 let connectionManager;
+let oldChain = "";
 
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState().defaults.apiServer
@@ -45,7 +47,7 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
-const willTransitionTo = (nextState, replaceState, callback) => {
+const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 15) {
         apiLatenciesCount = 0;
@@ -62,26 +64,59 @@ const willTransitionTo = (nextState, replaceState, callback) => {
     if (!connectionString) connectionString = urls[0].url;
     if (connectionString.indexOf("fake.automatic-selection") !== -1) connectionString = urls[0];
 
-    if (!connectionManager) connectionManager = new Manager({url: connectionString, urls});
+    var onConnect = () => {
+        const currentChain = Apis.instance().chain_id;
+        const chainChanged = oldChain && oldChain !== currentChain;
+        oldChain = currentChain;
+        var db;
+        try {
+            iDB.close();
+            db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
+        } catch(err) {
+            console.log("db init error:", err);
+        }
+        return Promise.all([db, SettingsStore.init()]).then(() => {
+            return Promise.all([
+                PrivateKeyActions.loadDbData().then(()=> {
+                    AccountRefsStore.loadDbData();
+                }),
+                WalletDb.loadDbData().then(() => {
+                    // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
+                    //     replaceState("/dashboard");
+                    // }
+                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
+                        replaceState("/dashboard");
+                    }
+                }).then(() => {
+                    if (chainChanged) {
+                        ChainStore.clearCache();
+                        ChainStore.subscribed = false;
+                        ChainStore.init().then(() => {
+                            AccountStore.loadDbData(currentChain);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("----- WalletDb.willTransitionTo error ----->", error);
+                    replaceState("/init-error");
+                }),
+                WalletManagerStore.init()
+            ]).then(()=> {
+                ss.set("activeNode", connectionManager.url);
+                callback();
+            });
+        });
+    }
+
+    var onResetError = (err) => {
+        console.log("err:", err);
+        return callback();
+    }
+
+    connectionManager = new Manager({url: connectionString, urls});
     if (nextState.location.pathname === "/init-error") {
         return Apis.reset(connectionString, true).init_promise
-        .then(() => {
-            var db;
-            try {
-                db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-            } catch(err) {
-                console.log("db init error:", err);
-            }
-            return Promise.all([db, SettingsStore.init()]).then(() => {
-                return callback();
-            }).catch((err) => {
-                console.log("err:", err);
-                return callback();
-            });
-        }).catch((err) => {
-            console.log("err:", err);
-            return callback();
-        });
+        .then(onConnect).catch(onResetError);
 
     }
     let connectionCheckPromise = !apiLatenciesCount ? connectionManager.checkConnections() : null;
@@ -97,51 +132,31 @@ const willTransitionTo = (nextState, replaceState, callback) => {
         }
         let latencies = ss.get("apiLatencies", {});
         let connectionStart = new Date().getTime();
-        connectionManager.connectWithFallback(connect).then(() => {
-            /* Update the latencies object and current active node */
-            latencies[connectionManager.url] = new Date().getTime() - connectionStart;
-            SettingsActions.changeSetting({setting: "apiServer", value: connectionManager.url});
-            SettingsActions.updateLatencies(latencies);
 
-            var db;
-            try {
-                db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
-            } catch(err) {
-                console.log("db init error:", err);
-            }
-            return Promise.all([db, SettingsStore.init()]).then(() => {
-                return Promise.all([
-                    PrivateKeyActions.loadDbData().then(()=> AccountRefsStore.loadDbData()),
-                    WalletDb.loadDbData().then(() => {
-                        // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                        //     replaceState("/dashboard");
-                        // }
-                        if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                            replaceState("/dashboard");
-                        }
-                    }).catch((error) => {
-                        console.error("----- WalletDb.willTransitionTo error ----->", error);
-                        replaceState("/init-error");
-                    }),
-                    WalletManagerStore.init()
-                ]).then(()=> {
-                    ss.set("activeNode", connectionManager.url);
-                    callback();
-                });
-            });
-        }).catch( error => {
-            console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
-            if(error.name === "InvalidStateError") {
-                if (__ELECTRON__) {
-                    replaceState("/dashboard");
+        if(appInit){
+            connectionManager.connectWithFallback(connect).then(() => {
+                /* Update the latencies object and current active node */
+                latencies[connectionManager.url] = new Date().getTime() - connectionStart;
+                SettingsActions.changeSetting({setting: "apiServer", value: connectionManager.url});
+                SettingsActions.updateLatencies(latencies);
+
+                onConnect();
+            }).catch( error => {
+                console.error("----- App.willTransitionTo error ----->", error, (new Error).stack);
+                if(error.name === "InvalidStateError") {
+                    if (__ELECTRON__) {
+                        replaceState("/dashboard");
+                    } else {
+                        alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
+                    }
                 } else {
-                    alert("Can't access local storage.\nPlease make sure your browser is not in private/incognito mode.");
+                    replaceState("/init-error");
+                    callback();
                 }
-            } else {
-                replaceState("/init-error");
-                callback();
-            }
-        });
+            });
+        } else {
+            Apis.reset(connectionManager.url, true).init_promise.then(onConnect).catch(onResetError);
+        }
 
         /* Only try initialize the API with connect = true on the first onEnter */
         connect = false;

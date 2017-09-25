@@ -23,7 +23,8 @@
     "unlock": "Dévérouiller",
     "unlock_password": "Log in using a password",
     "unlock_short": "Login",
-    "account_notify": "The active account is now %(account)s"
+    "account_notify": "The active account is now %(account)s",
+    "account_value": "Valeur de compte"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -140,7 +141,13 @@
       "remove_committee": "Remove",
       "add_committee": "Add",
       "add_committee_label": "Committee Member",
-      "add_witness_label": "Witness"
+      "add_witness_label": "Witness",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active_short": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",

@@ -28,7 +28,8 @@
     "help": "Hilfe",
     "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
     "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
-    "account_notify": "The active account is now %(account)s"
+    "account_notify": "The active account is now %(account)s",
+    "account_value": "Kontowert"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -239,7 +240,13 @@
       "recycled": "Recycelt",
       "funding": "Auszahlend",
       "total_budget": "Gesamtes Worker Budget",
-      "unused_budget": "Ungenutztes Worker Budget"
+      "unused_budget": "Ungenutztes Worker Budget",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active_short": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Gewünschte Anzahl Witnesses",

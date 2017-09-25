@@ -27,7 +27,8 @@
     "help": "Ayuda",
     "locked_tip": "Billetera bloqueada. Click para desbloquear.",
     "unlocked_tip": "Billetera desbloqueada. Click para bloquear",
-    "account_notify": "The active account is now %(account)s"
+    "account_notify": "The active account is now %(account)s",
+    "account_value": "Valor de la cuenta"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -156,7 +157,13 @@
       "add_committee_label": "Miembro del Comité",
       "add_witness_label": "Testigos",
       "approve_worker": "Aprobar propuesta de trabajo",
-      "reject_worker": "Rechazar propuesta de trabajo"
+      "reject_worker": "Rechazar propuesta de trabajo",
+      "witness": "Witness name",
+      "committee": "Committee member name",
+      "toggle": "Toggle vote",
+      "supported": "Supported",
+      "active_short": "Active",
+      "inactive": "Inactive"
     },
     "options": {
       "num_witnesses": "Testigos Deseados",

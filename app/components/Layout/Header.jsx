@@ -166,7 +166,7 @@ class Header extends React.Component {
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
                             <div className="grp-menu-item header-balance">
-                                <a><TotalBalanceValue.AccountWrapper label="exchange.balance" accounts={[this.props.currentAccount]} inHeader={true}/></a>
+                                <a><TotalBalanceValue.AccountWrapper label="header.account_value" accounts={[this.props.currentAccount]} inHeader={true}/></a>
                             </div>) : null;
 
         let dashboard = (

@@ -21,6 +21,8 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Incognito from "./components/Layout/Incognito";
+import { isIncognito } from "feature_detect";
 
 class App extends React.Component {
 
@@ -40,7 +42,9 @@ class App extends React.Component {
             disableChat: SettingsStore.getState().settings.get("disableChat", true),
             showChat: SettingsStore.getState().viewSettings.get("showChat", false),
             dockedChat: SettingsStore.getState().viewSettings.get("dockedChat", false),
-            isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari)
+            isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
+            incognito: false,
+            incognitoWarningDismissed: false
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
@@ -53,9 +57,12 @@ class App extends React.Component {
 
     componentDidMount() {
         try {
+            isIncognito(function(incognito){
+                this.setState({incognito});
+            }.bind(this));
+
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange.bind(this));
-
 
             ChainStore.init().then(() => {
                 this.setState({synced: true});
@@ -85,6 +92,10 @@ class App extends React.Component {
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
+    }
+
+    _onIgnoreIncognitoWarning(){
+        this.setState({incognitoWarningDismissed: true});
     }
 
     _rebuildTooltips() {
@@ -140,12 +151,16 @@ class App extends React.Component {
     // }
 
     render() {
-        let {disableChat, isMobile, showChat, dockedChat, theme} = this.state;
+        let {isMobile, showChat, dockedChat, theme, incognito, incognitoWarningDismissed } = this.state;
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
 
-        if (this.state.syncFail) {
+        if(incognito && !incognitoWarningDismissed){
+            content = (
+                <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
+            );
+        } else if (this.state.syncFail) {
             content = (
                 <SyncError />
             );

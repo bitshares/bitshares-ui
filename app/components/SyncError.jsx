@@ -8,6 +8,7 @@ import {Apis} from "bitsharesjs-ws";
 import Icon from "./Icon/Icon";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import counterpart from "counterpart";
+import AccessSettings from "./Settings/AccessSettings";
 
 class SyncError extends React.Component {
 
@@ -18,6 +19,9 @@ class SyncError extends React.Component {
     onChangeWS(e) {
         SettingsActions.changeSetting({setting: "apiServer", value: e.target.value });
         Apis.reset(e.target.value, true);
+        setTimeout(()=>{
+            this.onReloadClick();
+        }, 50);
     }
 
     onReloadClick(e) {
@@ -31,13 +35,13 @@ class SyncError extends React.Component {
         else window.location.href = __BASE_URL__;
     }
 
-    onReset() {
-        SettingsActions.changeSetting({setting: "apiServer", value: this.props.defaultConnection });
-        SettingsActions.clearSettings();
+    triggerModal(e, ...args) {
+        this.refs.ws_modal.show(e, ...args);
     }
 
     render() {
-        let options = this.props.apis.map(entry => {
+        const { props } = this;
+        let options = props.apis.map(entry => {
             let onlyDescription = entry.url.indexOf("fake.automatic-selection") !== -1;
             let {location} = entry;
             if (location && typeof location === "object" && "translate" in location) location = counterpart.translate(location.translate);
@@ -48,8 +52,7 @@ class SyncError extends React.Component {
         return (
 
             <div className="grid-frame vertical">
-
-                <div className="grid-container text-center" style={{paddingTop: "5rem", maxWidth: "40rem"}}>
+                <div className="grid-container text-center" style={{padding: "5rem 10% 0 10%", maxWidth: "100%", overflowY: "auto", margin: "0 !important"}}>
 
                     <h2><Translate content="sync_fail.title" /></h2>
                     <br />
@@ -57,46 +60,12 @@ class SyncError extends React.Component {
                     <Icon name="clock" size="5x"/>
 
                     <p><Translate unsafe content="sync_fail.sub_text_2" /></p>
-                </div>
-                <div className="grid-container text-center" style={{paddingTop: "1rem", maxWidth: "40rem"}}>
-                <section className="block-list">
-                    <header><Translate component="span" content={`settings.apiServer`} /></header>
-                    <ul>
-                        <li className="with-dropdown">
+                    <hr />
 
-                            <select onChange={this.onChangeWS.bind(this)} value={this.props.apiServer}>
-                                {options}
-                            </select>
-
-                            <div style={{paddingTop: 10}} className="button-group">
-                                <div
-                                    onClick={this.triggerModal.bind(this)}
-                                    className="button outline"
-                                    id="add"
-                                >
-                                        <Translate id="add_text" content="settings.add_api" />
-                                </div>
-                            </div>
-                        </li>
-                        <li className="key-value clearfix">
-                            <div className="float-left">Connection Status</div>
-                            <div className="float-right">
-                                {this.props.rpc_connection_status === "open" ? <span className="txtlabel success"><Translate content={`init_error.connected`} /></span> : <span className="txtlabel warning"><Translate content={`init_error.not_connected`} /></span>}
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-                <br/>
-                <div className="button-group">
-                    <div className="button outline" href onClick={this.onReloadClick}><Translate content={`init_error.retry`} /></div>
-
-                    <div onClick={this.onReset.bind(this)} className="button outline">
-                        <Translate content="settings.reset" />
-                    </div>
+                    <AccessSettings currentNode={props.apiServer} nodes={props.apis} onChange={this.onChangeWS.bind(this)} apiLatencies={props.apiLatencies} triggerModal={this.triggerModal.bind(this)} />;
                 </div>
 
-                <WebsocketAddModal ref="ws_modal" apis={this.props.apis} />
-                </div>
+                <WebsocketAddModal ref="ws_modal" apis={props.apis} api={props.apiServer} />
             </div>
         );
     }
@@ -112,6 +81,7 @@ SyncError = connect(SyncError, {
             apis: SettingsStore.getState().defaults.apiServer,
             apiServer: SettingsStore.getState().settings.get("apiServer"),
             defaultConnection: SettingsStore.getState().defaultSettings.get("apiServer"),
+            apiLatencies: SettingsStore.getState().apiLatencies
         };
     }
 });

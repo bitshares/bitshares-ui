@@ -26,20 +26,15 @@ class CandleStickChartWithZoomPan extends React.Component {
     constructor(props) {
         super();
 
-        const pricePrecision = props.base.get("precision");
-        const volumePrecision = props.quote.get("precision");
-
-        const priceFormat = format(`.${pricePrecision}f`);
         const timeFormatter = timeFormat("%Y-%m-%d %H:%M");
-        const volumeFormat = format(`.${volumePrecision}r`);
-
+        const {volumeFormat, priceFormat} = this._getFormats(props);
         this.state = {
             enableTrendLine: false,
             enableFib: false,
             tools: [],
-            priceFormat,
             timeFormatter,
             volumeFormat,
+            priceFormat,
             margin: {left: 75, right: 75, top:20, bottom: 30},
             calculators: this._getCalculators(props)
         };
@@ -47,6 +42,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         this.onTrendLineComplete = this.onTrendLineComplete.bind(this);
         this.onFibComplete = this.onFibComplete.bind(this);
         this.onKeyPress = this.onKeyPress.bind(this);
+
     }
 
     componentDidMount() {
@@ -54,6 +50,15 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
     componentWillUnmount() {
         document.removeEventListener("keyup", this.onKeyPress);
+    }
+
+    _getFormats(props = this.props) {
+        const pricePrecision = props.base.get("precision");
+        const volumePrecision = props.quote.get("precision");
+
+        const priceFormat = format(`.${pricePrecision}f`);
+        const volumeFormat = format(`.${volumePrecision}r`);
+        return {priceFormat, volumeFormat};
     }
 
     onTrendLineComplete() {
@@ -92,6 +97,10 @@ class CandleStickChartWithZoomPan extends React.Component {
     }
 
     componentWillReceiveProps(np) {
+        if (np.base !== this.props.base || np.quote !== this.props.quote) {
+            this.setState(this._getFormats(np));
+        }
+
         let tools = cloneDeep(this.state.tools);
         if (np.tools && np.tools.trendline) {
             this.setState({enableTrendLine: true});
@@ -208,11 +217,11 @@ class CandleStickChartWithZoomPan extends React.Component {
         </Chart>;
     }
 
-    _renderCandleStickChart(chartMultiplier, maCalcs) {
-        const { height, width, showVolumeChart, indicators } = this.props;
+    _renderCandleStickChart(chartMultiplier, maCalcs, last) {
+        const { height, width, showVolumeChart, indicators, enableChartClamp } = this.props;
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
             enableFib, calculators } = this.state;
-        const { positiveColor, negativeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
+        const { positiveColor, negativeColor, strokeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
 
         let gridHeight = height - margin.top - margin.bottom;
         let gridWidth = width - margin.left - margin.right;
@@ -254,6 +263,7 @@ class CandleStickChartWithZoomPan extends React.Component {
             <CandlestickSeries
                 wickStroke={d => d.close > d.open ? positiveColor : negativeColor}
                 fill={d => d.close > d.open ? positiveColor : negativeColor}
+                stroke={d => Math.abs(d.close - d.open) <= (last.high / 1000) ? (strokeColor || "#000") : "#000"}
                 opacity={0.8}
             />
             {indicators.bb ? <BollingerSeries calculator={calculators.bb} /> : null}
@@ -309,7 +319,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 
     render() {
         const { width, priceData, height, ratio, theme, zoom,
-            indicators, showVolumeChart } = this.props;
+            indicators, showVolumeChart, enableChartClamp } = this.props;
         const { timeFormatter, enableFib, enableTrendLine, margin, calculators } = this.state;
         const themeColors = colors[theme];
         const { axisLineColor, indicatorLineColor} = themeColors;
@@ -337,12 +347,13 @@ class CandleStickChartWithZoomPan extends React.Component {
         const filteredData = zoom === "all" ? priceData : priceData.filter(a => {
             return a.date > filterDate;
         });
-
+        const last = filteredData[filteredData.length - 1] || {high: 1};
         return (
             <ChartCanvas
                 ratio={ratio} width={width - 20} height={height}
                 seriesName="PriceChart"
                 margin={margin}
+                clamp={enableChartClamp}
                 data={filteredData} calculator={calc}
                 xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
                 xExtents={[filteredData[0].date, filteredData[filteredData.length - 1].date]}
@@ -353,7 +364,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                 {showVolumeChart ? this._renderVolumeChart(chartMultiplier)
                  : <span></span>}
 
-                {this._renderCandleStickChart(chartMultiplier, maCalcs)}
+                {this._renderCandleStickChart(chartMultiplier, maCalcs, last)}
 
                 {indicators.macd ?
                     <Chart
@@ -417,7 +428,8 @@ export default class Wrapper extends React.Component {
             np.width !== this.props.width ||
             np.leftOrderBook !== this.props.leftOrderBook ||
             np.zoom !== this.props.zoom ||
-            np.showVolumeChart !== this.props.showVolumeChart
+            np.showVolumeChart !== this.props.showVolumeChart ||
+            np.enableChartClamp !== this.props.enableChartClamp
         );
     }
 
@@ -559,7 +571,7 @@ export default class Wrapper extends React.Component {
 		});
 
 		/* Tools dropdown */
-		const settingsOptions = ["volume", "height"].map(i => {
+		const settingsOptions = ["volume", "height", "clamp_chart"].map(i => {
 			let content;
 			switch (i) {
 				case "height": {
@@ -580,6 +592,16 @@ export default class Wrapper extends React.Component {
 					content = (
 						<li className="clickable indicator" key={i} onClick={this.props.onToggleVolume}>
 							<input type="checkbox" checked={this.props.showVolumeChart} />
+							<div><Translate content={`exchange.chart_options.${i}`} /></div>
+						</li>
+					);
+					break;
+				}
+
+				case "clamp_chart": {
+					content = (
+						<li className="clickable indicator" key={i} onClick={this.props.onToggleChartClamp}>
+							<input type="checkbox" checked={this.props.enableChartClamp} />
 							<div><Translate content={`exchange.chart_options.${i}`} /></div>
 						</li>
 					);

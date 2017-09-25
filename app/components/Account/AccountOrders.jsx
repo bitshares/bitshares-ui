@@ -6,6 +6,7 @@ import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs/es";
 import MarketLink from "../Utility/MarketLink";
+import { LimitOrder } from "common/MarketClasses";
 
 class AccountOrders extends React.Component {
 
@@ -34,9 +35,16 @@ class AccountOrders extends React.Component {
             let order = ChainStore.getObject(orderID).toJS();
             let base = ChainStore.getAsset(order.sell_price.base.asset_id);
             let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+
             if (base && quote) {
+                let assets = {
+                    [base.get("id")]: {precision: base.get("precision")},
+                    [quote.get("id")]: {precision: quote.get("precision")}
+                };
                 let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
                 let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
+
+                let limitOrder = new LimitOrder(order, assets, base.get("id"));
 
                 let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
@@ -66,7 +74,7 @@ class AccountOrders extends React.Component {
                     <OrderRow
                         ref={markets[marketID].base.symbol}
                         key={order.id}
-                        order={order}
+                        order={limitOrder}
                         base={marketBase}
                         quote={marketQuote}
                         cancel_text={cancel}
