@@ -167,7 +167,7 @@ class BlockTradesGateway extends React.Component {
                             action={this.state.action}
                         />
                         <label className="left-label">Support</label>
-                        <div><Translate content="gateway.support_block" /><br /><br /><a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
+                        <div><Translate content="gateway.support_block" /><br /><br /><a href={(issuer.support.indexOf("@") === -1 ? "" : "mailto:") + issuer.support}>{issuer.support}</a></div>
                     </div>
 
                     {coin && coin.symbol ?
