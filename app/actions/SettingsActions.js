@@ -26,14 +26,6 @@ class SettingsActions {
         return {quote, base, value};
     }
 
-    addStarAccount(account) {
-        return account;
-    }
-
-    removeStarAccount(account) {
-        return account;
-    }
-
     addWS(ws) {
         return ws;
     }

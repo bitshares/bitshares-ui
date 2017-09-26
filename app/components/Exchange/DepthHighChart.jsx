@@ -38,6 +38,18 @@ class DepthHighChart extends React.Component {
 		}
 	}
 
+	componentWillUpdate() {
+		if (this.props.centerRef) {
+			this.tempScroll = this.props.centerRef.scrollTop;
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.centerRef) {
+			this.props.centerRef.scrollTop = this.tempScroll;
+		}
+	}
+
 	reflowChart(timeout) {
 		setTimeout(() => {
 			if (this.refs.depthChart) {
@@ -58,8 +70,10 @@ class DepthHighChart extends React.Component {
 		const { primaryText, callColor, settleColor, settleFillColor, bidColor,
 			bidFillColor, askColor, askFillColor, axisLineColor } = this._getThemeColors();
 
-		const baseSymbol = base.get("symbol");
-		const quoteSymbol = quote.get("symbol");
+		let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(base.get("symbol"), base.has("bitasset") && !(base.has("bitasset") && base.getIn(["bitasset", "is_prediction_market"])) && base.get("issuer") === "1.2.0");
+		let {name: quoteSymbol, prefix: quotePrefix} = utils.replaceName(quote.get("symbol"), quote.has("bitasset") && !(quote.has("bitasset") && quote.getIn(["bitasset", "is_prediction_market"])) && quote.get("issuer") === "1.2.0");
+		baseSymbol = (basePrefix || "") + baseSymbol;
+		quoteSymbol = (quotePrefix || "") + quoteSymbol;
 
 		let flatBids = cloneDeep(flat_bids), flatAsks = cloneDeep(flat_asks),
 			flatCalls = cloneDeep(flat_calls), flatSettles = cloneDeep(flat_settles);
@@ -143,7 +157,7 @@ class DepthHighChart extends React.Component {
 					<table>
 						<tr>
 							<td>${counterpart.translate("exchange.price")}:</td>
-							<td style="text-align: right">${utils.format_number(this.x / power, base.get("precision"))} ${baseSymbol}</td>
+							<td style="text-align: right">${utils.format_number(this.x / power, base.get("precision"))} ${baseSymbol}/${quoteSymbol}</td>
 						</tr>
 						<tr>
 							<td>${counterpart.translate("exchange.quantity")}:</td>
@@ -395,8 +409,8 @@ class DepthHighChart extends React.Component {
 				<div className="grid-content no-overflow no-padding middle-content">
 					<div className="exchange-bordered" style={{margin: 10}}>
 						<div className="exchange-content-header">
-							{this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} <AssetName name={baseSymbol} /></span>}
-							{this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} <AssetName name={quoteSymbol} /></span>}
+							{this.props.noText ? null : <span className="bid-total">{utils.format_number(totalBids, base.get("precision"))} <AssetName name={base.get("symbol")} /></span>}
+							{this.props.noText ? null : <span className="ask-total float-right">{utils.format_number(totalAsks, quote.get("precision"))} <AssetName name={quote.get("symbol")} /></span>}
 						</div>
 						{!flatBids.length && !flatAsks.length && !flatCalls.length ? <span className="no-data"><Translate content="exchange.no_data" /></span> : null}
 						{flatBids || flatAsks || flatCalls ? <ReactHighstock ref="depthChart" config={config}/> : null}
@@ -411,8 +425,6 @@ DepthHighChart.defaultProps = {
 	flat_bids: [],
 	flat_asks: [],
 	orders: {},
-	quoteSymbol: "",
-	baseSymbol: "",
 	noText: false,
 	noFrame: true
 };
@@ -420,9 +432,7 @@ DepthHighChart.defaultProps = {
 DepthHighChart.propTypes = {
 	flat_bids: PropTypes.array.isRequired,
 	flat_asks: PropTypes.array.isRequired,
-	orders: PropTypes.object.isRequired,
-	baseSymbol: PropTypes.string.isRequired,
-	quoteSymbol: PropTypes.string.isRequired
+	orders: PropTypes.object.isRequired
 };
 
 export default DepthHighChart;

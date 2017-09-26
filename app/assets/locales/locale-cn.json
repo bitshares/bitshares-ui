@@ -57,7 +57,8 @@
       "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
       "login": "钱包并不提供传统的登录，而是通过锁定和解锁<b>只</b>存储于用户浏览器中的钱包。<br/><br/>当你关闭钱包时，钱包文件即被锁定，也就相当于登出了系统。",
       "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
-      "borrow": "从系统借出 %(asset)s 。这将创建一个智能合约，冻结你的抵押物，直到你调整仓位或进行平仓。"
+      "borrow": "从系统借出 %(asset)s 。这将创建一个智能合约，冻结你的抵押物，直到你调整仓位或进行平仓。",
+      "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
     "intro_text_title": "欢迎来到比特股去中心化交易所！",
@@ -652,7 +653,8 @@
       "call_limit": "Call limit",
       "short_limit": "Short limit",
       "settlement_price": "喂价",
-      "time": "时间"
+      "time": "时间",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "资产",

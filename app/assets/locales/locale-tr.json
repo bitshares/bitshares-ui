@@ -57,7 +57,8 @@
     "deposit_tip": "Yatıma işlemini tamamlamak için aşağıdaki adrese %(asset)s gönderin. Transfer işleminiz onaylandığı zaman bakiyenizi yüklenecektir. Aşağıda bir işem açıklaması (memo) belirtilmişse transfere o açıklamayı eklemeniz ZORUNLUDUR.",
     "copy_tip": "Metni kopyalamak için tıklayın",
     "withdraw_full": "Bütün bakiyeyi çekmek için tıklayın",
-    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
+    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
+    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "propose": "Teklif Et",
   "cancel": "İptal",
@@ -646,7 +647,8 @@
       "max_margin_period_sec": "Maksimum marjin periodları (s)",
       "call_limit": "Çağrı Sınırı",
       "short_limit": "Kısa pozisyon limit",
-      "settlement_price": "Uzlaşma"
+      "settlement_price": "Uzlaşma",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "Dijital Varlıklar",

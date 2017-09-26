@@ -20,11 +20,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span> : null}</th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
-                    <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
-                    <th style={{width: "18%"}}></th>
+                    <th><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span> : null}</th>
+                    <th>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
+                    <th style={{width: "28%"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th />
                 </tr>
             </thead>
         );
@@ -59,19 +59,19 @@ class OrderRow extends React.Component {
 
         return (
             <tr key={order.id}>
-                <td style={{width: "18%"}} className={tdClass}>
+                <td className={tdClass}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
                     {priceSymbol}
                 </td>
-                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
-                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
+                <td>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
                 <td style={{width: "28%"}}>
                     {isCall ? null : <FormattedDate
                         value={order.expiration}
                         format="short"
                     />}
                 </td>
-                <td className="text-center" style={{width: "18%", padding: "2px 5px"}}>
+                <td className="text-center" style={{ padding: "2px 5px"}}>
                     {isCall ? null : <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
                         <Icon name="cross-circle" className="icon-14px" />
                     </a>}

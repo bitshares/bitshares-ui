@@ -8,6 +8,7 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
+import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
@@ -80,9 +81,9 @@ class DashboardList extends React.Component {
 	_onStar(account, isStarred, e) {
 		e.preventDefault();
 		if (!isStarred) {
-			SettingsActions.addStarAccount(account);
+			AccountActions.addStarAccount(account);
 		} else {
-			SettingsActions.removeStarAccount(account);
+			AccountActions.removeStarAccount(account);
 		}
 	}
 
@@ -273,12 +274,12 @@ class AccountsListWrapper extends React.Component {
 
 export default connect(AccountsListWrapper, {
 	listenTo() {
-		return [SettingsStore, WalletUnlockStore];
+		return [SettingsStore, WalletUnlockStore, AccountStore];
 	},
 	getProps() {
 		return {
 			locked: WalletUnlockStore.getState().locked,
-			starredAccounts: SettingsStore.getState().starredAccounts,
+			starredAccounts: AccountStore.getState().starredAccounts,
 			viewSettings: SettingsStore.getState().viewSettings
 		};
 	}

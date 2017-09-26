@@ -39,6 +39,10 @@ class WalletActions {
         return true;
     }
 
+    deleteWallet(name) {
+        return name;
+    }
+
     createAccountWithPassword( account_name, password, registrar, referrer, referrer_percent, refcode ) {
         let {privKey : owner_private} = WalletDb.generateKeyFromPassword(account_name, "owner", password);
         let {privKey: active_private} = WalletDb.generateKeyFromPassword(account_name, "active", password);
