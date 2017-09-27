@@ -83,6 +83,8 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             db = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
         } catch(err) {
             console.log("db init error:", err);
+            replaceState("/init-error");
+            callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
             return Promise.all([
