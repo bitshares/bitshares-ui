@@ -22,8 +22,9 @@ class WalletManagerStore extends BaseStore {
             onRestore: WalletActions.restore,
             onSetWallet: WalletActions.setWallet,
             onSetBackupDate: WalletActions.setBackupDate,
-            onSetBrainkeyBackupDate: WalletActions.setBrainkeyBackupDate
-        })
+            onSetBrainkeyBackupDate: WalletActions.setBrainkeyBackupDate,
+            onDeleteWallet: WalletActions.deleteWallet
+        });
         super._export("init", "setNewWallet", "onDeleteWallet", "onDeleteAllWallets")
     }
 
@@ -38,6 +39,7 @@ class WalletManagerStore extends BaseStore {
     /** This will change the current wallet the newly restored wallet. */
     onRestore({wallet_name, wallet_object}) {
         iDB.restore(wallet_name, wallet_object).then( () => {
+            AccountStore.setWallet(wallet_name);
             return this.onSetWallet({wallet_name})
         }).catch( error => {
             console.error(error)
@@ -113,13 +115,15 @@ class WalletManagerStore extends BaseStore {
     init() {
         return iDB.root.getProperty("current_wallet").then(
             current_wallet => {
-            return iDB.root.getProperty("wallet_names", []).then( wallet_names => {
-                this.setState({
-                    wallet_names: Immutable.Set(wallet_names),
-                    current_wallet
-                })
-            })
-        })
+                return iDB.root.getProperty("wallet_names", []).then( wallet_names => {
+                    this.setState({
+                        wallet_names: Immutable.Set(wallet_names),
+                        current_wallet
+                    });
+                    AccountStore.setWallet(current_wallet);
+                });
+            }
+        );
     }
 
     onDeleteAllWallets() {
@@ -139,7 +143,8 @@ class WalletManagerStore extends BaseStore {
             iDB.root.setProperty("wallet_names", wallet_names)
             if(current_wallet === delete_wallet_name) {
                 current_wallet = wallet_names.size ? wallet_names.first() : undefined
-                iDB.root.setProperty("current_wallet", current_wallet)
+                iDB.root.setProperty("current_wallet", current_wallet);
+                if (current_wallet) WalletActions.setWallet(current_wallet);
             }
             this.setState({current_wallet, wallet_names})
             var database_name = iDB.getDatabaseName(delete_wallet_name)

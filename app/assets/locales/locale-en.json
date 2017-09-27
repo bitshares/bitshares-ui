@@ -67,7 +67,8 @@
     "deposit_tip": "To complete the deposit, go to your %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
     "copy_tip": "Click to copy the text",
     "withdraw_full": "Click to withdraw the full balance",
-    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal."
+    "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
+    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -78,7 +79,7 @@
     "intro_text_3": "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
     "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
-    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
     "market_actions": "Market actions",
     "see_open": "See open orders",
@@ -344,7 +345,7 @@
       "not_yours": "Not your account"
     },
     "collaterals": "Margin Positions",
-    "eq_value": "Equivalent Value",
+    "eq_value": "Estimated Value",
     "no_price": "Unknown value",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
@@ -375,7 +376,7 @@
     "pay_from": "Pay From",
     "amount": "Quantity",
     "to": "To",
-    "memo": "Memo",
+    "memo": "Memo / Message",
     "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
     "fee": "Fee",
     "send": "Send",
@@ -660,7 +661,8 @@
       "max_margin_period_sec": "Max margin period (s)",
       "call_limit": "Call limit",
       "short_limit": "Short limit",
-      "settlement_price": "Settlement price"
+      "settlement_price": "Settlement price",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "Assets",
@@ -843,7 +845,7 @@
     "nosync": "Blockchain is out of sync, please wait until it's synchronized..",
     "connection": "No Blockchain connection",
     "brainkey": "Backup brainkey recommended",
-    "update_available": "UPDATE AVAILBLE"
+    "update_available": "UPDATE AVAILABLE"
   },
   "exchange": {
     "chart_options": {

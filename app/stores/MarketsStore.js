@@ -282,7 +282,7 @@ class MarketsStore {
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
-                            new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                            callOrder
                         );
                     }
                 } catch(err) {
@@ -938,7 +938,6 @@ class MarketsStore {
             change = 0,
             last = {close_quote: null, close_base: null},
             invert,
-            latestPrice,
             noTrades = true;
 
         if (history.length) {
@@ -977,22 +976,6 @@ class MarketsStore {
             if (!isFinite(change) || isNaN(change)) {
                 change = 0;
             }
-        }
-
-        if (recent && recent.length && recent.length > 1) {
-            let order = recent[1].op;
-            let paysAsset, receivesAsset, isAsk = false;
-
-            if (order.pays.asset_id === baseAsset.get("id")) {
-                paysAsset = baseAsset;
-                receivesAsset = quoteAsset;
-                isAsk = true;
-            } else {
-                paysAsset = quoteAsset;
-                receivesAsset = baseAsset;
-            }
-            let flipped = baseAsset.get("id").split(".")[2] > quoteAsset.get("id").split(".")[2];
-            latestPrice = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped).full;
         }
 
         let price;
@@ -1043,7 +1026,6 @@ class MarketsStore {
             volumeBase,
             volumeQuote,
             close: close,
-            latestPrice,
             price,
             volumeBaseAsset,
             volumeQuoteAsset

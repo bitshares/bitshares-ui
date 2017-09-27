@@ -1,7 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
 import classNames from "classnames";
-import market_utils from "common/market_utils";
 import {FormattedDate} from "react-intl";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -10,6 +9,8 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
+import { ChainStore } from "bitsharesjs/es";
+import { LimitOrder, CallOrder } from "common/MarketClasses";
 
 class TableHeader extends React.Component {
 
@@ -19,11 +20,11 @@ class TableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{width: "18%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span> : null}</th>
-                    <th style={{width: "18%", textAlign: "center"}}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
-                    <th style={{width: "28%", textAlign: "center"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
-                    <th style={{width: "18%"}}></th>
+                    <th><Translate className="header-sub-title" content="exchange.price" /></th>
+                    <th>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span> : null}</th>
+                    <th>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
+                    <th style={{width: "28%"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
+                    <th />
                 </tr>
             </thead>
         );
@@ -49,7 +50,8 @@ class OrderRow extends React.Component {
     render() {
         let {base, quote, order, showSymbols} = this.props;
         const isBid = order.isBid();
-        let tdClass = classNames({orderHistoryBid: isBid, orderHistoryAsk: !isBid});
+        const isCall = order.isCall();
+        let tdClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
 
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
@@ -57,21 +59,22 @@ class OrderRow extends React.Component {
 
         return (
             <tr key={order.id}>
-                <td style={{width: "18%"}} className={tdClass}>
+                <td className={tdClass}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
                     {priceSymbol}
                 </td>
-                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
-                <td style={{width: "18%"}}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
-                <td style={{width: "28%"}}><FormattedDate
-                    value={order.expiration}
-                    format="short"
-                    />
+                <td>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
+                <td style={{width: "28%"}}>
+                    {isCall ? null : <FormattedDate
+                        value={order.expiration}
+                        format="short"
+                    />}
                 </td>
-                <td className="text-center" style={{width: "18%", padding: "2px 5px"}}>
-                    <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
+                <td className="text-center" style={{ padding: "2px 5px"}}>
+                    {isCall ? null : <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
                         <Icon name="cross-circle" className="icon-14px" />
-                    </a>
+                    </a>}
                 </td>
             </tr>
         );
@@ -86,74 +89,79 @@ OrderRow.defaultProps = {
 
 class MyOpenOrders extends React.Component {
 
+    constructor() {
+        super();
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return (
-    //             nextProps.currentAccount !== this.props.currentAccount ||
-    //             nextProps.className !== this.props.className ||
-    //             !Immutable.is(nextProps.orders, this.props.orders)
-    //         );
-    // }
+        this._getOrders = this._getOrders.bind(this);
+    }
 
     componentDidMount() {
         let asksContainer = this.refs.asks;
-        Ps.initialize(asksContainer);
+        if (asksContainer) Ps.initialize(asksContainer);
     }
 
     componentDidUpdate() {
         let asksContainer = this.refs.asks;
-        Ps.update(asksContainer);
+        if (asksContainer) Ps.update(asksContainer);
+    }
+
+    _getOrders() {
+        const { currentAccount, base, quote } = this.props;
+        const orders = currentAccount.get("orders"), call_orders = currentAccount.get("call_orders");
+        const baseID = base.get("id"), quoteID = quote.get("id");
+        const assets = {
+            [base.get("id")]: {precision: base.get("precision")},
+            [quote.get("id")]: {precision: quote.get("precision")}
+        };
+        let limitOrders = orders.map(order => {
+            let o = ChainStore.getObject(order);
+            if (!o) return null;
+            let sellBase = o.getIn(["sell_price", "base", "asset_id"]), sellQuote = o.getIn(["sell_price", "quote", "asset_id"]);
+            if (sellBase === baseID && sellQuote === quoteID ||
+                sellBase === quoteID && sellQuote === baseID
+            ) {
+                return new LimitOrder(o.toJS(), assets, quote.get("id"));
+            }
+        }).filter(a => !!a).toArray();
+
+        let callOrders = call_orders.map(order => {
+            let o = ChainStore.getObject(order);
+            if (!o) return null;
+            let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
+            if (sellBase === baseID && sellQuote === quoteID ||
+                sellBase === quoteID && sellQuote === baseID
+            ) {
+                return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
+            }
+        }).filter(a => !!a).filter(a => a.isMarginCalled()).toArray();
+
+        return limitOrders.concat(callOrders);
     }
 
     render() {
-        let {orders, currentAccount, base, quote, quoteSymbol, baseSymbol} = this.props;
-        let bids = null, asks = null;
+        let {base, quote, quoteSymbol, baseSymbol} = this.props;
+        if (!base || !quote) return null;
 
+        const orders = this._getOrders();
         let emptyRow = <tr><td style={{textAlign: "center"}} colSpan="5"><Translate content="account.no_orders" /></td></tr>;
 
-        if(orders.size > 0 && base && quote) {
+        let bids = orders.filter(a => {
+            return a.isBid();
+        }).sort((a, b) => {
+            return b.getPrice() - a.getPrice();
+        }).map(order => {
+            let price = order.getPrice();
+            return <OrderRow price={price} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+        });
 
-            bids = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id !== base.get("id"));
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
-
-                return b_price.full - a_price.full;
-            }).map(order => {
-                let {price} = market_utils.parseOrder(order, base, quote);
-                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
-            }).toArray();
-
-            asks = orders.filter(a => {
-                return (a.seller === currentAccount && a.sell_price.quote.asset_id === base.get("id"));
-            }).sort((a, b) => {
-                let {price: a_price} = market_utils.parseOrder(a, base, quote);
-                let {price: b_price} = market_utils.parseOrder(b, base, quote);
-
-                return a_price.full - b_price.full;
-            }).map(order => {
-                let {price} = market_utils.parseOrder(order, base, quote);
-                return <OrderRow price={price.full} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
-            }).toArray();
-
-        } else {
-            return (
-                <div key="open_orders" className="grid-content text-center ps-container">
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                            {emptyRow}
-                        </tbody>
-                    </table>
-
-                    <table className="table order-table my-orders text-right table-hover">
-                        <tbody>
-                            {emptyRow}
-                        </tbody>
-                </table>
-                </div>
-            );
-        }
+        let asks = orders.filter(a => {
+            return !a.isBid();
+        }).sort((a, b) => {
+            return a.getPrice() - b.getPrice();
+        }).map(order => {
+            let price = order.getPrice();
+            return <OrderRow price={price} key={order.id} order={order} base={base} quote={quote} onCancel={this.props.onCancel.bind(this, order.id)}/>;
+        });
 
         let rows = [];
 
@@ -168,10 +176,6 @@ class MyOpenOrders extends React.Component {
         rows.sort((a, b) => {
             return a.props.price - b.props.price;
         });
-
-        // if (bids.length === 0 && asks.length ===0) {
-        //     return <div key="open_orders" className="grid-content no-padding text-center ps-container" ref="orders"></div>;
-        // }
 
         return (
             <div

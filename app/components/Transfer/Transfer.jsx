@@ -71,6 +71,7 @@ class Transfer extends React.Component {
     componentWillMount() {
         this.nestedRef = null;
         this._updateFee();
+        this._checkFeeStatus();
     }
 
     shouldComponentUpdate(np, ns) {
@@ -117,7 +118,7 @@ class Transfer extends React.Component {
         let balanceObject = ChainStore.getObject(balanceID);
         let feeBalanceObject = feeBalanceID ? ChainStore.getObject(feeBalanceID) : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this._updateFee("1.3.0");
+            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
         }
         const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
         if (hasBalance === null) return;
@@ -127,7 +128,7 @@ class Transfer extends React.Component {
     _checkFeeStatus(account = this.state.from_account) {
         if (!account) return;
 
-        const assets = Object.keys(this.state.from_account.get("balances").toJS()).sort(utils.sortID);
+        const assets = Object.keys(account.get("balances").toJS()).sort(utils.sortID);
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -156,15 +157,20 @@ class Transfer extends React.Component {
         });
     }
 
-    _updateFee(fee_asset_id = this.state.fee_asset_id) {
-        if (!this.state.from_account) return null;
+    _updateFee(state = this.state) {
+        let { fee_asset_id, from_account } = state;
+        const { fee_asset_types } = this._getAvailableAssets(state);
+        if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
+            fee_asset_id = fee_asset_types[0];
+        }
+        if (!from_account) return null;
         checkFeeStatusAsync({
-            accountID: this.state.from_account.get("id"),
+            accountID: from_account.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: this.state.memo
+                content: state.memo
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
@@ -174,7 +180,7 @@ class Transfer extends React.Component {
                 hasBalance,
                 hasPoolBalance,
                 error: (!hasBalance || !hasPoolBalance)
-            }, this._checkFeeStatus);
+            });
         });
     }
 
@@ -188,7 +194,7 @@ class Transfer extends React.Component {
     }
 
     onFromAccountChanged(from_account) {
-        this.setState({from_account, error: null}, this._updateFee);
+        this.setState({from_account, error: null}, () => {this._updateFee(); this._checkFeeStatus();});
     }
 
     onToAccountChanged(to_account) {
@@ -276,10 +282,12 @@ class Transfer extends React.Component {
     _getAvailableAssets(state = this.state) {
         const { feeStatus } = this.state;
         function hasFeePoolBalance(id) {
+            if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasPoolBalance;
         }
 
         function hasBalance(id) {
+            if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasBalance;
         }
 
@@ -407,7 +415,7 @@ class Transfer extends React.Component {
                         {/*  M E M O  */}
                         <div className="content-block transfer-input">
                             {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
-                            <Translate className="left-label" component="label" content="transfer.memo"/>
+                            <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
                             <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
