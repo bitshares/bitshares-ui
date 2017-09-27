@@ -172,8 +172,6 @@ class CandleStickChartWithZoomPan extends React.Component {
         const { timeFormatter, volumeFormat, calculators } = this.state;
         const { axisLineColor, volumeColor, indicatorLineColor } = this._getThemeColors();
 
-        console.log("volumeFormat", volumeFormat);
-
         return <Chart id={2}
             yExtents={[d => d.volume, calculators.smaVolume.accessor()]}
             height={height * 0.2}
