@@ -1184,15 +1184,6 @@
     "bridge_text": " Köprüler bir dijital varlıktan bir diğerine geçiş yapmanızı sağlar, örn. BTC'yi BTS'ye.",
     "gateway_text": "Geçitler BitShares'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
     "fiat_text": "Buradaki kripto para yatırma işlemleri CCEDK tarafından sağlanan bir hizmettir. Bu hizmetten faydalanmanız için öncelikle CCEDK kaydınız olmalıdır. Kayıt işleminden sonra aşağıdaki dönüşümleri yapabilirsiniz:",
-    "transwiser": {
-      "gateway": "Transwiser",
-      "visit_weidian": "Yatırmak için ziyaret edin",
-      "deposit_title": "%(asset)s'a RMB yatırın",
-      "withdraw_title": "RMB'ye %(asset)s çekin",
-      "alipay": "ALIPAY Hesap Adı",
-      "withdraw_note": "Şimdilik sadece ALIPAY çekimleri destekleniyor. Dijital varlıklarınız 1:1 oranında çevrilecektir ve ALIPAY hesabınaıza RMB gönderilecektir.",
-      "you_will_receive": "%(amount)s miktarında RMB elinize geçecek"
-    },
     "meta": {
       "open_website": ""
     },
