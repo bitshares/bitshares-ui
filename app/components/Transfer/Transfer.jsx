@@ -14,7 +14,7 @@ import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import { debounce } from "lodash";
+import { debounce, isNaN } from "lodash";
 import { Asset } from "common/MarketClasses";
 
 class Transfer extends React.Component {
@@ -359,7 +359,8 @@ class Transfer extends React.Component {
 
         let propose_incomplete = propose && ! propose_account;
         let submitButtonClass = "button float-right no-margin";
-        if(!from_account || !to_account || !amount || amount === "0"|| !asset || from_error || propose_incomplete || balanceError)
+        const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
+        if(!from_account || !to_account || !amountValue || isNaN(amountValue) || !asset || from_error || propose_incomplete || balanceError)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
