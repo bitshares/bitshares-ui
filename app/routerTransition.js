@@ -129,9 +129,10 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
 
     connectionManager = new Manager({url: connectionString, urls});
     if (nextState.location.pathname === "/init-error") {
-        return Apis.reset(connectionString, true).init_promise
-        .then(onConnect).catch(onResetError);
-
+        return Apis.reset(connectionString, true).then(instance => {
+            return instance.init_promise
+            .then(onConnect).catch(onResetError);
+        });
     }
     let connectionCheckPromise = !apiLatenciesCount ? connectionManager.checkConnections() : null;
     Promise.all([connectionCheckPromise]).then((res => {
@@ -165,7 +166,9 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                 }
             });
         } else {
-            Apis.reset(connectionManager.url, true).init_promise.then(onConnect).catch(onResetError);
+            Apis.reset(connectionManager.url, true).then(instance => {
+                instance.init_promise.then(onConnect).catch(onResetError);
+            });
         }
 
         /* Only try initialize the API with connect = true on the first onEnter */
