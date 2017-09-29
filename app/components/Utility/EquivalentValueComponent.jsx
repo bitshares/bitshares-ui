@@ -31,7 +31,8 @@ class ValueComponent extends React.Component {
     static defaultProps = {
         toAsset: "1.3.0",
         fullPrecision: true,
-        noDecimals: false
+        noDecimals: false,
+        hide_asset: false
     };
 
     constructor() {
@@ -129,7 +130,7 @@ class ValueComponent extends React.Component {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
-        return <FormattedAsset noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
+        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
     }
 }
 ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
@@ -161,7 +162,7 @@ class BalanceValueComponent extends React.Component {
         let amount = Number(this.props.balance.get("balance"));
         let fromAsset = this.props.balance.get("asset_type");
 
-        return <EquivalentValueComponent amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
+        return <EquivalentValueComponent hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
 BalanceValueComponent = BindToChainState(BalanceValueComponent, {keep_updating: true});

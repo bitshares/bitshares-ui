@@ -252,14 +252,14 @@ class TotalValue extends React.Component {
             return(
                 <span>
                     {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
-                    <FormattedAsset noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                    <FormattedAsset noTip={this.props.noTip} noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </span>
             );
         } else {
             return (
                 <div className="tooltip inline-block" data-tip={totalsTip} data-place="bottom" data-html={true} >
                     {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
-                    <FormattedAsset noTip noPrefix amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                    <FormattedAsset noTip noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
                 </div>
             );
         }
@@ -300,7 +300,7 @@ class TotalBalanceValue extends React.Component {
     };
 
     render() {
-        let {balances, toAsset, collateral, debt, openOrders, inHeader} = this.props;
+        let {balances, collateral, debt, openOrders, inHeader} = this.props;
         let assets = Immutable.List();
         let amounts = [];
 
@@ -323,7 +323,7 @@ class TotalBalanceValue extends React.Component {
             }
         }
 
-        return <ValueStoreWrapper label={this.props.label} inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
+        return <ValueStoreWrapper label={this.props.label} hide_asset={this.props.hide_asset} noTip={this.props.noTip} inHeader={inHeader} balances={amounts} openOrders={openOrders} debt={debt} collateral={collateral} fromAssets={assets}/>;
     }
 }
 TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});

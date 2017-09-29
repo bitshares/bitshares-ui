@@ -28,21 +28,26 @@ class Tab extends React.Component {
         title: PropTypes.string.isRequired,
         changeTab: PropTypes.func,
         isActive: PropTypes.bool.isRequired,
-        index: PropTypes.number.isRequired
+        index: PropTypes.number.isRequired,
+        className: PropTypes.string
     };
 
     static defaultProps = {
         isActive: false,
-        index: 0
+        index: 0,
+        className: ""
     };
 
     render() {
-        let {isActive, index, changeTab, title} = this.props;
-        let c = cnames({"is-active": isActive});
+        let {isActive, index, changeTab, title, className, disabled} = this.props;
+        let c = cnames({"is-active": isActive}, className);
 
         return (
-            <li className={c} onClick={changeTab.bind(this, index)}>
-                <a>{title.indexOf(".") > 0 ? <Translate content={title} /> : title}</a>
+            <li className={c} onClick={!disabled ? changeTab.bind(this, index) : null}>
+                <a>
+                    {title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : title}
+                    {this.props.subText ? <span className="tab-subtext"><br />{this.props.subText}</span> : null}
+                </a>
             </li>
         );
     }
@@ -52,12 +57,14 @@ class Tabs extends React.Component {
 
     static propTypes = {
         setting: PropTypes.string,
-        defaultActiveTab: PropTypes.number
+        defaultActiveTab: PropTypes.number,
+        segmented: PropTypes.bool
     };
 
     static defaultProps = {
         active: 0,
-        defaultActiveTab: 0
+        defaultActiveTab: 0,
+        segmented: true
     };
 
     constructor(props) {
@@ -87,7 +94,7 @@ class Tabs extends React.Component {
     }
 
     render() {
-        let {children, contentClass, tabsClass, style} = this.props;
+        let {children, contentClass, tabsClass, style, segmented} = this.props;
 
         let activeContent = null;
 
@@ -116,7 +123,7 @@ class Tabs extends React.Component {
         return (
             <div className={this.props.className}>
                 <div className="service-selector">
-                    <ul style={style} className={cnames("button-group segmented no-margin", tabsClass)}>
+                    <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
                         {tabs}
                     </ul>
                 </div>

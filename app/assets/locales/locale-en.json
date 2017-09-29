@@ -364,7 +364,11 @@
     "propose_from": "Propose From",
     "settle": "Settle",
     "no_orders": "No open orders",
-    "asset_details": "Asset details"
+    "asset_details": "Asset details",
+    "portfolio": "Portfolio",
+    "activity": "Activity",
+    "eq_value_header": "Value (%(asset)s)",
+    "qty": "Qty"
   },
   "pagination": {
     "newer": "Newer",
