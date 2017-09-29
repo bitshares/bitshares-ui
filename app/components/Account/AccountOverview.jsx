@@ -26,6 +26,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import {Tabs, Tab} from "../Utility/Tabs";
+import AccountOrders from "./AccountOrders";
 
 class AccountOverview extends React.Component {
 
@@ -429,25 +430,29 @@ class AccountOverview extends React.Component {
                 debt={debt}
                 collateral={collateral}
             />;
-        let totalBalanceNoSymbol =
-            <TotalBalanceValue
-                noTip
-                balances={totalBalanceList}
-                openOrders={orders}
-                debt={debt}
-                collateral={collateral}
-                hide_asset
-            />;
         let portFolioBalance =
             <TotalBalanceValue
                 noTip
                 balances={totalBalanceList}
+            />;
+        let portFolioBalanceNoSymbol =
+            <TotalBalanceValue
+                noTip
+                balances={totalBalanceList}
+                hide_asset
             />;
         let ordersBalance =
             <TotalBalanceValue
                 noTip
                 balances={Immutable.List()}
                 openOrders={orders}
+            />;
+        let ordersBalanceNoSymbol =
+            <TotalBalanceValue
+                noTip
+                balances={Immutable.List()}
+                openOrders={orders}
+                hide_asset
             />;
         let collateralBalance =
             <TotalBalanceValue
@@ -457,7 +462,7 @@ class AccountOverview extends React.Component {
                 collateral={collateral}
             />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td><Translate content="account.portfolio" /></td><td></td><td style={{textAlign: "right"}}>{totalBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td><Translate content="account.portfolio" /></td><td></td><td style={{textAlign: "right"}}>{portFolioBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -526,29 +531,16 @@ class AccountOverview extends React.Component {
                             </Tab>
 
                             <Tab title="account.open_orders" subText={ordersBalance}>
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                            <th style={{textAlign: "right"}}><Translate component="span" content="account.asset" /></th>
-                                            {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
-                                            <th style={{textAlign: "right"}} className="column-hide-small"><Translate component="span" content="account.eq_value" /></th>
-                                            {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
-                                            <th style={{textAlign: "center"}}>
-                                                <Translate content="account.transfer_actions" />
-                                            </th>
-                                            <th style={{textAlign: "center"}}>
-                                                <Translate content="account.market_actions" />
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
+                                <AccountOrders {...this.props}>
                                     <tbody>
-                                        {/* Open orders */}
-                                        {includedOrders}
-                                        {hiddenOrders}
+                                        <tr className="total-value">
+                                            <td colSpan="2">Open orders</td>
+                                            <td colSpan="3"></td>
+                                            <td style={{textAlign: "center"}}>{ordersBalanceNoSymbol}</td>
+                                            {this.props.isMyAccount ? <td></td> : null}
+                                        </tr>
                                     </tbody>
-                                </table>
+                                </AccountOrders>
                             </Tab>
 
                             <Tab title="account.collaterals" subText={collateralBalance}>

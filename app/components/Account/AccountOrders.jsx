@@ -83,6 +83,9 @@ class AccountOrders extends React.Component {
                         invert={true}
                         onCancel={this._cancelLimitOrder.bind(this, order.id)}
                         price={price.full}
+                        dashboard
+                        isMyAccount={this.props.isMyAccount}
+                        settings={this.props.settings}
                     />
                 );
             }
@@ -94,30 +97,24 @@ class AccountOrders extends React.Component {
         for (let market in marketOrders) {
             if (marketOrders[market].length) {
                 tables.push(
-                    <div key={market} style={marketIndex > 0 ? {paddingTop: "1rem"} : {}}>
-                    <h5 style={{paddingLeft: 20, marginBottom: 5}}>
-                        <MarketLink quote={markets[market].quote.id} base={markets[market].base.id} />
-                    </h5>
-                    <div className="exchange-bordered">
-                            <table className="table table-striped text-right ">
-                                <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>
-                                <tbody>
-                                    {marketOrders[market].sort((a, b) => {
-                                        return a.props.price - b.props.price;
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <tbody key={market}>
+                        {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}></td></tr> : null}
+                        {marketOrders[market].sort((a, b) => {
+                            return a.props.price - b.props.price;
+                        })}
+                    </tbody>
                 );
                 marketIndex++;
             }
         }
 
         return (
-            <div className="grid-content no-overflow" style={{minWidth: "50rem", paddingBottom: 15}}>
-                {!tables.length ? <p><Translate content="account.no_orders" /></p> : null}
-                {tables}
+            <div className="grid-content no-overflow no-padding" style={{paddingBottom: 15}}>
+                <table className="table table-striped dashboard-table">
+                    <TableHeader settings={this.props.settings} dashboard isMyAccount={this.props.isMyAccount}/>
+                    {tables}
+                    {this.props.children}
+                </table>
             </div>
         );
     }

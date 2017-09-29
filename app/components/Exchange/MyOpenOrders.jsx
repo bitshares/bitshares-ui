@@ -1,6 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -11,13 +10,17 @@ import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import { ChainStore } from "bitsharesjs/es";
 import { LimitOrder, CallOrder } from "common/MarketClasses";
+const rightAlign = {textAlign: "right"};
+const leftAlign = {textAlign: "left"};
+import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
 
 class TableHeader extends React.Component {
 
     render() {
-        let {baseSymbol, quoteSymbol} = this.props;
+        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, settings} = this.props;
+        let preferredUnit = settings ? settings.get("unit") : "1.3.0";
 
-        return (
+        return !dashboard ? (
             <thead>
                 <tr>
                     <th><Translate className="header-sub-title" content="exchange.price" /></th>
@@ -25,6 +28,19 @@ class TableHeader extends React.Component {
                     <th>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
                     <th style={{width: "28%"}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
                     <th />
+                </tr>
+            </thead>
+        ) : (
+            <thead>
+                <tr>
+                    <th style={leftAlign}>Asset 1</th>
+                    <th style={leftAlign}>Asset 2</th>
+                    <th style={rightAlign}>Qty</th>
+                    <th style={rightAlign}>Total</th>
+                    <th style={rightAlign}><Translate content="exchange.price" /></th>
+                    <th>Order Value (<AssetName name={preferredUnit} />)</th>
+                    {/* <th><Translate content="transaction.expiration" /></th> */}
+                    {isMyAccount ? <th><Translate content="wallet.cancel" /></th> : null}
                 </tr>
             </thead>
         );
@@ -48,7 +64,7 @@ class OrderRow extends React.Component {
     }
 
     render() {
-        let {base, quote, order, showSymbols} = this.props;
+        let {base, quote, order, showSymbols, dashboard, isMyAccount, settings} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
         let tdClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
@@ -56,8 +72,9 @@ class OrderRow extends React.Component {
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
+        let preferredUnit = settings ? settings.get("unit") : "1.3.0";
 
-        return (
+        return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
@@ -76,6 +93,31 @@ class OrderRow extends React.Component {
                         <Icon name="cross-circle" className="icon-14px" />
                     </a>}
                 </td>
+            </tr>
+        ) : (
+            <tr key={order.id}>
+                <td style={leftAlign}><AssetName name={quote.get("symbol")} /></td>
+                <td style={leftAlign}><AssetName name={base.get("symbol")} /></td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
+                <td className={tdClass} style={rightAlign}>
+                    <PriceText price={order.getPrice()} base={base} quote={quote} />
+                    {priceSymbol}
+                </td>
+                <td>
+                    <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/>
+                </td>
+                {/* <td>
+                    {isCall ? null : <FormattedDate
+                        value={order.expiration}
+                        format="short"
+                    />}
+                </td> */}
+                {isMyAccount ? <td className="text-center" style={{ padding: "2px 5px"}}>
+                    {isCall ? null : <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
+                        <Icon name="cross-circle" className="icon-14px" />
+                    </a>}
+                </td> : null}
             </tr>
         );
         // }
