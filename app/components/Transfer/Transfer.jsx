@@ -15,6 +15,7 @@ import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import { debounce, isNaN } from "lodash";
+import classnames from "classnames";
 import { Asset } from "common/MarketClasses";
 
 class Transfer extends React.Component {
@@ -358,13 +359,10 @@ class Transfer extends React.Component {
         }
 
         let propose_incomplete = propose && ! propose_account;
-        let submitButtonClass = "button float-right no-margin";
         const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
         const isAmountValid = amountValue && !isNaN(amountValue);
         const isToAccountValid = to_account && to_account.get("name") === to_name;
-        if(!from_account || !isToAccountValid || !isAmountValid || !asset || from_error || propose_incomplete || balanceError)
-            submitButtonClass += " disabled";
-
+        const isSendNotValid = !from_account || !isToAccountValid || !isAmountValid || !asset || from_error || propose_incomplete || balanceError;
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
         let tabIndex = 1;
@@ -443,10 +441,10 @@ class Transfer extends React.Component {
                                 error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
                             />
                             {propose ?
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                <button className={classnames("button float-right no-margin", {disabled: isSendNotValid})} type="submit" value="Submit" tabIndex={tabIndex++}>
                                     <Translate component="span" content="propose" />
                                 </button> :
-                                <button className={submitButtonClass} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                <button className={classnames("button float-right no-margin", {disabled: isSendNotValid})} type="submit" value="Submit" tabIndex={tabIndex++}>
                                     <Translate component="span" content="transfer.send" />
                                 </button>
                             }
