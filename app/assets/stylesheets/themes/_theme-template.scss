@@ -25,7 +25,13 @@
   $row-accent-color,
   $header-color,
   $chat-text-color,
-  $input-background
+  $input-background,
+  $account-header,
+  $account-cells,
+  $account-green,
+  $account-primarytext,
+  $account-dimmed,
+  $account-border
   ) {
 
   .font-secondary {
@@ -1232,6 +1238,57 @@
     input.my-key, td.my-key a {
         font-weight: bold;
         color: $info-color;
+    }
+
+    /* Table view account */
+    ul.account-overview {
+        li {
+            > a {
+                color: $account-dimmed;
+                background-color: $account-header;
+                &:hover {
+                    background-color: $account-header;
+                    color: $account-primarytext;
+                }
+                > span.tab-subtext {
+                    color: $account-green;
+                }
+            }
+            &.is-active > a {
+                color: $account-primarytext;
+                background-color: $account-header;
+            }
+            &.total-value {
+                > a {
+                    background-color: $account-cells;
+                    &:hover > span.tab-title {
+                        color: $account-dimmed;
+                    }
+                }
+            }
+        }
+    }
+
+    table.table.dashboard-table {
+        > thead > tr > th {
+            background-color: $account-header;
+            color: $account-primarytext;
+        }
+        > tbody > tr {
+            > td {
+                background-color: $account-cells;
+                color: $account-primarytext;
+                border: 1px solid $account-border;
+            }
+            &.total-value {
+                td {
+                    background-color: $account-header;
+                }
+                td:nth-child(3) {
+                    color: $account-green;
+                }
+            }
+        }
     }
 }
 

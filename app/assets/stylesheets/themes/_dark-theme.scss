@@ -35,6 +35,14 @@ $header-color: #484848;
 // Chat colors
 $chat-text-color: #191A1F;
 
+// Account table view colors
+$account-header: #1A242F;
+$account-cells: #27384B;
+$account-green: #7ED321;
+$account-primarytext: white;
+$account-dimmed: #606060;
+$account-border: #323131;
+
 .darkTheme {
   @include theme(
     $primary-text-color,
@@ -61,6 +69,12 @@ $chat-text-color: #191A1F;
     $row-accent-color,
     $header-color,
     $chat-text-color,
-    $input-background
+    $input-background,
+    $account-header,
+    $account-cells,
+    $account-green,
+    $account-primarytext,
+    $account-dimmed,
+    $account-border
   );
 }

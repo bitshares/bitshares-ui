@@ -112,35 +112,16 @@ ul.account-overview {
     li {
         > a {
             font-size: 1rem;
-            color: grey;
-            background-color: #1A242F;
-            &:hover {
-                background-color: #1A242F;
-                color: white;
-            }
-            > span.tab-title {
-            }
 
             > span.tab-subtext {
                 font-size: 85%;
-                color: #7ED321;
             }
-        }
-        &.is-active > a {
-            color: white;
-            background-color: #1A242F;
-             > span.tab-title {
-             }
         }
         &.total-value {
             > a {
                 cursor: default;
-                background-color: #27384B;
                 > span.tab-title {
                     font-size: 95%;
-                }
-                &:hover > span.tab-title {
-                    color: grey;
                 }
             }
         }
@@ -149,24 +130,18 @@ ul.account-overview {
 
 table.table.dashboard-table {
     > thead > tr > th {
-        background-color: #1A242F;
-        color: white;
         font-weight: 600;
         text-align: center;
     }
     > tbody > tr {
         > td {
             font-size: 0.9rem;
-            background-color: #27384B;
-            color: white;
-            border: 1px solid #323131;
             text-align: center;
         }
         &.total-value {
             td {
                 vertical-align: middle;
                 padding: 8px 5px;
-                background-color: #1A242F;
             }
             td:first-of-type {
                 text-align: left;
@@ -174,7 +149,6 @@ table.table.dashboard-table {
                 font-weight: 600;
             }
             td:nth-child(3) {
-                color: #7ED321;
                 font-weight: 600;
                 text-align: right;
             }
