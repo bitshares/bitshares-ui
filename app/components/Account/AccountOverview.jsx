@@ -563,8 +563,9 @@ class AccountOverview extends React.Component {
                                     compactView={false}
                                     showMore={true}
                                     fullHeight={true}
-                                    limit={10}
+                                    limit={15}
                                     showFilters={true}
+                                    dashboard
                                 />
                             </Tab>
                         </Tabs>

@@ -88,10 +88,10 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td style={{width: "20%"}} className="left-td column-hide-tiny">
+                        <td style={{textAlign: "left"}} className="left-td column-hide-tiny">
                             <Link className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.show_block", {block: utils.format_number(this.props.block, 0)})} to={`/block/${this.props.block}`}><TransactionLabel color={color} type={type} /></Link>
                         </td>)}
-                    <td style={{padding: "8px 5px"}}>
+                    <td style={{padding: "8px 5px", textAlign: "left"}}>
                         <div>
                             <span>{this.props.info}</span>
                         </div>

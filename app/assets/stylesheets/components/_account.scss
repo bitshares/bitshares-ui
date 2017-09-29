@@ -164,6 +164,7 @@ table.table.dashboard-table {
         }
         &.total-value {
             td {
+                vertical-align: middle;
                 padding: 8px 5px;
                 background-color: #1A242F;
             }
