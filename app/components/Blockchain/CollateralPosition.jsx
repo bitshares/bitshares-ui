@@ -10,8 +10,11 @@ import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import counterpart from "counterpart";
+import Icon from "../Icon/Icon";
 
 const wallet_api = new WalletApi();
+const alignRight = {textAlign: "right"};
+const alignLeft = {textAlign: "left"};
 /**
  *  Given a collateral position object (call order), displays it in a pretty way
  *
@@ -145,14 +148,18 @@ class CollateralPosition extends React.Component {
 
         return (
             <tr className="margin-row">
-                <td>
+                <td style={alignLeft}>
+                    <AssetName name={debtAsset.get("symbol")} />
+                </td>
+                <td style={alignRight}>
                     <FormattedAsset
                         amount={co.debt}
                         asset={co.call_price.quote.asset_id}
                         assetInfo={assetInfoLinks}
+                        hide_asset
                     />
                 </td>
-                <td className="column-hide-medium">
+                <td style={alignRight} className="column-hide-medium">
                     <FormattedAsset
                         decimalOffset={5}
                         amount={co.collateral}
@@ -165,8 +172,10 @@ class CollateralPosition extends React.Component {
                         decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                        hide_symbols
                     />
                 </td>
+                <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td>
 
                 <td>
                     <div
@@ -175,16 +184,18 @@ class CollateralPosition extends React.Component {
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Translate content="borrow.adjust" />
+                            <Icon name="adjust" className="icon-14px rotate90" />
                         </a>
                     </div>
+                </td>
+                <td>
                     <div
                         data-place="left"
                         data-tip={counterpart.translate("tooltip.close_position", {amount: d, asset: debtAsset.get("symbol")})}
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onClosePosition.bind(this)}>
-                            <Translate content="borrow.close" />
+                            <Icon name="cross-circle" className="icon-14px" />
                         </a>
                     </div>
                     {debtAsset ? (
@@ -218,25 +229,28 @@ class CollateralPositionWrapper extends React.Component {
 
 CollateralPositionWrapper = BindToChainState(CollateralPositionWrapper, {keep_updating: true});
 
-const CollateralTable = ({callOrders, account}) => {
+const CollateralTable = ({callOrders, account, className}) => {
 
     return (
-        <table className="table">
+        <table className={"table " + className}>
             <thead>
             <tr>
-                <th><Translate content="transaction.borrow_amount" /></th>
-                <th className="column-hide-medium"><Translate content="transaction.collateral" /></th>
-                <th style={{textAlign: "center"}}>
+                <th style={alignLeft}><Translate content="transaction.borrow_amount" /></th>
+                <th style={alignRight}><Translate content="account.qty" /></th>
+                <th style={alignRight} className="column-hide-medium"><Translate content="transaction.collateral" /></th>
+                <th>
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.coll_ratio")}>
                         <Translate content="borrow.coll_ratio" />
                     </div>
                 </th>
-                <th style={{textAlign: "center"}} className="column-hide-small">
+                <th className="column-hide-small">
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
                         <Translate content="exchange.call" />
                     </div>
                 </th>
-                <th></th>
+                <th>Units</th>
+                <th>Adjust</th>
+                <th>Close</th>
             </tr>
             </thead>
             <tbody>

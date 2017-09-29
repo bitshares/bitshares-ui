@@ -548,10 +548,7 @@ class AccountOverview extends React.Component {
 
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <div className="block-content-header">
-                                            <Translate content="account.collaterals" />
-                                        </div>
-                                        <CollateralPosition callOrders={call_orders} account={account} />
+                                        <CollateralPosition className="dashboard-table" callOrders={call_orders} account={account} />
                                     </div>
                                 </div>) : null}
                             </Tab>
