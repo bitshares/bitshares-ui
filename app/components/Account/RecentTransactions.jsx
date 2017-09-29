@@ -210,9 +210,9 @@ class RecentTransactions extends React.Component {
                         hideOpLabel={compactView}
                     />
                 );
-            }) : [<tr><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>];
+            }) : [<tr key="no_recent"><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>];
         display_history.push(
-            <tr className="total-value">
+            <tr className="total-value" key="total_value">
                 <td style={alignLeft}>
                     {this.props.showFilters ? (
                         <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>

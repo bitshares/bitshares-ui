@@ -488,7 +488,8 @@ class AccountOverview extends React.Component {
             <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
-                        <Tabs segmented={false} setting="overviewTab" tabsClass="account-overview no-padding bordered-header content-block">
+                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" tabsClass="account-overview no-padding bordered-header content-block">
+
                             <Tab disabled className="total-value" title="account.eq_value" subText={totalBalance}>
 
                             </Tab>
