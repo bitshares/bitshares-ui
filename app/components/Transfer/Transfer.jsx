@@ -360,7 +360,9 @@ class Transfer extends React.Component {
         let propose_incomplete = propose && ! propose_account;
         let submitButtonClass = "button float-right no-margin";
         const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
-        if(!from_account || !to_account || !amountValue || isNaN(amountValue) || !asset || from_error || propose_incomplete || balanceError)
+        const isAmountValid = amountValue && !isNaN(amountValue);
+        const isToAccountValid = to_account && to_account.get("name") === to_name;
+        if(!from_account || !isToAccountValid || !isAmountValid || !asset || from_error || propose_incomplete || balanceError)
             submitButtonClass += " disabled";
 
         let accountsList = Immutable.Set();
