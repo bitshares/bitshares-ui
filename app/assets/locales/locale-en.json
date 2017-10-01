@@ -125,7 +125,7 @@
       "title": "Vesting balances",
       "balance_number": "Balance #%(id)s",
       "no_balances": "This account has no vesting balances",
-      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
+      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
       "stats": "Membership",
@@ -136,9 +136,9 @@
       "network_percentage": "Network",
       "fee_allocation": "Fee Allocation",
       "membership": "Membership",
-      "fees_paid": "Lifetime fees paid",
-      "fees_pending": "Pending fees",
-      "fees_vested": "Pending vested fees",
+      "fees_paid": "Fees paid, Lifetime",
+      "fees_pending": "Fees pending division",
+      "fees_vested": "Fees pending, other",
       "referrals": "Referrals",
       "rewards": "Cashback Rewards",
       "cashback": "Vesting balance amount",
