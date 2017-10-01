@@ -115,6 +115,7 @@ form.order-form {
   align-items: center;
   table {
     width: 100%;
+    table-layout: auto;
     th {
       padding-top: 8px !important;
       padding-bottom: 8px !important;
