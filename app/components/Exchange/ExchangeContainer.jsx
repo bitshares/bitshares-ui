@@ -60,7 +60,7 @@ class ExchangeContainer extends React.Component {
                             return MarketsStore.getState().feedPrice;
                         },
                         currentAccount: () => {
-                            return AccountStore.getState().currentAccount;
+                            return "zdbz" //AccountStore.getState().currentAccount;
                         },
                         linkedAccounts: () => {
                             return AccountStore.getState().linkedAccounts;

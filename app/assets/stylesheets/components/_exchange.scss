@@ -36,9 +36,12 @@
 }
 
 .order-table {
-	width: 100%;
-  table-layout: fixed;
-  text-align: right;
+  width: 100%;
+
+  &.fixed-table {
+      table-layout: fixed;
+      text-align: right;
+  }
 
   > thead > tr > th {
       font-size: 14px;

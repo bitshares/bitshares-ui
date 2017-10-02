@@ -99,7 +99,7 @@ class AccountOrders extends React.Component {
                         <MarketLink quote={markets[market].quote.id} base={markets[market].base.id} />
                     </h5>
                     <div className="exchange-bordered">
-                            <table className="table table-striped text-right ">
+                            <table className="table table-striped">
                                 <TableHeader baseSymbol={markets[market].base.symbol} quoteSymbol={markets[market].quote.symbol}/>
                                 <tbody>
                                     {marketOrders[market].sort((a, b) => {
