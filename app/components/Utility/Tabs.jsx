@@ -45,8 +45,8 @@ class Tab extends React.Component {
         return (
             <li className={c} onClick={!disabled ? changeTab.bind(this, index) : null}>
                 <a>
-                    {title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : title}
-                    {this.props.subText ? <span className="tab-subtext"><br />{this.props.subText}</span> : null}
+                    {title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}
+                    {this.props.subText ? <div className="tab-subtext">{this.props.subText}</div> : null}
                 </a>
             </li>
         );
@@ -64,7 +64,8 @@ class Tabs extends React.Component {
     static defaultProps = {
         active: 0,
         defaultActiveTab: 0,
-        segmented: true
+        segmented: true,
+        contentClass: ""
     };
 
     constructor(props) {
@@ -127,7 +128,7 @@ class Tabs extends React.Component {
                         {tabs}
                     </ul>
                 </div>
-                <div className={contentClass} >
+                <div className={contentClass + " tab-content"} >
                     {activeContent}
                 </div>
 

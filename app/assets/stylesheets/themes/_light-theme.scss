@@ -43,6 +43,7 @@ $account-green: #7ED321;
 $account-primarytext: white;
 $account-dimmed: #606060;
 $account-border: #323131;
+$account-background: #e5e6e4;
 
 .lightTheme {
   @include theme(
@@ -76,7 +77,8 @@ $account-border: #323131;
     $account-green,
     $account-primarytext,
     $account-dimmed,
-    $account-border
+    $account-border,
+    $account-background
   );
 
   .change-up {

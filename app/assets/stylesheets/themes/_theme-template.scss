@@ -31,7 +31,8 @@
   $account-green,
   $account-primarytext,
   $account-dimmed,
-  $account-border
+  $account-border,
+  $account-background
   ) {
 
   .font-secondary {
@@ -1241,16 +1242,21 @@
     }
 
     /* Table view account */
+    div.overview-tabs {
+        background-color: $account-background;
+    }
     ul.account-overview {
+        background-color: $account-header;
         li {
             > a {
                 color: $account-dimmed;
                 background-color: $account-header;
+                border: none;
                 &:hover {
                     background-color: $account-header;
                     color: $account-primarytext;
                 }
-                > span.tab-subtext {
+                > div.tab-subtext {
                     color: $account-green;
                 }
             }

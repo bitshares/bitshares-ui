@@ -108,13 +108,54 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
+div.overview-tabs {
+    > div.service-selector {
+        margin-bottom: 0;
+        border: none;
+    }
+
+    div.hide-selector {
+        padding-bottom: 10px;
+        > div {
+            font-size: 1.15rem;
+            cursor: pointer;
+            &:first-of-type {
+                padding-right: 10px;
+            }
+            &.inactive {
+                color: grey;
+            }
+            &:hover.inactive {
+                color: inherit;
+            }
+        }
+    }
+
+    > div.tab-content {
+        padding: 20px;
+    }
+
+    ul.account-overview > li.total-value > a {
+        span.tab-title {
+            text-transform: uppercase;
+            font-variant: small-caps;
+            font-size: 0.8rem;
+        }
+        div.tab-subtext {
+            font-size: 1rem;
+            text-align: right;
+        }
+    }
+}
 ul.account-overview {
+    width: 100%;
     li {
         > a {
             font-size: 1rem;
 
-            > span.tab-subtext {
+            > div.tab-subtext {
                 font-size: 85%;
+                text-align: right;
             }
         }
         &.total-value {

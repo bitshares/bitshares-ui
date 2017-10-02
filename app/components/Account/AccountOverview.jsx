@@ -27,6 +27,7 @@ import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import {Tabs, Tab} from "../Utility/Tabs";
 import AccountOrders from "./AccountOrders";
+import cnames from "classnames";
 
 class AccountOverview extends React.Component {
 
@@ -248,10 +249,10 @@ class AccountOverview extends React.Component {
                         {directMarketLink}
                     </td>
                     <td>
-                        {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.borrow", {asset: symbol})}>{borrowLink}{borrowModal}</div> : null}
+                        {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.borrow", {asset: symbol})}>{borrowLink}{borrowModal}</div> : emptyCell}
                     </td>
                     <td>
-                        {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.settle", {asset: symbol})}>{settleLink}</div> : null}
+                        {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.settle", {asset: symbol})}>{settleLink}</div> : emptyCell}
                     </td>
                     <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
                         <a style={{marginRight: 0}} className={includeAsset ? "order-cancel" : "action-plus"} onClick={this._hideAsset.bind(this, asset_type, includeAsset)}>
@@ -317,7 +318,7 @@ class AccountOverview extends React.Component {
                                     </a>
                                 </span> : emptyCell}
                             </td>
-                            <td></td>
+                            <td>{emptyCell}</td>
                             <td style={{textAlign: "center"}}>
                                 {directMarketLink}
                             </td>
@@ -327,7 +328,7 @@ class AccountOverview extends React.Component {
                                         {borrowLink}{borrowModal}
                                     </div> : emptyCell}
                             </td>
-                            <td></td>
+                            <td>{emptyCell}</td>
                             <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
                                 <a style={{marginRight: 0}} className={includeAsset ? "order-cancel" : "action-plus"} onClick={this._hideAsset.bind(this, asset.get("id"), includeAsset)}>
                                     <Icon name={includeAsset ? "cross-circle" : "plus-circle"} className="icon-14px" />
@@ -417,35 +418,25 @@ class AccountOverview extends React.Component {
             hiddenOrders = hidden.openOrders;
         }
 
-        if (hiddenBalances) {
-            hiddenBalances.unshift(<tr style={{backgroundColor: "transparent"}} key="hidden"><td style={{height: 20}} colSpan="11"></td></tr>);
-        }
+        // if (hiddenBalances) {
+        //     hiddenBalances.unshift(<tr style={{backgroundColor: "transparent"}} key="hidden"><td style={{height: 20}} colSpan="11"></td></tr>);
+        // }
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-        let totalBalance =
+        let totalBalanceNoSymbol =
             <TotalBalanceValue
                 noTip
                 balances={totalBalanceList}
                 openOrders={orders}
                 debt={debt}
                 collateral={collateral}
-            />;
-        let portFolioBalance =
-            <TotalBalanceValue
-                noTip
-                balances={totalBalanceList}
+                hide_asset
             />;
         let portFolioBalanceNoSymbol =
             <TotalBalanceValue
                 noTip
                 balances={totalBalanceList}
                 hide_asset
-            />;
-        let ordersBalance =
-            <TotalBalanceValue
-                noTip
-                balances={Immutable.List()}
-                openOrders={orders}
             />;
         let ordersBalanceNoSymbol =
             <TotalBalanceValue
@@ -454,12 +445,13 @@ class AccountOverview extends React.Component {
                 openOrders={orders}
                 hide_asset
             />;
-        let collateralBalance =
+        let collateralBalanceNoSymbol =
             <TotalBalanceValue
                 noTip
                 balances={Immutable.List()}
                 debt={debt}
                 collateral={collateral}
+                hide_asset
             />;
 
         includedBalances.push(<tr key="portfolio" className="total-value"><td><Translate content="account.portfolio" /></td><td></td><td style={{textAlign: "right"}}>{portFolioBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
@@ -488,13 +480,22 @@ class AccountOverview extends React.Component {
             <div className="grid-content" style={{overflowX: "hidden"}}>
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" tabsClass="account-overview no-padding bordered-header content-block">
+                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
-                            <Tab disabled className="total-value" title="account.eq_value" subText={totalBalance}>
+                            <Tab disabled className="total-value" title={counterpart.translate("account.eq_value", {asset: assetName})} subText={totalBalanceNoSymbol}>
 
                             </Tab>
 
-                            <Tab title="account.portfolio" subText={portFolioBalance}>
+                            <Tab title="account.portfolio" subText={portFolioBalanceNoSymbol}>
+                                <div className="hide-selector">
+                                    <div className={cnames("inline-block", {inactive: showHidden})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                        <Translate content="account.hide_hidden" />
+                                    </div>
+                                    <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                        <Translate content="account.show_hidden" />
+                                    </div>
+                                </div>
+
                                 <table className="table dashboard-table">
                                     <thead>
                                         <tr>
@@ -513,25 +514,16 @@ class AccountOverview extends React.Component {
                                             <th><Translate content="account.trade" /></th>
                                             <th><Translate content="exchange.borrow" /></th>
                                             <th><Translate content="account.settle" /></th>
-                                            <th>{/* Hide/show asset column */}</th>
+                                            <th><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {includedBalances}
-                                        {showHidden ? hiddenBalances : null}
+                                        {showHidden ? hiddenBalances : includedBalances}
                                     </tbody>
                                 </table>
-
-                                {hiddenBalances && hiddenBalances.length - 1 > 0 ? <div
-                                    className="button outline small column-hide-small no-margin"
-                                    style={{position: "relative", top: 10}}
-                                    onClick={this._toggleHiddenAssets.bind(this)}
-                                >
-                                    <Translate content={`account.${showHidden ? "hide_hidden" : "show_hidden"}`} /><span> ({hiddenBalances.reduce((count, a) => {if (a.key.indexOf("hidden") === -1) return count + 1; return count;}, 0)})</span>
-                                </div> : null}
                             </Tab>
 
-                            <Tab title="account.open_orders" subText={ordersBalance}>
+                            <Tab title="account.open_orders" subText={ordersBalanceNoSymbol}>
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
@@ -544,7 +536,7 @@ class AccountOverview extends React.Component {
                                 </AccountOrders>
                             </Tab>
 
-                            <Tab title="account.collaterals" subText={collateralBalance}>
+                            <Tab title="account.collaterals" subText={collateralBalanceNoSymbol}>
                                 {call_orders.length > 0 ? (
 
                                 <div className="content-block">
