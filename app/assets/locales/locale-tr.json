@@ -1141,7 +1141,7 @@
         "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
         "trade": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
         "bit": "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
-        "bitcny": "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Transwiser tarafından yürütülmektedir. Daha fazla bilgi için: https://www.transwiser.com/"
+        "bitcny": "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/"
     },
     "your_account": "Kullanıcı adınız",
     "bitkapital_receive": "Vermiş olduğunuz banka hesabınıza yatacak miktar",
@@ -1184,15 +1184,6 @@
     "bridge_text": " Köprüler bir dijital varlıktan bir diğerine geçiş yapmanızı sağlar, örn. BTC'yi BTS'ye.",
     "gateway_text": "Geçitler BitShares'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
     "fiat_text": "Buradaki kripto para yatırma işlemleri CCEDK tarafından sağlanan bir hizmettir. Bu hizmetten faydalanmanız için öncelikle CCEDK kaydınız olmalıdır. Kayıt işleminden sonra aşağıdaki dönüşümleri yapabilirsiniz:",
-    "transwiser": {
-      "gateway": "Transwiser",
-      "visit_weidian": "Yatırmak için ziyaret edin",
-      "deposit_title": "%(asset)s'a RMB yatırın",
-      "withdraw_title": "RMB'ye %(asset)s çekin",
-      "alipay": "ALIPAY Hesap Adı",
-      "withdraw_note": "Şimdilik sadece ALIPAY çekimleri destekleniyor. Dijital varlıklarınız 1:1 oranında çevrilecektir ve ALIPAY hesabınaıza RMB gönderilecektir.",
-      "you_will_receive": "%(amount)s miktarında RMB elinize geçecek"
-    },
     "meta": {
       "open_website": ""
     },

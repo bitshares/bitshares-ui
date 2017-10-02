@@ -5,7 +5,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import TranswiserDepositWithdraw from "../DepositWithdraw/transwiser/TranswiserDepositWithdraw";
 import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
@@ -185,41 +184,6 @@ class AccountDepositWithdraw extends React.Component {
                         <div className="content-block">
                         </div>
                     </div>)
-        });
-
-        serList.push({
-            name: "Transwiser",
-            template: (
-                <div>
-                    <div className="float-right"><a href="http://www.transwiser.com" rel="noopener noreferrer" target="_blank"><Translate content="gateway.website" /></a></div>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th><Translate content="gateway.symbol" /></th>
-                            <th><Translate content="gateway.deposit_to" /></th>
-                            <th><Translate content="gateway.balance" /></th>
-                            <th><Translate content="gateway.withdraw" /></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {/* <TranswiserDepositWithdraw
-                            issuerAccount="transwiser-wallet"
-                            account={account.get("name")}
-                            receiveAsset="TCNY" /> */}
-                        <TranswiserDepositWithdraw
-                            issuerAccount="transwiser-wallet"
-                            account={account.get("name")}
-                            receiveAsset="CNY" />
-                        {/*
-                        <TranswiserDepositWithdraw
-                            issuerAccount="transwiser-wallet"
-                            account={this.props.account.get("name")}
-                            receiveAsset="BOTSCNY" />
-                        */}
-                        </tbody>
-                    </table>
-                </div>
-            )
         });
 
         serList.push({
