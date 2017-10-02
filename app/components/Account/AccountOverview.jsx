@@ -546,9 +546,9 @@ class AccountOverview extends React.Component {
                                 </div>) : null}
                             </Tab>
 
-                            <Tab title="markets.title" subText={hiddenSubText}>
+                            {/* <Tab title="markets.title" subText={hiddenSubText}>
 
-                            </Tab>
+                            </Tab> */}
 
                             <Tab title="account.activity" subText={hiddenSubText}>
                                 <RecentTransactions
