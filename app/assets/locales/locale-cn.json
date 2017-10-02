@@ -1176,7 +1176,7 @@
         "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
         "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
         "bit": "<br/>bit %(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",
-        "bitcny": "<br/><br/>bitCNY 可以通过 Transwiser 提供的网关服务进行充值提现。更多信息请访问 https://www.transwiser.com/"
+        "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/"
     },
     "your_account": "你的账户",
     "bridge": "桥接",
@@ -1189,32 +1189,6 @@
     "withdraw": "提现",
     "inventory": "库存",
     "scan_qr": "扫描二维码，手机支付",
-    "transwiser": {
-      "channel": {
-        "withdraw": {
-          "alipay": "支付宝",
-          "weixin_pay": "微信支付",
-          "bank_wire": "银行账户"
-        }
-      },
-      "fee": "手续费",
-      "fee_min": "最低",
-      "gateway": "Transwiser",
-      "visit_weidian": "访问网店进行充值",
-      "deposit_title": "充值人民币到 %(asset)s",
-      "withdraw_title": "提现 %(asset)s 到 %(channel)s",
-      "alipay_account": "支付宝账户",
-      "memo": "备注",
-      "alipay_account_name_notice": "支付宝账户名，一般为邮箱或手机号。",
-      "alipay_realname": "支付宝账户实名",
-      "alipay_realname_notice": "提现到支付宝请在备注栏输入真实姓名以供校验",
-      "withdraw_note": "目前仅支持支付宝提现，将资产按1:1比例兑换成人民币发送到你的支付宝账户中",
-      "you_will_receive": "你将收到 %(amount)s 元人民币",
-      "bank_name": "银行名称",
-      "bank_branch": "分行/支行名",
-      "bank_account": "收款人账号",
-      "bank_holder": "收款人户名"
-    },
     "meta": {
       "open_website": "访问官网"
     },

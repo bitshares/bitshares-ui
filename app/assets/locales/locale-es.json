@@ -767,7 +767,7 @@
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
         "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/"
     },
     "your_account": "Your account",
     "bridge": "Bridge",
@@ -780,15 +780,6 @@
     "withdraw": "Withdraw",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
-    "transwiser": {
-      "gateway": "Transwiser",
-      "visit_weidian": "Click to deposit",
-      "deposit_title": "Deposit RMB to %(asset)s",
-      "withdraw_title": "Withdraw %(asset)s to RMB",
-      "alipay": "ALIPAY Account Name",
-      "withdraw_note": "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
-      "you_will_receive": "You will receive %(amount)s RMB"
-    },
     "meta": {
       "open_website": "Open Website"
     },
