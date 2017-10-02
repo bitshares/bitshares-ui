@@ -472,7 +472,7 @@ class AccountOverview extends React.Component {
         let assetName = !!preferredAsset ? preferredAsset.get("symbol") : "";
         if (preferredAsset) {
             const {prefix, name} = utils.replaceName(assetName, !!preferredAsset.get("bitasset_data_id"));
-            assetName = prefix + name;
+            assetName = (prefix || "") + name;
         }
         const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
 

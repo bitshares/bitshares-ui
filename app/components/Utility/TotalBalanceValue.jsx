@@ -252,14 +252,14 @@ class TotalValue extends React.Component {
             return(
                 <span>
                     {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
-                    <FormattedAsset noTip={this.props.noTip} noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                    <FormattedAsset noTip={this.props.noTip} noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? (toAsset.get("precision") - 2) : 4}/>
                 </span>
             );
         } else {
             return (
                 <div className="tooltip inline-block" data-tip={totalsTip} data-place="bottom" data-html={true} >
                     {!!this.props.label ? (<span className="font-secondary"><Translate content={this.props.label} />: </span>) : null}
-                    <FormattedAsset noTip noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? toAsset.get("precision") : 4}/>
+                    <FormattedAsset noTip noPrefix hide_asset={this.props.hide_asset} amount={totalValue} asset={toAsset.get("id")} decimalOffset={toAsset.get("symbol").indexOf("BTC") === -1 ? (toAsset.get("precision") - 2) : 4}/>
                 </div>
             );
         }
