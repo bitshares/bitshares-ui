@@ -106,8 +106,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                             AccountStore.reset();
                             AccountStore.loadDbData(currentChain);
                         });
-                    } else {
-                        AccountStore.reset();
                     }
                 })
                 .catch((error) => {
