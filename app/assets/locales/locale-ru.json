@@ -835,7 +835,8 @@
     "remove":"Удалить",
     "activate":"Активировать",
     "confirm_remove":"Вы уверены, что хотите удалить %(name)s из Вашего списка доступных узлов?",
-    "valid_node_url":"URL-адрес узла должен начинаться с ws:// или wss://"
+    "valid_node_url":"URL-адрес узла должен начинаться с ws:// или wss://",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
   },
   "footer":{
     "title":"BitShares",

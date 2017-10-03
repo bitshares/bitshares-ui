@@ -818,7 +818,8 @@
     "api_closest": "自动选择最近的",
     "wallet_required": "要求钱包模式",
     "wallet_required_text": "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
-    "enable_wallet": "启用钱包模式"
+    "enable_wallet": "启用钱包模式",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
   },
   "pagination": {
     "newer": "更近",
