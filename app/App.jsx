@@ -48,6 +48,7 @@ class App extends React.Component {
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
+        this._onSettingsChange = this._onSettingsChange.bind(this);
     }
 
     componentWillUnmount() {
@@ -62,7 +63,7 @@ class App extends React.Component {
             }.bind(this));
 
             NotificationStore.listen(this._onNotificationChange.bind(this));
-            SettingsStore.listen(this._onSettingsChange.bind(this));
+            SettingsStore.listen(this._onSettingsChange);
 
             ChainStore.init().then(() => {
                 this.setState({synced: true});

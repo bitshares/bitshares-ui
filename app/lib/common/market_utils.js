@@ -351,12 +351,13 @@ const MarketUtils = {
         };
     },
 
-    getMarketID(directions, base, quote) {
+    getMarketID(base, quote) {
+        if (!base || !quote) return {marketId: "_"};
         let baseID = parseInt(base.get("id").split(".")[2], 10);
         let quoteID = parseInt(quote.get("id").split(".")[2], 10);
         const marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
-        return {baseID, quoteID, marketID};
+        return {baseID, quoteID, marketID, first: quoteID > baseID ? quote : base, second: quoteID > baseID ? base : quote};
     }
 };
 

@@ -53,7 +53,7 @@ class AccountOrders extends React.Component {
 
 
                 // let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
-                const {marketID, baseID, quoteID} = marketUtils.getMarketID(this.props.marketDirections, base, quote);
+                const {marketID} = marketUtils.getMarketID(base, quote);
                 const direction = marketDirections.get(marketID);
 
                 if (!markets[marketID]) {

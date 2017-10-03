@@ -395,7 +395,15 @@ class Exchange extends React.Component {
                 amount: 0
             }
         });
-
+        const {marketID, first} = market_utils.getMarketID(this.props.baseAsset, this.props.quoteAsset);
+        const inverted = this.props.marketDirections.get(marketID);
+        const shouldFlip = inverted && first.get("id") !== this.props.baseAsset.get("id") ||
+            !inverted && first.get("id") !== this.props.baseAsset.get("id");
+        if (shouldFlip) {
+            let setting = {};
+            setting[marketID] = !inverted;
+            SettingsActions.changeMarketDirection(setting);
+        }
         console.log("order:", JSON.stringify(order.toObject()));
         return MarketsActions.createLimitOrder2(order).then((result) => {
             if (result.error) {

@@ -134,7 +134,7 @@ class SettingsStore {
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
         this.marketDirections = Immutable.Map(ss.get("marketDirections"));
-
+        console.log("marketDirections", this.marketDirections.toJS());
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
         this.apiLatencies = ss.get("apiLatencies", {});
@@ -228,7 +228,7 @@ class SettingsStore {
         for (let key in payload) {
             this.marketDirections = this.marketDirections.set(key, payload[key]);
         }
-
+        console.log("marketDirections", this.marketDirections.toJS());
         ss.set("marketDirections", this.marketDirections.toJS());
     }
 
