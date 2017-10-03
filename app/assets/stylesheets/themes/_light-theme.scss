@@ -37,12 +37,12 @@ $header-color: #DCDCDC;
 $chat-text-color: #191A1F;
 
 // Account table view colors
-$account-header: #1A242F;
-$account-cells: #27384B;
-$account-green: #7ED321;
-$account-primarytext: white;
-$account-dimmed: #606060;
-$account-border: #323131;
+$account-header: #b1b1b1;
+$account-cells: #dadada;
+$account-green: #488a00;
+$account-primarytext: $primary-text-color;
+$account-dimmed: #5d5d5d;
+$account-border: rgba(50, 49, 49, 0.1);
 $account-background: #e5e6e4;
 
 .lightTheme {
