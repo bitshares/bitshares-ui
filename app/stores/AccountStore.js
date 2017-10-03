@@ -57,7 +57,8 @@ class AccountStore extends BaseStore {
             unFollowedAccounts: Immutable.Set(),
             currentAccount: null,
             passwordAccount: null,
-            starredAccounts: Immutable.Map()
+            starredAccounts: Immutable.Map(),
+            searchAccounts: Immutable.Map()
         };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
