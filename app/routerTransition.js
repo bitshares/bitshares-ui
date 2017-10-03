@@ -13,10 +13,12 @@ import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
 const latencyChecks = ss.get("latencyChecks", 1);
+import counterpart from "counterpart";
 
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import SettingsActions from "actions/SettingsActions";
+import notify from "actions/NotificationActions";
 
 ChainStore.setDispatchFrequency(20);
 
@@ -99,15 +101,16 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                         replaceState("/dashboard");
                     }
                 }).then(() => {
+                    console.log("onConnect", chainChanged);
                     if (chainChanged) {
                         ChainStore.clearCache();
                         ChainStore.subscribed = false;
                         ChainStore.init().then(() => {
                             AccountStore.reset();
-                            AccountStore.loadDbData(currentChain);
+                            AccountStore.loadDbData(currentChain).catch(err => {
+                                console.error(err);
+                            });
                         });
-                    } else {
-                        AccountStore.reset();
                     }
                 })
                 .catch((error) => {
@@ -124,7 +127,16 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
 
     var onResetError = (err) => {
         console.log("err:", err);
-        return callback();
+        oldChain = "old";
+        connect = true;
+        notify.addNotification({
+            message: counterpart.translate("settings.connection_error", {url: connectionString}),
+            level: "error",
+            autoDismiss: 10
+        });
+        return Apis.close().then(() => {
+            return willTransitionTo(nextState, replaceState, callback, true);
+        });
     };
 
     connectionManager = new Manager({url: connectionString, urls});
@@ -166,6 +178,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                 }
             });
         } else {
+            oldChain = "old";
             Apis.reset(connectionManager.url, true).then(instance => {
                 instance.init_promise.then(onConnect).catch(onResetError);
             });

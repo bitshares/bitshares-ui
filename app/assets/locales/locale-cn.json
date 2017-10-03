@@ -818,7 +818,8 @@
     "api_closest": "自动选择最近的",
     "wallet_required": "要求钱包模式",
     "wallet_required_text": "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
-    "enable_wallet": "启用钱包模式"
+    "enable_wallet": "启用钱包模式",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
   },
   "pagination": {
     "newer": "更近",
@@ -1176,7 +1177,7 @@
         "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
         "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
         "bit": "<br/>bit %(asset)s 锚定 %(backed)s 的金融衍生品. 它是100%去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合用中的抵押品进行价值背书。",
-        "bitcny": "<br/><br/>bitCNY 可以通过 Transwiser 提供的网关服务进行充值提现。更多信息请访问 https://www.transwiser.com/"
+        "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/"
     },
     "your_account": "你的账户",
     "bridge": "桥接",
