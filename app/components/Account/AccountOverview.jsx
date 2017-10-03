@@ -206,7 +206,7 @@ class AccountOverview extends React.Component {
             }
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                    <td style={{textAlign: "left"}}><AssetName name={asset.get("symbol")} /></td>
+                    <td><AssetName name={asset.get("symbol")} /></td>
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
@@ -298,7 +298,7 @@ class AccountOverview extends React.Component {
                     let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
-                            <td style={{textAlign: "left"}}>
+                            <td>
                                 <AssetName name={a} />
                             </td>
                             <td colSpan="3"></td>
@@ -488,19 +488,19 @@ class AccountOverview extends React.Component {
 
                             <Tab title="account.portfolio" subText={portFolioBalanceNoSymbol}>
                                 <div className="hide-selector">
-                                    <div className={cnames("inline-block", {inactive: showHidden})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                    <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <Translate content="account.hide_hidden" />
                                     </div>
-                                    <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                    {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <Translate content="account.show_hidden" />
-                                    </div>
+                                    </div> : null}
                                 </div>
 
                                 <table className="table dashboard-table">
                                     <thead>
                                         <tr>
                                             {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                            <th style={{textAlign: "left"}}><Translate component="span" content="account.asset" /></th>
+                                            <th><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                             <th style={{textAlign: "right"}} className="column-hide-small">
@@ -518,7 +518,7 @@ class AccountOverview extends React.Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {showHidden ? hiddenBalances : includedBalances}
+                                        {showHidden && hiddenBalances.length ? hiddenBalances : includedBalances}
                                     </tbody>
                                 </table>
                             </Tab>
