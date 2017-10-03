@@ -946,7 +946,8 @@
     "show_star_1": "Show",
     "show_star_2": "only",
     "base": "Base currency:",
-    "search": "Search for more markets here"
+    "search": "Search for more markets here",
+    "order_value": "Order value"
   },
   "fees": {
     "title": "Fee Schedule"

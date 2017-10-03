@@ -12,7 +12,6 @@ import Icon from "../Icon/Icon";
 import { ChainStore } from "bitsharesjs/es";
 import { LimitOrder, CallOrder } from "common/MarketClasses";
 const rightAlign = {textAlign: "right"};
-const leftAlign = {textAlign: "left"};
 import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
 
 class TableHeader extends React.Component {
@@ -34,11 +33,11 @@ class TableHeader extends React.Component {
         ) : (
             <thead>
                 <tr>
-                    <th style={leftAlign}>Market</th>
+                    <th><Translate content="account.bts_market" /></th>
                     <th style={rightAlign}><Translate content="exchange.price" /></th>
                     <th style={rightAlign}><Translate content="account.qty" /></th>
-                    <th style={rightAlign}>Total</th>
-                    <th>Order Value (<AssetName name={preferredUnit} />)</th>
+                    <th style={rightAlign}><Translate content="exchange.total" /></th>
+                    <th><Translate content="exchange.order_value" /> (<AssetName name={preferredUnit} />)</th>
                     <th><Translate content="account.trade" /></th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     {isMyAccount ? <th><Translate content="wallet.cancel" /></th> : null}
@@ -98,7 +97,7 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td style={leftAlign}>
+                <td>
                     <Link to={`/asset/${quote.get("symbol")}`}><AssetName noTip name={quote.get("symbol")} /></Link>
                     <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>

@@ -107,7 +107,7 @@ class AccountOrders extends React.Component {
             if (marketOrders[market].length) {
                 tables.push(
                     <tbody key={market}>
-                        {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}></td></tr> : null}
+                        {/* {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}><span style={{visibility: "hidden"}}>H</span></td></tr> : null} */}
                         {marketOrders[market].sort((a, b) => {
                             return a.props.price - b.props.price;
                         })}

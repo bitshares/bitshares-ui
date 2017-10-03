@@ -454,7 +454,7 @@ class AccountOverview extends React.Component {
                 hide_asset
             />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td><Translate content="account.portfolio" /></td><td></td><td style={{textAlign: "right"}}>{portFolioBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td></td><td></td><td style={{textAlign: "right"}}>{portFolioBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -527,8 +527,8 @@ class AccountOverview extends React.Component {
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
-                                            <td colSpan="2"><Translate content="account.open_orders" /></td>
-                                            <td colSpan="2"></td>
+                                            <td colSpan="1"></td>
+                                            <td colSpan="3"></td>
                                             <td style={{textAlign: "center"}}>{ordersBalanceNoSymbol}</td>
                                             <td></td>
                                             {this.props.isMyAccount ? <td></td> : null}
