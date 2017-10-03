@@ -1130,6 +1130,7 @@
     "coll_ratio": "Collateral ratio",
     "call_limit": "Market Call Limit",
     "adjust": "Update position",
+    "adjust_short": "Adjust",
     "close": "Close position",
     "update": "Update",
     "errors": {

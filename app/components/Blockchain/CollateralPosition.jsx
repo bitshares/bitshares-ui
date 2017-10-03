@@ -172,10 +172,9 @@ class CollateralPosition extends React.Component {
                         decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
-                        hide_symbols
                     />
                 </td>
-                <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td>
+                {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
 
                 <td>
                     <div
@@ -248,9 +247,8 @@ const CollateralTable = ({callOrders, account, className}) => {
                         <Translate content="exchange.call" />
                     </div>
                 </th>
-                <th>Units</th>
-                <th>Adjust</th>
-                <th>Close</th>
+                <th><Translate content="borrow.adjust_short" /></th>
+                <th><Translate content="transfer.close" /></th>
             </tr>
             </thead>
             <tbody>

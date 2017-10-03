@@ -1285,6 +1285,9 @@
                 background-color: $account-cells;
                 color: $account-primarytext;
                 border: 1px solid $account-border;
+                .icon > svg > path {
+                    fill: $account-primarytext;
+                }
             }
             &.total-value {
                 td {

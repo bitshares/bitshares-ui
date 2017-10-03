@@ -134,7 +134,7 @@ class SettingsStore {
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
 
         this.marketDirections = Immutable.Map(ss.get("marketDirections"));
-        console.log("marketDirections", this.marketDirections.toJS());
+        
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
         this.apiLatencies = ss.get("apiLatencies", {});
