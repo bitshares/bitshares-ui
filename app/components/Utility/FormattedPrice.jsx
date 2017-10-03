@@ -9,6 +9,8 @@ import SettingsActions from "actions/SettingsActions";
 import Popover from "react-popover";
 import Translate from "react-translate-component";
 import AssetName from "./AssetName";
+import marketUtils from "common/market_utils";
+import { Asset, Price } from "common/MarketClasses";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -37,9 +39,19 @@ class FormattedPrice extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {isPopoverOpen: false};
+        const {marketID} = marketUtils.getMarketID(this.props.marketDirections, this.props.base_asset, this.props.quote_asset);
+
+        this.state = {isPopoverOpen: false, marketId: marketID};
         this.togglePopover = this.togglePopover.bind(this);
         this.closePopover = this.closePopover.bind(this);
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.base_asset !== this.props.base_asset ||
+            np.quote_asset !== this.props.quote_asset) {
+            const {marketID} = marketUtils.getMarketID(np.marketDirections, np.base_asset, np.quote_asset);
+            this.setState({marketId: marketID});
+        }
     }
 
     togglePopover(e) {
@@ -53,7 +65,8 @@ class FormattedPrice extends React.Component {
 
     onFlip() {
         let setting = {};
-        setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
+
+        setting[this.state.marketId] = !this.props.marketDirections.get(this.state.marketId);
         SettingsActions.changeMarketDirection(setting);
     }
 
@@ -75,9 +88,21 @@ class FormattedPrice extends React.Component {
     render() {
 
         let {base_asset, quote_asset, base_amount, quote_amount,
-          marketDirections, marketId, hide_symbols, noPopOver} = this.props;
-
-        let invertPrice = marketDirections.get(marketId);
+          marketDirections, hide_symbols, noPopOver} = this.props;
+        let invertPrice = marketDirections.get(this.state.marketId);
+        const price = new Price({
+            base: new Asset({
+                asset_id: this.props.base_asset.get("id"),
+                precision: this.props.base_asset.get("precision"),
+                amount: base_amount
+            }),
+            quote: new Asset({
+                asset_id: this.props.quote_asset.get("id"),
+                precision: this.props.quote_asset.get("precision"),
+                amount: quote_amount
+            })
+        });
+        console.log("marketId", this.state.marketId, "invertPrice", invertPrice, price.toReal());
         if( (invertPrice) || this.props.invert) {
             let tmp = base_asset;
             base_asset = quote_asset;

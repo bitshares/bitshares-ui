@@ -527,9 +527,10 @@ class AccountOverview extends React.Component {
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
-                                            <td colSpan="2">Open orders</td>
-                                            <td colSpan="3"></td>
+                                            <td colSpan="2"><Translate content="account.open_orders" /></td>
+                                            <td colSpan="2"></td>
                                             <td style={{textAlign: "center"}}>{ordersBalanceNoSymbol}</td>
+                                            <td></td>
                                             {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>

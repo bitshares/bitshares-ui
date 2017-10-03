@@ -1,10 +1,13 @@
 import React from "react";
 import {OrderRow, TableHeader} from "../Exchange/MyOpenOrders";
-import market_utils from "common/market_utils";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs/es";
 import { LimitOrder } from "common/MarketClasses";
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
+import marketUtils from "common/market_utils";
 
 class AccountOrders extends React.Component {
 
@@ -19,8 +22,14 @@ class AccountOrders extends React.Component {
         });
     }
 
+    onFlip(marketId) {
+        let setting = {};
+        setting[marketId] = !this.props.marketDirections.get(marketId);
+        SettingsActions.changeMarketDirection(setting);
+    }
+
     render() {
-        let {account} = this.props;
+        let {account, marketDirections} = this.props;
         let cancel = counterpart.translate("account.perm.cancel");
         let markets = {};
 
@@ -39,15 +48,16 @@ class AccountOrders extends React.Component {
                     [base.get("id")]: {precision: base.get("precision")},
                     [quote.get("id")]: {precision: quote.get("precision")}
                 };
-                let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
-                let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
+                // let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
+                // let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
 
-                let limitOrder = new LimitOrder(order, assets, quoteID > baseID ? quote.get("id") : base.get("id"));
 
-                let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
+                // let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
+                const {marketID, baseID, quoteID} = marketUtils.getMarketID(this.props.marketDirections, base, quote);
+                const direction = marketDirections.get(marketID);
 
                 if (!markets[marketID]) {
-                    if (quoteID > baseID) {
+                    if (direction) {
                         markets[marketID] = {
                             base: {id: base.get("id"), symbol: base.get("symbol"), precision: base.get("precision")},
                             quote: {id: quote.get("id"), symbol: quote.get("symbol"), precision: quote.get("precision")}
@@ -59,7 +69,8 @@ class AccountOrders extends React.Component {
                         };
                     }
                 }
-
+                let limitOrder = new LimitOrder(order, assets, markets[marketID].quote.id);
+                console.log("marketID", marketID, "direction", direction, limitOrder.market_base, "isBid", limitOrder.isBid())
 
                 let marketBase = ChainStore.getAsset(markets[marketID].base.id);
                 let marketQuote = ChainStore.getAsset(markets[marketID].quote.id);
@@ -68,7 +79,6 @@ class AccountOrders extends React.Component {
                     marketOrders[marketID] = [];
                 }
 
-                let {price} = market_utils.parseOrder(order, marketBase, marketQuote);
                 marketOrders[marketID].push(
                     <OrderRow
                         ref={markets[marketID].base.symbol}
@@ -80,10 +90,11 @@ class AccountOrders extends React.Component {
                         showSymbols={false}
                         invert={true}
                         onCancel={this._cancelLimitOrder.bind(this, order.id)}
-                        price={price.full}
+                        price={limitOrder.getPrice()}
                         dashboard
                         isMyAccount={this.props.isMyAccount}
                         settings={this.props.settings}
+                        onFlip={this.onFlip.bind(this, marketID)}
                     />
                 );
             }
@@ -117,5 +128,16 @@ class AccountOrders extends React.Component {
         );
     }
 }
+
+AccountOrders = connect(AccountOrders, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            marketDirections: SettingsStore.getState().marketDirections
+        };
+    }
+});
 
 export default AccountOrders;

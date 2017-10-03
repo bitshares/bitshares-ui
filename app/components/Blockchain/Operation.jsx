@@ -182,7 +182,7 @@ class Operation extends React.Component {
                 color = "warning";
                 let o = op[1];
                 let isAsk = market_utils.isAskOp(op[1]);
-
+                console.log("order", o, "isAsk", isAsk);
                 column = (
                         <span>
                             <TranslateWithLinks

@@ -1,5 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
+import { Link } from "react-router";
 import {FormattedDate} from "react-intl";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -33,12 +34,12 @@ class TableHeader extends React.Component {
         ) : (
             <thead>
                 <tr>
-                    <th style={leftAlign}>Asset 1</th>
-                    <th style={leftAlign}>Asset 2</th>
-                    <th style={rightAlign}>Qty</th>
-                    <th style={rightAlign}>Total</th>
+                    <th style={leftAlign}>Market</th>
                     <th style={rightAlign}><Translate content="exchange.price" /></th>
+                    <th style={rightAlign}><Translate content="account.qty" /></th>
+                    <th style={rightAlign}>Total</th>
                     <th>Order Value (<AssetName name={preferredUnit} />)</th>
+                    <th><Translate content="account.trade" /></th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     {isMyAccount ? <th><Translate content="wallet.cancel" /></th> : null}
                 </tr>
@@ -59,7 +60,8 @@ class OrderRow extends React.Component {
             nextProps.order.for_sale !== this.props.order.for_sale ||
             nextProps.order.id !== this.props.order.id ||
             nextProps.quote !== this.props.quote ||
-            nextProps.base !== this.props.base
+            nextProps.base !== this.props.base ||
+            nextProps.order.market_base !== this.props.order.market_base
         );
     }
 
@@ -96,14 +98,17 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td style={leftAlign}><AssetName name={quote.get("symbol")} /></td>
-                <td style={leftAlign}><AssetName name={base.get("symbol")} /></td>
-                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
-                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
+                <td style={leftAlign}>
+                    <Link to={`/asset/${quote.get("symbol")}`}><AssetName noTip name={quote.get("symbol")} /></Link>
+                    <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
+                    <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
+                </td>
                 <td className={tdClass} style={rightAlign}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
                     {priceSymbol}
                 </td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
                 <td>
                     <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/>
                 </td>
@@ -113,6 +118,7 @@ class OrderRow extends React.Component {
                         format="short"
                     />}
                 </td> */}
+                <td><Link to={`/market/${quote.get("symbol")}_${base.get("symbol")}`}><Icon name="trade" className="icon-14px" /></Link></td>
                 {isMyAccount ? <td className="text-center" style={{ padding: "2px 5px"}}>
                     {isCall ? null : <a style={{marginRight: 0}} className="order-cancel" onClick={this.props.onCancel}>
                         <Icon name="cross-circle" className="icon-14px" />
