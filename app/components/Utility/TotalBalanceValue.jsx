@@ -164,7 +164,6 @@ class TotalValue extends React.Component {
         let assetValues = {};
 
         // Collateral value
-        if (Object.keys(collateral).length === 1) debugger;
         for (let asset in collateral) {
             let fromAsset = assets[asset];
             if (fromAsset) {

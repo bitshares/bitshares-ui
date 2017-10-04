@@ -1,5 +1,5 @@
 import React, {PropTypes, Component} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import {FormattedDate} from "react-intl";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";

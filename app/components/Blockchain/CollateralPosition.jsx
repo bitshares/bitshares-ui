@@ -13,6 +13,7 @@ import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import {List} from "immutable";
+import {Link} from "react-router/es";
 
 const wallet_api = new WalletApi();
 const alignRight = {textAlign: "right"};
@@ -151,7 +152,9 @@ class CollateralPosition extends React.Component {
         return (
             <tr className="margin-row">
                 <td style={alignLeft}>
-                    <AssetName name={debtAsset.get("symbol")} />
+                    <Link to={`/asset/${debtAsset.get("symbol")}`}>
+                        <AssetName noTip name={debtAsset.get("symbol")} />
+                    </Link>
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset

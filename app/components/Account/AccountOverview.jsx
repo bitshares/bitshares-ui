@@ -14,7 +14,7 @@ import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
@@ -427,7 +427,7 @@ class AccountOverview extends React.Component {
         // }
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-        console.log("debt", debt, "collateral", collateral);
+
         let totalValue =
             <TotalBalanceValue
                 noTip
