@@ -28,6 +28,7 @@ import GatewayActions from "actions/GatewayActions";
 import {Tabs, Tab} from "../Utility/Tabs";
 import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class AccountOverview extends React.Component {
 
@@ -473,7 +474,16 @@ class AccountOverview extends React.Component {
                 hide_asset
             />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td></td><td></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        const preferredUnit = settings.get("unit") || "1.3.0";
+        const totalValueText = <TranslateWithLinks
+            noLink
+            string="account.total"
+            keys={[
+                {type: "asset", value: preferredUnit, arg: "asset"}
+            ]}
+        />;
+
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -486,7 +496,6 @@ class AccountOverview extends React.Component {
         }) || {};
         const currentBridges = this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
-        let preferredUnit = settings.get("unit") || "1.3.0";
         const preferredAsset = ChainStore.getAsset(preferredUnit);
         let assetName = !!preferredAsset ? preferredAsset.get("symbol") : "";
         if (preferredAsset) {
@@ -501,7 +510,7 @@ class AccountOverview extends React.Component {
                     <div className="generic-bordered-box">
                         <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
-                            <Tab disabled className="total-value" title={counterpart.translate("account.eq_value", {asset: assetName})} subText={totalValue}>
+                            <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
 
                             </Tab>
 
@@ -523,7 +532,13 @@ class AccountOverview extends React.Component {
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                             <th style={{textAlign: "right"}} className="column-hide-small">
-                                                {preferredAsset ? <Translate component="span" content="account.eq_value_header" asset={assetName} /> : null}
+                                                <TranslateWithLinks
+                                                    noLink
+                                                    string="account.eq_value_header"
+                                                    keys={[
+                                                        {type: "asset", value: preferredUnit, arg: "asset"}
+                                                    ]}
+                                                />
                                             </th>
                                             {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                             <th><Translate content="header.payments" /></th>
@@ -546,7 +561,9 @@ class AccountOverview extends React.Component {
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
-                                            <td colSpan="3"></td>
+                                            <td style={{textAlign: "center"}} colSpan="3">
+                                                {totalValueText}
+                                            </td>
                                             <td colSpan="3"></td>
                                             <td style={{textAlign: "center"}}>{ordersValue}</td>
                                             <td colSpan="1"></td>
@@ -557,13 +574,13 @@ class AccountOverview extends React.Component {
                             </Tab>
 
                             <Tab title="account.collaterals" subText={marginValue}>
-                                {call_orders.length > 0 ? (
-
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <CollateralPosition className="dashboard-table" callOrders={call_orders} account={account}>
+                                        <CollateralPosition preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
                                             <tr className="total-value">
-                                                <td>Totals (<AssetName name={preferredUnit} />)</td>
+                                                <td>
+                                                    {totalValueText}
+                                                </td>
                                                 <td>{debtValue}</td>
                                                 <td>{collateralValue}</td>
                                                 <td></td>
@@ -572,7 +589,7 @@ class AccountOverview extends React.Component {
                                             </tr>
                                         </CollateralPosition>
                                     </div>
-                                </div>) : null}
+                                </div>
                             </Tab>
 
                             {/* <Tab title="markets.title" subText={hiddenSubText}>

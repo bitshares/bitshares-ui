@@ -14,6 +14,7 @@ import Icon from "../Icon/Icon";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import {List} from "immutable";
 import {Link} from "react-router/es";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 const wallet_api = new WalletApi();
 const alignRight = {textAlign: "right"};
@@ -251,7 +252,7 @@ class CollateralPositionWrapper extends React.Component {
 
 CollateralPositionWrapper = BindToChainState(CollateralPositionWrapper, {keep_updating: true});
 
-const CollateralTable = ({callOrders, account, className, children}) => {
+const CollateralTable = ({callOrders, account, className, children, preferredUnit}) => {
 
     return (
         <table className={"table " + className}>
@@ -265,7 +266,15 @@ const CollateralTable = ({callOrders, account, className, children}) => {
                         <Translate content="borrow.coll_ratio" />
                     </div>
                 </th>
-                <th>Value</th>
+                <th>
+                    <TranslateWithLinks
+                        noLink
+                        string="account.total"
+                        keys={[
+                            {type: "asset", value: preferredUnit, arg: "asset"}
+                        ]}
+                    />
+                </th>
                 <th style={alignRight} className="column-hide-small">
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
                         <Translate content="exchange.call" />

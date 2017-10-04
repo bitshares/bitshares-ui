@@ -28,7 +28,8 @@ class LinkToAccountById extends React.Component {
             return <span>{this.props.account.get("id")}</span>;
         }
 
-        return <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>;
+        return this.props.noLink ? <span>{account_name}</span> :
+            <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>;
     }
 }
 

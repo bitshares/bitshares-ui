@@ -25,7 +25,6 @@ import SettingsStore from "stores/SettingsStore";
 class Tab extends React.Component {
 
     static propTypes = {
-        title: PropTypes.string.isRequired,
         changeTab: PropTypes.func,
         isActive: PropTypes.bool.isRequired,
         index: PropTypes.number.isRequired,
@@ -45,7 +44,7 @@ class Tab extends React.Component {
         return (
             <li className={c} onClick={!disabled ? changeTab.bind(this, index) : null}>
                 <a>
-                    {title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}
+                    {typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}
                     {this.props.subText ? <div className="tab-subtext">{this.props.subText}</div> : null}
                 </a>
             </li>

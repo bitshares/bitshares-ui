@@ -345,7 +345,7 @@
       "not_yours": "Not your account"
     },
     "collaterals": "Margin Positions",
-    "eq_value": "Estimated %(asset)s",
+    "eq_value": "Estimated",
     "no_price": "Unknown value",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
@@ -367,8 +367,9 @@
     "asset_details": "Asset details",
     "portfolio": "Portfolio",
     "activity": "Activity",
-    "eq_value_header": "Value (%(asset)s)",
-    "qty": "Qty"
+    "eq_value_header": "Value ({asset})",
+    "qty": "Qty",
+    "total": "Total ({asset})"
   },
   "pagination": {
     "newer": "Newer",
