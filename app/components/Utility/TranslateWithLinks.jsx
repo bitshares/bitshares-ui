@@ -45,7 +45,7 @@ export default class TranslateWithLinks extends React.Component {
         const {noLink} = this.props;
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
-            <LinkToAccountById account={name_or_id} noLink/> : noLink ? <span>{name_or_id}</span> :
+            <LinkToAccountById account={name_or_id} noLink={noLink} /> : noLink ? <span>{name_or_id}</span> :
             <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
@@ -53,7 +53,7 @@ export default class TranslateWithLinks extends React.Component {
         const {noLink} = this.props;
         if(!symbol_or_id) return <span>-</span>;
         return utils.is_object_id(symbol_or_id) ?
-            <LinkToAssetById asset={symbol_or_id} noLink/> : noLink ? <AssetName name={symbol_or_id} noTip /> :
+            <LinkToAssetById asset={symbol_or_id} noLink={noLink} /> : noLink ? <AssetName name={symbol_or_id} noTip /> :
             <Link to={`/asset/${symbol_or_id}`}><AssetName name={symbol_or_id} noTip /></Link>;
     }
 
