@@ -2,7 +2,7 @@ import React from "react";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
-
+import AssetName from "../Utility/AssetName";
 export default class SettingsEntry extends React.Component {
 
     constructor() {
@@ -99,7 +99,9 @@ export default class SettingsEntry extends React.Component {
                 if (defaults) {
                     options = defaults.map((entry, index) => {
                         let option = entry.translate ? counterpart.translate(`settings.${entry.translate}`) : entry;
-
+                        if (setting === "unit") {
+                            option = <AssetName name={entry} />;
+                        }
                         let key = entry.translate ? entry.translate : entry;
                         return <option value={entry.translate ? entry.translate : entry} key={key}>{option}</option>;
                     });
