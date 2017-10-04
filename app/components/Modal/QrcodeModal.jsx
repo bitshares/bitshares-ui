@@ -59,6 +59,8 @@ class QrcodeModal extends React.Component {
 
 
     render() {
+        let pos = null;
+        if(this.state.isShowQrcode)pos = {textAlign: "center"};
         return (
             <BaseModal onClose={this.onClose} id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <h3>
@@ -67,7 +69,7 @@ class QrcodeModal extends React.Component {
                 <form onSubmit={this.onPasswordEnter} noValidate>
                     <div className="form-group">
                         {this.state.isShowQrcode ?
-                            <section>
+                            <section style={pos}>
                                 <QRCode size={256} value={this.state.keyString}/>
                             </section>
                             :
@@ -86,7 +88,7 @@ class QrcodeModal extends React.Component {
                             </section>
                         }
                     </div>
-                    <div>
+                    <div style={pos}>
                         <div className="button-group">
                             {this.state.isShowQrcode == false ?
                                 <button className="button" data-place="bottom" data-html onClick={this.onPasswordEnter}>
