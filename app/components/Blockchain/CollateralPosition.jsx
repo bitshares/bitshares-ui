@@ -11,6 +11,8 @@ import Translate from "react-translate-component";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
+import TotalBalanceValue from "../Utility/TotalBalanceValue";
+import {List} from "immutable";
 
 const wallet_api = new WalletApi();
 const alignRight = {textAlign: "right"};
@@ -167,11 +169,29 @@ class CollateralPosition extends React.Component {
                     />
                 </td>
                 <td data-place="bottom" data-tip={this._getCRTip()} className={"center-content "+ statusClass} >{utils.format_number(cr, 2)}</td>
-                <td className={"center-content column-hide-small"}>
+                <td style={alignRight} >
+                    <TotalBalanceValue
+                        noTip
+                        balances={List()}
+                        debt={{[debtAsset.get("id")] : co.debt}}
+                        collateral={{[collateralAsset.get("id")]: parseInt(co.collateral, 10)}}
+                        hide_asset
+                    />
+                </td>
+                <td style={alignRight} className={"center-content column-hide-small"}>
                     <FormattedPrice
                         decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                        hide_symbols
+                    />
+                </td>
+                <td className={"center-content column-hide-small"} style={alignLeft}>
+                    <FormattedPrice
+                        decimals={2}
+                        base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
+                        quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                        hide_value
                     />
                 </td>
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
@@ -228,31 +248,34 @@ class CollateralPositionWrapper extends React.Component {
 
 CollateralPositionWrapper = BindToChainState(CollateralPositionWrapper, {keep_updating: true});
 
-const CollateralTable = ({callOrders, account, className}) => {
+const CollateralTable = ({callOrders, account, className, children}) => {
 
     return (
         <table className={"table " + className}>
             <thead>
             <tr>
-                <th style={alignLeft}><Translate content="transaction.borrow_amount" /></th>
-                <th style={alignRight}><Translate content="account.qty" /></th>
+                <th style={alignLeft}><Translate content="explorer.asset.title" /></th>
+                <th style={alignRight}><Translate content="transaction.borrow_amount" /></th>
                 <th style={alignRight} className="column-hide-medium"><Translate content="transaction.collateral" /></th>
                 <th>
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.coll_ratio")}>
                         <Translate content="borrow.coll_ratio" />
                     </div>
                 </th>
-                <th className="column-hide-small">
+                <th>Value</th>
+                <th style={alignRight} className="column-hide-small">
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
                         <Translate content="exchange.call" />
                     </div>
                 </th>
+                <th style={alignLeft}><Translate content="explorer.assets.units" /></th>
                 <th><Translate content="borrow.adjust_short" /></th>
                 <th><Translate content="transfer.close" /></th>
             </tr>
             </thead>
             <tbody>
                 { callOrders.sort((a, b) => (a.split(".")[2] - b.split(".")[2])).map(id => <CollateralPositionWrapper key={id} object={id} account={account}/>) }
+                { children }
             </tbody>
         </table>
     );

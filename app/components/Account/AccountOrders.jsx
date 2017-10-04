@@ -70,7 +70,6 @@ class AccountOrders extends React.Component {
                     }
                 }
                 let limitOrder = new LimitOrder(order, assets, markets[marketID].quote.id);
-                console.log("marketID", marketID, "direction", direction, limitOrder.market_base, "isBid", limitOrder.isBid())
 
                 let marketBase = ChainStore.getAsset(markets[marketID].base.id);
                 let marketQuote = ChainStore.getAsset(markets[marketID].quote.id);

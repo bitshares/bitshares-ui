@@ -369,7 +369,7 @@ class AccountOverview extends React.Component {
             return null;
         }
 
-        let call_orders = [], collateral = 0, debt = {};
+        let call_orders = [], collateral = {}, debt = {};
 
         if (account.toJS && account.has("call_orders")) call_orders = account.get("call_orders").toJS();
         let includedBalances, hiddenBalances, includedOrders, hiddenOrders;
@@ -379,8 +379,12 @@ class AccountOverview extends React.Component {
         call_orders.forEach( (callID) => {
             let position = ChainStore.getObject(callID);
             if (position) {
-                collateral += parseInt(position.get("collateral"), 10);
-
+                let collateralAsset = position.getIn(["call_price", "base", "asset_id"]);
+                if (!collateral[collateralAsset]) {
+                    collateral[collateralAsset] = parseInt(position.get("collateral"), 10);
+                } else {
+                    collateral[collateralAsset] += parseInt(position.get("collateral"), 10);
+                }
                 let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
                 if (!debt[debtAsset]) {
                     debt[debtAsset] = parseInt(position.get("debt"), 10);
@@ -423,7 +427,8 @@ class AccountOverview extends React.Component {
         // }
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-        let totalBalanceNoSymbol =
+        console.log("debt", debt, "collateral", collateral);
+        let totalValue =
             <TotalBalanceValue
                 noTip
                 balances={totalBalanceList}
@@ -432,29 +437,43 @@ class AccountOverview extends React.Component {
                 collateral={collateral}
                 hide_asset
             />;
-        let portFolioBalanceNoSymbol =
+        let portFolioValue =
             <TotalBalanceValue
                 noTip
                 balances={totalBalanceList}
                 hide_asset
             />;
-        let ordersBalanceNoSymbol =
+        let ordersValue =
             <TotalBalanceValue
                 noTip
                 balances={Immutable.List()}
                 openOrders={orders}
                 hide_asset
             />;
-        let collateralBalanceNoSymbol =
+        let marginValue =
             <TotalBalanceValue
                 noTip
                 balances={Immutable.List()}
                 debt={debt}
+                collateral={collateral}
+                hide_asset
+            />;
+        let debtValue =
+            <TotalBalanceValue
+                noTip
+                balances={Immutable.List()}
+                debt={debt}
+                hide_asset
+            />;
+        let collateralValue =
+            <TotalBalanceValue
+                noTip
+                balances={Immutable.List()}
                 collateral={collateral}
                 hide_asset
             />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td></td><td></td><td style={{textAlign: "right"}}>{portFolioBalanceNoSymbol}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td></td><td></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -482,11 +501,11 @@ class AccountOverview extends React.Component {
                     <div className="generic-bordered-box">
                         <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
-                            <Tab disabled className="total-value" title={counterpart.translate("account.eq_value", {asset: assetName})} subText={totalBalanceNoSymbol}>
+                            <Tab disabled className="total-value" title={counterpart.translate("account.eq_value", {asset: assetName})} subText={totalValue}>
 
                             </Tab>
 
-                            <Tab title="account.portfolio" subText={portFolioBalanceNoSymbol}>
+                            <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
                                     <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <Translate content="account.hide_hidden" />
@@ -523,26 +542,35 @@ class AccountOverview extends React.Component {
                                 </table>
                             </Tab>
 
-                            <Tab title="account.open_orders" subText={ordersBalanceNoSymbol}>
+                            <Tab title="account.open_orders" subText={ordersValue}>
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
-                                            <td colSpan="1"></td>
                                             <td colSpan="3"></td>
-                                            <td style={{textAlign: "center"}}>{ordersBalanceNoSymbol}</td>
-                                            <td></td>
+                                            <td colSpan="3"></td>
+                                            <td style={{textAlign: "center"}}>{ordersValue}</td>
+                                            <td colSpan="1"></td>
                                             {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>
                                 </AccountOrders>
                             </Tab>
 
-                            <Tab title="account.collaterals" subText={collateralBalanceNoSymbol}>
+                            <Tab title="account.collaterals" subText={marginValue}>
                                 {call_orders.length > 0 ? (
 
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <CollateralPosition className="dashboard-table" callOrders={call_orders} account={account} />
+                                        <CollateralPosition className="dashboard-table" callOrders={call_orders} account={account}>
+                                            <tr className="total-value">
+                                                <td>Totals (<AssetName name={preferredUnit} />)</td>
+                                                <td>{debtValue}</td>
+                                                <td>{collateralValue}</td>
+                                                <td></td>
+                                                <td>{marginValue}</td>
+                                                <td colSpan="4"></td>
+                                            </tr>
+                                        </CollateralPosition>
                                     </div>
                                 </div>) : null}
                             </Tab>

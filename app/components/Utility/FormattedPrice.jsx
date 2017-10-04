@@ -107,18 +107,24 @@ class FormattedPrice extends React.Component {
             quote_amount = tempAmount;
         }
 
-        const price = new Price({
-            quote: new Asset({
-                asset_id: base.get("id"),
-                precision: base.get("precision"),
-                amount: base_amount
-            }),
-            base: new Asset({
-                asset_id: quote.get("id"),
-                precision: quote.get("precision"),
-                amount: quote_amount
-            })
-        });
+        let price;
+        try {
+            price = new Price({
+                quote: new Asset({
+                    asset_id: base.get("id"),
+                    precision: base.get("precision"),
+                    amount: base_amount
+                }),
+                base: new Asset({
+                    asset_id: quote.get("id"),
+                    precision: quote.get("precision"),
+                    amount: quote_amount
+                })
+            });
+        } catch(err) {
+            return null;
+        }
+
 
         let formatted_value = "";
         if (!this.props.hide_value) {

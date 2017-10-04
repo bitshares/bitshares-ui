@@ -1293,8 +1293,9 @@
                 td {
                     background-color: $account-header;
                 }
-                td:nth-child(3) {
+                td:nth-child(n+2) {
                     color: $account-green;
+                    text-align: right;
                 }
             }
         }
