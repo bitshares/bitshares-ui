@@ -835,7 +835,8 @@
     "remove": "Remove",
     "activate": "Activate",
     "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
-    "valid_node_url": "Node URL must begin with ws:// or wss://"
+    "valid_node_url": "Node URL must begin with ws:// or wss://",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
   },
   "footer": {
     "title": "BitShares",
