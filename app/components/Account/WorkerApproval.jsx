@@ -5,7 +5,7 @@ import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import Icon from "components/Icon/Icon";

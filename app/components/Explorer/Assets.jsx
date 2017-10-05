@@ -5,7 +5,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";

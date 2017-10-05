@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router/es";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "./ChainTypes";
+import BindToChainState from "./BindToChainState";
 
 class LinkToAccountById extends React.Component {
 

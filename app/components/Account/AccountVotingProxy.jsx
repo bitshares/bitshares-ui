@@ -5,7 +5,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import {List} from "immutable";
 
 class AccountVotingProxy extends React.Component {

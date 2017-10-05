@@ -1,8 +1,8 @@
 import React from "react";
 import {Link} from "react-router/es";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
-import AssetName from "../Utility/AssetName";
+import ChainTypes from "./ChainTypes";
+import BindToChainState from "./BindToChainState";
+import AssetName from "./AssetName";
 
 class LinkToAssetById extends React.Component {
     static propTypes = {

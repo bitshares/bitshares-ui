@@ -7,7 +7,7 @@ import Transaction from "./Transaction";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import LinkToWitnessById from "./LinkToWitnessById";
+import LinkToWitnessById from "../Utility/LinkToWitnessById";
 
 class TransactionList extends React.Component {
 

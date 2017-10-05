@@ -18,6 +18,7 @@ import {Link} from "react-router/es";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
@@ -207,7 +208,9 @@ class AccountOverview extends React.Component {
             }
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                    <td><AssetName name={asset.get("symbol")} /></td>
+                    <td>
+                        <LinkToAssetById asset={asset.get("id")} />
+                    </td>
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
@@ -300,7 +303,7 @@ class AccountOverview extends React.Component {
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
                             <td>
-                                <AssetName name={a} />
+                                <LinkToAssetById asset={asset.get("id")} />
                             </td>
                             <td colSpan="3"></td>
                             <td style={{textAlign: "center"}}>

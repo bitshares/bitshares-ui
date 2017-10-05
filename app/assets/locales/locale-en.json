@@ -475,7 +475,8 @@
     "asset_issue": "Issue {amount} to {to} using {account}",
     "asset_reserve": "Reserve (burn) {amount} using {account}",
     "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
-    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}"
+    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
+    "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
