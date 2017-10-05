@@ -346,7 +346,7 @@
     },
     "collaterals": "Margin Positions",
     "eq_value": "Estimated",
-    "no_price": "Unknown value",
+    "no_price": "--",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",

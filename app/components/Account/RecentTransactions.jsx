@@ -213,10 +213,7 @@ class RecentTransactions extends React.Component {
             }) : [<tr key="no_recent"><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>];
         display_history.push(
             <tr className="total-value" key="total_value">
-                <td style={alignLeft}>
-                    {this.props.showFilters ? (
-                        <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
-                    ) : null}
+                <td>
                 </td>
                 <td style={alignRight}>
                     {historyCount > 0 ?
@@ -261,7 +258,11 @@ class RecentTransactions extends React.Component {
                         <table className={"table" + (compactView ? " compact" : "") + (this.props.dashboard ? " dashboard-table" : "")}>
                             <thead>
                                 <tr>
-                                    {compactView ? null : <th style={alignLeft} className="column-hide-tiny"><Translate content="explorer.block.op" /></th>}
+                                    {compactView ? null : <th style={alignLeft} className="column-hide-tiny">
+                                        {this.props.showFilters ? (
+                                            <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5, width: "auto"}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                        ) : null}
+                                    </th>}
                                     <th style={alignLeft}><Translate content="account.votes.info" /></th>
                                     <th></th>
                                 </tr>

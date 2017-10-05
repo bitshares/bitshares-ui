@@ -340,9 +340,9 @@ class AccountOverview extends React.Component {
                 }
             });
 
-            if (balances.length !== currentIndex) {
-                balances.splice(currentIndex + 1, 0, <tr style={{backgroundColor: "transparent"}} key={"hidden_" + currentIndex} ><td style={{height: 20}} colSpan="11"></td></tr>);
-            }
+            // if (balances.length !== currentIndex) {
+            //     balances.splice(currentIndex + 1, 0, <tr style={{backgroundColor: "transparent"}} key={"hidden_" + currentIndex} ><td style={{height: 20}} colSpan="11"></td></tr>);
+            // }
         }
 
         function sortAlphabetic(a, b) {
@@ -607,6 +607,12 @@ class AccountOverview extends React.Component {
                                     dashboard
                                 />
                             </Tab>
+
+                            {account.get("proposals") && account.get("proposals").size ?
+                            <Tab title="explorer.proposals.title" subText={account.get("proposals") ? account.get("proposals").size : 0}>
+
+                                    <Proposals className="dashboard-table" account={account.get("id")}/>
+                            </Tab> : null}
                         </Tabs>
 
 
@@ -614,14 +620,6 @@ class AccountOverview extends React.Component {
                         <SettleModal ref="settlement_modal" asset={this.state.settleAsset} account={account.get("name")}/>
                     </div>
                 </div>
-
-                {account.get("proposals") && account.get("proposals").size ?
-                <div className="content-block">
-                    <div className="block-content-header">
-                        <Translate content="explorer.proposals.title" account={account.get("id")} />
-                    </div>
-                    <Proposals account={account.get("id")}/>
-                </div> : null}
 
                 {/* Deposit Modal */}
                 <SimpleDepositWithdraw
