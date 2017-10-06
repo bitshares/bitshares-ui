@@ -1266,6 +1266,7 @@
     "rudex": {
       "support_block": "For support, please contact RuDEX at:",
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Please enter number >= minimum",
       "coming_soon": "Coming soon"
     }
   },

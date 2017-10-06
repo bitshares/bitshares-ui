@@ -3,7 +3,7 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import WithdrawModalRuDex from "./WithdrawModalRuDex";
+import RuDexWithdrawModal from "./RuDexWithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
@@ -305,7 +305,7 @@ class RuDexGatewayDepositRequest extends React.Component {
                         </Trigger>
                         <br/>
                         <div className="grid-block vertical">
-                            <WithdrawModalRuDex
+                            <RuDexWithdrawModal
                                 account={this.props.account.get("name")}
                                 issuer={this.props.issuer_account.get("name")}
                                 asset={this.props.receive_asset.get("symbol")}
