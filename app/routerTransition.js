@@ -86,7 +86,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         } catch(err) {
             console.log("db init error:", err);
             replaceState("/init-error");
-            callback();
+            return callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
             return Promise.all([

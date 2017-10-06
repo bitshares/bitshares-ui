@@ -230,7 +230,7 @@ class CreateAccount extends React.Component {
                 <div className="divider" />
 
                 {/* Submit button */}
-                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button className={buttonClass}><Translate content="account.create_account" /></button>}
+                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button style={{width: "100%"}} className={buttonClass}><Translate content="account.create_account" /></button>}
 
                 {/* Backup restore option */}
                 <div style={{paddingTop: 40}}>
