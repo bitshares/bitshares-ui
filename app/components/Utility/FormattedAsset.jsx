@@ -105,7 +105,7 @@ class FormattedAsset extends React.Component {
                 {!hide_amount ?
                     <FormattedNumber
                         value={this.props.exact_amount ? amount : amount / precision}
-                        minimumFractionDigits={2}
+                        minimumFractionDigits={Math.max(decimals, 2)}
                         maximumFractionDigits={Math.max(decimals, 2)}
                     />
                 : null}

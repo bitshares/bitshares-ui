@@ -17,6 +17,7 @@ import Icon from "../Icon/Icon";
 import {Link} from "react-router/es";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
+import EquivalentPrice from "../Utility/EquivalentPrice";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
@@ -214,6 +215,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
+                    <td style={{textAlign: "right"}}><EquivalentPrice fromAsset={asset.get("id")} hide_symbols/></td>
                     <td style={{textAlign: "right"}} className="column-hide-small">
                         {hasBalance || hasOnOrder ? <BalanceValueComponent balance={balance} toAsset={preferredUnit} hide_asset/> : null}
                     </td>
@@ -305,7 +307,7 @@ class AccountOverview extends React.Component {
                             <td>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td colSpan="3"></td>
+                            <td colSpan="4"></td>
                             <td style={{textAlign: "center"}}>
                                 {canBuy  && this.props.isMyAccount ?
                                 <span>
@@ -486,7 +488,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -533,6 +535,7 @@ class AccountOverview extends React.Component {
                                             {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                             <th><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
+                                            <th style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
                                             {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                             <th style={{textAlign: "right"}} className="column-hide-small">
                                                 <TranslateWithLinks

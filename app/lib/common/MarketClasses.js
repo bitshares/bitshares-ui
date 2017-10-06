@@ -299,6 +299,22 @@ class Price {
             quote: this.quote.toObject()
         };
     }
+
+    times(p, common = "1.3.0") {
+        const p2 = (
+            (p.base.asset_id === common &&
+            this.quote.asset_id === common) ||
+            (p.quote.asset_id === common &&
+            this.base.asset_id === common)
+        ) ? p.clone() : p.invert();
+
+        const np = p2.toReal() * this.toReal();
+        return new Price({
+            base: p2.base,
+            quote: this.quote,
+            real: np
+        });
+    }
 }
 
 class FeedPrice extends Price {

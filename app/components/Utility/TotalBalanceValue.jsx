@@ -3,14 +3,14 @@ import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
-import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs/es";
 import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
-import Immutable from "immutable";
+import {List} from "immutable";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import {MarketStatsCheck} from "./EquivalentPrice";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -22,88 +22,36 @@ import counterpart from "counterpart";
  *  -'fullPrecision' boolean to tell if the amount uses the full precision of the asset
  */
 
-class TotalValue extends React.Component {
+class TotalValue extends MarketStatsCheck {
 
     static propTypes = {
         fromAssets: ChainTypes.ChainAssetsList.isRequired,
         toAsset: ChainTypes.ChainAsset.isRequired,
+        coreAsset: ChainTypes.ChainAsset.isRequired,
         inHeader: React.PropTypes.bool,
         label: React.PropTypes.string
     };
 
     static defaultProps = {
         inHeader: false,
-        label: ""
+        label: "",
+        coreAsset: "1.3.0"
     };
 
     constructor() {
         super();
-
-        this.fromStatsIntervals = {};
-        this.toStatsInterval = null;
     }
 
-    componentWillMount() {
-        this._startUpdates(this.props);
-    }
-
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(np) {
         return (
-            !utils.are_equal_shallow(nextProps.fromAssets, this.props.fromAssets) ||
-            nextProps.toAsset !== this.props.toAsset ||
-            !utils.are_equal_shallow(nextProps.balances, this.props.balances) ||
-            !utils.are_equal_shallow(nextProps.openOrders, this.props.openOrders) ||
-            !utils.are_equal_shallow(nextProps.collateral, this.props.collateral) ||
-            !utils.are_equal_shallow(nextProps.debt, this.props.debt)
+            super.shouldComponentUpdate(np) ||
+            !utils.are_equal_shallow(np.fromAssets, this.props.fromAssets) ||
+            np.toAsset !== this.props.toAsset ||
+            !utils.are_equal_shallow(np.balances, this.props.balances) ||
+            !utils.are_equal_shallow(np.openOrders, this.props.openOrders) ||
+            !utils.are_equal_shallow(np.collateral, this.props.collateral) ||
+            !utils.are_equal_shallow(np.debt, this.props.debt)
         );
-    }
-
-    _startUpdates(props) {
-        let coreAsset = ChainStore.getAsset("1.3.0");
-        let {fromAssets} = props;
-
-        if (coreAsset) {
-            // From assets
-            fromAssets.forEach(asset => {
-                if (asset) {
-
-                    if (asset.get("id") !== coreAsset.get("id")) {
-                        setTimeout(() => {
-                            MarketsActions.getMarketStats(coreAsset, asset);
-                            this.fromStatsIntervals[asset.get("id")] = setInterval(MarketsActions.getMarketStats.bind(this, coreAsset, asset), 10 * 60 * 1000);
-                        }, 50)
-                    }
-                }
-            })
-
-            // To asset
-            if (props.toAsset.get("id") !== coreAsset.get("id")) {
-                // wrap this in a timeout to prevent dispatch in the middle of a dispatch
-                MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
-                this.toStatsInterval = setInterval(() => {
-                    MarketsActions.getMarketStats.defer(coreAsset, this.props.toAsset);
-                }, 5 * 60 * 1000);
-            }
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (!Immutable.is(nextProps.toAsset, this.props.toAsset)) {
-            this._stopUpdates();
-
-            this._startUpdates(nextProps);
-        }
-    }
-
-    _stopUpdates() {
-        for (let key in this.fromStatsIntervals) {
-            clearInterval(this.fromStatsIntervals[key]);
-        }
-        clearInterval(this.toStatsInterval);
-    }
-
-    componentWillUnmount() {
-        this._stopUpdates();
     }
 
     _convertValue(amount, fromAsset, toAsset, marketStats, coreAsset) {
@@ -305,7 +253,7 @@ class TotalBalanceValue extends React.Component {
 
     render() {
         let {balances, collateral, debt, openOrders, inHeader} = this.props;
-        let assets = Immutable.List();
+        let assets = List();
         let amounts = [];
 
         balances.forEach(balance => {
@@ -349,7 +297,7 @@ class AccountWrapper extends React.Component {
     }
 
     render() {
-        let balanceList = Immutable.List(), collateral = {}, debt = {}, openOrders = {};
+        let balanceList = List(), collateral = {}, debt = {}, openOrders = {};
 
         this.props.accounts.forEach(account => {
 

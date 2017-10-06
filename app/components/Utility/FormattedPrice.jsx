@@ -89,10 +89,15 @@ class FormattedPrice extends React.Component {
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount,
+        let {base_asset, base_amount, quote_amount,
           marketDirections, hide_symbols, noPopOver} = this.props;
         const {marketId, first, second} = this.state;
         let inverted = marketDirections.get(marketId) || this.props.invert;
+        if (this.props.force_direction && second.get("symbol") === this.props.force_direction && inverted) {
+            inverted = false;
+        } else if (this.props.force_direction && first.get("symbol") === this.props.force_direction && !inverted) {
+            inverted = true;
+        }
         let base, quote;
         if (inverted) {
             base = second;
@@ -130,17 +135,17 @@ class FormattedPrice extends React.Component {
         if (!this.props.hide_value) {
             let value = price.toReal();
             if (isNaN(value) || !isFinite(value)) {
-                return <span>n/a</span>;
+                return <span>--</span>;
             }
-            let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
+            let decimals = this.props.decimals ? this.props.decimals : price.base.precision;
             decimals = Math.min(8, decimals);
-            if (base_asset.get("id") === "1.3.0") {
-                base_asset.get("precision");
+            if (base.get("id") === "1.3.0") {
+                base.get("precision");
             }
             formatted_value = (
                 <FormattedNumber
                     value={value}
-                    minimumFractionDigits={2}
+                    minimumFractionDigits={Math.max(2, decimals)}
                     maximumFractionDigits={decimals}
                 />
             );
