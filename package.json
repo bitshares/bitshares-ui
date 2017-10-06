@@ -152,7 +152,7 @@
     "react-highcharts": "^12.0.0",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-interpolate-component": "^0.10.0",
-    "react-intl": "^2.2.2",
+    "react-intl": "^2.4.0",
     "react-json-inspector": "^7.0.0",
     "react-notification-system": "^0.2.12",
     "react-popover": "^0.4.6",
