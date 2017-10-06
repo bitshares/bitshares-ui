@@ -17,6 +17,7 @@ import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import Icon from "../Icon/Icon";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -167,7 +168,6 @@ class CreateAccountPassword extends React.Component {
 
         let my_accounts = AccountStore.getMyAccounts();
         let firstAccount = my_accounts.length === 0;
-        let hasWallet = WalletDb.getWallet();
         let valid = this.isValid();
         let isLTM = false;
         let registrar = registrar_account ? ChainStore.getAccount(registrar_account) : null;
@@ -196,7 +196,7 @@ class CreateAccountPassword extends React.Component {
                     />
 
                 <section>
-                    <label className="left-label"><Translate content="wallet.generated" /></label>
+                    <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
                     <div style={{padding: "0.25rem"}}>
                         <input disabled value={this.state.generatedPassword} type="text"/>
                     </div>

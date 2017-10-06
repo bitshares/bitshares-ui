@@ -68,7 +68,8 @@
     "copy_tip": "Click to copy the text",
     "withdraw_full": "Click to withdraw the full balance",
     "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
+    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+    "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place"
   },
   "propose": "Propose",
   "cancel": "Cancel",
