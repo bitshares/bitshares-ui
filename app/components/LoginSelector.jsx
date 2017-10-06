@@ -36,7 +36,7 @@ export default class LoginSelector extends React.Component {
 
                         {!!childCount ? null :
                         <div className="button-group">
-                            <label style={{textAlign: "left"}}>New User?<br/>
+                            <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>
                                 <Link to="/create-account/password">
                                     <div className="button">
                                         <Translate content="header.create_account" />
@@ -44,7 +44,7 @@ export default class LoginSelector extends React.Component {
                                 </Link>
                             </label>
 
-                            <label style={{textAlign: "left"}}>Existing Users<br/>
+                            <label style={{textAlign: "left"}}><Translate content="account.existing_user" /><br/>
                                 <div className="button success" onClick={() => {
                                     SettingsActions.changeSetting({setting: "passwordLogin", value: true});
                                     WalletUnlockActions.unlock.defer();

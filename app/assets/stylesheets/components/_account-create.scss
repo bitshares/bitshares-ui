@@ -71,8 +71,10 @@ div.account-creation {
     div.button-group {
         padding-top: 2rem;
         label {
-            text-transform: none;
-            font-size: 90%;
+            > span {
+                text-transform: none;
+                font-size: 90%;
+            }
             &:first-of-type {
                 margin-right: 3rem;
             }
