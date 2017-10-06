@@ -47,6 +47,10 @@ div.has-error > input:focus {
   color: #a94442;
 }
 
+.has-error, .facolor-error {
+    max-width: 30rem;
+}
+
 .menu-bar.primary > li > a.active {
   background: #414141;
   color: #fff;

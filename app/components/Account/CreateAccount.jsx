@@ -263,8 +263,8 @@ class CreateAccount extends React.Component {
         let firstAccount = my_accounts.length === 0;
 
         return (
-            <div>
-                <h4 style={{fontWeight: "bold", paddingBottom: 15}}><Translate content="wallet.wallet_browser" /></h4>
+            <div className="confirm-checks" >
+                <h4 style={{fontWeight: "bold", paddingBottom: 15, marginTop: 0}}><Translate content="wallet.wallet_browser" /></h4>
 
                 <p>{!hasWallet ? <Translate content="wallet.has_wallet" /> : null}</p>
 
@@ -367,25 +367,13 @@ class CreateAccount extends React.Component {
 
     render() {
         let {step} = this.state;
-
+        step = 1;
         // let my_accounts = AccountStore.getMyAccounts();
         // let firstAccount = my_accounts.length === 0;
         return (
-            <div className="grid-block vertical page-layout Account_create">
-                <div className="grid-block shrink small-12 medium-10 medium-offset-2">
-                    <div className="grid-content" style={{paddingTop: 20}}>
-                        <Translate content="wallet.wallet_new" component="h2" />
-                        {/* <h4 style={{paddingTop: 20}}>
-                            {step === 1 ?
-                                <span>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</span> :
-                            step === 2 ? <Translate content="wallet.create_success" /> :
-                            <Translate content="wallet.all_set" />
-                            }
-                        </h4> */}
-                    </div>
-                </div>
-                <div className="grid-block wrap">
-                    <div className="grid-content small-12 medium-4 medium-offset-2">
+            <div className="sub-content">
+
+                    <div className="grid-content small-12" style={{maxWidth: "95vw"}}>
                         {step !== 1 ? <p style={{fontWeight: "bold"}}>
                             <Translate content={"wallet.step_" + step} />
                         </p> : null}
@@ -395,12 +383,11 @@ class CreateAccount extends React.Component {
                         }
                     </div>
 
-                    <div className="grid-content small-12 medium-4 medium-offset-1">
+                    <div style={{maxWidth: "95vw", paddingTop: "2rem"}} className="grid-content small-12">
                         {step === 1 ? this._renderAccountCreateText() : step === 2 ? this._renderBackupText() :
                             this._renderGetStartedText()
                         }
                     </div>
-                </div>
             </div>
         );
     }
