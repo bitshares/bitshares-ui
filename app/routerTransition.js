@@ -101,7 +101,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                         replaceState("/dashboard");
                     }
                 }).then(() => {
-                    console.log("onConnect", chainChanged);
                     if (chainChanged) {
                         ChainStore.clearCache();
                         ChainStore.subscribed = false;

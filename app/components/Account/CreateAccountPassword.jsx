@@ -18,6 +18,7 @@ import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
+import CopyButton from "../Utility/CopyButton";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -197,8 +198,15 @@ class CreateAccountPassword extends React.Component {
 
                 <section>
                     <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
-                    <div style={{padding: "0.25rem"}}>
-                        <input disabled value={this.state.generatedPassword} type="text"/>
+                    <div style={{paddingBottom: "0.5rem"}}>
+                        <span className="inline-label">
+                            <input style={{maxWidth: "calc(30rem - 48px)", textOverflow: "ellipsis", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
+                            <CopyButton
+                                text={this.state.generatedPassword}
+                                tip="tooltip.copy_password"
+                                dataPlace="top"
+                            />
+                        </span>
                     </div>
                 </section>
 
