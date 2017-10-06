@@ -10,6 +10,14 @@ export function fetchCoins(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.COIN
     });
 }
 
+export function fetchCoinsSimple(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.COINS_LIST)) {
+    return fetch(url).then(reply => reply.json().then(result => {
+        return result;
+    })).catch(err => {
+        console.log("error fetching simple list of coins", err, url);
+    });
+}
+
 export function fetchBridgeCoins(baseurl = (blockTradesAPIs.BASE)) {
     let url = baseurl + blockTradesAPIs.TRADING_PAIRS;
     return fetch(url, {method: "get", headers: new Headers({"Accept": "application/json"})}).then(reply => reply.json().then(result => {
