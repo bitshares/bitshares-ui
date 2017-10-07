@@ -705,7 +705,7 @@ class MyMarkets extends React.Component {
                                             tabIndex={1}
                                             style={{width: "100%", paddingBottom: "1.5rem"}}
                                             onFound={this._onFoundBaseAsset.bind(this)}
-                                            label="exchange.base"
+                                            label="exchange.quote"
                                             noLabel
                                             inputStyle={{fontSize: "0.9rem"}}
                                         />
