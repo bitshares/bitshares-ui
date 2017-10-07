@@ -8,9 +8,7 @@ let ss = new ls(STORAGE_KEY);
 
 class GatewayStore {
     constructor() {
-        this.coins = Immutable.Map();
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
-        this.backedCoinsSimple = Immutable.Map(ss.get("backedCoinsSimple", {}));
         this.bridgeCoins = Immutable.Map(Immutable.fromJS(ss.get("bridgeCoins", {})));
         this.bridgeInputs = ["btc", "dash", "eth", "steem"];
 
@@ -23,7 +21,6 @@ class GatewayStore {
 
     onFetchCoins({backer, coins, backedCoins} = {}) {
         if (backer && coins) {
-            this.coins = this.coins.set(backer, coins);
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
 
             ss.set("backedCoins", this.backedCoins.toJS());
@@ -33,9 +30,9 @@ class GatewayStore {
     onFetchCoinsSimple({backer, coins} = {}) {
 
         if (backer && coins) {
-            this.backedCoinsSimple = this.backedCoinsSimple.set(backer, coins);
+            this.backedCoins = this.backedCoins.set(backer, coins);
 
-            ss.set("backedCoinsSimple", this.coins.toJS());
+            ss.set("backedCoins", this.backedCoins.toJS());
         }
     }
 

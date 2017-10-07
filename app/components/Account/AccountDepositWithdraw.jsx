@@ -355,7 +355,7 @@ export default connect(DepositStoreWrapper, {
             account: AccountStore.getState().currentAccount,
             viewSettings: SettingsStore.getState().viewSettings,
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
-            rudexBackedCoins: GatewayStore.getState().backedCoinsSimple.get("RUDEX", []),
+            rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
             blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", [])
         };
     }
