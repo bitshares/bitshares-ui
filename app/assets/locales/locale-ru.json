@@ -1263,7 +1263,13 @@
     "purchase":"Покупка %(asset)s",
     "purchase_1":"Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit":"Лимит на депозиты",
-    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s"
+    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s",
+    "rudex": {
+      "support_block":"Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
+      "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Пожалуйста введите число >= минимума",
+      "coming_soon": "Скоро"
+    }
   },
   "chat":{
     "title":"Троллбокс",

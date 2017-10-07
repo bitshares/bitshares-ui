@@ -1267,7 +1267,13 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit",
-    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s"
+    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
+    "rudex": {
+      "support_block": "For support, please contact RuDEX at:",
+      "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Please enter number >= minimum",
+      "coming_soon": "Coming soon"
+    }
   },
   "chat": {
     "title": "Chat",

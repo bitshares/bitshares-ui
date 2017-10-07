@@ -10,11 +10,13 @@ class GatewayStore {
     constructor() {
         this.coins = Immutable.Map();
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
+        this.backedCoinsSimple = Immutable.Map(ss.get("backedCoinsSimple", {}));
         this.bridgeCoins = Immutable.Map(Immutable.fromJS(ss.get("bridgeCoins", {})));
         this.bridgeInputs = ["btc", "dash", "eth", "steem"];
 
         this.bindListeners({
             onFetchCoins: GatewayActions.fetchCoins,
+            onFetchCoinsSimple: GatewayActions.fetchCoinsSimple,
             onFetchBridgeCoins: GatewayActions.fetchBridgeCoins
         });
     }
@@ -25,6 +27,15 @@ class GatewayStore {
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
 
             ss.set("backedCoins", this.backedCoins.toJS());
+        }
+    }
+
+    onFetchCoinsSimple({backer, coins} = {}) {
+
+        if (backer && coins) {
+            this.backedCoinsSimple = this.backedCoinsSimple.set(backer, coins);
+
+            ss.set("backedCoinsSimple", this.coins.toJS());
         }
     }
 
