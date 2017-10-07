@@ -57,6 +57,7 @@ class SettingsStore {
                 "ko",
                 "de",
                 "es",
+                "it",
                 "tr",
                 "ru"
             ],

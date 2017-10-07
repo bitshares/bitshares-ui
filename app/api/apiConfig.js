@@ -9,6 +9,12 @@ export const blockTradesAPIs = {
     ESTIMATE_OUTPUT: "/estimate-output-amount"
 };
 
+export const rudexAPIs = {
+    BASE: "https://gateway.rudex.org/api/v0_1",
+    COINS_LIST: "/coins",
+    NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
+};
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
@@ -29,5 +35,6 @@ export const settingsAPIs = {
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
     DEFAULT_FAUCET: "https://bitshares.openledger.info",
+    TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };
