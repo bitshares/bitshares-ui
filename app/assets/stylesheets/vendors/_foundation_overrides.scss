@@ -120,6 +120,10 @@ a {
   .button-group {
     margin-bottom: 0;
   }
+
+  button, div.button {
+      font-size: 1.1rem;
+  }
 }
 
 .inline-label {
