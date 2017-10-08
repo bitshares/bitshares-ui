@@ -143,7 +143,7 @@ div.overview-tabs {
             font-size: 0.8rem;
         }
         div.tab-subtext {
-            font-size: 1rem;
+            font-size: 0.8rem;
             text-align: right;
         }
     }
@@ -152,10 +152,10 @@ ul.account-overview {
     width: 100%;
     li {
         > a {
-            font-size: 1rem;
+            font-size: 1.1rem;
 
             > div.tab-subtext {
-                font-size: 85%;
+                font-size: 70%;
                 text-align: right;
             }
         }
