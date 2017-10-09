@@ -21,6 +21,10 @@ import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
 
 class CreateAccountPassword extends React.Component {
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    };
+
     constructor() {
         super();
         this.state = {
@@ -36,7 +40,8 @@ class CreateAccountPassword extends React.Component {
             generatedPassword: "P" + key.get_random_key().toWif(),
             confirm_password: "",
             understand_1: false,
-            understand_2: false
+            understand_2: false,
+            understand_3: false
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
@@ -196,7 +201,6 @@ class CreateAccountPassword extends React.Component {
                         noLabel
                     />
 
-                    <Translate component="p" content="wallet.account_exp" unsafe />
                 <section>
                     <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
                     <div style={{paddingBottom: "0.5rem"}}>
@@ -218,6 +222,13 @@ class CreateAccountPassword extends React.Component {
                     <div className="has-error"><Translate content="wallet.confirm_error" /></div> : null}
                 </section>
 
+            <br />
+            <div className="confirm-checks" onClick={this._onInput.bind(this, "understand_3")}>
+                <label>
+                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_3}/>
+                    <Translate content="wallet.understand_3" />
+                </label>
+            </div>
             <br />
             <div className="confirm-checks" onClick={this._onInput.bind(this, "understand_1")}>
                 <label>
@@ -310,15 +321,9 @@ class CreateAccountPassword extends React.Component {
                 <div className="divider" />
                 <p className="txtlabel warning"><Translate unsafe content="wallet.password_lose_warning" /></p>
 
-                <div style={{width: "100%"}} onClick={() => {this.setState({step: 3});}} className="button"><Translate content="init_error.understand" /></div>
+                <div style={{width: "100%"}} onClick={() => {this.context.router.push("/dashboard");;}} className="button"><Translate content="wallet.ok_done" /></div>
             </div>
         );
-    }
-
-    _onBackupDownload = () => {
-        this.setState({
-            step: 3
-        });
     }
 
     _renderGetStarted() {
