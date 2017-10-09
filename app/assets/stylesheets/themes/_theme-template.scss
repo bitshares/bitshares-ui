@@ -25,7 +25,14 @@
   $row-accent-color,
   $header-color,
   $chat-text-color,
-  $input-background
+  $input-background,
+  $account-header,
+  $account-cells,
+  $account-green,
+  $account-primarytext,
+  $account-dimmed,
+  $account-border,
+  $account-background
   ) {
 
   .font-secondary {
@@ -146,7 +153,7 @@
   }
 
   .modal {
-    @include color($light-text-color, $light-panel-bg-color);
+    @include color($light-text-color, $account-cells);
     .close-button {
       color: $secondary-text-color;
       &:hover {
@@ -1232,6 +1239,74 @@
     input.my-key, td.my-key a {
         font-weight: bold;
         color: $info-color;
+    }
+
+    /* Table view account */
+    div.overview-tabs {
+        background-color: $account-background;
+    }
+    ul.account-overview {
+        background-color: $account-header;
+        li {
+            > a {
+                color: $account-dimmed;
+                background-color: $account-header;
+                border: none;
+                &:hover {
+                    background-color: $account-header;
+                    color: $account-primarytext;
+                }
+                > div.tab-subtext {
+                    color: $account-green;
+                }
+            }
+            &.is-active > a {
+                color: $account-primarytext;
+                background-color: $account-header;
+            }
+            &.total-value {
+                > a {
+                    background-color: $account-cells;
+                    &:hover > span.tab-title {
+                        color: $account-dimmed;
+                    }
+                }
+            }
+        }
+    }
+
+    table.table.dashboard-table {
+        > thead > tr > th {
+            background-color: $account-header;
+            color: $account-primarytext;
+        }
+        > tbody > tr {
+            > td {
+                background-color: $account-cells;
+                color: $account-primarytext;
+                border: 1px solid $account-border;
+                .icon > svg > path {
+                    fill: $account-primarytext;
+                }
+            }
+            &.total-value {
+                td {
+                    background-color: $account-header;
+                }
+                td:nth-child(n+2) {
+                    color: $account-green;
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    div.account-creation {
+        background-color: $account-cells;
+
+        div.button > a {
+            color: $primary-text-color;
+        }
     }
 }
 

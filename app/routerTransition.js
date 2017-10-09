@@ -51,6 +51,7 @@ const filterAndSortURLs = (count, latencies) => {
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     const apiLatencies = SettingsStore.getState().apiLatencies;
     let apiLatenciesCount = Object.keys(apiLatencies).length;
+    let connectionStart;
 
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 15) {
@@ -71,10 +72,15 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         connectionString = urls[0];
     }
 
-    var onConnect = (res) => {
-        if (res && res[1] && res[1].ws_rpc) {
-            SettingsActions.changeSetting({setting: "activeNode", value: res[1].ws_rpc.ws.url});
-            if (!autoSelection) SettingsActions.changeSetting({setting: "apiServer", value: res[1].ws_rpc.ws.url});
+    var onConnect = () => {
+        if (Apis.instance()) {
+            let currentUrl = Apis.instance().url;
+            SettingsActions.changeSetting({setting: "activeNode", value: currentUrl});
+            if (!autoSelection) SettingsActions.changeSetting({setting: "apiServer", value: currentUrl});
+            if (!(currentUrl in apiLatencies)) {
+                apiLatencies[currentUrl] = new Date().getTime() - connectionStart;
+                console.log("set latency to:", apiLatencies[currentUrl]);
+            }
         }
         const currentChain = Apis.instance().chain_id;
         const chainChanged = oldChain && oldChain !== currentChain;
@@ -86,7 +92,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         } catch(err) {
             console.log("db init error:", err);
             replaceState("/init-error");
-            callback();
+            return callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
             return Promise.all([
@@ -101,7 +107,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                         replaceState("/dashboard");
                     }
                 }).then(() => {
-                    console.log("onConnect", chainChanged);
                     if (chainChanged) {
                         ChainStore.clearCache();
                         ChainStore.subscribed = false;
@@ -158,6 +163,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         }
         // let latencies = ss.get("apiLatencies", {});
         // let connectionStart = new Date().getTime();
+        connectionStart = new Date().getTime();
 
         if(appInit){
             connectionManager.connectWithFallback(connect).then((res) => {

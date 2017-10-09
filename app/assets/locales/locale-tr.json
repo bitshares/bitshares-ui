@@ -6,6 +6,7 @@
     "ko": "한국어",
     "de": "Deutsch",
     "es": "İspanyolca",
+    "it": "Italiano",
     "tr": "Türkçe"
   },
   "header": {
@@ -900,7 +901,7 @@
     "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
     "show_star_1": "Show",
     "show_star_2": "only",
-    "base": "Base currency:",
+    "quote": "Quote currency:",
     "search": "Search for more markets here"
   },
   "fees": {

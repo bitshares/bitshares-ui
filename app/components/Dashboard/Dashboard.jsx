@@ -10,6 +10,7 @@ var logo = require("assets/logo-ico-blue.png");
 import LoadingIndicator from "../LoadingIndicator";
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import LoginSelector from "../LoginSelector";
 
 class Dashboard extends React.Component {
 
@@ -226,40 +227,41 @@ class Dashboard extends React.Component {
         }).filter(a => !!a);
 
         if (!accountCount) {
-            return (
-                <div ref="wrapper" className="grid-block page-layout vertical">
-                    <div ref="container" className="grid-block vertical medium-horizontal"  style={{padding: "25px 10px 0 10px"}}>
-                        <div className="grid-block vertical small-12 medium-5">
-                            <div className="Dashboard__intro-text">
-                                <h4><img style={{position: "relative", top: -15, margin: 0}} src={logo}/><Translate content="account.intro_text_title" /></h4>
-
-                                <Translate unsafe content="account.intro_text_1" component="p" />
-                                <Translate unsafe content="account.intro_text_2" component="p" />
-                                <Translate unsafe content="account.intro_text_3" component="p" />
-                                <Translate unsafe content="account.intro_text_4" component="p" />
-                                <div className="button-group">
-                                    <div className="button create-account" onClick={() => {this.props.router.push("create-account");}}>
-                                        <Translate content="account.create_new" />
-                                    </div>
-
-                                    <div className="button create-account" onClick={() => {
-                                        SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-                                        WalletUnlockActions.unlock.defer();
-                                    }}>
-                                        <Translate content="account.password_login" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
-                            <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
-                            <div className="grid-block small-up-1 large-up-3 xlarge-up-4 no-overflow fm-outer-container">
-                                {markets}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+            return <LoginSelector />;
+            // return (
+            //     <div ref="wrapper" className="grid-block page-layout vertical">
+            //         <div ref="container" className="grid-block vertical medium-horizontal"  style={{padding: "25px 10px 0 10px"}}>
+            //             <div className="grid-container">
+            //                 <div className="Dashboard__intro-text Account_create">
+            //                     <h4><img style={{position: "relative", top: -15, margin: 0}} src={logo}/><Translate content="account.intro_text_title" /></h4>
+            //
+            //                     <Translate unsafe content="account.intro_text_1" component="p" />
+            //                     <Translate unsafe content="account.intro_text_2" component="p" />
+            //                     <Translate unsafe content="account.intro_text_3" component="p" />
+            //                     <Translate unsafe content="account.intro_text_4" component="p" />
+            //                     <div className="button-group">
+            //                         <div className="button create-account" onClick={() => {this.props.router.push("create-account");}}>
+            //                             <Translate content="account.create_new" />
+            //                         </div>
+            //
+            //                         <div className="button create-account" onClick={() => {
+            //                             SettingsActions.changeSetting({setting: "passwordLogin", value: true});
+            //                             WalletUnlockActions.unlock.defer();
+            //                         }}>
+            //                             <Translate content="account.password_login" />
+            //                         </div>
+            //                     </div>
+            //                 </div>
+            //             </div>
+            //             {/* <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
+            //                 <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
+            //                 <div className="grid-block small-up-1 large-up-3 xlarge-up-4 no-overflow fm-outer-container">
+            //                     {markets}
+            //                 </div>
+            //             </div> */}
+            //         </div>
+            //     </div>
+            // );
         }
 
         return (
