@@ -47,14 +47,23 @@ class ApiNode extends React.Component {
         const { props, state } = this;
         const { allowActivation, allowRemoval, automatic, autoActive, name, url, displayUrl, ping, up } = props;
 
-        var color;
-        var green = "#00FF00";
-        var yellow = "yellow";
-        var red = "red";
+        let color;
+        let green = "#00FF00";
+        let yellow = "yellow";
+        let red = "red";
+        let latencyKey;
 
-        if(ping < 200) color = green;
-        if(ping >= 200 && ping < 400) color = yellow;
-        if(ping >= 400) color = red;
+        if(ping < 400) {
+            color = green;
+            latencyKey = "low_latency";
+        }
+        else if(ping >= 400 && ping < 800) {
+            color = yellow;
+            latencyKey = "medium_latency";
+        } else {
+            color = red;
+            latencyKey = "high_latency";
+        }
         /*
         * The testnet latency is not checked in the connection manager,
         * so we force enable activation of it even though it shows as 'down'
@@ -63,7 +72,7 @@ class ApiNode extends React.Component {
 
         var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
          <Translate style={{color: up ? green : red, marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
-          {up && <span style={{color}}>{ping}ms</span>}
+          {up && <span style={{color}}><Translate content={`settings.${latencyKey}`} /></span>}
           {!up && <span style={{color: "red"}}>__</span>}
         </div>;
 
