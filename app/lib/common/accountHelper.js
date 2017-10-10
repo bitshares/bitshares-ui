@@ -43,9 +43,7 @@ function checkMarginStatus(account) {
                             sqr: debtAsset.bitasset.current_feed.maximum_short_squeeze_ratio,
                             assets: assetsMap
                         });
-                        console.log("price:", price.toReal(), debt.getAmount({real: true}), collateral.getAmount({real: true}));
                         let current = {ratio: collateral.getAmount({real: true}) / (debt.getAmount({real: true}) / price.toReal())};
-                        console.log(debtAsset.symbol, "ratio", current.ratio);
                         if (isNaN(current.ratio)) return null;
                         if (current.ratio < mr) {
                             current.statusClass = "danger";

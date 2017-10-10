@@ -67,7 +67,6 @@ class AccountOverview extends React.Component {
 
     _checkMarginStatus(props = this.props) {
         checkMarginStatus(props.account).then(status => {
-            console.log("account margin status:", status);
             let globalMarginStatus = null;
             for (let asset in status) {
                 globalMarginStatus = status[asset].statusClass || globalMarginStatus;
