@@ -217,7 +217,7 @@ class CreateAccountPassword extends React.Component {
 
                 <section>
                     <label className="left-label"><Translate content="wallet.confirm_password" /></label>
-                    <input type="password" value={this.state.confirm_password} onChange={this._onInput.bind(this, "confirm_password")}/>
+                    <input type="password" name="password" id="password" value={this.state.confirm_password} onChange={this._onInput.bind(this, "confirm_password")}/>
                     {this.state.confirm_password && this.state.confirm_password !== this.state.generatedPassword ?
                     <div className="has-error"><Translate content="wallet.confirm_error" /></div> : null}
                 </section>

@@ -213,7 +213,7 @@ class WalletUnlockModal extends React.Component {
                                 <label className="left-label"><Translate content="settings.password" /></label>
                             </div>
                             <div className="input-area" style={{marginLeft: "3.5rem"}}>
-                                <input ref="password_input" type="password" tabIndex={tabIndex++} />
+                                <input ref="password_input" name="password" id="password" type="password" tabIndex={tabIndex++} />
                             </div>
                             {this.state.password_error ? <div className="error-area">
                                 <Translate content="wallet.pass_incorrect" />
@@ -225,7 +225,7 @@ class WalletUnlockModal extends React.Component {
 
                 <div style={{marginLeft: "3.5rem"}}>
                     <div className="button-group">
-                        <button tabIndex={tabIndex++} className="button" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
+                        <button tabIndex={tabIndex++} className="button" type="submit" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
                             <div tabIndex={tabIndex++} className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>

@@ -128,7 +128,10 @@ class AccountSelector extends React.Component {
                             {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
                             <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
                                 account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
-                                <input type="text"
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="username"
                                     value={this.props.accountName || ""}
                                     placeholder={this.props.placeholder || counterpart.translate("account.name")}
                                     ref="user_input"
