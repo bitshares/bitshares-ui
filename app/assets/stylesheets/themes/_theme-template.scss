@@ -1308,6 +1308,12 @@
             color: $primary-text-color;
         }
     }
+    span.danger {
+        color: darken($alert-color, 15%);
+    }
+    span.warning {
+        color: darken($warning-color, 15%);
+    }
 }
 
 .olDarkTheme .gate_fee .amount-selector {

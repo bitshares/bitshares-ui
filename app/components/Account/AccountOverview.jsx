@@ -31,6 +31,7 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import { checkMarginStatus } from "common/accountHelper";
 
 class AccountOverview extends React.Component {
 
@@ -58,6 +59,25 @@ class AccountOverview extends React.Component {
                 "OPEN.DASH"
             ]
         };
+    }
+
+    componentWillMount() {
+        this._checkMarginStatus();
+    }
+
+    _checkMarginStatus(props = this.props) {
+        checkMarginStatus(props.account).then(status => {
+            console.log("account margin status:", status);
+            let globalMarginStatus = null;
+            for (let asset in status) {
+                globalMarginStatus = status[asset].statusClass || globalMarginStatus;
+            };
+            this.setState({globalMarginStatus});
+        });
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.account !== this.props.account) this._checkMarginStatus(np);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -421,13 +441,13 @@ class AccountOverview extends React.Component {
                 hide_asset
             />;
         let marginValue =
-            <TotalBalanceValue
-                noTip
-                balances={Immutable.List()}
-                debt={debt}
-                collateral={collateral}
-                hide_asset
-            />;
+                <TotalBalanceValue
+                    noTip
+                    balances={Immutable.List()}
+                    debt={debt}
+                    collateral={collateral}
+                    hide_asset
+                />;
         let debtValue =
             <TotalBalanceValue
                 noTip
@@ -543,7 +563,7 @@ class AccountOverview extends React.Component {
                                 </AccountOrders>
                             </Tab>
 
-                            <Tab title="account.collaterals" subText={marginValue}>
+                            <Tab title="account.collaterals" subText={<span className={this.state.globalMarginStatus}>{marginValue}</span>}>
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
                                         <CollateralPosition preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
