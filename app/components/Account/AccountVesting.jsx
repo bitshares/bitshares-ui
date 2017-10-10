@@ -115,6 +115,7 @@ class AccountVesting extends React.Component {
     }
 
     retrieveVestingBalances(accountId) {
+        accountId = accountId || this.props.account.get("id");
         Apis.instance().db_api().exec("get_vesting_balances", [
             accountId
         ]).then(vbs => {
