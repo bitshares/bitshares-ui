@@ -136,7 +136,6 @@ class Restore extends Component {
             setting: "passwordLogin",
             value: false
         });
-        console.log("onRestore");
     }
 
 }
