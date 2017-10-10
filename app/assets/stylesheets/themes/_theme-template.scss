@@ -153,7 +153,7 @@
   }
 
   .modal {
-    @include color($light-text-color, $light-panel-bg-color);
+    @include color($light-text-color, $account-cells);
     .close-button {
       color: $secondary-text-color;
       &:hover {
@@ -1298,6 +1298,14 @@
                     text-align: right;
                 }
             }
+        }
+    }
+
+    div.account-creation {
+        background-color: $account-cells;
+
+        div.button > a {
+            color: $primary-text-color;
         }
     }
 }

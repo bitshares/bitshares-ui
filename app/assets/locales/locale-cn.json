@@ -6,6 +6,7 @@
     "ko": "한국어",
     "de": "Deutsch",
     "es": "Español",
+    "it": "Italiano",
     "tr": "Turkish"
   },
   "sync_fail": {
@@ -929,6 +930,7 @@
     "show_star_1": "显示",
     "show_star_2": "仅",
     "base": "基准货币:",
+    "quote": "Quote currency:",
     "search": "搜索更多交易对"
   },
   "markets": {

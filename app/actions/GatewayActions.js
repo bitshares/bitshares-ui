@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import { fetchCoins, fetchBridgeCoins, getBackedCoins, getActiveWallets } from "common/blockTradesMethods";
+import { fetchCoins, fetchBridgeCoins, fetchCoinsSimple, getBackedCoins, getActiveWallets } from "common/blockTradesMethods";
 import {blockTradesAPIs} from "api/apiConfig";
 
 let inProgress = {};
@@ -23,6 +23,26 @@ class GatewayActions {
                         backer
                     });
                 });
+            };
+        } else {
+            return {};
+        }
+    }
+
+    fetchCoinsSimple({backer = "RUDEX", url = undefined} = {}) {
+
+        if (!inProgress["fetchCoinsSimple_" + backer]) {
+            inProgress["fetchCoinsSimple_" + backer] = true;
+            return (dispatch) => {
+                fetchCoinsSimple(url)
+                    .then(coins => {
+                        delete inProgress["fetchCoinsSimple_" + backer];
+
+                        dispatch({
+                            coins: coins,
+                            backer
+                        });
+                    });
             };
         } else {
             return {};

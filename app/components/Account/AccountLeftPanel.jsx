@@ -132,7 +132,7 @@ class AccountLeftPanel extends React.Component {
 						{isMyAccount ?
 							<div className="regular-padding">
 								<div className="button block-button create-account-button">
-									<Link to="/create-account"><Translate content="account.create_new" /></Link>
+									<Link to={`/create-account/${this.props.passwordLogin ? "password" : "wallet"}`}><Translate content="account.create_new" /></Link>
 								</div>
 						</div>
 						: null}

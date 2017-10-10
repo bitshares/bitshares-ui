@@ -6,6 +6,7 @@
     "ko":"한국어",
     "de":"Deutsch",
     "es":"Español",
+    "it": "Italiano",
     "tr":"Turkish",
     "ru":"Русский"
   },
@@ -941,7 +942,7 @@
     "market_frozen":"Владелец %(asset)s запретил торговлю на этом рынке.",
     "show_star_1":"Показать",
     "show_star_2":"только",
-    "base":"Базовая валюта:",
+    "quote": "Quote currency:",
     "search":"Искать здесь другие рынки"
   },
   "fees":{
@@ -1262,7 +1263,13 @@
     "purchase":"Покупка %(asset)s",
     "purchase_1":"Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit":"Лимит на депозиты",
-    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s"
+    "address_with_memo":"%(address)s <span class=\"blocktrades-with-memo\"> с примечанием</span> %(memo)s",
+    "rudex": {
+      "support_block":"Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
+      "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Пожалуйста введите число >= минимума",
+      "coming_soon": "Скоро"
+    }
   },
   "chat":{
     "title":"Троллбокс",
