@@ -135,7 +135,7 @@ class EquivalentPrice extends MarketStatsCheck {
         }
 
         if (toAsset.get("id") === fromAsset.get("id")) {
-            return <span>--</span>;
+            return <span>1.00</span>;
         }
         let finalPrice;
         if (toPrice && fromPrice) {
