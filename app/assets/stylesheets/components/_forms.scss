@@ -269,3 +269,11 @@ div.dropdown-wrapper.upper-case {
         text-transform: uppercase;
     }
 }
+
+form.full-width {
+
+    section > input {
+        max-width: 100%;
+    }
+
+}
