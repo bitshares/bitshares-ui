@@ -126,9 +126,13 @@
     "alt-react": "0.0.1",
     "bignumber.js": "^4.0.0",
     "bitsharesjs": "^1.3.1",
+    "bitsharesjs-ws": "^1.2.1",
+    "bs58": "^4.0.1",
     "classnames": "^2.2.1",
     "cookies-js": "^1.2.1",
     "counterpart": "^0.17.1",
+    "d3-format": "^1.2.0",
+    "d3-time-format": "^2.1.0",
     "event-emitter": "^0.3.4",
     "file-saver": "^1.3.3",
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
@@ -166,6 +170,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "autoprefixer": "^7.1.5",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
     "babel-jest": "^18.0.0",
