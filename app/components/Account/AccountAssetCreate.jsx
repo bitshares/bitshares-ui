@@ -274,7 +274,9 @@ class AccountAssetCreate extends React.Component {
             case "maximum_force_settlement_volume":
                 bitasset_opts[value] = parseFloat(e.target.value) * assetConstants.GRAPHENE_1_PERCENT;
                 break;
-
+            case "minimum_feeds":
+                bitasset_opts[value] = parseInt(e.target.value, 10);
+                break;
             case "feed_lifetime_sec":
             case "force_settlement_delay_sec":
                 console.log(e.target.value, parseInt(parseFloat(e.target.value) * 60, 10));
