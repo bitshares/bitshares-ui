@@ -104,7 +104,8 @@ class EquivalentPrice extends MarketStatsCheck {
 
     static defaultProps = {
         toAsset: "1.3.0",
-        coreAsset: "1.3.0"
+        coreAsset: "1.3.0",
+        forceDirection: true
     }
 
     constructor(props) {
@@ -123,7 +124,7 @@ class EquivalentPrice extends MarketStatsCheck {
 
 
     render() {
-        const {coreAsset, fromAsset, toAsset, marketStats, ...others} = this.props;
+        const {coreAsset, fromAsset, toAsset, marketStats, forceDirection, ...others} = this.props;
         const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
         const fromMarket = fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
         let toPrice, fromPrice;
@@ -153,7 +154,7 @@ class EquivalentPrice extends MarketStatsCheck {
         ) {
             return (
                 <FormattedPrice
-                    force_direction={toAsset.get("symbol")}
+                    force_direction={forceDirection ? toAsset.get("symbol") : false}
                     base_amount={finalPrice.base.amount}
                     base_asset={finalPrice.base.asset_id}
                     quote_amount={finalPrice.quote.amount}
@@ -177,7 +178,7 @@ export default class EquivalentPriceWrapper extends React.Component {
             stores={[SettingsStore, MarketsStore]}
             inject={{
                 toAsset: () => {
-                    return SettingsStore.getState().settings.get("unit", "1.3.0");
+                    return this.props.toAsset || SettingsStore.getState().settings.get("unit", "1.3.0");
                 },
                 marketStats: () => {
                     return MarketsStore.getState().allMarketStats;

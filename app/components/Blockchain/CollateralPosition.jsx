@@ -15,6 +15,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import {List} from "immutable";
 import {Link} from "react-router/es";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import EquivalentPrice from "../Utility/EquivalentPrice";
 
 const wallet_api = new WalletApi();
 const alignRight = {textAlign: "right"};
@@ -182,17 +183,23 @@ class CollateralPosition extends React.Component {
                         hide_asset
                     />
                 </td>
-                <td style={alignRight} className={"center-content column-hide-small"}>
+                <td style={alignRight} className={"column-hide-small"}>
                     <FormattedPrice
-                        decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
                         hide_symbols
                     />
                 </td>
+                <td style={alignRight} className={"column-hide-small"}>
+                    <EquivalentPrice
+                        forceDirection={false}
+                        fromAsset={co.call_price.base.asset_id}
+                        toAsset={co.call_price.quote.asset_id}
+                        hide_symbols
+                    />
+                </td>
                 <td className={"center-content column-hide-small"} style={alignLeft}>
                     <FormattedPrice
-                        decimals={2}
                         base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
                         quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
                         hide_value
@@ -279,6 +286,9 @@ const CollateralTable = ({callOrders, account, className, children, preferredUni
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
                         <Translate content="exchange.call" />
                     </div>
+                </th>
+                <th style={alignRight} className="column-hide-small">
+                    <Translate content="exchange.price" />
                 </th>
                 <th style={alignLeft}><Translate content="explorer.assets.units" /></th>
                 <th><Translate content="borrow.adjust_short" /></th>

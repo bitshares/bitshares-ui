@@ -555,7 +555,7 @@ class AccountOverview extends React.Component {
                                                 <td>{collateralValue}</td>
                                                 <td></td>
                                                 <td>{marginValue}</td>
-                                                <td colSpan="4"></td>
+                                                <td colSpan="5"></td>
                                             </tr>
                                         </CollateralPosition>
                                     </div>
