@@ -301,7 +301,7 @@ class AssetActions {
                         delete inProgress[id];
                         dispatch({
                             assets: assets,
-                            dynamic_data: results[0],
+                            dynamic: results[0],
                             bitasset_data: results[1],
                             loading: false
                         });
@@ -356,7 +356,7 @@ class AssetActions {
                         delete inProgress[id];
                         dispatch({
                             asset: asset[0],
-                            dynamic_data: results[0][0],
+                            dynamic: results[0][0],
                             bitasset_data: results[1] ? results[1][0] : null
                         });
                     });
