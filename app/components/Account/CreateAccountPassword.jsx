@@ -37,7 +37,7 @@ class CreateAccountPassword extends React.Component {
             show_identicon: false,
             step: 1,
             showPass: false,
-            generatedPassword: "P" + key.get_random_key().toWif(),
+            generatedPassword: ("P" + key.get_random_key().toWif()).substr(0, 45),
             confirm_password: "",
             understand_1: false,
             understand_2: false,
@@ -205,7 +205,7 @@ class CreateAccountPassword extends React.Component {
                     <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
                     <div style={{paddingBottom: "0.5rem"}}>
                         <span className="inline-label">
-                            <input style={{maxWidth: "calc(30rem - 48px)", textOverflow: "ellipsis", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
+                            <input style={{maxWidth: "calc(30rem - 48px)", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
                             <CopyButton
                                 text={this.state.generatedPassword}
                                 tip="tooltip.copy_password"
