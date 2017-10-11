@@ -11,7 +11,7 @@ class AccountRefsStore extends BaseStore {
 
     constructor() {
         super()
-        this._export("loadDbData")
+        this._export("loadDbData", "getAccountRefs");
         this.state = this._getInitialState()
         this.bindListeners({ onAddPrivateKey: PrivateKeyActions.addKey })
         this.no_account_refs = Immutable.Set() // Set of account ids
@@ -21,23 +21,34 @@ class AccountRefsStore extends BaseStore {
     _getInitialState() {
         this.chainstore_account_ids_by_key = null;
         this.chainstore_account_ids_by_account = null;
+        let account_refs = new Immutable.Map();
+        account_refs = account_refs.set(this._getChainId(), Immutable.Set());
         return {
-            account_refs: Immutable.Set()
-            // loading_account_refs: false
-        }
+            account_refs
+        };
+    }
+
+    getAccountRefs(chainId = this._getChainId()) {
+        return this.state.account_refs.get(chainId, Immutable.Set());
+    }
+
+    _getChainId() {
+        return Apis.instance().chain_id || "4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8";
     }
 
     onAddPrivateKey({private_key_object}) {
         if(ChainStore.getAccountRefsOfKey(private_key_object.pubkey) !== undefined)
-            this.chainStoreUpdate()
+            this.chainStoreUpdate();
     }
 
     loadDbData() {
-        // this.setState(this._getInitialState())
         this.chainstore_account_ids_by_key = null;
         this.chainstore_account_ids_by_account = null;
         this.no_account_refs = Immutable.Set();
-        this.state = {account_refs: Immutable.Set()};
+
+        let account_refs = new Immutable.Map();
+        account_refs = account_refs.set(this._getChainId(), Immutable.Set());
+        this.state = {account_refs};
         return loadNoAccountRefs()
             .then( no_account_refs => this.no_account_refs = no_account_refs )
             .then( ()=> this.chainStoreUpdate() );
@@ -55,7 +66,7 @@ class AccountRefsStore extends BaseStore {
 
     checkPrivateKeyStore() {
         let no_account_refs = this.no_account_refs
-        let account_refs = Immutable.Set()
+        let temp_account_refs = Immutable.Set()
         PrivateKeyStore.getState().keys.keySeq().forEach( pubkey => {
             if(no_account_refs.has(pubkey)) return
             let refs = ChainStore.getAccountRefsOfKey(pubkey)
@@ -76,21 +87,21 @@ class AccountRefsStore extends BaseStore {
                 no_account_refs = no_account_refs.add(pubkey)
                 return
             }
-            account_refs = account_refs.add(refs.valueSeq())
+            temp_account_refs = temp_account_refs.add(refs.valueSeq())
         })
-        account_refs = account_refs.flatten();
+        temp_account_refs = temp_account_refs.flatten();
 
         /* Discover accounts referenced by account name in permissions */
-        account_refs.forEach(account => {
+        temp_account_refs.forEach(account => {
             let refs = ChainStore.getAccountRefsOfAccount(account);
             if(refs === undefined) return;
             if( ! refs.size) return;
-            account_refs = account_refs.add(refs.valueSeq());
+            temp_account_refs = temp_account_refs.add(refs.valueSeq());
         });
-        account_refs = account_refs.flatten();
-        if( ! this.state.account_refs.equals(account_refs)) {
+        temp_account_refs = temp_account_refs.flatten();
+        if( ! this.getAccountRefs().equals(temp_account_refs)) {
+            this.state.account_refs = this.state.account_refs.set(this._getChainId(), temp_account_refs);
             // console.log("AccountRefsStore account_refs",account_refs.size);
-            this.setState({account_refs})
         }
         if(!this.no_account_refs.equals(no_account_refs)) {
             this.no_account_refs = no_account_refs

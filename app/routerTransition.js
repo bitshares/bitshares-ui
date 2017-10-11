@@ -83,7 +83,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             }
         }
         const currentChain = Apis.instance().chain_id;
-        const chainChanged = oldChain && oldChain !== currentChain;
+        const chainChanged = oldChain !== currentChain;
         oldChain = currentChain;
         var db;
         try {
@@ -95,38 +95,42 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             return callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
-            return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=> {
-                    AccountRefsStore.loadDbData();
-                }),
-                WalletDb.loadDbData().then(() => {
-                    // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                    //     replaceState("/dashboard");
-                    // }
-                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                        replaceState("/dashboard");
-                    }
-                }).then(() => {
-                    if (chainChanged) {
-                        ChainStore.clearCache();
-                        ChainStore.subscribed = false;
-                        ChainStore.init().then(() => {
+            let chainStoreResetPromise = chainChanged ? ChainStore.resetCache() : Promise.resolve();
+            return chainStoreResetPromise.then(() => {
+                return Promise.all([
+                    PrivateKeyActions.loadDbData().then(()=> {
+                        return AccountRefsStore.loadDbData();
+                    }),
+                    WalletDb.loadDbData().then(() => {
+                        // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
+                        //     replaceState("/dashboard");
+                        // }
+                        if (nextState.location.pathname.indexOf("/auth/") === 0) {
+                            replaceState("/dashboard");
+                        }
+                    }).then(() => {
+                        if (chainChanged) {
+                            // ChainStore.clearCache();
+                            // ChainStore.subscribed = false;
+                            // return ChainStore.resetCache().then(() => {
                             AccountStore.reset();
-                            AccountStore.loadDbData(currentChain).catch(err => {
+                            return AccountStore.loadDbData(currentChain).catch(err => {
                                 console.error(err);
                             });
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error("----- WalletDb.willTransitionTo error ----->", error);
-                    replaceState("/init-error");
-                }),
-                WalletManagerStore.init()
-            ]).then(()=> {
-                SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
-                callback();
-            });
+                            // });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("----- WalletDb.willTransitionTo error ----->", error);
+                        replaceState("/init-error");
+                    }),
+                    WalletManagerStore.init()
+                ]).then(()=> {
+                    SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
+                    callback();
+                });
+            })
+
         }).catch(err => {
             console.error(err);
             replaceState("/init-error");
