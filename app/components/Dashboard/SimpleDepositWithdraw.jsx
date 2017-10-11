@@ -18,11 +18,12 @@ import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import { ChainStore } from "bitsharesjs/es";
 import { debounce } from "lodash";
+import {DecimalChecker} from "../Exchange/ExchangeInput";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
 
-class DepositWithdrawContent extends React.Component {
+class DepositWithdrawContent extends DecimalChecker {
 
     static propTypes = {
         sender: ChainTypes.ChainAccount.isRequired,
@@ -315,6 +316,7 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _renderWithdraw() {
+        const {amountError} = this.state;
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         let tabIndex = 1;
         const {supportsMemos} = this.props;
@@ -346,20 +348,28 @@ class DepositWithdrawContent extends React.Component {
                 <div className="SimpleTrade__withdraw-row">
                         <label className="left-label">{counterpart.translate("modal.withdraw.amount")}</label>
                         <div className="inline-label input-wrapper">
-                            <input tabIndex={tabIndex++} type="text" value={this.state.withdrawValue} onChange={this._onInputAmount.bind(this)} />
+                            <input
+                                tabIndex={tabIndex++}
+                                type="number"
+                                min="0"
+                                onKeyPress={this.onKeyPress.bind(this)}
+                                value={this.state.withdrawValue}
+                                onChange={this._onInputAmount.bind(this)}
+                            />
                             <div className="form-label select floating-dropdown">
                                 <div className="dropdown-wrapper inactive">
                                     <div>{assetName}</div>
                                 </div>
                             </div>
                         </div>
+                    {amountError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content={amountError} /></p>:null}
                     {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
                 </div>
 
                 <div className="SimpleTrade__withdraw-row">
                     <label className="left-label">{counterpart.translate("transfer.fee")}</label>
                         <div className="inline-label input-wrapper">
-                            <input type="text" value={currentFee.getAmount({real: true})} />
+                            <input type="text" disabled value={currentFee.getAmount({real: true})} />
 
                             <div className="form-label select floating-dropdown">
                                 <div className="dropdown-wrapper inactive">

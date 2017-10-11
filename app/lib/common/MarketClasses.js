@@ -58,8 +58,7 @@ class Asset {
         if (typeof sats !== "number" && typeof real !== "number") {
             throw new Error("Invalid arguments for setAmount");
         }
-        if (real && typeof real !== "undefined") {
-            if (typeof real !== "number" || isNaN(real)) throw new Error("Invalid argument 'real' for setAmount");
+        if (typeof real === "number") {
             this.amount = this.toSats(real);
             this._clearCache();
         } else if(typeof sats === "number") {
