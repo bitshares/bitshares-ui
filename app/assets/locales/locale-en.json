@@ -1191,7 +1191,7 @@
     "qrcode":{
       "label":"qrcode",
       "title":"Private key QR code",
-      "input_messate":"Please enter the password used to encrypt the QR code, the password is empty that does not encrypt."
+      "input_message":"Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code."
     }
   },
   "init_error": {

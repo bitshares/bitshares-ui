@@ -1159,7 +1159,7 @@
     "qrcode":{
       "label":"二维码",
       "title":"私钥二维码",
-      "input_messate":"请输入用于加密二维码的密码，密码为空表示不加密"
+      "input_message":"请输入用于加密二维码的密码，密码为空表示不加密"
     }
   },
   "init_error": {

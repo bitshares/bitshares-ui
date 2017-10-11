@@ -63,46 +63,48 @@ class QrcodeModal extends React.Component {
         if(this.state.isShowQrcode)pos = {textAlign: "center"};
         return (
             <BaseModal onClose={this.onClose} id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
-                <h3>
-                    <Translate content="modal.qrcode.title"/>
-                </h3>
-                <form onSubmit={this.onPasswordEnter} noValidate>
-                    <div className="form-group">
-                        {this.state.isShowQrcode ?
-                            <section style={pos}>
-                                <QRCode size={256} value={this.state.keyString}/>
-                            </section>
-                            :
-                            <section>
-                                <label className="left-label"><Translate content="modal.qrcode.input_messate"/></label>
-                                <input
-                                    name="password"
-                                    type="text"
-                                    onFocus={() => {
-                                        this.refs.password_input.setAttribute("type", "password");
-                                    }}
-                                    ref="password_input"
-                                    autoComplete="off"
-                                    onKeyDown={this.onKeyDown}
-                                />
-                            </section>
-                        }
+                <div className="text-center">
+                    <div style={{margin: "1.5rem 0"}}>
+                        <Translate component="h4" content="modal.qrcode.title"/>
                     </div>
-                    <div style={pos}>
-                        <div className="button-group">
-                            {this.state.isShowQrcode == false ?
-                                <button className="button" data-place="bottom" data-html onClick={this.onPasswordEnter}>
-                                    <Translate content="modal.ok"/>
-                                </button>
+                    <form className="full-width" style={{margin: "0 3.5rem"}} onSubmit={this.onPasswordEnter} noValidate>
+                        <div className="form-group">
+                            {this.state.isShowQrcode ?
+                                <section style={pos}>
+                                    <QRCode size={256} value={this.state.keyString}/>
+                                </section>
                                 :
-                                null
+                                <section>
+                                    <label className="left-label"><Translate unsafe content="modal.qrcode.input_message"/></label>
+                                    <input
+                                        name="password"
+                                        type="text"
+                                        onFocus={() => {
+                                            this.refs.password_input.setAttribute("type", "password");
+                                        }}
+                                        ref="password_input"
+                                        autoComplete="off"
+                                        onKeyDown={this.onKeyDown}
+                                    />
+                                </section>
                             }
-                            <button className="button" data-place="bottom" data-html onClick={this.onCancel}>
-                                <Translate content="cancel"/>
-                            </button>
                         </div>
-                    </div>
-                </form>
+                        <div style={pos}>
+                            <div className="button-group">
+                                {this.state.isShowQrcode == false ?
+                                    <button className="button" data-place="bottom" data-html onClick={this.onPasswordEnter}>
+                                        <Translate content="modal.ok"/>
+                                    </button>
+                                    :
+                                    null
+                                }
+                                <button className="button" data-place="bottom" data-html onClick={this.onCancel}>
+                                    <Translate content="cancel"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </BaseModal>
         );
     }
@@ -116,4 +118,3 @@ QrcodeModal.defaultProps = {
     modalId: "qr_code_password_modal"
 };
 export default QrcodeModal;
- 

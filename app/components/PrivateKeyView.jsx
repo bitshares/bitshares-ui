@@ -58,10 +58,15 @@ export default class PrivateKeyView extends Component {
                             <label><Translate content="account.perm.private" /></label>
                             <div>
                                 {this.state.wif ? <span>
-                                    {this.state.wif}
-                                    &nbsp;(<a onClick={this.onHide.bind(this)}>hide</a>,<a onClick={this.showQrCode.bind(this)}><Translate content="modal.qrcode.label" /></a>)
+                                    <p style={{fontWeight: 600}}>{this.state.wif}</p>
+                                    <div className="button-group">
+                                        <div className="button" onClick={this.onHide.bind(this)}>hide</div>
+                                        <div className="clickable" onClick={this.showQrCode.bind(this)}>
+                                            <img style={{height: 50}} src={require("assets/qr.png")} />
+                                        </div>
+                                    </div>
                                 </span>:<span>
-                                    (<a onClick={this.onShow.bind(this)}><Translate content="account.perm.show" /></a>)
+                                    <div className="button" onClick={this.onShow.bind(this)}><Translate content="account.perm.show" /></div>
                                 </span>}
                             </div>
                         </div>
