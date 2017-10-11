@@ -1187,7 +1187,12 @@
         "key_approval_add": "Key approval to add",
         "key_approval_remove": "Key approval to remove"
     },
-    "ok": "OK"
+    "ok": "OK",
+    "qrcode":{
+      "label":"qrcode",
+      "title":"Private key QR code",
+      "input_messate":"Please enter the password used to encrypt the QR code, the password is empty that does not encrypt."
+    }
   },
   "init_error": {
     "title": "Application initialization issues",

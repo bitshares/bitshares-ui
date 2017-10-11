@@ -5,6 +5,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import QrcodeModal from "./Modal/QrcodeModal";
 
 export default class PrivateKeyView extends Component {
 
@@ -58,7 +59,7 @@ export default class PrivateKeyView extends Component {
                             <div>
                                 {this.state.wif ? <span>
                                     {this.state.wif}
-                                    &nbsp;(<a onClick={this.onHide.bind(this)}>hide</a>)
+                                    &nbsp;(<a onClick={this.onHide.bind(this)}>hide</a>,<a onClick={this.showQrCode.bind(this)}><Translate content="modal.qrcode.label" /></a>)
                                 </span>:<span>
                                     (<a onClick={this.onShow.bind(this)}><Translate content="account.perm.show" /></a>)
                                 </span>}
@@ -86,6 +87,7 @@ export default class PrivateKeyView extends Component {
                     <div onClick={this.onClose.bind(this)} className=" button"><Translate content="transfer.close" /></div>
                 </div>
             </BaseModal>
+            <QrcodeModal ref="qrmodal" keyValue={this.state.wif} />
         </span>
     }
 
@@ -109,6 +111,10 @@ export default class PrivateKeyView extends Component {
 
     onHide() {
         this.setState({ wif: null })
+    }
+
+    showQrCode(){
+        this.refs.qrmodal.show();
     }
 
 }
