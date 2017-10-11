@@ -121,6 +121,7 @@ class Transfer extends React.Component {
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
             this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
         }
+        if (!balanceObject || !feeAmount) return;
         const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});

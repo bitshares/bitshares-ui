@@ -242,7 +242,7 @@ class DepositWithdrawContent extends React.Component {
         const {feeAmount, to_withdraw} = this.state;
         const {asset} = this.props;
         const balance = this._getCurrentBalance();
-
+        if (!balance || !feeAmount) return;
         const hasBalance = checkBalance(to_withdraw.getAmount({real: true}), asset, feeAmount, balance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
