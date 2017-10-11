@@ -180,7 +180,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
-            name: "BlockTrades (TRADE.X)",
+            name: "BlockTrades",
             template: (
                 <div>
                         <div className="content-block">
@@ -189,11 +189,9 @@ class AccountDepositWithdraw extends React.Component {
                             <div className="service-selector">
                                 <ul className="button-group segmented no-margin">
                                     <li onClick={this.toggleBTService.bind(this, "bridge")} className={btService === "bridge" ? "is-active" : ""}><a><Translate content="gateway.bridge" /></a></li>
-                                    <li onClick={this.toggleBTService.bind(this, "gateway")} className={btService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
                                 </ul>
                             </div>
 
-                            {btService === "bridge" ?
                             <BlockTradesBridgeDepositRequest
                                 gateway="blocktrades"
                                 issuer_account="blocktrades"
@@ -207,17 +205,7 @@ class AccountDepositWithdraw extends React.Component {
                                 initial_conversion_input_coin_type="bts"
                                 initial_conversion_output_coin_type="bitbtc"
                                 initial_conversion_estimated_input_amount="1000"
-                            /> : null}
-
-                            {btService === "gateway" ?
-                            <div>
-                                <h4 className="txtlabel cancel">This cryptocurrency gateway is shutting down as it is rarely if ever used</h4>
-                                <p>Openledger's gateway continues to operate, and it offers more coins and a far more liquid trading environment. Note that we will be continuing the operation of our cryptocurrency bridge for quickly buying and selling cryptocurrency, since it is actively used by the Bitshares community.</p>
-
-                                <p>We'll be shutting down this gateway in stages. In the first stage, which has just begun, we've disabled deposits to the gateway. Inevitably, someone may still use one of their old deposit addresses, in which case we'll manually refund them when you contact us. <b>We request that if you hold any TRADE assets, you perform a withdrawal of those assets during this stage.</b></p>
-
-                                <p>Eventually, we will also disable withdrawals as well, but we will leave in place a 1-1 market order on OPEN.BTC_TRADE.BTC for a while after that to allow users to exchange any remaining TRADE.BTC for OPEN.BTC. We will place similar orders for any other TRADE assets that remain outstanding after withdrawals are disabled.</p>
-                            </div> : null}
+                            />
                         </div>
                         <div className="content-block">
                         </div>
