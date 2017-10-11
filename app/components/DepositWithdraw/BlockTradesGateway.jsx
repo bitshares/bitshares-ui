@@ -164,6 +164,7 @@ class BlockTradesGateway extends React.Component {
                             receive_asset={coin.symbol}
                             receive_coin_type={coin.symbol.toLowerCase()}
                             supports_output_memos={coin.supportsMemos}
+                            isAvailable={coin.isAvailable}
                             action={this.state.action}
                         />
                         <label className="left-label">Support</label>

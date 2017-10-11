@@ -111,7 +111,7 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
-    renderServices(blockTradesGatewayCoins, openLedgerGatewayCoins, rudexGatewayCoins) {
+    renderServices(openLedgerGatewayCoins, rudexGatewayCoins) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let { account } = this.props;
@@ -236,23 +236,7 @@ class AccountDepositWithdraw extends React.Component {
         let { account } = this.props;
         let { activeService } = this.state;
 
-        let blockTradesGatewayCoins = this.props.blockTradesBackedCoins.filter(coin => {
-            if (coin.backingCoinType.toLowerCase() === "muse") {
-                return false;
-            }
-            return coin.symbol.toUpperCase().indexOf("TRADE") !== -1;
-        })
-        .map(coin => {
-            return coin;
-        })
-        .sort((a, b) => {
-            if (a.symbol < b.symbol)
-                return -1;
-            if (a.symbol > b.symbol)
-                return 1;
-            return 0;
-        });
-
+        console.log("openLedgerBackedCoins", this.props.openLedgerBackedCoins);
         let openLedgerGatewayCoins = this.props.openLedgerBackedCoins.map(coin => {
             return coin;
         })
@@ -275,7 +259,7 @@ class AccountDepositWithdraw extends React.Component {
             return 0;
         });
 
-        let services = this.renderServices(blockTradesGatewayCoins, openLedgerGatewayCoins, rudexGatewayCoins);
+        let services = this.renderServices(openLedgerGatewayCoins, rudexGatewayCoins);
 
         let options = services.map((services_obj, index) => {
             return <option key={index} value={index}>{services_obj.name}</option>;
