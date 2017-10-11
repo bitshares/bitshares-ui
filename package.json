@@ -135,7 +135,7 @@
     "fractional": "^1.0.0",
     "highcharts": "4.2.6",
     "immutable": "^3.8.1",
-    "indexeddbshim": "^2.0.4",
+    "indexeddbshim": "^2.2.1",
     "intl": "^1.1.0",
     "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
     "js-sha256": "^0.2.3",
