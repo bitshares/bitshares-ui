@@ -1155,6 +1155,11 @@
         "approval_remove": "同意移除",
         "key_approval_add": "同意添加密钥",
         "key_approval_remove": "同意移除密钥"
+    },
+    "qrcode":{
+      "label":"二维码",
+      "title":"私钥二维码",
+      "input_message":"请输入用于加密二维码的密码，密码为空表示不加密"
     }
   },
   "init_error": {

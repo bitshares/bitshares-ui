@@ -127,6 +127,10 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                 SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
                 callback();
             });
+        }).catch(err => {
+            console.error(err);
+            replaceState("/init-error");
+            callback();
         });
     };
 
@@ -192,7 +196,11 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
 
         /* Only try initialize the API with connect = true on the first onEnter */
         connect = false;
-    }));
+    })).catch(err => {
+        console.error(err);
+        replaceState("/init-error");
+        callback();
+    });
 
 
     // Every 15 connections we check the latencies of the full list of nodes

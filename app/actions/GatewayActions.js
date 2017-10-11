@@ -9,17 +9,20 @@ class GatewayActions {
         if (!inProgress["fetchCoins_" + backer]) {
             inProgress["fetchCoins_" + backer] = true;
             return (dispatch) => {
-                Promise.all([fetchCoins(url),
+                Promise.all([
+                    fetchCoins(url),
                     fetchBridgeCoins(blockTradesAPIs.BASE_OL),
                     getActiveWallets(url)
                 ]).then(result => {
                     delete inProgress["fetchCoins_" + backer];
                     let [coins, tradingPairs, wallets] = result;
+                    let backedCoins = getBackedCoins({allCoins: coins, tradingPairs: tradingPairs, backer: backer}).filter(a => !!a.walletType);
+                    backedCoins.forEach(a => {
+                        a.isAvailable = wallets.indexOf(a.walletType) !== -1;
+                    });
                     dispatch({
-                        coins: coins,
-                        backedCoins: getBackedCoins({allCoins: coins, tradingPairs: tradingPairs, backer: backer}).filter(a => {
-                            return wallets.indexOf(a.walletType) !== -1;
-                        }),
+                        coins,
+                        backedCoins,
                         backer
                     });
                 });

@@ -1197,7 +1197,12 @@
         "key_approval_add": "Key approval to add",
         "key_approval_remove": "Key approval to remove"
     },
-    "ok": "OK"
+    "ok": "OK",
+    "qrcode":{
+      "label":"qrcode",
+      "title":"Private key QR code",
+      "input_message":"Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code."
+    }
   },
   "init_error": {
     "title": "Application initialization issues",
@@ -1291,7 +1296,8 @@
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
       "min_amount_error": "Please enter number >= minimum",
       "coming_soon": "Coming soon"
-    }
+    },
+    "unavailable": "The gateway service for this asset is currently down, please try again later"
   },
   "chat": {
     "title": "Chat",

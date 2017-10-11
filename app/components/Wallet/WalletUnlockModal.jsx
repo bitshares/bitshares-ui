@@ -154,7 +154,7 @@ class WalletUnlockModal extends React.Component {
             );
         }
         return (
-            <form onSubmit={this.onPasswordEnter} noValidate>
+            <form className="full-width" onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, margin: "0 3.5rem "}}>
                 <PasswordInput
                     ref="password_input"
                     onEnter={this.onPasswordEnter}
@@ -190,7 +190,7 @@ class WalletUnlockModal extends React.Component {
         let tabIndex = 1;
 
         return (
-            <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20}}>
+            <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, marginRight: "3.5rem"}}>
                 {/* Dummy input to trick Chrome into disabling auto-complete */}
                 <input type="text" className="no-padding no-margin" style={{visibility: "hidden", height: 0}}/>
 

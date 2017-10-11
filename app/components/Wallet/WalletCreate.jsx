@@ -8,6 +8,7 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import WalletActions from "actions/WalletActions";
 import { connect } from "alt-react";
 import cname from "classnames";
+import SettingsActions from "actions/SettingsActions";
 
 class CreateNewWallet extends Component {
 
@@ -61,6 +62,10 @@ class CreateNewWallet extends Component {
         }
 
         WalletActions.setWallet(wallet_public_name, valid_password, this.state.brnkey);
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: false
+        });
         this.setState({create_submitted: true});
     }
 
