@@ -48,15 +48,15 @@ class AccountOverview extends React.Component {
             withdrawAsset: null,
             bridgeAsset: null,
             alwaysShowAssets: [
-                "BTS",
-                "USD",
-                "CNY",
-                "OPEN.BTC",
-                "OPEN.USDT",
-                "OPEN.ETH",
-                "OPEN.MAID",
-                "OPEN.STEEM",
-                "OPEN.DASH"
+                // "BTS",
+                // "USD",
+                // "CNY",
+                // "OPEN.BTC",
+                // "OPEN.USDT",
+                // "OPEN.ETH",
+                // "OPEN.MAID",
+                // "OPEN.STEEM",
+                // "OPEN.DASH"
             ]
         };
     }
@@ -300,7 +300,8 @@ class AccountOverview extends React.Component {
                             <td>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td colSpan="4"></td>
+                            <td colSpan="2"></td>
+                            <td className="column-hide-small" colSpan="2"></td>
                             <td style={{textAlign: "center"}}>
                                 {canBuy  && this.props.isMyAccount ?
                                 <span>
@@ -471,7 +472,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td colSpan="2"></td><td style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -493,7 +494,7 @@ class AccountOverview extends React.Component {
         const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
 
         return (
-            <div className="grid-content" style={{overflowX: "hidden"}}>
+            <div className="grid-content">
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
                         <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block">
