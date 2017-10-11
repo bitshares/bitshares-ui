@@ -622,6 +622,7 @@ class AccountOverview extends React.Component {
                     modalId="simple_deposit_modal"
                     balances={this.props.balances}
                     {...currentDepositAsset}
+                    isDown={this.props.gatewayDown.get("OPEN")}
                 />
 
                 {/* Withdraw Modal */}
@@ -635,6 +636,7 @@ class AccountOverview extends React.Component {
                     modalId="simple_withdraw_modal"
                     balances={this.props.balances}
                     {...currentWithdrawAsset}
+                    isDown={this.props.gatewayDown.get("OPEN")}
                 />
 
                 {/* Bridge modal */}
@@ -647,6 +649,7 @@ class AccountOverview extends React.Component {
                     modalId="simple_bridge_modal"
                     balances={this.props.balances}
                     bridges={currentBridges}
+                    isDown={this.props.gatewayDown.get("TRADE")}
                 />
             </div>
 

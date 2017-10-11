@@ -1298,8 +1298,10 @@
       "coming_soon": "Coming soon"
     },
     "unavailable": "The gateway service for this asset is currently down, please try again later",
+    "unavailable_bridge": "The brdige service for this asset is currently down, please try again later",
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
-    "unavailable_RUDEX": "The RuDEX Gateway is down or not responding"
+    "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
+    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
   },
   "chat": {
     "title": "Chat",

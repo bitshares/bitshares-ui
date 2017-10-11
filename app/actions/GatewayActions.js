@@ -7,8 +7,8 @@ let inProgress = {};
 const GATEWAY_TIMEOUT = 10000;
 
 const onGatewayTimeout = (dispatch, gateway)=>{
-  dispatch({down: gateway});
-}
+    dispatch({down: gateway});
+};
 
 class GatewayActions {
     fetchCoins({backer = "OPEN", url = undefined} = {}) {
@@ -68,11 +68,13 @@ class GatewayActions {
         if (!inProgress["fetchBridgeCoins"]) {
             inProgress["fetchBridgeCoins"] = true;
             return (dispatch) => {
+                let fetchCoinsTimeout = setTimeout(onGatewayTimeout.bind(null, dispatch, "TRADE"), GATEWAY_TIMEOUT);
                 Promise.all([
                     fetchCoins(url),
                     fetchBridgeCoins(blockTradesAPIs.BASE),
                     getActiveWallets(url)
                 ]).then(result => {
+                    clearTimeout(fetchCoinsTimeout);
                     delete inProgress["fetchBridgeCoins"];
                     let [coins, bridgeCoins, wallets] = result;
                     dispatch({

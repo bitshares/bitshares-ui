@@ -223,7 +223,6 @@ class AccountDepositWithdraw extends React.Component {
 
     render() {
         let { account, servicesDown } = this.props;
-
         let { activeService } = this.state;
 
         let openLedgerGatewayCoins = this.props.openLedgerBackedCoins.map(coin => {
@@ -253,6 +252,11 @@ class AccountDepositWithdraw extends React.Component {
         let options = services.map((services_obj, index) => {
             return <option key={index} value={index}>{services_obj.name}</option>;
         });
+
+        const serviceNames = ["OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
+        const currentServiceName = serviceNames[activeService];
+        const currentServiceDown = servicesDown.get(currentServiceName);
+
         return (
             <div className={this.props.contained ? "grid-content" : "grid-container"}>
                 <div className={this.props.contained ? "" : "grid-content"} style={{paddingTop: "2rem"}}>
@@ -274,8 +278,8 @@ class AccountDepositWithdraw extends React.Component {
                                     {options}
                                 </select>
                                 {
-                                  (activeService === 0  && servicesDown.get('OPEN')) || (activeService === 1 && servicesDown.get('RUDEX')) ? 
-                                  <Translate style={{color: 'red', marginBottom: '1em', display: 'block'}} content={`gateway.unavailable_${activeService === 0 ? 'OPEN' : 'RUDEX'}`} /> 
+                                  currentServiceDown ?
+                                  <Translate style={{color: "red", marginBottom: "1em", display: "block"}} content={`gateway.unavailable_${currentServiceName}`} />
                                   : null
                                 }
                             </div>
@@ -300,7 +304,7 @@ class AccountDepositWithdraw extends React.Component {
                     </div>
 
                     <div className="grid-content no-padding" style={{paddingTop: 15}}>
-                    {activeService && services[activeService] ? services[activeService].template : services[0].template}
+                    {currentServiceDown ? null : activeService && services[activeService] ? services[activeService].template : services[0].template}
                     </div>
                 </div>
             </div>
