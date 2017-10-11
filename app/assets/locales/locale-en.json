@@ -1297,7 +1297,9 @@
       "min_amount_error": "Please enter number >= minimum",
       "coming_soon": "Coming soon"
     },
-    "unavailable": "The gateway service for this asset is currently down, please try again later"
+    "unavailable": "The gateway service for this asset is currently down, please try again later",
+    "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
+    "unavailable_RUDEX": "The RuDEX Gateway is down or not responding"
   },
   "chat": {
     "title": "Chat",

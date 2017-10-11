@@ -46,6 +46,7 @@ class AccountDepositWithdraw extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.account !== this.props.account ||
+            nextProps.servicesDown !== this.props.servicesDown ||
             !utils.are_equal_shallow(nextProps.blockTradesBackedCoins, this.props.blockTradesBackedCoins) ||
             !utils.are_equal_shallow(nextProps.openLedgerBackedCoins, this.props.openLedgerBackedCoins) ||
             nextState.olService !== this.state.olService ||
@@ -221,10 +222,10 @@ class AccountDepositWithdraw extends React.Component {
     }
 
     render() {
-        let { account } = this.props;
+        let { account, servicesDown } = this.props;
+
         let { activeService } = this.state;
 
-        console.log("openLedgerBackedCoins", this.props.openLedgerBackedCoins);
         let openLedgerGatewayCoins = this.props.openLedgerBackedCoins.map(coin => {
             return coin;
         })
@@ -272,6 +273,11 @@ class AccountDepositWithdraw extends React.Component {
                                 <select onChange={this.onSetService.bind(this)} className="bts-select" value={activeService} >
                                     {options}
                                 </select>
+                                {
+                                  (activeService === 0  && servicesDown.get('OPEN')) || (activeService === 1 && servicesDown.get('RUDEX')) ? 
+                                  <Translate style={{color: 'red', marginBottom: '1em', display: 'block'}} content={`gateway.unavailable_${activeService === 0 ? 'OPEN' : 'RUDEX'}`} /> 
+                                  : null
+                                }
                             </div>
                             <div className="medium-5 medium-offset-1 small-order-1 medium-order-2" style={{paddingBottom: 20}}>
                                 <Translate component="label" className="left-label" content="gateway.your_account" />
@@ -328,7 +334,8 @@ export default connect(DepositStoreWrapper, {
             viewSettings: SettingsStore.getState().viewSettings,
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
             rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
-            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", [])
+            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", []),
+            servicesDown: GatewayStore.getState().down || {}
         };
     }
 });

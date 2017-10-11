@@ -11,6 +11,7 @@ class GatewayStore {
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
         this.bridgeCoins = Immutable.Map(Immutable.fromJS(ss.get("bridgeCoins", {})));
         this.bridgeInputs = ["btc", "dash", "eth", "steem"];
+        this.down = Immutable.Map({});
 
         this.bindListeners({
             onFetchCoins: GatewayActions.fetchCoins,
@@ -19,20 +20,31 @@ class GatewayStore {
         });
     }
 
-    onFetchCoins({backer, coins, backedCoins} = {}) {
+    onFetchCoins({backer, coins, backedCoins, down} = {}) {
         if (backer && coins) {
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
 
             ss.set("backedCoins", this.backedCoins.toJS());
+
+            this.down = this.down.set(backer, false);
+        }
+
+        if( down ) {
+            this.down = this.down.set(down, true);
         }
     }
 
-    onFetchCoinsSimple({backer, coins} = {}) {
-
+    onFetchCoinsSimple({backer, coins, down} = {}) {
         if (backer && coins) {
             this.backedCoins = this.backedCoins.set(backer, coins);
 
             ss.set("backedCoins", this.backedCoins.toJS());
+
+            this.down = this.down.set(backer, false);
+        }
+
+        if( down ) {
+            this.down = this.down.set(down, true);
         }
     }
 
