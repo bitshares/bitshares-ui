@@ -531,7 +531,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
     render() {
         let {asset, action} = this.props;
-
         let isDeposit = action === "deposit";
 
         if (!asset) {
@@ -539,6 +538,12 @@ class DepositWithdrawContent extends DecimalChecker {
         }
 
         const {name: assetName} = utils.replaceName(asset.get("symbol"), true);
+
+        let content = this.props.isDown ?
+            <div><Translate className="txtlabel cancel" content="gateway.unavailable_OPEN" component="p" /></div> :
+            !this.props.isAvailable ?
+            <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
+            isDeposit ? this._renderDeposit() : this._renderWithdraw();
 
         return (
             <div className="SimpleTrade__modal">
@@ -556,7 +561,7 @@ class DepositWithdrawContent extends DecimalChecker {
                         paddingTop: "1rem"
                     }}>
 
-                    {isDeposit ? this._renderDeposit() : this._renderWithdraw()}
+                    {content}
                 </div>
             </div>
         );
