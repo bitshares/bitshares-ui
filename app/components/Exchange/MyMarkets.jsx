@@ -145,7 +145,7 @@ class MarketGroup extends React.Component {
                 return <th key={header.name}><Translate content="explorer.assets.issuer" /></th>;
 
             case "add":
-                return <th key={header.name}></th>;
+                return <th key={header.name} style={{textAlign: "right"}}><Translate content="account.perm.confirm_add" /></th>;
 
             default:
                 return <th key={header.name}></th>;
