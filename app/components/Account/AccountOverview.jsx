@@ -32,6 +32,7 @@ import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
+import tableHeightHelper from "lib/common/tableHeightHelper";
 
 class AccountOverview extends React.Component {
 
@@ -59,6 +60,9 @@ class AccountOverview extends React.Component {
                 // "OPEN.DASH"
             ]
         };
+
+        this.tableHeightMountInterval = tableHeightHelper.tableHeightMountInterval.bind(this);
+        this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
     }
 
     componentWillMount() {
@@ -77,6 +81,18 @@ class AccountOverview extends React.Component {
 
     componentWillReceiveProps(np) {
         if (np.account !== this.props.account) this._checkMarginStatus(np);
+    }
+
+    componentDidMount(){
+        this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.tableHeightMountIntervalInstance);
+    }
+
+    adjustHeightOnChangeTab(){
+        this.adjustHeightOnChangeTab();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -494,10 +510,10 @@ class AccountOverview extends React.Component {
         const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
 
         return (
-            <div className="grid-content">
+            <div className="grid-content app-tables" ref="appTables">
                 <div className="content-block small-12">
                     <div className="generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block">
+                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
 
                             <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
 

@@ -91,6 +91,8 @@ class Tabs extends React.Component {
             });
         }
         this.setState({activeTab: value});
+
+        if(this.props.onChangeTab) this.props.onChangeTab(value);
     }
 
     render() {
