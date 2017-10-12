@@ -2,18 +2,23 @@
     > div.grid-block {
         border-right: 1px solid $border-color;
     }
-  .account-buttons-row .button {
-    min-width: 4.5rem;
-  }
-  .bottom {
-    border-top: 1px solid transparent;
-    padding: 0.5rem;
-    > .center {
-      width: auto;
-      margin: 0 auto;
+    .account-buttons-row .button {
+        min-width: 4.5rem;
     }
-  }
+    .bottom {
+        border-top: 1px solid transparent;
+        padding: 0.5rem;
+        > .center {
+            width: auto;
+            margin: 0 auto;
+        }
+    }
 
+    span.button {
+        font-size: 1.1rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
 
     a.pay-button {
         font-weight: bold;
@@ -25,83 +30,109 @@
     }
 }
 
+@keyframes flash {
+  from, 50%, to {
+    opacity: 1;
+  }
+
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  animation-name: flash;
+}
+
 .account-info {
+    text-align: center;
     .account-title {
+        transition: opacity 0.75s linear, transform 0.75s linear, color 0.5s linear;
         margin-bottom: 0;
+        font-weight: 600;
+        &.flash {
+            opacity: 0.35;
+            transform: scale(1.1);
+        }
+    }
+    > p:first-of-type {
+        font-size: 85%;
+        line-height: 1.2;
     }
 
-  .account-image {
-      padding-bottom: 1rem;
-      > canvas {
-          padding: 1rem;
-          border: 1px solid $border-color;
-      }
-  }
-  > div.secondary {
-      padding-bottom: 1rem;
-      position: relative;
+    .account-image {
 
-      > span:first-of-type {
-          font-weight: bold;
-      }
+        padding-bottom: 1rem;
+        > canvas {
+            padding: 1rem;
+            border: 1px solid $border-color;
+        }
+    }
+    > div.secondary {
+        padding-bottom: 1rem;
+        position: relative;
 
-      > span.my-account-label {
-          top: 4px;
-          font-size: 0.8rem;
-          position: absolute;
-          right: 0;
-          text-transform: uppercase;
-          font-variant: small-caps;
-      }
-  }
+        > span:first-of-type {
+            font-weight: bold;
+        }
+
+        > span.my-account-label {
+            top: 4px;
+            font-size: 0.8rem;
+            position: absolute;
+            right: 0;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+    }
 }
 
 .account-left-menu {
-  > li {
-    &.menu-subheader {
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      padding: 1.5rem 0.5rem 0.25rem 0.5rem;
-      text-align: center;
-      border-bottom: none !important;
+    > li {
+        &.menu-subheader {
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            padding: 1.5rem 0.5rem 0.25rem 0.5rem;
+            text-align: center;
+            border-bottom: none !important;
 
-      > span {
-          display: inline-block;
-          color: inherit;
-          cursor: pointer;
-      }
-    }
+            > span {
+                display: inline-block;
+                color: inherit;
+                cursor: pointer;
+            }
+        }
 
-    > a {
-      padding-left: 1.75rem !important;
-      border-right: 3px solid transparent;
+        > a {
+            padding-left: 1.75rem !important;
+            border-right: 3px solid transparent;
+        }
     }
-  }
 }
 
 .no-amount {
-  padding-right: 1rem;
-  padding-left: 0.7rem;
-  font-size: 0.9rem;
-  font-weight: bold;
+    padding-right: 1rem;
+    padding-left: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 .weight-input {
-  display: table-cell;
-  margin: 0 1rem !important;
-  width: 30% !important;
+    display: table-cell;
+    margin: 0 1rem !important;
+    width: 30% !important;
 }
 
 .threshold input {
-  width: 5rem !important;
+    width: 5rem !important;
 }
 
 .more-button {
-  padding-top: 0.5rem;
+    padding-top: 0.5rem;
 }
 
 .create-account-header {
-  height: 180px;
+    height: 180px;
 }
 
 a.action-button > span {

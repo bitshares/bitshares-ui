@@ -600,6 +600,14 @@
 
   .account-info {
       color: $primary-text-color;
+      > p:first-of-type {
+          color: $light-text-color;
+      }
+      .account-title {
+          &.flash {
+              color: white;
+          }
+      }
       > div.secondary {
           > span:first-of-type {
               color: $primary-text-color;
@@ -611,7 +619,7 @@
       }
   }
 
-  .my-account h5, .my-account h4, table.table > tbody > tr > td.my-account > span {
+  .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
     font-weight: bold;
     color: $info-color;
   }

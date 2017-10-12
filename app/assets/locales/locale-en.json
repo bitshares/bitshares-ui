@@ -338,6 +338,8 @@
     "unfollow": "Unfollow",
     "follow": "Follow",
     "pay": "Send to",
+    "deposit": "Deposit BTS",
+    "deposit_address": "Your deposit address is your account name",
     "overview": "Overview",
     "home": "Home",
     "bts_market": "Market",
