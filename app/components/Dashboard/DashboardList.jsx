@@ -241,7 +241,7 @@ class DashboardList extends React.Component {
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div> : null}
 					</section>) : null}
-				<table className="table table-hover" style={{fontSize: "0.85rem"}}>
+				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (
 					<thead>
 						<tr>

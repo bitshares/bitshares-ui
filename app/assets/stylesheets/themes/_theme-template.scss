@@ -611,7 +611,7 @@
       }
   }
 
-  .my-account h5, .my-account h4, td.my-account {
+  .my-account h5, .my-account h4, table.table > tbody > tr > td.my-account > span {
     font-weight: bold;
     color: $info-color;
   }
@@ -1284,7 +1284,7 @@
             > td {
                 background-color: $account-cells;
                 color: $account-primarytext;
-                border: 1px solid $account-border;
+                border-color: $account-border;
                 .icon > svg > path {
                     fill: $account-primarytext;
                 }

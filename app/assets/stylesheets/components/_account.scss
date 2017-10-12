@@ -183,11 +183,13 @@ table.table.dashboard-table {
         > td {
             font-size: 0.9rem;
             text-align: center;
+            border: 1px solid;
         }
         &.total-value {
             td {
                 vertical-align: middle;
                 padding: 8px 5px;
+                border-bottom: none;
             }
             td:first-of-type {
                 text-align: left;
