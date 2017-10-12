@@ -737,7 +737,7 @@ class Exchange extends React.Component {
 
     _setReceive(state, isBid) {
         if (state.price.isValid() && state.for_sale.hasAmount()) {
-            state.to_receive = state.for_sale.times(state.price, isBid);
+            state.to_receive = state.for_sale.times(state.price);
             state.toReceiveText = state.to_receive.getAmount({real: true}).toString();
             return true;
         }
@@ -746,7 +746,7 @@ class Exchange extends React.Component {
 
     _setForSale(state, isBid) {
         if (state.price.isValid() && state.to_receive.hasAmount()) {
-            state.for_sale = state.to_receive.times(state.price, isBid);
+            state.for_sale = state.to_receive.times(state.price, true);
             state.forSaleText = state.for_sale.getAmount({real: true}).toString();
             return true;
         }
