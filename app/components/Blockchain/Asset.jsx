@@ -436,13 +436,19 @@ class Asset extends React.Component {
         let header = (
           <thead>
             <tr>
-                <th> <Translate content="explorer.asset.price_feed_data.settlement_price"/> –
-                      {this.formattedPrice(settlement_price_header, false, true)}</th>
-                    <th> <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/> –
-                     {this.formattedPrice(core_exchange_rate_header, false, true)} </th>
+                <th style={{textAlign: "left"}}> <Translate content="explorer.asset.price_feed_data.publisher"/> </th>
+                <th>
+                    <Translate content="explorer.asset.price_feed_data.settlement_price"/>
+                    <br />
+                    ({this.formattedPrice(settlement_price_header, false, true)})
+                </th>
+                <th>
+                    <Translate content="explorer.asset.price_feed_data.core_exchange_rate"/>
+                    <br />
+                    ({this.formattedPrice(core_exchange_rate_header, false, true)})
+                </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
-                <th> <Translate content="explorer.asset.price_feed_data.publisher"/> </th>
                 <th> <Translate content="explorer.asset.price_feed_data.published"/> </th>
             </tr>
             </thead>
@@ -457,12 +463,12 @@ class Asset extends React.Component {
             var maximum_short_squeeze_ratio = '' + feed[1][1].maximum_short_squeeze_ratio/10 + '%';
             rows.push(
                 <tr key={publisher}>
-                    <td>{this.formattedPrice(settlement_price, true)}</td>
-                    <td> {this.formattedPrice(core_exchange_rate, true)} </td>
-                    <td style={{textAlign:"center"}}> {maintenance_collateral_ratio}</td>
-                    <td style={{textAlign:"center"}}> {maximum_short_squeeze_ratio}</td>
                     <td> <LinkToAccountById account={publisher}/> </td>
-                    <td><TimeAgo time={publishDate}/></td>
+                    <td style={{textAlign: "right"}}>{this.formattedPrice(settlement_price, true)}</td>
+                    <td style={{textAlign: "right"}}> {this.formattedPrice(core_exchange_rate, true)} </td>
+                    <td style={{textAlign:"right"}}> {maintenance_collateral_ratio}</td>
+                    <td style={{textAlign:"right"}}> {maximum_short_squeeze_ratio}</td>
+                    <td style={{textAlign: "right"}}><TimeAgo time={publishDate}/></td>
                 </tr>
             );
         }
