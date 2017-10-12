@@ -83,7 +83,7 @@ class AccountList extends React.Component {
         }
 
         return (
-            <table className="table compact">
+            <table className="table compact dashboard-table">
                 {showHeaders ? (
                     <thead>
                         <tr>

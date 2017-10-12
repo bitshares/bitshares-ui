@@ -138,7 +138,7 @@ class AssetActions {
     }
 
     updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, flags, permissions,
-            isBitAsset, bitasset_opts, original_bitasset_opts, description) {
+            isBitAsset, bitasset_opts, original_bitasset_opts, description, auths) {
 
         // Create asset action here...
         let tr = wallet_api.new_transaction();
@@ -155,7 +155,7 @@ class AssetActions {
 
         let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(cr_quote_precision).toString();
         let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(cr_base_precision).toString();
-
+        console.log("auths:", auths);
         let updateObject = {
             fee: {
                 amount: 0,
@@ -172,10 +172,10 @@ class AssetActions {
                 description: description,
                 issuer_permissions: permissions,
                 flags: flags,
-                whitelist_authorities: asset.getIn(["options", "whitelist_authorities"]),
-                blacklist_authorities: asset.getIn(["options", "blacklist_authorities"]),
-                whitelist_markets: asset.getIn(["options", "whitelist_markets"]),
-                blacklist_markets: asset.getIn(["options", "blacklist_markets"]),
+                whitelist_authorities: auths.whitelist_authorities.toJS(),
+                blacklist_authorities: auths.blacklist_authorities.toJS(),
+                whitelist_markets: auths.whitelist_markets.toJS(),
+                blacklist_markets: auths.blacklist_markets.toJS(),
                 extensions: asset.getIn(["options", "extensions"]),
                 core_exchange_rate: {
                     quote: {

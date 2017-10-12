@@ -108,6 +108,23 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
+div.hide-selector {
+    padding-bottom: 10px;
+    > div {
+        font-size: 1.15rem;
+        cursor: pointer;
+        &:nth-of-type(n + 2) {
+            padding-left: 10px;
+        }
+        &.inactive {
+            color: grey;
+        }
+        &:hover.inactive {
+            color: inherit;
+        }
+    }
+}
+
 div.overview-tabs {
     > div.service-selector {
         margin-bottom: 0;
@@ -116,20 +133,6 @@ div.overview-tabs {
 
     div.hide-selector {
         padding-left: 5px;
-        padding-bottom: 10px;
-        > div {
-            font-size: 1.15rem;
-            cursor: pointer;
-            &:first-of-type {
-                padding-right: 10px;
-            }
-            &.inactive {
-                color: grey;
-            }
-            &:hover.inactive {
-                color: inherit;
-            }
-        }
     }
 
     > div.tab-content {

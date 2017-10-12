@@ -251,7 +251,7 @@ class AccountAssets extends React.Component {
                             <Translate content="account.user_issued_assets.issued_assets" />
                         </div>
                         <div className="box-content">
-                            <table className="table">
+                            <table className="table dashboard-table">
                                 <thead>
                                 <tr>
                                     <th><Translate content="account.user_issued_assets.symbol" /></th>
