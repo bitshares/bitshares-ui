@@ -73,7 +73,7 @@ class AccountLeftPanel extends React.Component {
         this.setState({titleClass: "account-title flash"});
         setTimeout(() => {
             this.setState({titleClass: undefined});
-        }, 750);
+        }, 250);
     }
 
     render() {
