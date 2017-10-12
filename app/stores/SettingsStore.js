@@ -139,6 +139,9 @@ class SettingsStore {
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
         this.apiLatencies = ss.get("apiLatencies", {});
+
+        this.mainnet_faucet = ss.get("mainnet_faucet", settingsAPIs.DEFAULT_FAUCET);
+        this.testnet_faucet = ss.get("testnet_faucet", settingsAPIs.TESTNET_FAUCET);
     }
 
     init() {
@@ -211,10 +214,35 @@ class SettingsStore {
             payload.value
         );
 
-        ss.set("settings_v3", this.settings.toJS());
-        if (payload.setting === "walletLockTimeout") {
-            ss.set("lockTimeout", payload.value);
+        switch(payload.setting) {
+            case "faucet_address":
+                if (payload.value.indexOf("testnet") === -1) {
+                    this.mainnet_faucet = payload.value;
+                    ss.set("mainnet_faucet", payload.value);
+                } else {
+                    this.testnet_faucet = payload.value;
+                    ss.set("testnet_faucet", payload.value);
+                }
+                break;
+
+            case "apiServer":
+                let faucetUrl = payload.value.indexOf("testnet") !== -1 ?
+                    this.testnet_faucet : this.mainnet_faucet;
+                this.settings = this.settings.set(
+                    "faucet_address",
+                    faucetUrl
+                );
+                break;
+
+            case "walletLockTimeout":
+                ss.set("lockTimeout", payload.value);
+                break;
+
+            default:
+                break;
         }
+
+        ss.set("settings_v3", this.settings.toJS());
     }
 
     onChangeViewSetting(payload) {
