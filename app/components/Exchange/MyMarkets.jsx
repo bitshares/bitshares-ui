@@ -310,10 +310,12 @@ class MyMarkets extends React.Component {
             window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
         }
 
-        const currentBase = this.props.current.split("_")[1];
-        const currentIndex = this.props.preferredBases.findIndex(a => a === currentBase);
-        if (currentIndex !== -1 && currentIndex !== this.state.activeMarketTab) {
-            this.setState({activeMarketTab: currentIndex});
+        if (this.props.currrent) {
+            const currentBase = this.props.current.split("_")[1];
+            const currentIndex = this.props.preferredBases.findIndex(a => a === currentBase);
+            if (currentIndex !== -1 && currentIndex !== this.state.activeMarketTab) {
+                this.setState({activeMarketTab: currentIndex});
+            }
         }
     }
 
