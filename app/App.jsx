@@ -21,8 +21,8 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
-import Incognito from "./components/Layout/Incognito";
-import { isIncognito } from "feature_detect";
+// import Incognito from "./components/Layout/Incognito";
+// import { isIncognito } from "feature_detect";
 
 class App extends React.Component {
 
@@ -35,7 +35,7 @@ class App extends React.Component {
 
         let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
         this.state = {
-            loading: true,
+            loading: false,
             synced: ChainStore.subscribed,
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
@@ -48,6 +48,7 @@ class App extends React.Component {
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
+        this._onSettingsChange = this._onSettingsChange.bind(this);
     }
 
     componentWillUnmount() {
@@ -57,30 +58,19 @@ class App extends React.Component {
 
     componentDidMount() {
         try {
-            isIncognito(function(incognito){
-                this.setState({incognito});
-            }.bind(this));
-
             NotificationStore.listen(this._onNotificationChange.bind(this));
-            SettingsStore.listen(this._onSettingsChange.bind(this));
-
-            ChainStore.init().then(() => {
-                this.setState({synced: true});
-                Promise.all([
-                    AccountStore.loadDbData(Apis.instance().chainId)
-                ]).then(() => {
-                    AccountStore.tryToSetCurrentAccount();
-                    this.setState({loading: false});
-                }).catch(error => {
-                    console.log("[App.jsx] ----- ERROR ----->", error);
-                    this.setState({loading: false});
-                });
-            }).catch(error => {
-                console.log("[App.jsx] ----- ChainStore.init error ----->", error);
-                let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
-
-                this.setState({loading: false, synced: false, syncFail});
+            SettingsStore.listen(this._onSettingsChange);
+            ChainStore.subscribe(() => {
+                if (ChainStore.subscribed !== this.state.synced || ChainStore.subError) {
+                    let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+                    this.setState({
+                        synced: ChainStore.subscribed,
+                        syncFail
+                    });
+                }
             });
+
+            AccountStore.tryToSetCurrentAccount();
         } catch(e) {
             console.error("e:", e);
         }
@@ -151,21 +141,23 @@ class App extends React.Component {
     // }
 
     render() {
-        let {isMobile, showChat, dockedChat, theme, incognito, incognitoWarningDismissed } = this.state;
+        let {isMobile, showChat, dockedChat, theme } = this.state;
         let content = null;
 
         let showFooter = this.props.location.pathname.indexOf("market") === -1;
-
-        if(incognito && !incognitoWarningDismissed){
-            content = (
-                <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
-            );
-        } else if (this.state.syncFail) {
+        // if(incognito && !incognitoWarningDismissed){
+        //     content = (
+        //         <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
+        //     );
+        // } else
+        if (this.state.syncFail) {
             content = (
                 <SyncError />
             );
         } else if (this.state.loading) {
-            content = <div className="grid-frame vertical"><LoadingIndicator /></div>;
+            content = <div className="grid-frame vertical">
+                <LoadingIndicator loadingText={"Connecting to APIS and tarting app"}/>
+            </div>;
         } else if (this.props.location.pathname === "/init-error") {
             content = <div className="grid-frame vertical">{this.props.children}</div>;
         } else {

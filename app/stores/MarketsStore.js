@@ -963,6 +963,17 @@ class MarketsStore {
                 first = history[0];
             }
             last = history[history.length -1];
+            /* Some market histories have 0 value for price values, set to 1 in that case */ 
+            function removeZeros(entry) {
+                for (let key in entry) {
+                    if (key.indexOf("volume") === -1 && entry[key] === 0) {
+                        entry[key] = 1;
+                    }
+                }
+            }
+            removeZeros(last);
+            removeZeros(first);
+
             let open, close;
             if (invert) {
                 open = utils.get_asset_price(first.open_quote, quoteAsset, first.open_base, baseAsset, invert);

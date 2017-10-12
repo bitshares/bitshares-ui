@@ -4,11 +4,10 @@ import {Link} from "react-router/es";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import market_utils from "common/market_utils";
 import utils from "common/utils";
 import BlockTime from "./BlockTime";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
@@ -16,6 +15,9 @@ import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import ProposedOperation from "./ProposedOperation";
+import marketUtils from "common/market_utils";
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
@@ -88,10 +90,10 @@ class Row extends React.Component {
         return (
                 <tr>
                     {hideOpLabel ? null : (
-                        <td style={{width: "20%"}} className="left-td column-hide-tiny">
+                        <td style={{textAlign: "left"}} className="left-td column-hide-tiny">
                             <Link className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.show_block", {block: utils.format_number(this.props.block, 0)})} to={`/block/${this.props.block}`}><TransactionLabel color={color} type={type} /></Link>
                         </td>)}
-                    <td style={{padding: "8px 5px"}}>
+                    <td style={{padding: "8px 5px", textAlign: "left"}}>
                         <div>
                             <span>{this.props.info}</span>
                         </div>
@@ -125,6 +127,12 @@ class Operation extends React.Component {
         csvExportMode: React.PropTypes.bool
     };
 
+    componentWillReceiveProps(np) {
+        if (np.marketDirections !== this.props.marketDirections) {
+            this.forceUpdate();
+        }
+    }
+
     linkToAccount(name_or_id) {
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
@@ -143,7 +151,8 @@ class Operation extends React.Component {
         if (!this.props.op || !nextProps.op) {
             return false;
         }
-        return !utils.are_equal_shallow(nextProps.op[1], this.props.op[1]);
+        return !utils.are_equal_shallow(nextProps.op[1], this.props.op[1]) ||
+            nextProps.marketDirections !== this.props.marketDirections;
     }
 
     render() {
@@ -181,18 +190,45 @@ class Operation extends React.Component {
             case "limit_order_create":
                 color = "warning";
                 let o = op[1];
-                let isAsk = market_utils.isAskOp(op[1]);
-
+                /*
+                marketID = OPEN.ETH_USD
+                if (!inverted) (default)
+                    price = USD / OPEN.ETH
+                    buy / sell OPEN.ETH
+                    isBid = amount_to_sell.asset_symbol = USD
+                    amount = to_receive
+                if (inverted)
+                    price =  OPEN.ETH / USD
+                    buy / sell USD
+                    isBid = amount_to_sell.asset_symbol = OPEN.ETH
+                    amount =
+                */
                 column = (
                         <span>
-                            <TranslateWithLinks
-                                string={isAsk ? "operation.limit_order_sell" : "operation.limit_order_buy"}
-                                keys={[
-                                    {type: "account", value: op[1].seller, arg: "account"},
-                                    {type: "amount", value: isAsk ? op[1].amount_to_sell : op[1].min_to_receive, arg: "amount"},
-                                    {type: "price", value: {base: isAsk ? op[1].min_to_receive : op[1].amount_to_sell, quote: isAsk ? op[1].amount_to_sell : op[1].min_to_receive}, arg: "price"}
-                                ]}
-                            />
+                            <BindToChainState.Wrapper base={o.min_to_receive.asset_id} quote={o.amount_to_sell.asset_id}>
+                                { ({base, quote}) => {
+                                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
+                                    const inverted = this.props.marketDirections.get(marketID);
+                                    // const paySymbol = base.get("symbol");
+                                    // const receiveSymbol = quote.get("symbol");
+
+                                    const isBid = o.amount_to_sell.asset_id === (inverted ? first.get("id") : second.get("id"));
+
+                                    let priceBase = (isBid) ? o.amount_to_sell : o.min_to_receive;
+                                    let priceQuote = (isBid) ? o.min_to_receive : o.amount_to_sell;
+                                    const amount = isBid ? op[1].min_to_receive : op[1].amount_to_sell;
+
+                                    return <TranslateWithLinks
+                                        string={isBid ? "operation.limit_order_buy" : "operation.limit_order_sell"}
+                                        keys={[
+                                            {type: "account", value: op[1].seller, arg: "account"},
+                                            {type: "amount", value: amount, arg: "amount"},
+                                            {type: "price", value: {base: priceBase, quote: priceQuote}, arg: "price"}
+                                        ]}
+                                    />;
+                                }}
+                            </BindToChainState.Wrapper>
+
                         </span>
                 );
                 break;
@@ -596,17 +632,58 @@ class Operation extends React.Component {
                 color = "success";
                 o = op[1];
 
-                let receivedAmount = o.fee.asset_id === o.receives.asset_id ? o.receives.amount - o.fee.amount : o.receives.amount;
+                /*
+                marketID = OPEN.ETH_USD
+                if (!inverted) (default)
+                    price = USD / OPEN.ETH
+                    buy / sell OPEN.ETH
+                    isBid = amount_to_sell.asset_symbol = USD
+                    amount = to_receive
+                if (inverted)
+                    price =  OPEN.ETH / USD
+                    buy / sell USD
+                    isBid = amount_to_sell.asset_symbol = OPEN.ETH
+                    amount =
+
+                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
+                    const inverted = this.props.marketDirections.get(marketID);
+                    // const paySymbol = base.get("symbol");
+                    // const receiveSymbol = quote.get("symbol");
+
+                    const isBid = o.amount_to_sell.asset_id === (inverted ? first.get("id") : second.get("id"));
+
+                    let priceBase = (isBid) ? o.amount_to_sell : o.min_to_receive;
+                    let priceQuote = (isBid) ? o.min_to_receive : o.amount_to_sell;
+                    const amount = isBid ? op[1].min_to_receive : op[1].amount_to_sell;
+                */
+
                 column = (
                         <span>
-                            <TranslateWithLinks
-                                string="operation.fill_order"
-                                keys={[
-                                    {type: "account", value: op[1].account_id, arg: "account"},
-                                    {type: "amount", value: {amount: receivedAmount, asset_id: op[1].receives.asset_id}, arg: "received", decimalOffset: op[1].receives.asset_id === "1.3.0" ? 3 : null},
-                                    {type: "price", value: {base: o.pays, quote: o.receives}, arg: "price"}
-                                ]}
-                            />
+                            <BindToChainState.Wrapper base={o.receives.asset_id} quote={o.pays.asset_id}>
+                                { ({base, quote}) => {
+
+                                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
+                                    const inverted = this.props.marketDirections.get(marketID);
+                                    const isBid = o.pays.asset_id === (inverted ? first.get("id") : second.get("id"));
+
+
+                                    // const paySymbol = base.get("symbol");
+                                    // const receiveSymbol = quote.get("symbol");
+                                    let priceBase = (isBid) ? o.receives : o.pays;
+                                    let priceQuote = (isBid) ? o.pays : o.receives;
+                                    let amount = isBid ? o.receives : o.pays;
+                                    let receivedAmount = o.fee.asset_id === amount.asset_id ? amount.amount - o.fee.amount : amount.amount;
+
+                                    return <TranslateWithLinks
+                                        string={`operation.fill_order_${isBid ? "buy" : "sell"}`}
+                                        keys={[
+                                            {type: "account", value: op[1].account_id, arg: "account"},
+                                            {type: "amount", value: {amount: receivedAmount, asset_id: amount.asset_id}, arg: "amount", decimalOffset: op[1].receives.asset_id === "1.3.0" ? 3 : null},
+                                            {type: "price", value: {base: priceBase, quote: priceQuote}, arg: "price"}
+                                        ]}
+                                    />;
+                                }}
+                        </BindToChainState.Wrapper>
                         </span>
                 );
                 break;
@@ -822,5 +899,17 @@ class Operation extends React.Component {
         );
     }
 }
+
+
+Operation = connect(Operation, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            marketDirections: SettingsStore.getState().marketDirections
+        };
+    }
+});
 
 export default Operation;

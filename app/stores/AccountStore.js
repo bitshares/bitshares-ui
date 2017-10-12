@@ -50,6 +50,7 @@ class AccountStore extends BaseStore {
             "setWallet"
         );
 
+        const referralAccount = this._checkReferrer();
         this.state = {
             subbed: false,
             linkedAccounts: Immutable.Set(),
@@ -58,13 +59,39 @@ class AccountStore extends BaseStore {
             currentAccount: null,
             passwordAccount: null,
             starredAccounts: Immutable.Map(),
-            searchAccounts: Immutable.Map()
+            searchAccounts: Immutable.Map(),
+            referralAccount
         };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
         this.chainStoreUpdate = this.chainStoreUpdate.bind(this);
         this._getStorageKey = this._getStorageKey.bind(this);
         this.setWallet = this.setWallet.bind(this);
+    }
+
+    _checkReferrer() {
+        let referralAccount = "";
+        if (window) {
+            function getQueryParam(param) {
+                var result =  window.location.search.match(
+                    new RegExp("(\\?|&)" + param + "(\\[\\])?=([^&]*)")
+                );
+
+                return result ? decodeURIComponent(result[3]) : false;
+            }
+            let validQueries = ["r", "ref", "referrer", "referral"];
+            for (let i = 0; i < validQueries.length; i++) {
+                referralAccount = getQueryParam(validQueries[i]);
+                if (referralAccount) break;
+            }
+        }
+        if (referralAccount) {
+            accountStorage.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
+        } else {
+            accountStorage.remove("referralAccount");
+        }
+        if (referralAccount) console.log("referralAccount", referralAccount);
+        return referralAccount;
     }
 
     reset() {
@@ -93,26 +120,6 @@ class AccountStore extends BaseStore {
     _getInitialState() {
         this.account_refs = null;
         this.initial_account_refs_load = true; // true until all undefined accounts are found
-        let referralAccount = "";
-        if (window) {
-            function getQueryParam(param) {
-                var result =  window.location.search.match(
-                    new RegExp("(\\?|&)" + param + "(\\[\\])?=([^&]*)")
-                );
-
-                return result ? result[3] : false;
-            }
-            let validQueries = ["r", "ref", "referrer", "referral"];
-            for (let i = 0; i < validQueries.length; i++) {
-                referralAccount = getQueryParam(validQueries[i]);
-                if (referralAccount) break;
-            }
-        }
-        if (referralAccount) {
-            accountStorage.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
-        } else {
-            accountStorage.remove("referralAccount");
-        }
 
         const wallet_name = this.state.wallet_name || "";
         let starredAccounts = Immutable.Map(accountStorage.get(this._getStorageKey("starredAccounts", {wallet_name})));
@@ -174,7 +181,6 @@ class AccountStore extends BaseStore {
     loadDbData() {
         let linkedAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
-
         return new Promise((resolve, reject) => {
             iDB.load_data("linked_accounts")
             .then(data => {
@@ -220,7 +226,7 @@ class AccountStore extends BaseStore {
 
     addAccountRefs() {
         //  Simply add them to the linkedAccounts list (no need to persist them)
-        let account_refs = AccountRefsStore.getState().account_refs;
+        let account_refs = AccountRefsStore.getAccountRefs();
         if( ! this.initial_account_refs_load && this.account_refs === account_refs) {
             return this.setState({refsLoaded: true});
         }
@@ -482,7 +488,7 @@ class AccountStore extends BaseStore {
 
     checkAccountRefs() {
         //  Simply add them to the linkedAccounts list (no need to persist them)
-        let account_refs = AccountRefsStore.getState().account_refs;
+        let account_refs = AccountRefsStore.getAccountRefs();
 
         account_refs.forEach(id => {
             let account = ChainStore.getAccount(id);

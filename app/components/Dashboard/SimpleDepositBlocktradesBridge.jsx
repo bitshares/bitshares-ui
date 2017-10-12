@@ -1,7 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "../Modal/BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import { Asset } from "common/MarketClasses";
 import utils from "common/utils";
@@ -69,6 +68,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             np.outputCoinType !== this.props.outputCoinType ||
             np.sender !== this.props.sender ||
             np.asset !== this.props.asset ||
+            np.isAvailable !== this.props.isAvailable ||
+            np.isDown !== this.props.isDown ||
             !utils.are_equal_shallow(ns, this.state)
         );
     }
@@ -205,7 +206,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         return (
             <div className={!addressValue ? "no-overflow" : ""}>
-                <p><Translate unsafe content="gateway.purchase_1" inputAsset={inputName} outputAsset={receiveName} />.</p>
+                <p><Translate component="p" unsafe content="gateway.purchase_1" inputAsset={inputName} outputAsset={receiveName} />.</p>
 
                 {this._renderCurrentBalance()}
 
@@ -342,7 +343,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         }
 
         const {name: assetName, prefix} = utils.replaceName(asset.get("symbol"), !!asset.get("bitasset"));
-
         return (
             <div className="SimpleTrade__modal">
                 <div className="Modal__header">
@@ -359,7 +359,10 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         paddingTop: "1rem"
                     }}>
 
-                    {this._renderDeposit()}
+                    {this.props.isDown ?
+                        <div><Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" /></div> :
+                        !this.props.isAvailable ? <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
+                        this._renderDeposit()}
                 </div>
             </div>
         );

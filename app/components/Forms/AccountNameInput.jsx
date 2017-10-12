@@ -133,9 +133,9 @@ class AccountNameInput extends React.Component {
                 <section>
                     <label className="left-label">{this.props.placeholder}</label>
                     <input
-                        name="value"
+                        name="username"
+                        id="username"
                         type="text"
-                        id={this.props.id}
                         ref="input"
                         autoComplete="off"
                         placeholder={null}
