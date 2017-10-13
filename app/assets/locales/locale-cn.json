@@ -91,8 +91,6 @@
       "ref_percentage": "推荐人奖励",
       "network_percentage": "网络收取",
       "fees_paid": "手续费总支出",
-      "fees_pending": "待结费用",
-      "fees_vested": "待解冻金额",
       "in_orders": "委单冻结金额 %(core_asset)s ",
       "unknown": "未知的会员",
       "lifetime": "终身会员",
