@@ -8,7 +8,7 @@ export default {
             if(parseInt(appTables.style.height) !== appTables.clientHeight){
                 appTables.style.height = `${appTables.clientHeight}px`;
             }
-        }.bind(this), 100);
+        }.bind(this), 10);
         
         return interval;
     },
