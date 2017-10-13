@@ -36,6 +36,10 @@ const filterAndSortURLs = (count, latencies) => {
         if (!__TESTNET__ && a.url.indexOf("testnet") !== -1) return false;
         /* Also remove the automatic fallback dummy url */
         if (a.url.indexOf("fake.automatic-selection") !== -1) return false;
+        /* Remove insecure websocket urls when using secure protocol */
+        if (window.location.protocol === "https:" && a.url.indexOf("ws://") !== -1) {
+            return false;
+        }
         /* Use all the remaining urls if count = 0 */
         if (!count) return true;
 
@@ -47,6 +51,8 @@ const filterAndSortURLs = (count, latencies) => {
     }).map(a => a.url);
     return urls;
 };
+
+
 
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     const apiLatencies = SettingsStore.getState().apiLatencies;
@@ -67,6 +73,10 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     */
     let connectionString = SettingsStore.getSetting("apiServer");
     if (!connectionString) connectionString = urls[0].url;
+    /* Don't use an insecure websocket url when using secure protocol */
+    if (window.location.protocol === "https:" && connectionString.indexOf("ws://") !== -1) {
+        connectionString = urls[0];
+    }
     const autoSelection = connectionString.indexOf("fake.automatic-selection") !== -1;
     if (autoSelection) {
         connectionString = urls[0];
