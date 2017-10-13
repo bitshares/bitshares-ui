@@ -183,6 +183,7 @@
       "approx_fee": "Approximate fee",
       "exists": "That asset already exists",
       "max_positive": "Max supply should be a positive number",
+      "too_large": "That max supply is too big, please choose a smaller number",
       "core_exchange_rate": "Core exchange rate",
       "quote": "Quote asset amount",
       "quote_name": "Quote asset",

@@ -22,7 +22,7 @@ import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 import AssetWhitelist from "./AssetWhitelist";
 
-let MAX_SAFE_INT = new big("9007199254740991");
+let GRAPHENE_MAX_SHARE_SUPPLY = new big(assetConstants.GRAPHENE_MAX_SHARE_SUPPLY);
 
 class AccountAssetUpdate extends React.Component {
 
@@ -236,7 +236,7 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
-                if ((new big(marketFee)).times(precision).gt(MAX_SAFE_INT)) {
+                if ((new big(marketFee)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                     updateState = false;
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
@@ -245,13 +245,13 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_supply":
                 let maxSupply = e.amount.replace(/,/g, "");
-                try {
-                    if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
-                        updateState = false;
-                        return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
-                    }
-                    update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
-                } catch(e) {}
+                // try {
+                //     if ((new big(maxSupply)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                //         updateState = false;
+                //         return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
+                //     }
+                update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                // } catch(e) {}
                 break;
 
             default:
@@ -275,7 +275,15 @@ class AccountAssetUpdate extends React.Component {
             base_asset: null
         };
 
-        errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") : null;
+        const p = this.props.asset.get("precision");
+        try {
+            errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") :
+                (new big(parseInt(new_state.max_supply, 10))).times(Math.pow(10, p)).gt(GRAPHENE_MAX_SHARE_SUPPLY) ? counterpart.translate("account.user_issued_assets.too_large") :
+                null;
+        } catch(err) {
+            console.log("err:", err);
+            errors.max_supply = counterpart.translate("account.user_issued_assets.too_large");
+        }
 
         if (cer) {
             if (cer.quote.asset_id !== asset.get("id") && cer.base.asset_id !== asset.get("id")) {
@@ -420,8 +428,8 @@ class AccountAssetUpdate extends React.Component {
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
         let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
-        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
+        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(Math.pow(10, precision)).toString();
+        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(Math.pow(10, basePrecision)).toString();
 
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
         // Loop over flags
