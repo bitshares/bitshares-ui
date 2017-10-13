@@ -338,6 +338,8 @@
     "unfollow": "Unfollow",
     "follow": "Follow",
     "pay": "Send to",
+    "deposit": "Deposit BTS",
+    "deposit_address": "Your deposit address is your account name",
     "overview": "Overview",
     "home": "Home",
     "bts_market": "Market",
@@ -794,7 +796,9 @@
     }
   },
   "settings": {
-    "passwordLogin": "Login using a cloud wallet",
+    "passwordLogin": "Login mode",
+    "cloud_login": "Cloud Wallet Login",
+    "local_wallet": "Local Wallet Login",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",

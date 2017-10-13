@@ -30,6 +30,7 @@
     "start-electron": "electron build/electron/index.js",
     "build": "cross-env NODE_ENV=production webpack --env.prod",
     "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
+    "build-hash-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.noUgly --env.baseUrl=''",
     "build-github": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl='/wallet/'",
     "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
     "build-electron-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",

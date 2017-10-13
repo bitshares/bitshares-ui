@@ -36,7 +36,7 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 250}}>
+                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}

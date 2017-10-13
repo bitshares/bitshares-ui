@@ -42,7 +42,7 @@ class SettingsStore {
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
             disableChat: false,
-            passwordLogin: false
+            passwordLogin: true
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -88,8 +88,8 @@ class SettingsStore {
                 "olDarkTheme"
             ],
             passwordLogin: [
-                {translate: "yes"},
-                {translate: "no"}
+                {translate: "cloud_login"},
+                {translate: "local_wallet"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
