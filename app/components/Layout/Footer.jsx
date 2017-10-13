@@ -75,9 +75,6 @@ class Footer extends React.Component {
         const { state } = this;
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let block_time = this.props.dynGlobalObject.get("time") + "+00:00";
-        // console.log("block_time", block_time)
-        let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
-        let now = new Date().getTime() / 1000;
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
         let version = version_match ? `.${version_match[1]}` : ` ${APP_VERSION}`;
         let updateStyles = {display: "inline-block", verticalAlign: "top"}
@@ -104,7 +101,7 @@ class Footer extends React.Component {
                             {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}
                         </div>
                     </div>
-                    {this.props.synced ? null : <div className="grid-block shrink txtlabel error"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
+                    {this.props.synced ? null : <div className="grid-block shrink txtlabel error flash"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
                     {this.props.rpc_connection_status === "closed" ? <div className="grid-block shrink txtlabel error"><Translate content="footer.connection" />&nbsp; &nbsp;</div> : null}
                     {this.props.backup_recommended ? <span>
                         <div className="grid-block">
@@ -124,8 +121,13 @@ class Footer extends React.Component {
                     {block_height ?
                         (<div className="grid-block shrink">
                             <Translate content="footer.block" /> &nbsp;
-                            <pre>#{block_height} </pre> &nbsp;
-                            { now - bt > 5 ? <TimeAgo ref="footer_head_timeago" time={block_time} /> : <span data-tip="Synchronized" data-place="left"><Icon name="checkmark-circle" /></span> }
+                            { !this.props.synced ?
+                                <TimeAgo ref="footer_head_timeago" time={block_time} /> :
+                                <span data-tip="Synchronized" data-place="left">
+                                    <span>#{block_height} </span> &nbsp;
+                                    <Icon name="checkmark-circle" />
+                                </span>
+                            }
                         </div>) :
                         <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>
