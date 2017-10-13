@@ -53,7 +53,8 @@ const filterAndSortURLs = (count, latencies) => {
 };
 
 
-
+let _connectInProgress = false;
+let _connectionCheckPromise = null
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     const apiLatencies = SettingsStore.getState().apiLatencies;
     let apiLatenciesCount = Object.keys(apiLatencies).length;
@@ -83,6 +84,8 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     }
 
     var onConnect = () => {
+        if (_connectInProgress) return callback();
+        _connectInProgress = true;
         if (Apis.instance()) {
             let currentUrl = Apis.instance().url;
             SettingsActions.changeSetting({setting: "activeNode", value: currentUrl});
@@ -102,6 +105,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         } catch(err) {
             console.log("db init error:", err);
             replaceState("/init-error");
+            _connectInProgress = false;
             return callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
@@ -136,14 +140,15 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                     }),
                     WalletManagerStore.init()
                 ]).then(()=> {
+                    _connectInProgress = false;
                     SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
                     callback();
                 });
             })
-
         }).catch(err => {
             console.error(err);
             replaceState("/init-error");
+            _connectInProgress = false;
             callback();
         });
     };
@@ -169,8 +174,13 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             .then(onConnect).catch(onResetError);
         });
     }
-    let connectionCheckPromise = !apiLatenciesCount ? connectionManager.checkConnections() : null;
+    let connectionCheckPromise = !apiLatenciesCount ?
+        _connectionCheckPromise ? _connectionCheckPromise :
+        connectionManager.checkConnections() : null;
+    _connectionCheckPromise = connectionCheckPromise;
+
     Promise.all([connectionCheckPromise]).then((res => {
+        _connectionCheckPromise = null;
         if (connectionCheckPromise && res[0]) {
             let [latencies] = res;
             urls = filterAndSortURLs(Object.keys(latencies).length, latencies);
