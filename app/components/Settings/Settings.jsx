@@ -39,16 +39,17 @@ class Settings extends React.Component {
         if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
             const currentEntries = this._getMenuEntries(this.props);
             const menuEntries = this._getMenuEntries(np);
-            if (currentEntries.length < menuEntries.length) {
-                this.setState({
-                    activeSetting: this.state.activeSetting + (menuEntries.length - currentEntries.length)
-                });
-            }
+            const currentActive = currentEntries[this.state.activeSetting];
+            const newActiveIndex = menuEntries.indexOf(currentActive);
+            const newActive = menuEntries[newActiveIndex];
             this.setState({
                 menuEntries
             });
-
-            if (this.state.activeSetting > (menuEntries.length - 1)) {
+            if (newActiveIndex && newActiveIndex !== this.state.activeSetting) {
+                this.setState({
+                    activeSetting: menuEntries.indexOf(currentActive)
+                });
+            } else if (!newActive || this.state.activeSetting > (menuEntries.length - 1)) {
                 this.setState({
                     activeSetting: 0
                 });
@@ -139,7 +140,9 @@ class Settings extends React.Component {
         case "showSettles":
         case "showAssetPercent":
         case "passwordLogin":
-            SettingsActions.changeSetting({setting, value: e.target.value === "yes" });
+            let reference = defaults[setting][0];
+            if (reference.translate) reference = reference.translate;
+            SettingsActions.changeSetting({setting, value: e.target.value === reference });
             break;
 
         case "unit":
@@ -174,7 +177,6 @@ class Settings extends React.Component {
     render() {
         let {settings, defaults} = this.props;
         const {menuEntries, activeSetting, settingEntries} = this.state;
-
         let entries;
         let activeEntry = menuEntries[activeSetting] || menuEntries[0];
         switch (activeEntry) {
