@@ -134,7 +134,7 @@
       "title": "Vesting balances",
       "balance_number": "Balance #%(id)s",
       "no_balances": "This account has no vesting balances",
-      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
+      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
       "stats": "Membership",
@@ -145,9 +145,7 @@
       "network_percentage": "Network",
       "fee_allocation": "Fee Allocation",
       "membership": "Membership",
-      "fees_paid": "Lifetime fees paid",
-      "fees_pending": "Pending fees",
-      "fees_vested": "Pending vested fees",
+      "fees_paid": "Total fees paid",
       "referrals": "Referrals",
       "rewards": "Cashback Rewards",
       "cashback": "Vesting balance amount",
@@ -160,7 +158,7 @@
       "subscribe": "Buy Annual Subscription",
       "expires": "expires",
       "membership_expiration": "Membership Expiration",
-      "fees_cashback": "Fees and cashback",
+      "fees_cashback": "Fee statistics",
       "coindays": "coin days",
       "earned": "Coin days earned",
       "required": "Coin days required",

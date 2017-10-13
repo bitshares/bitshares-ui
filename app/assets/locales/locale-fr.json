@@ -72,8 +72,6 @@
       "ref_percentage": "Pourcentage de frais pour le recruteur",
       "network_percentage": "Pourcentage de frais pour le reseau",
       "fees_paid": "Frais payé",
-      "fees_pending": "Frais en attente",
-      "fees_vested": "Frais en attente bloqué",
       "in_orders": "Total de %(core_asset)s en ordres",
       "referrals": "Recrutements",
       "rewards": "Gains totaux",
