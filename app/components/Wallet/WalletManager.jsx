@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router/es";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
+import BackupActions from "actions/BackupActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import Translate from "react-translate-component";
 import cname from "classnames";
@@ -237,6 +238,7 @@ class ChangeActiveWallet extends Component {
 
     onConfirm() {
         WalletActions.setWallet(this.state.current_wallet);
+        BackupActions.reset();
         // if (window.electron) {
         //     window.location.hash = "";
         //     window.remote.getCurrentWindow().reload();
