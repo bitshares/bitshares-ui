@@ -12,7 +12,7 @@ import AccountStore from "stores/AccountStore";
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
-const latencyChecks = ss.get("latencyChecks", 1);
+let latencyChecks;
 import counterpart from "counterpart";
 
 // Actions
@@ -54,9 +54,10 @@ const filterAndSortURLs = (count, latencies) => {
 
 
 let _connectInProgress = false;
-let _connectionCheckPromise = null
+let _connectionCheckPromise = null;
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     const apiLatencies = SettingsStore.getState().apiLatencies;
+    latencyChecks = ss.get("latencyChecks", 1);
     let apiLatenciesCount = Object.keys(apiLatencies).length;
     let connectionStart;
 
@@ -92,7 +93,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             if (!autoSelection) SettingsActions.changeSetting({setting: "apiServer", value: currentUrl});
             if (!(currentUrl in apiLatencies)) {
                 apiLatencies[currentUrl] = new Date().getTime() - connectionStart;
-                console.log("set latency to:", apiLatencies[currentUrl]);
             }
         }
         const currentChain = Apis.instance().chain_id;
@@ -154,7 +154,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     };
 
     var onResetError = (err) => {
-        console.log("err:", err);
+        console.log("onResetError:", err);
         oldChain = "old";
         connect = true;
         notify.addNotification({
