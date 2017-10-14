@@ -100,7 +100,7 @@ class OpenSettleOrders extends React.Component {
                 key="open_orders"
                 className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"
             >
-                <div className="small-6 order-1" style={{paddingBottom: "1rem"}}>
+                <div className="small-12 medium-6 large-6 xlarge-4 order-1" style={{paddingBottom: "1rem"}}>
                     <div className="exchange-bordered">
                         <div className="exchange-content-header">
                             <Translate content="exchange.settle_orders" />
