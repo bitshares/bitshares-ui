@@ -109,12 +109,16 @@ export default idb_helper = {
 
 class ChainEvent {
     constructor(existing_on_event, callback, request) {
+        // Assigning the constructor arguments to work around hot-reload
+        // rewriting breaking the scope of this.event
+        this.existing_on_event = existing_on_event
+        this.callback = callback
         this.event = (event)=> {
             if(event.target.error)
                 console.error("---- transaction error ---->", event.target.error);
             //event.request = request
-            callback(event);
-            if(existing_on_event) existing_on_event(event);
+            this.callback(event);
+            if(this.existing_on_event) this.existing_on_event(event);
         };
     }
 }

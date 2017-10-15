@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Router, Route, IndexRoute, browserHistory, hashHistory } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
@@ -108,7 +108,7 @@ const routes = (
 
         <Route path="/account/:account_name" component={AccountPage} >
             <IndexRoute component={AccountOverview} />
-            <Route path="overview" component={AccountOverview} />
+            <Route path="dashboard" component={AccountOverview} />
             <Route path="assets" component={AccountAssets} />
             <Route path="create-asset" component={AccountAssetCreate} />
             <Route path="update-asset/:asset" component={AccountAssetUpdate} />
@@ -119,6 +119,7 @@ const routes = (
             <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
             <Route path="orders" component={AccountOrders} />
             <Route path="whitelist" component={AccountWhitelist} />
+            <Redirect from="overview" to="dashboard" />
         </Route>
 
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />

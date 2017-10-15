@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route, IndexRoute } from "react-router/es";
+import { Route, IndexRoute, Redirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
@@ -161,7 +161,7 @@ const routes = (
             <IndexRoute getComponent={(location, cb) => {
                 System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
             }}/>
-            <Route path="overview" getComponent={(location, cb) => {
+            <Route path="dashboard" getComponent={(location, cb) => {
                 System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
             }}/>
             <Route path="assets" getComponent={(location, cb) => {
@@ -194,6 +194,7 @@ const routes = (
             <Route path="whitelist" getComponent={(location, cb) => {
                 System.import("components/Account/AccountWhitelist").then(loadRoute(cb)).catch(errorLoading);
             }}/>
+            <Redirect from="overview" to="dashboard" />
         </Route>
         <Route path="deposit-withdraw" getComponent={(location, cb) => {
             System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);

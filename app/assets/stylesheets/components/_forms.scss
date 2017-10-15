@@ -250,6 +250,7 @@ div.transfer-input {
 
 div.input-wrapper {
     position: relative;
+    width: 100%;
     div.floating-dropdown {
         background: transparent;
         position: absolute;
@@ -268,4 +269,12 @@ div.dropdown-wrapper.upper-case {
     > div, > ul > li {
         text-transform: uppercase;
     }
+}
+
+form.full-width {
+
+    section > input {
+        max-width: 100%;
+    }
+
 }

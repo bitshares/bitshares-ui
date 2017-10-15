@@ -85,3 +85,18 @@ div.bordered-header {
 .table-cell{
   display: table-cell;
 }
+
+.grid-content.app-tables {
+  box-sizing: border-box;
+  padding-bottom: 1.5rem;
+  min-height: 100%;
+  position: relative;
+}
+
+.grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .overview-tabs {
+  height: 100%;
+}
+
+.grid-content.app-tables > .content-block {
+  margin-bottom: 0 !important;
+}

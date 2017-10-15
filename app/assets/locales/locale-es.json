@@ -80,8 +80,6 @@
       "fee_allocation": "Asignación de Comisiones",
       "membership": "Membresía",
       "fees_paid": "Membresía vitalicia paga",
-      "fees_pending": "Comisiones pendientes",
-      "fees_vested": "Comisiones pendientes de consolidación",
       "referrals": "Referidos",
       "rewards": "Reembolso de Honorarios",
       "cashback": "Reembolso",
@@ -720,7 +718,7 @@
     "current_pass": "Current password",
     "generated": "Generated password",
     "understand_1": "I understand that no one can recover my password if I lose or forget it",
-    "understand_2": "I have written down or oherwise stored my password",
+    "understand_2": "I have written down or otherwise stored my password",
     "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
   },
   "borrow": {

@@ -71,7 +71,10 @@
     "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
     "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
-    "copy_password": "Click here to copy the password to your clipboard"
+    "copy_password": "Click here to copy the password to your clipboard",
+    "sync_yes": "The current node is in sync with the blockchain",
+    "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
+    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -105,8 +108,8 @@
     "as_collateral": "Collateral",
     "open_orders": "Open orders",
     "total_value": "Total value",
-    "show_hidden": "Show hidden assets",
-    "hide_hidden": "Hide hidden assets",
+    "show_hidden": "Hidden",
+    "hide_hidden": "Active",
     "ignore": "Hide",
     "unignore": "Unhide",
     "show_ignored": "Show hidden accounts",
@@ -126,13 +129,15 @@
       "white_by": "Whitelisted by",
       "black_by": "Blacklisted by",
       "empty_white_by": "No accounts have whitelisted %(account)s.",
-      "empty_black_by": "No accounts have blacklisted %(account)s."
+      "empty_black_by": "No accounts have blacklisted %(account)s.",
+      "whitelist_authorities": "Whitelist authority",
+      "blacklist_authorities": "Blacklist authority"
     },
     "vesting": {
       "title": "Vesting balances",
       "balance_number": "Balance #%(id)s",
       "no_balances": "This account has no vesting balances",
-      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
+      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
       "stats": "Membership",
@@ -143,9 +148,7 @@
       "network_percentage": "Network",
       "fee_allocation": "Fee Allocation",
       "membership": "Membership",
-      "fees_paid": "Lifetime fees paid",
-      "fees_pending": "Pending fees",
-      "fees_vested": "Pending vested fees",
+      "fees_paid": "Total fees paid",
       "referrals": "Referrals",
       "rewards": "Cashback Rewards",
       "cashback": "Vesting balance amount",
@@ -158,7 +161,7 @@
       "subscribe": "Buy Annual Subscription",
       "expires": "expires",
       "membership_expiration": "Membership Expiration",
-      "fees_cashback": "Fees and cashback",
+      "fees_cashback": "Fee statistics",
       "coindays": "coin days",
       "earned": "Coin days earned",
       "required": "Coin days required",
@@ -183,6 +186,7 @@
       "approx_fee": "Approximate fee",
       "exists": "That asset already exists",
       "max_positive": "Max supply should be a positive number",
+      "too_large": "That max supply is too big, please choose a smaller number",
       "core_exchange_rate": "Core exchange rate",
       "quote": "Quote asset amount",
       "quote_name": "Quote asset",
@@ -253,7 +257,7 @@
       "key_viewer": "Private key viewer",
       "public": "Public key",
       "private": "Private key (WIF - Wallet Import Format)",
-      "show": "show",
+      "show": "Show",
       "brain": "Brainkey position",
       "from": "Imported from account",
       "sign_owner": "Sign as owner",
@@ -336,6 +340,8 @@
     "unfollow": "Unfollow",
     "follow": "Follow",
     "pay": "Send to",
+    "deposit": "Deposit BTS",
+    "deposit_address": "Your deposit address is your account name",
     "overview": "Overview",
     "home": "Home",
     "bts_market": "Market",
@@ -352,8 +358,8 @@
       "not_yours": "Not your account"
     },
     "collaterals": "Margin Positions",
-    "eq_value": "Estimated Value",
-    "no_price": "Unknown value",
+    "eq_value": "Estimated",
+    "no_price": "--",
     "percent": "Percent of total supply",
     "please_create_account": "Please create an account",
     "create_account": "Create account",
@@ -371,7 +377,12 @@
     "propose_from": "Propose From",
     "settle": "Settle",
     "no_orders": "No open orders",
-    "asset_details": "Asset details"
+    "asset_details": "Asset details",
+    "portfolio": "My Portfolio",
+    "activity": "Activity",
+    "eq_value_header": "Value ({asset})",
+    "qty": "Qty",
+    "total": "Total ({asset})"
   },
   "pagination": {
     "newer": "Newer",
@@ -417,7 +428,8 @@
     "proposal_create": "{account} created a proposed transaction",
     "proposal_update": "{account} updated a proposed transaction",
     "proposal_delete": "{account} deleted a proposed transaction",
-    "fill_order": "{account} bought {received} at {price}",
+    "fill_order_buy": "{account} bought {amount} at {price}",
+    "fill_order_sell": "{account} sold {amount} at {price}",
     "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
     "balance_claim": "{account} claimed a balance of {amount}",
     "publish_feed": "{account} published feed price of {price}",
@@ -476,7 +488,8 @@
     "asset_issue": "Issue {amount} to {to} using {account}",
     "asset_reserve": "Reserve (burn) {amount} using {account}",
     "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
-    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}"
+    "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
+    "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}"
   },
   "transaction": {
     "confirm": "Please confirm the transaction",
@@ -679,7 +692,8 @@
       "symbol": "Symbol",
       "id": "ID",
       "issuer": "Issuer",
-      "precision": "Precision"
+      "precision": "Precision",
+      "units": "Units"
     },
     "asset": {
       "title": "Asset",
@@ -725,7 +739,14 @@
         "maximum_short_squeeze_ratio": "MSSR",
         "publisher": "Publisher",
         "published": "Published"
-      }
+      },
+      "whitelist": {
+            "whitelist_authorities": "Whitelist authorities",
+            "blacklist_authorities": "Blacklist authorities",
+            "whitelist_markets": "Market whitelist",
+            "blacklist_markets": "Market blacklist",
+            "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities"
+        }
     },
     "witnesses": {
       "title": "Witnesses",
@@ -777,7 +798,9 @@
     }
   },
   "settings": {
-    "passwordLogin": "Login using a cloud wallet",
+    "passwordLogin": "Login mode",
+    "cloud_login": "Cloud Wallet Login",
+    "local_wallet": "Local Wallet Login",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",
@@ -853,10 +876,13 @@
     "block": "Head block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
-    "nosync": "Blockchain is out of sync, please wait until it's synchronized..",
+    "nosync": "Your active node is out of sync",
     "connection": "No Blockchain connection",
     "brainkey": "Backup brainkey recommended",
-    "update_available": "UPDATE AVAILABLE"
+    "update_available": "UPDATE AVAILABLE",
+    "synced": "Synced",
+    "unsynced": "Out of sync",
+    "disconnected": "Disconnected"
   },
   "exchange": {
     "chart_options": {
@@ -952,7 +978,8 @@
     "show_star_1": "Show",
     "show_star_2": "only",
     "quote": "Quote currency:",
-    "search": "Search for more markets here"
+    "search": "Search for more markets here",
+    "order_value": "Order value"
   },
   "fees": {
     "title": "Fee Schedule"
@@ -1071,7 +1098,7 @@
     "wallet_browser": "Your Web Browser is your Wallet",
     "has_wallet": "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
     "go_get_started": "See Get Started tips",
-    "wallet_crucial": "Your local wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>Noone else can restore your account if you lose your backup.</strong>",
+    "wallet_crucial": "Your local wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>No one else can restore your account if you lose your backup.</strong>",
     "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
     "wallet_lose_warning": "<strong>IMPORTANT: If you lose your local wallet or your pass phrase you will be unable to access any of your funds again. Make sure you store the backup somewhere safe, and memorize or write down your password!</strong>",
     "tips_deposit": "Make a deposit",
@@ -1125,8 +1152,8 @@
     "no_wallet": "You do not have a local wallet yet",
     "generated": "Generated password",
     "account_exp": "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in Bitshares!</strong>",
-    "understand_1": "I understand that noone can recover my password if I lose or forget it",
-    "understand_2": "I have written down or oherwise stored my password",
+    "understand_1": "I understand that no one can recover my password if I lose or forget it",
+    "understand_2": "I have written down or otherwise stored my password",
     "understand_3": " I understand that I will lose access to my funds if I lose my password",
     "bts_rules": "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
     "ok_done": "OK, take me to the dashboard"
@@ -1134,9 +1161,10 @@
   "borrow": {
     "title": "%(asset_symbol)s Margin",
     "no_valid": "No valid feeds for %(asset_symbol)s",
-    "coll_ratio": "Collateral ratio",
+    "coll_ratio": "Ratio",
     "call_limit": "Market Call Limit",
     "adjust": "Update position",
+    "adjust_short": "Adjust",
     "close": "Close position",
     "update": "Update",
     "errors": {
@@ -1187,7 +1215,12 @@
         "key_approval_add": "Key approval to add",
         "key_approval_remove": "Key approval to remove"
     },
-    "ok": "OK"
+    "ok": "OK",
+    "qrcode":{
+      "label":"qrcode",
+      "title":"Private key QR code",
+      "input_message":"Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code."
+    }
   },
   "init_error": {
     "title": "Application initialization issues",
@@ -1281,7 +1314,12 @@
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
       "min_amount_error": "Please enter number >= minimum",
       "coming_soon": "Coming soon"
-    }
+    },
+    "unavailable": "The gateway service for this asset is currently down, please try again later",
+    "unavailable_bridge": "The brdige service for this asset is currently down, please try again later",
+    "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
+    "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
+    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
   },
   "chat": {
     "title": "Chat",

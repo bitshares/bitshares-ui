@@ -120,7 +120,7 @@ BalanceClaimActive = connect(BalanceClaimActive, {
     },
     getProps() {
         let props = BalanceClaimActiveStore.getState();
-        props.account_refs = AccountRefsStore.getState().account_refs;
+        props.account_refs = AccountRefsStore.getAccountRefs();
         return props;
     }
 });

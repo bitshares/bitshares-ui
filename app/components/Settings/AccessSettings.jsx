@@ -29,11 +29,6 @@ class ApiNode extends React.Component {
 
     activate(){
         SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
-        if (this.props.url.indexOf("testnet") !== -1) {
-            SettingsActions.changeSetting({setting: "faucet_address", value: settingsAPIs.TESTNET_FAUCET });
-        } else {
-            SettingsActions.changeSetting({setting: "faucet_address", value: settingsAPIs.DEFAULT_FAUCET });
-        };
         setTimeout(function(){
             willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);
         }.bind(this), 50);

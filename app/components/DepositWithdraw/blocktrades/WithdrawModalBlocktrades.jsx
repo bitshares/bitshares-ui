@@ -193,9 +193,9 @@ class WithdrawModalBlocktrades extends React.Component {
 
     _checkBalance() {
         const {feeAmount, withdraw_amount} = this.state;
-        const {asset} = this.props;
-
-        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, this.props.balance);
+        const {asset, balance} = this.props;
+        if (!balance || !feeAmount) return;
+        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
         return hasBalance;

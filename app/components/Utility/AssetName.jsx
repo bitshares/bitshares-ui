@@ -56,7 +56,7 @@ class AssetName extends React.Component {
 
 			return (
 				<div
-					className="tooltip inline-block"
+					className={"inline-block" + (this.props.noTip ? "" : " tooltip")}
 					data-tip={tooltip}
 					data-place={this.props.dataPlace}
 					data-html={true}

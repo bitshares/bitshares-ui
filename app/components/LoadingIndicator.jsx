@@ -42,6 +42,7 @@ class LoadingIndicator extends React.Component {
                 return (
                     <div className={classes}>
                         <div className="loading-panel">
+                            <div className="text-center">{this.props.loadingText}</div>
                             <div className="spinner">
                                 <div className="bounce1"></div>
                                 <div className="bounce2"></div>

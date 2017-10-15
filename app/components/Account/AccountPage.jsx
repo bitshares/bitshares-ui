@@ -36,7 +36,7 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 250}}>
+                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
@@ -63,7 +63,8 @@ class AccountPage extends React.Component {
                             balances: account.get("balances", null),
                             orders: account.get("orders", null),
                             backedCoins: this.props.backedCoins,
-                            bridgeCoins: this.props.bridgeCoins
+                            bridgeCoins: this.props.bridgeCoins,
+                            gatewayDown: this.props.gatewayDown
                         }
                     )}
                     </div>
@@ -96,7 +97,8 @@ export default connect(AccountPageStoreWrapper, {
             myAccounts:  AccountStore.getState().myAccounts,
             viewSettings: SettingsStore.getState().viewSettings,
             backedCoins: GatewayStore.getState().backedCoins,
-            bridgeCoins: GatewayStore.getState().bridgeCoins
+            bridgeCoins: GatewayStore.getState().bridgeCoins,
+            gatewayDown: GatewayStore.getState().down
         };
     }
 });

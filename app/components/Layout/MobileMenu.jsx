@@ -36,7 +36,11 @@ class MobileMenu extends React.Component {
         let accounts = null;
 
         if(linkedAccounts.size > 1) {
-            accounts = linkedAccounts.map( a => {
+            accounts = linkedAccounts.sort((a, b) => {
+                if (a > b) return 1;
+                if (a < b) return -1;
+                return 0;
+            }).map( a => {
                 return <li key={a} onClick={this.onClick}><Link to={`/account/${a}/overview`}>{a}</Link></li>;
             });
         }  else if (linkedAccounts.size === 1) {
@@ -44,8 +48,7 @@ class MobileMenu extends React.Component {
         }
 
         let linkToAccountOrDashboard;
-        if (linkedAccounts.size > 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, "/dashboard")}><Translate content="header.dashboard" /></a>;
-        else if (linkedAccounts.size === 1) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, `/account/${linkedAccounts.first()}/overview`)}><Translate content="header.account" /></a>;
+        if (linkedAccounts.size > 0) linkToAccountOrDashboard = <a onClick={this._onNavigate.bind(this, "/dashboard")}><Translate content="header.dashboard" /></a>;
         else linkToAccountOrDashboard = <Link to="/create-account">Create Account</Link>;
 
         let tradeLink = this.props.lastMarket ?
