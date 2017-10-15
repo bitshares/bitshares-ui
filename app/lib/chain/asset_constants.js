@@ -18,7 +18,8 @@ module.exports = {
         "disable_confidential"
     ],
     GRAPHENE_100_PERCENT: 10000,
-    GRAPHENE_1_PERCENT: 10000 / 100
+    GRAPHENE_1_PERCENT: 10000 / 100,
+    GRAPHENE_MAX_SHARE_SUPPLY: "1000000000000000"
 };
 
 

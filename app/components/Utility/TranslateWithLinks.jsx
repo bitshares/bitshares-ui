@@ -1,11 +1,12 @@
 import React from "react";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 import {Link} from "react-router/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
 
 /**
  *  Given a string and a list of interpolation parameters, this component
@@ -41,17 +42,19 @@ export default class TranslateWithLinks extends React.Component {
     }
 
     linkToAccount(name_or_id) {
+        const {noLink} = this.props;
         if(!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ?
-            <LinkToAccountById account={name_or_id}/> :
+            <LinkToAccountById account={name_or_id} noLink={noLink} /> : noLink ? <span>{name_or_id}</span> :
             <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>;
     }
 
     linkToAsset(symbol_or_id) {
+        const {noLink} = this.props;
         if(!symbol_or_id) return <span>-</span>;
         return utils.is_object_id(symbol_or_id) ?
-            <LinkToAssetById asset={symbol_or_id}/> :
-            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>;
+            <LinkToAssetById asset={symbol_or_id} noLink={noLink} /> : noLink ? <AssetName name={symbol_or_id} noTip /> :
+            <Link to={`/asset/${symbol_or_id}`}><AssetName name={symbol_or_id} noTip /></Link>;
     }
 
     render() {

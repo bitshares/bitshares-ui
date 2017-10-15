@@ -12,7 +12,7 @@ import AccountStore from "stores/AccountStore";
 import ls from "common/localStorage";
 const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
-const latencyChecks = ss.get("latencyChecks", 1);
+let latencyChecks;
 import counterpart from "counterpart";
 
 // Actions
@@ -36,6 +36,10 @@ const filterAndSortURLs = (count, latencies) => {
         if (!__TESTNET__ && a.url.indexOf("testnet") !== -1) return false;
         /* Also remove the automatic fallback dummy url */
         if (a.url.indexOf("fake.automatic-selection") !== -1) return false;
+        /* Remove insecure websocket urls when using secure protocol */
+        if (window.location.protocol === "https:" && a.url.indexOf("ws://") !== -1) {
+            return false;
+        }
         /* Use all the remaining urls if count = 0 */
         if (!count) return true;
 
@@ -48,8 +52,12 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
+
+let _connectInProgress = false;
+let _connectionCheckPromise = null;
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
     const apiLatencies = SettingsStore.getState().apiLatencies;
+    latencyChecks = ss.get("latencyChecks", 1);
     let apiLatenciesCount = Object.keys(apiLatencies).length;
     let connectionStart;
 
@@ -67,23 +75,28 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     */
     let connectionString = SettingsStore.getSetting("apiServer");
     if (!connectionString) connectionString = urls[0].url;
+    /* Don't use an insecure websocket url when using secure protocol */
+    if (window.location.protocol === "https:" && connectionString.indexOf("ws://") !== -1) {
+        connectionString = urls[0];
+    }
     const autoSelection = connectionString.indexOf("fake.automatic-selection") !== -1;
     if (autoSelection) {
         connectionString = urls[0];
     }
 
     var onConnect = () => {
+        if (_connectInProgress) return callback();
+        _connectInProgress = true;
         if (Apis.instance()) {
             let currentUrl = Apis.instance().url;
             SettingsActions.changeSetting({setting: "activeNode", value: currentUrl});
             if (!autoSelection) SettingsActions.changeSetting({setting: "apiServer", value: currentUrl});
             if (!(currentUrl in apiLatencies)) {
                 apiLatencies[currentUrl] = new Date().getTime() - connectionStart;
-                console.log("set latency to:", apiLatencies[currentUrl]);
             }
         }
         const currentChain = Apis.instance().chain_id;
-        const chainChanged = oldChain && oldChain !== currentChain;
+        const chainChanged = oldChain !== currentChain;
         oldChain = currentChain;
         var db;
         try {
@@ -92,46 +105,56 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
         } catch(err) {
             console.log("db init error:", err);
             replaceState("/init-error");
+            _connectInProgress = false;
             return callback();
         }
         return Promise.all([db, SettingsStore.init()]).then(() => {
-            return Promise.all([
-                PrivateKeyActions.loadDbData().then(()=> {
-                    AccountRefsStore.loadDbData();
-                }),
-                WalletDb.loadDbData().then(() => {
-                    // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                    //     replaceState("/dashboard");
-                    // }
-                    if (nextState.location.pathname.indexOf("/auth/") === 0) {
-                        replaceState("/dashboard");
-                    }
-                }).then(() => {
-                    if (chainChanged) {
-                        ChainStore.clearCache();
-                        ChainStore.subscribed = false;
-                        ChainStore.init().then(() => {
+            let chainStoreResetPromise = chainChanged ? ChainStore.resetCache() : Promise.resolve();
+            return chainStoreResetPromise.then(() => {
+                return Promise.all([
+                    PrivateKeyActions.loadDbData().then(()=> {
+                        return AccountRefsStore.loadDbData();
+                    }),
+                    WalletDb.loadDbData().then(() => {
+                        // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
+                        //     replaceState("/dashboard");
+                        // }
+                        if (nextState.location.pathname.indexOf("/auth/") === 0) {
+                            replaceState("/dashboard");
+                        }
+                    }).then(() => {
+                        if (chainChanged) {
+                            // ChainStore.clearCache();
+                            // ChainStore.subscribed = false;
+                            // return ChainStore.resetCache().then(() => {
                             AccountStore.reset();
-                            AccountStore.loadDbData(currentChain).catch(err => {
+                            return AccountStore.loadDbData(currentChain).catch(err => {
                                 console.error(err);
                             });
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error("----- WalletDb.willTransitionTo error ----->", error);
-                    replaceState("/init-error");
-                }),
-                WalletManagerStore.init()
-            ]).then(()=> {
-                SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
-                callback();
-            });
+                            // });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("----- WalletDb.willTransitionTo error ----->", error);
+                        replaceState("/init-error");
+                    }),
+                    WalletManagerStore.init()
+                ]).then(()=> {
+                    _connectInProgress = false;
+                    SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
+                    callback();
+                });
+            })
+        }).catch(err => {
+            console.error(err);
+            replaceState("/init-error");
+            _connectInProgress = false;
+            callback();
         });
     };
 
     var onResetError = (err) => {
-        console.log("err:", err);
+        console.log("onResetError:", err);
         oldChain = "old";
         connect = true;
         notify.addNotification({
@@ -151,8 +174,13 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             .then(onConnect).catch(onResetError);
         });
     }
-    let connectionCheckPromise = !apiLatenciesCount ? connectionManager.checkConnections() : null;
+    let connectionCheckPromise = !apiLatenciesCount ?
+        _connectionCheckPromise ? _connectionCheckPromise :
+        connectionManager.checkConnections() : null;
+    _connectionCheckPromise = connectionCheckPromise;
+
     Promise.all([connectionCheckPromise]).then((res => {
+        _connectionCheckPromise = null;
         if (connectionCheckPromise && res[0]) {
             let [latencies] = res;
             urls = filterAndSortURLs(Object.keys(latencies).length, latencies);
@@ -192,7 +220,11 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
 
         /* Only try initialize the API with connect = true on the first onEnter */
         connect = false;
-    }));
+    })).catch(err => {
+        console.error(err);
+        replaceState("/init-error");
+        callback();
+    });
 
 
     // Every 15 connections we check the latencies of the full list of nodes

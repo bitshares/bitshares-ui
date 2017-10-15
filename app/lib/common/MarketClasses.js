@@ -58,8 +58,7 @@ class Asset {
         if (typeof sats !== "number" && typeof real !== "number") {
             throw new Error("Invalid arguments for setAmount");
         }
-        if (real && typeof real !== "undefined") {
-            if (typeof real !== "number" || isNaN(real)) throw new Error("Invalid argument 'real' for setAmount");
+        if (typeof real === "number") {
             this.amount = this.toSats(real);
             this._clearCache();
         } else if(typeof sats === "number") {
@@ -298,6 +297,22 @@ class Price {
             base: this.base.toObject(),
             quote: this.quote.toObject()
         };
+    }
+
+    times(p, common = "1.3.0") {
+        const p2 = (
+            (p.base.asset_id === common &&
+            this.quote.asset_id === common) ||
+            (p.quote.asset_id === common &&
+            this.base.asset_id === common)
+        ) ? p.clone() : p.invert();
+
+        const np = p2.toReal() * this.toReal();
+        return new Price({
+            base: p2.base,
+            quote: this.quote,
+            real: np
+        });
     }
 }
 

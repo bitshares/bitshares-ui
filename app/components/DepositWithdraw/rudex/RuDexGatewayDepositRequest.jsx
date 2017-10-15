@@ -10,7 +10,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import RuDexDepositAddressCache from "common/RuDexDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
-import LinkToAccountById from "components/Blockchain/LinkToAccountById";
+import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress} from "common/RuDexMethods";
 import { rudexAPIs } from "api/apiConfig";
 import utils from "common/utils";

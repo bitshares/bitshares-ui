@@ -600,6 +600,14 @@
 
   .account-info {
       color: $primary-text-color;
+      > p:first-of-type {
+          color: $light-text-color;
+      }
+      .account-title {
+          &.flash {
+              color: white;
+          }
+      }
       > div.secondary {
           > span:first-of-type {
               color: $primary-text-color;
@@ -611,7 +619,7 @@
       }
   }
 
-  .my-account h5, .my-account h4, td.my-account {
+  .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
     font-weight: bold;
     color: $info-color;
   }
@@ -1284,7 +1292,7 @@
             > td {
                 background-color: $account-cells;
                 color: $account-primarytext;
-                border: 1px solid $account-border;
+                border-color: $account-border;
                 .icon > svg > path {
                     fill: $account-primarytext;
                 }
@@ -1306,6 +1314,23 @@
 
         div.button > a {
             color: $primary-text-color;
+        }
+    }
+    span.danger {
+        color: darken($alert-color, 15%);
+    }
+    span.warning {
+        color: darken($warning-color, 15%);
+    }
+
+    .footer {
+        div.footer-status {
+            > span.success {
+                color: $success-color;
+            }
+            > span.warning {
+                color: $alert-color;
+            }
         }
     }
 }

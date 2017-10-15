@@ -4,7 +4,7 @@ import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate} from "react-intl";
 import Operation from "../Blockchain/Operation";
-import LinkToWitnessById from "../Blockchain/LinkToWitnessById";
+import LinkToWitnessById from "../Utility/LinkToWitnessById";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import TransactionChart from "./TransactionChart";

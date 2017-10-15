@@ -27,9 +27,7 @@ class DashboardContainer extends React.Component {
                     lowVolumeMarkets: () => {
                         return MarketsStore.getState().lowVolumeMarkets;
                     },
-                    // marketStats: () => {
-                    //     return MarketsStore.getState().allMarketStats;
-                    // }
+                    currentEntry: SettingsStore.getState().viewSettings.get("dashboardEntry", "accounts")
                 }}>
                 <Dashboard {...this.props} />
             </AltContainer>

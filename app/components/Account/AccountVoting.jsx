@@ -15,7 +15,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 
 let wallet_api = new WalletApi();
 

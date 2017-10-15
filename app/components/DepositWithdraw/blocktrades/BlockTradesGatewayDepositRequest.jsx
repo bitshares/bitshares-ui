@@ -5,14 +5,14 @@ import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import BaseModal from "../../Modal/BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
-import LinkToAccountById from "components/Blockchain/LinkToAccountById";
+import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress} from "common/blockTradesMethods";
 import { blockTradesAPIs } from "api/apiConfig";
+import LoadingIndicator from "components/LoadingIndicator";
 
 class BlockTradesGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -160,7 +160,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         if( !receive_address ) {
             requestDepositAddress(this._getDepositObject());
-            return emptyRow;
+            return <div style={{margin: "3rem"}}><LoadingIndicator type="three-bounce"/></div>;
         }
 
         let withdraw_modal_id = this.getWithdrawModalId();
@@ -198,6 +198,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                 deposit_address_fragment = (<span>{receive_address.address}</span>);
             }
             var withdraw_memo_prefix = "";
+        }
+
+        if (!this.props.isAvailable) {
+            return <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="h4" /></div>;
         }
 
         if (this.props.action === "deposit") {

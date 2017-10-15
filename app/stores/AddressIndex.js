@@ -103,7 +103,7 @@ class AddressIndex extends BaseStore {
         if(this.loadAddyMapPromise) return this.loadAddyMapPromise;
         this.loadAddyMapPromise = iDB.root.getProperty("AddressIndex").then( map => {
             this.state.addresses = map ? Immutable.Map(map) : Immutable.Map();
-            console.log("AddressIndex load", this.state.addresses.size);
+            // console.log("AddressIndex load", this.state.addresses.size);
             this.state.addresses.valueSeq().forEach( pubkey => this.pubkeys.add(pubkey) );
             this.setState({ addresses: this.state.addresses });
         });
@@ -113,7 +113,7 @@ class AddressIndex extends BaseStore {
     saveAddyMap() {
         clearTimeout(this.saveAddyMapTimeout);
         this.saveAddyMapTimeout = setTimeout(()=> {
-            console.log("AddressIndex save", this.state.addresses.size);
+            // console.log("AddressIndex save", this.state.addresses.size);
             this.setState({saving: false});
             // If indexedDB fails to save, it will re-try via PrivateKeyStore calling this.add
             return iDB.root.setProperty("AddressIndex", this.state.addresses.toObject());

@@ -395,7 +395,15 @@ class Exchange extends React.Component {
                 amount: 0
             }
         });
-
+        const {marketID, first} = market_utils.getMarketID(this.props.baseAsset, this.props.quoteAsset);
+        const inverted = this.props.marketDirections.get(marketID);
+        const shouldFlip = inverted && first.get("id") !== this.props.baseAsset.get("id") ||
+            !inverted && first.get("id") !== this.props.baseAsset.get("id");
+        if (shouldFlip) {
+            let setting = {};
+            setting[marketID] = !inverted;
+            SettingsActions.changeMarketDirection(setting);
+        }
         console.log("order:", JSON.stringify(order.toObject()));
         return MarketsActions.createLimitOrder2(order).then((result) => {
             if (result.error) {
@@ -729,7 +737,7 @@ class Exchange extends React.Component {
 
     _setReceive(state, isBid) {
         if (state.price.isValid() && state.for_sale.hasAmount()) {
-            state.to_receive = state.for_sale.times(state.price, isBid);
+            state.to_receive = state.for_sale.times(state.price);
             state.toReceiveText = state.to_receive.getAmount({real: true}).toString();
             return true;
         }
@@ -738,7 +746,7 @@ class Exchange extends React.Component {
 
     _setForSale(state, isBid) {
         if (state.price.isValid() && state.to_receive.hasAmount()) {
-            state.for_sale = state.to_receive.times(state.price, isBid);
+            state.for_sale = state.to_receive.times(state.price, true);
             state.forSaleText = state.for_sale.getAmount({real: true}).toString();
             return true;
         }

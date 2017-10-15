@@ -6,7 +6,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb.js";
 
@@ -83,7 +83,7 @@ class AccountList extends React.Component {
         }
 
         return (
-            <table className="table compact">
+            <table className="table compact dashboard-table">
                 {showHeaders ? (
                     <thead>
                         <tr>
