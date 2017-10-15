@@ -84,6 +84,7 @@ class Tabs extends React.Component {
     }
 
     _changeTab(value) {
+        if (value === this.state.activeTab) return;
         // Persist current tab if desired
         if (this.props.setting) {
             SettingsActions.changeViewSetting({

@@ -91,9 +91,9 @@ class AccountOverview extends React.Component {
         clearInterval(this.tableHeightMountIntervalInstance);
     }
 
-    adjustHeightOnChangeTab(){
-        this.adjustHeightOnChangeTab();
-    }
+    // adjustHeightOnChangeTab(){
+    //     this.adjustHeightOnChangeTab();
+    // }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
