@@ -91,7 +91,14 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     addDepositAddress( receive_address ) {
         let account_name = this.props.account.get("name");
-        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
+        this.deposit_address_cache.cacheInputAddress(
+            this.props.gateway,
+            account_name,
+            this.props.deposit_coin_type,
+            this.props.receive_coin_type,
+            receive_address.address,
+            receive_address.memo
+        );
         this.setState( {receive_address} );
     }
 
