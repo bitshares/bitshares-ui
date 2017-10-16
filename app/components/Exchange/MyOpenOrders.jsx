@@ -164,7 +164,7 @@ class MyOpenOrders extends React.Component {
             [base.get("id")]: {precision: base.get("precision")},
             [quote.get("id")]: {precision: quote.get("precision")}
         };
-        let limitOrders = orders.map(order => {
+        let limitOrders = orders.toArray().map(order => {
             let o = ChainStore.getObject(order);
             if (!o) return null;
             let sellBase = o.getIn(["sell_price", "base", "asset_id"]), sellQuote = o.getIn(["sell_price", "quote", "asset_id"]);
@@ -173,9 +173,9 @@ class MyOpenOrders extends React.Component {
             ) {
                 return new LimitOrder(o.toJS(), assets, quote.get("id"));
             }
-        }).filter(a => !!a).toArray();
+        }).filter(a => !!a);
 
-        let callOrders = call_orders.map(order => {
+        let callOrders = call_orders.toArray().map(order => {
             let o = ChainStore.getObject(order);
             if (!o) return null;
             let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
@@ -184,8 +184,7 @@ class MyOpenOrders extends React.Component {
             ) {
                 return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
             }
-        }).filter(a => !!a).filter(a => a.isMarginCalled()).toArray();
-
+        }).filter(a => !!a).filter(a => a.isMarginCalled());
         return limitOrders.concat(callOrders);
     }
 

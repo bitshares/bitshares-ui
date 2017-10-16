@@ -71,7 +71,10 @@
     "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
     "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
-    "copy_password": "Click here to copy the password to your clipboard"
+    "copy_password": "Click here to copy the password to your clipboard",
+    "sync_yes": "The current node is in sync with the blockchain",
+    "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
+    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -134,7 +137,7 @@
       "title": "Vesting balances",
       "balance_number": "Balance #%(id)s",
       "no_balances": "This account has no vesting balances",
-      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay for example. They have a certain vesting period and are continually unlocked during that vesting period until all funds are available"
+      "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
       "stats": "Membership",
@@ -145,9 +148,7 @@
       "network_percentage": "Network",
       "fee_allocation": "Fee Allocation",
       "membership": "Membership",
-      "fees_paid": "Lifetime fees paid",
-      "fees_pending": "Pending fees",
-      "fees_vested": "Pending vested fees",
+      "fees_paid": "Total fees paid",
       "referrals": "Referrals",
       "rewards": "Cashback Rewards",
       "cashback": "Vesting balance amount",
@@ -160,7 +161,7 @@
       "subscribe": "Buy Annual Subscription",
       "expires": "expires",
       "membership_expiration": "Membership Expiration",
-      "fees_cashback": "Fees and cashback",
+      "fees_cashback": "Fee statistics",
       "coindays": "coin days",
       "earned": "Coin days earned",
       "required": "Coin days required",
@@ -185,6 +186,7 @@
       "approx_fee": "Approximate fee",
       "exists": "That asset already exists",
       "max_positive": "Max supply should be a positive number",
+      "too_large": "That max supply is too big, please choose a smaller number",
       "core_exchange_rate": "Core exchange rate",
       "quote": "Quote asset amount",
       "quote_name": "Quote asset",
@@ -796,7 +798,9 @@
     }
   },
   "settings": {
-    "passwordLogin": "Login using a cloud wallet",
+    "passwordLogin": "Login mode",
+    "cloud_login": "Cloud Wallet Login",
+    "local_wallet": "Local Wallet Login",
     "inverseMarket": "Market orientation preference",
     "unit": "Preferred unit of account",
     "confirmMarketOrder": "Ask for confirmation of market orders",
@@ -872,10 +876,13 @@
     "block": "Head block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
-    "nosync": "Blockchain is out of sync, please wait until it's synchronized..",
+    "nosync": "Your active node is out of sync",
     "connection": "No Blockchain connection",
     "brainkey": "Backup brainkey recommended",
-    "update_available": "UPDATE AVAILABLE"
+    "update_available": "UPDATE AVAILABLE",
+    "synced": "Synced",
+    "unsynced": "Out of sync",
+    "disconnected": "Disconnected"
   },
   "exchange": {
     "chart_options": {

@@ -6,6 +6,7 @@ export class DecimalChecker extends React.Component {
         var decimal = nextValue.match(/\./g);
         var decimalCount = decimal ? decimal.length : 0;
         if(e.key === "." && decimalCount > 1) e.preventDefault();
+        if(parseFloat(nextValue) != nextValue) e.preventDefault();
 
         if(this.props.onKeyPress) this.props.onKeyPress(e);
     }
@@ -17,7 +18,7 @@ class ExchangeInput extends DecimalChecker {
     }
 
     render(){
-        return <input type="number" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
+        return <input type="text" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
     }
 }
 

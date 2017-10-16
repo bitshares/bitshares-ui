@@ -7,7 +7,7 @@ $dark-text-color: #444;
 $primary-text-color: #ffffff;
 $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #4A90E2;
-$error-text-color: #E3745B;
+$error-text-color: #ff3950;
 
 $bg-color: #2a2a2a;
 $panel-bg-color: #3f3f3f;
@@ -19,7 +19,7 @@ $input-background: lighten($bg-color, 8%);
 
 $alert-color: $error-text-color;
 $info-color: #A0D3E8;
-$success-color: #50D2C2;
+$success-color: #7bd500;
 $warning-color: #FCAB53;
 $fee-color: $secondary-text-color;
 

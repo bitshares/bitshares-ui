@@ -1322,6 +1322,17 @@
     span.warning {
         color: darken($warning-color, 15%);
     }
+
+    .footer {
+        div.footer-status {
+            > span.success {
+                color: $success-color;
+            }
+            > span.warning {
+                color: $alert-color;
+            }
+        }
+    }
 }
 
 .olDarkTheme .gate_fee .amount-selector {

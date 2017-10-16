@@ -18,7 +18,7 @@ import AmountSelector from "../Utility/AmountSelector";
 import assetConstants from "chain/asset_constants";
 import { estimateFee } from "common/trxHelper";
 
-let MAX_SAFE_INT = new big("9007199254740991");
+let GRAPHENE_MAX_SHARE_SUPPLY = new big(assetConstants.GRAPHENE_MAX_SHARE_SUPPLY);
 
 class BitAssetOptions extends React.Component {
 
@@ -296,7 +296,7 @@ class AccountAssetCreate extends React.Component {
     }
 
     _onUpdateInput(value, e) {
-        let {update} = this.state;
+        let {update, errors} = this.state;
         let updateState = true;
         let shouldRestoreCursor = false;
         let precision = utils.get_asset_precision(this.state.update.precision);
@@ -310,8 +310,9 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_market_fee":
-                if ((new big(inputValue)).times(precision).gt(MAX_SAFE_INT)) {
-                    return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
+                if ((new big(inputValue)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                    errors.max_market_fee = "The number you tried to enter is too large";
+                    return this.setState({errors});
                 }
                 target.value = utils.limitByPrecision(target.value, this.state.update.precision);
                 update[value] = target.value;
@@ -323,11 +324,14 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_supply":
-                if ((new big(target.value)).times(precision).gt(MAX_SAFE_INT)) {
-                    return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
-                }
                 target.value = utils.limitByPrecision(target.value, this.state.update.precision);
                 update[value] = target.value;
+                // if ((new big(target.value)).times(Math.pow(10, precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                //     return this.setState({
+                //         update,
+                //         errors: {max_supply: "The number you tried to enter is too large"
+                //     }});
+                // }
                 break;
 
             case "symbol":
@@ -360,8 +364,6 @@ class AccountAssetCreate extends React.Component {
     }
 
     _validateEditFields( new_state ) {
-        let {core} = this.props;
-
         let errors = {
             max_supply: null
         };
@@ -372,7 +374,14 @@ class AccountAssetCreate extends React.Component {
             errors.symbol = counterpart.translate("account.user_issued_assets.exists");
         }
 
-        errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") : null;
+        try {
+            errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") :
+                (new big(new_state.max_supply)).times(Math.pow(10, new_state.precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY) ? counterpart.translate("account.user_issued_assets.too_large") :
+                null;
+        } catch(err) {
+            console.log("err:", err);
+            errors.max_supply = counterpart.translate("account.user_issued_assets.too_large");
+        }
 
         let isValid = !errors.symbol && !errors.max_supply;
 
@@ -551,7 +560,7 @@ class AccountAssetCreate extends React.Component {
                         </tr>
                     </tbody>
                 </table>
-            )
+            );
         }
 
         return (

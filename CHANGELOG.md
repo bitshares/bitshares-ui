@@ -1,4 +1,54 @@
 ---------------------------------------------------------------------
+Release 2.0.171015
+---------------------------------------------------------------------
+New features
+--------
+- Tables Rewrite - Account Dashboard #378
+- Add an optional encrypted qr code for the private key (#542)
+- #545: Show gateway status as down for unavailable coins
+- #471: Add label to Find Markets add header
+- #560 Show unavailable messages for openledger and rudex if they time out
+- Add whitelisting to asset update page fix #70 and fix #462
+- Clear transfer form once completed (#564)
+- Use new tables styling in dashboard, add accounts/recent switching
+- #500: Set testnet/mainnet faucets depending on current API node
+- #488: Hover state + click toggle for account name QR code
+- Filter out insecure websocket urls when using https
+- #572: Make sure exchange input only allows numbers, no negative input
+- #543: Add sync status check interval, 'Synced/Out of sync/Disconnnected' warning
+
+Bug fixes
+--------
+- #496: Ensure tables retain correct height
+- Remove forced create account step position #576
+- Fix #578: Open orders not displaying all orders
+- Fix ChainStore failing to notify after reset and latency check counter
+- Fix #563: Settlement box width
+- Fix App.jsx synced state to mean blockchain sync status #543
+- Fix #571
+- Fix #479: Max supply bug in asset creation and update
+- #574: Remove nodes that are no longer available
+- Fix issue #294 (#575)
+- Reset backup store when wallet is changed (#570)
+- Fix Backup dashboard link
+- Set cloud wallet login to default, improve settings switching logic
+- #Fix 501: Asset explorer table alignment
+- Fix #567: Explorer My Markets page does not load
+- Round up `for_sale` and down `to_receive`, #562 (#565)
+- Simplify and improve app init chain #531
+- Fix #529: Withrawal modal inputs
+- Fix #483: Remove TRADE.X from dropdown and remove blocktrades gateway
+- #531: Catch some app init errors and redirect, update indexeddbshim
+- Add an image for QR code, fix some styling and translations #444
+- Harmonize login forms between modes
+- Use account.assets from new API to display list of issued assets
+- Set password and username type/name/ids for password managers #527
+- Fix #535: remove ellipsis and cap password length at 45 chars
+- Fix typo (oherwise -> otherwise) (#534)
+- fix: parseInt for minimum_feeds when create asset (#539)
+- #532 change noone to no one
+
+---------------------------------------------------------------------
 Release 2.0.170914
 ---------------------------------------------------------------------
 New features

@@ -195,7 +195,7 @@ class Dashboard extends React.Component {
                     </div>
 
                     {accountCount ? (
-                        <div>
+                        <div style={{paddingBottom: "3rem"}}>
                             <div className="hide-selector" style={{paddingBottom: "1rem"}}>
                                 {entries.map((type, index) => {
                                     return (

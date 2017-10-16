@@ -78,7 +78,6 @@ class AccountMembership extends React.Component {
         let lifetime_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_lifetime_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
         let annual_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_annual_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
 
-
         let member_status = ChainStore.getAccountMemberStatus(this.props.account);
         let membership = "account.member." + member_status;
         let expiration = null

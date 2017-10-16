@@ -1,5 +1,4 @@
 import {ChainStore} from "bitsharesjs/es";
-import {Apis} from "bitsharesjs-ws";
 import React from "react";
 import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";
@@ -36,7 +35,7 @@ class App extends React.Component {
         let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
         this.state = {
             loading: false,
-            synced: ChainStore.subscribed,
+            synced: this._syncStatus(),
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
             disableChat: SettingsStore.getState().settings.get("disableChat", true),
@@ -49,31 +48,46 @@ class App extends React.Component {
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
         this._onSettingsChange = this._onSettingsChange.bind(this);
+        this._chainStoreSub = this._chainStoreSub.bind(this);
+        this._syncStatus = this._syncStatus.bind(this);
     }
 
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
         SettingsStore.unlisten(this._onSettingsChange);
+        ChainStore.unsubscribe(this._chainStoreSub);
+        clearInterval(this.syncCheckInterval);
     }
 
-    componentDidMount() {
+    _syncStatus(setState = false) {
+        let synced = true;
+        let dynGlobalObject = ChainStore.getObject("2.1.0");
+        if (dynGlobalObject) {
+            let block_time = dynGlobalObject.get("time") + "+00:00";
+            let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
+            let now = new Date().getTime() / 1000;
+            synced = Math.abs(now - bt) < 5;
+        }
+        if (setState && synced !== this.state.synced) {
+            this.setState({synced});
+        }
+        return synced;
+    }
+
+    _setListeners() {
         try {
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange);
-            ChainStore.subscribe(() => {
-                if (ChainStore.subscribed !== this.state.synced || ChainStore.subError) {
-                    let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
-                    this.setState({
-                        synced: ChainStore.subscribed,
-                        syncFail
-                    });
-                }
-            });
-
+            ChainStore.subscribe(this._chainStoreSub);
             AccountStore.tryToSetCurrentAccount();
         } catch(e) {
             console.error("e:", e);
         }
+    }
+
+    componentDidMount() {
+        this._setListeners();
+        this.syncCheckInterval = setInterval(this._syncStatus, 5000);
         const user_agent = navigator.userAgent.toLowerCase();
         if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
             this.refs.browser_modal.show();
@@ -96,6 +110,19 @@ class App extends React.Component {
                 this.refs.tooltip.globalRebuild();
             }
         }, 1500);
+    }
+
+    _chainStoreSub() {
+        let synced = this._syncStatus();
+        if (synced !== this.state.synced) {
+            this.setState({synced});
+        }
+        if (ChainStore.subscribed !== this.state.synced || ChainStore.subError) {
+            let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+            this.setState({
+                syncFail
+            });
+        }
     }
 
     /** Usage: NotificationActions.[success,error,warning,info] */

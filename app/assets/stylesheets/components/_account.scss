@@ -47,7 +47,7 @@
 .account-info {
     text-align: center;
     .account-title {
-        transition: opacity 0.75s linear, transform 0.75s linear, color 0.5s linear;
+        transition: opacity 0.25s linear, transform 0.25s linear, color 0.25s linear;
         margin-bottom: 0;
         font-weight: 600;
         &.flash {
