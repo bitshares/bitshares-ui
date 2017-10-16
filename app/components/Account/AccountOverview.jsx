@@ -54,6 +54,7 @@ const sortFunctions = {
     totalValue: function(a, b) {
         let aRef = this.valueRefs[a.key];
         let bRef = this.valueRefs[b.key];
+        console.log(aRef, bRef);
         if (aRef && bRef) {
             let aValue = aRef.getValue();
             let bValue = bRef.getValue();
@@ -118,7 +119,12 @@ class AccountOverview extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if (np.account !== this.props.account) this._checkMarginStatus(np);
+        if (np.account !== this.props.account) {
+            this._checkMarginStatus(np);
+            this.priceRefs = {};
+            this.valueRefs = {};
+            setTimeout(this.forceUpdate.bind(this), 500);
+        };
     }
 
     componentDidMount(){
@@ -128,10 +134,6 @@ class AccountOverview extends React.Component {
     componentWillUnmount(){
         clearInterval(this.tableHeightMountIntervalInstance);
     }
-
-    // adjustHeightOnChangeTab(){
-    //     this.adjustHeightOnChangeTab();
-    // }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
@@ -384,11 +386,8 @@ class AccountOverview extends React.Component {
             });
         }
 
-
-
         balances.sort(sortFunctions[this.state.sortKey]);
-        // balances.sort(sortFunctions.priceValue.bind(this));
-        return {balances};
+        return balances;
     }
 
     _toggleHiddenAssets() {
@@ -469,9 +468,9 @@ class AccountOverview extends React.Component {
             });
 
             let included = this._renderBalances(includedBalancesList, this.state.alwaysShowAssets, true);
-            includedBalances = included.balances;
+            includedBalances = included;
             let hidden = this._renderBalances(hiddenBalancesList, this.state.alwaysShowAssets);
-            hiddenBalances = hidden.balances;
+            hiddenBalances = hidden;
         }
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
