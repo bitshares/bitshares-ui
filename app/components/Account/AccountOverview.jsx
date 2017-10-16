@@ -54,7 +54,6 @@ const sortFunctions = {
     totalValue: function(a, b) {
         let aRef = this.valueRefs[a.key];
         let bRef = this.valueRefs[b.key];
-        console.log(aRef, bRef);
         if (aRef && bRef) {
             let aValue = aRef.getValue();
             let bValue = bRef.getValue();
