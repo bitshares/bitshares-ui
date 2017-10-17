@@ -534,19 +534,12 @@ class Asset extends React.Component {
     }
 }
 
-/*
-Asset.defaultProps = {
-    assets: {},
-    accounts: {},
-    asset_symbol_to_id: {}
-};
+Asset = BindToChainState(Asset, {keep_updating: true});
 
-Asset.propTypes = {
-    assets: PropTypes.object.isRequired,
-    accounts: PropTypes.object.isRequired,
-    asset_symbol_to_id: PropTypes.object.isRequired
-};
-Asset.contextTypes = { router: React.PropTypes.func.isRequired };
-*/
+export default class AssetContainer extends React.Component {
 
-export default BindToChainState(Asset, {keep_updating: true});
+    render() {
+        let symbol = this.props.params.symbol;
+        return <Asset {...this.props} symbol={symbol}/>;
+    }
+};

@@ -310,59 +310,8 @@ class AssetActions {
                     });
                 })
                 .catch(error => {
-                    console.log("Error in AssetStore.getAssetList: ", error);
+                    console.log("Error in AssetActions.getAssetList: ", error);
                     dispatch({loading: false});
-                    delete inProgress[id];
-                });
-            }
-        };
-    }
-
-    getAsset(id) {
-        let assetPromise;
-        return (dispatch) => {
-            if (!inProgress[id]) {
-                inProgress[id] = true;
-                if (utils.is_object_id(id)) {
-                    assetPromise = Apis.instance().db_api().exec("get_objects", [
-                        [id]
-                    ]);
-                } else {
-                    assetPromise = Apis.instance().db_api().exec("list_assets", [
-                        id, 1
-                    ]);
-                }
-
-                return assetPromise.then((asset) => {
-
-                    if (asset.length === 0 || !asset) {
-
-                        dispatch({
-                            asset: null,
-                            id: id
-                        });
-                    }
-                    let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
-                        [asset[0].bitasset_data_id]
-                    ]) : null;
-
-                    Promise.all([
-                        Apis.instance().db_api().exec("get_objects", [
-                            [asset[0].dynamic_asset_data_id]
-                        ]),
-                        bitAssetPromise
-                    ])
-                    .then(results => {
-                        delete inProgress[id];
-                        dispatch({
-                            asset: asset[0],
-                            dynamic: results[0][0],
-                            bitasset_data: results[1] ? results[1][0] : null
-                        });
-                    });
-
-                }).catch((error) => {
-                    console.log("Error in AssetStore.updateAsset: ", error);
                     delete inProgress[id];
                 });
             }
