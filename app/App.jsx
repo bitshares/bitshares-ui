@@ -35,7 +35,7 @@ class App extends React.Component {
         let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
         this.state = {
             loading: false,
-            synced: this._getSyncStatus(),
+            synced: this._syncStatus(),
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
             disableChat: SettingsStore.getState().settings.get("disableChat", true),
@@ -49,23 +49,29 @@ class App extends React.Component {
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
         this._onSettingsChange = this._onSettingsChange.bind(this);
         this._chainStoreSub = this._chainStoreSub.bind(this);
+        this._syncStatus = this._syncStatus.bind(this);
     }
 
     componentWillUnmount() {
         NotificationStore.unlisten(this._onNotificationChange);
         SettingsStore.unlisten(this._onSettingsChange);
         ChainStore.unsubscribe(this._chainStoreSub);
+        clearInterval(this.syncCheckInterval);
     }
 
-    _getSyncStatus() {
+    _syncStatus(setState = false) {
+        let synced = true;
         let dynGlobalObject = ChainStore.getObject("2.1.0");
         if (dynGlobalObject) {
             let block_time = dynGlobalObject.get("time") + "+00:00";
             let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
             let now = new Date().getTime() / 1000;
-            return Math.abs(now - bt) < 5;
+            synced = Math.abs(now - bt) < 5;
         }
-        return true;
+        if (setState && synced !== this.state.synced) {
+            this.setState({synced});
+        }
+        return synced;
     }
 
     _setListeners() {
@@ -81,6 +87,7 @@ class App extends React.Component {
 
     componentDidMount() {
         this._setListeners();
+        this.syncCheckInterval = setInterval(this._syncStatus, 5000);
         const user_agent = navigator.userAgent.toLowerCase();
         if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
             this.refs.browser_modal.show();
@@ -106,7 +113,7 @@ class App extends React.Component {
     }
 
     _chainStoreSub() {
-        let synced = this._getSyncStatus();
+        let synced = this._syncStatus();
         if (synced !== this.state.synced) {
             this.setState({synced});
         }

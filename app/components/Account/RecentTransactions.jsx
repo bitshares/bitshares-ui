@@ -213,7 +213,7 @@ class RecentTransactions extends React.Component {
             }) : [<tr key="no_recent"><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>];
         display_history.push(
             <tr className="total-value" key="total_value">
-                <td>
+                <td className="column-hide-tiny">
                 </td>
                 <td style={alignRight}>
                     {historyCount > 0 ?
