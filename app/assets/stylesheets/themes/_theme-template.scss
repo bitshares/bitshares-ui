@@ -24,7 +24,6 @@
   $negative-color,
   $row-accent-color,
   $header-color,
-  $chat-text-color,
   $input-background,
   $account-header,
   $account-cells,
@@ -979,7 +978,7 @@
           font-size: 12px;
 
           > option {
-              color: $chat-text-color;
+              color: $primary-text-color;
           }
       }
   }
@@ -1070,29 +1069,6 @@
     cursor: pointer;
   }
 
-  #chatbox {
-    .chat-text {
-      color: $chat-text-color;
-    }
-
-    .chatbox-content {
-        background-color: #ccc;
-        color: $chat-text-color;
-    }
-
-    .chatbox-title {
-      background-color: $header-color !important;
-    }
-
-    select {
-      height: 3rem;
-      font-size: 12px;
-    }
-
-    input {
-        color: $chat-text-color;
-    }
-  }
 
   // Settings
   .settings-menu {
