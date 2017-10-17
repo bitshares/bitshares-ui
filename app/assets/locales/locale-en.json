@@ -543,6 +543,7 @@
     "deposit_to": "Deposited to account",
     "claimed": "Total claimed",
     "borrow_amount": "Debt",
+    "borrower": "Borrower",
     "funding_account": "Funding account",
     "delta_collateral": "Collateral change",
     "delta_debt": "Debt change",
@@ -739,6 +740,9 @@
         "maximum_short_squeeze_ratio": "MSSR",
         "publisher": "Publisher",
         "published": "Published"
+      },
+      "margin_positions": {
+        "title": "Margin positions"
       },
       "whitelist": {
             "whitelist_authorities": "Whitelist authorities",
