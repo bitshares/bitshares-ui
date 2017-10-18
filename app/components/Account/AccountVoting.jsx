@@ -49,7 +49,8 @@ class AccountVoting extends React.Component {
             lastBudgetObject: null,
             showExpired: false,
             all_witnesses: Immutable.List(),
-            all_committee: Immutable.List()
+            all_committee: Immutable.List(),
+            showExpired: false
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -394,6 +395,12 @@ class AccountVoting extends React.Component {
         return workerArray;
     }
 
+    _toggleOldWorkers() {
+        this.setState({
+            showExpired: !this.state.showExpired
+        });
+    }
+
     render() {
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
@@ -604,13 +611,26 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="account.votes.workers_short">
 
-                                    <div className={cnames("content-block")}>
-                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
+                                    {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" /> */}
 
-                                        <div style={{paddingBottom: 20}}>
-                                            <Link to="/create-worker"><div className="button">Create a new worker</div></Link>
+                                    <div className="hide-selector">
+                                        <div className={cnames("inline-block", {inactive: showExpired && expiredWorkers.length})} onClick={showExpired ? this._toggleOldWorkers.bind(this) : () => {}}>
+                                            <Translate content="account.votes.active" />
                                         </div>
-                                        <table className="table">
+                                        {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._toggleOldWorkers.bind(this) : () => {}}>
+                                            <Translate content="account.votes.expired" />
+                                        </div> : null}
+
+                                        <div style={{position: "relative", top: -10}} className="float-right">
+                                            <Link to="/create-worker">
+                                            <div className="button no-margin"><Translate content="account.votes.create_worker" /></div>
+                                        </Link>
+                                        </div>
+                                    </div>
+
+                                    {showExpired ? null : (
+                                    <div style={{paddingTop: 10, paddingBottom: 20}}>
+                                        <table>
                                             <tbody>
                                                 <tr>
                                                     <td>
@@ -624,63 +644,50 @@ class AccountVoting extends React.Component {
                                                     <td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
                                             </tbody>
                                         </table>
-                                        <table className="table dashboard-table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th><Translate content="account.user_issued_assets.description" /></th>
-                                                    <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
-                                                    <th className="hide-column-small">
-                                                        <Translate content="account.votes.total_votes" />
-                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
-                                                            (<AssetName name={ChainStore.getAsset("1.3.0").get("symbol")} />)
-                                                        </div>
-                                                    </th>
-                                                    <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
-                                                    <th style={{textAlign: "right"}} className="hide-column-small">
-                                                        <Translate content="account.votes.daily_pay" />
-                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
-                                                            (<AssetName name={preferredUnit} />)
-                                                        </div>
-                                                    </th>
-                                                    <th className="hide-column-large">
-                                                        <div><Translate content="account.votes.unclaimed" /></div>
-                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
-                                                            (<AssetName name={preferredUnit} />)
-                                                        </div>
-                                                        </th>
-                                                    <th><Translate content="account.votes.supported" /> </th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            {newWorkers.length ? (
-                                            <tbody>
-                                                <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
-                                                {newWorkers}
-                                                <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
-                                            </tbody>
-                                            ) : null}
-                                            <tbody>
-                                                {workers}
-                                            </tbody>
+                                    </div>)}
 
-                                            <tbody>
-                                                <tr style={{backgroundColor: "transparent"}}><td></td></tr>
-                                                <tr>
-                                                    <td colSpan="3">
-                                                        <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
-                                                        <span>&nbsp;&nbsp;
-                                                            <button onClick={this._toggleExpired.bind(this)} className="button outline small">
-                                                                {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}
-                                                            </button>
-                                                        </span>
+                                    <table className="table dashboard-table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th><Translate content="account.user_issued_assets.description" /></th>
+                                                <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
+                                                <th className="hide-column-small">
+                                                    <Translate content="account.votes.total_votes" />
+                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                        (<AssetName name={ChainStore.getAsset("1.3.0").get("symbol")} />)
+                                                    </div>
+                                                </th>
+                                                <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                <th style={{textAlign: "right"}} className="hide-column-small">
+                                                    <Translate content="account.votes.daily_pay" />
+                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                        (<AssetName name={preferredUnit} />)
+                                                    </div>
+                                                </th>
+                                                <th className="hide-column-large">
+                                                    <div><Translate content="account.votes.unclaimed" /></div>
+                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                        (<AssetName name={preferredUnit} />)
+                                                    </div>
+                                                    </th>
+                                                <th><Translate content="account.votes.supported" /> </th>
+                                                <th><Translate content="account.votes.toggle" /></th>
+                                            </tr>
+                                        </thead>
+                                        {showExpired ? null : newWorkers.length ? (
+                                        <tbody>
+                                            <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
+                                            {newWorkers}
+                                            <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
+                                        </tbody>
+                                        ) : null}
 
-                                                    </td>
-                                                </tr>
-                                                {showExpired ? expiredWorkers : null}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <tbody>
+                                            {showExpired ? expiredWorkers : workers}
+                                        </tbody>
+
+                                    </table>
                                 </Tab>
                         </Tabs>
                     </div>

@@ -4,7 +4,6 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
-import VestingBalance from "../Utility/VestingBalance";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
 import {EquivalentValueComponent, BalanceValueComponent} from "../Utility/EquivalentValueComponent";
@@ -96,7 +95,7 @@ class WorkerApproval extends React.Component{
         return  (
 
             <tr className={approvalState ? "" : "unsupported"}>
-                {isExpired ? null : <td style={{backgroundColor: fundedPercent > 0 ? "green" : "orange"}}>#{rank}</td>}
+                {isExpired ? null : <td style={{backgroundColor: fundedPercent > 0 ? "green" : ""}}>#{rank}</td>}
 
                 <td colSpan={isExpired ? "2" : "1"}>
                     <div>{worker.name}</div>
@@ -143,7 +142,10 @@ class WorkerApproval extends React.Component{
                     <Translate content={`settings.${approvalState ? "yes" : "no"}`}/>
                 </td>
 
-                <td>
+                <td
+                    className="clickable"
+                    onClick={this.props.proxy ? () => {} : this[approvalState ? "onReject" : "onApprove"].bind(this)}
+                >
                     {!this.props.proxy ?
                         <Icon name={approvalState ? "checkmark-circle" : "minus-circle"} /> :
                         <Icon name="locked" />}

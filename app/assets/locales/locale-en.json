@@ -330,7 +330,8 @@
       "supported": "Supported",
       "active_short": "Active",
       "inactive": "Backup",
-      "about": "About"
+      "about": "About",
+      "create_worker": "Create a new worker"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
