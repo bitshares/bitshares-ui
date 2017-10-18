@@ -15,6 +15,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {Link} from "react-router/es";
 import ApplicationApi from "api/ApplicationApi";
+import tableHeightHelper from "lib/common/tableHeightHelper";
 
 class AccountVoting extends React.Component {
 
@@ -45,16 +46,29 @@ class AccountVoting extends React.Component {
         this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
-        this._onUpdate = this._onUpdate.bind(this);
         this._getVoteObjects = this._getVoteObjects.bind(this);
+        this.tableHeightMountInterval = tableHeightHelper.tableHeightMountInterval.bind(this);
+        this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
     }
 
-    componentWillUnmount() {
-        ChainStore.unsubscribe(this._onUpdate);
+    componentWillMount() {
+        this.updateAccountData(this.props.account);
+        accountUtils.getFinalFeeAsset(this.props.account, "account_update");
+        this.getBudgetObject();
     }
 
-    _onUpdate() {
-        this.forceUpdate();
+    componentDidMount() {
+        this.getBudgetObject();
+        this._getVoteObjects();
+        this._getVoteObjects("committee");
+        this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.account !== this.props.account) {
+            this.updateAccountData(nextProps.account);
+        }
+        this.getBudgetObject();
     }
 
     updateAccountData(account) {
@@ -100,32 +114,11 @@ class AccountVoting extends React.Component {
         });
     }
 
-    isChanged() {
-        let s = this.state;
+    isChanged(s = this.state) {
         return s.proxy_account_id !== s.prev_proxy_account_id ||
                s.witnesses !== s.prev_witnesses ||
                s.committee !== s.prev_committee ||
                !Immutable.is(s.vote_ids, s.prev_vote_ids);
-    }
-
-    componentWillMount() {
-        this.updateAccountData(this.props.account);
-        accountUtils.getFinalFeeAsset(this.props.account, "account_update");
-        this.getBudgetObject();
-        ChainStore.subscribe(this._onUpdate);
-    }
-
-    componentDidMount() {
-        this.getBudgetObject();
-        this._getVoteObjects();
-        this._getVoteObjects("committee");
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.account !== this.props.account) {
-            this.updateAccountData(nextProps.account);
-        }
-        this.getBudgetObject();
     }
 
     _getVoteObjects(type = "witnesses", vote_ids) {
@@ -152,6 +145,7 @@ class AccountVoting extends React.Component {
                 }
                 return this._getVoteObjects(type, vote_ids);
             }
+            console.log("_getVoteObjects && forceUpdate");
             this.forceUpdate();
         });
     }
@@ -308,9 +302,10 @@ class AccountVoting extends React.Component {
             ChainStore.getObject(newID);
 
             this.setState({lastBudgetObject: newID});
-            if (newID !== currentID) {
-                this.forceUpdate();
-            }
+            // if (newID !== currentID) {
+            //     console.log("getBudgetObject && forceUpdate");
+            //     this.forceUpdate();
+            // }
         } else {
             if (lastBudgetObject !== "2.13.1") {
                 let newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
@@ -349,7 +344,6 @@ class AccountVoting extends React.Component {
 
         let {globalObject} = this.props;
         let {showExpired} = this.state;
-
         let budgetObject;
         if (this.state.lastBudgetObject) {
             budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
@@ -463,139 +457,155 @@ class AccountVoting extends React.Component {
             );
         });
 
+        let actionButtons = (
+            <div>
+                <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
+                    <Translate content="account.votes.publish"/>
+                </button>
+                <button className={"button outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
+                    <Translate content="account.perm.reset"/>
+                </button>
+            </div>
+        );
+
         return (
-            <div className="grid-content">
-                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
+            <div className="grid-content app-tables" ref="appTables">
+                <div className="content-block small-12">
+                    <div className="generic-bordered-box">
+                        {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
+                        */}
 
-                <div className="content-block">
-                    <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
-                        <Translate content="account.votes.publish"/>
-                    </button>
-                    <button className={"button outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
-                        <Translate content="account.perm.reset"/>
-                    </button>
+
+                        <Tabs
+                            setting="votingTab"
+                            className="overview-tabs"
+                            defaultActiveTab={1}
+                            segmented={false}
+                            tabsClass="account-overview no-padding bordered-header content-block"
+                            onChangeTab={this.adjustHeightOnChangeTab.bind(this)}
+                            actionButtons={actionButtons}
+                        >
+
+                                <Tab title="account.votes.proxy_short">
+                                    <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
+                                    <AccountVotingProxy
+                                        ref="voting_proxy"
+                                        existingProxy={this.props.account.getIn(["options", "voting_account"])}
+                                        account={this.props.account}
+                                        onProxyAccountChanged={this.onProxyAccountChange}
+                                        onClearProxy={this.onClearProxy.bind(this)}
+                                    />
+                                </Tab>
+
+                                <Tab title="explorer.witnesses.title">
+                                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
+                                        <VotingAccountsList
+                                            type="witness"
+                                            label="account.votes.add_witness_label"
+                                            items={this.state.all_witnesses}
+                                            validateAccount={this.validateAccount.bind(this, "witnesses")}
+                                            onAddItem={this.onAddItem.bind(this, "witnesses")}
+                                            onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
+                                            tabIndex={proxy_is_set ? -1 : 2}
+                                            supported={this.state.witnesses}
+                                            withSelector={false}
+                                            active={globalObject.get("active_witnesses")}
+                                        />
+                                    </div>
+                                </Tab>
+
+                                <Tab title="explorer.committee_members.title">
+                                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
+                                        <VotingAccountsList
+                                            type="committee"
+                                            label="account.votes.add_committee_label"
+                                            items={this.state.all_committee}
+                                            validateAccount={this.validateAccount.bind(this, "committee")}
+                                            onAddItem={this.onAddItem.bind(this, "committee")}
+                                            onRemoveItem={this.onRemoveItem.bind(this, "committee")}
+                                            tabIndex={proxy_is_set ? -1 : 3}
+                                            supported={this.state.committee}
+                                            withSelector={false}
+                                            active={globalObject.get("active_committee_members")}
+                                        />
+                                    </div>
+                                </Tab>
+
+                                <Tab title="account.votes.workers_short">
+
+                                    <div className={cnames("content-block")}>
+                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
+
+                                        <div style={{paddingBottom: 20}}>
+                                            <Link to="/create-worker"><div className="button">Create a new worker</div></Link>
+                                        </div>
+                                        <table className="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <Translate content="account.votes.total_budget" />:</td>
+                                                    <td style={{paddingLeft: 20, textAlign: "right"}}>
+                                                        &nbsp;{globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}
+                                                        <span>&nbsp;({globalObject ? <EquivalentValueComponent fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null})</span>
+                                                    </td></tr>
+                                                <tr>
+                                                    <td><Translate content="account.votes.unused_budget" />:</td>
+                                                    <td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
+                                            </tbody>
+                                        </table>
+                                        <table className="table dashboard-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><Translate content="account.user_issued_assets.description" /></th>
+                                                    <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
+                                                    <th className="hide-column-small"><Translate content="account.votes.total_votes" /></th>
+                                                    <th className="hide-column-small">
+                                                        <Translate content="account.votes.daily_pay" />
+                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
+                                                    </th>
+                                                    <th className="hide-column-large">
+                                                        <div><Translate content="account.votes.unclaimed" /></div>
+                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
+                                                        </th>
+                                                    <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                    <th></th>
+                                                    <th><Translate content="account.votes.status.title" /> </th>
+                                                </tr>
+                                            </thead>
+                                            {newWorkers.length ? (
+                                            <tbody>
+                                                <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
+                                                {newWorkers}
+                                                <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
+                                            </tbody>
+                                            ) : null}
+                                            <tbody>
+                                                {workers}
+                                            </tbody>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td colSpan="3">
+                                                        <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
+                                                        <span>&nbsp;&nbsp;
+                                                            <button onClick={this._toggleExpired.bind(this)} className="button outline small">
+                                                                {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}
+                                                            </button>
+                                                        </span>
+
+                                                    </td>
+                                                </tr>
+                                                {showExpired ? expiredWorkers : null}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </Tab>
+                        </Tabs>
+                    </div>
                 </div>
-
-                <Tabs setting="votingTab" tabsClass="no-padding bordered-header" contentClass="grid-content no-padding">
-
-                        <Tab title="account.votes.proxy_short">
-                            <div className="content-block">
-                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
-                                <AccountVotingProxy
-                                    ref="voting_proxy"
-                                    existingProxy={this.props.account.getIn(["options", "voting_account"])}
-                                    account={this.props.account}
-                                    onProxyAccountChanged={this.onProxyAccountChange}
-                                    onClearProxy={this.onClearProxy.bind(this)}
-                                />
-                            </div>
-                        </Tab>
-
-                        <Tab title="explorer.witnesses.title">
-                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
-                                <VotingAccountsList
-                                    type="witness"
-                                    label="account.votes.add_witness_label"
-                                    items={this.state.all_witnesses}
-                                    validateAccount={this.validateAccount.bind(this, "witnesses")}
-                                    onAddItem={this.onAddItem.bind(this, "witnesses")}
-                                    onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
-                                    tabIndex={proxy_is_set ? -1 : 2}
-                                    supported={this.state.witnesses}
-                                    withSelector={false}
-                                    active={globalObject.get("active_witnesses")}
-                                />
-                            </div>
-                        </Tab>
-
-                        <Tab title="explorer.committee_members.title">
-                            <div className={cnames("content-block", {disabled : proxy_is_set})}>
-                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
-                                <VotingAccountsList
-                                    type="committee"
-                                    label="account.votes.add_committee_label"
-                                    items={this.state.all_committee}
-                                    validateAccount={this.validateAccount.bind(this, "committee")}
-                                    onAddItem={this.onAddItem.bind(this, "committee")}
-                                    onRemoveItem={this.onRemoveItem.bind(this, "committee")}
-                                    tabIndex={proxy_is_set ? -1 : 3}
-                                    supported={this.state.committee}
-                                    withSelector={false}
-                                    active={globalObject.get("active_committee_members")}
-                                />
-                            </div>
-                        </Tab>
-
-                        <Tab title="account.votes.workers_short">
-
-                            <div className={cnames("content-block")}>
-                                <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" />
-
-                                <div style={{paddingBottom: 20}}>
-                                    <Link to="/create-worker"><div className="button">Create a new worker</div></Link>
-                                </div>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <Translate content="account.votes.total_budget" />:</td>
-                                            <td style={{paddingLeft: 20, textAlign: "right"}}>
-                                                &nbsp;{globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}
-                                                <span>&nbsp;({globalObject ? <EquivalentValueComponent fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null})</span>
-                                            </td></tr>
-                                        <tr><td><Translate content="account.votes.unused_budget" />:</td><td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
-                                    </tbody>
-                                </table>
-                                <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th><Translate content="account.user_issued_assets.description" /></th>
-                                        <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
-                                        <th className="hide-column-small"><Translate content="account.votes.total_votes" /></th>
-                                        <th className="hide-column-small">
-                                            <Translate content="account.votes.daily_pay" />
-                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
-                                        </th>
-                                        <th className="hide-column-large">
-                                            <div><Translate content="account.votes.unclaimed" /></div>
-                                            <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
-                                            </th>
-                                        <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
-                                        <th></th>
-                                        <th><Translate content="account.votes.status.title" /> </th>
-                                    </tr>
-                                </thead>
-                                {newWorkers.length ? (
-                                <tbody>
-                                    <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
-                                    {newWorkers}
-                                    <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
-                                </tbody>
-                                ) : null}
-                                <tbody>
-                                    {workers}
-                                </tbody>
-
-                                <tbody>
-                                    <tr>
-                                        <td colSpan="3">
-                                            <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>
-                                            <span>&nbsp;&nbsp;
-                                                <button onClick={this._toggleExpired.bind(this)} className="button outline small">
-                                                    {showExpired ? <Translate content="exchange.hide" />: <Translate content="account.perm.show" />}
-                                                </button>
-                                            </span>
-
-                                        </td>
-                                    </tr>
-                                    {showExpired ? expiredWorkers : null}
-                                </tbody>
-                            </table>
-                            </div>
-                        </Tab>
-                </Tabs>
             </div>
         );
     }

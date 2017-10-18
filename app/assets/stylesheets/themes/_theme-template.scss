@@ -1306,6 +1306,16 @@
                     text-align: right;
                 }
             }
+
+            &.unsupported {
+                > td {
+                    color: grey;
+
+                    svg > path {
+                        fill: grey;
+                    }
+                }
+            }
         }
     }
 

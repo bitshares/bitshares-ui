@@ -329,7 +329,8 @@
       "toggle": "Toggle vote",
       "supported": "Supported",
       "active_short": "Active",
-      "inactive": "Inactive"
+      "inactive": "Backup",
+      "about": "About"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
