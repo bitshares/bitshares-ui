@@ -2,8 +2,6 @@ import React from "react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
-import WalletApi from "api/WalletApi";
-import WalletDb from "stores/WalletDb.js";
 import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import WorkerApproval from "./WorkerApproval";
 import AccountVotingProxy from "./AccountVotingProxy";
@@ -16,8 +14,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {Link} from "react-router/es";
-
-let wallet_api = new WalletApi();
+import ApplicationApi from "api/ApplicationApi";
 
 class AccountVoting extends React.Component {
 
@@ -216,9 +213,7 @@ class AccountVoting extends React.Component {
 
                     return parseInt(a_split[1], 10) - parseInt(b_split[1], 10);
                 });
-            var tr = wallet_api.new_transaction();
-            tr.add_type_operation("account_update", updateObject);
-            WalletDb.process_transaction(tr, null, true);
+            ApplicationApi.updateAccount(updateObject);
         });
     }
 
