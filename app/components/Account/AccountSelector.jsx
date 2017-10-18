@@ -119,16 +119,18 @@ class AccountSelector extends React.Component {
         return (
             <div className="account-selector" style={this.props.style}>
                 <div className="content-area">
+                    {this.props.label ? (
                     <div className="header-area">
                         {error ? null : <label className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></label>}
                         <Translate className="left-label" component="label" content={this.props.label}/>
-                    </div>
+                    </div>) : null}
                     <div className="input-area">
                         <div className="inline-label input-wrapper">
                             {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
-                            <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
+                            this.props.hideImage ? null : <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
                                 account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
                                 <input
+                                    style={{textTransform: "lowercase", fontVariant: "initial"}}
                                     type="text"
                                     name="username"
                                     id="username"

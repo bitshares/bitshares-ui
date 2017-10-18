@@ -130,9 +130,12 @@ class BalanceValueComponent extends React.Component {
     }
 
     render() {
-        let amount = Number(this.props.balance.get("balance"));
-        let fromAsset = this.props.balance.get("asset_type");
+        const {balance} = this.props;
+        const isBalanceObject = !!balance.getIn(["balance", "amount"]);
 
+        let amount = Number(isBalanceObject ? balance.getIn(["balance", "amount"]) : balance.get("balance"));
+        let fromAsset = isBalanceObject ? balance.getIn(["balance", "asset_id"]) : balance.get("asset_type");
+        if (isNaN(amount)) return <span>--</span>;
         return <EquivalentValueComponent refCallback={this.props.refCallback} hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }

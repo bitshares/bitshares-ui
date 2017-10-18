@@ -183,8 +183,10 @@ div.overview-tabs {
     }
 }
 ul.account-overview {
-    width: 100%;
+    display: table;
     li {
+        display: table-cell;
+        vertical-align: middle;
         > a {
             font-size: 1.1rem;
 

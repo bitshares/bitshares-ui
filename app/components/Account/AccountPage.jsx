@@ -65,7 +65,8 @@ class AccountPage extends React.Component {
                             backedCoins: this.props.backedCoins,
                             bridgeCoins: this.props.bridgeCoins,
                             gatewayDown: this.props.gatewayDown,
-                            viewSettings: this.props.viewSettings
+                            viewSettings: this.props.viewSettings,
+                            proxy: account.getIn(["options", "voting_account"])
                         }
                     )}
                     </div>

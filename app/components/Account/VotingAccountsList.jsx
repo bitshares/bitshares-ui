@@ -37,7 +37,8 @@ class AccountItemRow extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.action !== this.props.action ||
             nextProps.isActive !== this.props.isActive ||
-            nextProps.idx !== this.props.idx
+            nextProps.idx !== this.props.idx ||
+            nextProps.proxy !== this.props.proxy
         );
     }
 
@@ -68,8 +69,11 @@ class AccountItemRow extends React.Component {
                 <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} hide_asset /></td>
                 <td><Translate content={`account.votes.${isActive ? "active_short" : "inactive"}`} /></td>
                 <td style={{textAlign: "center"}}><Translate content={`settings.${isSupported ? "yes" : "no"}`}/></td>
-                <td onClick={this.onAction.bind(this, item_id)}>
-                    <Icon name={isSupported ? "checkmark-circle" : "minus-circle"} />
+                <td className={this.props.proxy ? "" : "clickable"} onClick={this.props.proxy ? () => {} : this.onAction.bind(this, item_id)}>
+                    {!this.props.proxy ?
+                        <Icon name={isSupported ? "checkmark-circle" : "minus-circle"} /> :
+                        <Icon name="locked" />
+                }
                 </td>
             </tr>
         );
@@ -169,6 +173,7 @@ class VotingAccountsList extends React.Component {
                     isSelected={this.props.items.indexOf(i) !== -1}
                     action={action}
                     isActive={isActive}
+                    proxy={this.props.proxy}
                 />
             );
         });

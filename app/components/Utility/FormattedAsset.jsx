@@ -99,7 +99,7 @@ class FormattedAsset extends React.Component {
             />
             {this.props.assetInfo}
         </div>;
-
+        console.log(decimals, "offset", this.props.decimalOffset);
         return (
                 <span className={colorClass}  >
                 {!hide_amount ?

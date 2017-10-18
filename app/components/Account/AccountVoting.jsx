@@ -4,7 +4,6 @@ import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import WorkerApproval from "./WorkerApproval";
-import AccountVotingProxy from "./AccountVotingProxy";
 import VotingAccountsList from "./VotingAccountsList";
 import HelpContent from "../Utility/HelpContent";
 import cnames from "classnames";
@@ -16,13 +15,17 @@ import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {Link} from "react-router/es";
 import ApplicationApi from "api/ApplicationApi";
 import tableHeightHelper from "lib/common/tableHeightHelper";
+import AccountSelector from "./AccountSelector";
+import Icon from "../Icon/Icon";
+import AssetName from "../Utility/AssetName";
 
 class AccountVoting extends React.Component {
 
     static propTypes = {
         initialBudget: ChainTypes.ChainObject.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired,
-        dynamicGlobal: ChainTypes.ChainObject.isRequired
+        dynamicGlobal: ChainTypes.ChainObject.isRequired,
+        proxy: ChainTypes.ChainAccount.isRequired
     };
 
     static defaultProps = {
@@ -33,17 +36,22 @@ class AccountVoting extends React.Component {
 
     constructor(props) {
         super(props);
+        const proxyId = props.proxy.get("id");
+        const proxyName = props.proxy.get("name");
         this.state = {
-            proxy_account_id: "",//"1.2.16",
+            proxy_account_id: proxyId === "1.2.5" ? "": proxyId,//"1.2.16",
+            prev_proxy_account_id: proxyId === "1.2.5" ? "": proxyId,
+            current_proxy_input: proxyId === "1.2.5" ? "" : proxyName,
             witnesses: null,
             committee: null,
             vote_ids: Immutable.Set(),
+            proxy_vote_ids: Immutable.Set(),
             lastBudgetObject: null,
             showExpired: false,
             all_witnesses: Immutable.List(),
             all_committee: Immutable.List()
         };
-        this.onProxyAccountChange = this.onProxyAccountChange.bind(this);
+        this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
         this._getVoteObjects = this._getVoteObjects.bind(this);
@@ -52,59 +60,93 @@ class AccountVoting extends React.Component {
     }
 
     componentWillMount() {
-        this.updateAccountData(this.props.account);
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
         this.getBudgetObject();
     }
 
     componentDidMount() {
+        this.updateAccountData(this.props);
         this.getBudgetObject();
         this._getVoteObjects();
         this._getVoteObjects("committee");
         this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.account !== this.props.account) {
-            this.updateAccountData(nextProps.account);
+    componentWillReceiveProps(np) {
+        if (np.account !== this.props.account) {
+            const proxyId = np.proxy.get("id");
+            let newState = {
+                proxy_account_id: proxyId === "1.2.5" ? "": proxyId
+            };
+            this.setState({prev_proxy_account_id: newState.proxy_account_id});
+            this.updateAccountData(np, newState);
         }
         this.getBudgetObject();
     }
 
-    updateAccountData(account) {
+    updateAccountData({account}, state = this.state) {
+        let {proxy_account_id} = state;
+        const proxy = ChainStore.getAccount(proxy_account_id);
         let options = account.get("options");
-        let proxy_account_id = options.get("voting_account");
+        let proxyOptions = proxy ? proxy.get("options") : null;
+        // let proxy_account_id = proxy ? proxy.get("id") : "1.2.5";
+        let current_proxy_input = proxy ? proxy.get("name") : "";
         if (proxy_account_id === "1.2.5" ) {
             proxy_account_id = "";
+            current_proxy_input = "";
         }
 
         let votes = options.get("votes");
         let vote_ids = votes.toArray();
         let vids = Immutable.Set( vote_ids );
-        ChainStore.getObjectsByVoteIds(vote_ids);
-        FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000).then(vote_objs => {
-            //console.log( "Vote Objs: ", vote_objs );
-            let witnesses = new Immutable.List();
-            let committee = new Immutable.List();
-            let workers = new Immutable.Set();
-            vote_objs.forEach( obj => {
-                let account_id = obj.get("committee_member_account");
-                if (account_id) {
-                    committee = committee.push(account_id);
-                } else if( account_id = obj.get( "worker_account" ) ) {
-                   // console.log( "worker: ", obj );
-               //     workers = workers.add(obj.get("id"));
-                } else if( account_id = obj.get("witness_account") ) {
-                    witnesses = witnesses.push(account_id);
-                }
-            });
+        // ChainStore.getObjectsByVoteIds(vote_ids);
+
+        let proxyPromise = null, proxy_vids = Immutable.Set([]);
+        const hasProxy = proxy_account_id !== "1.2.5";
+        if (hasProxy && proxyOptions) {
+            let proxy_votes = proxyOptions.get("votes");
+            let proxy_vote_ids = proxy_votes.toArray();
+            proxy_vids = Immutable.Set( proxy_vote_ids );
+            proxyPromise = FetchChainObjects(ChainStore.getObjectByVoteID, proxy_vote_ids, 5000);
+        }
+
+        Promise.all([
+            FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000),
+            proxyPromise
+        ]).then(res => {
+            const [vote_objs, proxy_vote_objs] = res;
+            function sortVoteObjects(objects) {
+                let witnesses = new Immutable.List();
+                let committee = new Immutable.List();
+                let workers = new Immutable.Set();
+                objects.forEach( obj => {
+                    let account_id = obj.get("committee_member_account");
+                    if (account_id) {
+                        committee = committee.push(account_id);
+                    } else if( account_id = obj.get( "worker_account" ) ) {
+                       // console.log( "worker: ", obj );
+                   //     workers = workers.add(obj.get("id"));
+                    } else if( account_id = obj.get("witness_account") ) {
+                        witnesses = witnesses.push(account_id);
+                    }
+                });
+
+                return {witnesses, committee, workers};
+            }
+
+            let {witnesses, committee, workers} = sortVoteObjects(vote_objs);
+            let {witnesses: proxy_witnesses, committee: proxy_committee, workers: proxy_workers} = sortVoteObjects(proxy_vote_objs || []);
             let state = {
-                proxy_account_id: proxy_account_id,
+                proxy_account_id,
+                current_proxy_input,
                 witnesses: witnesses,
                 committee: committee,
                 workers: workers,
+                proxy_witnesses: proxy_witnesses,
+                proxy_committee: proxy_committee,
+                proxy_workers: proxy_workers,
                 vote_ids: vids,
-                prev_proxy_account_id: proxy_account_id,
+                proxy_vote_ids: proxy_vids,
                 prev_witnesses: witnesses,
                 prev_committee: committee,
                 prev_workers: workers,
@@ -145,7 +187,6 @@ class AccountVoting extends React.Component {
                 }
                 return this._getVoteObjects(type, vote_ids);
             }
-            console.log("_getVoteObjects && forceUpdate");
             this.forceUpdate();
         });
     }
@@ -216,12 +257,13 @@ class AccountVoting extends React.Component {
         if (this.refs.voting_proxy && this.refs.voting_proxy.refs.bound_component) this.refs.voting_proxy.refs.bound_component.onResetProxy();
         this.setState({
             proxy_account_id: s.prev_proxy_account_id,
+            current_proxy_input: s.prev_proxy_input,
             witnesses: s.prev_witnesses,
             committee: s.prev_committee,
             workers: s.prev_workers,
             vote_ids: s.prev_vote_ids
         }, () => {
-            this.updateAccountData(this.props.account);
+            this.updateAccountData(this.props);
         });
     }
 
@@ -255,12 +297,6 @@ class AccountVoting extends React.Component {
         this.setState(state);
     }
 
-    onProxyAccountChange(proxy_account) {
-        this.setState({
-            proxy_account_id: proxy_account ? proxy_account.get("id") : ""
-        });
-    }
-
     validateAccount(collection, account) {
         if(!account) return null;
         if(collection === "witnesses") {
@@ -274,6 +310,27 @@ class AccountVoting extends React.Component {
             });
         }
         return null;
+    }
+
+    onProxyChange(current_proxy_input) {
+        let proxyAccount = ChainStore.getAccount(current_proxy_input);
+        if (!proxyAccount || proxyAccount && proxyAccount.get("id") !== this.state.proxy_account_id) {
+            this.setState({
+                proxy_account_id: "",
+                proxy_witnesses: Immutable.Set(),
+                proxy_committee: Immutable.Set(),
+                proxy_workers: Immutable.Set()
+            });
+        }
+        this.setState({current_proxy_input});
+    }
+
+    onProxyAccountFound(proxy_account) {
+        this.setState({
+            proxy_account_id: proxy_account ? proxy_account.get("id") : ""
+        }, () => {
+            this.updateAccountData(this.props);
+        });
     }
 
     onClearProxy() {
@@ -339,9 +396,8 @@ class AccountVoting extends React.Component {
 
     render() {
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
-        let proxy_is_set = this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
+        let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
-
         let {globalObject} = this.props;
         let {showExpired} = this.state;
         let budgetObject;
@@ -387,8 +443,9 @@ class AccountVoting extends React.Component {
                     rank={index + 1}
                     key={worker.get("id")}
                     worker={worker.get("id")}
-                    vote_ids={this.state.vote_ids}
+                    vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
+                    proxy={hasProxy}
                 />
             );
         });
@@ -420,8 +477,9 @@ class AccountVoting extends React.Component {
                     rank={index + 1}
                     key={worker.get("id")}
                     worker={worker.get("id")}
-                    vote_ids={this.state.vote_ids}
+                    vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
+                    proxy={hasProxy}
                 />
             );
         });
@@ -451,8 +509,9 @@ class AccountVoting extends React.Component {
                     rank={index + 1}
                     key={worker.get("id")}
                     worker={worker.get("id")}
-                    vote_ids={this.state.vote_ids}
+                    vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
+                    proxy={hasProxy}
                 />
             );
         });
@@ -462,11 +521,24 @@ class AccountVoting extends React.Component {
                 <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
                     <Translate content="account.votes.publish"/>
                 </button>
-                <button className={"button outline " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
+                <button className={"button " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
                     <Translate content="account.perm.reset"/>
                 </button>
             </div>
         );
+
+        let proxyInput = (
+            <AccountSelector
+                hideImage
+                account={this.state.current_proxy_input}
+                accountName={this.state.current_proxy_input}
+                onChange={this.onProxyChange.bind(this)}
+                onAccountChanged={this.onProxyAccountFound}
+                tabIndex={1}
+                placeholder="Proxy not set"
+        >
+            <span style={{paddingLeft: 5, position: "relative", top: -1, visibility: (hasProxy ? "visible" : "hidden")}}><Icon name="locked" size="2x" /></span>
+        </AccountSelector>);
 
         return (
             <div className="grid-content app-tables" ref="appTables">
@@ -474,7 +546,6 @@ class AccountVoting extends React.Component {
                     <div className="generic-bordered-box">
                         {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
                         */}
-
 
                         <Tabs
                             setting="votingTab"
@@ -486,19 +557,15 @@ class AccountVoting extends React.Component {
                             actionButtons={actionButtons}
                         >
 
-                                <Tab title="account.votes.proxy_short">
-                                    <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingProxy" />
-                                    <AccountVotingProxy
-                                        ref="voting_proxy"
-                                        existingProxy={this.props.account.getIn(["options", "voting_account"])}
-                                        account={this.props.account}
-                                        onProxyAccountChanged={this.onProxyAccountChange}
-                                        onClearProxy={this.onClearProxy.bind(this)}
-                                    />
+                                <Tab
+                                    disabled
+                                    title={proxyInput}
+                                    className="total-value"
+                                >
                                 </Tab>
 
                                 <Tab title="explorer.witnesses.title">
-                                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                    <div className={cnames("content-block")}>
                                         <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
                                         <VotingAccountsList
                                             type="witness"
@@ -507,16 +574,17 @@ class AccountVoting extends React.Component {
                                             validateAccount={this.validateAccount.bind(this, "witnesses")}
                                             onAddItem={this.onAddItem.bind(this, "witnesses")}
                                             onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
-                                            tabIndex={proxy_is_set ? -1 : 2}
-                                            supported={this.state.witnesses}
+                                            tabIndex={hasProxy ? -1 : 2}
+                                            supported={this.state[hasProxy ? "proxy_witnesses" : "witnesses"]}
                                             withSelector={false}
                                             active={globalObject.get("active_witnesses")}
+                                            proxy={this.state.proxy_account_id}
                                         />
                                     </div>
                                 </Tab>
 
                                 <Tab title="explorer.committee_members.title">
-                                    <div className={cnames("content-block", {disabled : proxy_is_set})}>
+                                    <div className={cnames("content-block")}>
                                         <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
                                         <VotingAccountsList
                                             type="committee"
@@ -525,10 +593,11 @@ class AccountVoting extends React.Component {
                                             validateAccount={this.validateAccount.bind(this, "committee")}
                                             onAddItem={this.onAddItem.bind(this, "committee")}
                                             onRemoveItem={this.onRemoveItem.bind(this, "committee")}
-                                            tabIndex={proxy_is_set ? -1 : 3}
-                                            supported={this.state.committee}
+                                            tabIndex={hasProxy ? -1 : 3}
+                                            supported={this.state[hasProxy ? "proxy_committee" : "committee"]}
                                             withSelector={false}
                                             active={globalObject.get("active_committee_members")}
+                                            proxy={this.state.proxy_account_id}
                                         />
                                     </div>
                                 </Tab>
@@ -561,18 +630,27 @@ class AccountVoting extends React.Component {
                                                     <th></th>
                                                     <th><Translate content="account.user_issued_assets.description" /></th>
                                                     <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
-                                                    <th className="hide-column-small"><Translate content="account.votes.total_votes" /></th>
                                                     <th className="hide-column-small">
+                                                        <Translate content="account.votes.total_votes" />
+                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                            (<AssetName name={ChainStore.getAsset("1.3.0").get("symbol")} />)
+                                                        </div>
+                                                    </th>
+                                                    <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                    <th style={{textAlign: "right"}} className="hide-column-small">
                                                         <Translate content="account.votes.daily_pay" />
-                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.daily" />)</div>
+                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                            (<AssetName name={preferredUnit} />)
+                                                        </div>
                                                     </th>
                                                     <th className="hide-column-large">
                                                         <div><Translate content="account.votes.unclaimed" /></div>
-                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>(<Translate content="account.votes.recycled" />)</div>
+                                                        <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                            (<AssetName name={preferredUnit} />)
+                                                        </div>
                                                         </th>
-                                                    <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                    <th><Translate content="account.votes.supported" /> </th>
                                                     <th></th>
-                                                    <th><Translate content="account.votes.status.title" /> </th>
                                                 </tr>
                                             </thead>
                                             {newWorkers.length ? (
@@ -587,6 +665,7 @@ class AccountVoting extends React.Component {
                                             </tbody>
 
                                             <tbody>
+                                                <tr style={{backgroundColor: "transparent"}}><td></td></tr>
                                                 <tr>
                                                     <td colSpan="3">
                                                         <div className="inline-block"><Translate component="h4" content="account.votes.expired" /></div>

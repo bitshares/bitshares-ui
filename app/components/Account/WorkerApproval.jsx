@@ -7,7 +7,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import VestingBalance from "../Utility/VestingBalance";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
-import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import {EquivalentValueComponent, BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import Icon from "components/Icon/Icon";
 
 class WorkerApproval extends React.Component{
@@ -61,7 +61,7 @@ class WorkerApproval extends React.Component{
         // console.log( "render...", worker);
         let total_votes = worker.total_votes_for - worker.total_votes_against;
         let total_days = 1;
-
+        // console.log("vote_ids", this.props.vote_ids);
         let approvalState = this.props.vote_ids.has(worker.vote_for) ? true :
         this.props.vote_ids.has(worker.vote_against) ? false :
         null;
@@ -92,10 +92,10 @@ class WorkerApproval extends React.Component{
 
         let now = new Date();
         let isExpired = new Date(worker.work_end_date) <= now;
-
+        // console.log(worker.name, approvalState);
         return  (
 
-            <tr>
+            <tr className={approvalState ? "" : "unsupported"}>
                 {isExpired ? null : <td style={{backgroundColor: fundedPercent > 0 ? "green" : "orange"}}>#{rank}</td>}
 
                 <td colSpan={isExpired ? "2" : "1"}>
@@ -105,45 +105,55 @@ class WorkerApproval extends React.Component{
                 </td>
 
                 <td className="hide-column-small">
-                    <div><LinkToAccountById account={worker.worker_account} /></div>
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}><a target="_blank" rel="noopener noreferrer" href={worker.url}>{displayURL}</a> </div>
+                    <div>
+                        <LinkToAccountById account={worker.worker_account} />
+                        <div className="inline-block" style={{paddingLeft: 5, position: "relative", top: 2}}>
+                            {worker.url && worker.url.indexOf(".") !== -1 ?
+                            <a href={worker.url} target="_blank" rel="noopener noreferrer">
+                                <Icon name="share" />
+                            </a> : null}
+                        </div>
+                    </div>
                 </td>
 
-                <td className="hide-column-small">
-                    <FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5}/>
-                </td>
-
-                <td className="hide-column-small">
-                    <FormattedAsset amount={worker.daily_pay} asset="1.3.0" decimalOffset={5}/>
-                    {this.props.preferredUnit !== "1.3.0" ?<div style={{paddingTop: 5}}>
-                        (<EquivalentValueComponent fromAsset="1.3.0" toAsset={this.props.preferredUnit} amount={worker.daily_pay}/>)
-                    </div> : null}
-                </td>
-
-                <td className="hide-column-large">
-                    {worker.worker[1].balance ?
-                        <VestingBalance balance={worker.worker[1].balance} decimalOffset={5}/> :
-                        worker.worker[1].total_burned ?
-                        <span>(<FormattedAsset amount={worker.worker[1].total_burned} asset="1.3.0" decimalOffset={5} />)</span> :
-                            null}
+                <td style={{textAlign: "right"}} className="hide-column-small">
+                    <FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} hide_asset/>
                 </td>
 
                 <td className="hide-column-small">
                     {utils.format_number(fundedPercent, 2)}%
                 </td>
 
-                <td style={{textAlign: "right"}}>
-                    {approvalState !== true ?
+                <td style={{textAlign: "right"}} className="hide-column-small">
+                    <EquivalentValueComponent noDecimals hide_asset fromAsset="1.3.0" toAsset={this.props.preferredUnit} amount={worker.daily_pay}/>
+                </td>
+
+                <td style={{textAlign: "right"}} className="hide-column-large">
+
+
+                    {worker.worker[1].balance ?
+                        <BalanceValueComponent hide_asset toAsset={this.props.preferredUnit} balance={worker.worker[1].balance} />
+                        :
+                        worker.worker[1].total_burned ?
+                        <span><EquivalentValueComponent noDecimals hide_asset fromAsset="1.3.0" toAsset={this.props.preferredUnit} amount={worker.worker[1].total_burned} /></span> :
+                            <span>--</span>}
+                </td>
+
+                <td style={{padding: 0, textAlign: "center"}}>
+                    <Translate content={`settings.${approvalState ? "yes" : "no"}`}/>
+                </td>
+
+                <td>
+                    {!this.props.proxy ?
+                        <Icon name={approvalState ? "checkmark-circle" : "minus-circle"} /> :
+                        <Icon name="locked" />}
+                    {/* {approvalState !== true ?
                     <button className="button outline small success" onClick={this.onApprove.bind(this)}>
                     +
                     </button> :
                     <button className="button outline small info" onClick={this.onReject.bind(this)}>
                     -
-                    </button>}
-                </td>
-
-                <td style={{padding: 0, textAlign: "center", backgroundColor: approvalState === true ? "green" : approvalState === false ? "red" : "transparent"}}>
-                    {approval}
+                    </button>} */}
                 </td>
 
                 {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
