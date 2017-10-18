@@ -18,8 +18,14 @@ class ExchangeInput extends DecimalChecker {
         super();
     }
 
+    componentWillReceiveProps(np) {
+        if (this.props.value && !np.value) {
+            this.refs.input.value = "";
+        }
+    }
+
     render(){
-        return <input type="text" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
+        return <input ref="input" type="text" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
     }
 }
 
