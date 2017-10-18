@@ -20,8 +20,9 @@ import assetUtils from "common/asset_utils";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
+import AssetWhitelist from "./AssetWhitelist";
 
-let MAX_SAFE_INT = new big("9007199254740991");
+let GRAPHENE_MAX_SHARE_SUPPLY = new big(assetConstants.GRAPHENE_MAX_SHARE_SUPPLY);
 
 class AccountAssetUpdate extends React.Component {
 
@@ -57,13 +58,8 @@ class AccountAssetUpdate extends React.Component {
             (new big(core_exchange_rate.base.amount)).div(precision).toString() :
             (new big(core_exchange_rate.base.amount)).div(corePrecision).toString();
 
-        console.log("isBitAsset:", isBitAsset);
-
         let flagBooleans = assetUtils.getFlagBooleans(asset.options.flags, isBitAsset);
         let permissionBooleans = assetUtils.getFlagBooleans(asset.options.issuer_permissions, isBitAsset);
-        let flags = assetUtils.getFlags(flagBooleans);
-        let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
-        console.log("permissions:", permissions, asset);
         asset.options.market_fee_percent /= 100;
 
         let coreRateQuoteAssetName = ChainStore.getAsset(core_exchange_rate.quote.asset_id).get("symbol");
@@ -78,7 +74,7 @@ class AccountAssetUpdate extends React.Component {
             },
             core_exchange_rate: core_exchange_rate,
             issuer: asset.issuer,
-            new_issuer_account: null,
+            new_issuer_account_id: null,
             issuer_account_name: null,
             new_funder_account: props.account.get("id"),
             funder_account_name: props.account.get("name"),
@@ -86,6 +82,8 @@ class AccountAssetUpdate extends React.Component {
             errors: {
                 max_supply: null
             },
+            new_authority_id: null,
+            authority_name: null,
             isValid: true,
             flagBooleans: flagBooleans,
             permissionBooleans: permissionBooleans,
@@ -98,7 +96,11 @@ class AccountAssetUpdate extends React.Component {
             claimFeesAmount: 0,
             bitasset_opts: isBitAsset ? asset.bitasset.options : null,
             original_bitasset_opts: isBitAsset ? props.asset.getIn(["bitasset", "options"]).toJS() : null,
-            marketInput: ""
+            marketInput: "",
+            whitelist_authorities: props.asset.getIn(["options", "whitelist_authorities"]),
+            blacklist_authorities: props.asset.getIn(["options", "blacklist_authorities"]),
+            whitelist_markets: props.asset.getIn(["options", "whitelist_markets"]),
+            blacklist_markets: props.asset.getIn(["options", "blacklist_markets"])
         };
     }
 
@@ -106,7 +108,7 @@ class AccountAssetUpdate extends React.Component {
 
     _updateAsset(e) {
         e.preventDefault();
-        let {update, issuer, new_issuer_account, core_exchange_rate, flagBooleans,
+        let {update, issuer, new_issuer_account_id, core_exchange_rate, flagBooleans,
             permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
@@ -117,17 +119,22 @@ class AccountAssetUpdate extends React.Component {
         }
         let permissions = assetUtils.getPermissions(permissionBooleans, isBitAsset);
 
-        let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
-        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
-
         if (this.state.marketInput !== update.description.market) {
             update.description.market = "";
         }
         let description = JSON.stringify(update.description);
 
-        AssetActions.updateAsset(issuer, new_issuer_account, update, core_exchange_rate, this.props.asset,
-            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description).then(result => {
-            console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account, this.props.asset.get("id"), update)
+        let auths = {
+            whitelist_authorities: this.state.whitelist_authorities,
+            blacklist_authorities: this.state.blacklist_authorities,
+            whitelist_markets: this.state.whitelist_markets,
+            blacklist_markets: this.state.blacklist_markets
+        };
+
+        AssetActions.updateAsset(issuer, new_issuer_account_id, update, core_exchange_rate, this.props.asset,
+            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths)
+        .then(() => {
+            console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
                 AssetActions.getAsset(this.props.asset.get("id"));
             }, 3000);
@@ -229,7 +236,7 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
-                if ((new big(marketFee)).times(precision).gt(MAX_SAFE_INT)) {
+                if ((new big(marketFee)).times(precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                     updateState = false;
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
@@ -238,13 +245,13 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_supply":
                 let maxSupply = e.amount.replace(/,/g, "");
-                try {
-                    if ((new big(maxSupply)).times(precision).gt(MAX_SAFE_INT)) {
-                        updateState = false;
-                        return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
-                    }
-                    update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
-                } catch(e) {}
+                // try {
+                //     if ((new big(maxSupply)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                //         updateState = false;
+                //         return this.setState({errors: {max_supply: "The number you tried to enter is too large"}});
+                //     }
+                update[value] = utils.limitByPrecision(maxSupply, this.props.asset.get("precision"));
+                // } catch(e) {}
                 break;
 
             default:
@@ -268,7 +275,15 @@ class AccountAssetUpdate extends React.Component {
             base_asset: null
         };
 
-        errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") : null;
+        const p = this.props.asset.get("precision");
+        try {
+            errors.max_supply = new_state.max_supply <= 0 ? counterpart.translate("account.user_issued_assets.max_positive") :
+                (new big(parseInt(new_state.max_supply, 10))).times(Math.pow(10, p)).gt(GRAPHENE_MAX_SHARE_SUPPLY) ? counterpart.translate("account.user_issued_assets.too_large") :
+                null;
+        } catch(err) {
+            console.log("err:", err);
+            errors.max_supply = counterpart.translate("account.user_issued_assets.too_large");
+        }
 
         if (cer) {
             if (cer.quote.asset_id !== asset.get("id") && cer.base.asset_id !== asset.get("id")) {
@@ -297,29 +312,15 @@ class AccountAssetUpdate extends React.Component {
         this.forceUpdate();
     }
 
-    onIssuerAccountChanged(account) {
-        // console.log("onIssuerAccountChanged", account.get("symbol"));
+    onAccountChanged(key, account) {
         this.setState({
-            new_issuer_account: account ? account.get("id") : null
+            [key]: account ? account.get("id") : null
         });
     }
 
-    issuerNameChanged(name) {
+    onAccountNameChanged(key, name) {
         this.setState({
-            issuer_account_name: name
-        });
-    }
-
-    onFunderAccountChanged(account) {
-        // console.log("onIssuerAccountChanged", account.get("symbol"));
-        this.setState({
-            new_funder_account: account ? account.get("id") : null
-        });
-    }
-
-    funderNameChanged(name) {
-        this.setState({
-            funder_account_name: name
+            [key]: name
         });
     }
 
@@ -387,7 +388,7 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
-    _onFundPool(e) {
+    _onFundPool() {
         AssetActions.fundPool(this.state.new_funder_account, this.props.core, this.props.asset, this.state.fundPoolAmount.replace( /,/g, "" ));
     }
 
@@ -397,14 +398,23 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
-    _onClaimFees(e) {
-
+    _onClaimFees() {
         AssetActions.claimPoolFees(this.props.account.get("id"), this.props.asset, this.state.claimFeesAmount.replace( /,/g, "" ));
     }
 
+    onChangeList(key, action = "add", id) {
+        let current = this.state[key];
+        if (action === "add" && !current.includes(id)) {
+            current = current.push(id);
+        } else if (action === "remove" && current.includes(id)) {
+            current = current.remove(current.indexOf(id));
+        }
+        this.setState({[key]: current});
+    }
+
     render() {
-        let {account, account_name, asset, core} = this.props;
-        let {errors, isValid, update, assets, core_exchange_rate, flagBooleans,
+        let {account, asset, core} = this.props;
+        let {errors, isValid, update, core_exchange_rate, flagBooleans,
             permissionBooleans, fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset update fee
@@ -418,11 +428,10 @@ class AccountAssetUpdate extends React.Component {
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
         let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(precision).toString();
-        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(basePrecision).toString();
+        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(Math.pow(10, precision)).toString();
+        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(Math.pow(10, basePrecision)).toString();
 
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
-
         // Loop over flags
         let flags = [];
         let getFlag = (key, onClick, isChecked)=>{
@@ -632,6 +641,23 @@ class AccountAssetUpdate extends React.Component {
 
                             </Tab>
 
+                            <Tab title="account.whitelist.title">
+                                <AssetWhitelist
+                                    whiteListEnabled={flagBooleans["white_list"]}
+                                    whitelist_authorities={this.state.whitelist_authorities}
+                                    blacklist_authorities={this.state.blacklist_authorities}
+                                    whitelist_markets={this.state.whitelist_markets}
+                                    blacklist_markets={this.state.blacklist_markets}
+                                    new_authority_id={this.state.new_authority_id}
+                                    authority_name={this.state.authority_name}
+                                    onAccountNameChanged={this.onAccountNameChanged.bind(this)}
+                                    onAccountChanged={this.onAccountChanged.bind(this)}
+                                    onChangeList={this.onChangeList.bind(this)}
+                                >
+                                    {confirmButtons}
+                                </AssetWhitelist>
+                            </Tab>
+
                             <Tab title="account.user_issued_assets.description">
                                 <div className="small-12 large-8 grid-content">
                                     <Translate component="h3" content="account.user_issued_assets.description" />
@@ -723,8 +749,8 @@ class AccountAssetUpdate extends React.Component {
                                     <AccountSelector
                                         label="account.user_issued_assets.new_issuer"
                                         accountName={this.state.issuer_account_name}
-                                        onChange={this.issuerNameChanged.bind(this)}
-                                        onAccountChanged={this.onIssuerAccountChanged.bind(this)}
+                                        onChange={this.onAccountNameChanged.bind(this, "issuer_account_name")}
+                                        onAccountChanged={this.onAccountChanged.bind(this, "new_issuer_account_id")}
                                         account={this.state.issuer_account_name}
                                         error={null}
                                         tabIndex={1}
@@ -809,8 +835,8 @@ class AccountAssetUpdate extends React.Component {
                                     <AccountSelector
                                         label="transaction.funding_account"
                                         accountName={this.state.funder_account_name}
-                                        onChange={this.funderNameChanged.bind(this)}
-                                        onAccountChanged={this.onFunderAccountChanged.bind(this)}
+                                        onChange={this.onAccountNameChanged.bind(this, "funder_account_name")}
+                                        onAccountChanged={this.onAccountChanged.bind(this, "new_funder_account")}
                                         account={this.state.funder_account_name}
                                         error={null}
                                         tabIndex={1}

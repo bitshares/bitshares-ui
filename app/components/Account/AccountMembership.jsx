@@ -78,7 +78,6 @@ class AccountMembership extends React.Component {
         let lifetime_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_lifetime_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
         let annual_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_annual_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
 
-
         let member_status = ChainStore.getAccountMemberStatus(this.props.account);
         let membership = "account.member." + member_status;
         let expiration = null
@@ -119,7 +118,7 @@ class AccountMembership extends React.Component {
                             <div>
                                 <h4><Translate content="account.member.referral_link"/></h4>
                                 <Translate content="account.member.referral_text"/>:
-                                <h5>{`https://bitshares.openledger.info/?r=${account.name}`}</h5>
+                                <h5>{`https://bitshares.org/wallet?r=${account.name}`}</h5>
                             </div>) : null}
                             <h4><Translate content="account.member.fee_allocation"/></h4>
                             <table className="table key-value-table">

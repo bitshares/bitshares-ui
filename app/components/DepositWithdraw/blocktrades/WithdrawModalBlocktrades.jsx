@@ -47,8 +47,9 @@ class WithdrawModalBlocktrades extends React.Component {
             memo: "",
             withdraw_address_first: true,
             empty_withdraw_value: false,
-            from_account: ChainStore.getAccount(AccountStore.getState().currentAccount),
-            fee_asset_id: "1.3.0"
+            from_account: props.account,
+            fee_asset_id: "1.3.0",
+            feeStatus: {}
         };
 
 
@@ -60,20 +61,39 @@ class WithdrawModalBlocktrades extends React.Component {
 
     componentWillMount() {
         this._updateFee();
+        this._checkFeeStatus();
     }
 
     componentWillUnmount() {
         this.unMounted = true;
     }
 
-    _updateFee(fee_asset_id = this.state.fee_asset_id) {
+    componentWillReceiveProps(np) {
+        if (np.account !== this.state.from_account && np.account !== this.props.account) {
+            this.setState({
+                from_account: np.account,
+                feeStatus: {},
+                fee_asset_id: "1.3.0",
+                feeAmount: new Asset({amount: 0})
+            }, () => {this._updateFee(); this._checkFeeStatus();});
+        }
+    }
+
+    _updateFee(state = this.state) {
+        let { fee_asset_id, from_account } = state;
+        const { fee_asset_types } = this._getAvailableAssets(state);
+        if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
+            fee_asset_id = fee_asset_types[0];
+        }
+
+        if (!from_account) return null;
         checkFeeStatusAsync({
-            accountID: this.props.account.get("id"),
+            accountID: from_account.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + this.state.memo : "")
+                content: this.props.output_coin_type + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
@@ -85,6 +105,40 @@ class WithdrawModalBlocktrades extends React.Component {
                 hasPoolBalance,
                 error: (!hasBalance || !hasPoolBalance)
             }, this._checkBalance);
+        });
+    }
+
+    _checkFeeStatus(state = this.state) {
+        let account = state.from_account;
+        if (!account) return;
+
+        const { fee_asset_types: assets } = this._getAvailableAssets(state);
+        // const assets = ["1.3.0", this.props.asset.get("id")];
+        let feeStatus = {};
+        let p = [];
+        assets.forEach(a => {
+            p.push(checkFeeStatusAsync({
+                accountID: account.get("id"),
+                feeID: a,
+                options: ["price_per_kbyte"],
+                data: {
+                    type: "memo",
+                    content: this.props.output_coin_type + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
+                }
+            }));
+        });
+        Promise.all(p).then(status => {
+            assets.forEach((a, idx) => {
+                feeStatus[a] = status[idx];
+            });
+            if (!utils.are_equal_shallow(state.feeStatus, feeStatus)) {
+                this.setState({
+                    feeStatus
+                });
+            }
+            this._checkBalance();
+        }).catch(err => {
+            console.error(err);
         });
     }
 
@@ -109,7 +163,7 @@ class WithdrawModalBlocktrades extends React.Component {
             withdraw_address: new_withdraw_address,
             withdraw_address_check_in_progress: true,
             withdraw_address_is_valid: null
-        });
+        }, this._updateFee);
         this._validateAddress(new_withdraw_address);
     }
 
@@ -121,7 +175,7 @@ class WithdrawModalBlocktrades extends React.Component {
             withdraw_address_check_in_progress: true,
             withdraw_address_selected: new_withdraw_address,
             withdraw_address_is_valid: null
-        });
+        }, this._updateFee);
         this._validateAddress(new_withdraw_address);
     }
 
@@ -139,9 +193,9 @@ class WithdrawModalBlocktrades extends React.Component {
 
     _checkBalance() {
         const {feeAmount, withdraw_amount} = this.state;
-        const {asset} = this.props;
-
-        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, this.props.balance);
+        const {asset, balance} = this.props;
+        if (!balance || !feeAmount) return;
+        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
         return hasBalance;
@@ -281,7 +335,17 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     _getAvailableAssets(state = this.state) {
-        const { from_account } = state;
+        const { from_account, feeStatus } = state;
+        function hasFeePoolBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasPoolBalance;
+        }
+
+        function hasBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasBalance;
+        }
+
         let fee_asset_types = [];
         if (!(from_account && from_account.get("balances"))) {
             return {fee_asset_types};
@@ -304,6 +368,10 @@ class WithdrawModalBlocktrades extends React.Component {
                 }
             }
         }
+
+        fee_asset_types = fee_asset_types.filter(a => {
+            return hasFeePoolBalance(a) && hasBalance(a);
+        });
 
         return {fee_asset_types};
     }

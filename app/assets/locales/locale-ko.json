@@ -6,6 +6,7 @@
     "ko": "한국어",
     "de": "Deutsch",
     "es": "Español",
+    "it": "Italiano",
     "tr": "Turkish"
   },
   "header": {
@@ -51,11 +52,12 @@
     "propose_scam": "This proposal was created by a known scammer, do not approve it!",
     "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
     "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
-    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required."
+    "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+    "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
     "in_open": "This is the amount of %(asset)s you have in open orders.",
-    "in_open_value": "This is the equivalent value of the %(asset)s you have in open orders.",
+    "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
     "market_actions": "Market actions",
     "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
@@ -78,8 +80,6 @@
       "fee_allocation": "수수료 분배",
       "membership": "멤버쉽",
       "fees_paid": "지불된 평생회원 수수료",
-      "fees_pending": "보류중인 수수료",
-      "fees_vested": "보류중인 확정 수수료",
       "referrals": "피추천인",
       "rewards": "캐쉬백 리워드",
       "cashback": "캐쉬백",
@@ -189,7 +189,7 @@
       "not_yours": "소유 계정이 아님"
     },
     "collaterals": "보증금 포지션",
-    "eq_value": "Equivalent Value",
+    "eq_value": "Estimated Value",
     "please_create_account": "계정을 생성해주세요",
     "create_account": "계정 생성",
     "identicon": "아이덴티콘",
@@ -442,7 +442,8 @@
       "max_margin_period_sec": "Max margin period (s)",
       "call_limit": "콜 한도",
       "short_limit": "공매도 한도",
-      "settlement_price": "강제청산 가격"
+      "settlement_price": "강제청산 가격",
+      "go_to": "Go to block"
     },
     "assets": {
       "title": "자산",
@@ -556,7 +557,8 @@
     "api_closest": "Choose closest automatically",
     "wallet_required": "Wallet model required",
     "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-    "enable_wallet": "Enable wallet model"
+    "enable_wallet": "Enable wallet model",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
   },
   "footer": {
     "title": "비트쉐어 2.0",
@@ -616,7 +618,7 @@
     "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
     "show_star_1": "Show",
     "show_star_2": "only",
-    "base": "Base currency:",
+    "quote": "Quote currency:",
     "search": "Search for more markets here"
   },
   "markets": {
@@ -722,7 +724,7 @@
     "current_pass": "Current password",
     "generated": "Generated password",
     "understand_1": "I understand that no one can recover my password if I lose or forget it",
-    "understand_2": "I have written down or oherwise stored my password",
+    "understand_2": "I have written down or otherwise stored my password",
     "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
   },
   "borrow": {
@@ -765,7 +767,7 @@
         "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
         "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
         "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using the gateway service provided by Transwiser. For more info, see https://www.transwiser.com/"
+        "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/"
         },
     "your_account": "Your account",
     "bridge": "Bridge",
@@ -778,15 +780,6 @@
     "withdraw": "Withdraw",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
-    "transwiser": {
-      "gateway": "Transwiser",
-      "visit_weidian": "Click to deposit",
-      "deposit_title": "Deposit RMB to %(asset)s",
-      "withdraw_title": "Withdraw %(asset)s to RMB",
-      "alipay": "ALIPAY Account Name",
-      "withdraw_note": "Currently only ALIPAY withdraw is supported.  Your asset will be converted at 1:1 ratio and send RMB to your ALIPAY account.",
-      "you_will_receive": "You will receive %(amount)s RMB"
-    },
     "meta": {
       "open_website": "Open Website"
     },

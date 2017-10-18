@@ -145,7 +145,7 @@ class MarketGroup extends React.Component {
                 return <th key={header.name}><Translate content="explorer.assets.issuer" /></th>;
 
             case "add":
-                return <th key={header.name}></th>;
+                return <th key={header.name} style={{textAlign: "right"}}><Translate content="account.perm.confirm_add" /></th>;
 
             default:
                 return <th key={header.name}></th>;
@@ -305,6 +305,20 @@ class MyMarkets extends React.Component {
         );
     }
 
+    componentWillMount() {
+        if (this.props.setMinWidth) {
+            window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
+        }
+
+        if (this.props.currrent) {
+            const currentBase = this.props.current.split("_")[1];
+            const currentIndex = this.props.preferredBases.findIndex(a => a === currentBase);
+            if (currentIndex !== -1 && currentIndex !== this.state.activeMarketTab) {
+                this.setState({activeMarketTab: currentIndex});
+            }
+        }
+    }
+
     componentDidMount() {
         let historyContainer = this.refs.favorites;
         Ps.initialize(historyContainer);
@@ -314,14 +328,9 @@ class MyMarkets extends React.Component {
         if (this.state.activeTab === "find-market") {
             this._lookupAssets("OPEN.", true);
         }
-
     }
 
-    componentWillMount() {
-        if (this.props.setMinWidth) {
-            window.addEventListener("resize", this._setMinWidth, {capture: false, passive: true});
-        }
-    }
+
 
     componetWillUnmount() {
         if (this.props.setMinWidth) {
@@ -698,7 +707,7 @@ class MyMarkets extends React.Component {
                                             tabIndex={1}
                                             style={{width: "100%", paddingBottom: "1.5rem"}}
                                             onFound={this._onFoundBaseAsset.bind(this)}
-                                            label="exchange.base"
+                                            label="exchange.quote"
                                             noLabel
                                             inputStyle={{fontSize: "0.9rem"}}
                                         />

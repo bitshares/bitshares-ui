@@ -44,6 +44,7 @@ class Exchange extends React.Component {
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this.psInit = true;
     }
 
     _initialState(props) {
@@ -148,10 +149,6 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = this.refs.center;
-        if (centerContainer) {
-            Ps.initialize(centerContainer);
-        }
         SettingsActions.changeViewSetting.defer({
             [this._getLastMarketKey()]: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
@@ -191,10 +188,21 @@ class Exchange extends React.Component {
                 height: innerHeight,
                 width: innerWidth
             });
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.update(centerContainer);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        if (this.refs.center && this.psInit) {
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.initialize(centerContainer);
+                this.psInit = false;
+            }
+        }
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||
             nextProps.baseAsset !== this.props.baseAsset ||
@@ -395,7 +403,15 @@ class Exchange extends React.Component {
                 amount: 0
             }
         });
-
+        const {marketID, first} = market_utils.getMarketID(this.props.baseAsset, this.props.quoteAsset);
+        const inverted = this.props.marketDirections.get(marketID);
+        const shouldFlip = inverted && first.get("id") !== this.props.baseAsset.get("id") ||
+            !inverted && first.get("id") !== this.props.baseAsset.get("id");
+        if (shouldFlip) {
+            let setting = {};
+            setting[marketID] = !inverted;
+            SettingsActions.changeMarketDirection(setting);
+        }
         console.log("order:", JSON.stringify(order.toObject()));
         return MarketsActions.createLimitOrder2(order).then((result) => {
             if (result.error) {
@@ -729,7 +745,7 @@ class Exchange extends React.Component {
 
     _setReceive(state, isBid) {
         if (state.price.isValid() && state.for_sale.hasAmount()) {
-            state.to_receive = state.for_sale.times(state.price, isBid);
+            state.to_receive = state.for_sale.times(state.price);
             state.toReceiveText = state.to_receive.getAmount({real: true}).toString();
             return true;
         }
@@ -738,7 +754,7 @@ class Exchange extends React.Component {
 
     _setForSale(state, isBid) {
         if (state.price.isValid() && state.to_receive.hasAmount()) {
-            state.for_sale = state.to_receive.times(state.price, isBid);
+            state.for_sale = state.to_receive.times(state.price, true);
             state.forSaleText = state.for_sale.getAmount({real: true}).toString();
             return true;
         }
@@ -1119,7 +1135,7 @@ class Exchange extends React.Component {
                             showVolumeChart={showVolumeChart}
                         />
 
-                        <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
+                        <div className="grid-block vertical no-padding ps-container" id="CenterContent" ref="center">
                         {!showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" >
                                 {/* Price history chart */}
@@ -1194,6 +1210,7 @@ class Exchange extends React.Component {
                                     noFrame={false}
                                     verticalOrderbook={leftOrderBook}
                                     theme={this.props.settings.get("themes")}
+                                    centerRef={this.refs.center}
                                 />
                             </div>)}
 
@@ -1248,13 +1265,14 @@ class Exchange extends React.Component {
                                     )}
                                     key="open_orders"
                                     orders={marketLimitOrders}
-                                    currentAccount={currentAccount.get("id")}
+                                    currentAccount={currentAccount}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                    feedPrice={this.props.feedPrice}
                                 />) : null}
                             </div>
 

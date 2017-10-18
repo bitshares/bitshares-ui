@@ -3,15 +3,16 @@ import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import { key } from "bitsharesjs/es";
 
 export default class AccountPermissionsMigrate extends React.Component {
 
     constructor() {
         super();
-
         this.state = {
             validPassword : false,
-            pass: null
+            pass: null,
+            generatedPassword: "P" + key.get_random_key().toWif().toString()
         };
     }
 
@@ -25,7 +26,7 @@ export default class AccountPermissionsMigrate extends React.Component {
 
         const active = !valid ? null : WalletDb.generateKeyFromPassword(name, "active", e.value).pubKey;
         const owner = !valid ? null : WalletDb.generateKeyFromPassword(name, "owner", e.value).pubKey;
-        const memo = !valid ? null : WalletDb.generateKeyFromPassword(name, "memo", e.value).pubKey;
+        const memo = !valid ? null : WalletDb.generateKeyFromPassword(name, "active", e.value).pubKey;
         this.setState({validPassword: e.valid, pass: e.value});
         this.props.onSetPasswordKeys({active, owner, memo});
     }
@@ -76,6 +77,11 @@ export default class AccountPermissionsMigrate extends React.Component {
                         onSubmit={this.onSubmit.bind(this)}
                         noValidate
                     >
+                        <label className="left-label">
+                            <Translate content="wallet.generated" />
+                        </label>
+                        <p>{this.state.generatedPassword}</p>
+                        
                         <p style={{fontWeight: "bold"}}><Translate content="account.perm.password_model_2" /></p>
 
                         <PasswordInput

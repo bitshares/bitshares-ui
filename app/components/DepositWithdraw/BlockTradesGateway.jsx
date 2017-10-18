@@ -110,7 +110,7 @@ class BlockTradesGateway extends React.Component {
 
         let issuers = {
             blocktrades: {name: "blocktrades", id: "1.2.32567", support: "support@blocktrades.us"},
-            openledger: {name: coin.intermediateAccount, id: "1.2.96397", support: "support@openledger.info"}
+            openledger: {name: coin.intermediateAccount, id: "1.2.96397", support: "https://openledger.freshdesk.com"}
         };
 
         let issuer = issuers[provider];
@@ -164,10 +164,11 @@ class BlockTradesGateway extends React.Component {
                             receive_asset={coin.symbol}
                             receive_coin_type={coin.symbol.toLowerCase()}
                             supports_output_memos={coin.supportsMemos}
+                            isAvailable={coin.isAvailable}
                             action={this.state.action}
                         />
                         <label className="left-label">Support</label>
-                        <div><Translate content="gateway.support_block" /><br /><br /><a href={"mailto:" + issuer.support}>{issuer.support}</a></div>
+                        <div><Translate content="gateway.support_block" /><br /><br /><a href={(issuer.support.indexOf("@") === -1 ? "" : "mailto:") + issuer.support}>{issuer.support}</a></div>
                     </div>
 
                     {coin && coin.symbol ?

@@ -8,6 +8,7 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
+import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
@@ -80,9 +81,9 @@ class DashboardList extends React.Component {
 	_onStar(account, isStarred, e) {
 		e.preventDefault();
 		if (!isStarred) {
-			SettingsActions.addStarAccount(account);
+			AccountActions.addStarAccount(account);
 		} else {
-			SettingsActions.removeStarAccount(account);
+			AccountActions.removeStarAccount(account);
 		}
 	}
 
@@ -137,7 +138,7 @@ class DashboardList extends React.Component {
 		}).map(account => {
 
 			if (account) {
-				let collateral = 0, debt = {}, openOrders = {};
+				let collateral = {}, debt = {}, openOrders = {};
 				balanceList = balanceList.clear();
 
 				let accountName = account.get("name");
@@ -163,8 +164,12 @@ class DashboardList extends React.Component {
 					account.get("call_orders").forEach( (callID, key) => {
 						let position = ChainStore.getObject(callID);
 						if (position) {
-							collateral += parseInt(position.get("collateral"), 10);
-
+							let collateralAsset = position.getIn(["call_price", "base", "asset_id"]);
+			                if (!collateral[collateralAsset]) {
+			                    collateral[collateralAsset] = parseInt(position.get("collateral"), 10);
+			                } else {
+			                    collateral[collateralAsset] += parseInt(position.get("collateral"), 10);
+			                }
 							let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
 							if (!debt[debtAsset]) {
 								debt[debtAsset] = parseInt(position.get("debt"), 10);
@@ -236,7 +241,7 @@ class DashboardList extends React.Component {
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div> : null}
 					</section>) : null}
-				<table className="table table-hover" style={{fontSize: "0.85rem"}}>
+				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (
 					<thead>
 						<tr>
@@ -273,12 +278,12 @@ class AccountsListWrapper extends React.Component {
 
 export default connect(AccountsListWrapper, {
 	listenTo() {
-		return [SettingsStore, WalletUnlockStore];
+		return [SettingsStore, WalletUnlockStore, AccountStore];
 	},
 	getProps() {
 		return {
 			locked: WalletUnlockStore.getState().locked,
-			starredAccounts: SettingsStore.getState().starredAccounts,
+			starredAccounts: AccountStore.getState().starredAccounts,
 			viewSettings: SettingsStore.getState().viewSettings
 		};
 	}

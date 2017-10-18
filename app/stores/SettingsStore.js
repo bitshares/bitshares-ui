@@ -22,8 +22,6 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
-            onAddStarAccount: SettingsActions.addStarAccount,
-            onRemoveStarAccount: SettingsActions.removeStarAccount,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -44,7 +42,7 @@ class SettingsStore {
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
             disableChat: false,
-            passwordLogin: false
+            passwordLogin: true
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -59,6 +57,7 @@ class SettingsStore {
                 "ko",
                 "de",
                 "es",
+                "it",
                 "tr",
                 "ru"
             ],
@@ -89,8 +88,8 @@ class SettingsStore {
                 "olDarkTheme"
             ],
             passwordLogin: [
-                {translate: "yes"},
-                {translate: "no"}
+                {translate: "cloud_login"},
+                {translate: "local_wallet"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -140,6 +139,9 @@ class SettingsStore {
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
 
         this.apiLatencies = ss.get("apiLatencies", {});
+
+        this.mainnet_faucet = ss.get("mainnet_faucet", settingsAPIs.DEFAULT_FAUCET);
+        this.testnet_faucet = ss.get("testnet_faucet", settingsAPIs.TESTNET_FAUCET);
     }
 
     init() {
@@ -155,7 +157,8 @@ class SettingsStore {
                     "OPEN.DGD", "EUR", "GOLD", "SILVER", "IOU.CNY", "OPEN.DASH",
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
                     "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
-                    "YOYOW", "HERO", "RUBLE", "SMOKE"
+                    "YOYOW", "HERO", "RUBLE", "SMOKE", "STEALTH", "BRIDGE.BCO",
+                    "BRIDGE.BTC", "KEXCOIN", "PPY", "OPEN.EOS", "OPEN.OMG"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"
@@ -195,7 +198,6 @@ class SettingsStore {
             this.defaultMarkets = Immutable.Map(defaultMarkets);
             this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
             this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
-            this.starredAccounts = Immutable.Map(ss.get(this._getChainKey("starredAccounts")));
 
             this.initDone = true;
             resolve();
@@ -212,10 +214,35 @@ class SettingsStore {
             payload.value
         );
 
-        ss.set("settings_v3", this.settings.toJS());
-        if (payload.setting === "walletLockTimeout") {
-            ss.set("lockTimeout", payload.value);
+        switch(payload.setting) {
+            case "faucet_address":
+                if (payload.value.indexOf("testnet") === -1) {
+                    this.mainnet_faucet = payload.value;
+                    ss.set("mainnet_faucet", payload.value);
+                } else {
+                    this.testnet_faucet = payload.value;
+                    ss.set("testnet_faucet", payload.value);
+                }
+                break;
+
+            case "apiServer":
+                let faucetUrl = payload.value.indexOf("testnet") !== -1 ?
+                    this.testnet_faucet : this.mainnet_faucet;
+                this.settings = this.settings.set(
+                    "faucet_address",
+                    faucetUrl
+                );
+                break;
+
+            case "walletLockTimeout":
+                ss.set("lockTimeout", payload.value);
+                break;
+
+            default:
+                break;
         }
+
+        ss.set("settings_v3", this.settings.toJS());
     }
 
     onChangeViewSetting(payload) {
@@ -230,7 +257,6 @@ class SettingsStore {
         for (let key in payload) {
             this.marketDirections = this.marketDirections.set(key, payload[key]);
         }
-
         ss.set("marketDirections", this.marketDirections.toJS());
     }
 
@@ -275,23 +301,6 @@ class SettingsStore {
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
-    onAddStarAccount(account) {
-        if (!this.starredAccounts.has(account)) {
-            this.starredAccounts = this.starredAccounts.set(account, {name: account});
-
-            ss.set(this._getChainKey("starredAccounts"), this.starredAccounts.toJS());
-        } else {
-            return false;
-        }
-    }
-
-    onRemoveStarAccount(account) {
-
-        this.starredAccounts = this.starredAccounts.delete(account);
-
-        ss.set(this._getChainKey("starredAccounts"), this.starredAccounts.toJS());
-    }
-
     onAddWS(ws) {
         if (typeof ws === "string") {
             ws = {url: ws, location: null};
@@ -328,6 +337,7 @@ class SettingsStore {
     }
 
     onUpdateLatencies(latencies) {
+        ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
     }
 }

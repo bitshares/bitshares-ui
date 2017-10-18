@@ -1,13 +1,11 @@
 import React from "react";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
 import { settingsAPIs } from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 import { withRouter } from "react-router/es";
-
-import ls from "common/localStorage";
-const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
+import { connect } from "alt-react";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
 const testnetAPI = settingsAPIs.WS_NODE_LIST.find(a => a.url.indexOf("node.testnet.bitshares.eu") !== -1);
@@ -30,8 +28,7 @@ class ApiNode extends React.Component {
     }
 
     activate(){
-        let action = SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
-
+        SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
         setTimeout(function(){
             willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);
         }.bind(this), 50);
@@ -43,28 +40,36 @@ class ApiNode extends React.Component {
 
     render(){
         const { props, state } = this;
-        const { allowActivation, allowRemoval, automatic, name, url, displayUrl, ping, up } = props;
+        const { allowActivation, allowRemoval, automatic, autoActive, name, url, displayUrl, ping, up } = props;
 
-        var color;
-        var green = "#00FF00";
-        var yellow = "yellow";
-        var red = "red";
+        let color;
+        let green = "#00FF00";
+        let yellow = "yellow";
+        let red = "red";
+        let latencyKey;
 
-        if(ping < 100) color = green;
-        if(ping >= 100 && ping < 200) color = yellow;
-        if(ping >= 200) color = red;
-
-        var Status = <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
-          <Translate style={{color: up ? green : red, marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
-          {up && <span style={{color}}>{ping}ms</span>}
-          {!up && <span style={{color: "red"}}>__</span>}
-        </div>;
-
+        if(ping < 400) {
+            color = green;
+            latencyKey = "low_latency";
+        }
+        else if(ping >= 400 && ping < 800) {
+            color = yellow;
+            latencyKey = "medium_latency";
+        } else {
+            color = red;
+            latencyKey = "high_latency";
+        }
         /*
         * The testnet latency is not checked in the connection manager,
         * so we force enable activation of it even though it shows as 'down'
         */
-        const forceAllow = url === testnetAPI.url;
+        const isTestnet = url === testnetAPI.url;
+
+        var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
+         <Translate style={{color: up ? green : red, marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
+          {up && <span style={{color}}><Translate content={`settings.${latencyKey}`} /></span>}
+          {!up && <span style={{color: "red"}}>__</span>}
+        </div>;
 
         return <div
             className="api-node"
@@ -74,18 +79,18 @@ class ApiNode extends React.Component {
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
             <p style={{marginBottom: 0}}>{displayUrl}</p>
-
+            {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" style={{color: green, marginBottom: 0}} /></div> : null}
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
             {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
 
-            {(allowActivation || allowRemoval) && state.hovered &&
+            {(allowActivation || allowRemoval) && state.hovered && !(automatic && autoActive) &&
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
                     { allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
-                    {(automatic || forceAllow ? true : up) && allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
+                    {(automatic || isTestnet ? true : true) && allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
                 </div>
             }
-        </div>
+        </div>;
     }
 }
 
@@ -94,10 +99,10 @@ ApiNode.defaultProps = {
     url: "wss://testnode.net/wss",
     displayUrl: "wss://testnode.net/wss",
     up: true,
-    ping: 50,
+    ping: null,
     allowActivation: false,
     allowRemoval: false
-}
+};
 
 const ApiNodeWithRouter = withRouter(ApiNode);
 
@@ -159,7 +164,19 @@ class AccessSettings extends React.Component {
 
         let allowRemoval = (!automatic && !this.isDefaultNode[node.url]) ? true : false;
 
-        return <ApiNodeWithRouter {...node} automatic={automatic} allowActivation={allowActivation} allowRemoval={allowActivation && allowRemoval} key={node.url} name={name} displayUrl={displayUrl} triggerModal={props.triggerModal} />;
+        return (
+            <ApiNodeWithRouter
+                {...node}
+                autoActive={props.currentNode === autoSelectAPI}
+                automatic={automatic}
+                allowActivation={allowActivation}
+                allowRemoval={allowActivation && allowRemoval}
+                key={node.url}
+                name={name}
+                displayUrl={displayUrl}
+                triggerModal={props.triggerModal}
+            />
+        );
     }
 
     render(){
@@ -167,25 +184,26 @@ class AccessSettings extends React.Component {
         let getNode = this.getNode.bind(this);
         let renderNode = this.renderNode.bind(this);
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-
         let nodes = props.nodes.map((node)=>{
-            return getNode(node)
+            return getNode(node);
         });
 
         let activeNode = getNode(props.nodes[currentNodeIndex] || props.nodes[0]);
 
         if(activeNode.url == autoSelectAPI){
-            let nodeUrl = ss.get("activeNode");
+            let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
             activeNode = getNode(props.nodes[currentNodeIndex]);
         }
 
         nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1)).sort(function(a,b){
+            let isTestnet = a.url === testnetAPI.url;
             if(a.url == autoSelectAPI){
                 return -1;
             } else if(a.up && b.up){
                 return a.ping - b.ping;
             } else if(!a.up && !b.up){
+                if (isTestnet) return -1;
                 return 1;
             } else if(a.up && !b.up){
                 return -1;
@@ -213,8 +231,21 @@ class AccessSettings extends React.Component {
                     })
                 }
             </div>
-        </div>
+        </div>;
     }
 }
+
+AccessSettings = connect(AccessSettings, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            currentNode: SettingsStore.getState().settings.get("apiServer"),
+            activeNode: SettingsStore.getState().settings.get("activeNode"),
+            apiLatencies: SettingsStore.getState().apiLatencies
+        };
+    }
+});
 
 export default AccessSettings;

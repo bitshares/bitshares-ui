@@ -5,14 +5,14 @@ import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import BaseModal from "../../Modal/BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
-import LinkToAccountById from "components/Blockchain/LinkToAccountById";
+import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress} from "common/blockTradesMethods";
 import { blockTradesAPIs } from "api/apiConfig";
+import LoadingIndicator from "components/LoadingIndicator";
 
 class BlockTradesGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -78,8 +78,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     componentWillMount() {
         let account_name = this.props.account.get("name");
         let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        if (!receive_address) {
+        if (!receive_address || receive_address.address === "unknown") {
             requestDepositAddress(this._getDepositObject());
+        } else {
+            this.setState({receive_address});
         }
     }
 
@@ -89,7 +91,14 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     addDepositAddress( receive_address ) {
         let account_name = this.props.account.get("name");
-        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
+        this.deposit_address_cache.cacheInputAddress(
+            this.props.gateway,
+            account_name,
+            this.props.deposit_coin_type,
+            this.props.receive_coin_type,
+            receive_address.address,
+            receive_address.memo
+        );
         this.setState( {receive_address} );
     }
 
@@ -114,7 +123,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     render() {
-
+        const isDeposit = this.props.action === "deposit";
         let emptyRow = <div style={{display:"none", minHeight: 150}}></div>;
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return emptyRow;
@@ -158,9 +167,9 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
         }
 
-        if( !receive_address ) {
+        if( !receive_address) {
             requestDepositAddress(this._getDepositObject());
-            return emptyRow;
+            return <div style={{margin: "3rem"}}><LoadingIndicator type="three-bounce"/></div>;
         }
 
         let withdraw_modal_id = this.getWithdrawModalId();
@@ -200,7 +209,11 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             var withdraw_memo_prefix = "";
         }
 
-        if (this.props.action === "deposit") {
+        if (!this.props.isAvailable || (isDeposit && !this.props.deposit_account && !this.state.receive_address)) {
+            return <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="h4" /></div>;
+        }
+
+        if (isDeposit) {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
                     <div className="small-12 medium-5">

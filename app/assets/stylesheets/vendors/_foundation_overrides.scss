@@ -47,6 +47,10 @@ div.has-error > input:focus {
   color: #a94442;
 }
 
+.has-error, .facolor-error, .facolor-warning {
+    max-width: 30rem;
+}
+
 .menu-bar.primary > li > a.active {
   background: #414141;
   color: #fff;
@@ -115,6 +119,10 @@ a {
   }
   .button-group {
     margin-bottom: 0;
+  }
+
+  button, div.button {
+      font-size: 1.1rem;
   }
 }
 

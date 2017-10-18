@@ -8,8 +8,8 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
 import account_constants from "chain/account_constants";
 import Icon from "../Icon/Icon";
@@ -998,7 +998,14 @@ class Transaction extends React.Component {
                             <td><Translate component="span" content="proposal_create.fee_paying_account" /></td>
                             <td>{this.linkToAccount(op[1].fee_paying_account)}</td>
                         </tr>
-                    )
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td><Translate component="span" content="proposal_create.id" /></td>
+                            <td>{op[1].proposal}</td>
+                        </tr>
+                    );
 
                     fields.forEach((field) => {
                         if (op[1][field].length) {

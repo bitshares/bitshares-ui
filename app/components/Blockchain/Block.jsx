@@ -1,6 +1,5 @@
 import React from "react";
 import {PropTypes} from "react";
-import BaseComponent from "../BaseComponent";
 import {FormattedDate} from "react-intl";
 import Immutable from "immutable";
 import BlockchainActions from "actions/BlockchainActions";
@@ -8,7 +7,7 @@ import Transaction from "./Transaction";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import LinkToWitnessById from "./LinkToWitnessById";
+import LinkToWitnessById from "../Utility/LinkToWitnessById";
 
 class TransactionList extends React.Component {
 
@@ -46,7 +45,7 @@ class TransactionList extends React.Component {
 }
 
 
-class Block extends BaseComponent {
+class Block extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
         blocks: PropTypes.object.isRequired,
@@ -61,14 +60,28 @@ class Block extends BaseComponent {
 
     constructor(props) {
         super(props);
-        this._bind("_previousBlock", "_nextBlock");
+
+        this.state = {
+            showInput: false
+        };
     }
 
-    shouldComponentUpdate(nextProps) {
+    componentDidMount() {
+        this._getBlock(this.props.height);
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.height !== this.props.height) {
+            this._getBlock(np.height);
+        }
+    }
+
+    shouldComponentUpdate(np, ns) {
         return (
-            !Immutable.is(nextProps.blocks, this.props.blocks) ||
-            nextProps.height !== this.props.height ||
-            nextProps.dynGlobalObject !== this.props.dynGlobalObject
+            !Immutable.is(np.blocks, this.props.blocks) ||
+            np.height !== this.props.height ||
+            np.dynGlobalObject !== this.props.dynGlobalObject ||
+            ns.showInput !== this.state.showInput
         );
     }
 
@@ -78,12 +91,6 @@ class Block extends BaseComponent {
             if (!this.props.blocks.get(height)) {
                 BlockchainActions.getBlock(height);
             }
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.height !== this.props.height) {
-            this._getBlock(nextProps.height);
         }
     }
 
@@ -99,21 +106,52 @@ class Block extends BaseComponent {
         this.props.router.push(`/block/${previousBlock}`);
     }
 
-    componentDidMount() {
-        this._getBlock(this.props.height);
+    toggleInput(e) {
+        e.preventDefault();
+        this.setState({showInput: true});
+    }
+
+    _onKeyDown(e) {
+        if (e && e.keyCode === 13) {
+            this.props.router.push(`/block/${e.target.value}`);
+            this.setState({showInput: false});
+        }
+    }
+
+    _onSubmit() {
+        const value = this.refs.blockInput.value;
+        if (value) {
+            this._onKeyDown({keyCode: 13, target: {value}});
+        }
     }
 
     render() {
-
+        const { showInput } = this.state;
         let {blocks} = this.props;
         let height = parseInt(this.props.height, 10);
         let block = blocks.get(height);
 
+        let blockHeight = showInput ?
+            <span className="inline-label">
+                <input ref="blockInput" type="number" onKeyDown={this._onKeyDown.bind(this)}/>
+                <button onClick={this._onSubmit.bind(this)} className="button"><Translate content="explorer.block.go_to" /></button>
+            </span> :
+            <span>
+                <Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" />
+                <a onClick={this.toggleInput.bind(this)}>
+                    &nbsp;#{height}
+                </a>
+            </span>;
+
         return (
-            <div className="grid-block">
+            <div className="grid-block page-layout">
+                <div className="grid-block main-content">
                 <div className="grid-content">
                         <div className="grid-content no-overflow medium-offset-2 medium-8 large-offset-3 large-6 small-12">
-                        <h4 className="text-center"><Translate style={{textTransform: "uppercase"}} component="span" content="explorer.block.title" /> #{height}</h4>
+                        <h4 className="text-center">
+
+                            {blockHeight}
+                        </h4>
                         <ul>
                            <li><Translate component="span" content="explorer.block.date" />:  {block ? <FormattedDate
                                 value={block.timestamp}
@@ -131,6 +169,7 @@ class Block extends BaseComponent {
                         {block ? <TransactionList
                             block={block}
                         /> : null}
+                    </div>
                     </div>
                 </div>
             </div>

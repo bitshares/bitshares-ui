@@ -132,7 +132,7 @@ class Proposals extends Component {
             });
 
         return (
-            <table className={"table compact"}>
+            <table className={"table compact " + this.props.className}>
                 <thead>
                 <tr>
                     <th><Translate content="account.votes.info" /></th>

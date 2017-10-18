@@ -118,6 +118,10 @@ button, .button {
   @include RobotoCondensed;
 }
 
+.table.dashboard-table > thead > tr > th {
+  @include RobotoRegular;
+}
+
 // .key-value-table tr > td:first-child {
 //   @include RobotoLight;
 // }
@@ -175,11 +179,7 @@ button, .button {
     @include RobotoCondensed;
   }
 
-  .table > thead > tr > th {
-    @include RobotoCondensed;
-  }
-
-  .key-value-table tr > td:first-child {
+   .key-value-table tr > td:first-child {
     @include SegoeUILight;
   }
 

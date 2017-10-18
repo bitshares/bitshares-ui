@@ -36,16 +36,23 @@
 }
 
 .order-table {
-	width: 100%;
-    > thead > tr > th {
-        font-size: 14px;
-        padding: 5px 5px;
-    }
+  width: 100%;
 
-    > tbody > tr > td {
-        font-size: 12px;
-        padding-bottom: 4px;
-    }
+  &.fixed-table {
+      table-layout: fixed;
+      text-align: right;
+  }
+
+  > thead > tr > th {
+      font-size: 14px;
+      padding: 5px 5px;
+      text-align: right;
+  }
+
+  > tbody > tr > td {
+      font-size: 12px;
+      padding-bottom: 4px;
+  }
 }
 
 .my-orders {
@@ -111,6 +118,7 @@ form.order-form {
   align-items: center;
   table {
     width: 100%;
+    table-layout: auto;
     th {
       padding-top: 8px !important;
       padding-bottom: 8px !important;
@@ -430,10 +438,14 @@ table thead tr th.mymarkets-header {
 }
 
 .gold-star > svg > path {
-  fill: #CC9F00;
+  fill: #CC9F00 !important;
 }
 
 .grey-star > svg > path {
+  fill: #878787 !important;
+}
+
+.shuffle > svg > path {
   fill: #878787;
 }
 

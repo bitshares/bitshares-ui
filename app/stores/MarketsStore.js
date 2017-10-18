@@ -282,7 +282,7 @@ class MarketsStore {
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
-                            new CallOrder(call, assets, this.quoteAsset.get("id"), this.feedPrice)
+                            callOrder
                         );
                     }
                 } catch(err) {
@@ -938,7 +938,6 @@ class MarketsStore {
             change = 0,
             last = {close_quote: null, close_base: null},
             invert,
-            latestPrice,
             noTrades = true;
 
         if (history.length) {
@@ -964,6 +963,17 @@ class MarketsStore {
                 first = history[0];
             }
             last = history[history.length -1];
+            /* Some market histories have 0 value for price values, set to 1 in that case */ 
+            function removeZeros(entry) {
+                for (let key in entry) {
+                    if (key.indexOf("volume") === -1 && entry[key] === 0) {
+                        entry[key] = 1;
+                    }
+                }
+            }
+            removeZeros(last);
+            removeZeros(first);
+
             let open, close;
             if (invert) {
                 open = utils.get_asset_price(first.open_quote, quoteAsset, first.open_base, baseAsset, invert);
@@ -977,22 +987,6 @@ class MarketsStore {
             if (!isFinite(change) || isNaN(change)) {
                 change = 0;
             }
-        }
-
-        if (recent && recent.length && recent.length > 1) {
-            let order = recent[1].op;
-            let paysAsset, receivesAsset, isAsk = false;
-
-            if (order.pays.asset_id === baseAsset.get("id")) {
-                paysAsset = baseAsset;
-                receivesAsset = quoteAsset;
-                isAsk = true;
-            } else {
-                paysAsset = quoteAsset;
-                receivesAsset = baseAsset;
-            }
-            let flipped = baseAsset.get("id").split(".")[2] > quoteAsset.get("id").split(".")[2];
-            latestPrice = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped).full;
         }
 
         let price;
@@ -1043,7 +1037,6 @@ class MarketsStore {
             volumeBase,
             volumeQuote,
             close: close,
-            latestPrice,
             price,
             volumeBaseAsset,
             volumeQuoteAsset

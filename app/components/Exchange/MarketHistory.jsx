@@ -167,13 +167,13 @@ class MarketHistory extends React.Component {
                         </div>
                     </div>
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table order-table text-right market-right-padding">
+                        <table className="table order-table text-right fixed-table market-right-padding">
                             <thead>
                                 <tr>
-                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content="exchange.price" /></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
-                                    <th style={{width: "25%", textAlign: "center"}}><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                    <th><Translate className="header-sub-title" content="exchange.price" /></th>
+                                    <th><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
+                                    <th><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
+                                    <th><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
                                 </tr>
                             </thead>
                         </table>
@@ -183,7 +183,7 @@ class MarketHistory extends React.Component {
                         ref="history"
                         style={{maxHeight: 210, overflow: "hidden"}}
                     >
-                        <table className="table order-table text-right market-right-padding">
+                        <table className="table order-table text-right fixed-table market-right-padding">
                             <TransitionWrapper
                                 component="tbody"
                                 transitionName="newrow"

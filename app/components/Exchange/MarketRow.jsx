@@ -130,11 +130,11 @@ class MarketRow extends React.Component {
                     </td>);
 
             case "price":
-                let finalPrice = stats && stats.latestPrice ?
-                    stats.latestPrice :
+                let finalPrice = stats && stats.price ?
+                    stats.price.toReal() :
                     stats && stats.close && (stats.close.quote.amount && stats.close.base.amount) ?
                     utils.get_asset_price(stats.close.quote.amount, quote, stats.close.base.amount, base, true) :
-                    utils.get_asset_price(price.base.amount, base, price.quote.amount, quote);
+                    utils.get_asset_price(price.quote.amount, quote, price.base.amount, base, true);
 
                 let highPrecisionAssets = ["BTC", "OPEN.BTC", "TRADE.BTC", "GOLD", "SILVER"];
                 let precision = 6;

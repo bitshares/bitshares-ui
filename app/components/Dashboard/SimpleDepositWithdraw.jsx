@@ -18,11 +18,12 @@ import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import { ChainStore } from "bitsharesjs/es";
 import { debounce } from "lodash";
+import {DecimalChecker} from "../Exchange/ExchangeInput";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
 
-class DepositWithdrawContent extends React.Component {
+class DepositWithdrawContent extends DecimalChecker {
 
     static propTypes = {
         sender: ChainTypes.ChainAccount.isRequired,
@@ -242,7 +243,7 @@ class DepositWithdrawContent extends React.Component {
         const {feeAmount, to_withdraw} = this.state;
         const {asset} = this.props;
         const balance = this._getCurrentBalance();
-
+        if (!balance || !feeAmount) return;
         const hasBalance = checkBalance(to_withdraw.getAmount({real: true}), asset, feeAmount, balance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
@@ -315,6 +316,7 @@ class DepositWithdrawContent extends React.Component {
     }
 
     _renderWithdraw() {
+        const {amountError} = this.state;
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         let tabIndex = 1;
         const {supportsMemos} = this.props;
@@ -346,20 +348,28 @@ class DepositWithdrawContent extends React.Component {
                 <div className="SimpleTrade__withdraw-row">
                         <label className="left-label">{counterpart.translate("modal.withdraw.amount")}</label>
                         <div className="inline-label input-wrapper">
-                            <input tabIndex={tabIndex++} type="text" value={this.state.withdrawValue} onChange={this._onInputAmount.bind(this)} />
+                            <input
+                                tabIndex={tabIndex++}
+                                type="number"
+                                min="0"
+                                onKeyPress={this.onKeyPress.bind(this)}
+                                value={this.state.withdrawValue}
+                                onChange={this._onInputAmount.bind(this)}
+                            />
                             <div className="form-label select floating-dropdown">
                                 <div className="dropdown-wrapper inactive">
                                     <div>{assetName}</div>
                                 </div>
                             </div>
                         </div>
+                    {amountError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content={amountError} /></p>:null}
                     {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
                 </div>
 
                 <div className="SimpleTrade__withdraw-row">
                     <label className="left-label">{counterpart.translate("transfer.fee")}</label>
                         <div className="inline-label input-wrapper">
-                            <input type="text" value={currentFee.getAmount({real: true})} />
+                            <input type="text" disabled value={currentFee.getAmount({real: true})} />
 
                             <div className="form-label select floating-dropdown">
                                 <div className="dropdown-wrapper inactive">
@@ -521,7 +531,6 @@ class DepositWithdrawContent extends React.Component {
 
     render() {
         let {asset, action} = this.props;
-
         let isDeposit = action === "deposit";
 
         if (!asset) {
@@ -529,6 +538,12 @@ class DepositWithdrawContent extends React.Component {
         }
 
         const {name: assetName} = utils.replaceName(asset.get("symbol"), true);
+
+        let content = this.props.isDown ?
+            <div><Translate className="txtlabel cancel" content="gateway.unavailable_OPEN" component="p" /></div> :
+            !this.props.isAvailable ?
+            <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
+            isDeposit ? this._renderDeposit() : this._renderWithdraw();
 
         return (
             <div className="SimpleTrade__modal">
@@ -546,7 +561,7 @@ class DepositWithdrawContent extends React.Component {
                         paddingTop: "1rem"
                     }}>
 
-                    {isDeposit ? this._renderDeposit() : this._renderWithdraw()}
+                    {content}
                 </div>
             </div>
         );

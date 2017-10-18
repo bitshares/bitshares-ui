@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router/es";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
+import BackupActions from "actions/BackupActions";
 import WalletManagerStore from "stores/WalletManagerStore";
 import Translate from "react-translate-component";
 import cname from "classnames";
@@ -185,6 +186,12 @@ class ChangeActiveWallet extends Component {
         this.setState({current_wallet});
     }
 
+    componentWillReceiveProps(np) {
+        if (np.current_wallet !== this.state.current_wallet) {
+            this.setState({current_wallet: np.current_wallet});
+        }
+    }
+
     render() {
         let state = WalletManagerStore.getState();
 
@@ -231,6 +238,7 @@ class ChangeActiveWallet extends Component {
 
     onConfirm() {
         WalletActions.setWallet(this.state.current_wallet);
+        BackupActions.reset();
         // if (window.electron) {
         //     window.location.hash = "";
         //     window.remote.getCurrentWindow().reload();
@@ -333,7 +341,7 @@ class WalletDelete extends Component {
     }
 
     onConfirm2() {
-        WalletManagerStore.onDeleteWallet(this.state.selected_wallet);
+        WalletActions.deleteWallet(this.state.selected_wallet);
         this._onCancel();
         // window.history.back()
     }
