@@ -2,6 +2,7 @@ import React from "react";
 
 export class DecimalChecker extends React.Component {
     onKeyPress(e){
+        if(e.key === "." && e.target.value === "") e.target.value = "0";
         var nextValue = e.target.value + e.key;
         var decimal = nextValue.match(/\./g);
         var decimalCount = decimal ? decimal.length : 0;
@@ -17,8 +18,14 @@ class ExchangeInput extends DecimalChecker {
         super();
     }
 
+    componentWillReceiveProps(np) {
+        if (this.props.value && !np.value) {
+            this.refs.input.value = "";
+        }
+    }
+
     render(){
-        return <input type="text" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
+        return <input ref="input" type="text" {...this.props} onKeyPress={this.onKeyPress.bind(this)} />;
     }
 }
 
