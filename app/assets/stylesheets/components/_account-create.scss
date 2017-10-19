@@ -95,6 +95,10 @@ div.account-creation {
         font-weight: 600;
         margin: 0 -1rem;
     }
+    
+    p {
+        max-width: 35rem;
+    }
 }
 
 @include breakpoint(medium) {
