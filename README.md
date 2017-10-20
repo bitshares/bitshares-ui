@@ -46,11 +46,11 @@ npm install
 
 ## Running the dev server&emsp;运行开发服务器
 
-The dev server uses Express in combination with Webpack 2.
+The dev server uses Express in combination with Webpack.
 
 Once all the packages have been installed you can start the development server by running:
 
->开发服务器使用了EXPRSS和Webpack 2.
+>开发服务器使用了EXPRESS和Webpack.
 
 >一旦所有的封包被安装了，你就可以通过'web'文件夹并且输入下列代码，开始启动开发服务器
 ```
