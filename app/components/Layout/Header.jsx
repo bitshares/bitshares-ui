@@ -24,7 +24,7 @@ import AccountImage from "../Account/AccountImage";
 var logo = require("assets/logo-ico-blue.png");
 
 const FlagImage = ({flag, width = 20, height = 20}) => {
-    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+    return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
 class Header extends React.Component {
