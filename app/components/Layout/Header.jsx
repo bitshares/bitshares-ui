@@ -172,7 +172,7 @@ class Header extends React.Component {
         let dashboard = (
             <a
                 style={{paddingTop: 12, paddingBottom: 12}}
-                className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})}
+                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
