@@ -41,6 +41,9 @@ class Tab extends React.Component {
         let {isActive, index, changeTab, title, className, disabled} = this.props;
         let c = cnames({"is-active": isActive}, className);
 
+        if (this.props.collapsed) {
+            return <option value={index}>{typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}</option>;
+        }
         return (
             <li className={c} onClick={!disabled ? changeTab.bind(this, index) : null}>
                 <a>
@@ -70,8 +73,16 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting ? props.viewSettings.get(props.setting, props.defaultActiveTab) : props.defaultActiveTab
+            activeTab: props.setting ? props.viewSettings.get(props.setting, props.defaultActiveTab) : props.defaultActiveTab,
+            width: window.innerWidth
         };
+
+        this._setDimensions = this._setDimensions.bind(this);
+    }
+
+    componentDidMount() {
+        this._setDimensions();
+        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -83,7 +94,20 @@ class Tabs extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        window.removeEventListener("resize", this._setDimensions);
+    }
+
+    _setDimensions() {
+        let width = window.innerWidth;
+
+        if (width !== this.state.width) {
+            this.setState({width});
+        }
+    }
+
     _changeTab(value) {
+        console.log("_changeTab", value);
         if (value === this.state.activeTab) return;
         // Persist current tab if desired
         if (this.props.setting) {
@@ -98,6 +122,7 @@ class Tabs extends React.Component {
 
     render() {
         let {children, contentClass, tabsClass, style, segmented} = this.props;
+        const collapseTabs = this.state.width < 900;
 
         let activeContent = null;
 
@@ -106,12 +131,13 @@ class Tabs extends React.Component {
             if (!child) {
                 return null;
             }
+            if (collapseTabs && child.props.disabled) return null;
             let isActive = index === this.state.activeTab;
             if (isActive) {
                 activeContent = child.props.children;
             }
 
-            return React.cloneElement(child, {isActive: isActive, changeTab: this._changeTab.bind(this), index: index} );
+            return React.cloneElement(child, {collapsed: collapseTabs, isActive, changeTab: this._changeTab.bind(this), index: index} );
         }).filter(a => {
             if (a) {
                 tabIndex.push(a.props.index);
@@ -126,8 +152,12 @@ class Tabs extends React.Component {
         return (
             <div className={this.props.className}>
                 <div className="service-selector">
+
                     <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
-                        {tabs}
+                        {collapseTabs ?
+                            <select value={this.state.activeTab} style={{margin: 10}} className="bts-select" onChange={(e) => {this._changeTab(parseInt(e.target.value, 10));}}>{tabs}</select> :
+                            tabs
+                        }
                     </ul>
                 </div>
                 <div className={contentClass + " tab-content"} >
