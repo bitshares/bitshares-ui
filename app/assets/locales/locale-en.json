@@ -33,7 +33,7 @@
     "create_asset": "Create Asset",
     "update_asset": "Update Asset",
     "lock": "Log out (lock the local wallet)",
-    "unlock": "Log in (unlock the local wallet)",
+    "unlock": "Local Wallet Login",
     "unlock_password": "Cloud Wallet Login",
     "unlock_short": "Login",
     "help": "Help",
@@ -106,7 +106,7 @@
     "more": "see more",
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
-    "open_orders": "Open orders",
+    "open_orders": "Open Orders",
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
@@ -439,7 +439,7 @@
     "limit_order_buy": "{account} placed an order to buy {amount} at {price}",
     "limit_order_cancel": "{account} cancelled order #%(order)s",
     "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
-    "asset_reserve": "{account} reserved (burnt) {amount}",
+    "asset_reserve": "{account} burned (reserved) {amount}",
     "asset_issue": "{account} issued {amount} to {to}",
     "asset_fund_fee_pool": "{account} funded {asset} fee pool with {amount}",
     "asset_create": "{account} created the asset {asset}",
@@ -486,7 +486,7 @@
     "reject": "Reject",
     "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
     "asset_issue": "Issue {amount} to {to} using {account}",
-    "asset_reserve": "Reserve (burn) {amount} using {account}",
+    "asset_reserve": "Burn (reserve) {amount} using {account}",
     "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
     "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
     "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}"
@@ -543,6 +543,7 @@
     "deposit_to": "Deposited to account",
     "claimed": "Total claimed",
     "borrow_amount": "Debt",
+    "borrower": "Borrower",
     "funding_account": "Funding account",
     "delta_collateral": "Collateral change",
     "delta_debt": "Debt change",
@@ -554,7 +555,7 @@
     "outputs": "Outputs",
     "inputs": "Inputs",
     "settlement_date": "Settlement date",
-    "asset_reserve": "reserved asset amount",
+    "asset_reserve": "burned asset amount",
     "trxTypes": {
       "all": "Show all",
       "transfer": "Transfer",
@@ -571,7 +572,7 @@
       "asset_update_bitasset": "Update SmartCoin",
       "asset_update_feed_producers": "Update asset feed producers",
       "asset_issue": "Issue asset",
-      "asset_reserve": "Reserve asset",
+      "asset_reserve": "Burn asset",
       "asset_fund_fee_pool": "Fund asset fee pool",
       "asset_settle": "Asset settlement",
       "asset_global_settle": "Global asset settlement",
@@ -740,6 +741,9 @@
         "publisher": "Publisher",
         "published": "Published"
       },
+      "margin_positions": {
+        "title": "Margin positions"
+      },
       "whitelist": {
             "whitelist_authorities": "Whitelist authorities",
             "blacklist_authorities": "Blacklist authorities",
@@ -793,7 +797,7 @@
       "type": "Fee Type",
       "fee": "Standard Fee",
       "feeeq": "(equivalent)",
-      "feeltm": "Lifetime/Annual Member Fee",
+      "feeltm": "Lifetime Member Fee",
       "feeltmeq": "(equivalent)"
     }
   },
@@ -1037,7 +1041,7 @@
     "done": "Done",
     "verify": "I've written it down",
     "invalid_format": "Invalid Format",
-    "enter_password": "Enter Password",
+    "enter_password": "Password",
     "confirm_password": "Confirm Password",
     "pass_incorrect": "Incorrect password",
     "confirm_error": "The confirmation does not match the password",
@@ -1097,7 +1101,7 @@
     "import_private_key": "Import a private key",
     "wallet_browser": "Your Web Browser is your Wallet",
     "has_wallet": "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
-    "go_get_started": "See Get Started tips",
+    "go_get_started": "Getting Started",
     "wallet_crucial": "Your local wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>No one else can restore your account if you lose your backup.</strong>",
     "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
     "wallet_lose_warning": "<strong>IMPORTANT: If you lose your local wallet or your pass phrase you will be unable to access any of your funds again. Make sure you store the backup somewhere safe, and memorize or write down your password!</strong>",
@@ -1116,7 +1120,7 @@
     "all_set": "You're all set!",
     "step_1": "Create a wallet",
     "step_2": "Create a backup",
-    "step_3": "Get Started",
+    "step_3": "Getting Started",
     "congrat": "Congratulations, you're ready!",
     "tips_explore": "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links below to start exploring.",
     "tips_header": "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
@@ -1198,10 +1202,10 @@
       "submit": "Settle asset"
     },
     "reserve": {
-      "title": "Reserve (burn) asset",
-      "amount": "Amount to reserve",
-      "from": "Account to reserve from",
-      "submit": "Reserve"
+      "title": "Burn (reserve) asset",
+      "amount": "Amount to burn",
+      "from": "Account to burn from",
+      "submit": "Burn"
     },
     "confirmation": {
       "title": "The address you entered does not appear valid, are you sure you want to make the withdrawal?",

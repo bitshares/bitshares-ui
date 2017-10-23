@@ -12,7 +12,6 @@ import notify from "actions/NotificationActions";
 import utils from "common/utils";
 import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
-import PrivateKeyStore from "stores/PrivateKeyStore";
 import IssueModal from "../Modal/IssueModal";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import { connect } from "alt-react";
@@ -131,7 +130,7 @@ class AccountAssets extends React.Component {
                 });
 
                 // Update the data for the asset
-                AssetActions.getAsset(issue.asset_id);
+                ChainStore.getAsset(issue.asset_id);
             } else {
                 notify.addNotification({
                     message: `Failed to issue asset`,//: ${this.state.wallet_public_name}

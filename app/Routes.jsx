@@ -122,7 +122,7 @@ const routes = (
             System.import("components/Blockchain/BlockContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="asset/:symbol" getComponent={(location, cb) => {
-            System.import("components/Blockchain/AssetContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Blockchain/Asset").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="create-account" getComponent={(location, cb) => {
             System.import("components/LoginSelector").then(loadRoute(cb)).catch(errorLoading);

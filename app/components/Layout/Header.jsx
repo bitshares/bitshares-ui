@@ -24,7 +24,7 @@ import AccountImage from "../Account/AccountImage";
 var logo = require("assets/logo-ico-blue.png");
 
 const FlagImage = ({flag, width = 20, height = 20}) => {
-    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+    return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
 class Header extends React.Component {
@@ -172,7 +172,7 @@ class Header extends React.Component {
         let dashboard = (
             <a
                 style={{paddingTop: 12, paddingBottom: 12}}
-                className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})}
+                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
@@ -214,7 +214,7 @@ class Header extends React.Component {
                         <li className={name === account_display_name ? "current-account" : ""} key={name}>
                             <a href onClick={this._accountClickHandler.bind(this, name)}>
                                 <div className="table-cell"><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></div>
-                                <div className="table-cell" style={{paddingLeft: 10}}><span>{name}</span></div>
+                                <div className="table-cell" style={{paddingLeft: 10}}><span className="lower-case">{name}</span></div>
                             </a>
                         </li>
                     );
@@ -265,7 +265,7 @@ class Header extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a href onClick={this._onNavigate.bind(this, "/help")}>
+                        <a href onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
                             <span><Translate content="header.help" /></span>
                         </a>
                     </li>

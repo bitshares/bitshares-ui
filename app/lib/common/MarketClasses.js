@@ -615,6 +615,15 @@ class CallOrder {
         return this.call_price;
     }
 
+    getCollateral() {
+        if (this._collateral) return this._collateral;
+        return this._collateral = new Asset({
+            amount: this.for_sale,
+            asset_id: this.for_sale_id,
+            precision: this.assets[this.for_sale_id].precision
+        });
+    }
+
     /*
     * Assume a USD:BTS market
     * The call order will always be selling BTS in order to buy USD
@@ -689,6 +698,24 @@ class CallOrder {
     totalForSale({noCache = false} = {}) {
         if (!noCache && this._total_for_sale) return this._total_for_sale;
         return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
+    }
+
+    getRatio() {
+        return this.getCollateral().getAmount({real: true}) / this.amountToReceive().getAmount({real: true}) / this.getFeedPrice();
+    }
+
+    getStatus() {
+        const mr = this.assets[this.to_receive_id].bitasset.current_feed.maintenance_collateral_ratio / 1000;
+        const cr = this.getRatio();
+
+        if (isNaN(cr)) return null;
+        if (cr < mr) {
+            return "danger";
+        } else if (cr < (mr + 0.5)) {
+            return "warning";
+        } else {
+            return "";
+        }
     }
 }
 
