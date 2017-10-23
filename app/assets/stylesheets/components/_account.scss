@@ -170,15 +170,20 @@ div.overview-tabs {
         padding: 20px;
     }
 
-    ul.account-overview > li.total-value > a {
-        span.tab-title {
-            text-transform: uppercase;
-            font-variant: small-caps;
-            font-size: 0.8rem;
+    ul.account-overview > li.total-value {
+        input {
+            min-width: 15rem;
         }
-        div.tab-subtext {
-            font-size: 0.8rem;
-            text-align: right;
+        > a {
+            span.tab-title {
+                text-transform: uppercase;
+                font-variant: small-caps;
+                font-size: 0.8rem;
+            }
+            div.tab-subtext {
+                font-size: 0.8rem;
+                text-align: right;
+            }
         }
     }
 }

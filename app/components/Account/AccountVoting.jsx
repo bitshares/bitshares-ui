@@ -525,7 +525,7 @@ class AccountVoting extends React.Component {
 
         let actionButtons = (
             <div>
-                <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
+                <button style={{marginRight: 5}} className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
                     <Translate content="account.votes.publish"/>
                 </button>
                 <button className={"button " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
@@ -567,7 +567,7 @@ class AccountVoting extends React.Component {
                                 <Tab
                                     disabled
                                     title={proxyInput}
-                                    className="total-value"
+                                    className="total-value shrink"
                                 >
                                 </Tab>
 

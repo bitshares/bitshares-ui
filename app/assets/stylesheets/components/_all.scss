@@ -18,6 +18,7 @@
 @import "account-create";
 @import "help";
 @import "rudex";
+@import "tabs";
 
 .lifetime {
     background: url("../fresh-bolt2.png") no-repeat 100% 50%;
@@ -27,4 +28,8 @@
 
 .bottom-border {
     border-bottom: 1px solid #444;
+}
+
+.linethrough {
+    text-decoration: line-through;
 }
