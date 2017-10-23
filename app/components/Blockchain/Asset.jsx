@@ -529,7 +529,7 @@ class Asset extends React.Component {
 
         const {sortDirection} = this.state;
 
-        let filterFunctions = {
+        let sortFunctions = {
             name: function(a, b) {
                 let nameA = ChainStore.getAccount(a.borrower, false);
                 if (nameA) nameA = nameA.get("name");
@@ -547,6 +547,9 @@ class Asset extends React.Component {
             },
             debt: function(a, b) {
                 return (sortDirection ? 1 : -1) * (b.amountToReceive().getAmount() - a.amountToReceive().getAmount());
+            },
+            ratio: function(a, b) {
+                return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
             }
         };
 
@@ -600,14 +603,14 @@ class Asset extends React.Component {
                                                     noPopOver
                                                 />)</span> : null}
                                             </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "price")}>
+                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "ratio")}>
                                                 <Translate content="borrow.coll_ratio" />
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.callOrders
-                                            .sort(filterFunctions[this.state.marginTableSort])
+                                            .sort(sortFunctions[this.state.marginTableSort])
                                             .map(c => {
                                                 return (
                                                     <tr className="margin-row" key={c.id}>
