@@ -232,11 +232,12 @@ class Asset extends React.Component {
                 preferredMarket = core_asset.get("symbol");
             }
         }
+        if (asset.symbol === core_asset.get("symbol")) preferredMarket = "USD";
         if (urls && urls.length) {
             urls.forEach(url => {
                 let markdownUrl = `<a target="_blank" rel="noopener noreferrer" href="${url}">${url}</a>`;
                 desc = desc.replace(url, markdownUrl);
-            })
+            });
         }
 
         let {name, prefix} = utils.replaceName(asset.symbol, "bitasset" in asset && !asset.bitasset.is_prediction_market && asset.issuer === "1.2.0");

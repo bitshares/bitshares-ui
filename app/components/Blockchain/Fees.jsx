@@ -41,7 +41,7 @@ class FeeGroup extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
             !Immutable.is(nextProps.globalObject, this.props.globalObject)
-            );
+        );
     }
 
     render() {
@@ -58,8 +58,8 @@ class FeeGroup extends React.Component {
 
         let fees = opIds.map((feeIdx) => {
             if (feeIdx >= feesRaw.length) {
-             console.warn("Asking for non-existing fee id %d! Check group settings in Fees.jsx", feeIdx);
-             return; // FIXME, if I ask for a fee that does not exist?
+                console.warn("Asking for non-existing fee id %d! Check group settings in Fees.jsx", feeIdx);
+                return; // FIXME, if I ask for a fee that does not exist?
             }
 
             let feeStruct = feesRaw[feeIdx];
@@ -85,51 +85,51 @@ class FeeGroup extends React.Component {
                 if (!headIncluded) {
                     headIncluded = true
                     title = (<td rowSpan="6" style={{width:"15em"}}>
-                               <span className={labelClass}>
-                                {feename}
-                               </span>
-                             </td>)
+                        <span className={labelClass}>
+                            {feename}
+                        </span>
+                    </td>)
                 }
 
                 if (ltm_required.indexOf(opId)<0) {
                     rows.push(
-                            <tr key={opId.toString() + key}>
-                                {title}
-                                <td>{feeTypes[key]}</td>
-                                <td style={{textAlign: "right"}}>{equivalentAmount}</td>
-                                <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
-                            </tr>
-                           );
+                        <tr key={opId.toString() + key} className={feeTypes[key]==="Annual Membership" ? "linethrough" : ""}>
+                            {title}
+                            <td>{feeTypes[key]}</td>
+                            <td style={{textAlign: "right"}}>{equivalentAmount}</td>
+                            <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                        </tr>
+                    );
                 } else {
                     rows.push(
-                            <tr key={opId.toString() + key}>
-                                {title}
-                                <td>{feeTypes[key]}</td>
-                                <td style={{textAlign: "right"}}>- <sup>*</sup></td>
-                                <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
-                            </tr>
-                           );
+                        <tr key={opId.toString() + key}>
+                            {title}
+                            <td>{feeTypes[key]}</td>
+                            <td style={{textAlign: "right"}}>- <sup>*</sup></td>
+                            <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                        </tr>
+                    );
                 }
             }
             return (<tbody key={feeIdx}>{rows}</tbody>);
         })
 
         return (
-                   <div className="asset-card">
-                    <div className="card-divider">{this.props.title}</div>
-                    <table className="table">
-                     <thead>
-                      <tr>
-                       <th><Translate content={"explorer.block.op"} /></th>
-                       <th><Translate content={"explorer.fees.type"} /></th>
-                       <th style={{textAlign: "right"}}><Translate content={"explorer.fees.fee"} /></th>
-                       <th style={{textAlign: "right"}}><Translate content={"explorer.fees.feeltm"} /></th>
-                      </tr>
-                     </thead>
-                      {fees}
-                    </table>
-                   </div>
-           );
+            <div className="asset-card">
+                <div className="card-divider">{this.props.title}</div>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th><Translate content={"explorer.block.op"} /></th>
+                            <th><Translate content={"explorer.fees.type"} /></th>
+                            <th style={{textAlign: "right"}}><Translate content={"explorer.fees.fee"} /></th>
+                            <th style={{textAlign: "right"}}><Translate content={"explorer.fees.feeltm"} /></th>
+                        </tr>
+                    </thead>
+                    {fees}
+                </table>
+            </div>
+        );
     }
 }
 FeeGroup = BindToChainState(FeeGroup, {keep_updating:true});
@@ -151,12 +151,12 @@ class Fees extends React.Component {
             <div className="grid-block page-layout">
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
                     <div className="grid-block small-12 shrink" style={{ overflow:"visible"}}>
-                      <HelpContent path = {"components/Fees"} />
+                        <HelpContent path = {"components/Fees"} />
                     </div>
                     <div className="grid-block small-12 " style={{overflow:"visible"}}>
-                     <div className="grid-content">
-                      {feeGroups}
-                     </div>
+                        <div className="grid-content">
+                            {feeGroups}
+                        </div>
                     </div>
                 </div>
             </div>

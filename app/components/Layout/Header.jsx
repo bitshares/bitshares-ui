@@ -24,7 +24,7 @@ import AccountImage from "../Account/AccountImage";
 var logo = require("assets/logo-ico-blue.png");
 
 const FlagImage = ({flag, width = 20, height = 20}) => {
-    return <img height={height} width={width} src={"language-dropdown/" + flag.toUpperCase() + ".png"} />;
+    return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
 class Header extends React.Component {
@@ -172,7 +172,7 @@ class Header extends React.Component {
         let dashboard = (
             <a
                 style={{paddingTop: 12, paddingBottom: 12}}
-                className={cnames({active: active === "/" || active.indexOf("dashboard") !== -1})}
+                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />

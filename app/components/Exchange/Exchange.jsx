@@ -37,6 +37,22 @@ Highcharts.setOptions({
 });
 
 class Exchange extends React.Component {
+    static propTypes = {
+        marketCallOrders: PropTypes.object.isRequired,
+        activeMarketHistory: PropTypes.object.isRequired,
+        viewSettings: PropTypes.object.isRequired,
+        priceData: PropTypes.array.isRequired,
+        volumeData: PropTypes.array.isRequired
+    };
+
+    static defaultProps = {
+        marketCallOrders: [],
+        activeMarketHistory: {},
+        viewSettings: {},
+        priceData: [],
+        volumeData: []
+    };
+
     constructor(props) {
         super();
 
@@ -116,22 +132,6 @@ class Exchange extends React.Component {
             currentPeriod: ws.get("currentPeriod", 3600* 24 * 30 * 3) // 3 months
         };
     }
-
-    static propTypes = {
-        marketCallOrders: PropTypes.object.isRequired,
-        activeMarketHistory: PropTypes.object.isRequired,
-        viewSettings: PropTypes.object.isRequired,
-        priceData: PropTypes.array.isRequired,
-        volumeData: PropTypes.array.isRequired
-    };
-
-    static defaultProps = {
-        marketCallOrders: [],
-        activeMarketHistory: {},
-        viewSettings: {},
-        priceData: [],
-        volumeData: []
-    };
 
     _getLastMarketKey() {
         const chainID = Apis.instance().chain_id;
