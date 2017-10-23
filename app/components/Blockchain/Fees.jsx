@@ -92,7 +92,17 @@ class FeeGroup extends React.Component {
                 }
 
                 if (ltm_required.indexOf(opId)<0) {
-                    rows.push(
+                  if (feeTypes[key]==="Annual Membership") { 
+		    rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td><span className="linethrough">{feeTypes[key]}</span></td>
+                                <td style={{textAlign: "right"}}><span className="linethrough">{equivalentAmount}</span></td>
+                                <td style={{textAlign: "right"}}><span className="linethrough">{equivalentAmountLTM}</span></td>
+                            </tr>
+                           );
+		  } else {
+		    rows.push(
                             <tr key={opId.toString() + key}>
                                 {title}
                                 <td>{feeTypes[key]}</td>
@@ -100,6 +110,7 @@ class FeeGroup extends React.Component {
                                 <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
                             </tr>
                            );
+		  }
                 } else {
                     rows.push(
                             <tr key={opId.toString() + key}>
