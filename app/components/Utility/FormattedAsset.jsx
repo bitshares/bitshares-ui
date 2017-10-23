@@ -86,8 +86,6 @@ class FormattedAsset extends React.Component {
         let issuer = ChainStore.getObject(asset.issuer, false, false);
         let issuerName = issuer ? issuer.get("name") : "";
 
-        console.log("props:", this.props.decimalOffset, "decimals", decimals);
-
         let description = assetUtils.parseDescription(asset.options.description);
 
         const currency_popover_body = !hide_asset && this.props.assetInfo && <div>
