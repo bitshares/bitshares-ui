@@ -165,7 +165,7 @@ class WalletUnlockModal extends React.Component {
 
                 <div>
                     <div className="button-group">
-                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
+                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
                             <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
