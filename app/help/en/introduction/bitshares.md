@@ -22,7 +22,6 @@ transparent, trustworthy, efficient and most importantly profitable.
 
 ## This Wallet
 
-The wallet currently open in this browser window allows to access all
-functionalities of the BitShares network including
+The wallet currently open in this browser window allows to access most features of the BitShares network including
 [BitAssets](../assets/mpa.md), [User-Issued Assets](../assets/uia.md) and the
 [decentralized exchange](../dex/introduction.md).
