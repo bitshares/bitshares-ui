@@ -11,11 +11,10 @@ A *regular* account is a *non-member*.
 ## Lifetime Members
 
 Lifetime Members get a percentage cashback on every transaction fee they pay
-and qualify to earn referral income from users they register with or referer to
-the network. A Lifetime membership is associated with a certain one-time fee
-that is defined by the committee.
+and income from referrals. A Lifetime membership is associated with a certain one-time fee
+defined in this [schedule](/explorer/fees).
 
-## Anual Members
+## Annual Members
 
 If a lifetime membership is too much you can still get the same cashback for the
 next year by becoming an annual subscriber for a smaller one-time fee which
@@ -40,4 +39,4 @@ every maintenance interval.
 
 Most fees are made available immediately, but fees over the vesting threshold
 (such as those paid to upgrade your membership or register a premium account
-name) must vest for some days as defined by the committee.
+name) must vest for some period of time as defined by the committee.
