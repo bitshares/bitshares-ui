@@ -567,7 +567,7 @@ class AccountVoting extends React.Component {
                                 <Tab
                                     disabled
                                     title={proxyInput}
-                                    className="total-value shrink"
+                                    className="total-value"
                                 >
                                 </Tab>
 

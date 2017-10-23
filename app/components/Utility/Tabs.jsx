@@ -150,7 +150,7 @@ class Tabs extends React.Component {
         }
 
         return (
-            <div className={this.props.className}>
+            <div className={cnames(!!this.props.actionButtons ? "with-buttons" : "", this.props.className)}>
                 <div className="service-selector">
 
                     <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
