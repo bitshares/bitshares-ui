@@ -503,7 +503,7 @@ class Asset extends React.Component {
                     </th>
                     <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
                     <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
-                    <th> <Translate content="explorer.asset.price_feed_data.published"/> </th>
+                    <th> <Translate content="explorer.asset.price_feed_data.published"/> </th> 
                 </tr>
             </thead>
         )
@@ -511,6 +511,7 @@ class Asset extends React.Component {
             var feed = feeds[i];
             var publisher = feed[0];
             var publishDate = new Date(feed[1][0]);
+            publishDate.setTime(publishDate.getTime() - publishDate.getTimezoneOffset()*60*1000);
             var settlement_price = feed[1][1].settlement_price;
             var core_exchange_rate = feed[1][1].core_exchange_rate;
             var maintenance_collateral_ratio = '' + feed[1][1].maintenance_collateral_ratio/10 + '%';
@@ -522,7 +523,7 @@ class Asset extends React.Component {
                     <td style={{textAlign: "right"}}> {this.formattedPrice(core_exchange_rate, true)} </td>
                     <td style={{textAlign:"right"}}> {maintenance_collateral_ratio}</td>
                     <td style={{textAlign:"right"}}> {maximum_short_squeeze_ratio}</td>
-                    <td style={{textAlign: "right"}}><TimeAgo time={publishDate}/></td>
+                    <td style={{textAlign: "right"}}><TimeAgo time={publishDate}/></td> 
                 </tr>
             );
         }
