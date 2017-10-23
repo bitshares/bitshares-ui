@@ -241,3 +241,17 @@ table.table.dashboard-table {
         }
     }
 }
+
+div.hide-selector > div.new-worker-button {
+    padding-left: inherit;
+    padding-top: 10px;
+
+    @include breakpoint(medium) {
+        padding-left: 0;
+        padding-top: 0;
+        position: relative;
+        top: -10px;
+        float: right;
+        clear: both;
+    }
+}

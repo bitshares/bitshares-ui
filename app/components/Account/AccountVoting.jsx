@@ -47,10 +47,9 @@ class AccountVoting extends React.Component {
             vote_ids: Immutable.Set(),
             proxy_vote_ids: Immutable.Set(),
             lastBudgetObject: null,
-            showExpired: false,
+            workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
-            all_committee: Immutable.List(),
-            showExpired: false
+            all_committee: Immutable.List()
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -374,12 +373,6 @@ class AccountVoting extends React.Component {
         }
     }
 
-    _toggleExpired() {
-        this.setState({
-            showExpired: !this.state.showExpired
-        });
-    }
-
     _getWorkerArray() {
         let workerArray = [];
 
@@ -395,30 +388,30 @@ class AccountVoting extends React.Component {
         return workerArray;
     }
 
-    _toggleOldWorkers() {
+    _setWorkerTableIndex(index) {
         this.setState({
-            showExpired: !this.state.showExpired
+            workerTableIndex: index
         });
     }
 
     render() {
+        let {workerTableIndex} = this.state;
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
         let publish_buttons_class = cnames("button", {disabled : !this.isChanged()});
         let {globalObject} = this.props;
-        let {showExpired} = this.state;
         let budgetObject;
         if (this.state.lastBudgetObject) {
             budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
         }
 
-        let totalBudget = 0;
-        let unusedBudget = 0;
+        // let totalBudget = 0;
+        // let unusedBudget = 0;
         let workerBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
 
         if (budgetObject) {
             workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
-            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            // totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
         }
 
         let now = new Date();
@@ -457,7 +450,7 @@ class AccountVoting extends React.Component {
             );
         });
 
-        unusedBudget = Math.max(0, workerBudget);
+        // unusedBudget = Math.max(0, workerBudget);
 
         let newWorkers = workerArray
         .filter(a => {
@@ -547,6 +540,8 @@ class AccountVoting extends React.Component {
             <span style={{paddingLeft: 5, position: "relative", top: -1, visibility: (hasProxy ? "visible" : "hidden")}}><Icon name="locked" size="2x" /></span>
         </AccountSelector>);
 
+        const showExpired = workerTableIndex === 2;
+
         return (
             <div className="grid-content app-tables" ref="appTables">
                 <div className="content-block small-12">
@@ -611,24 +606,26 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="account.votes.workers_short">
 
-                                    {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWorkers" /> */}
-
                                     <div className="hide-selector">
-                                        <div className={cnames("inline-block", {inactive: showExpired && expiredWorkers.length})} onClick={showExpired ? this._toggleOldWorkers.bind(this) : () => {}}>
+                                        <div className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
+                                            <Translate content="account.votes.new" />
+                                        </div>
+                                        <div className={cnames("inline-block", {inactive: workerTableIndex !== 1})} onClick={this._setWorkerTableIndex.bind(this, 1)}>
                                             <Translate content="account.votes.active" />
                                         </div>
-                                        {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._toggleOldWorkers.bind(this) : () => {}}>
+
+                                        {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._setWorkerTableIndex.bind(this, 2) : () => {}}>
                                             <Translate content="account.votes.expired" />
                                         </div> : null}
 
-                                        <div style={{position: "relative", top: -10}} className="float-right">
+                                        <div className="new-worker-button">
                                             <Link to="/create-worker">
-                                            <div className="button no-margin"><Translate content="account.votes.create_worker" /></div>
-                                        </Link>
+                                                <div className="button no-margin"><Translate content="account.votes.create_worker" /></div>
+                                            </Link>
                                         </div>
                                     </div>
 
-                                    {showExpired ? null : (
+                                    {/* {showExpired ? null : (
                                     <div style={{paddingTop: 10, paddingBottom: 20}}>
                                         <table>
                                             <tbody>
@@ -644,47 +641,32 @@ class AccountVoting extends React.Component {
                                                     <td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
                                             </tbody>
                                         </table>
-                                    </div>)}
+                                    </div>)} */}
 
                                     <table className="table dashboard-table">
                                         <thead>
                                             <tr>
-                                                <th></th>
-                                                <th><Translate content="account.user_issued_assets.description" /></th>
-                                                <th className="hide-column-small"><Translate content="account.votes.creator" /></th>
-                                                <th className="hide-column-small">
+                                                <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>
+                                                <th style={{textAlign: "left"}}><Translate content="account.user_issued_assets.description" /></th>
+                                                <th style={{textAlign: "left"}} className="hide-column-small"><Translate content="account.votes.creator" /></th>
+                                                <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.total_votes" />
-                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
-                                                        (<AssetName name={ChainStore.getAsset("1.3.0").get("symbol")} />)
-                                                    </div>
                                                 </th>
-                                                <th className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                <th style={{textAlign: "right"}} className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                <th><Translate content="explorer.workers.period" /></th>
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.daily_pay" />
                                                     <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
                                                         (<AssetName name={preferredUnit} />)
                                                     </div>
                                                 </th>
-                                                <th className="hide-column-large">
-                                                    <div><Translate content="account.votes.unclaimed" /></div>
-                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
-                                                        (<AssetName name={preferredUnit} />)
-                                                    </div>
-                                                    </th>
-                                                <th><Translate content="account.votes.supported" /> </th>
+
                                                 <th><Translate content="account.votes.toggle" /></th>
                                             </tr>
                                         </thead>
-                                        {showExpired ? null : newWorkers.length ? (
-                                        <tbody>
-                                            <tr><td colSpan="5"><Translate component="h4" content="account.votes.new" /></td></tr>
-                                            {newWorkers}
-                                            <tr><td colSpan="5"><Translate component="h4" content="account.votes.active" /></td></tr>
-                                        </tbody>
-                                        ) : null}
 
                                         <tbody>
-                                            {showExpired ? expiredWorkers : workers}
+                                            {workerTableIndex === 0 ? newWorkers : workerTableIndex === 1 ? workers : expiredWorkers}
                                         </tbody>
 
                                     </table>

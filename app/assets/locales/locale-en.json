@@ -1,4 +1,11 @@
 {
+    "counterpart": {
+        "formats": {
+            "date": {
+                "short_custom": "%e %b %Y"
+            }
+        }
+    },
   "languages": {
     "en": "English",
     "cn": "简体中文",
@@ -296,7 +303,7 @@
       "approve_worker": "Approve",
       "reject_worker": "Reject",
       "worker_account": "Worker account",
-      "total_votes": "Net votes",
+      "total_votes": "Votes",
       "votes_against": "Votes against",
       "daily_pay": "Daily Pay",
       "daily": "daily",
@@ -315,15 +322,15 @@
       "funding": "Funding",
       "total_budget": "Total available daily worker budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed workers",
-      "active": "Active workers",
+      "new": "Proposed",
+      "active": "Active",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
       "cm_approved_by": "Committee members approved by %(account)s",
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
       "proxy_known": "Or choose an account as your proxy",
-      "expired": "Expired workers",
+      "expired": "Expired",
       "witness": "Witness name",
       "committee": "Committee member name",
       "toggle": "Toggle vote",
@@ -331,7 +338,8 @@
       "active_short": "Active",
       "inactive": "Backup",
       "about": "About",
-      "create_worker": "Create a new worker"
+      "create_worker": "Create a new worker",
+      "line": "Line"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
@@ -776,7 +784,7 @@
     },
     "workers": {
       "title": "Worker name",
-      "period": "Worker duration",
+      "period": "Duration",
       "daily_pay": "Daily pay (BTS)",
       "website": "Website",
       "vesting_pay": "Salary vesting period (days)",

@@ -1320,6 +1320,9 @@
             &.unsupported {
                 > td {
                     color: grey;
+                    > a {
+                        color: grey;
+                    }
 
                     svg > path {
                         fill: grey;
