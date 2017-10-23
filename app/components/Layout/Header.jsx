@@ -265,7 +265,7 @@ class Header extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a href onClick={this._onNavigate.bind(this, "/help")}>
+                        <a href onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
                             <span><Translate content="header.help" /></span>
                         </a>
                     </li>
