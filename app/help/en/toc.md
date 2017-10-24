@@ -6,9 +6,9 @@
  * [Blockchain](introduction/blockchain.md)
  * Voting
     * [Proxy](voting/proxy.md)
-    * [Witness](voting/witness.md)
+    * [Witnesses](voting/witness.md)
     * [Committee](voting/committee.md)
-    * [Worker](voting/worker.md)
+    * [Workers](voting/worker.md)
  * [Accounts](accounts/general.md)
  * [Permissions](accounts/permissions.md)
  * [Memberships](accounts/membership.md)

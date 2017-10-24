@@ -9,9 +9,12 @@ Workers are proposals to perform a service in return for a salary from the block
 
 ## Worker Lifecycle
 
-- Proposed: These worker proposals have been submitted to the blockchain and are being actively voted on. In order to become active, they must exceed the refund400k worker in total votes.
-- Active: These worker proposals have exceeded the threshold and are being actively paid. Active workers can be defunded if their vote threshold is reduced below the refund400k worker level.
-- Expired: These worker proposals are displayed for historical purposes. You will find propsals that have ended based upon their end date.
+### Proposed
+These worker proposals have been submitted to the blockchain and are being actively voted on. In order to become active, they must exceed the refund400k worker in total votes.
+### Active
+These worker proposals have exceeded the threshold and are being actively paid. Active workers can be defunded if their vote threshold is reduced below the refund400k worker level.
+### Expired
+These worker proposals are displayed for historical purposes. You will find propsals that have ended based upon their end date.
 
 ## Worker budget mechanics
 Workers receive pay from a fixed daily budget on a first-come, first-serve basis until there are no more funds left.
