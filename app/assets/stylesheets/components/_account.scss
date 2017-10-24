@@ -160,6 +160,7 @@ div.overview-tabs {
     > div.service-selector {
         margin-bottom: 0;
         border: none;
+        overflow-x: hidden;
     }
 
     div.hide-selector {
@@ -168,6 +169,11 @@ div.overview-tabs {
 
     > div.tab-content {
         padding: 20px;
+    }
+
+    &.with-buttons ul.account-overview > li:not(.total-value) > a {
+        padding-left: 3px;
+        padding-right: 3px;
     }
 
     ul.account-overview > li.total-value {
@@ -243,11 +249,10 @@ table.table.dashboard-table {
 }
 
 div.hide-selector > div.new-worker-button {
-    padding-left: inherit;
+    padding-left: 0;
     padding-top: 10px;
 
     @include breakpoint(medium) {
-        padding-left: 0;
         padding-top: 0;
         position: relative;
         top: -10px;

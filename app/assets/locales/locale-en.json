@@ -322,7 +322,7 @@
       "funding": "Funding",
       "total_budget": "Total available daily worker budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed",
+      "new": "Proposed (%(count)s)",
       "active": "Active",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
@@ -339,7 +339,8 @@
       "inactive": "Backup",
       "about": "About",
       "create_worker": "Create a new worker",
-      "line": "Line"
+      "line": "Line",
+      "save_finish": "Click save to finish"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",

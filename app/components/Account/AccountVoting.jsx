@@ -5,19 +5,17 @@ import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import WorkerApproval from "./WorkerApproval";
 import VotingAccountsList from "./VotingAccountsList";
-import HelpContent from "../Utility/HelpContent";
 import cnames from "classnames";
 import {Tabs, Tab} from "../Utility/Tabs";
-import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {Link} from "react-router/es";
 import ApplicationApi from "api/ApplicationApi";
 import tableHeightHelper from "lib/common/tableHeightHelper";
 import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
+import counterpart from "counterpart";
 
 class AccountVoting extends React.Component {
 
@@ -518,7 +516,7 @@ class AccountVoting extends React.Component {
 
         let actionButtons = (
             <div>
-                <button style={{marginRight: 5}} className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
+                <button className={cnames(publish_buttons_class, {success: this.isChanged()})} onClick={this.onPublish} tabIndex={4}>
                     <Translate content="account.votes.publish"/>
                 </button>
                 <button className={"button " + publish_buttons_class} onClick={this.onReset} tabIndex={8}>
@@ -537,10 +535,17 @@ class AccountVoting extends React.Component {
                 tabIndex={1}
                 placeholder="Proxy not set"
         >
-            <span style={{paddingLeft: 5, position: "relative", top: -1, visibility: (hasProxy ? "visible" : "hidden")}}><Icon name="locked" size="2x" /></span>
+            <span style={{paddingLeft: 5, position: "relative", top: -1, display: (hasProxy ? "" : "none")}}><Icon name="locked" size="2x" /></span>
+            <span style={{paddingLeft: 5, position: "relative", top: -1, display: (!hasProxy ? "" : "none")}}><Link to="/help/voting/proxy"><Icon name="question-circle" size="2x" /></Link></span>
         </AccountSelector>);
 
         const showExpired = workerTableIndex === 2;
+
+        const saveText = (
+            <div className="inline-block" style={{visibility: this.isChanged() ? "visible": "hidden", color: "red", padding: "0.85rem", fontSize: "0.9rem"}}>
+                <Translate content="account.votes.save_finish" />
+            </div>
+        );
 
         return (
             <div className="grid-content app-tables" ref="appTables">
@@ -568,7 +573,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.witnesses.title">
                                     <div className={cnames("content-block")}>
-                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingWitnesses" />
+                                        <div className="hide-selector">
+                                            <Link to="/help/voting/witness"><Icon name="question-circle" /></Link>
+                                            <div className="new-worker-button">
+                                                {saveText}
+                                            </div>
+                                        </div>
                                         <VotingAccountsList
                                             type="witness"
                                             label="account.votes.add_witness_label"
@@ -587,7 +597,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.committee_members.title">
                                     <div className={cnames("content-block")}>
-                                        <HelpContent style={{maxWidth: "800px"}} path="components/AccountVotingCommittee" />
+                                        <div className="hide-selector">
+                                            <Link to="/help/voting/committee"><Icon name="question-circle" /></Link>
+                                            <div className="new-worker-button">
+                                                {saveText}
+                                            </div>
+                                        </div>
                                         <VotingAccountsList
                                             type="committee"
                                             label="account.votes.add_committee_label"
@@ -607,8 +622,9 @@ class AccountVoting extends React.Component {
                                 <Tab title="account.votes.workers_short">
 
                                     <div className="hide-selector">
-                                        <div className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
-                                            <Translate content="account.votes.new" />
+                                        <Link to="/help/voting/worker"><Icon name="question-circle" /></Link>
+                                        <div style={{paddingLeft: 10}} className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
+                                            {counterpart.translate("account.votes.new", {count: newWorkers.length})}
                                         </div>
                                         <div className={cnames("inline-block", {inactive: workerTableIndex !== 1})} onClick={this._setWorkerTableIndex.bind(this, 1)}>
                                             <Translate content="account.votes.active" />
@@ -619,6 +635,7 @@ class AccountVoting extends React.Component {
                                         </div> : null}
 
                                         <div className="new-worker-button">
+                                            {saveText}
                                             <Link to="/create-worker">
                                                 <div className="button no-margin"><Translate content="account.votes.create_worker" /></div>
                                             </Link>

@@ -22,7 +22,7 @@ import FloatingDropdown from "../Utility/FloatingDropdown";
 class AccountSelector extends React.Component {
 
     static propTypes = {
-        label: React.PropTypes.string.isRequired, // a translation key for the label
+        label: React.PropTypes.string, // a translation key for the label
         error: React.PropTypes.element, // the error message override
         placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
         onChange: React.PropTypes.func, // a method to be called any time user input changes
