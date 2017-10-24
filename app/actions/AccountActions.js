@@ -8,8 +8,6 @@ import WalletDb from "stores/WalletDb";
 import WalletActions from "actions/WalletActions";
 
 let accountSearch = {};
-let wallet_api = new WalletApi();
-let application_api = new ApplicationApi();
 
 /**
  *  @brief  Actions that modify linked accounts
@@ -57,7 +55,7 @@ class AccountActions {
     }
 
     /**
-     *  TODO:  This is a function of teh wallet_api and has no business being part of AccountActions
+     *  TODO:  This is a function of teh WalletApi and has no business being part of AccountActions
      */
     transfer(from_account, to_account, amount, asset, memo, propose_account = null, fee_asset_id = "1.3.0") {
 
@@ -66,7 +64,7 @@ class AccountActions {
 
         try {
             return (dispatch) => {
-                return application_api.transfer({
+                return ApplicationApi.transfer({
                     from_account, to_account, amount, asset, memo, propose_account, fee_asset_id
                 }).then(result => {
                     // console.log( "transfer result: ", result )
@@ -131,14 +129,14 @@ class AccountActions {
     }
 
     /**
-     *  TODO:  This is a function of the wallet_api and has no business being part of AccountActions, the account should already
+     *  TODO:  This is a function of the WalletApi and has no business being part of AccountActions, the account should already
      *  be linked.
      */
     upgradeAccount(account_id, lifetime) {
         // Set the fee asset to use
         let fee_asset_id = accountUtils.getFinalFeeAsset(account_id, "account_upgrade");
 
-        var tr = wallet_api.new_transaction();
+        var tr = WalletApi.new_transaction();
         tr.add_type_operation("account_upgrade", {
             "fee": {
                 amount: 0,

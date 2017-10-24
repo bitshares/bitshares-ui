@@ -4,8 +4,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
-import WalletApi from "api/WalletApi";
-import WalletDb from "stores/WalletDb.js";
+import ApplicationApi from "api/ApplicationApi";
 import {PublicKey} from "bitsharesjs/es";
 import AccountPermissionsList from "./AccountPermissionsList";
 import AccountPermissionsMigrate from "./AccountPermissionsMigrate";
@@ -13,8 +12,6 @@ import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import { RecentTransactions } from "./RecentTransactions";
-
-let wallet_api = new WalletApi();
 
 class AccountPermissions extends React.Component {
 
@@ -144,10 +141,7 @@ class AccountPermissions extends React.Component {
         }
 
         // console.log("-- AccountPermissions.onPublish -->", updateObject, s.memo_key);
-        var tr = wallet_api.new_transaction();
-        tr.add_type_operation("account_update", updateObject);
-        console.log("transaction:", JSON.stringify(tr.serialize()));
-        WalletDb.process_transaction(tr, null ,true);
+        ApplicationApi.updateAccount(updateObject);
     }
 
     isValidPubKey(value) {

@@ -160,6 +160,7 @@ div.overview-tabs {
     > div.service-selector {
         margin-bottom: 0;
         border: none;
+        overflow-x: hidden;
     }
 
     div.hide-selector {
@@ -170,21 +171,33 @@ div.overview-tabs {
         padding: 20px;
     }
 
-    ul.account-overview > li.total-value > a {
-        span.tab-title {
-            text-transform: uppercase;
-            font-variant: small-caps;
-            font-size: 0.8rem;
+    &.with-buttons ul.account-overview > li:not(.total-value) > a {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    ul.account-overview > li.total-value {
+        input {
+            min-width: 13rem;
         }
-        div.tab-subtext {
-            font-size: 0.8rem;
-            text-align: right;
+        > a {
+            span.tab-title {
+                text-transform: uppercase;
+                font-variant: small-caps;
+                font-size: 0.8rem;
+            }
+            div.tab-subtext {
+                font-size: 0.8rem;
+                text-align: right;
+            }
         }
     }
 }
 ul.account-overview {
-    width: 100%;
+    display: table;
     li {
+        display: table-cell;
+        vertical-align: middle;
         > a {
             font-size: 1.1rem;
 
@@ -232,5 +245,18 @@ table.table.dashboard-table {
                 text-align: right;
             }
         }
+    }
+}
+
+div.hide-selector > div.new-worker-button {
+    padding-left: 0;
+    padding-top: 10px;
+
+    @include breakpoint(medium) {
+        padding-top: 0;
+        position: relative;
+        top: -10px;
+        float: right;
+        clear: both;
     }
 }

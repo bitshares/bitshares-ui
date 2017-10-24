@@ -1,7 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -12,9 +11,6 @@ import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs/es";
 import AmountSelector from "../Utility/AmountSelector";
-
-let wallet_api = new WalletApi();
-
 
 class ModalContent extends React.Component {
     static propTypes = {
@@ -41,7 +37,7 @@ class ModalContent extends React.Component {
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
 
-        var tr = wallet_api.new_transaction();
+        var tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_settle", {
             fee: {
                 amount: 0,
