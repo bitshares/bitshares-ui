@@ -4,11 +4,7 @@
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
  * [Blockchain](introduction/blockchain.md)
- * Voting
-    * [Proxy](voting/proxy.md)
-    * [Witnesses](voting/witness.md)
-    * [Committee](voting/committee.md)
-    * [Workers](voting/worker.md)
+ * [Voting](voting.md)
  * [Accounts](accounts/general.md)
  * [Permissions](accounts/permissions.md)
  * [Memberships](accounts/membership.md)
