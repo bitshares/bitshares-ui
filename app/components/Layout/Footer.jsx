@@ -151,7 +151,7 @@ class Footer extends React.Component {
     }
 
     onAccess() {
-        this.context.router.push("/settings")
+        this.context.router.push("/settings");
     }
 }
 Footer = BindToChainState(Footer, {keep_updating: true});
