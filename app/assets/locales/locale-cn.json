@@ -783,7 +783,6 @@
     "lightTheme": "白色主题",
     "olDarkTheme": "Openledger黑",
     "reset": "恢复默认值",
-    "disableChat": "禁用聊天",
     "showAssetPercent": "在账户页上显示资产/供给占比",
     "general": "通用设置",
     "wallet": "钱包",
@@ -1262,23 +1261,6 @@
     "expiration_time": "过期时间",
     "proposed_operations": "提议的操作",
     "fee_paying_account": "付费账户"
-  },
-  "chat": {
-    "title": "聊天室",
-    "button": "聊天",
-    "send": "发送",
-    "color": "用户名颜色",
-    "user": "用户名",
-    "done": "完成",
-    "welcome_user": "欢迎访问BitShares",
-    "welcome": "这是P2P聊天室。没有管理员，也不能保证唯一的用户名。可以从设置中禁用聊天功能。发送消息的频率被限制在每2秒1条。输入 /help 获得命令帮助信息。",
-    "disconnected": "你已从聊天室断开链接，请点击下方重新连接。",
-    "rate": "请等待至少2秒发送新消息。",
-    "reconnect": "重新连接",
-    "users": "%(userCount)s 用户在线",
-    "disabled": "聊天室禁用",
-    "enable": "启用聊天室",
-    "telegram_link": "参与更加活跃的讨论，请加人 Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   },
     "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."

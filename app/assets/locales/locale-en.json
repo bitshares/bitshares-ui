@@ -839,7 +839,6 @@
     "lightTheme": "Light theme",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
-    "disableChat": "Disable chat",
     "general": "General",
     "wallet": "Local Wallet",
     "accounts": "Accounts",
@@ -1336,23 +1335,6 @@
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
     "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
   },
-  "chat": {
-    "title": "Chat",
-    "button": "Chat",
-    "send": "Send",
-    "color": "Username color",
-    "user": "Username",
-    "done": "Done",
-    "reconnect": "Reconnect",
-    "welcome_user": "Welcome to BitShares",
-    "users": "%(userCount)s users online",
-    "welcome": "Please visit BitShares via Telegram or Discord!",
-    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
-    "rate": "Please wait at least 2s before posting a new message",
-    "disabled": "Chat Options",
-    "enable": "Enable chat now",
-    "telegram_link": "<p>Please visit the BitShares Telegram group on: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a></p><p>BitShares is also on Discord: <a href='https://discord.gg/GsjQfAJ' target='blank' rel='noopener noreferrer'>https://discord.gg/GsjQfAJ</a></p>"
-    },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
     }

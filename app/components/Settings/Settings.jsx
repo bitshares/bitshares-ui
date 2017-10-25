@@ -136,7 +136,6 @@ class Settings extends React.Component {
             });
             break;
 
-        case "disableChat":
         case "showSettles":
         case "showAssetPercent":
         case "passwordLogin":
