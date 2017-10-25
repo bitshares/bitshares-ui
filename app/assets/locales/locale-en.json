@@ -322,7 +322,7 @@
       "funding": "Funding",
       "total_budget": "Total available daily worker budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed (%(count)s)",
+      "new": "Proposed",
       "active": "Active",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
