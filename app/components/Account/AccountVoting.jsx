@@ -536,7 +536,7 @@ class AccountVoting extends React.Component {
                 placeholder="Proxy not set"
         >
             <span style={{paddingLeft: 5, position: "relative", top: -1, display: (hasProxy ? "" : "none")}}><Icon name="locked" size="2x" /></span>
-            <span style={{paddingLeft: 5, position: "relative", top: -1, display: (!hasProxy ? "" : "none")}}><Link to="/help/voting/proxy"><Icon name="question-circle" size="2x" /></Link></span>
+            <span style={{paddingLeft: 5, position: "relative", top: 9, display: (!hasProxy ? "" : "none")}}><Link to="/help/voting"><Icon name="question-circle" size="1x" /></Link></span>
         </AccountSelector>);
 
         const showExpired = workerTableIndex === 2;
@@ -573,12 +573,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.witnesses.title">
                                     <div className={cnames("content-block")}>
-                                        <div className="hide-selector">
+                                        {/* <div className="hide-selector">
                                             <Link to="/help/voting/witness"><Icon name="question-circle" /></Link>
                                             <div className="new-worker-button">
                                                 {saveText}
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <VotingAccountsList
                                             type="witness"
                                             label="account.votes.add_witness_label"
@@ -597,12 +597,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.committee_members.title">
                                     <div className={cnames("content-block")}>
-                                        <div className="hide-selector">
+                                        {/* <div className="hide-selector">
                                             <Link to="/help/voting/committee"><Icon name="question-circle" /></Link>
                                             <div className="new-worker-button">
                                                 {saveText}
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <VotingAccountsList
                                             type="committee"
                                             label="account.votes.add_committee_label"
@@ -622,7 +622,7 @@ class AccountVoting extends React.Component {
                                 <Tab title="account.votes.workers_short">
 
                                     <div className="hide-selector">
-                                        <Link to="/help/voting/worker"><Icon name="question-circle" /></Link>
+                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" /></Link> */}
                                         <div style={{paddingLeft: 10}} className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
                                             {counterpart.translate("account.votes.new", {count: newWorkers.length})}
                                         </div>
