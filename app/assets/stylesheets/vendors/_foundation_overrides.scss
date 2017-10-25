@@ -48,7 +48,11 @@ div.has-error > input:focus {
 }
 
 .has-error, .facolor-error, .facolor-warning {
-    /* max-width: 30rem; */
+    max-width: 30rem;
+}
+
+.modal.is-active, .has-error, .facolor-error, .facolor-warning {
+  max-width: 35rem;
 }
 
 .menu-bar.primary > li > a.active {
