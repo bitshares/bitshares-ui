@@ -510,8 +510,7 @@ class Asset extends React.Component {
         for (var i = 0; i < feeds.length; i++) {
             var feed = feeds[i];
             var publisher = feed[0];
-            var publishDate = new Date(feed[1][0]);
-            publishDate.setTime(publishDate.getTime() - publishDate.getTimezoneOffset()*60*1000);
+            var publishDate = new Date(feed[1][0] + "Z");
             var settlement_price = feed[1][1].settlement_price;
             var core_exchange_rate = feed[1][1].core_exchange_rate;
             var maintenance_collateral_ratio = '' + feed[1][1].maintenance_collateral_ratio/10 + '%';
