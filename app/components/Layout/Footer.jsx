@@ -6,6 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
+import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
 
@@ -151,6 +152,7 @@ class Footer extends React.Component {
     }
 
     onAccess() {
+        SettingsActions.changeViewSetting({activeSetting: 6});
         this.context.router.push("/settings");
     }
 }
