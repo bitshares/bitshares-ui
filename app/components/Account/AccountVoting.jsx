@@ -573,12 +573,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.witnesses.title">
                                     <div className={cnames("content-block")}>
-                                        {/* <div className="hide-selector">
-                                            <Link to="/help/voting/witness"><Icon name="question-circle" /></Link>
+                                        <div className="hide-selector">
+                                            {/* <Link to="/help/voting/witness"><Icon name="question-circle" /></Link> */}
                                             <div className="new-worker-button">
                                                 {saveText}
                                             </div>
-                                        </div> */}
+                                        </div>
                                         <VotingAccountsList
                                             type="witness"
                                             label="account.votes.add_witness_label"
@@ -597,12 +597,12 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.committee_members.title">
                                     <div className={cnames("content-block")}>
-                                        {/* <div className="hide-selector">
-                                            <Link to="/help/voting/committee"><Icon name="question-circle" /></Link>
+                                        <div className="hide-selector">
+                                            {/* <Link to="/help/voting/committee"><Icon name="question-circle" /></Link> */}
                                             <div className="new-worker-button">
                                                 {saveText}
                                             </div>
-                                        </div> */}
+                                        </div>
                                         <VotingAccountsList
                                             type="committee"
                                             label="account.votes.add_committee_label"
