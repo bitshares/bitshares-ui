@@ -40,8 +40,6 @@ class AccountVoting extends React.Component {
         super(props);
         const proxyId = props.proxy.get("id");
         const proxyName = props.proxy.get("name");
-        console.log("constructor", props);
-        console.log("initialBudget:", props.initialBudget.toJS());
         this.state = {
             proxy_account_id: proxyId === "1.2.5" ? "": proxyId,//"1.2.16",
             prev_proxy_account_id: proxyId === "1.2.5" ? "": proxyId,
@@ -417,8 +415,6 @@ class AccountVoting extends React.Component {
             workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
             totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
         }
-
-        console.log("workerBudget", workerBudget);
 
         let now = new Date();
         let workerArray = this._getWorkerArray();
