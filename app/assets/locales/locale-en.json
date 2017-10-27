@@ -305,7 +305,7 @@
       "worker_account": "Worker account",
       "total_votes": "Votes",
       "votes_against": "Votes against",
-      "daily_pay": "Asking Pay",
+      "daily_pay": "Pay",
       "daily": "daily",
       "max_pay": "Maximum total pay",
       "unclaimed": "Unclaimed pay",
@@ -322,8 +322,8 @@
       "funding": "Funding",
       "total_budget": "Daily budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed (%(count)s)",
-      "active": "Active (%(count)s)",
+      "new": "Proposed(%(count)s)",
+      "active": "Active(%(count)s)",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
       "cm_approved_by": "Committee members approved by %(account)s",
@@ -342,7 +342,7 @@
       "line": "Line",
       "save_finish": "Click save to finish",
       "threshold": "Votes required to activate",
-      "missing": "Missing votes"
+      "missing": "Needed"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
