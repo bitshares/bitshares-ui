@@ -1293,6 +1293,7 @@
         > thead > tr > th {
             background-color: $account-header;
             color: $account-primarytext;
+            border-color: $account-border;
             &:first-of-type {
                 border-left: 1px solid $account-border;
             }

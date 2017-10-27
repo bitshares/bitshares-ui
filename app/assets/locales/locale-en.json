@@ -2,7 +2,7 @@
     "counterpart": {
         "formats": {
             "date": {
-                "short_custom": "%e %b %Y"
+                "short_custom": "%e %b '%y"
             }
         }
     },
@@ -305,7 +305,7 @@
       "worker_account": "Worker account",
       "total_votes": "Votes",
       "votes_against": "Votes against",
-      "daily_pay": "Daily Pay",
+      "daily_pay": "Asking Pay",
       "daily": "daily",
       "max_pay": "Maximum total pay",
       "unclaimed": "Unclaimed pay",
@@ -320,10 +320,10 @@
       "creator": "Creator",
       "recycled": "Recycled",
       "funding": "Funding",
-      "total_budget": "Total available daily worker budget",
+      "total_budget": "Daily budget",
       "unused_budget": "Unused daily worker budget",
       "new": "Proposed (%(count)s)",
-      "active": "Active",
+      "active": "Active (%(count)s)",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
       "cm_approved_by": "Committee members approved by %(account)s",
@@ -340,7 +340,9 @@
       "about": "About",
       "create_worker": "Create a new worker",
       "line": "Line",
-      "save_finish": "Click save to finish"
+      "save_finish": "Click save to finish",
+      "threshold": "Votes required to activate",
+      "missing": "Missing votes"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
