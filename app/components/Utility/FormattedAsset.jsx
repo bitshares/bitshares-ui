@@ -80,12 +80,11 @@ class FormattedAsset extends React.Component {
                 <span className={colorClass}>
                     {percent}%
                 </span>
-            )
-
+            );
         }
 
         let issuer = ChainStore.getObject(asset.issuer, false, false);
-        let issuerName = issuer ? issuer.get('name') : '';
+        let issuerName = issuer ? issuer.get("name") : "";
 
         let description = assetUtils.parseDescription(asset.options.description);
 
@@ -99,14 +98,13 @@ class FormattedAsset extends React.Component {
             />
             {this.props.assetInfo}
         </div>;
-
         return (
                 <span className={colorClass}  >
                 {!hide_amount ?
                     <FormattedNumber
                         value={this.props.exact_amount ? amount : amount / precision}
-                        minimumFractionDigits={Math.max(decimals, 2)}
-                        maximumFractionDigits={Math.max(decimals, 2)}
+                        minimumFractionDigits={Math.max(decimals, 0)}
+                        maximumFractionDigits={Math.max(decimals, 0)}
                     />
                 : null}
                 {!hide_asset && (this.props.assetInfo ? (

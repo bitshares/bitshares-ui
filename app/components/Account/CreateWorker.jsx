@@ -6,9 +6,6 @@ import utils from "common/utils";
 import notify from "actions/NotificationActions";
 import Translate from "react-translate-component";
 
-const application_api = new ApplicationApi();
-
-
 class CreateWorker extends React.Component {
 
     constructor() {
@@ -32,7 +29,7 @@ class CreateWorker extends React.Component {
     }
 
     onSubmit() {
-        application_api.createWorker(this.state, this.props.currentAccount).catch(error => {
+        ApplicationApi.createWorker(this.state, this.props.currentAccount).catch(error => {
             console.log("error", error);
             let error_msg = error.message && error.message.length && error.message.length > 0 ? error.message.split("stack")[0] : "unknown error";
 

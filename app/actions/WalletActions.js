@@ -7,8 +7,6 @@ import {Apis} from "bitsharesjs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
 
-let application_api = new ApplicationApi();
-
 class WalletActions {
 
     /** Restore and make active a new wallet_object. */
@@ -52,7 +50,7 @@ class WalletActions {
 
         return new Promise((resolve, reject) => {
             let create_account = () => {
-                return application_api.create_account(
+                return ApplicationApi.create_account(
                     owner_private.toPublicKey().toPublicKeyString(),
                     active_private.toPublicKey().toPublicKeyString(),
                     account_name,
@@ -134,7 +132,7 @@ class WalletActions {
         };
 
         let create_account = () => {
-            return application_api.create_account(
+            return ApplicationApi.create_account(
                 owner_private.private_key.toPublicKey().toPublicKeyString(),
                 active_private.private_key.toPublicKey().toPublicKeyString(),
                 account_name,

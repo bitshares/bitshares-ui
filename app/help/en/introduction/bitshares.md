@@ -2,7 +2,7 @@
 
 ## Support
 
->If you have an issue related to a Gateway provider, please be sure to contact them directly. See Gateways at the bottom of the left menu.
+>If you have an issue related to a Gateway provider, please be sure to contact them directly. See Gateways in the left menu.
 
 ### Bitshares Chat
 You can chat with other member of the Bitshares community in real time at:
@@ -37,6 +37,6 @@ transparent, trustworthy, efficient and most importantly profitable.
 ## Wallet
 This wallet allows access most features of the BitShares network including
 
-- [BitAssets](../assets/mpa.md)
-- [User-Issued Assets](../assets/uia.md)
-- [The DEX](../dex/introduction.md)
+- [BitAssets](/help/assets/mpa.md)
+- [User-Issued Assets](/help/assets/uia.md)
+- [The DEX](/help/dex/introduction.md)

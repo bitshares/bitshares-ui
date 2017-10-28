@@ -1,4 +1,11 @@
 {
+    "counterpart": {
+        "formats": {
+            "date": {
+                "short_custom": "%e %b %Y"
+            }
+        }
+    },
   "languages": {
     "en": "English",
     "cn": "简体中文",
@@ -236,8 +243,8 @@
       "active": "Active Permissions",
       "owner": "Owner Permissions",
       "memo_key": "Memo key",
-      "publish": "Publish Changes",
-      "reset": "Reset Changes",
+      "publish": "Save",
+      "reset": "Cancel",
       "add": "Add Permission",
       "type": "Type",
       "key": "Key/Name",
@@ -286,7 +293,7 @@
       "url": "Webpage",
       "support": "Support",
       "workers": "Budget Items",
-      "publish": "Publish Changes",
+      "publish": "Save",
       "add_witness": "Add",
       "remove_witness": "Remove",
       "remove_committee": "Remove",
@@ -296,9 +303,9 @@
       "approve_worker": "Approve",
       "reject_worker": "Reject",
       "worker_account": "Worker account",
-      "total_votes": "Net votes",
+      "total_votes": "Votes",
       "votes_against": "Votes against",
-      "daily_pay": "Pay",
+      "daily_pay": "Daily Pay",
       "daily": "daily",
       "max_pay": "Maximum total pay",
       "unclaimed": "Unclaimed pay",
@@ -315,21 +322,25 @@
       "funding": "Funding",
       "total_budget": "Total available daily worker budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed workers",
-      "active": "Active workers",
+      "new": "Proposed",
+      "active": "Active",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
       "cm_approved_by": "Committee members approved by %(account)s",
       "cm_not_approved_by": "Committee members not approved by %(account)s",
       "already": "Account is already in the list",
       "proxy_known": "Or choose an account as your proxy",
-      "expired": "Expired workers",
+      "expired": "Expired",
       "witness": "Witness name",
       "committee": "Committee member name",
       "toggle": "Toggle vote",
       "supported": "Supported",
       "active_short": "Active",
-      "inactive": "Inactive"
+      "inactive": "Backup",
+      "about": "About",
+      "create_worker": "Create a new worker",
+      "line": "Line",
+      "save_finish": "Click save to finish"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
@@ -774,7 +785,7 @@
     },
     "workers": {
       "title": "Worker name",
-      "period": "Worker duration",
+      "period": "Duration",
       "daily_pay": "Daily pay (BTS)",
       "website": "Website",
       "vesting_pay": "Salary vesting period (days)",
@@ -828,7 +839,6 @@
     "lightTheme": "Light theme",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
-    "disableChat": "Disable chat",
     "general": "General",
     "wallet": "Local Wallet",
     "accounts": "Accounts",
@@ -1325,23 +1335,6 @@
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
     "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
   },
-  "chat": {
-    "title": "Chat",
-    "button": "Chat",
-    "send": "Send",
-    "color": "Username color",
-    "user": "Username",
-    "done": "Done",
-    "reconnect": "Reconnect",
-    "welcome_user": "Welcome to BitShares",
-    "users": "%(userCount)s users online",
-    "welcome": "Please visit BitShares via Telegram or Discord!",
-    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
-    "rate": "Please wait at least 2s before posting a new message",
-    "disabled": "Chat Options",
-    "enable": "Enable chat now",
-    "telegram_link": "<p>Please visit the BitShares Telegram group on: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a></p><p>BitShares is also on Discord: <a href='https://discord.gg/GsjQfAJ' target='blank' rel='noopener noreferrer'>https://discord.gg/GsjQfAJ</a></p>"
-    },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
     }

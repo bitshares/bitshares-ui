@@ -1,10 +1,8 @@
 import React from "react";
-import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
-import VestingBalance from "../Utility/VestingBalance";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
@@ -58,20 +56,10 @@ class WorkerApproval extends React.Component{
     render() {
         let {rank} = this.props;
         let worker = this.props.worker.toJS();
-        // console.log( "render...", worker);
         let total_votes = worker.total_votes_for - worker.total_votes_against;
-        let total_days = 1;
-
         let approvalState = this.props.vote_ids.has(worker.vote_for) ? true :
-        this.props.vote_ids.has(worker.vote_against) ? false :
-        null;
-
-        let approval = null;
-
-        // console.log( "this.props.vote_ids: ", this.props.vote_ids )
-        if( approvalState === true ) {
-            approval = <Icon name="checkmark" />;
-        }
+            this.props.vote_ids.has(worker.vote_against) ? false :
+            null;
 
         let displayURL = worker.url ? worker.url.replace(/http:\/\/|https:\/\//, "") : "";
 
@@ -87,67 +75,53 @@ class WorkerApproval extends React.Component{
             fundedPercent = this.props.rest / worker.daily_pay * 100;
         }
 
-        let startDate = counterpart.localize(new Date(worker.work_begin_date), { type: "date" });
-        let endDate = counterpart.localize(new Date(worker.work_end_date), { type: "date" });
+        let startDate = counterpart.localize(new Date(worker.work_begin_date), { type: "date", format: "short_custom" });
+        let endDate = counterpart.localize(new Date(worker.work_end_date), { type: "date", format: "short_custom" });
 
         let now = new Date();
         let isExpired = new Date(worker.work_end_date) <= now;
-
         return  (
 
-            <tr>
-                {isExpired ? null : <td style={{backgroundColor: fundedPercent > 0 ? "green" : "orange"}}>#{rank}</td>}
+            <tr className={approvalState ? "" : "unsupported"}>
+                {isExpired ? null : <td style={{textAlign: "right", paddingRight: 10, paddingLeft: 0}}>{rank}</td>}
 
-                <td colSpan={isExpired ? "2" : "1"}>
-                    <div>{worker.name}</div>
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
-                    {startDate} - {endDate}</div>
+                <td style={{textAlign: "left"}} colSpan={isExpired ? "2" : "1"}>
+                    <div className="inline-block" style={{paddingRight: 5, position: "relative", top: 2}}>
+                        <a style={{visibility: worker.url && worker.url.indexOf(".") !== -1 ? "visible": "hidden"}} href={worker.url} target="_blank" rel="noopener noreferrer">
+                            <Icon name="share" />
+                        </a>
+                    </div>
+                    {worker.name.substr(0, 30)}{worker.name.length > 30 ? "..." : ""}
                 </td>
 
-                <td className="hide-column-small">
-                    <div><LinkToAccountById account={worker.worker_account} /></div>
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}><a target="_blank" rel="noopener noreferrer" href={worker.url}>{displayURL}</a> </div>
+                <td style={{textAlign: "left"}} className="hide-column-small">
+                    <LinkToAccountById account={worker.worker_account} />
                 </td>
 
-                <td className="hide-column-small">
-                    <FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5}/>
+                <td style={{textAlign: "right"}} className="hide-column-small">
+                    <FormattedAsset amount={total_votes} asset="1.3.0" decimalOffset={5} hide_asset/>
                 </td>
 
-                <td className="hide-column-small">
-                    <FormattedAsset amount={worker.daily_pay} asset="1.3.0" decimalOffset={5}/>
-                    {this.props.preferredUnit !== "1.3.0" ?<div style={{paddingTop: 5}}>
-                        (<EquivalentValueComponent fromAsset="1.3.0" toAsset={this.props.preferredUnit} amount={worker.daily_pay}/>)
-                    </div> : null}
-                </td>
-
-                <td className="hide-column-large">
-                    {worker.worker[1].balance ?
-                        <VestingBalance balance={worker.worker[1].balance} decimalOffset={5}/> :
-                        worker.worker[1].total_burned ?
-                        <span>(<FormattedAsset amount={worker.worker[1].total_burned} asset="1.3.0" decimalOffset={5} />)</span> :
-                            null}
-                </td>
-
-                <td className="hide-column-small">
+                <td style={{textAlign: "right"}} className="hide-column-small">
                     {utils.format_number(fundedPercent, 2)}%
                 </td>
 
-                <td style={{textAlign: "right"}}>
-                    {approvalState !== true ?
-                    <button className="button outline small success" onClick={this.onApprove.bind(this)}>
-                    +
-                    </button> :
-                    <button className="button outline small info" onClick={this.onReject.bind(this)}>
-                    -
-                    </button>}
+                <td>
+                    {startDate} - {endDate}
                 </td>
 
-                <td style={{padding: 0, textAlign: "center", backgroundColor: approvalState === true ? "green" : approvalState === false ? "red" : "transparent"}}>
-                    {approval}
+                <td style={{textAlign: "right"}} className="hide-column-small">
+                    <EquivalentValueComponent hide_asset fromAsset="1.3.0" toAsset={this.props.preferredUnit} amount={worker.daily_pay}/>
                 </td>
 
-                {/*<div className="button-group no-margin" style={{paddingTop: "1rem"}}>
-                </div>*/}
+                <td
+                    className="clickable"
+                    onClick={this.props.proxy ? () => {} : this[approvalState ? "onReject" : "onApprove"].bind(this)}
+                >
+                    {!this.props.proxy ?
+                        <Icon name={approvalState ? "checkmark-circle" : "minus-circle"} /> :
+                        <Icon name="locked" />}
+                </td>
             </tr>
         );
     }

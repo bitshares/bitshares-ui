@@ -99,7 +99,7 @@ class ValueComponent extends MarketStatsCheck {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
-        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
+        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}/>;
     }
 }
 ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
@@ -130,9 +130,12 @@ class BalanceValueComponent extends React.Component {
     }
 
     render() {
-        let amount = Number(this.props.balance.get("balance"));
-        let fromAsset = this.props.balance.get("asset_type");
+        const {balance} = this.props;
+        const isBalanceObject = !!balance.getIn(["balance", "amount"]);
 
+        let amount = Number(isBalanceObject ? balance.getIn(["balance", "amount"]) : balance.get("balance"));
+        let fromAsset = isBalanceObject ? balance.getIn(["balance", "asset_id"]) : balance.get("asset_type");
+        if (isNaN(amount)) return <span>--</span>;
         return <EquivalentValueComponent refCallback={this.props.refCallback} hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }

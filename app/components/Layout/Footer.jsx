@@ -6,6 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
+import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
 
@@ -123,7 +124,7 @@ class Footer extends React.Component {
                     </span>:null}
                     {block_height ?
                     (<div className="grid-block shrink">
-                        <div className="tooltip" data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`)} data-place="top">
+                        <div className="tooltip" onClick={this.onAccess.bind(this)} data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`)} data-place="top">
                             <div className="footer-status">
                                 { !synced || !connected ?
                                     <span className="warning"><Translate content={`footer.${!synced ? "unsynced" : "disconnected"}`} /></span> :
@@ -148,6 +149,11 @@ class Footer extends React.Component {
 
     onBackupBrainkey() {
         this.context.router.push("/wallet/backup/brainkey");
+    }
+
+    onAccess() {
+        SettingsActions.changeViewSetting({activeSetting: 6});
+        this.context.router.push("/settings");
     }
 }
 Footer = BindToChainState(Footer, {keep_updating: true});
