@@ -223,12 +223,23 @@ class WithdrawModalBlocktrades extends React.Component {
 
                 const {feeAmount} = this.state;
 
-                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, "")) + parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
+
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: amount
                 });
+                
+                let userAmount = new Asset({
+                    amount: this.props.balance.get("balance"),
+                    asset_id: this.props.asset.get("id"),
+                    precision: this.props.asset.get("precision")
+                });
+
+                console.log("Sending Amount: " + sendAmount.amount + " Available Amount: " + userAmount.amount);
+
+                sendAmount.amount = sendAmount.amount > userAmount.amount ? userAmount.amount : sendAmount.amount;
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
