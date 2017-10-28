@@ -17,7 +17,6 @@ import {Link} from "react-router/es";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import EquivalentPrice from "../Utility/EquivalentPrice";
 
-const wallet_api = new WalletApi();
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
 /**
@@ -49,7 +48,7 @@ class CollateralPosition extends React.Component {
 
     _onClosePosition(e) {
         e.preventDefault();
-        let tr = wallet_api.new_transaction();
+        let tr = WalletApi.new_transaction();
 
         tr.add_type_operation("call_order_update", {
             "fee": {

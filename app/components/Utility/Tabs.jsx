@@ -67,7 +67,8 @@ class Tabs extends React.Component {
         active: 0,
         defaultActiveTab: 0,
         segmented: true,
-        contentClass: ""
+        contentClass: "",
+        style: {}
     };
 
     constructor(props) {
@@ -149,14 +150,24 @@ class Tabs extends React.Component {
         }
 
         return (
-            <div className={this.props.className}>
+            <div className={cnames(!!this.props.actionButtons ? "with-buttons" : "", this.props.className)}>
                 <div className="service-selector">
 
                     <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
                         {collapseTabs ?
-                            <select value={this.state.activeTab} style={{margin: 10}} className="bts-select" onChange={(e) => {this._changeTab(parseInt(e.target.value, 10));}}>{tabs}</select> :
+                            <li style={{paddingLeft: 10, paddingRight: 10, minWidth: "15rem"}}>
+                                <select
+                                    value={this.state.activeTab}
+                                    style={{marginTop: 10, marginBottom: 10}}
+                                    className="bts-select"
+                                    onChange={(e) => {this._changeTab(parseInt(e.target.value, 10));}}
+                                >
+                                    {tabs}
+                                </select>
+                            </li> :
                             tabs
                         }
+                        {this.props.actionButtons ? <li className="tabs-action-buttons">{this.props.actionButtons}</li> : null}
                     </ul>
                 </div>
                 <div className={contentClass + " tab-content"} >

@@ -796,7 +796,6 @@
     "lightTheme": "Tema chiaro",
     "olDarkTheme": "Openledger scuro",
     "reset": "Impostazioni predefinite",
-    "disableChat": "Disabilita chat",
     "general": "Generali",
     "wallet": "Portafoglio",
     "accounts": "Account",
@@ -1266,23 +1265,6 @@
     "deposit_limit": "Limite di deposito",
     "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">con memo</span> %(memo)s"
   },
-  "chat": {
-    "title": "Chat",
-    "button": "Chat",
-    "send": "Invia",
-    "color": "Colore username",
-    "user": "Username",
-    "done": "Fatto",
-    "reconnect": "Riconnetti",
-    "welcome_user": "Benvenuto su BitShares",
-    "users": "%(userCount)s utenti online",
-    "welcome": "Per favore visita BitShares su Telegram o Discord!",
-    "disconnected": "Al momento non sei connesso ad alcun peer o al server centrale, per favore clicca sotto per riconnetterti. Se non sei in grado di connetterti, è possibile che il server sia offline; per favore riprova più tardi.",
-    "rate": "Per favore aspetta almeno 2 secondi prima di postare un nuovo messaggio",
-    "disabled": "Opzioni Chat",
-    "enable": "Abilita chat",
-    "telegram_link": "<p>Per favore visita il gruppo Telegram di BitShares: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a></p><p>BitShares è anche su Discord: <a href='https://discord.gg/GsjQfAJ' target='blank' rel='noopener noreferrer'>https://discord.gg/GsjQfAJ</a></p>"
-    },
     "trx_error": {
         "expire": "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."
     }

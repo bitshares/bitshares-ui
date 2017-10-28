@@ -19,8 +19,6 @@ import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 
-let wallet_api = new WalletApi();
-
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
  *
@@ -206,7 +204,7 @@ class BorrowModalContent extends React.Component {
         let backingPrecision = utils.get_asset_precision(this.props.backing_asset.get("precision"));
         let currentPosition = this._getCurrentPosition(this.props);
 
-        var tr = wallet_api.new_transaction();
+        var tr = WalletApi.new_transaction();
         tr.add_type_operation("call_order_update", {
             "fee": {
                 amount: 0,
