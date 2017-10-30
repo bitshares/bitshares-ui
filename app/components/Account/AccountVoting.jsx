@@ -413,7 +413,7 @@ class AccountVoting extends React.Component {
 
         if (budgetObject) {
             workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
-            // totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
         }
 
         let now = new Date();
@@ -700,11 +700,11 @@ class AccountVoting extends React.Component {
                                             <tr>
                                                 <th></th>
                                                 <th style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
-                                                <th colSpan="5"></th>
+                                                <th colSpan="5" className="hide-column-small"></th>
                                                 <th style={{textAlign: "right"}}>
                                                     {globalObject ? <EquivalentValueComponent hide_asset fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null}
                                                 </th>
-                                                <th></th>
+                                                <th className="hide-column-small"></th>
                                             </tr>
                                             <tr >
                                                 <th style={{border: "none", backgroundColor: "transparent"}}></th>
