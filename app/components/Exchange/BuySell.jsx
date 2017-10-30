@@ -13,6 +13,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
+import Icon from "../Icon/Icon";
 
 class BuySell extends React.Component {
 
@@ -97,6 +98,7 @@ class BuySell extends React.Component {
         const baseFlagBooleans = assetUtils.getFlagBooleans(base.getIn(["options", "flags"]), base.has("bitasset_data_id"));
         const quoteFlagBooleans = assetUtils.getFlagBooleans(quote.getIn(["options", "flags"]), quote.has("bitasset_data_id"));
 
+
         const hasMarketFee = baseFlagBooleans["charge_market_fee"] || quoteFlagBooleans["charge_market_fee"];
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
@@ -107,7 +109,20 @@ class BuySell extends React.Component {
                     <input disabled type="text" id="baseMarketFee" value={baseFee} autoComplete="off"/>
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
-                    <AssetName dataPlace="right" name={base.get("symbol")} />
+                    <AssetName noTip name={base.get("symbol")} />
+                    <span
+                        data-tip={counterpart.translate(
+                            "tooltip.market_fee",
+                            {
+                                percent: base.getIn(["options", "market_fee_percent"]) / 100,
+                                asset: base.get("symbol")
+                            }
+                        )
+                        }
+                        className="inline-block tooltip"
+                    >
+                        &nbsp;<Icon style={{position: "relative", top: 3}} name="question-circle" />
+                    </span>
                 </div>
             </div>
         ) : hasMarketFee ?
@@ -125,7 +140,20 @@ class BuySell extends React.Component {
                     <input disabled type="text" id="baseMarketFee" value={quoteFee} autoComplete="off"/>
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
-                    <AssetName dataPlace="right" name={quote.get("symbol")} />
+                    <AssetName noTip name={quote.get("symbol")} />
+                    <span
+                        data-tip={counterpart.translate(
+                            "tooltip.market_fee",
+                            {
+                                percent: quote.getIn(["options", "market_fee_percent"]) / 100,
+                                asset: quote.get("symbol")
+                            }
+                        )
+                        }
+                        className="inline-block tooltip"
+                    >
+                        &nbsp;<Icon style={{position: "relative", top: 3}} name="question-circle" />
+                    </span>
                 </div>
             </div>
         ) : hasMarketFee ?
