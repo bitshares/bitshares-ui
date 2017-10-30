@@ -151,7 +151,7 @@ class App extends React.Component {
         let {isMobile, theme } = this.state;
         let content = null;
 
-        let showFooter = this.props.location.pathname.indexOf("market") === -1;
+        let showFooter = 1;
         // if(incognito && !incognitoWarningDismissed){
         //     content = (
         //         <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
