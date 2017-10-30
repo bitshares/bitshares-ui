@@ -82,9 +82,9 @@ class WorkerApproval extends React.Component{
                 {isExpired ? null : <td style={{textAlign: "right", paddingRight: 10, paddingLeft: 0}}>{rank}</td>}
 
                 <td className="worker-name" style={{textAlign: "left"}}>
-                    <div className="inline-block" style={{paddingRight: 5, position: "relative", top: 2}}>
+                    <div className="inline-block" style={{paddingRight: 5, position: "relative", top: -1}}>
                         <a style={{visibility: worker.url && worker.url.indexOf(".") !== -1 ? "visible": "hidden"}} href={worker.url} target="_blank" rel="noopener noreferrer">
-                            <Icon name="share" size="2x"/>
+                            <Icon name="share"/>
                         </a>
                     </div>
                     <div data-tip={worker.name} className="inline-block tooltip">
