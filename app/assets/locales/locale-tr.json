@@ -777,7 +777,6 @@
     "lightTheme": "Açık tema",
     "olDarkTheme": "OpenLedger koyu",
     "reset": "Ayarları sıfırla",
-    "disableChat": "Sohbeti devre dışı bırak",
     "general": "Genel",
     "wallet": "Cüzdan",
     "accounts": "Hesaplar",
@@ -1190,23 +1189,6 @@
     "purchase": "%(asset)s satın al",
     "purchase_1": "%(inputAsset)s kullanarak hızlı ve kolayca %(outputAsset)s satın almak için burayı kullanabilirsiniz. Bu hizmet <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> tarafından sağlanmaktadır.",
     "deposit_limit": "Yatırma limiti"
-  },
-  "chat": {
-    "title": "Sohbet Kanalı",
-    "button": "Sohbet",
-    "send": "Gönder",
-    "color": "Kullanıcı rengi",
-    "user": "Kullanıcı adı",
-    "disabled": "Sohbet etkin değil",
-    "enable": "Etkin hale getir",
-    "done": "Tamam",
-    "reconnect": "Tekrar bağlan",
-    "welcome_user": "Bitshares'e Hoşgeldiniz",
-    "users": "%(count)s kullanıcı çevrimiçi",
-    "welcome": "Bu yöneticisi olmayan ve kullanıcı adlarının gerçek olmama ihtimali olan P2P bir sohbet odasıdır. Ayarlardan kapatılabilir. 2 saniyede 1 mesaj olarak sınırlıdır. Mevcut komutlar için /help yazın.",
-    "disconnected": "Şu anda hiçbir ağa ya da sunucuya bağlı değilsiniz, lütfen aşağı tıklayarak tekrar bağlanınız. Bağlanamıyorsanız, bu sunucu çalışmıyor demektir, lütfen sonra tekrar deneyiniz.",
-    "rate": "Yeni bir mesaj göndermeden önce lütfen en az 2 saniye bekleyin.",
-    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

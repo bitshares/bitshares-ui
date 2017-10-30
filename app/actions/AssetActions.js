@@ -7,15 +7,12 @@ import WalletDb from "stores/WalletDb";
 import {ChainStore} from "bitsharesjs/es";
 import big from "bignumber.js";
 
-let wallet_api = new WalletApi();
-let application_api = new ApplicationApi();
-
 let inProgress = {};
 
 class AssetActions {
 
     fundPool(account_id, core, asset, amount) {
-        let tr = wallet_api.new_transaction();
+        let tr = WalletApi.new_transaction();
         let precision = utils.get_asset_precision(core.get("precision"));
         tr.add_type_operation("asset_fund_fee_pool", {
             "fee": {
@@ -39,7 +36,7 @@ class AssetActions {
     }
 
     claimPoolFees(account_id, asset, amount) {
-        let tr = wallet_api.new_transaction();
+        let tr = WalletApi.new_transaction();
         let precision = utils.get_asset_precision(asset.get("precision"));
 
         tr.add_type_operation("asset_claim_fees", {
@@ -66,7 +63,7 @@ class AssetActions {
     createAsset(account_id, createObject, flags, permissions, cer, isBitAsset, is_prediction_market, bitasset_opts, description) {
         // Create asset action here...
         console.log("create asset:", createObject, "flags:", flags, "isBitAsset:", isBitAsset, "bitasset_opts:", bitasset_opts);
-        let tr = wallet_api.new_transaction();
+        let tr = WalletApi.new_transaction();
         let precision = utils.get_asset_precision(createObject.precision);
 
         big.config({DECIMAL_PLACES: createObject.precision});
@@ -141,7 +138,7 @@ class AssetActions {
             isBitAsset, bitasset_opts, original_bitasset_opts, description, auths) {
 
         // Create asset action here...
-        let tr = wallet_api.new_transaction();
+        let tr = WalletApi.new_transaction();
         let quotePrecision = utils.get_asset_precision(asset.get("precision"));
 
         big.config({DECIMAL_PLACES: asset.get("precision")});
@@ -230,13 +227,13 @@ class AssetActions {
 
     issueAsset(to_account, from_account, asset_id, amount, memo) {
 
-        application_api.issue_asset(to_account, from_account, asset_id, amount, memo);
+        ApplicationApi.issue_asset(to_account, from_account, asset_id, amount, memo);
     }
 
     // issueAsset(account_id, issueObject) {
     //     console.log("account_id: ", account_id, issueObject);
     //     // Create asset action here...
-    //     var tr = wallet_api.new_transaction();
+    //     var tr = WalletApi.new_transaction();
     //     tr.add_type_operation("asset_issue", {
     //         fee: {
     //             amount: 0,
@@ -310,59 +307,8 @@ class AssetActions {
                     });
                 })
                 .catch(error => {
-                    console.log("Error in AssetStore.getAssetList: ", error);
+                    console.log("Error in AssetActions.getAssetList: ", error);
                     dispatch({loading: false});
-                    delete inProgress[id];
-                });
-            }
-        };
-    }
-
-    getAsset(id) {
-        let assetPromise;
-        return (dispatch) => {
-            if (!inProgress[id]) {
-                inProgress[id] = true;
-                if (utils.is_object_id(id)) {
-                    assetPromise = Apis.instance().db_api().exec("get_objects", [
-                        [id]
-                    ]);
-                } else {
-                    assetPromise = Apis.instance().db_api().exec("list_assets", [
-                        id, 1
-                    ]);
-                }
-
-                return assetPromise.then((asset) => {
-
-                    if (asset.length === 0 || !asset) {
-
-                        dispatch({
-                            asset: null,
-                            id: id
-                        });
-                    }
-                    let bitAssetPromise = asset[0].bitasset_data_id ? Apis.instance().db_api().exec("get_objects", [
-                        [asset[0].bitasset_data_id]
-                    ]) : null;
-
-                    Promise.all([
-                        Apis.instance().db_api().exec("get_objects", [
-                            [asset[0].dynamic_asset_data_id]
-                        ]),
-                        bitAssetPromise
-                    ])
-                    .then(results => {
-                        delete inProgress[id];
-                        dispatch({
-                            asset: asset[0],
-                            dynamic: results[0][0],
-                            bitasset_data: results[1] ? results[1][0] : null
-                        });
-                    });
-
-                }).catch((error) => {
-                    console.log("Error in AssetStore.updateAsset: ", error);
                     delete inProgress[id];
                 });
             }
@@ -396,7 +342,7 @@ class AssetActions {
     }
 
     reserveAsset(amount, assetId, payer) {
-        var tr = wallet_api.new_transaction();
+        var tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_reserve", {
             fee: {
                 amount: 0,
