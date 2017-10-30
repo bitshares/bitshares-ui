@@ -29,7 +29,7 @@ class BlockchainStore {
     onGetBlock(block) {
         if (!this.blocks.get(block.id)) {
             if (!/Z$/.test(block.timestamp)) {
-                block.timestamp + 'Z';
+                block.timestamp += 'Z';
             }
             block.timestamp = new Date(block.timestamp);
             this.blocks = this.blocks.set(
