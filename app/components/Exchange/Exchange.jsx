@@ -1095,6 +1095,7 @@ class Exchange extends React.Component {
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                 marketReady={marketReady}
                 wrapperClass={`order-${buySellTop ? 3 : 1} xlarge-order-${buySellTop ? 4 : 1}`}
+                currentAccount={this.props.currentAccount.get("id")}
             />
         );
 
