@@ -413,7 +413,7 @@ class AccountVoting extends React.Component {
 
         if (budgetObject) {
             workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
-            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            // totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
         }
 
         let now = new Date();

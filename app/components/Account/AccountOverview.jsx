@@ -212,13 +212,15 @@ class AccountOverview extends React.Component {
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
+            const notCorePrefUnit = preferredUnit !== "BTS";
+
             let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
             symbol = asset.get("symbol");
             if (symbol.indexOf("OPEN.") !== -1 && !market) market = "USD";
             let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
 
             /* Table content */
-            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
+            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : notCorePrefUnit ? <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
             transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Icon name="transfer" className="icon-14px" /></Link>;
 
             let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
@@ -555,9 +557,9 @@ class AccountOverview extends React.Component {
                     <div className="generic-bordered-box">
                         <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
 
-                            <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
+                            {/* <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
 
-                            </Tab>
+                            </Tab> */}
 
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
