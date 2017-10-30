@@ -667,6 +667,10 @@ class AccountAssetCreate extends React.Component {
                                         </h5>
                                     </div>
                                 </label>
+                                <div>
+                                    <Translate content="account.user_issued_assets.cer_warning_1" component="label" className="has-error"/>
+                                    <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
+                                </div>
                             </div>
                         </Tab>
 

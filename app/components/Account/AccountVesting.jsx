@@ -10,7 +10,9 @@ class VestingBalance extends React.Component {
 
     _onClaim(claimAll, e) {
         e.preventDefault();
-        WalletActions.claimVestingBalance(this.props.account.id, this.props.vb, claimAll);
+        WalletActions.claimVestingBalance(this.props.account.id, this.props.vb, claimAll).then(() => {
+            typeof this.props.handleChanged == 'function' && this.props.handleChanged();
+        });
     }
 
     render() {
@@ -45,35 +47,41 @@ class VestingBalance extends React.Component {
             <div style={{paddingBottom: "1rem"}}>
                 <div className="">
                     <div className="grid-content no-padding">
-                        <Translate component="h5" content="account.vesting.balance_number" id={vb.id} />
+                        <Translate component="h5" content="account.vesting.balance_number" id={vb.id}/>
 
                         <table className="table key-value-table">
                             <tbody>
-                                <tr>
-                                    <td><Translate content="account.member.cashback"/> </td>
-                                    <td><FormattedAsset amount={vb.balance.amount} asset={vb.balance.asset_id} /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.earned" /></td>
-                                    <td>{utils.format_number(utils.get_asset_amount(earned / secondsPerDay, cvbAsset), 0)} <Translate content="account.member.coindays" /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.required" /></td>
-                                    <td>{utils.format_number(utils.get_asset_amount(vb.balance.amount * vestingPeriod / secondsPerDay, cvbAsset), 0)} <Translate content="account.member.coindays" /></td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.remaining" /></td>
-                                    <td>{utils.format_number(vestingPeriod * (1 -  availablePercent) / secondsPerDay || 0, 2)} days</td>
-                                </tr>
-                                <tr>
-                                    <td><Translate content="account.member.available" /></td>
-                                    <td>{utils.format_number(availablePercent * 100, 2)}% / <FormattedAsset amount={availablePercent * vb.balance.amount} asset={cvbAsset.get("id")} /></td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="2" style={{textAlign: "right"}}>
-                                        <button onClick={this._onClaim.bind(this, false)} className="button outline"><Translate content="account.member.claim" /></button>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td><Translate content="account.member.cashback"/></td>
+                                <td><FormattedAsset amount={vb.balance.amount} asset={vb.balance.asset_id}/></td>
+                            </tr>
+                            <tr>
+                                <td><Translate content="account.member.earned"/></td>
+                                <td>{utils.format_number(utils.get_asset_amount(earned / secondsPerDay, cvbAsset), 0)}
+                                    &nbsp;<Translate content="account.member.coindays"/></td>
+                            </tr>
+                            <tr>
+                                <td><Translate content="account.member.required"/></td>
+                                <td>{utils.format_number(utils.get_asset_amount(vb.balance.amount * vestingPeriod / secondsPerDay, cvbAsset), 0)}
+                                    &nbsp;<Translate content="account.member.coindays"/></td>
+                            </tr>
+                            <tr>
+                                <td><Translate content="account.member.remaining"/></td>
+                                <td>{utils.format_number(vestingPeriod * (1 - availablePercent) / secondsPerDay || 0, 2)}
+                                    &nbsp;days
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><Translate content="account.member.available"/></td>
+                                <td>{utils.format_number(availablePercent * 100, 2)}% / <FormattedAsset
+                                    amount={availablePercent * vb.balance.amount} asset={cvbAsset.get("id")}/></td>
+                            </tr>
+                            <tr>
+                                <td colSpan="2" style={{textAlign: "right"}}>
+                                    <button onClick={this._onClaim.bind(this, false)} className="button outline">
+                                        <Translate content="account.member.claim"/></button>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -97,16 +105,17 @@ class AccountVesting extends React.Component {
         this.retrieveVestingBalances.call(this, this.props.account.get("id"));
     }
 
-    componentWillUpdate(nextProps){
+    componentWillUpdate(nextProps) {
         let newId = nextProps.account.get("id");
         let oldId = this.props.account.get("id");
 
-        if(newId !== oldId){
+        if (newId !== oldId) {
             this.retrieveVestingBalances.call(this, newId);
         }
     }
 
-    retrieveVestingBalances(accountId){
+    retrieveVestingBalances(accountId) {
+        accountId = accountId || this.props.account.get("id");
         Apis.instance().db_api().exec("get_vesting_balances", [
             accountId
         ]).then(vbs => {
@@ -126,7 +135,8 @@ class AccountVesting extends React.Component {
 
         let balances = vbs.map(vb => {
             if (vb.balance.amount) {
-                return <VestingBalance key={vb.id} vb={vb} account={account}/>;
+                return <VestingBalance key={vb.id} vb={vb} account={account}
+                                       handleChanged={this.retrieveVestingBalances.bind(this)}/>;
             }
         }).filter(a => {
             return !!a;
@@ -134,13 +144,13 @@ class AccountVesting extends React.Component {
 
         return (
             <div className="grid-content" style={{overflowX: "hidden"}}>
-                <Translate content="account.vesting.explain" component="p" />
+                <Translate content="account.vesting.explain" component="p"/>
                 {!balances.length ? (
-                <h4 style={{paddingTop: "1rem"}}>
-                    <Translate content={"account.vesting.no_balances"}/>
-                </h4>) : balances}
+                    <h4 style={{paddingTop: "1rem"}}>
+                        <Translate content={"account.vesting.no_balances"}/>
+                    </h4>) : balances}
             </div>
-);
+        );
     }
 }
 
