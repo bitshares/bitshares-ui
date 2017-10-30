@@ -468,13 +468,7 @@ class AccountVoting extends React.Component {
                 return false;
             }
 
-
-
             let votes = a.get("total_votes_for") - a.get("total_votes_against");
-            if (a.get("name").indexOf("Greater China") !== -1) {
-                console.log(a.toJS(), "worker:", a.get("name"), a.get("work_end_date"), new Date(a.get("work_end_date")+"Z") > now &&
-                votes < voteThreshold, "votes:", votes, "voteThreshold", voteThreshold);
-            }
             return (
                 (new Date(a.get("work_end_date")+ "Z") > now &&
                 votes < voteThreshold) ||
