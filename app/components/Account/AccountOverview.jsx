@@ -6,7 +6,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import AssetName from "../Utility/AssetName";
-import CollateralPosition from "../Blockchain/CollateralPosition";
+import MarginPositions from "./MarginPositions";
 import { RecentTransactions } from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "bitsharesjs/es";
@@ -624,7 +624,7 @@ class AccountOverview extends React.Component {
                             <Tab title="account.collaterals" subText={<span className={this.state.globalMarginStatus}>{marginValue}</span>}>
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <CollateralPosition preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
+                                        <MarginPositions preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
                                             <tr className="total-value">
                                                 <td>
                                                     {totalValueText}
@@ -635,7 +635,7 @@ class AccountOverview extends React.Component {
                                                 <td>{marginValue}</td>
                                                 <td colSpan="5"></td>
                                             </tr>
-                                        </CollateralPosition>
+                                        </MarginPositions>
                                     </div>
                                 </div>
                             </Tab>
