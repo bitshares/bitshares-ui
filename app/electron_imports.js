@@ -23,7 +23,7 @@ import MarketsContainer from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
 import SettingsContainer from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
-import AssetContainer from "./components/Blockchain/AssetContainer";
+import Asset from "./components/Blockchain/Asset";
 import CreateAccount from "./components/Account/CreateAccount";
 import CreateAccountPassword from "./components/Account/CreateAccountPassword";
 import LoginSelector from "./components/LoginSelector";

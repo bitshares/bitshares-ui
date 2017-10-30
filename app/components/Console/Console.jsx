@@ -8,8 +8,8 @@ function evalInContext(js) {
 
     var db = Apis.instance().db_api(),
         net = Apis.instance().network_api(),
-        app = new ApplicationApi(),
-        wallet = new WalletApi(),
+        app = ApplicationApi,
+        wallet = WalletApi,
         debug = new DebugApi()
 
     var $g = {
