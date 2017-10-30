@@ -202,6 +202,7 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSubmit() {
+        let {balance} = this.props;
 
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
@@ -231,15 +232,10 @@ class WithdrawModalBlocktrades extends React.Component {
                     real: amount
                 });
                 
-                let userAmount = new Asset({
-                    amount: this.props.balance.get("balance"),
-                    asset_id: this.props.asset.get("id"),
-                    precision: this.props.asset.get("precision")
-                });
+                let userBalance = balance.get("balance");
+                let isUserBalanceEnough = sendAmount.amount < userBalance;
 
-                console.log("Sending Amount: " + sendAmount.amount + " Available Amount: " + userAmount.amount);
-
-                sendAmount.amount = sendAmount.amount > userAmount.amount ? userAmount.amount : sendAmount.amount;
+                sendAmount.amount = isUserBalanceEnough ? sendAmount.amount : userBalance;
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
