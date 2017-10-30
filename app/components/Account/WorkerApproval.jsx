@@ -69,12 +69,13 @@ class WorkerApproval extends React.Component{
             fundedPercent = this.props.rest / worker.daily_pay * 100;
         }
 
-        let startDate = counterpart.localize(new Date(worker.work_begin_date), { type: "date", format: "short_custom" });
-        let endDate = counterpart.localize(new Date(worker.work_end_date), { type: "date", format: "short_custom" });
+        let startDate = counterpart.localize(new Date(worker.work_begin_date + "Z"), { type: "date", format: "short_custom" });
+        let endDate = counterpart.localize(new Date(worker.work_end_date + "Z"), { type: "date", format: "short_custom" });
 
         let now = new Date();
-        let isExpired = new Date(worker.work_end_date) <= now;
-        let isProposed = !isExpired && total_votes < this.props.voteThreshold;
+        let isExpired = new Date(worker.work_end_date + "Z") <= now;
+        let hasStarted = new Date(worker.work_begin_date + "Z") <= now;
+        let isProposed = (!isExpired && total_votes < this.props.voteThreshold) || !hasStarted;
         return  (
 
             <tr className={approvalState ? "" : "unsupported"}>
@@ -83,16 +84,14 @@ class WorkerApproval extends React.Component{
                 <td className="worker-name" style={{textAlign: "left"}}>
                     <div className="inline-block" style={{paddingRight: 5, position: "relative", top: 2}}>
                         <a style={{visibility: worker.url && worker.url.indexOf(".") !== -1 ? "visible": "hidden"}} href={worker.url} target="_blank" rel="noopener noreferrer">
-                            <Icon name="share" />
+                            <Icon name="share" size="2x"/>
                         </a>
                     </div>
                     <div data-tip={worker.name} className="inline-block tooltip">
                         {worker.name}
+                        <br />
+                        <LinkToAccountById account={worker.worker_account} />
                     </div>
-                </td>
-
-                <td style={{textAlign: "left"}} className="hide-column-small">
-                    <LinkToAccountById account={worker.worker_account} />
                 </td>
 
                 <td style={{textAlign: "right"}} className="hide-column-small">
@@ -101,7 +100,7 @@ class WorkerApproval extends React.Component{
 
                 {!isProposed ? null :
                 <td style={{textAlign: "right"}}>
-                    <FormattedAsset amount={this.props.voteThreshold - total_votes} asset="1.3.0" hide_asset decimalOffset={5} />
+                    <FormattedAsset amount={Math.max(0, this.props.voteThreshold - total_votes)} asset="1.3.0" hide_asset decimalOffset={5} />
                 </td>}
 
                 <td>
