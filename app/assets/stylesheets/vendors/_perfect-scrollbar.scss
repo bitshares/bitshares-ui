@@ -60,7 +60,7 @@
     display: none;
     position: absolute;
     /* please don't change 'position' */
-    opacity: 0;
+    opacity: 0.6;
     -webkit-transition: background-color .2s linear, opacity .2s linear;
     -o-transition: background-color .2s linear, opacity .2s linear;
     -moz-transition: background-color .2s linear, opacity .2s linear;

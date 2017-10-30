@@ -12,6 +12,8 @@ import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
+import assetUtils from "common/asset_utils";
+import Icon from "../Icon/Icon";
 
 class BuySell extends React.Component {
 
@@ -80,10 +82,93 @@ class BuySell extends React.Component {
         if (this.props.total) total = this.props.total;
 
         let balanceAmount = new Asset({amount: balance ? balance.get("balance") : 0, precision: balancePrecision, asset_id: this.props.balanceId});
+
+        const maxBaseMarketFee = new Asset({
+            amount: base.getIn(["options", "max_market_fee"]),
+            asset_id: base.get("asset_id"),
+            precision: base.get("precision")
+        });
+        const maxQuoteMarketFee = new Asset({
+            amount: quote.getIn(["options", "max_market_fee"]),
+            asset_id: quote.get("asset_id"),
+            precision: quote.get("precision")
+        });
+        const quoteFee = !amount ? 0 : Math.min(maxQuoteMarketFee.getAmount({real: true}), amount * quote.getIn(["options", "market_fee_percent"]) / 10000);
+        const baseFee = !amount ? 0 : Math.min(maxBaseMarketFee.getAmount({real: true}), total * base.getIn(["options", "market_fee_percent"]) / 10000);
+        const baseFlagBooleans = assetUtils.getFlagBooleans(base.getIn(["options", "flags"]), base.has("bitasset_data_id"));
+        const quoteFlagBooleans = assetUtils.getFlagBooleans(quote.getIn(["options", "flags"]), quote.has("bitasset_data_id"));
+
+
+        const hasMarketFee = baseFlagBooleans["charge_market_fee"] || quoteFlagBooleans["charge_market_fee"];
+        var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
+            <div className="grid-block no-padding buy-sell-row">
+                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:
+                </div>
+                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                    <input disabled type="text" id="baseMarketFee" value={baseFee} autoComplete="off"/>
+                </div>
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
+                    <AssetName noTip name={base.get("symbol")} />
+                    <span
+                        data-tip={counterpart.translate(
+                            "tooltip.market_fee",
+                            {
+                                percent: base.getIn(["options", "market_fee_percent"]) / 100,
+                                asset: base.get("symbol")
+                            }
+                        )
+                        }
+                        className="inline-block tooltip"
+                    >
+                        &nbsp;<Icon style={{position: "relative", top: 3}} name="question-circle" />
+                    </span>
+                </div>
+            </div>
+        ) : hasMarketFee ?
+        <div className="grid-block no-padding buy-sell-row">
+            <div style={{visibility: "hidden"}} className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                <Translate content="explorer.asset.summary.market_fee" />:
+            </div>
+        </div> : null;
+        var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
+            <div className="grid-block no-padding buy-sell-row">
+                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:
+                </div>
+                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                    <input disabled type="text" id="baseMarketFee" value={quoteFee} autoComplete="off"/>
+                </div>
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-box">
+                    <AssetName noTip name={quote.get("symbol")} />
+                    <span
+                        data-tip={counterpart.translate(
+                            "tooltip.market_fee",
+                            {
+                                percent: quote.getIn(["options", "market_fee_percent"]) / 100,
+                                asset: quote.get("symbol")
+                            }
+                        )
+                        }
+                        className="inline-block tooltip"
+                    >
+                        &nbsp;<Icon style={{position: "relative", top: 3}} name="question-circle" />
+                    </span>
+                </div>
+            </div>
+        ) : hasMarketFee ?
+        <div className="grid-block no-padding buy-sell-row">
+            <div style={{visibility: "hidden"}} className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                <Translate content="explorer.asset.summary.market_fee" />:
+            </div>
+        </div> : null;
+
         // if (!balanceAmount) {
         //     balanceAmount = 0;
         // }
         const isBid = type === "bid";
+        let marketFee = isBid && quoteMarketFee ? quoteMarketFee : !isBid && baseMarketFee ? baseMarketFee : null;
+        console.log("isBid", isBid, "quoteMarketFee", !!quoteMarketFee, "baseMarketFee", !!baseMarketFee);
         let hasBalance = isBid ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
 
         let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
@@ -201,6 +286,8 @@ class BuySell extends React.Component {
                                         </select>
                                     </div>
                                 </div>
+
+                                {marketFee}
                             </div>
                             <div>
                                 <div className="grid-content clear-fix no-padding">
