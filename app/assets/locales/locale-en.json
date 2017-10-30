@@ -81,7 +81,8 @@
     "copy_password": "Click here to copy the password to your clipboard",
     "sync_yes": "The current node is in sync with the blockchain",
     "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
-    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings"
+    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
+    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order."
   },
   "propose": "Propose",
   "cancel": "Cancel",

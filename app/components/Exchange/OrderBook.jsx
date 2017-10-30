@@ -401,10 +401,12 @@ class OrderBook extends React.Component {
                                         <span> (<AssetName name={quoteSymbol} />)</span>
                                     </div>
                                 </div>
-                                <table className="table order-table table-hover fixed-table text-right">
-                                    {!this.state.flip ? rightHeader : leftHeader}
-                                </table>
-                                <div className="grid-block" ref="hor_asks" style={{paddingRight: !showAllAsks ? 0 : 15, overflow: "hidden", maxHeight: 210}}>
+                                <div style={{paddingRight: "0.6rem"}}>
+                                    <table className="table order-table table-hover fixed-table text-right">
+                                        {!this.state.flip ? rightHeader : leftHeader}
+                                    </table>
+                                </div>
+                                <div className="grid-block" ref="hor_asks" style={{paddingRight: "0.6rem", overflow: "hidden", maxHeight: 210}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover fixed-table text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
@@ -442,10 +444,12 @@ class OrderBook extends React.Component {
                                         <span> (<AssetName name={baseSymbol} />)</span>
                                     </div>
                                 </div>
-                                <table className="table order-table table-hover fixed-table text-right">
-                                    {this.state.flip ? rightHeader : leftHeader}
-                                </table>
-                                <div className="grid-block" ref="hor_bids" style={{paddingRight: !showAllBids ? 0 : 15, overflow: "hidden", maxHeight: 210}}>
+                                <div style={{paddingRight: "0.6rem"}}>
+                                    <table className="table order-table table-hover fixed-table text-right">
+                                        {this.state.flip ? rightHeader : leftHeader}
+                                    </table>
+                                </div>
+                                <div className="grid-block" ref="hor_bids" style={{paddingRight: "0.6rem", overflow: "hidden", maxHeight: 210}}>
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover fixed-table text-right no-overflow">
                                         <TransitionWrapper
                                             ref="bidTransition"

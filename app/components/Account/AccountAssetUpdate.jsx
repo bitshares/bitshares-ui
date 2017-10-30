@@ -236,7 +236,7 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
-                if ((new big(marketFee)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                if ((new big(marketFee)).times(precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                     updateState = false;
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
