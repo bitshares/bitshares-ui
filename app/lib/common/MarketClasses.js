@@ -415,6 +415,7 @@ class LimitOrder {
         this.assets = assets;
         this.market_base = market_base;
         this.id = order.id;
+        this.sellers = [order.seller];
         this.expiration = order.expiration && new Date(order.expiration);
         this.seller = order.seller;
         this.for_sale = parseInt(order.for_sale, 10); // asset id is sell_price.base.asset_id
@@ -473,9 +474,16 @@ class LimitOrder {
 
     sum(order) {
         let newOrder = this.clone();
+        if (newOrder.sellers.indexOf(order.seller) === -1) {
+            newOrder.sellers.push(order.seller);
+        }
         newOrder.for_sale += order.for_sale;
 
         return newOrder;
+    }
+
+    isMine(id) {
+        return this.sellers.indexOf(id) !== -1;
     }
 
     clone() {
