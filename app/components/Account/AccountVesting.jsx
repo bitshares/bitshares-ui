@@ -58,17 +58,17 @@ class VestingBalance extends React.Component {
                             <tr>
                                 <td><Translate content="account.member.earned"/></td>
                                 <td>{utils.format_number(utils.get_asset_amount(earned / secondsPerDay, cvbAsset), 0)}
-                                    <Translate content="account.member.coindays"/></td>
+                                    &nbsp;<Translate content="account.member.coindays"/></td>
                             </tr>
                             <tr>
                                 <td><Translate content="account.member.required"/></td>
                                 <td>{utils.format_number(utils.get_asset_amount(vb.balance.amount * vestingPeriod / secondsPerDay, cvbAsset), 0)}
-                                    <Translate content="account.member.coindays"/></td>
+                                    &nbsp;<Translate content="account.member.coindays"/></td>
                             </tr>
                             <tr>
                                 <td><Translate content="account.member.remaining"/></td>
                                 <td>{utils.format_number(vestingPeriod * (1 - availablePercent) / secondsPerDay || 0, 2)}
-                                    days
+                                    &nbsp;days
                                 </td>
                             </tr>
                             <tr>
