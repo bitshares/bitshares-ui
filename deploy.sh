@@ -39,6 +39,7 @@ then
     cd $TRAVIS_BUILD_DIR/wallet.bitshares.org
     git checkout gh-pages
     rm -rf ./*
+    git checkout ./CNAME
     cp -Rv $TRAVIS_BUILD_DIR/build/hash-history_/* .
     git add -A
     git commit -a -m "Update wallet by Travis: v$TRAVIS_TAG"
