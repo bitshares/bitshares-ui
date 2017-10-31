@@ -51,7 +51,7 @@ module.exports = function(env) {
     var outputPath = path.join(root_dir, "assets");
 
     // COMMON PLUGINS
-    const baseUrl = "baseUrl" in env ? env.baseUrl : "/";
+    const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
