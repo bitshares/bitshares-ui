@@ -16,6 +16,7 @@ import {List} from "immutable";
 import {Link} from "react-router/es";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import EquivalentPrice from "../Utility/EquivalentPrice";
+import Immutable from "immutable";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -25,7 +26,7 @@ const alignLeft = {textAlign: "left"};
  *  Expects one property, 'object' which should be a call order id
  */
 
-class CollateralPosition extends React.Component {
+class MarginPosition extends React.Component {
 
     static propTypes = {
         debtAsset: ChainTypes.ChainAsset.isRequired,
@@ -240,9 +241,9 @@ class CollateralPosition extends React.Component {
         );
     }
 }
-CollateralPosition = BindToChainState(CollateralPosition, {keep_updating: true});
+MarginPosition = BindToChainState(MarginPosition, {keep_updating: true});
 
-class CollateralPositionWrapper extends React.Component {
+class MarginPositionWrapper extends React.Component {
     static propTypes = {
         object: ChainTypes.ChainObject.isRequired
     };
@@ -252,11 +253,173 @@ class CollateralPositionWrapper extends React.Component {
         let debtAsset = object.getIn(["call_price", "quote", "asset_id"]);
         let collateralAsset = object.getIn(["call_price", "base", "asset_id"]);
 
-        return <CollateralPosition debtAsset={debtAsset} collateralAsset={collateralAsset} {...this.props} />;
+        return <MarginPosition debtAsset={debtAsset} collateralAsset={collateralAsset} {...this.props} />;
     }
 }
 
-CollateralPositionWrapper = BindToChainState(CollateralPositionWrapper, {keep_updating: true});
+MarginPositionWrapper = BindToChainState(MarginPositionWrapper, {keep_updating: true});
+
+class MarginPositionPlaceHolder extends React.Component {
+
+    static propTypes = {
+        debtAsset: ChainTypes.ChainAsset.isRequired,
+        collateralAsset: ChainTypes.ChainAsset.isRequired
+    };
+
+    static defaultProps = {
+        tempComponent: "tr"
+    };
+
+    static contextTypes = {
+        router: React.PropTypes.object
+    };
+
+    _onUpdatePosition(e) {
+        e.preventDefault();
+        let ref = "cp_modal_" + this.props.debtAsset.get("id");
+        this.refs[ref].show();
+    }
+
+    _getFeedPrice() {
+
+        if (!this.props) {
+            return 1;
+        }
+
+        return 1 / utils.get_asset_price(
+            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"]),
+            this.props.collateralAsset,
+            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"]),
+            this.props.debtAsset
+        );
+    }
+
+    _onNavigate(route, e) {
+        e.preventDefault();
+        this.context.router.push(route);
+    }
+
+    render() {
+        let {debtAsset, collateralAsset} = this.props;
+
+        const assetDetailURL = `/asset/${debtAsset.get("symbol")}`;
+        const marketURL = `/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`;
+        const assetInfoLinks = (
+        <ul>
+            <li>
+                <a href={assetDetailURL} onClick={this._onNavigate.bind(this, assetDetailURL)}>
+                    <Translate content="account.asset_details"/>
+                </a>
+            </li>
+            <li>
+                <a href={marketURL} onClick={this._onNavigate.bind(this, marketURL)}>
+                    <AssetName name={debtAsset.get("symbol")} /> : <AssetName name={collateralAsset.get("symbol")} />
+                </a>
+            </li>
+        </ul>);
+
+        return (
+            <tr className="margin-row">
+                <td style={alignLeft}>
+                    <Link to={`/asset/${debtAsset.get("symbol")}`}>
+                        <AssetName noTip name={debtAsset.get("symbol")} />
+                    </Link>
+                </td>
+                <td style={alignRight}>
+                    <FormattedAsset
+                        amount={0}
+                        asset={debtAsset.get("id")}
+                        assetInfo={assetInfoLinks}
+                        hide_asset
+                    />
+                </td>
+                <td style={alignRight} className="column-hide-medium">
+                    <FormattedAsset
+                        decimalOffset={5}
+                        amount={0}
+                        asset={collateralAsset.get("id")}
+                    />
+                </td>
+                <td></td>
+                <td style={alignRight} >
+
+                </td>
+                <td style={alignRight} className={"column-hide-small"}>
+
+                </td>
+                <td style={alignRight} className={"column-hide-small"}>
+
+                </td>
+                <td className={"center-content column-hide-small"} style={alignLeft}>
+
+                </td>
+                {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
+
+                <td>
+                    <div
+                        data-place="left"
+                        data-tip={counterpart.translate("tooltip.update_position")}
+                        style={{paddingBottom: 5}}
+                    >
+                        <a onClick={this._onUpdatePosition.bind(this)}>
+                            <Icon name="adjust" className="icon-14px rotate90" />
+                        </a>
+                    </div>
+                </td>
+                <td>
+
+                    {debtAsset ? (
+                        <BorrowModal
+                            ref={"cp_modal_" + debtAsset.get("id")}
+                            quote_asset={debtAsset.get("id")}
+                            backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                            account={this.props.account}
+                        />) : null}
+                </td>
+
+            </tr>
+        );
+    }
+}
+
+MarginPositionPlaceHolder = BindToChainState(MarginPositionPlaceHolder);
+
+class PlaceHolderWrapper extends React.Component {
+    static propTypes = {
+        objects: ChainTypes.ChainObjectsList,
+        optionals: ChainTypes.ChainAssetsList
+    };
+
+    static defaultProps = {
+        optionals: Immutable.List(["1.3.103", "1.3.113", "1.3.120", "1.3.121", "1.3.958", "1.3.1362"])
+    }
+
+    render() {
+        let {objects, optionals} = this.props;
+        objects = objects.filter(o => !!o);
+        optionals = optionals.filter(o => !!o);
+        if (!optionals.length) return null;
+        objects.forEach(object => {
+            if (object) {
+                let index = optionals.findIndex(o => {
+                    return o && o.get("id") === object.getIn(["call_price", "quote", "asset_id"]);
+                });
+                if (index !== -1) {
+                    optionals.splice(index, 1);
+                }
+            }
+        });
+
+        if (!optionals.length) return null;
+        let rows = optionals.map(a => {
+            return <MarginPositionPlaceHolder key={a.get("id")} debtAsset={a.get("id")} collateralAsset={a.getIn(["bitasset", "options", "short_backing_asset"])} {...this.props} />;
+        });
+
+        return <tbody>{rows}</tbody>;
+    }
+}
+
+PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper, {keep_updating: true});
 
 const CollateralTable = ({callOrders, account, className, children, preferredUnit}) => {
 
@@ -295,7 +458,10 @@ const CollateralTable = ({callOrders, account, className, children, preferredUni
             </tr>
             </thead>
             <tbody>
-                { callOrders.sort((a, b) => (a.split(".")[2] - b.split(".")[2])).map(id => <CollateralPositionWrapper key={id} object={id} account={account}/>) }
+                { callOrders.sort((a, b) => (a.split(".")[2] - b.split(".")[2])).map(id => <MarginPositionWrapper key={id} object={id} account={account}/>) }
+            </tbody>
+            <PlaceHolderWrapper account={account} objects={Immutable.List(callOrders)} />
+            <tbody>
                 { children }
             </tbody>
         </table>

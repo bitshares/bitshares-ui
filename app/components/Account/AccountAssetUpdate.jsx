@@ -236,7 +236,7 @@ class AccountAssetUpdate extends React.Component {
 
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
-                if ((new big(marketFee)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                if ((new big(marketFee)).times(precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                     updateState = false;
                     return this.setState({errors: {max_market_fee: "The number you tried to enter is too large"}});
                 }
@@ -428,9 +428,8 @@ class AccountAssetUpdate extends React.Component {
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
         let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(Math.pow(10, precision)).toString();
-        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(Math.pow(10, basePrecision)).toString();
-
+        let cr_quote_amount = parseFloat(core_exchange_rate.quote.amount) * precision;
+        let cr_base_amount = parseFloat(core_exchange_rate.base.amount) * basePrecision;
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
         // Loop over flags
         let flags = [];
@@ -626,7 +625,6 @@ class AccountAssetUpdate extends React.Component {
                                         </div>
                                         <div>
                                             <h5><Translate content="exchange.price" />: <FormattedPrice
-                                                invert
                                                 style={{fontWeight: "bold"}}
                                                 quote_amount={cr_quote_amount}
                                                 quote_asset={core_exchange_rate.quote.asset_id}
@@ -635,6 +633,10 @@ class AccountAssetUpdate extends React.Component {
                                             /></h5>
                                         </div>
                                     </label>
+                                    <div>
+                                        <Translate content="account.user_issued_assets.cer_warning_1" component="label" className="has-error"/>
+                                        <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
+                                    </div>
 
                                     {confirmButtons}
                                 </div>

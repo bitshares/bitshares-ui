@@ -2,7 +2,7 @@
     "counterpart": {
         "formats": {
             "date": {
-                "short_custom": "%e %b %Y"
+                "short_custom": "%e %b '%y"
             }
         }
     },
@@ -81,7 +81,8 @@
     "copy_password": "Click here to copy the password to your clipboard",
     "sync_yes": "The current node is in sync with the blockchain",
     "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
-    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings"
+    "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
+    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order."
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -233,7 +234,9 @@
       "error_invalid": "That asset may not be used",
       "market": "Preferred market pairing",
       "precision_warning": "Warning: The number of decimals may not be changed after creation",
-      "visible": "Hide asset from search and markets"
+      "visible": "Hide asset from search and markets",
+      "cer_warning_1": "Warning",
+      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
     },
     "connections": {
       "known": "Known by",
@@ -320,10 +323,10 @@
       "creator": "Creator",
       "recycled": "Recycled",
       "funding": "Funding",
-      "total_budget": "Total available daily worker budget",
+      "total_budget": "Daily budget",
       "unused_budget": "Unused daily worker budget",
-      "new": "Proposed",
-      "active": "Active",
+      "new": "Proposed(%(count)s)",
+      "active": "Active(%(count)s)",
       "w_approved_by": "Witnesses approved by %(account)s",
       "w_not_approved_by": "Witnesses not approved by %(account)s",
       "cm_approved_by": "Committee members approved by %(account)s",
@@ -340,7 +343,9 @@
       "about": "About",
       "create_worker": "Create a new worker",
       "line": "Line",
-      "save_finish": "Click save to finish"
+      "save_finish": "Click save to finish",
+      "threshold": "Votes required to activate",
+      "missing": "Needed"
     },
     "options": {
       "num_witnesses": "Desired Witnesses",
