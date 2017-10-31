@@ -3,7 +3,8 @@
         "formats": {
             "date": {
                 "short_custom": "%e %b '%y",
-                "market_history": "%m/%e %H:%M:%S"
+                "market_history": "%e/%m %H:%M:%S",
+                "market_history_us": "%m/%e %H:%M:%S"
             }
         }
     },

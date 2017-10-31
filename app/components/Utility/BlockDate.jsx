@@ -4,6 +4,7 @@ import {connect} from "alt-react";
 import BlockchainStore from "stores/BlockchainStore";
 import BlockchainActions from "actions/BlockchainActions";
 import ReactTooltip from "react-tooltip";
+import getLocale from "browser-locale";
 
 /**
  * @brief displays block's date and time based on block number
@@ -15,7 +16,7 @@ import ReactTooltip from "react-tooltip";
 class BlockDate extends React.Component {
 
     static defaultProps = {
-        format: "market_history",
+        format: getLocale().toLowerCase().indexOf("en-us") !== -1 ? "market_history_us": "market_history",
         tooltip: false,
         component: "span"
     }
@@ -31,7 +32,6 @@ class BlockDate extends React.Component {
 
     render() {
         const {block, tooltip, component, format} = this.props;
-
         if (!block) return React.createElement(component);
         return (
             React.createElement(component, {className: tooltip ? "tooltip": "", "data-tip": tooltip ? block.timestamp : ""},

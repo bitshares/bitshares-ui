@@ -16,6 +16,7 @@ const {operations} = grapheneChainTypes;
 import BlockDate from "../Utility/BlockDate";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
+import getLocale from "browser-locale";
 
 class MarketHistory extends React.Component {
     constructor(props) {
@@ -147,7 +148,7 @@ class MarketHistory extends React.Component {
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
                         <td className="tooltip" data-tip={new Date(order.time)}>
-                            {counterpart.localize(new Date(order.time), {type: "date", format: "market_history"})}
+                            {counterpart.localize(new Date(order.time), {type: "date", format: getLocale().toLowerCase().indexOf("en-us") !== -1 ? "market_history_us": "market_history"})}
                         </td>
                     </tr>
                 );
