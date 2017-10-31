@@ -2,7 +2,8 @@
     "counterpart": {
         "formats": {
             "date": {
-                "short_custom": "%e %b '%y"
+                "short_custom": "%e %b '%y",
+                "market_history": "%m/%e %H:%M:%S"
             }
         }
     },

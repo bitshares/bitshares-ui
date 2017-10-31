@@ -2,11 +2,7 @@ import Immutable from "immutable";
 import alt from "alt-instance";
 import BlockchainActions from "actions/BlockchainActions";
 import {ChainStore} from "bitsharesjs/es";
-
-import {
-    Block
-}
-    from "./tcomb_structs";
+import {Block} from "./tcomb_structs";
 
 class BlockchainStore {
     constructor() {
@@ -29,7 +25,7 @@ class BlockchainStore {
     onGetBlock(block) {
         if (!this.blocks.get(block.id)) {
             if (!/Z$/.test(block.timestamp)) {
-                block.timestamp += 'Z';
+                block.timestamp += "Z";
             }
             block.timestamp = new Date(block.timestamp);
             this.blocks = this.blocks.set(
@@ -43,6 +39,9 @@ class BlockchainStore {
         let {block, maxBlock} = payload;
         if (typeof block.timestamp === "string") {
             block.timestamp += "+00:00";
+            if (!/Z$/.test(block.timestamp)) {
+                block.timestamp += "Z";
+            }
         }
         block.timestamp = new Date(block.timestamp);
         if (block.id > maxBlock - this.maxBlocks) {
