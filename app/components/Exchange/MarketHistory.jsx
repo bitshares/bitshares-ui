@@ -1,9 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
-import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
-import utils from "common/utils";
 import Translate from "react-translate-component";
 import market_utils from "common/market_utils";
 import PriceText from "../Utility/PriceText";
@@ -15,6 +13,10 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import { ChainTypes as grapheneChainTypes } from "bitsharesjs/es";
 const {operations} = grapheneChainTypes;
+import BlockDate from "../Utility/BlockDate";
+import counterpart from "counterpart";
+import ReactTooltip from "react-tooltip";
+import getLocale from "browser-locale";
 
 class MarketHistory extends React.Component {
     constructor(props) {
@@ -57,10 +59,12 @@ class MarketHistory extends React.Component {
         let historyNode = this.refs.history;
         historyNode.scrollTop = 0;
         Ps.update(historyNode);
+
+        setTimeout(ReactTooltip.rebuild, 1000);
     }
 
     render() {
-        let {history, myHistory, base, quote, baseSymbol, quoteSymbol, flipped, isNullAccount} = this.props;
+        let {history, myHistory, base, quote, baseSymbol, quoteSymbol, isNullAccount} = this.props;
         let  {activeTab} = this.state;
         let historyRows = null;
 
@@ -69,7 +73,6 @@ class MarketHistory extends React.Component {
         }
 
         if (activeTab === "my_history" && (myHistory && myHistory.size)) {
-            let index = 0;
             let keyIndex = -1;
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             historyRows = myHistory.filter(a => {
@@ -110,7 +113,7 @@ class MarketHistory extends React.Component {
                         </td>
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
-                        <td><Link to={`/block/${block_num}`}>#{utils.format_number(block_num, 0)}</Link></td>
+                        <BlockDate component="td" block_number={block_num} tooltip />
                     </tr>
                 );
             }).toArray();
@@ -119,7 +122,7 @@ class MarketHistory extends React.Component {
             let keyIndex = -1;
             let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
             historyRows = this.props.history
-            .filter(a => {
+            .filter(() => {
                 index++;
                 return index % 2 === 0;
             })
@@ -136,7 +139,6 @@ class MarketHistory extends React.Component {
                     paysAsset = quote;
                     receivesAsset = base;
                 }
-
                 let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
                 return (
                     <tr key={"history_" + keyIndex}>
@@ -145,7 +147,9 @@ class MarketHistory extends React.Component {
                         </td>
                         <td>{parsed_order.receives}</td>
                         <td>{parsed_order.pays}</td>
-                        <td data-tip={new Date(order.time)}>{parsed_order.time}</td>
+                        <td className="tooltip" data-tip={new Date(order.time)}>
+                            {counterpart.localize(new Date(order.time), {type: "date", format: getLocale().toLowerCase().indexOf("en-us") !== -1 ? "market_history_us": "market_history"})}
+                        </td>
                     </tr>
                 );
             }).toArray();
@@ -173,7 +177,7 @@ class MarketHistory extends React.Component {
                                     <th><Translate className="header-sub-title" content="exchange.price" /></th>
                                     <th><span className="header-sub-title"><AssetName dataPlace="top" name={quoteSymbol} /></span></th>
                                     <th><span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span></th>
-                                    <th><Translate className="header-sub-title" content={activeTab === "history" ? "explorer.block.date" : "explorer.block.title"} /></th>
+                                    <th><Translate className="header-sub-title" content="explorer.block.date" /></th>
                                 </tr>
                             </thead>
                         </table>
