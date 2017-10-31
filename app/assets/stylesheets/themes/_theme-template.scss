@@ -1258,9 +1258,12 @@ $account-background
                     color: $account-green;
                 }
             }
-            &.is-active > a {
-                color: $account-primarytext;
-                background-color: $account-header;
+            &.is-active {
+                background-color: lighten($account-header, 4%);
+                > a {
+                    color: $account-primarytext;
+                    background-color: lighten($account-header, 4%);
+                }
             }
             &.total-value {
                 > a {
