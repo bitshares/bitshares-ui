@@ -1260,7 +1260,7 @@ $account-background
             }
             &.is-active > a {
                 color: $account-primarytext;
-                background-color: $account-header;
+                background-color: lighten($account-header, 4%);
             }
             &.total-value {
                 > a {
