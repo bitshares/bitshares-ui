@@ -168,7 +168,6 @@ class BuySell extends React.Component {
         // }
         const isBid = type === "bid";
         let marketFee = isBid && quoteMarketFee ? quoteMarketFee : !isBid && baseMarketFee ? baseMarketFee : null;
-        console.log("isBid", isBid, "quoteMarketFee", !!quoteMarketFee, "baseMarketFee", !!baseMarketFee);
         let hasBalance = isBid ? balanceAmount.getAmount({real: true}) >= parseFloat(total) : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
 
         let buttonText = isPredictionMarket ? counterpart.translate("exchange.short") : isBid ? counterpart.translate("exchange.buy") : counterpart.translate("exchange.sell");
