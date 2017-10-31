@@ -127,6 +127,7 @@
     "alt-react": "0.0.1",
     "bignumber.js": "^4.0.0",
     "bitsharesjs": "^1.4.1",
+    "browser-locale": "^1.0.3",
     "classnames": "^2.2.1",
     "cookies-js": "^1.2.1",
     "counterpart": "^0.17.1",
