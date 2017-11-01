@@ -118,8 +118,14 @@ button, .button {
   @include RobotoCondensed;
 }
 
-.table.dashboard-table > thead > tr > th {
-  @include RobotoRegular;
+.table.dashboard-table {
+    > thead > tr > th {
+        @include RobotoRegular;
+    }
+
+    > tbody > tr > td {
+        @include RobotoCondensed;
+    }
 }
 
 // .key-value-table tr > td:first-child {

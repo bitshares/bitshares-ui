@@ -48,7 +48,6 @@ npm install
 
 The dev server uses Express in combination with Webpack.
 
-<<<<<<< fcd7d7a6e6b91ecd0695bdac7368ef9dbaaec712
 Once all the packages have been installed you can start the development server by running:
 
 >开发服务器使用了EXPRESS和Webpack.

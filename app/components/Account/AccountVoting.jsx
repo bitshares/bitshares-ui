@@ -427,8 +427,8 @@ class AccountVoting extends React.Component {
             }
 
             return (
-                new Date(a.get("work_end_date")) > now &&
-                new Date(a.get("work_begin_date")) <= now
+                new Date(a.get("work_end_date") + "Z") > now &&
+                new Date(a.get("work_begin_date") + "Z") <= now
             );
 
         })
@@ -469,10 +469,10 @@ class AccountVoting extends React.Component {
             }
 
             let votes = a.get("total_votes_for") - a.get("total_votes_against");
-
             return (
-                new Date(a.get("work_end_date")) >= now &&
-                votes < voteThreshold
+                (new Date(a.get("work_end_date")+ "Z") > now &&
+                votes < voteThreshold) ||
+                new Date(a.get("work_begin_date")+ "Z") > now
             );
 
         })
@@ -700,7 +700,7 @@ class AccountVoting extends React.Component {
                                             <tr>
                                                 <th></th>
                                                 <th style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
-                                                <th colSpan="5" className="hide-column-small"></th>
+                                                <th colSpan="4" className="hide-column-small"></th>
                                                 <th style={{textAlign: "right"}}>
                                                     {globalObject ? <EquivalentValueComponent hide_asset fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null}
                                                 </th>
@@ -714,7 +714,6 @@ class AccountVoting extends React.Component {
                                             <tr>
                                                 {workerTableIndex === 2 ? null : <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>}
                                                 <th style={{textAlign: "left"}}><Translate content="account.user_issued_assets.description" /></th>
-                                                <th style={{textAlign: "left"}} className="hide-column-small"><Translate content="account.votes.creator" /></th>
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.total_votes" />
                                                 </th>

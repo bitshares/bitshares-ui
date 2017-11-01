@@ -231,10 +231,17 @@ table.table.dashboard-table {
             border: 1px solid;
 
             &.worker-name {
-                max-width: 8rem;
+                max-width: 15rem;
                 overflow-x: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+                > div span.icon > svg {
+                    width: 1.75rem;
+                    height: 1.75rem;
+                }
+                > div > a {
+                    font-size: 90%;
+                }
             }
         }
         &.total-value {
