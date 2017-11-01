@@ -6,7 +6,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import AssetName from "../Utility/AssetName";
-import CollateralPosition from "../Blockchain/CollateralPosition";
+import MarginPositions from "./MarginPositions";
 import { RecentTransactions } from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "bitsharesjs/es";
@@ -212,13 +212,15 @@ class AccountOverview extends React.Component {
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
+            const notCorePrefUnit = preferredUnit !== "BTS";
+
             let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
             symbol = asset.get("symbol");
             if (symbol.indexOf("OPEN.") !== -1 && !market) market = "USD";
             let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
 
             /* Table content */
-            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
+            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : notCorePrefUnit ? <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
             transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Icon name="transfer" className="icon-14px" /></Link>;
 
             let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
@@ -237,7 +239,7 @@ class AccountOverview extends React.Component {
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                    <td>
+                    <td style={{textAlign: "left", paddingLeft: 10}}>
                         <LinkToAssetById asset={asset.get("id")} />
                     </td>
                     <td style={{textAlign: "right"}}>
@@ -342,7 +344,7 @@ class AccountOverview extends React.Component {
                     let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
-                            <td>
+                            <td style={{textAlign: "left"}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
                             <td colSpan="2"></td>
@@ -528,7 +530,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "center"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -573,7 +575,7 @@ class AccountOverview extends React.Component {
                                     <thead>
                                         <tr>
                                             {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
+                                            <th style={{textAlign: "left", paddingLeft: 10}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
                                             {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
@@ -622,7 +624,7 @@ class AccountOverview extends React.Component {
                             <Tab title="account.collaterals" subText={<span className={this.state.globalMarginStatus}>{marginValue}</span>}>
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <CollateralPosition preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
+                                        <MarginPositions preferredUnit={preferredUnit} className="dashboard-table" callOrders={call_orders} account={account}>
                                             <tr className="total-value">
                                                 <td>
                                                     {totalValueText}
@@ -633,7 +635,7 @@ class AccountOverview extends React.Component {
                                                 <td>{marginValue}</td>
                                                 <td colSpan="5"></td>
                                             </tr>
-                                        </CollateralPosition>
+                                        </MarginPositions>
                                     </div>
                                 </div>
                             </Tab>
