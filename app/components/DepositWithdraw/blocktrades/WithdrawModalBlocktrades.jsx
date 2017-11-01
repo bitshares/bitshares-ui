@@ -201,7 +201,6 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSubmit() {
-
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
                 ZfApi.publish(this.getWithdrawModalId(), "open");
@@ -223,12 +222,29 @@ class WithdrawModalBlocktrades extends React.Component {
                 const {feeAmount} = this.state;
 
                 let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                let gateFee = parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
+
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: amount
                 });
 
+                let balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
+
+                let gateFeeAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: gateFee
+                });
+
+                sendAmount.plus(gateFeeAmount);
+
+                /* Insufficient balance */
+                if (balanceAmount.lt(sendAmount)) {
+                    sendAmount = balanceAmount;
+                }
+                
                 AccountActions.transfer(
                     this.props.account.get("id"),
                     this.props.issuer.get("id"),
