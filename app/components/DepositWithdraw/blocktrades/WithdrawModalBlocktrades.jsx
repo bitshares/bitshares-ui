@@ -221,8 +221,8 @@ class WithdrawModalBlocktrades extends React.Component {
 
                 const {feeAmount} = this.state;
 
-                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
-                let gateFee = parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
+                const amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                const gateFee = parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
 
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
@@ -232,7 +232,7 @@ class WithdrawModalBlocktrades extends React.Component {
 
                 let balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
 
-                let gateFeeAmount = new Asset({
+                const gateFeeAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: gateFee
@@ -244,7 +244,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 if (balanceAmount.lt(sendAmount)) {
                     sendAmount = balanceAmount;
                 }
-                
+
                 AccountActions.transfer(
                     this.props.account.get("id"),
                     this.props.issuer.get("id"),
@@ -475,6 +475,11 @@ class WithdrawModalBlocktrades extends React.Component {
             balance = "No funds";
         }
 
+        const disableSubmit =
+            this.state.error ||
+            this.state.balanceError ||
+            !this.state.withdraw_amount;
+
         return (<form className="grid-block vertical full-width-content">
             <div className="grid-container">
                 <div className="content-block">
@@ -547,7 +552,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (disableSubmit ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 

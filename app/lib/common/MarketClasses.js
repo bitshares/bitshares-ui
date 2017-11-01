@@ -48,7 +48,8 @@ class Asset {
     }
 
     toSats(amount = 1) { // Return the full integer amount in 'satoshis'
-        return Math.floor(amount * this.satoshi);
+        // Round to prevent floating point math errors
+        return Math.round(amount * this.satoshi);
     }
 
     setAmount({sats, real}) {

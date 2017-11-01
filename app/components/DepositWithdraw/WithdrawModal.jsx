@@ -28,7 +28,7 @@ class WithdrawModal extends React.Component {
         };
     }
 
-    onWithdrawAmountChange( {amount, asset} ) {
+    onWithdrawAmountChange( {amount} ) {
         this.setState( {withdraw_amount:amount} );
     }
 
@@ -40,7 +40,6 @@ class WithdrawModal extends React.Component {
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = this.state.withdraw_amount.replace( /,/g, "" );
-        console.log( "withdraw_amount: ", amount );
         AccountActions.transfer(
             this.props.account.get("id"),
             this.props.issuer.get("id"),
