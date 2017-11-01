@@ -26,14 +26,12 @@ class AccountVoting extends React.Component {
     static propTypes = {
         initialBudget: ChainTypes.ChainObject.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired,
-        dynamicGlobal: ChainTypes.ChainObject.isRequired,
         proxy: ChainTypes.ChainAccount.isRequired
     };
 
     static defaultProps = {
         initialBudget: SettingsStore.getState().viewSettings.get("lastBudgetObject", "2.13.1"),
-        globalObject: "2.0.0",
-        dynamicGlobal: "2.1.0"
+        globalObject: "2.0.0"
     };
 
     constructor(props) {
@@ -362,14 +360,16 @@ class AccountVoting extends React.Component {
 
             this.setState({lastBudgetObject: newID});
         } else {
-            if (lastBudgetObject !== "2.13.1") {
-                let newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
+            const newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
+            if (typeof newBudgetObjectId === "number" && newBudgetObjectId > 1) {
+
+                const lastId = Math.max(1, newBudgetObjectId - 1);
                 this.setState({
-                    lastBudgetObject: "2.13." + (newBudgetObjectId - 1)
+                    lastBudgetObject: "2.13." + lastId
                 });
 
                 SettingsActions.changeViewSetting.defer({
-                    lastBudgetObject: "2.13." + (newBudgetObjectId - 1)
+                    lastBudgetObject: "2.13." + lastId
                 });
             }
         }
