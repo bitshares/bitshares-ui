@@ -31,7 +31,7 @@ export const settingsAPIs = {
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
-    DEFAULT_FAUCET: "https://bitshares.openledger.info",
+    DEFAULT_FAUCET: "https://faucet.bitshares.eu",
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };
