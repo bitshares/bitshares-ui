@@ -88,8 +88,7 @@ class CreateAccountPassword extends React.Component {
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
 
-            FetchChain("getAccount", this.state.accountName).then(() => {
-                console.log("onFinishConfirm");
+            FetchChain("getAccount", this.state.accountName, undefined, {[this.state.accountName]: true}).then(() => {
                 this.props.router.push("/wallet/backup/create?newAccount=true");
             });
         }
@@ -109,7 +108,7 @@ class CreateAccountPassword extends React.Component {
             AccountActions.setPasswordAccount(name);
             // User registering his own account
             if(this.state.registrar_account) {
-                FetchChain("getAccount", name).then(() => {
+                FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                     this.setState({
                         step: 2,
                         loading: false
@@ -118,14 +117,12 @@ class CreateAccountPassword extends React.Component {
                 });
                 TransactionConfirmStore.listen(this.onFinishConfirm);
             } else { // Account registered by the faucet
-                // this.props.router.push(`/wallet/backup/create?newAccount=true`);
-                FetchChain("getAccount", name).then(() => {
+                FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                     this.setState({
                         step: 2
                     });
+                    this._unlockAccount(name, password);
                 });
-                this._unlockAccount(name, password);
-                // this.props.router.push(`/account/${name}/overview`);
 
             }
         }).catch(error => {
