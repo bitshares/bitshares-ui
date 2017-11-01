@@ -23,18 +23,16 @@ then
 
     # Commit Changes
     ################
-    echo "Pushing new wallet repo"
+    echo "Pushing new wallet folder"
     cd $TRAVIS_BUILD_DIR/bitshares.org
     #git config user.email "travis@bitshares.org"
     #git config user.name "BitShares Wallet Build Automation"
     git add -A
     git commit -a -m "Update wallet by Travis: v$TRAVIS_TAG"
-
-    # Push Changes
-    ##############
     git push
 
     ## wallet.bitshares.org subdomain (independent repo)
+    echo "Pushing new wallet subdomain repo"
     git clone https://github.com:${GITHUB_TOKEN}@github.com/${WALLET_REPO} $TRAVIS_BUILD_DIR/wallet.bitshares.org
     cd $TRAVIS_BUILD_DIR/wallet.bitshares.org
     git checkout gh-pages
@@ -43,4 +41,5 @@ then
     cp -Rv $TRAVIS_BUILD_DIR/build/hash-history_/* .
     git add -A
     git commit -a -m "Update wallet by Travis: v$TRAVIS_TAG"
+    git push
 fi

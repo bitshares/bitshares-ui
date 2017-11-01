@@ -1,4 +1,38 @@
 ---------------------------------------------------------------------
+Release 2.0.171101
+---------------------------------------------------------------------
+New features
+--------
+- #634 The hosted wallet is now available at wallet.bitshares.org
+- #530 Withdraw amounts now factor in the gate fee
+- #538 The voting page has been completely revamped
+- #579 The margin position tab now includes a set of default assets
+- #632 The connection status is now visible throughout the app
+- #302 Your own orders are highlighted in the order book
+- #623 The Chinese translation has been updated
+- #670 My Trades now show dates instead of block numbers
+- #581 Market fees are now shown in the exchange page
+- #633 Clicking on connection status now takes you to Settings --> Access
+- #430 The asset page for bit assets now includes a sortable list of open margin position
+- #583 The portfolio is now sortable
+
+Bug fixes
+--------
+- #658 BTS trade button missing from portfolio view
+- #627 Display Feed Published value as an actual date/time in localized time zone
+- #52 Show a warning about core_exchange_rate at asset create/update page
+- #455 Trollbox has been removed completely
+- #645 Kexcoin has been removed from the dashboard
+- #622 Login screens have been harmonized
+- #580 Annual membership fee now is now shown as disabled
+- #607 Long line wrapping issue has been fixed
+- #590 'Reserve asset' changed to 'Burn asset'
+- #586 Input fields clear properly when switching between markets
+- #594 Leading decimals can now be input correctly in the exchange
+- #498 Orderbook scrollbars always visible
+- #673 Account tab headers are now highlighted
+
+---------------------------------------------------------------------
 Release 2.0.171015
 ---------------------------------------------------------------------
 New features

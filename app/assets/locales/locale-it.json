@@ -11,7 +11,7 @@
     "ru": "Русский"
   },
   "incognito": {
-    "no_support": "Questo Portafoglio Bitshares necessita di Local Storage e IndexedDB, funzionalità che non sono persistenti nella modalità in incognito. Raccomandiamo l'uso di una sessione di navigazione normale.",
+    "no_support": "Questo Portafoglio BitShares necessita di Local Storage e IndexedDB, funzionalità che non sono persistenti nella modalità in incognito. Raccomandiamo l'uso di una sessione di navigazione normale.",
     "ignore": "Ho capito, continua."
   },
   "sync_fail": {
@@ -70,21 +70,28 @@
     "withdraw_full": "Clicca per prelevare l'intero saldo",
     "withdraw_address": "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
     "memo_tip": "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
-    "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro"
+    "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
+    "copy_password": "Clicca qui per copiare la password negli appunti",
+    "sync_yes": "Il nodo corrente è sincronizzato con la blockchain",
+    "sync_no": "Il nodo corrente non è sincronizzato con la blockchain, prova a passare a un altro",
+    "disconnected": "Non sei connesso a un nodo API, prova a ricaricare o a scegliere un nuovo punto di accesso nelle Impostazioni",
+    "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato."
   },
   "propose": "Proponi",
   "cancel": "Annulla",
   "account": {
-    "new_user": "Nuovo utgente?",
+    "new_user": "Nuovo utente?",
     "existing_user": "Utente esistente",
-    "intro_text_title": "Benvenuto nel BitShares DEX",
-    "intro_text_1": "L'exchange decentralizzato <b>BitShares</b> - chiamato anche Il DEX - è una piattaforma di ultima generazione per il trading di crisptovalute.",
+    "restore": "Ripristina",
+    "advanced": "Avanzate",
+    "intro_text_title": "Benvenuto su BitShares",
+    "intro_text_1": "Il tuo Exchange decentralizzato",
     "intro_text_2": "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
     "intro_text_3": "<b>Il DEX</b> permette anche la creazione di asset generati dagli utenti (user-issued assets, UIA), con cui si può fare trading con altri UIA o altri asset trustless sulla piattaforma.  Un distributore molto noto sul DEX è <b>OpenLedger</b>, che offre una gamma di asset che include BTC, ETH, STEEM, DASH, LTC, DOGE e molti altri",
     "intro_text_4": "Ciò garantisce ai trader di criptovalute un unico mix di trading tradizionale e decentralizzato, il tutto con la familiare interfaccia di un exchange. Buon trading!",
     "in_open": "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
     "in_open_value": "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
-    "transfer_actions": "Movimenti",
+    "transfer_actions": "Trasferimenti",
     "market_actions": "Operazioni di mercato",
     "see_open": "Mostra ordini aperti",
     "total_estimate": "Questa è una stima del valore di tutti i tuoi asset, inclusi asset nascosti, ordini aperti, debito e garanzia. La stima è ottenuta usando informazioni in tempo reale dalla blockchain, e potrebbe non essere del tutto accurata.",
@@ -102,8 +109,8 @@
     "as_collateral": "Garanzia",
     "open_orders": "Ordini aperti",
     "total_value": "Valore totale",
-    "show_hidden": "Mostra asset nascosti",
-    "hide_hidden": "Nascondi asset nascosti",
+    "show_hidden": "Nascosti",
+    "hide_hidden": "Attivi",
     "ignore": "Nascondi",
     "unignore": "Mostra",
     "show_ignored": "Mostra account nascosti",
@@ -123,7 +130,9 @@
       "white_by": "Messo in whitelist da",
       "black_by": "Messo in blacklist da",
       "empty_white_by": "Nessun account ha messo %(account)s in whitelist.",
-      "empty_black_by": "Nessun account ha messo %(account)s in blacklist."
+      "empty_black_by": "Nessun account ha messo %(account)s in blacklist.",
+      "whitelist_authorities": "Autorità whitelist",
+      "blacklist_authorities": "Autorità blacklist"
     },
     "vesting": {
       "title": "Saldi vesting",
@@ -178,6 +187,7 @@
       "approx_fee": "Commissione approssimativa",
       "exists": "Questo asset esiste sempre",
       "max_positive": "La disponibilità massima deve essere un numero positivo",
+      "too_large": "La disponibilità massima è eccessiva, per favore scegli un numero più piccolo",
       "core_exchange_rate": "Tasso di cambio centrale",
       "quote": "Quantità asset quotato",
       "quote_name": "Asset quotato",
@@ -217,7 +227,9 @@
       "error_invalid": "Quell'asset non può essere usato",
       "market": "Coppia di mercato preferita",
       "precision_warning": "Attenzione: Il numero di decimali non può essere modificato dopo la creazione",
-      "visible": "Nascondi asset in ricerca e mercati"
+      "visible": "Nascondi asset in ricerca e mercati",
+      "cer_warning_1": "Avviso",
+      "cer_warning_2": "Assicurati che il tuo core exchange rate sia maggiore del prezzo di mercato, altrimenti le persone compreranno il tuo token dal mercato e prosciugheranno il tuo fee pool tramite arbitraggio implicito. Il core exchange rate dovrebbe essere aggiornato regolarmente per riflettere il prezzo di mercato del tuo asset."
     },
     "connections": {
       "known": "Conosciuto da",
@@ -320,7 +332,13 @@
       "toggle": "Cambia voto",
       "supported": "Supportato",
       "active_short": "Attivo",
-      "inactive": "Inattivo"
+      "inactive": "Backup",
+      "about": "Informazioni",
+      "create_worker": "Crea un nuovo worker",
+      "line": "Linea",
+      "save_finish": "Clicca Salva per completare",
+      "threshold": "Voti necesssari per l'attivazione",
+      "missing": "Necessari"
     },
     "options": {
       "num_witnesses": "Numero desiderato di witness",
@@ -331,6 +349,8 @@
     "unfollow": "Non seguire",
     "follow": "Segui",
     "pay": "Invia a",
+    "deposit": "Deposita BTS",
+    "deposit_address": "Il tuo indirizzo di deposito è il nome del tuo account",
     "overview": "Panoramica",
     "home": "Home",
     "bts_market": "Mercato",
@@ -352,7 +372,7 @@
     "percent": "Percentuale della disponibilità totale",
     "please_create_account": "Per favore crea un account",
     "create_account": "Crea un account",
-    "create_new": "Create un nuovo account",
+    "create_new": "Crea un nuovo account",
     "password_login": "Login con password",
     "identicon": "Identicon",
     "pay_from": "Paga con l'account",
@@ -366,7 +386,12 @@
     "propose_from": "Proponi da",
     "settle": "Settle",
     "no_orders": "Nessun ordine aperto",
-    "asset_details": "Dettagli asset"
+    "asset_details": "Dettagli asset",
+    "portfolio": "Il mio Portfolio",
+    "activity": "Attività",
+    "eq_value_header": "Valore ({asset})",
+    "qty": "Qtà",
+    "total": "Totale ({asset})"
   },
   "pagination": {
     "newer": "Più recenti",
@@ -412,7 +437,8 @@
     "proposal_create": "{account} ha creato una proposta di transazione",
     "proposal_update": "{account} ha aggiornato una proposta di transazione",
     "proposal_delete": "{account} ha rimosso una proposta di transazione",
-    "fill_order": "{account} ha acquistato {received} a {price}",
+    "fill_order_buy": "{account} ha acquistato {amount} per {price}",
+    "fill_order_sell": "{account} ha venduto {amount} per {price}",
     "vesting_balance_withdraw": "{account} ha ritirato un saldo vesting di {amount}",
     "balance_claim": "{account} ha riscosso un saldo di {amount}",
     "publish_feed": "{account} ha pubblicato un feed price di {price}",
@@ -471,7 +497,8 @@
     "asset_issue": "Emetti {amount} a {to} usando {account}",
     "asset_reserve": "Riserva (brucia) {amount} usando {account}",
     "vesting_balance_withdraw": "Preleva {amount} dal saldo vesting di {account}",
-    "feed_producer": "Aggiorna i produttori di feed per l'asset {asset} usando l'account {account}"
+    "feed_producer": "Aggiorna i produttori di feed per l'asset {asset} usando l'account {account}",
+    "call_order_update": "Cambia il debito {account} {debtSymbol} di {debt} e la garanzia di {collateral}"
   },
   "transaction": {
     "confirm": "Per favore conferma la transazione",
@@ -525,6 +552,7 @@
     "deposit_to": "Depositato nell'account",
     "claimed": "Totale richiesto",
     "borrow_amount": "Debito",
+    "borrower": "Debitore",
     "funding_account": "Account sorgente",
     "delta_collateral": "Variazione garanzia",
     "delta_debt": "Variazione debito",
@@ -674,7 +702,8 @@
       "symbol": "Simbolo",
       "id": "ID",
       "issuer": "Erogatore",
-      "precision": "Precisione"
+      "precision": "Precisione",
+      "units": "Unità"
     },
     "asset": {
       "title": "Asset",
@@ -720,12 +749,22 @@
         "maximum_short_squeeze_ratio": "MSSR",
         "publisher": "Publisher",
         "published": "Pubblicato"
-      }
+      },
+      "margin_positions": {
+        "title": "Posizioni con margine"
+      },
+      "whitelist": {
+            "whitelist_authorities": "Autorità whitelist",
+            "blacklist_authorities": "Autorita blacklist",
+            "whitelist_markets": "Whitelist mercato",
+            "blacklist_markets": "Blacklist mercato",
+            "enable_flag": "Il flag 'whitelist' deve essere abilitato per impostare le autorità whitelist"
+        }
     },
     "witnesses": {
       "title": "Witness",
       "current": "Witness attuale",
-      "participation": "Tasso di participation",
+      "participation": "Tasso di partecipazione",
       "pay": "Paga-per-blocco",
       "budget": "Budget rimanente",
       "next_vote": "Prossimo aggiornamento dei voti",
@@ -773,6 +812,8 @@
   },
   "settings": {
     "passwordLogin": "Fai il login usando il modalità account",
+    "cloud_login": "Login Portafoglio Cloud",
+    "local_wallet": "Login Portafoglio locale",
     "inverseMarket": "Preferenza orientazione del mercato",
     "unit": "Unità preferite per l'account",
     "confirmMarketOrder": "Chiedi conferma per gli ordini di mercato",
@@ -837,7 +878,10 @@
     "activate": "Attiva",
     "confirm_remove": "Sei sicuro di voler rimuovere %(name)s dalla lista dei nodi disponibili?",
     "valid_node_url": "L'URL del Nodo deve iniziare con ws:// oppure wss://",
-    "connection_error": "Impossibile connettersi con il nodo API node %(url)s; ripiegando su nodi funzionanti noti"
+    "connection_error": "Impossibile connettersi con il nodo API node %(url)s; ripiegando su nodi funzionanti noti",
+    "low_latency": "Bassa latenza",
+    "medium_latency": "Media latenza",
+    "high_latency": "Alta latenza"
   },
   "footer": {
     "title": "BitShares",
@@ -847,7 +891,10 @@
     "nosync": "La blockchain non è sincronizzata, per favore attendi..",
     "connection": "Nessuna connessione alla Blockchain",
     "brainkey": "Raccomandato il backup della brainkey",
-    "update_available": "AGGIORNAMENTO DISPONIBILE"
+    "update_available": "AGGIORNAMENTO DISPONIBILE",
+    "synced": "Sincronizzato",
+    "unsynced": "Fuori sincrono",
+    "disconnected": "Disconnesso"
   },
   "exchange": {
     "chart_options": {
@@ -901,7 +948,7 @@
     "base_supply": "Disponibilità valuta di base",
     "more": "Trova mercati",
     "volume_24": "Volume 24h",
-    "change": "Cambia",
+    "change": "Variazione",
     "confirm_buy": "Il tuo ordine è %(diff)s volte più alto dell'offerta più bassa, sei sicuro?",
     "confirm_sell": "Il tuo ordine è %(diff)s volte più basso della domanda più alta, sei sicuro?",
     "confirm_no_orders_buy": "Stai facendo un ordine di acquisto in un mercato senza ordini di vendita attivi. Sei sicuro di voler continuare?",
@@ -943,7 +990,8 @@
     "show_star_1": "Mostra",
     "show_star_2": "solo",
     "base": "Valuta di base:",
-    "search": "Cerca qui altri mercati"
+    "search": "Cerca qui altri mercati",
+    "order_value": "Valore ordine"
   },
   "fees": {
     "title": "Elenco commissioni"
@@ -967,7 +1015,7 @@
     "change_wallet": "Cambia portafoglio",
     "wallet_created": "Portafoglio creato",
     "create_wallet": "Crea nuovo portafoglio",
-    "create_importkeys_text": "Per importare le chiavi, devi prima create un portafoglio per contenerle. Completa la finestra di dialogo sotto per creare un nuovo portafoglio.",
+    "create_importkeys_text": "Per importare le chiavi, devi prima creare un portafoglio per contenerle. Completa la finestra di dialogo sotto per creare un nuovo portafoglio.",
     "create_wallet_backup": "Crea nuovo portafoglio da un backup",
     "import_bts1": "Importa da BitShares 0.9.3c",
     "setup_wallet": "Configura il tuo portafoglio",
@@ -1115,9 +1163,12 @@
     "current_pass": "Password attuale",
     "no_wallet": "Non hai ancora un portafoglio",
     "generated": "Password generata",
+    "account_exp": "Questo account sarà creato nella blockchain e sarà il tuo indirizzo per ogni trasferimento tu voglia effettuare! <strong>Non ci sono lunghi indirizzi stile Bitcoin su BitShares!</strong>",
     "understand_1": "Ho capito che non potrò recuperare la mia password se la perdo o me ne dimentico",
     "understand_2": "L'ho messa per iscritto o salvato in altro modo la mia password",
-    "bts_rules": "La prima regola di BitShares è: Non perdere la tua password.<br/>La seconda regola di BitShares è: Non perdere la tua password.<br />La terza regola di BitShares è: Non possiamo recuperare la tua password.<br />La quarta regola: Se puoi ricordare la tua password, allora non è sicura.<br />La quinta regola: Usa solo password generate a caso.<br />La sesta regola: Non dire a nessuno la tua password.<br />La settima regola: Fai sempre il backup della tua password."
+    "understand_3": "Ho capito che perderò l'accesso ai miei fondi se perdo la mia password",
+    "bts_rules": "La prima regola di BitShares è: Non perdere la tua password.<br/>La seconda regola di BitShares è: Non perdere la tua password.<br />La terza regola di BitShares è: Non possiamo recuperare la tua password.<br />La quarta regola: Se puoi ricordare la tua password, allora non è sicura.<br />La quinta regola: Usa solo password generate a caso.<br />La sesta regola: Non dire a nessuno la tua password.<br />La settima regola: Fai sempre il backup della tua password.",
+    "ok_done": "OK, portami alla dashboard"
   },
   "borrow": {
     "title": "%(asset_symbol)s con margine",
@@ -1125,6 +1176,7 @@
     "coll_ratio": "Collateral ratio",
     "call_limit": "Market Call Limit",
     "adjust": "Aggiorna posizione",
+    "adjust_short": "Aggiorna",
     "close": "Chiudi posizione",
     "update": "Aggiorna",
     "errors": {
@@ -1175,7 +1227,12 @@
         "key_approval_add": "Approvazione chiave da aggiungere",
         "key_approval_remove": "Approvazione chiave da rimuovere"
     },
-    "ok": "OK"
+    "ok": "OK",
+    "qrcode":{
+      "label":"qrcode",
+      "title":"Codice QR della chiave privata",
+      "input_message":"Inserisci una password usata per crittografare il codice QR.<br />Una password vuota mostrerà un codice QR in chiaro."
+    }
   },
   "init_error": {
     "title": "Problemi nell'inizializzazione dell'applicazione",
@@ -1263,7 +1320,18 @@
     "purchase": "Acquista %(asset)s",
     "purchase_1": "Acquista %(outputAsset)s rapidamente e facilmente usando %(inputAsset)s da un portafoglio esterno. Questo servizio è fornito da <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Limite di deposito",
-    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">con memo</span> %(memo)s"
+    "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">con memo</span> %(memo)s",
+    "rudex": {
+      "support_block": "Per supporto, contatta RuDEX a:",
+      "min_amount": "Quantità minima: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Per favore inserisci un numero >= minimo",
+      "coming_soon": "Prossimamente"
+    },
+    "unavailable": "Il servizio di gateway per questo asset non è al momento disponibile, riprova più tardi",
+    "unavailable_bridge": "Il servizio di bridge per questo asset non è al momento disponibile, riprova più tardi",
+    "unavailable_OPEN": "Il Gateway OpenLedger non è disponibile o non risponde",
+    "unavailable_RUDEX": "Il Gateway RuDEX non è disponibile o non risponde",
+    "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde"
   },
     "trx_error": {
         "expire": "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."

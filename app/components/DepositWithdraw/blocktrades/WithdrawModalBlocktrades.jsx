@@ -10,7 +10,6 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
@@ -202,7 +201,6 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSubmit() {
-
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
                 ZfApi.publish(this.getWithdrawModalId(), "open");
@@ -223,12 +221,29 @@ class WithdrawModalBlocktrades extends React.Component {
 
                 const {feeAmount} = this.state;
 
-                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                const amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                const gateFee = parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
+
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: amount
                 });
+
+                let balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
+
+                const gateFeeAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: gateFee
+                });
+
+                sendAmount.plus(gateFeeAmount);
+
+                /* Insufficient balance */
+                if (balanceAmount.lt(sendAmount)) {
+                    sendAmount = balanceAmount;
+                }
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
@@ -460,6 +475,11 @@ class WithdrawModalBlocktrades extends React.Component {
             balance = "No funds";
         }
 
+        const disableSubmit =
+            this.state.error ||
+            this.state.balanceError ||
+            !this.state.withdraw_amount;
+
         return (<form className="grid-block vertical full-width-content">
             <div className="grid-container">
                 <div className="content-block">
@@ -532,7 +552,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (disableSubmit ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 
