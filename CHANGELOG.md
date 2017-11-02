@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------
+Release 2.0.171102
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Fix exchange page not loading for bit assets with force called margin positions
+- Fix 'Invalid date' issue
+- Restore ask/bid price colors in exchange orderbook
+
+---------------------------------------------------------------------
 Release 2.0.171101
 ---------------------------------------------------------------------
 New features
