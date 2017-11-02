@@ -294,11 +294,17 @@ var Utils = {
     },
 
     format_date: function(date_str) {
+        if (!/Z$/.test(date_str)) {
+            date_str += "Z";
+        }
         let date = new Date(date_str);
         return date.toLocaleDateString();
     },
 
     format_time: function(time_str) {
+        if (!/Z$/.test(time_str)) {
+            time_str += "Z";
+        }
         let date = new Date(time_str);
         return date.toLocaleString();
     },
@@ -464,7 +470,7 @@ var Utils = {
         if (!globalObject || !dynGlobalObject) return null;
         const block_interval = globalObject.get("parameters").get("block_interval");
         const head_block = dynGlobalObject.get("head_block_number");
-        const head_block_time = new Date(dynGlobalObject.get("time") + "+00:00");
+        const head_block_time = new Date(dynGlobalObject.get("time") + "Z");
         const seconds_below = (head_block - block_number) * block_interval;
         return new Date(head_block_time - seconds_below * 1000);
     },

@@ -23,13 +23,12 @@ class TimeAgo extends React.Component {
 
     render() {
         let {time, chain_time} = this.props;
-        var offset_mills = chain_time ? ChainStore.getEstimatedChainTimeOffset() : 0
+        var offset_mills = chain_time ? ChainStore.getEstimatedChainTimeOffset() : 0;
         if (!time) {
             return null;
         }
-
-        if (typeof time === "string" && time.indexOf("+") === -1) {
-            time += "+00:00";
+        if (typeof time === "string" && time.indexOf("+") === -1 && !/Z$/.test(time)) {
+            time += "Z";
         }
 
         let timePassed = Math.round( ( new Date().getTime() - new Date(time).getTime() + offset_mills ) / 1000 );
