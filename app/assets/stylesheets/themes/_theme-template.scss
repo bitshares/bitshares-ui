@@ -264,7 +264,7 @@ $account-background
     }
 
     .header .button,  .header .button:active {
-        background-color: $panel-bg-color !important;
+        background-color: transparent !important;
     }
 
     .header a.button.create-account {
@@ -791,7 +791,7 @@ $account-background
     }
 
     .menu-group.primary, .menu-group.primary .menu-bar {
-        background-color: $panel-bg-color;
+        background-color: $account-background;
 
         .menu-bar > li {
 
@@ -800,11 +800,11 @@ $account-background
             }
 
             > a:hover {
-                background-color: lighten($panel-bg-color, 5%) !important;
+                background-color: $bg-color !important;
             }
 
             > a.active {
-                background-color: lighten($panel-bg-color, 5%) !important;
+                background-color: $bg-color !important;
             }
         }
     }

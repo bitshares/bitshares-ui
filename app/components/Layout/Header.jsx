@@ -322,39 +322,52 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium">
                     <ul className="menu-bar">
                         <li>{dashboard}</li>
-                        {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}><Translate content="header.account" /></Link></li>}
-                        {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
-                        {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
+                        {!currentAccount ? null :
+                        <li>
+                            <Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}>
+                                <Translate content="header.dashboard" />
+                            </Link>
+                        </li>}
                         <li>{tradeLink}</li>
-                        {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
+                        {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
+                        <li>
+                            <a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
+                                <Translate component="span" content="header.explorer" />
+                            </a>
+                        </li>
+                        <li>
+                            <a className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
+                                <span><Translate content="header.settings" /></span>
+                            </a>
+                        </li>
+                        {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
                     </ul>
                 </div>
                 <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
 
-                        {!myAccountCount || !walletBalance ? null : walletBalance}
-
-                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
-                            {settingsDropdown}
-                        </div>}
-
-                        {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                        {/* {!myAccountCount || !walletBalance ? null : walletBalance} */}
+                        <div className="grp-menu-item overflow-visible" >
                             {flagDropdown}
-                        </div>}
+                        </div>
+
+                        {/* {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
+                            {settingsDropdown}
+                        </div>} */}
+
+
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
                             {accountsDropDown}
                         </div>
 
-                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible account-drop-down">
-                            {flagDropdown}
-                        </div>}
 
-                        {!myAccountCount ? null : <div className="grp-menu-item overflow-visible" >
+
+                        {/* {!myAccountCount ? null : <div className="grp-menu-item overflow-visible" >
                             {settingsDropdown}
-                        </div>}
+                        </div>} */}
 
-                        {lock_unlock}
+                        {/* {lock_unlock} */}
                     </div>
                 </div>
             </div>

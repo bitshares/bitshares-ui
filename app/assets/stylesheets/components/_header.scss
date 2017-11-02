@@ -17,16 +17,16 @@
         border: none;
     }
     &.primary {
-        border-bottom: 1px solid $border-color;
+        border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 66px;
-  text-transform: uppercase;
+  min-height: 64px;
+  // text-transform: uppercase;
   .menu-bar > li {
 
     display: list-item;
     padding: 0;
-    border-right: 1px solid $border-color;
+    border-right: none;
     > a {
       font-weight: bold;
       line-height: 2rem;
@@ -68,7 +68,7 @@ div.account-drop-down {
 
 div.header-right-menu {
     > .grp-menu-item {
-        border-left: 1px solid $border-color;
+        border-left: none;
         line-height: 2rem;
 
         > a {
