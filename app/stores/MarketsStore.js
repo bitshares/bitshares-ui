@@ -556,11 +556,14 @@ class MarketsStore {
 
         let addTime = (time, i, bucketSize) => {
             return new Date(time.getTime() + i * bucketSize * 1000);
-        }
+        };
 
         for (let i = 0; i < this.priceHistory.length; i++) {
             let current = this.priceHistory[i];
-            let date = new Date(current.key.open + "+00:00");
+            if (!/Z$/.test(current.key.open)) {
+                current.key.open += "Z";
+            }
+            let date = new Date(current.key.open);
 
             if (this.quoteAsset.get("id") === current.key.quote) {
                 high = utils.get_asset_price(current.high_base, this.baseAsset, current.high_quote, this.quoteAsset);
@@ -946,7 +949,10 @@ class MarketsStore {
         if (history.length) {
             let first;
             history.forEach((bucket, i) => {
-                let date = new Date(bucket.key.open + "+00:00").getTime();
+                if (!/Z$/.test(bucket.key.open)) {
+                    bucket.key.open += "Z";
+                }
+                let date = new Date(bucket.key.open).getTime();
                 if (date > yesterday) {
                     noTrades = false;
                     if (!first) {
