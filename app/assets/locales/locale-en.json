@@ -851,7 +851,7 @@
     "wallet_text": "Control the details of your local wallet.",
     "accounts_text": "Your accounts list.",
     "password_text": "Change your password.",
-    "backup_text": "**IMPORTANT** NOTICE: To provide enhanced security, the web-based wallet will move to the subdomain https://wallet.bitshares.org by November 15, 2017. We will phase out https://bitshares.org/wallet. Please backup your wallet now and restore the backup file to https://wallet.bitshares.org, which will be your new address for the web wallet. Thanks for your continued support.",
+    "backup_text": "Create backups here.",
     "restore_text": "Restore from a backup or import keys.",
     "access_text": "",
     "view_keys": "View keys",
