@@ -861,16 +861,7 @@ $account-background
 
     }
 
-    .orderbook td.orderHistoryBid {
-        > span.price-integer, > span > span.price-integer {
-            font-weight: bold;
-            color: $primary-text-color;
-        }
-    }
-
     td.orderHistoryAsk  {
-
-
         > span.price-integer, > span > span.price-integer {
             font-weight: bold;
             color: $ask-color;
@@ -879,15 +870,6 @@ $account-background
         > span.price-decimal, > span >span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
-        }
-
-    }
-
-    .orderbook td.orderHistoryAsk {
-
-    > span.price-integer, > span > span.price-integer {
-            font-weight: bold;
-            color: $primary-text-color;
         }
     }
 

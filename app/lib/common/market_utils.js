@@ -157,8 +157,8 @@ const MarketUtils = {
         if (order.time) {
             time = order.time.split("T")[1];
             let now = new Date();
-            let offset = now.getTimezoneOffset() / 60;
-            let date = utils.format_date(order.time + "Z").split(/\W/);
+            let offset = now.getTimezoneOffset() / 60;            
+            let date = utils.format_date(order.time).split(/\W/);
             let hour = time.substr(0, 2);
             let hourNumber = parseInt(hour, 10);
             let localHour = hourNumber - offset;

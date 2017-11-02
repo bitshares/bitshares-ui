@@ -350,10 +350,13 @@ class AccountVoting extends React.Component {
         budgetObject = ChainStore.getObject(lastBudgetObject ? lastBudgetObject : "2.13.1");
         if (budgetObject) {
             let timestamp = budgetObject.get("time");
+            if (!/Z$/.test(timestamp)) {
+                timestamp += "Z";
+            }
             let now = new Date();
 
             let idIndex = parseInt(budgetObject.get("id").split(".")[2], 10);
-            let currentID = idIndex + Math.floor((now - new Date(timestamp + "+00:00").getTime()) / 1000 / 60 / 60) - 1;
+            let currentID = idIndex + Math.floor((now - new Date(timestamp).getTime()) / 1000 / 60 / 60) - 1;
             let newID = "2.13." + Math.max(idIndex, currentID);
 
             ChainStore.getObject(newID);
