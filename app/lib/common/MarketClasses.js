@@ -536,6 +536,7 @@ class CallOrder {
         this.inverted = market_base === order.call_price.base.asset_id;
         this.id = order.id;
         this.borrower = order.borrower;
+        this.borrowers = [order.borrower];
         /* Collateral asset type is call_price.base.asset_id */
         this.for_sale = parseInt(order.collateral, 10);
         this.for_sale_id = order.call_price.base.asset_id;
@@ -662,6 +663,9 @@ class CallOrder {
 
     sum(order) {
         let newOrder = this.clone();
+        if (newOrder.borrowers.indexOf(order.borrower) === -1) {
+            newOrder.borrowers.push(order.borrower);
+        }
         newOrder.to_receive += order.to_receive;
         newOrder.for_sale += order.for_sale;
         newOrder._clearCache();
@@ -725,6 +729,10 @@ class CallOrder {
         } else {
             return "";
         }
+    }
+
+    isMine(id) {
+        return this.borrowers.indexOf(id) !== -1;
     }
 }
 
