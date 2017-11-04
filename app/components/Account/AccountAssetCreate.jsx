@@ -324,8 +324,30 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_supply":
-                target.value = utils.limitByPrecision(target.value, this.state.update.precision);
-                update[value] = target.value;
+                shouldRestoreCursor = true;
+                let regexp_digits_required = new RegExp(/[1-9]/);
+                let regexp_digits_zero = new RegExp(/^[0]/i);
+                let regexp_digits = new RegExp(/[[:digit:]]/);
+
+                /* Clean Leading Zero */
+                if(regexp_digits_zero.test(target.value)) {
+                    while(target.value.charAt(0) === "0") {
+                        target.value = target.value.substr(1);
+                    }
+                }
+
+                /* Clean Invalid Input */
+                if(!regexp_digits.test(target.value)) {
+                    target.value = target.value.replace(/[^0-9]/g, "");
+                }
+
+                /* Require Valid Digits */
+                if(!regexp_digits_required.test(target.value)) {
+                    update[value] = "";
+                } else {
+                    target.value = utils.limitByPrecision(target.value, this.state.update.precision);
+                    update[value] = target.value;
+                }
                 // if ((new big(target.value)).times(Math.pow(10, precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                 //     return this.setState({
                 //         update,
@@ -335,8 +357,8 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "symbol":
+                shouldRestoreCursor = true;
                 // Enforce uppercase
-                shouldRestoreCursor = true
                 const symbol = target.value.toUpperCase();
                 // Enforce characters
                 let regexp = new RegExp("^[\.A-Z]+$");
@@ -355,7 +377,7 @@ class AccountAssetCreate extends React.Component {
         if (updateState) {
             this.setState({update: update}, () => {
                 if(shouldRestoreCursor) {
-                    const selectionStart = caret - (inputValue.length - update[value].length)
+                    const selectionStart = caret - (inputValue.length - update[value].length);
                     target.setSelectionRange(selectionStart, selectionStart);
                 }
             });
@@ -579,7 +601,7 @@ class AccountAssetCreate extends React.Component {
 
 
                                 <label><Translate content="account.user_issued_assets.max_supply" /> {update.symbol ? <span>({update.symbol})</span> : null}
-                                    <input type="number" value={update.max_supply} onChange={this._onUpdateInput.bind(this, "max_supply")} />
+                                    <input type="text" value={update.max_supply} onChange={this._onUpdateInput.bind(this, "max_supply")} />
                                 </label>
                                 { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
 
