@@ -74,6 +74,7 @@ class Asset extends React.Component {
 
     componentWillMount() {
         if (this.props.asset.has("bitasset")) {
+            console.log("asset:", this.props.asset.get("id"));
             const assets = {
                 [this.props.asset.get("id")]: this.props.asset.toJS(),
                 [this.props.backingAsset.get("id")]: this.props.backingAsset.toJS()
@@ -92,21 +93,27 @@ class Asset extends React.Component {
                 settlePrice = settlePrice.setIn(["quote", "asset_id"], this.props.asset.get("id"));
                 sqr = 1000;
             }
-            const feedPrice = new FeedPrice({
-                priceObject: settlePrice,
-                market_base: this.props.asset.get("id"),
-                sqr,
-                assets
-            });
 
-            Apis.instance().db_api().exec("get_call_orders", [
-                this.props.asset.get("id"), 300
-            ]).then(call_orders => {
-                let callOrders = call_orders.map(c => {
-                    return new CallOrder(c, assets, this.props.asset.get("id"), feedPrice, isPredictionMarket);
+            try {
+                const feedPrice = new FeedPrice({
+                    priceObject: settlePrice,
+                    market_base: this.props.asset.get("id"),
+                    sqr,
+                    assets
                 });
-                this.setState({callOrders});
-            });
+
+                Apis.instance().db_api().exec("get_call_orders", [
+                    this.props.asset.get("id"), 300
+                ]).then(call_orders => {
+                    let callOrders = call_orders.map(c => {
+                        return new CallOrder(c, assets, this.props.asset.get("id"), feedPrice, isPredictionMarket);
+                    });
+                    this.setState({callOrders});
+                });
+            } catch(err) {
+                console.log(err);
+            }
+
         }
     }
 
@@ -503,7 +510,7 @@ class Asset extends React.Component {
                     </th>
                     <th> <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio"/> </th>
                     <th> <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio"/> </th>
-                    <th> <Translate content="explorer.asset.price_feed_data.published"/> </th> 
+                    <th> <Translate content="explorer.asset.price_feed_data.published"/> </th>
                 </tr>
             </thead>
         )
@@ -522,7 +529,7 @@ class Asset extends React.Component {
                     <td style={{textAlign: "right"}}> {this.formattedPrice(core_exchange_rate, true)} </td>
                     <td style={{textAlign:"right"}}> {maintenance_collateral_ratio}</td>
                     <td style={{textAlign:"right"}}> {maximum_short_squeeze_ratio}</td>
-                    <td style={{textAlign: "right"}}><TimeAgo time={publishDate}/></td> 
+                    <td style={{textAlign: "right"}}><TimeAgo time={publishDate}/></td>
                 </tr>
             );
         }

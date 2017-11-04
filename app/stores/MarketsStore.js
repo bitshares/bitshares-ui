@@ -298,6 +298,9 @@ class MarketsStore {
         if (result.history) {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
+                if (!/Z$/.test(order.time)) {
+                    order.time += "Z";
+                }
                 order.op.time = order.time;
                 /* Only include history objects that aren't 'something for nothing' to avoid confusion */
                 if (!(order.op.receives.amount == 0 || order.op.pays.amount == 0)) {
@@ -553,11 +556,14 @@ class MarketsStore {
 
         let addTime = (time, i, bucketSize) => {
             return new Date(time.getTime() + i * bucketSize * 1000);
-        }
+        };
 
         for (let i = 0; i < this.priceHistory.length; i++) {
             let current = this.priceHistory[i];
-            let date = new Date(current.key.open + "+00:00");
+            if (!/Z$/.test(current.key.open)) {
+                current.key.open += "Z";
+            }
+            let date = new Date(current.key.open);
 
             if (this.quoteAsset.get("id") === current.key.quote) {
                 high = utils.get_asset_price(current.high_base, this.baseAsset, current.high_quote, this.quoteAsset);
@@ -943,7 +949,10 @@ class MarketsStore {
         if (history.length) {
             let first;
             history.forEach((bucket, i) => {
-                let date = new Date(bucket.key.open + "+00:00").getTime();
+                if (!/Z$/.test(bucket.key.open)) {
+                    bucket.key.open += "Z";
+                }
+                let date = new Date(bucket.key.open).getTime();
                 if (date > yesterday) {
                     noTrades = false;
                     if (!first) {
@@ -963,7 +972,7 @@ class MarketsStore {
                 first = history[0];
             }
             last = history[history.length -1];
-            /* Some market histories have 0 value for price values, set to 1 in that case */ 
+            /* Some market histories have 0 value for price values, set to 1 in that case */
             function removeZeros(entry) {
                 for (let key in entry) {
                     if (key.indexOf("volume") === -1 && entry[key] === 0) {

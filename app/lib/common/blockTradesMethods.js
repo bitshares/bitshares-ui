@@ -77,12 +77,12 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
         }, error => {
             // console.log( "error: ",error  );
             delete depositRequests[body_string];
-            if (stateCallback) stateCallback({"address": "unknown", "memo": null});
+            if (stateCallback) stateCallback(null);
         });
     }, error => {
         // console.log( "error: ",error  );
         delete depositRequests[body_string];
-        if (stateCallback) stateCallback({"address": "unknown", "memo": null});
+        if (stateCallback) stateCallback(null);
     }).catch(err => {
         console.log("fetch error:", err);
         delete depositRequests[body_string];

@@ -222,18 +222,34 @@ table.table.dashboard-table {
         font-weight: 600;
         font-size: 80%;
         text-align: center;
+        border: 1px solid;
     }
     > tbody > tr {
         > td {
             font-size: 0.9rem;
             text-align: center;
             border: 1px solid;
+
+            &.worker-name {
+                max-width: 15rem;
+                overflow-x: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                > div span.icon > svg {
+                    width: 1.75rem;
+                    height: 1.75rem;
+                }
+                > div > a {
+                    font-size: 90%;
+                }
+            }
         }
         &.total-value {
             td {
                 vertical-align: middle;
                 padding: 8px 5px;
                 border-bottom: none;
+                word-wrap: none;
             }
             td:first-of-type {
                 text-align: left;

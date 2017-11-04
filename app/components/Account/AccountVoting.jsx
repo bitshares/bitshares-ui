@@ -16,20 +16,22 @@ import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import counterpart from "counterpart";
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import FormattedAsset from "../Utility/FormattedAsset";
+import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
 
 class AccountVoting extends React.Component {
 
     static propTypes = {
         initialBudget: ChainTypes.ChainObject.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired,
-        dynamicGlobal: ChainTypes.ChainObject.isRequired,
         proxy: ChainTypes.ChainAccount.isRequired
     };
 
     static defaultProps = {
-        initialBudget: "2.13.1",
-        globalObject: "2.0.0",
-        dynamicGlobal: "2.1.0"
+        initialBudget: SettingsStore.getState().viewSettings.get("lastBudgetObject", "2.13.1"),
+        globalObject: "2.0.0"
     };
 
     constructor(props) {
@@ -44,7 +46,7 @@ class AccountVoting extends React.Component {
             committee: null,
             vote_ids: Immutable.Set(),
             proxy_vote_ids: Immutable.Set(),
-            lastBudgetObject: null,
+            lastBudgetObject: props.initialBudget.get("id"),
             workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
             all_committee: Immutable.List()
@@ -348,24 +350,29 @@ class AccountVoting extends React.Component {
         budgetObject = ChainStore.getObject(lastBudgetObject ? lastBudgetObject : "2.13.1");
         if (budgetObject) {
             let timestamp = budgetObject.get("time");
+            if (!/Z$/.test(timestamp)) {
+                timestamp += "Z";
+            }
             let now = new Date();
 
             let idIndex = parseInt(budgetObject.get("id").split(".")[2], 10);
-            let currentID = idIndex + Math.floor((now - new Date(timestamp + "+00:00").getTime()) / 1000 / 60 / 60) - 1;
+            let currentID = idIndex + Math.floor((now - new Date(timestamp).getTime()) / 1000 / 60 / 60) - 1;
             let newID = "2.13." + Math.max(idIndex, currentID);
 
             ChainStore.getObject(newID);
 
             this.setState({lastBudgetObject: newID});
-            // if (newID !== currentID) {
-            //     console.log("getBudgetObject && forceUpdate");
-            //     this.forceUpdate();
-            // }
         } else {
-            if (lastBudgetObject !== "2.13.1") {
-                let newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
+            const newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
+            if (typeof newBudgetObjectId === "number" && newBudgetObjectId > 1) {
+
+                const lastId = Math.max(1, newBudgetObjectId - 1);
                 this.setState({
-                    lastBudgetObject: "2.13." + (newBudgetObjectId - 1)
+                    lastBudgetObject: "2.13." + lastId
+                });
+
+                SettingsActions.changeViewSetting.defer({
+                    lastBudgetObject: "2.13." + lastId
                 });
             }
         }
@@ -403,18 +410,19 @@ class AccountVoting extends React.Component {
             budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
         }
 
-        // let totalBudget = 0;
+        let totalBudget = 0;
         // let unusedBudget = 0;
         let workerBudget = globalObject ? parseInt(globalObject.getIn(["parameters", "worker_budget_per_day"]), 10) : 0;
 
         if (budgetObject) {
             workerBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
-            // totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
+            totalBudget = Math.min(24 * budgetObject.getIn(["record", "worker_budget"]), workerBudget);
         }
 
         let now = new Date();
         let workerArray = this._getWorkerArray();
 
+        let voteThreshold = 0;
         let workers = workerArray
         .filter(a => {
             if (!a) {
@@ -422,8 +430,8 @@ class AccountVoting extends React.Component {
             }
 
             return (
-                new Date(a.get("work_end_date")) > now &&
-                new Date(a.get("work_begin_date")) <= now
+                new Date(a.get("work_end_date") + "Z") > now &&
+                new Date(a.get("work_begin_date") + "Z") <= now
             );
 
         })
@@ -433,6 +441,12 @@ class AccountVoting extends React.Component {
         .map((worker, index) => {
             let dailyPay = parseInt(worker.get("daily_pay"), 10);
             workerBudget = workerBudget - dailyPay;
+            let votes = worker.get("total_votes_for") - worker.get("total_votes_against");
+            if (workerBudget <= 0 && !voteThreshold) {
+                voteThreshold = votes;
+            }
+
+            if (voteThreshold && votes < voteThreshold) return null;
 
             return (
                 <WorkerApproval
@@ -444,9 +458,10 @@ class AccountVoting extends React.Component {
                     vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
                     proxy={hasProxy}
+                    voteThreshold={voteThreshold}
                 />
             );
-        });
+        }).filter(a => !!a);
 
         // unusedBudget = Math.max(0, workerBudget);
 
@@ -456,8 +471,11 @@ class AccountVoting extends React.Component {
                 return false;
             }
 
+            let votes = a.get("total_votes_for") - a.get("total_votes_against");
             return (
-                new Date(a.get("work_begin_date")) >= now
+                (new Date(a.get("work_end_date")+ "Z") > now &&
+                votes < voteThreshold) ||
+                new Date(a.get("work_begin_date")+ "Z") > now
             );
 
         })
@@ -465,19 +483,20 @@ class AccountVoting extends React.Component {
             return this._getTotalVotes(b) - this._getTotalVotes(a);
         })
         .map((worker, index) => {
-            let dailyPay = parseInt(worker.get("daily_pay"), 10);
-            workerBudget = workerBudget - dailyPay;
+            // let dailyPay = parseInt(worker.get("daily_pay"), 10);
+            // workerBudget = workerBudget - dailyPay;
 
             return (
                 <WorkerApproval
                     preferredUnit={preferredUnit}
-                    rest={workerBudget + dailyPay}
+                    rest={0}
                     rank={index + 1}
                     key={worker.get("id")}
                     worker={worker.get("id")}
                     vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
                     proxy={hasProxy}
+                    voteThreshold={voteThreshold}
                 />
             );
         });
@@ -497,19 +516,20 @@ class AccountVoting extends React.Component {
             return this._getTotalVotes(b) - this._getTotalVotes(a);
         })
         .map((worker, index) => {
-            let dailyPay = parseInt(worker.get("daily_pay"), 10);
-            workerBudget = workerBudget - dailyPay;
+            // let dailyPay = parseInt(worker.get("daily_pay"), 10);
+            // workerBudget = workerBudget - dailyPay;
 
             return (
                 <WorkerApproval
                     preferredUnit={preferredUnit}
-                    rest={workerBudget + dailyPay}
+                    rest={0}
                     rank={index + 1}
                     key={worker.get("id")}
                     worker={worker.get("id")}
                     vote_ids={this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]}
                     onChangeVotes={this.onChangeVotes.bind(this)}
                     proxy={hasProxy}
+                    voteThreshold={voteThreshold}
                 />
             );
         });
@@ -535,7 +555,7 @@ class AccountVoting extends React.Component {
                 tabIndex={1}
                 placeholder="Proxy not set"
         >
-            <span style={{paddingLeft: 5, position: "relative", top: -1, display: (hasProxy ? "" : "none")}}><Icon name="locked" size="2x" /></span>
+            <span style={{paddingLeft: 5, position: "relative", top: -1, display: (hasProxy ? "" : "none")}}><Icon name="locked" size="1x" /></span>
             <span style={{paddingLeft: 5, position: "relative", top: 9, display: (!hasProxy ? "" : "none")}}><Link to="/help/voting"><Icon name="question-circle" size="1x" /></Link></span>
         </AccountSelector>);
 
@@ -627,7 +647,7 @@ class AccountVoting extends React.Component {
                                             {counterpart.translate("account.votes.new", {count: newWorkers.length})}
                                         </div>
                                         <div className={cnames("inline-block", {inactive: workerTableIndex !== 1})} onClick={this._setWorkerTableIndex.bind(this, 1)}>
-                                            <Translate content="account.votes.active" />
+                                            {counterpart.translate("account.votes.active", {count: workers.length})}
                                         </div>
 
                                         {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._setWorkerTableIndex.bind(this, 2) : () => {}}>
@@ -661,22 +681,67 @@ class AccountVoting extends React.Component {
                                     </div>)} */}
 
                                     <table className="table dashboard-table">
+
+                                        {workerTableIndex === 2 ? null :
+                                        workerTableIndex === 0 ?
                                         <thead>
                                             <tr>
-                                                <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>
+                                                <th></th>
+                                                <th colSpan="3" style={{textAlign: "left"}}>
+                                                    <Translate content="account.votes.threshold" />
+                                                </th>
+                                                <th style={{textAlign: "right"}}>
+                                                    <FormattedAsset decimalOffset={5} hide_asset amount={voteThreshold} asset="1.3.0" />
+                                                </th>
+                                                <th colSpan="3"></th>
+                                            </tr>
+                                            <tr >
+                                                <th style={{border: "none", backgroundColor: "transparent"}}></th>
+                                            </tr>
+                                        </thead> :
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
+                                                <th colSpan="4" className="hide-column-small"></th>
+                                                <th style={{textAlign: "right"}}>
+                                                    {globalObject ? <EquivalentValueComponent hide_asset fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null}
+                                                </th>
+                                                <th className="hide-column-small"></th>
+                                            </tr>
+                                            <tr >
+                                                <th style={{border: "none", backgroundColor: "transparent"}}></th>
+                                            </tr>
+                                        </thead>}
+                                        <thead>
+                                            <tr>
+                                                {workerTableIndex === 2 ? null : <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>}
                                                 <th style={{textAlign: "left"}}><Translate content="account.user_issued_assets.description" /></th>
-                                                <th style={{textAlign: "left"}} className="hide-column-small"><Translate content="account.votes.creator" /></th>
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.total_votes" />
                                                 </th>
-                                                <th style={{textAlign: "right"}} className="hide-column-small"><Translate content="account.votes.funding" /></th>
+                                                {workerTableIndex === 0 ?
+                                                <th style={{textAlign: "right"}}>
+                                                    <Translate content="account.votes.missing" />
+                                                </th> : null}
                                                 <th><Translate content="explorer.workers.period" /></th>
+                                                {workerTableIndex === 2 || workerTableIndex === 0 ? null :
+                                                <th style={{textAlign: "right"}} className="hide-column-small">
+                                                    <Translate content="account.votes.funding" />
+                                                </th>}
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.daily_pay" />
                                                     <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
                                                         (<AssetName name={preferredUnit} />)
                                                     </div>
                                                 </th>
+                                                {workerTableIndex === 2 || workerTableIndex === 0 ? null :
+                                                <th style={{textAlign: "right"}}>
+                                                    <Translate content="explorer.witnesses.budget" />
+                                                    <div style={{paddingTop: 5, fontSize: "0.8rem"}}>
+                                                        (<AssetName name={preferredUnit} />)
+                                                    </div>
+                                                </th>}
 
                                                 <th><Translate content="account.votes.toggle" /></th>
                                             </tr>
