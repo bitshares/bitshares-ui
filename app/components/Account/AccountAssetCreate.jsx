@@ -310,7 +310,7 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_market_fee":
-                if ((new big(inputValue)).times(Math.pow(10, precision)).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
+                if ((new big(inputValue)).times(precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                     errors.max_market_fee = "The number you tried to enter is too large";
                     return this.setState({errors});
                 }
@@ -667,6 +667,10 @@ class AccountAssetCreate extends React.Component {
                                         </h5>
                                     </div>
                                 </label>
+                                <div>
+                                    <Translate content="account.user_issued_assets.cer_warning_1" component="label" className="has-error"/>
+                                    <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
+                                </div>
                             </div>
                         </Tab>
 

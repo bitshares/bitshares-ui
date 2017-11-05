@@ -60,6 +60,7 @@ class Exchange extends React.Component {
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this.psInit = true;
     }
 
     _initialState(props) {
@@ -148,10 +149,6 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = this.refs.center;
-        if (centerContainer) {
-            Ps.initialize(centerContainer);
-        }
         SettingsActions.changeViewSetting.defer({
             [this._getLastMarketKey()]: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
@@ -191,10 +188,21 @@ class Exchange extends React.Component {
                 height: innerHeight,
                 width: innerWidth
             });
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.update(centerContainer);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        if (this.refs.center && this.psInit) {
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.initialize(centerContainer);
+                this.psInit = false;
+            }
+        }
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||
             nextProps.baseAsset !== this.props.baseAsset ||
@@ -1095,6 +1103,7 @@ class Exchange extends React.Component {
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                 marketReady={marketReady}
                 wrapperClass={`order-${buySellTop ? 3 : 1} xlarge-order-${buySellTop ? 4 : 1}`}
+                currentAccount={this.props.currentAccount.get("id")}
             />
         );
 
@@ -1127,7 +1136,7 @@ class Exchange extends React.Component {
                             showVolumeChart={showVolumeChart}
                         />
 
-                        <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
+                        <div className="grid-block vertical no-padding ps-container" id="CenterContent" ref="center">
                         {!showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" >
                                 {/* Price history chart */}
