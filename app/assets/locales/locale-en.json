@@ -894,7 +894,7 @@
   },
   "footer": {
     "title": "BitShares",
-    "block": "Head block",
+    "block": "Block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
     "nosync": "Your active node is out of sync",

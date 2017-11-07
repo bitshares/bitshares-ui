@@ -131,14 +131,16 @@ class Footer extends React.Component {
                     (<div className="grid-block shrink">
                         <div className="tooltip" onClick={this.onAccess.bind(this)} data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`) + " " + currentNode} data-place="top">
                             <div className="footer-status">
-                                { !synced || !connected ?
-                                    <span className="warning"><Translate content={`footer.${!synced ? "unsynced" : "disconnected"}`} /></span> :
-                                    <span className="success"><Translate content="footer.synced" /> / <Translate content="footer.latency" /> {currentNodePing}ms</span>}
+                                { !connected ?
+                                    <span className="warning"><Translate content="footer.disconnected" /></span> :
+                                    <span className="success"><Translate content="footer.connected" /></span>}
                             </div>
                             <div className="footer-block">
                                 <span>
-                                    <Translate content="footer.block" />
-                                    <span>&nbsp;#{block_height}</span>
+                                    <span className="footer-block-title"><Translate content="footer.latency" /></span>
+                                        &nbsp;{currentNodePing}ms&nbsp;/&nbsp;
+                                    <span className="footer-block-title"><Translate content="footer.block" /></span>
+                                        &nbsp;#{block_height}
                                 </span>
                             </div>
                         </div>
