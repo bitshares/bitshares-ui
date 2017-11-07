@@ -22,6 +22,12 @@ import SettingsStore from "stores/SettingsStore";
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
 
+operations["create_room"] = 44;
+operations["create_room_2"] = 45;
+operations["buy_in"] = 46;
+operations["buy_out"] = 47;
+operations["game"] = 48;
+
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
 
@@ -161,6 +167,64 @@ class Operation extends React.Component {
         let memoComponent = null;
 
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+
+             case "buy_in":
+                color = "info";
+
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.buy_in"
+                            keys={[
+                                {type: "account", value: op[1].player, arg: "player"},
+                                {type: "string", value: "CHIP"+String.fromCharCode(parseInt(op[1].chip,16)), arg: "chip"},
+                                {type: "account", value: op[1].game_server, arg: "game_server"}
+                            ]}
+                        />
+                        {memoComponent}
+                    </span>
+                );
+
+                break;
+
+            case "game":
+                color = "success";
+
+                column = (
+                    <span className="right-td">
+                        Game
+                        <TranslateWithLinks
+                            string="operation.buy_in"
+                            keys={[
+                                {type: "account", value: op[1].player, arg: "player"},
+                                {type: "string", value: "CHIP"+String.fromCharCode(parseInt(op[1].chip,16)), arg: "chip"},
+                                {type: "account", value: op[1].game_server, arg: "game_server"}
+                            ]}
+                        />
+                        {memoComponent}
+                    </span>
+                );
+
+                break;
+
+             case "buy_out":
+                color = "success";
+
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.buy_out"
+                            keys={[
+                                {type: "account", value: op[1].player, arg: "player"},
+                                {type: "amount", value: op[1].amount, arg: "amount", decimalOffset: op[1].amount.asset_id === "1.3.1" ? 4 : null},
+                                {type: "account", value: op[1].game_server, arg: "game_server"}
+                            ]}
+                        />
+                        {memoComponent}
+                    </span>
+                );
+
+                break;
 
             case "transfer":
 

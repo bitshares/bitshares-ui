@@ -477,7 +477,9 @@
     "witness_receive": "Received witness from witness",
     "committee_member_update_global_parameters": "{account} updated the global committee parameters",
     "worker_create": "{account} created a worker proposal with daily pay of {pay}",
-    "override_transfer": "{issuer} transferred {amount} from {from} to {to}"
+    "override_transfer": "{issuer} transferred {amount} from {from} to {to}",
+    "buy_in": "{player} started {chip} on the server {game_server}",
+    "buy_out": "{game_server} transfered {amount} back to the player {player}"
   },
   "proposal": {
     "transfer": "Transfer {amount} from {from} to {to}",
@@ -595,6 +597,9 @@
       "asset_settle": "Asset settlement",
       "asset_global_settle": "Global asset settlement",
       "asset_publish_feed": "Publish feed",
+      "buy_in": "Buy In",
+      "buy_out": "Buy Out",
+      "game": "Game",
       "committee_member_create": "Create committee member",
       "committee_member_update": "Update committee member",
       "witness_create": "Create witness",
