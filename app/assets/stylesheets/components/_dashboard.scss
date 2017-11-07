@@ -73,6 +73,12 @@ div.fm-container {
         }
 
     }
+    .SimpleTrade__QR {
+        > canvas {
+            background: white;
+            padding: 0.5rem;
+        }
+    }
 }
 
 .balance-row.active {
@@ -157,4 +163,19 @@ div.input-wrapper {
             font-weight: bold;
         }
     }
+}
+
+/* Buttons */
+.ActionButton_Close, .ActionButton_Copy {
+    padding: 10px 40px 10px 40px;
+    border-radius: 5px 5px 5px 5px;
+    color: rgb(242, 242, 242);
+}
+
+.ActionButton_Close {
+    background-color: rgb(245, 27, 27);
+}
+
+.ActionButton_Copy {
+    background-color: rgb(65, 116, 184);
 }
