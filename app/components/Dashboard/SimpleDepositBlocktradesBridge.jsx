@@ -6,7 +6,6 @@ import { Asset } from "common/MarketClasses";
 import utils from "common/utils";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import ClipboardButton from "react-clipboard.js";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
 import {requestDepositAddress, validateAddress, WithdrawAddresses, getDepositLimit, estimateOutput} from "common/blockTradesMethods";
