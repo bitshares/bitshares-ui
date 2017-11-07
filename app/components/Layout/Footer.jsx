@@ -80,14 +80,6 @@ class Footer extends React.Component {
         // Current Node Details
         let currentNode = SettingsStore.getState().settings.get("activeNode");
         let currentNodePing = SettingsStore.getState().apiLatencies[currentNode];
-        let color;
-        let green = "#00FF00";
-        let red = "red";
-        if(currentNodePing < 800) {
-            color = green;
-        } else {
-            color = red;
-        }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
@@ -141,7 +133,7 @@ class Footer extends React.Component {
                             <div className="footer-status">
                                 { !synced || !connected ?
                                     <span className="warning"><Translate content={`footer.${!synced ? "unsynced" : "disconnected"}`} /></span> :
-                                    <span className="success" style={{color}}><Translate content="footer.synced" /></span>}
+                                    <span className="success"><Translate content="footer.synced" /> / <Translate content="footer.latency" /> {currentNodePing}ms</span>}
                             </div>
                             <div className="footer-block">
                                 <span>

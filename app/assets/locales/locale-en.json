@@ -903,7 +903,9 @@
     "update_available": "UPDATE AVAILABLE",
     "synced": "Synced",
     "unsynced": "Out of sync",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "connected": "Connected",
+    "latency": "Latency"
   },
   "exchange": {
     "chart_options": {
