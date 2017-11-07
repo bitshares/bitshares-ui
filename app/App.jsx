@@ -221,7 +221,7 @@ class RootIntl extends React.Component {
     render() {
         return (
             <IntlProvider
-                locale={this.props.locale.replace(/cn/, "zh")}
+                locale={this.props.locale}
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >
