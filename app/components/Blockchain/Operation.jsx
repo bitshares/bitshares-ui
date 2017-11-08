@@ -166,6 +166,7 @@ class Operation extends React.Component {
         let line = null, column = null, color = "info";
         let memoComponent = null;
 
+        console.log("!!!! op " + op[0]);
         switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
 
              case "buy_in":
@@ -192,13 +193,10 @@ class Operation extends React.Component {
 
                 column = (
                     <span className="right-td">
-                        Game
                         <TranslateWithLinks
-                            string="operation.buy_in"
+                            string="operation.game"
                             keys={[
-                                {type: "account", value: op[1].player, arg: "player"},
-                                {type: "string", value: "CHIP"+String.fromCharCode(parseInt(op[1].chip,16)), arg: "chip"},
-                                {type: "account", value: op[1].game_server, arg: "game_server"}
+                                {type: "account", value: op[1].game_server, arg: "game_server"},
                             ]}
                         />
                         {memoComponent}

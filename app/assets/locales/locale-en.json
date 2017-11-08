@@ -479,7 +479,8 @@
     "worker_create": "{account} created a worker proposal with daily pay of {pay}",
     "override_transfer": "{issuer} transferred {amount} from {from} to {to}",
     "buy_in": "{player} started {chip} on the server {game_server}",
-    "buy_out": "{game_server} transfered {amount} back to the player {player}"
+    "buy_out": "{game_server} transfered {amount} back to the player {player}",
+    "game": "game server {game_server} recorded a party"
   },
   "proposal": {
     "transfer": "Transfer {amount} from {from} to {to}",
