@@ -9,12 +9,20 @@ import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import counterpart from "counterpart";
 
-const MSG_SEPARATOR = "-- signed message -------------";
-const MSG_SENDER =  "sender";
-const MSG_PUBLICKEY = "public key";
-const MSG_LIB = "last irreversible block when sent";
+// constants for message format
+const MSG_HEAD = "-----BEGIN BITSHARES SIGNED MESSAGE-----";
+const MSG_META = "-----BEGIN META-----";
+const MSG_SIGNATURE = "-----BEGIN SIGNATURE-----";
+const MSG_FOOT = "-----END BITSHARES SIGNED MESSAGE-----";
+const MSG_SENDER =  "account";
+const MSG_PUBLICKEY = "memokey";
+const MSG_BLOCK = "block";
 
-class Accountsignedmessages extends React.Component {
+/*This component gives a user interface for signing and verifying messages with the bitShares memo key.
+    It consists of two tabs:
+ - Sign message tab (code prefix: signmessage)
+ - Verify message tab (code prefix: verifymessage) */
+class AccountSignedMessages extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
@@ -31,46 +39,84 @@ class Accountsignedmessages extends React.Component {
         };
     }
 
-    onVerifyMemoAction(event) {
+    parseMessage(message) {
+        let messageContent, messageMeta, messageSignature, messageSignedContent;
+        try {
+            // cut the sections
+            messageContent = message.split(MSG_HEAD)[1]; // everything before the head is ignored
+            messageMeta = messageContent.split(MSG_META);
+            messageContent = messageMeta[0].trim();
+            messageSignature = messageMeta[1].split(MSG_SIGNATURE);
+            messageMeta = messageSignature[0].trim();
+            messageSignature = messageSignature[1].split(MSG_FOOT)[0].trim(); // everything after footer is ignored
+            messageSignedContent = messageContent + "\n" + messageMeta;
+        } catch (err) {
+            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.invalidformat"));
+            return null;
+        }
+
+        let messageMetaAccount, messageMetaKey, messageMetaBlock;
+        if (messageMeta) {
+            try {
+                // process meta
+                // ... sender
+                messageMetaAccount = messageMeta.split(MSG_SENDER + "=");
+                messageMetaAccount = messageMetaAccount[1].split("\n")[0].trim();
+
+                // ... and its public key
+                messageMetaKey = messageMeta.split(MSG_PUBLICKEY + "=");
+                messageMetaKey = messageMetaKey[1].split("\n")[0].trim();
+
+                // ... block number
+                messageMetaBlock = messageMeta.split(MSG_BLOCK + "=");
+                messageMetaBlock = messageMetaBlock[1].split("\n")[0].trim();
+            } catch (err) {
+                this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.invalidformat"));
+                return null;
+            }
+        }
+
+        // validate account and key
+        let storedAccount = ChainStore.getAccount(messageMetaAccount);
+        let storedKey = storedAccount.get("options").get("memo_key");
+
+        // validate keys are still the same
+        if (messageMetaKey !== storedKey) {
+            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.keymismatch"));
+            return null;
+        }
+
+        return { content : messageContent,
+                 meta : { account : messageMetaAccount, key : storedKey, block : messageMetaBlock },
+                 signed : messageSignedContent,
+                 signature : messageSignature,
+                 };
+    }
+
+    verifyMessageAction(event) {
         event.preventDefault();
+        this.setState({
+            verifymessage_verified: false,
+        });
 
         if(this.state.verifymessage_memo) {
-            // memo needs to have specific format
-            let memoSplit = this.state.verifymessage_memo.split(MSG_SEPARATOR);
-            if (memoSplit.length !== 2) {
-                this.verifyMessagePopMessage("Invalid message");
-                return;
-            }
-            let userMessage = memoSplit[0];
+            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.verifying"), 0);
 
-            // get target user
-            let senderName = userMessage.split(MSG_SENDER + "=");
-            senderName = senderName[1].split("\n");
-            senderName = senderName[0];
+            setTimeout(() => {
+                let message = this.parseMessage(this.state.verifymessage_memo);
 
-            // get supposed target public keys
-            let senderKey = userMessage.split(MSG_PUBLICKEY + "=");
-            senderKey = senderKey[1].split("\n");
-            senderKey = senderKey[0];
+                if (message !== null) {
 
-            let senderAccount = ChainStore.getAccount(senderName);
-            let senderMemoPublicKey = senderAccount.get("options").get("memo_key");
+                    // verify message
+                    let verified = Signature.fromHex(message.signature).verifyBuffer(message.signed, PublicKey.fromPublicKeyString(message.meta.key));
 
-            // validate keys are still the same
-            if (senderKey !== senderMemoPublicKey) {
-                this.verifyMessagePopMessage("Given public key of the sender doesn't to the one stored in the senders account");
-                return;
-            }
+                    this.setState({
+                        verifymessage_verified: verified,
+                        verifymessage_message: "" // remove verifying text
+                    });
 
-            // verify message
-            let signature   = memoSplit[1].split("\n")[1];
-            this.verifyMessagePopMessage(signature);
-
-            let verified = Signature.fromHex(signature).verifyBuffer(userMessage, PublicKey.fromPublicKeyString(senderMemoPublicKey));
-            window.console.log(verified)
-            this.setState({
-                verifymessage_verified: verified
-            });
+                }
+            }, 0);
         }
 
     }
@@ -89,9 +135,6 @@ class Accountsignedmessages extends React.Component {
                     memo_from_public = null;
                 }
 
-                // user could specify a nonce ... but probably never will
-                let optional_nonce = null;
-
                 let memo_from_privkey;
                 if(memo && memo_from_public) {
                     memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
@@ -104,21 +147,26 @@ class Accountsignedmessages extends React.Component {
 
                 let irr_block = ChainStore.getObject("2.1.0").get("last_irreversible_block_num" );
 
-                let extended_memo = memo + "\n\n"
-                    + MSG_SENDER + "=" + this.props.account.get("name") + "\n"
+                let meta = MSG_SENDER + "=" + this.props.account.get("name") + "\n"
                     + MSG_PUBLICKEY + "=" + this.state.signmessage_memo_key + "\n"
-                    + MSG_LIB + "=" + irr_block + "\n";
+                    + MSG_BLOCK + "=" + irr_block;
 
-                this.popMessage(counterpart.translate("account.signedmessages.signing"), 0)
+                let memoToBeSigned = memo + "\n" + meta;
+
+                this.popMessage(counterpart.translate("account.signedmessages.signing"), 0);
 
                 setTimeout(() => {
-                    let memo_signature = Signature.signBuffer(extended_memo, memo_from_privkey, memo_from_public);
-
+                    let memo_signature = Signature.signBuffer(memoToBeSigned, memo_from_privkey, memo_from_public);
+                    let memo_formatted = MSG_HEAD + "\n"
+                                        + memo + "\n"
+                                        + MSG_META + "\n"
+                                        + meta + "\n"
+                                        + MSG_SIGNATURE + "\n"
+                                        + memo_signature.toHex() + "\n"
+                                        + MSG_FOOT;
                     this.setState({
-                        signmessage_memo_signed: extended_memo
-                        + MSG_SEPARATOR  + "\n"
-                        + memo_signature.toHex(),
-                        signmessage_message: ""
+                        signmessage_memo_signed: memo_formatted,
+                        signmessage_message: "" // removes calculating message
                     });
                 }, 0);
 
@@ -249,7 +297,7 @@ class Accountsignedmessages extends React.Component {
                                 </div>
                                 <textarea rows="10" value={this.state.verifymessage_memo} onChange={this.verifyMessageHandleChange.bind(this)} placeholder={counterpart.translate("account.signedmessages.entermessage")} />
                                 <span>
-                                    <button className="button" onClick={this.onVerifyMemoAction.bind(this)}>
+                                    <button className="button" onClick={this.verifyMessageAction.bind(this)}>
                                         <Translate content="account.signedmessages.verify"/>
                                     </button>
                                     <text style={{color: "gray"}}>{this.state.verifymessage_message}</text>
@@ -271,8 +319,8 @@ class Accountsignedmessages extends React.Component {
         );
     }
 }
-Accountsignedmessages = BindToChainState(Accountsignedmessages);
+AccountSignedMessages = BindToChainState(AccountSignedMessages);
 
-export default Accountsignedmessages;
+export default AccountSignedMessages;
 
 
