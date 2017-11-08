@@ -325,29 +325,27 @@ class AccountAssetCreate extends React.Component {
 
             case "max_supply":
                 shouldRestoreCursor = true;
-                let regexp_digits_required = new RegExp(/[1-9]/);
-                let regexp_digits_zero = new RegExp(/^[0]/i);
-                let regexp_digits = new RegExp(/[[:digit:]]/);
+                
+                const regexp_numeral = new RegExp(/[[:digit:]]/);
 
-                /* Clean Leading Zero */
-                if(regexp_digits_zero.test(target.value)) {
-                    while(target.value.charAt(0) === "0") {
-                        target.value = target.value.substr(1);
-                    }
+                // Ensure input is valid
+                if(!regexp_numeral.test(target.value)) {
+                    target.value = target.value.replace(/[^0-9.]/g, "");
                 }
 
-                /* Clean Invalid Input */
-                if(!regexp_digits.test(target.value)) {
-                    target.value = target.value.replace(/[^0-9]/g, "");
+                // Catch initial decimal input
+                if(target.value.charAt(0) == ".") { 
+                    target.value = "0."; 
                 }
 
-                /* Require Valid Digits */
-                if(!regexp_digits_required.test(target.value)) {
-                    update[value] = "";
-                } else {
-                    target.value = utils.limitByPrecision(target.value, this.state.update.precision);
-                    update[value] = target.value;
+                // Catch double decimal and remove if invalid
+                if(target.value.charAt(target.value.length) != target.value.search(".")) { 
+                    target.value.substr(1);
                 }
+
+                target.value = utils.limitByPrecision(target.value, this.state.update.precision);
+                update[value] = target.value;
+
                 // if ((new big(target.value)).times(Math.pow(10, precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                 //     return this.setState({
                 //         update,
