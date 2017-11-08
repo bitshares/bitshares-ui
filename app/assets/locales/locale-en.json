@@ -284,6 +284,20 @@
       "remove_text": "Remove",
       "valid_pub": "Valid Public Key"
     },
+    "signedmessages": {
+      "menuitem": "Signed messages",
+      "invalidkey": "Private key could not be obtained, is the public key valid?",
+      "title": "Signed Messages",
+      "signmessage": "Sign Message",
+      "verifymessage": "Verify Message",
+      "signing": "Signing, please wait ...",
+      "sign": "Sign",
+      "verify": "Verify",
+      "automaticcreation": "Signed Message will be created automatically",
+      "entermessage": "Enter message here",
+      "copysuccessful": "Signed message copied to clipboard",
+      "copyunsuccessful": "Failed to copy message"
+    },
     "votes": {
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
