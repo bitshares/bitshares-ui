@@ -109,6 +109,10 @@ button, .button {
   @include RobotoRegular;
 }
 
+.button {
+  @include RobotoCondensed;
+}
+
 .footer .logo {
   @include RobotoRegular;
 }
@@ -177,7 +181,7 @@ button, .button {
   }
 
   .account-drop-down a.button {
-    @include RobotoRegular;
+    @include RobotoCondensed;
   }
 
   .footer .logo {
