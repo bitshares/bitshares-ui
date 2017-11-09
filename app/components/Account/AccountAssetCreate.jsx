@@ -324,8 +324,28 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "max_supply":
+                shouldRestoreCursor = true;
+                
+                const regexp_numeral = new RegExp(/[[:digit:]]/);
+
+                // Ensure input is valid
+                if(!regexp_numeral.test(target.value)) {
+                    target.value = target.value.replace(/[^0-9.]/g, "");
+                }
+
+                // Catch initial decimal input
+                if(target.value.charAt(0) == ".") { 
+                    target.value = "0."; 
+                }
+
+                // Catch double decimal and remove if invalid
+                if(target.value.charAt(target.value.length) != target.value.search(".")) { 
+                    target.value.substr(1);
+                }
+
                 target.value = utils.limitByPrecision(target.value, this.state.update.precision);
                 update[value] = target.value;
+
                 // if ((new big(target.value)).times(Math.pow(10, precision).gt(GRAPHENE_MAX_SHARE_SUPPLY)) {
                 //     return this.setState({
                 //         update,
@@ -335,8 +355,8 @@ class AccountAssetCreate extends React.Component {
                 break;
 
             case "symbol":
+                shouldRestoreCursor = true;
                 // Enforce uppercase
-                shouldRestoreCursor = true
                 const symbol = target.value.toUpperCase();
                 // Enforce characters
                 let regexp = new RegExp("^[\.A-Z]+$");
@@ -355,7 +375,7 @@ class AccountAssetCreate extends React.Component {
         if (updateState) {
             this.setState({update: update}, () => {
                 if(shouldRestoreCursor) {
-                    const selectionStart = caret - (inputValue.length - update[value].length)
+                    const selectionStart = caret - (inputValue.length - update[value].length);
                     target.setSelectionRange(selectionStart, selectionStart);
                 }
             });
@@ -579,7 +599,7 @@ class AccountAssetCreate extends React.Component {
 
 
                                 <label><Translate content="account.user_issued_assets.max_supply" /> {update.symbol ? <span>({update.symbol})</span> : null}
-                                    <input type="number" value={update.max_supply} onChange={this._onUpdateInput.bind(this, "max_supply")} />
+                                    <input type="text" value={update.max_supply} onChange={this._onUpdateInput.bind(this, "max_supply")} />
                                 </label>
                                 { errors.max_supply ? <p className="grid-content has-error">{errors.max_supply}</p> : null}
 
