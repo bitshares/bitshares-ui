@@ -96,9 +96,10 @@ class SettingsStore {
 
         let savedDefaults = ss.get("defaults_v1", {});
         /* Fix for old clients after changing cn to zh */
-        let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
-        if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
-
+        if (savedDefaults && savedDefaults.locale) {
+            let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
+            if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
+        }
         this.defaults = merge({}, defaults, savedDefaults);
 
         (savedDefaults.apiServer || []).forEach(api => {
