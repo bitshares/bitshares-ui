@@ -3,7 +3,7 @@ import Translate from "react-translate-component";
 import PubKeyInput from "../Forms/PubKeyInput";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {Signature, Aes, TransactionHelper, ChainStore, PublicKey} from "bitsharesjs/es";
+import {Signature, ChainStore, PublicKey} from "bitsharesjs/es";
 import {Tabs, Tab} from "../Utility/Tabs";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -17,11 +17,27 @@ const MSG_FOOT = "-----END BITSHARES SIGNED MESSAGE-----";
 const MSG_SENDER =  "account";
 const MSG_PUBLICKEY = "memokey";
 const MSG_BLOCK = "block";
+const MSG_DATE = "timestamp";
 
-/*This component gives a user interface for signing and verifying messages with the bitShares memo key.
-    It consists of two tabs:
- - Sign message tab (code prefix: signmessage)
- - Verify message tab (code prefix: verifymessage) */
+/** This component gives a user interface for signing and verifying messages with the bitShares memo key.
+ *  It consists of two tabs:
+ *    - Sign message tab (code prefix: tabSM)
+ *    - Verify message tab (code prefix: tabVM)
+ *
+ *  The message format that is underlying is as follows:
+ *  -----BEGIN BITSHARES SIGNED MESSAGE-----
+ *  <message from the account>
+ *  -----BEGIN META-----
+ *  account=<account name>
+ *  memokey=<account memo public key>
+ *  block=<last irreversible block>
+ *  timestamp=<current time>
+ *  -----BEGIN SIGNATURE-----
+ *  <signature>
+ *  -----END BITSHARES SIGNED MESSAGE-----
+ *
+ *    @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
+ */
 class AccountSignedMessages extends React.Component {
 
     static propTypes = {
@@ -30,16 +46,34 @@ class AccountSignedMessages extends React.Component {
 
     constructor(props) {
         super(props);
+        // initialize state (do not use setState method!)
         this.state = {
-            signmessage_memo_key: this.props.account.get("options").get("memo_key"),
-            signmessage_memo: "",
-            signmessage_memo_signed: "",
-            verifymessage_memo: "",
-            verifymessage_verified: null
+            tabsm_memo_key: this.props.account.get("options").get("memo_key"),
+            tabsm_memo: "",
+            tabsm_memo_signed: "",
+            tabvm_memo: "",
+            tabvm_verified: null,
+            tabvm_memo_verified: null,
+            tabvm_flag_verifyonchange: false
         };
     }
 
-    parseMessage(message) {
+    /**
+     * Parses the given raw string to a processing friendly dictionary
+     *
+     * @param message Memo as raw string, properly formatted with head/meta/signature/footer
+     *
+     * @returns {*} parsed memo as dictionary with the following fields:
+     *              content : User message of the memo
+     *              meta : Dictionary with the meta data
+     *                      account : Account name of the signer
+     *                      key : Memo public key of the signer
+     *                      block : Current last irreversible block of the bitShares blockchain
+     *                      timestamp : Time the memo was signed in UTC format
+     *              signed : Seperate string that contains all data that will be signed (content + meta)
+     *              signature : Signature of the signed data
+     */
+    parseMemo(message) {
         let messageContent, messageMeta, messageSignature, messageSignedContent;
         try {
             // cut the sections
@@ -49,13 +83,14 @@ class AccountSignedMessages extends React.Component {
             messageSignature = messageMeta[1].split(MSG_SIGNATURE);
             messageMeta = messageSignature[0].trim();
             messageSignature = messageSignature[1].split(MSG_FOOT)[0].trim(); // everything after footer is ignored
+
+            // how the signed content it built is crucial, consider encapsulating
             messageSignedContent = messageContent + "\n" + messageMeta;
         } catch (err) {
-            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.invalidformat"));
-            return null;
+            throw new Error(counterpart.translate("account.signedmessages.invalidformat"));
         }
 
-        let messageMetaAccount, messageMetaKey, messageMetaBlock;
+        let messageMetaAccount, messageMetaKey, messageMetaBlock, messageMetaTimestamp;
         if (messageMeta) {
             try {
                 // process meta
@@ -70,185 +105,239 @@ class AccountSignedMessages extends React.Component {
                 // ... block number
                 messageMetaBlock = messageMeta.split(MSG_BLOCK + "=");
                 messageMetaBlock = messageMetaBlock[1].split("\n")[0].trim();
+
+                // ... time stamp
+                messageMetaTimestamp = messageMeta.split(MSG_DATE + "=");
+                messageMetaTimestamp = messageMetaTimestamp[1].split("\n")[0].trim();
             } catch (err) {
-                this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.invalidformat"));
-                return null;
+                throw new Error(counterpart.translate("account.signedmessages.invalidformat"));
             }
         }
 
         // validate account and key
         let storedAccount = ChainStore.getAccount(messageMetaAccount);
+        if (storedAccount == null) {
+            throw new Error(counterpart.translate("account.signedmessages.invaliduser"));
+        }
         let storedKey = storedAccount.get("options").get("memo_key");
 
         // validate keys are still the same
         if (messageMetaKey !== storedKey) {
-            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.keymismatch"));
-            return null;
+            throw new Error(counterpart.translate("account.signedmessages.keymismatch"));
         }
 
         return { content : messageContent,
-                 meta : { account : messageMetaAccount, key : storedKey, block : messageMetaBlock },
+                 meta : { account : messageMetaAccount, key : storedKey, block : messageMetaBlock, timestamp : messageMetaTimestamp },
                  signed : messageSignedContent,
                  signature : messageSignature,
                  };
     }
 
-    verifyMessageAction(event) {
-        event.preventDefault();
-        this.setState({
-            verifymessage_verified: false,
-        });
-
-        if(this.state.verifymessage_memo) {
-            this.verifyMessagePopMessage(counterpart.translate("account.signedmessages.verifying"), 0);
-
-            setTimeout(() => {
-                let message = this.parseMessage(this.state.verifymessage_memo);
-
-                if (message !== null) {
-
-                    // verify message
-                    let verified = Signature.fromHex(message.signature).verifyBuffer(message.signed, PublicKey.fromPublicKeyString(message.meta.key));
-
-                    this.setState({
-                        verifymessage_verified: verified,
-                        verifymessage_message: "" // remove verifying text
-                    });
-
-                }
-            }, 0);
-        }
-
-    }
-
-    onSignMemoAction(event) {
+    /**
+     * Event when user pushes sign button. Memo message and meta will be signed and displayed
+     * in the bottom textarea
+     *
+     * @param event
+     */
+    _tabSMSignAction(event) {
         event.preventDefault();
         // make sure wallet is unlocked (we need private key)
         Promise.resolve( WalletUnlockActions.unlock() ).then( () => {
             // there should be a message entered
-            if(this.state.signmessage_memo) {
-                let memo = this.state.signmessage_memo;
+            if(this.state.tabsm_memo) {
+                try {
+                    let memo = this.state.tabsm_memo;
 
-                let memo_from_public = this.state.signmessage_memo_key;
-                // The 1s are base58 for all zeros (null)
-                if( /111111111111111111111/.test(memo_from_public)) {
-                    memo_from_public = null;
-                }
-
-                let memo_from_privkey;
-                if(memo && memo_from_public) {
-                    memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
-
-                    if(!memo_from_privkey) {
-                        this.popMessage(counterpart.translate("account.signedmessages.invalidkey"));
-                        throw new Error("Missing private memo key for sender: " + memo_from_public);
+                    // obtain all necessary keys
+                    let memo_from_public = this.state.tabsm_memo_key;
+                    // The 1s are base58 for all zeros (null)
+                    if (/111111111111111111111/.test(memo_from_public)) {
+                        memo_from_public = null;
                     }
+                    let memo_from_privkey;
+                    if (memo && memo_from_public) {
+                        memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
+                        if (!memo_from_privkey) {
+                            throw new Error(counterpart.translate("account.signedmessages.invalidkey"));
+                        }
+                    }
+                    // get other meta data
+                    let irr_block = ChainStore.getObject("2.1.0").get("last_irreversible_block_num");
+                    let now = new Date();
+                    // build meta data
+                    let meta = MSG_SENDER + "=" + this.props.account.get("name") + "\n"
+                                + MSG_PUBLICKEY + "=" + this.state.tabsm_memo_key + "\n"
+                                + MSG_BLOCK + "=" + irr_block + "\n"
+                                + MSG_DATE + "=" + now.toUTCString();
+
+                    // sign memo
+                    let memoToBeSigned = memo + "\n" + meta;
+                    this._tabSMPopMessage(counterpart.translate("account.signedmessages.signing"), 0);
+
+                    setTimeout(() => { // do not block gui
+                        try {
+                            let memo_signature = Signature.signBuffer(memoToBeSigned, memo_from_privkey, memo_from_public);
+                            let memo_formatted = MSG_HEAD + "\n"
+                                            + memo + "\n"
+                                            + MSG_META + "\n"
+                                            + meta + "\n"
+                                            + MSG_SIGNATURE + "\n"
+                                            + memo_signature.toHex() + "\n"
+                                            + MSG_FOOT;
+                            this.setState({
+                                tabsm_memo_signed: memo_formatted,
+                                tabsm_message: "" // clear loading message
+                            });
+                        } catch (err) {
+                            this._tabSMPopMessage(err.message);
+                            this.setState({
+                                tabsm_memo_signed: null
+                            });
+                        }
+                    }, 0);
+                } catch (err) {
+                    this._tabSMPopMessage(err.message);
                 }
-
-                let irr_block = ChainStore.getObject("2.1.0").get("last_irreversible_block_num" );
-
-                let meta = MSG_SENDER + "=" + this.props.account.get("name") + "\n"
-                    + MSG_PUBLICKEY + "=" + this.state.signmessage_memo_key + "\n"
-                    + MSG_BLOCK + "=" + irr_block;
-
-                let memoToBeSigned = memo + "\n" + meta;
-
-                this.popMessage(counterpart.translate("account.signedmessages.signing"), 0);
-
-                setTimeout(() => {
-                    let memo_signature = Signature.signBuffer(memoToBeSigned, memo_from_privkey, memo_from_public);
-                    let memo_formatted = MSG_HEAD + "\n"
-                                        + memo + "\n"
-                                        + MSG_META + "\n"
-                                        + meta + "\n"
-                                        + MSG_SIGNATURE + "\n"
-                                        + memo_signature.toHex() + "\n"
-                                        + MSG_FOOT;
-                    this.setState({
-                        signmessage_memo_signed: memo_formatted,
-                        signmessage_message: "" // removes calculating message
-                    });
-                }, 0);
 
             }
 
         });
     }
 
-    verifyMessageHandleChange(event) {
-        this.setState({
-            verifymessage_memo: event.target.value,
-            verifymessage_verified: false
-        });
+    _tabSMHandleChange(event) { // event for textarea
+        this.setState({tabsm_memo: event.target.value});
     }
 
-    signMessageHandleChange(event) {
-        this.setState({signmessage_memo: event.target.value});
+    _tabSMHandleChangeKey(value) { // event for textfield of public key
+        this.setState({tabsm_memo_key: value});
     }
 
-    signMessageHandleChangeKey(value) {
-        this.setState({signmessage_memo_key: value});
-    }
-
-    copySignedMemo(event) {
+    _tabSMCopyToClipBoard(event) { // event when user clicks into the signed message textarea
         if (event.target.value !== "") {
             event.target.focus();
             event.target.select();
 
             try {
                 var successful = document.execCommand("copy");
-                this.popMessage(successful ? counterpart.translate("account.signedmessages.copysuccessful") :
+                this._tabSMPopMessage(successful ? counterpart.translate("account.signedmessages.copysuccessful") :
                                                 counterpart.translate("account.signedmessages.copyunsuccessful"));
             } catch (err) {
-                this.popMessage(counterpart.translate("account.signedmessages.copyunsuccessful"));
+                this._tabSMPopMessage(counterpart.translate("account.signedmessages.copyunsuccessful"));
             }
         }
     }
 
-    popMessage(message, timeout=2000) {
+    /**
+     * Displays an information to the user that disappears over time
+     *
+     * @param message
+     * @param timeout
+     */
+    _tabSMPopMessage(message, timeout=3000) {
         this.setState({
-            signmessage_message: message
+            tabsm_message: message
         });
 
         if (message !== "" && timeout > 0) {
             setTimeout(
                 () => {
                     this.setState({
-                        signmessage_message: ""
+                        tabsm_message: ""
                     });
                 }, timeout);
         }
     }
 
-    verifyMessagePopMessage(message, timeout=2000) {
+    /**
+     * Event when the user tries to verify a memo, either manual through the button or onChange of the textarea.
+     * The message is parsed and verified, the user gets the message restated in the bottom part of the site
+     *
+     * @param event
+     */
+    _tabVMAction(event) {
+        event.preventDefault();
+
+        // reset to unverified state
         this.setState({
-            verifymessage_message: message
+            tabvm_memo_verified: null,
+            tabvm_verified: false,
+        });
+
+        // attempt verifying
+        if(this.state.tabvm_memo) {
+            this._tabVMPopMessage(counterpart.translate("account.signedmessages.verifying"), 0);
+
+            setTimeout(() => { // do not block gui
+                try {
+                    let memo = this.parseMemo(this.state.tabvm_memo);
+
+                    // verify memo
+                    let verified = false;
+                    try {
+                        verified = Signature.fromHex(memo.signature).verifyBuffer(memo.signed, PublicKey.fromPublicKeyString(memo.meta.key));
+                    } catch (err) {
+                        // wrap message that could be raised from Signature
+                        throw new Error(counterpart.translate("account.signedmessages.errorverifying"));
+                    }
+                    if (!verified) {
+                        throw new Error(counterpart.translate("account.signedmessages.invalidsignature"));
+                    }
+                    this.setState({
+                        tabvm_memo_verified: memo,
+                        tabvm_verified: verified,
+                        tabvm_message: "" // clear verifying message
+                    });
+                } catch (err) {
+                    this._tabVMPopMessage(err.message);
+                    this.setState({
+                        tabvm_memo_verified: null,
+                        tabvm_verified: false
+                    });
+                }
+            }, 0);
+        }
+
+    }
+
+    _tabVMHandleChange(event) { // onchange event of the input textarea
+        this.setState({
+            tabvm_memo: event.target.value,
+            tabvm_verified: false,
+            tabvm_memo_verified: null,
+        });
+        if (this.state.tabvm_flag_verifyonchange) {
+            this._tabVMAction(event);
+        }
+    }
+
+    /**
+     * Displays an information to the user that disappears over time
+     *
+     * @param message
+     * @param timeout
+     */
+    _tabVMPopMessage(message, timeout=3000) {
+        this.setState({
+            tabvm_message: message
         });
 
         if (message !== "" && timeout > 0) {
             setTimeout(
                 () => {
                     this.setState({
-                        verifymessage_message: ""
+                        tabvm_message: ""
                     });
                 }, timeout);
         }
     }
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     // overridden
-    //     if (this.state.message !== "") {
-    //         setTimeout(
-    //             () => {
-    //                 this.setState({
-    //                     message: ""
-    //                 });
-    //             }, 2000);
-    //     }
-    // }
+    _tabVMToggleVerifyOnChange() { // event when the user enables / disables verifying while typing
+        this.setState({
+            tabvm_flag_verifyonchange: !this.state.tabvm_flag_verifyonchange
+        });
+    }
 
     render() {
-
         return (
             <div className="grid-content">
                 <div className="generic-bordered-box">
@@ -265,28 +354,28 @@ class AccountSignedMessages extends React.Component {
                                 </div>
                                 <PubKeyInput
                                     ref="memo_key"
-                                    value={this.state.signmessage_memo_key}
+                                    value={this.state.tabsm_memo_key}
                                     label="account.perm.memo_public_key"
                                     placeholder="Public Key"
                                     tabIndex={7}
-                                    onChange={this.signMessageHandleChangeKey.bind(this)}
+                                    onChange={this._tabSMHandleChangeKey.bind(this)}
                                     disableActionButton={true}
                                 />
                                 <br/>
-                                <textarea rows="10" value={this.state.signmessage_memo} onChange={this.signMessageHandleChange.bind(this)} placeholder={counterpart.translate("account.signedmessages.entermessage")} />
+                                <textarea rows="10" value={this.state.tabsm_memo} onChange={this._tabSMHandleChange.bind(this)} placeholder={counterpart.translate("account.signedmessages.entermessage")} />
                                 <span>
-                                    <button className="button" onClick={this.onSignMemoAction.bind(this)}>
+                                    <button className="button" onClick={this._tabSMSignAction.bind(this)}>
                                         <Translate content="account.signedmessages.sign"/>
                                     </button>
-                                    <text style={{color: "gray"}}>{this.state.signmessage_message}</text>
+                                    <text style={{color: "gray"}}>{this.state.tabsm_message}</text>
                                 </span>
                                 <br/>
                                 <br/>
                                 <textarea rows="14"
-                                          value={this.state.signmessage_memo_signed}
+                                          value={this.state.tabsm_memo_signed}
                                           style={{editable: false}}
                                           placeholder={counterpart.translate("account.signedmessages.automaticcreation")}
-                                          onClick={this.copySignedMemo.bind(this)}  />
+                                          onClick={this._tabSMCopyToClipBoard.bind(this)}  />
                             </div>
                         </Tab>
 
@@ -294,20 +383,37 @@ class AccountSignedMessages extends React.Component {
                             <div className="grid-content" style={{overflowX: "hidden"}}>
                                 <div className="content-block no-margin">
                                     <h3><Translate content="account.signedmessages.verifymessage"/></h3>
+                                    <div style={{float: "right", marginTop: "0.1em", marginBottom: "0.5em"}}>
+                                        <table><tr><td><label><Translate content="account.signedmessages.verifyonchange"/></label></td><td>
+                                        <div className="switch" onClick={this._tabVMToggleVerifyOnChange.bind(this)}>
+                                            <input type="checkbox" checked={this.state.tabvm_flag_verifyonchange} value={counterpart.translate("account.signedmessages.verifyonchange")} />
+                                            <label />
+                                        </div></td></tr></table>
+                                    </div>
                                 </div>
-                                <textarea rows="10" value={this.state.verifymessage_memo} onChange={this.verifyMessageHandleChange.bind(this)} placeholder={counterpart.translate("account.signedmessages.entermessage")} />
+                                <textarea rows="10" value={this.state.tabvm_memo} onChange={this._tabVMHandleChange.bind(this)} placeholder={counterpart.translate("account.signedmessages.entermessage")} />
                                 <span>
-                                    <button className="button" onClick={this.verifyMessageAction.bind(this)}>
+                                    <button className="button" onClick={this._tabVMAction.bind(this)}>
                                         <Translate content="account.signedmessages.verify"/>
                                     </button>
-                                    <text style={{color: "gray"}}>{this.state.verifymessage_message}</text>
-                                    {this.state.verifymessage_verified !== null &&
-                                    <div style={{float: "right"}}>Message is:
+                                    <text style={{color: "gray"}}>{this.state.tabvm_message}</text>
+                                    {this.state.tabvm_verified !== null &&
+                                    <div style={{float: "right"}}>
+                                        Message is:
                                         <div
-                                            style={{backgroundColor: this.state.verifymessage_verified ? "green" : "red"}}>
-                                            {this.state.verifymessage_verified ? "verified" : "not verified"}
+                                            style={{backgroundColor: this.state.tabvm_verified ? "green" : "red"}}>
+                                            <label>{this.state.tabvm_verified ? "verified" : "not verified"}</label>
                                         </div>
                                     </div>
+                                    }
+                                    {this.state.tabvm_verified && this.state.tabvm_memo_verified !== null &&
+                                        <div>
+                                            <br />
+                                            <div style={{color: "gray"}}>
+                                                Verified message from {this.state.tabvm_memo_verified.meta.account}, signed on {this.state.tabvm_memo_verified.meta.timestamp}:<br />
+                                                <pre>{this.state.tabvm_memo_verified.content}</pre>
+                                            </div>
+                                        </div>
                                     }
                                 </span>
                             </div>
@@ -322,5 +428,7 @@ class AccountSignedMessages extends React.Component {
 AccountSignedMessages = BindToChainState(AccountSignedMessages);
 
 export default AccountSignedMessages;
+
+
 
 
