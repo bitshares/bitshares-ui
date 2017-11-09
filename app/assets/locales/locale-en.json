@@ -10,7 +10,7 @@
     },
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -784,7 +784,7 @@
       "missed": "Blocks missed"
     },
     "committee_members": {
-      "title": "Committee members",
+      "title": "Committee",
       "active": "Total number of active committee members"
     },
     "committee_member": {

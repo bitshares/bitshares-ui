@@ -51,7 +51,7 @@ class SettingsStore {
         let defaults = {
             locale: [
                 "en",
-                "cn",
+                "zh",
                 "fr",
                 "ko",
                 "de",
@@ -95,6 +95,11 @@ class SettingsStore {
         this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
         let savedDefaults = ss.get("defaults_v1", {});
+        /* Fix for old clients after changing cn to zh */
+        if (savedDefaults && savedDefaults.locale) {
+            let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
+            if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
+        }
         this.defaults = merge({}, defaults, savedDefaults);
 
         (savedDefaults.apiServer || []).forEach(api => {

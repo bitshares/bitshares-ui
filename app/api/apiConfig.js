@@ -24,6 +24,7 @@ export const settingsAPIs = {
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://bts.ai.la/ws", location: "Hong Kong"},
+        {url: "wss://bitshares.apasia.tech/ws", location: "Bangkok, Thailand"},
         {url: "wss://bitshares.dacplay.org/ws", location:  "Hangzhou, China"},
         {url: "wss://bitshares-api.wancloud.io/ws", location:  "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
@@ -31,7 +32,7 @@ export const settingsAPIs = {
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
-    DEFAULT_FAUCET: "https://faucet.bitshares.eu",
+    DEFAULT_FAUCET: "https://bitshares.openledger.info",
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };
