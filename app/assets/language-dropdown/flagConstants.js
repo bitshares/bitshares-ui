@@ -1,6 +1,6 @@
 export const languages = [
   {flag: 'us', language: 'English'},
-  {flag: 'cn', language: 'Chinese'},
+  {flag: 'zh', language: 'Chinese'},
   {flag: 'fr', language: 'French'},
   {flag: 'kr', language: 'Korean'},
   {flag: 'de', language: 'German'},

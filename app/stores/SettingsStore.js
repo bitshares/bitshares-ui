@@ -51,7 +51,7 @@ class SettingsStore {
         let defaults = {
             locale: [
                 "en",
-                "cn",
+                "zh",
                 "fr",
                 "ko",
                 "de",
