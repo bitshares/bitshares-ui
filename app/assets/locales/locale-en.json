@@ -894,7 +894,7 @@
   },
   "footer": {
     "title": "BitShares",
-    "block": "Head block",
+    "block": "Block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
     "nosync": "Your active node is out of sync",
@@ -903,7 +903,9 @@
     "update_available": "UPDATE AVAILABLE",
     "synced": "Synced",
     "unsynced": "Out of sync",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "connected": "Connected",
+    "latency": "Latency"
   },
   "exchange": {
     "chart_options": {
