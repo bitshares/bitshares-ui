@@ -215,10 +215,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     _renderDeposit() {
-        // Request a fresh deposit address or memo
-        requestDepositAddress.bind(null, this._getDepositObject());
-
-        const {name: assetName, prefix} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
+                const {name: assetName, prefix} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         const {receive_address, apiError} = this.state;
         const hasMemo = receive_address && "memo" in receive_address && receive_address.memo;
         const addressValue = receive_address && receive_address.address || "";
