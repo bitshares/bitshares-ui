@@ -85,7 +85,8 @@
     "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
     "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
     "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
-    "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us"
+    "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+    "over_limit": "The bridge does not have enough of the desired asset for this buy order"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -1299,9 +1300,9 @@
     "generate_new_memo": "Get new memo",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
-	"convert": "Internal conversion",
+	  "convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
-	"convert_now": "Convert now",
+	  "convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1333,6 +1334,7 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+    "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
     "deposit_limit": "Deposit limit",
     "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
     "rudex": {
@@ -1345,7 +1347,8 @@
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
-    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
+    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+    "contact_TRADE": "Contact Blocktrades"
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

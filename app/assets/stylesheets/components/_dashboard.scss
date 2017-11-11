@@ -77,7 +77,21 @@ div.fm-container {
         > canvas {
             background: white;
             padding: 0.5rem;
+            margin-bottom: 10px;
         }
+    }
+    /* Buttons */
+    .ActionButton_Close {
+        padding: 10px 40px 10px 40px;
+        border-radius: 5px 5px 5px 5px;
+        color: rgb(242, 242, 242);
+        background-color: rgb(245, 27, 27);
+    }
+
+    .SimpleTrade__copyIcon {
+        padding: 3px;
+        margin-right: 10px;
+        background-color: rgb(65, 116, 184);
     }
 }
 
@@ -165,17 +179,5 @@ div.input-wrapper {
     }
 }
 
-/* Buttons */
-.ActionButton_Close, .ActionButton_Copy {
-    padding: 10px 40px 10px 40px;
-    border-radius: 5px 5px 5px 5px;
-    color: rgb(242, 242, 242);
-}
 
-.ActionButton_Close {
-    background-color: rgb(245, 27, 27);
-}
 
-.ActionButton_Copy {
-    background-color: rgb(65, 116, 184);
-}
