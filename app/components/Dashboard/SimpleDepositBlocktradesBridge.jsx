@@ -232,8 +232,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const inputName = this.props.inputCoinType.toUpperCase();
         const receiveName = (prefix ? prefix : "") + assetName;
 
-        console.log(receiveName + "|" + inputName + "|" + this.state.inputAmount + "|" + this.state.receiveAmount);
-
         let price = receiveName === "BTS" && inputName === "BTC" ? (this.state.inputAmount / this.state.receiveAmount).toFixed(8) :
             (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
         let priceSuffix = receiveName === "BTS" && inputName === "BTC" ? inputName +"/" + receiveName :
