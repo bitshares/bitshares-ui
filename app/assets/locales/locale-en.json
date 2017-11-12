@@ -35,6 +35,7 @@
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
+    "payments_beta": "Sendbeta",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",

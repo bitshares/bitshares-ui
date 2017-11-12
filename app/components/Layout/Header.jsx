@@ -6,6 +6,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -80,6 +81,11 @@ class Header extends React.Component {
             nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active
         );
+    }
+
+    _showSend(e) {
+        e.preventDefault();
+        this.refs.send_modal.show();
     }
 
     _triggerMenu(e) {
@@ -324,6 +330,7 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}><Translate content="header.account" /></Link></li>}
                         {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
+                        {currentAccount || myAccounts.length ? <li><a onClick={this._showSend.bind(this)}><Translate component="span" content="header.payments_beta" /></a></li> : null}
                         {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
                         <li>{tradeLink}</li>
                         {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
@@ -357,7 +364,11 @@ class Header extends React.Component {
                         {lock_unlock}
                     </div>
                 </div>
+                {/* Bridge modal */}
+                <SendModal ref="send_modal"
+                    account_name={account_display_name} />
             </div>
+            
         );
     }
 }

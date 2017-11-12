@@ -94,7 +94,7 @@ class AmountSelector extends React.Component {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }
 AmountSelector = BindToChainState(AmountSelector);
