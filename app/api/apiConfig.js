@@ -7,7 +7,7 @@ export const blockTradesAPIs = {
     TRADING_PAIRS: "/trading-pairs",
     DEPOSIT_LIMIT: "/deposit-limits",
     ESTIMATE_OUTPUT: "/estimate-output-amount",
-    ESTIMATE_INTPUT: "/estimate-input-amount"
+    ESTIMATE_INPUT: "/estimate-input-amount"
 };
 
 export const rudexAPIs = {

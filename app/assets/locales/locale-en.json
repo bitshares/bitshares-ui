@@ -1348,7 +1348,8 @@
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
     "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
-    "contact_TRADE": "Contact Blocktrades"
+    "contact_TRADE": "Contact Blocktrades",
+    "over_limit": "Limit Reached"
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

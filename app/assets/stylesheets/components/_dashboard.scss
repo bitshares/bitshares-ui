@@ -93,6 +93,36 @@ div.fm-container {
         margin-right: 10px;
         background-color: rgb(65, 116, 184);
     }
+
+    .SimpleTrade__msg, .SimpleTrade__msg.error {
+        vertical-align: middle;
+        text-align: right;
+        font-size: 0.8rem;
+    }
+    .SimpleTrade__msg.error {
+            width: 100%;
+            color: #a94442;
+            > Icon {
+                position: "relative";
+                top: 0;
+            }
+    }
+    .SimpleTrade__deposit-info {
+        overflow: "hidden";
+        > .copyIcon {
+            vertical-align: middle;
+        }
+        > .deposit-details {
+            text-align: left;
+            > div:nth-of-type(1) {
+                font-size: 0.75rem;
+            }
+            > div:nth-of-type(2) {
+                font-size: 1rem;
+                color: lightblue;
+            }
+        }
+    }
 }
 
 .balance-row.active {
