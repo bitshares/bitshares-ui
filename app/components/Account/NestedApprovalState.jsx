@@ -48,7 +48,7 @@ class AccountPermissionTree extends React.Component {
                     }}
                 >
                     <LinkToAccountById subpage="permissions" account={account.get("id")} />
-                        {!isNested && notNestedWeight ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
+                    {!isNested && notNestedWeight ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
                 </div>
                 <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
                     {!isNested && !isMultiSig ? (

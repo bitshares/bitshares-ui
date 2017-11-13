@@ -36,8 +36,13 @@ import tableHeightHelper from "lib/common/tableHeightHelper";
 class AccountOverview extends React.Component {
 
     static propTypes = {
-        balanceAssets: ChainTypes.ChainAssetsList
+        balanceAssets: ChainTypes.ChainAssetsList,
+        core_asset: ChainTypes.ChainAsset.isRequired
     };
+
+    static defaultProps = {
+        core_asset: "1.3.0"
+    }
 
     constructor(props) {
         super();
@@ -179,9 +184,9 @@ class AccountOverview extends React.Component {
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {
-        const core_asset = ChainStore.getAsset("1.3.0");
+        const {core_asset} = this.props;
         let {settings, hiddenAssets, orders} = this.props;
-        let preferredUnit = settings.get("unit") || "1.3.0";
+        let preferredUnit = settings.get("unit") || core_asset.get("symbol");
         let showAssetPercent = settings.get("showAssetPercent", false);
 
         const renderBorrow = (asset, account) => {
@@ -212,15 +217,20 @@ class AccountOverview extends React.Component {
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
-            const notCorePrefUnit = preferredUnit !== "BTS";
+            const notCorePrefUnit = preferredUnit !== core_asset.get("symbol");
 
             let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
             symbol = asset.get("symbol");
             if (symbol.indexOf("OPEN.") !== -1 && !market) market = "USD";
-            let preferredMarket = market ? market : core_asset ? core_asset.get("symbol") : "BTS";
+            let preferredMarket = market ? market : preferredUnit;
+
+            if (notCore && preferredMarket === symbol) preferredMarket = core_asset.get("symbol");
 
             /* Table content */
-            directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : notCorePrefUnit ? <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
+            directMarketLink = notCore ?
+                <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> :
+                notCorePrefUnit ? <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}><Icon name="trade" className="icon-14px" /></Link> :
+                emptyCell;
             transferLink = <Link to={`/transfer?asset=${asset.get("id")}`}><Icon name="transfer" className="icon-14px" /></Link>;
 
             let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
@@ -521,7 +531,7 @@ class AccountOverview extends React.Component {
                 hide_asset
             />;
 
-        const preferredUnit = settings.get("unit") || "1.3.0";
+        const preferredUnit = settings.get("unit") || this.props.core_asset.get("symbol");
         const totalValueText = <TranslateWithLinks
             noLink
             string="account.total"
