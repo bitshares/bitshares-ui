@@ -286,6 +286,27 @@
       "remove_text": "Remove",
       "valid_pub": "Valid Public Key"
     },
+    "signedmessages": {
+      "menuitem": "Signed Messages",
+      "invalidkey": "Private key could not be obtained, is the public key valid?",
+      "title": "Signed Messages",
+      "signmessage": "Sign Message",
+      "verifymessage": "Verify Message",
+      "signing": "Signing, please wait ...",
+      "verifying": "Verifying, please wait ...",
+      "invalidformat": "Signed message format can't be recognized",
+      "invaliduser": "Account of the message sender is invalid",
+      "invalidsignature": "The content of the message could be validated against the signature",
+      "errorverifying": "An error occured while verifying the message",
+      "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
+      "sign": "Sign",
+      "verify": "Verify",
+      "automaticcreation": "Signed message will be created automatically",
+      "entermessage": "Enter message here",
+      "copysuccessful": "Signed message copied to clipboard",
+      "copyunsuccessful": "Failed to copy message",
+      "verifyonchange": "Verify while typing"
+    },
     "votes": {
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
