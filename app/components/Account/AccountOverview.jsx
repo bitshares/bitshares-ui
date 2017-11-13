@@ -50,7 +50,7 @@ class AccountOverview extends React.Component {
             withdrawAsset: null,
             bridgeAsset: null,
             alwaysShowAssets: [
-                // "BTS",
+                "BTS",
                 // "USD",
                 // "CNY",
                 // "OPEN.BTC",
@@ -251,7 +251,7 @@ class AccountOverview extends React.Component {
                             fromAsset={asset.get("id")}
                             hide_symbols
                         />
-                        </td>
+                    </td>
                     <td style={{textAlign: "right"}} className="column-hide-small">
                         {hasBalance || hasOnOrder ?
                             <BalanceValueComponent
@@ -326,7 +326,6 @@ class AccountOverview extends React.Component {
                 balances.forEach(a => {
                     if (a.key === asset) keep = false;
                 });
-
                 return keep && isAvailable;
             }).forEach(a => {
                 let asset = ChainStore.getAsset(a);
@@ -343,11 +342,12 @@ class AccountOverview extends React.Component {
                     let directMarketLink = notCore ? <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> : emptyCell;
                     let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
-                        <tr key={"zz" + a} style={{maxWidth: "100rem"}}>
-                            <td style={{textAlign: "left"}}>
+                        <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
+                            <td style={{textAlign: "left", paddingLeft: 10}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td colSpan="2"></td>
+                            <td></td>
+                            <td></td>
                             <td className="column-hide-small" colSpan="2"></td>
                             <td style={{textAlign: "center"}}>
                                 {canBuy  && this.props.isMyAccount ?

@@ -73,6 +73,65 @@ div.fm-container {
         }
 
     }
+    .SimpleTrade__QR {
+        > canvas {
+            background: white;
+            padding: 0.5rem;
+            margin-bottom: 10px;
+        }
+    }
+    /* Buttons */
+    .ActionButton_Close {
+        padding: 10px 40px 10px 40px;
+        border-radius: 5px 5px 5px 5px;
+        color: rgb(242, 242, 242);
+        background-color: rgb(245, 27, 27);
+    }
+
+    .SimpleTrade__copyIcon {
+        padding: 5px;
+        margin-right: 15px;
+        background-color: rgb(65, 116, 184);
+    }
+
+    .SimpleTrade__msg {
+        text-align: right;
+        font-size: 0.8rem;
+    }
+    .SimpleTrade__msg-error {
+
+
+        > Icon {
+            position: "relative";
+            top: 0;
+        }
+    }
+    .error-msg {
+        text-align: right;
+        font-size: 0.8rem;
+        width: 100%;
+        color: #ff3633;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .SimpleTrade__deposit-info {
+        overflow: "hidden";
+        > .copyIcon {
+            vertical-align: middle;
+        }
+        > .deposit-details {
+            text-align: left;
+            > div:nth-of-type(1) {
+                font-size: 0.75rem;
+                margin-bottom: 5px;
+            }
+            > div:nth-of-type(2) {
+                font-size: 1rem;
+                color: lightblue;
+            }
+        }
+    }
 }
 
 .balance-row.active {
@@ -158,3 +217,6 @@ div.input-wrapper {
         }
     }
 }
+
+
+
