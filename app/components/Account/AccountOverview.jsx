@@ -85,7 +85,7 @@ class AccountOverview extends React.Component {
                 let bPrice = bRef.getFinalPrice(true);
                 if (!aPrice && bPrice) return 1;
                 if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice) return sortFunctions.alphabetic(a, b, true);
+                if (!aPrice && !bPrice) return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection ? aPrice - bPrice : bPrice - aPrice;
             }
         },
@@ -97,7 +97,7 @@ class AccountOverview extends React.Component {
                 let bValue = bRef.getValue();
                 if (!aValue && bValue) return 1;
                 if (aValue && !bValue) return -1;
-                if (!aValue && !bValue) return sortFunctions.alphabetic(a, b, true);
+                if (!aValue && !bValue) return this.sortFunctions.alphabetic(a, b, true);
                 return !this.state.sortDirection ? aValue - bValue : bValue - aValue;
             }
         }
