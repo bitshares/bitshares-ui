@@ -33,38 +33,6 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
 import tableHeightHelper from "lib/common/tableHeightHelper";
 
-const sortFunctions = {
-    alphabetic: function(a, b, force) {
-        if (a.key > b.key) return this.state.sortDirection || force ? 1 : -1;
-        if (a.key < b.key) return this.state.sortDirection || force ? -1 : 1;
-        return 0;
-    },
-    priceValue: function(a, b) {
-        let aRef = this.priceRefs[a.key];
-        let bRef = this.priceRefs[b.key];
-        if (aRef && bRef) {
-            let aPrice = aRef.getFinalPrice(true);
-            let bPrice = bRef.getFinalPrice(true);
-            if (!aPrice && bPrice) return 1;
-            if (aPrice && !bPrice) return -1;
-            if (!aPrice && !bPrice) return sortFunctions.alphabetic(a, b, true);
-            return this.state.sortDirection ? aPrice - bPrice : bPrice - aPrice;
-        }
-    },
-    totalValue: function(a, b) {
-        let aRef = this.valueRefs[a.key];
-        let bRef = this.valueRefs[b.key];
-        if (aRef && bRef) {
-            let aValue = aRef.getValue();
-            let bValue = bRef.getValue();
-            if (!aValue && bValue) return 1;
-            if (aValue && !bValue) return -1;
-            if (!aValue && !bValue) return sortFunctions.alphabetic(a, b, true);
-            return !this.state.sortDirection ? aValue - bValue : bValue - aValue;
-        }
-    }
-};
-
 class AccountOverview extends React.Component {
 
     static propTypes = {
@@ -98,8 +66,40 @@ class AccountOverview extends React.Component {
         this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
         this.priceRefs = {};
         this.valueRefs = {};
-        for (let key in sortFunctions) {
-            sortFunctions[key] = sortFunctions[key].bind(this);
+        for (let key in this.sortFunctions) {
+            this.sortFunctions[key] = this.sortFunctions[key].bind(this);
+        }
+    }
+
+    sortFunctions = {
+        alphabetic: function(a, b, force) {
+            if (a.key > b.key) return this.state.sortDirection || force ? 1 : -1;
+            if (a.key < b.key) return this.state.sortDirection || force ? -1 : 1;
+            return 0;
+        },
+        priceValue: function(a, b) {
+            let aRef = this.priceRefs[a.key];
+            let bRef = this.priceRefs[b.key];
+            if (aRef && bRef) {
+                let aPrice = aRef.getFinalPrice(true);
+                let bPrice = bRef.getFinalPrice(true);
+                if (!aPrice && bPrice) return 1;
+                if (aPrice && !bPrice) return -1;
+                if (!aPrice && !bPrice) return sortFunctions.alphabetic(a, b, true);
+                return this.state.sortDirection ? aPrice - bPrice : bPrice - aPrice;
+            }
+        },
+        totalValue: function(a, b) {
+            let aRef = this.valueRefs[a.key];
+            let bRef = this.valueRefs[b.key];
+            if (aRef && bRef) {
+                let aValue = aRef.getValue();
+                let bValue = bRef.getValue();
+                if (!aValue && bValue) return 1;
+                if (aValue && !bValue) return -1;
+                if (!aValue && !bValue) return sortFunctions.alphabetic(a, b, true);
+                return !this.state.sortDirection ? aValue - bValue : bValue - aValue;
+            }
         }
     }
 
@@ -387,7 +387,7 @@ class AccountOverview extends React.Component {
             });
         }
 
-        balances.sort(sortFunctions[this.state.sortKey]);
+        balances.sort(this.sortFunctions[this.state.sortKey]);
         return balances;
     }
 
