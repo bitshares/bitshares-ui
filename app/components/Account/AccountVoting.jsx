@@ -18,7 +18,6 @@ import AssetName from "../Utility/AssetName";
 import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
-import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 
 class AccountVoting extends React.Component {
@@ -30,7 +29,7 @@ class AccountVoting extends React.Component {
     };
 
     static defaultProps = {
-        initialBudget: SettingsStore.getState().viewSettings.get("lastBudgetObject", "2.13.1"),
+        initialBudget: SettingsStore.getLastBudgetObject(),
         globalObject: "2.0.0"
     };
 
@@ -371,9 +370,7 @@ class AccountVoting extends React.Component {
                     lastBudgetObject: "2.13." + lastId
                 });
 
-                SettingsActions.changeViewSetting.defer({
-                    lastBudgetObject: "2.13." + lastId
-                });
+                SettingsStore.setLastBudgetObject("2.13." + lastId);
             }
         }
     }
