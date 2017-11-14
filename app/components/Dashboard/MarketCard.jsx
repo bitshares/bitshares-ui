@@ -69,7 +69,7 @@ class MarketCard extends React.Component {
 
     _onError(imgName) {
         if (!this.state.imgError) {
-            this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";
+            this.refs[imgName.toLowerCase()].src = "asset-symbols/bco.png";
             this.setState({
                 imgError: true
             });

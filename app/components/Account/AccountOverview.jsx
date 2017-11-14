@@ -233,7 +233,7 @@ class AccountOverview extends React.Component {
             const includeAsset = !hiddenAssets.includes(asset_type);
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
-            const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
+            const canDepositWithdraw = !!this.props.backedCoins.get("BRIDGE", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
 
@@ -245,28 +245,14 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
-                    <td style={{textAlign: "right"}} className="column-hide-small">
-                        <EquivalentPrice
-                            refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
-                            fromAsset={asset.get("id")}
-                            hide_symbols
-                        />
-                        </td>
-                    <td style={{textAlign: "right"}} className="column-hide-small">
-                        {hasBalance || hasOnOrder ?
-                            <BalanceValueComponent
-                                balance={balance}
-                                toAsset={preferredUnit}
-                                hide_asset
-                                refCallback={(c) => {if (c && c.refs.bound_component) this.valueRefs[asset.get("symbol")] = c.refs.bound_component;}}
-                            /> : null}
-                    </td>
                     {showAssetPercent ? <td style={{textAlign: "right"}}>
                         {hasBalance ? <BalanceComponent balance={balance} asPercentage={true}/> : null}
                     </td> : null}
                     <td>
                         {transferLink}
                     </td>
+                    {
+                        /*
                     <td>
                         {canBuy && this.props.isMyAccount ?
                         <span>
@@ -275,6 +261,8 @@ class AccountOverview extends React.Component {
                             </a>
                         </span> : emptyCell}
                     </td>
+                    */
+                    }
                     <td>
                         {canDepositWithdraw && this.props.isMyAccount? (
                             <span>
@@ -293,15 +281,20 @@ class AccountOverview extends React.Component {
                             </span>
                         ) : emptyCell}
                     </td>
+{
+    /*
                     <td>
                         {directMarketLink}
                     </td>
+
                     <td>
                         {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.borrow", {asset: symbol})}>{borrowLink}{borrowModal}</div> : emptyCell}
                     </td>
                     <td>
                         {isBitAsset ? <div className="inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.settle", {asset: symbol})}>{settleLink}</div> : emptyCell}
                     </td>
+    */
+}
                     <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
                         <a style={{marginRight: 0}} className={includeAsset ? "order-cancel" : "action-plus"} onClick={this._hideAsset.bind(this, asset_type, includeAsset)}>
                             <Icon name={includeAsset ? "cross-circle" : "plus-circle"} className="icon-14px" />
@@ -530,15 +523,23 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+    /*
+        includedBalances.push(
+            <tr key="portfolio" className="total-value">
+                <td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td>
+                <td></td>
+                <td className="column-hide-small"></td>
+                <td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td>
+                <td colSpan="8"></td></tr>);
+                */
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
         // Find the current Openledger coins
-        const currentDepositAsset = this.props.backedCoins.get("OPEN", []).find(c => {
+        const currentDepositAsset = this.props.backedCoins.get("BRIDGE", []).find(c => {
             return c.symbol === this.state.depositAsset;
         }) || {};
-        const currentWithdrawAsset = this.props.backedCoins.get("OPEN", []).find(c => {
+        const currentWithdrawAsset = this.props.backedCoins.get("BRIDGE", []).find(c => {
             return c.symbol === this.state.withdrawAsset;
         }) || {};
         const currentBridges = this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
@@ -561,7 +562,7 @@ class AccountOverview extends React.Component {
 
                             </Tab> */}
 
-                            <Tab title="account.portfolio" subText={portFolioValue}>
+                            <Tab title="account.portfolio" >
                                 <div className="hide-selector">
                                     <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <Translate content="account.hide_hidden" />
@@ -577,25 +578,20 @@ class AccountOverview extends React.Component {
                                             {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                             <th style={{textAlign: "left", paddingLeft: 10}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
-                                            <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
-                                            {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
-                                            <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
-                                                <TranslateWithLinks
-                                                    noLink
-                                                    string="account.eq_value_header"
-                                                    keys={[
-                                                        {type: "asset", value: preferredUnit, arg: "asset"}
-                                                    ]}
-                                                />
-                                            </th>
+
                                             {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                             <th><Translate content="header.payments" /></th>
-                                            <th><Translate content="exchange.buy" /></th>
+
+                                        { /* <th><Translate content="exchange.buy" /></th> */ }
                                             <th><Translate content="modal.deposit.submit" /></th>
                                             <th><Translate content="modal.withdraw.submit" /></th>
+{
+    /*
                                             <th><Translate content="account.trade" /></th>
                                             <th><Translate content="exchange.borrow" /></th>
                                             <th><Translate content="account.settle" /></th>
+    */
+}
                                             <th className="column-hide-small"><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
                                         </tr>
                                     </thead>
@@ -605,7 +601,7 @@ class AccountOverview extends React.Component {
                                 </table>
                             </Tab>
 
-                            <Tab title="account.open_orders" subText={ordersValue}>
+                            <Tab title="account.open_orders" >
                                 <AccountOrders {...this.props}>
                                     <tbody>
                                         <tr className="total-value">
@@ -620,7 +616,8 @@ class AccountOverview extends React.Component {
                                     </tbody>
                                 </AccountOrders>
                             </Tab>
-
+{
+    /*
                             <Tab title="account.collaterals" subText={<span className={this.state.globalMarginStatus}>{marginValue}</span>}>
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
@@ -639,12 +636,15 @@ class AccountOverview extends React.Component {
                                     </div>
                                 </div>
                             </Tab>
+                            */
+                        }
+
 
                             {/* <Tab title="markets.title" subText={hiddenSubText}>
 
                             </Tab> */}
 
-                            <Tab title="account.activity" subText={hiddenSubText}>
+                            <Tab title="account.activity" >
                                 <RecentTransactions
                                     accountsList={Immutable.fromJS([account.get("id")])}
                                     compactView={false}
@@ -680,7 +680,9 @@ class AccountOverview extends React.Component {
                     modalId="simple_deposit_modal"
                     balances={this.props.balances}
                     {...currentDepositAsset}
-                    isDown={this.props.gatewayDown.get("OPEN")}
+                    isDown={false}
+                    isAvailable={true}
+                    intermediateAccount={'cryptobridge'}
                 />
 
                 {/* Withdraw Modal */}
@@ -693,21 +695,25 @@ class AccountOverview extends React.Component {
                     asset={this.state.withdrawAsset}
                     modalId="simple_withdraw_modal"
                     balances={this.props.balances}
+                    intermediateAccount={'cryptobridge'}
+
                     {...currentWithdrawAsset}
-                    isDown={this.props.gatewayDown.get("OPEN")}
+                    isAvailable={true}
                 />
 
                 {/* Bridge modal */}
                 <SimpleDepositBlocktradesBridge
                     ref="bridge_modal"
                     action="deposit"
+                    isAvailable={true}
                     account={this.props.account.get("name")}
                     sender={this.props.account.get("id")}
                     asset={this.state.bridgeAsset}
                     modalId="simple_bridge_modal"
                     balances={this.props.balances}
                     bridges={currentBridges}
-                    isDown={this.props.gatewayDown.get("TRADE")}
+                    isDown={this.props.gatewayDown.get("BRIDGE")}
+                    backingCoinType={'BRIDGE'}
                 />
             </div>
 

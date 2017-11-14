@@ -59,6 +59,11 @@
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "intro_text_title": "Willkommen bei der dezentralen CryptoBridge Börse!",
+    "intro_text_1": "CryptoBridge ist eine dezentrale Börse, welche eine sehr performante Blockchain verwendet.",
+    "intro_text_2": "Es gibt keinen Single Point of Failure. Alle Einzahlungen, Auszahlungen and und Marktaufträge sind transparent in der Blockchain gespeichert. Jeder Kunde hält seine eigenen Privaten Schlüssel für die Coins. CryptoBridge hat keinen Zugriff auf Kundengelder. ",
+    "intro_text_3": "Die verwendete Blockchain, graphene, kann bis zu 100.000 Transaktionen pro Sekunde verarbeiten und die durchschnittliche Bestätigung beträgt nur 3 Sekunden.",
+    "intro_text_4": "Alle aufgezeigten Aspekte geben Tradern eine einzigartige Verbindung aus traditionellem und dezentralem Handeln, in einem sehr bekannten Umfeld. Viel Spaß beim Traden!",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",

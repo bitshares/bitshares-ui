@@ -19,7 +19,7 @@ import AssetName from "../Utility/AssetName";
 import { ChainStore } from "bitsharesjs/es";
 import { debounce } from "lodash";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
-import { blockTradesAPIs } from "api/apiConfig";
+import { cryptoBridgeAPIs } from "api/apiConfig";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -40,9 +40,8 @@ class DepositWithdrawContent extends DecimalChecker {
 
     constructor(props) {
         super();
-        console.log("constructor");
         this.state = {
-            toAddress: WithdrawAddresses.getLast(props.walletType),
+            toAddress: WithdrawAddresses.getLast(props.backingCoinType),
             withdrawValue:"",
             amountError: null,
             symbol:props.asset.get("symbol"),
@@ -85,7 +84,7 @@ class DepositWithdrawContent extends DecimalChecker {
                 memo: "",
                 withdrawValue: "",
                 receive_address: null,
-                toAddress: WithdrawAddresses.getLast(np.walletType)
+                toAddress: WithdrawAddresses.getLast(np.backingCoinType)
             }, this._getDepositAddress);
         }
     }
@@ -94,11 +93,12 @@ class DepositWithdrawContent extends DecimalChecker {
         if (!this.props.backingCoinType) return;
         let account_name = this.props.sender.get("name");
         let receive_address = this.deposit_address_cache.getCachedInputAddress(
-            "openledger",
+            "cryptobridge",
             account_name,
             this.props.backingCoinType.toLowerCase(),
             this.props.symbol.toLowerCase()
         );
+
         if (!receive_address) {
             requestDepositAddress(this._getDepositObject());
         } else {
@@ -120,7 +120,7 @@ class DepositWithdrawContent extends DecimalChecker {
     addDepositAddress( receive_address ) {
         let account_name = this.props.sender.get("name");
         this.deposit_address_cache.cacheInputAddress(
-            "openledger",
+            "cryptobridge",
             account_name,
             this.props.backingCoinType.toLowerCase(),
             this.props.symbol.toLowerCase(),
@@ -161,15 +161,21 @@ class DepositWithdrawContent extends DecimalChecker {
             sendAmount = this.state.to_withdraw.clone();
         }
 
+
+
+        WithdrawAddresses.setLast({wallet: this.props.backingCoinType, address: this.state.toAddress});
+
         AccountActions.transfer(
             this.props.sender.get("id"),
             this.props.intermediateAccount,
-            this.state.to_withdraw.getAmount(),
+            sendAmount.getAmount(),
             this.state.to_withdraw.asset_id,
             this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
             null,
             fee.asset_id
         );
+
+        ZfApi.publish(this.props.modalId, "close");
     }
 
     _updateAmount() {
@@ -205,10 +211,6 @@ class DepositWithdrawContent extends DecimalChecker {
                 accountID: account.get("id"),
                 feeID: a,
                 options: ["price_per_kbyte"],
-                data: {
-                    type: "memo",
-                    content: this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + this.state.memo : "")
-                }
             }));
         });
         Promise.all(p).then(status => {
@@ -232,10 +234,6 @@ class DepositWithdrawContent extends DecimalChecker {
             accountID: this.props.sender.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                content: this.props.backingCoinType.toLowerCase() + ":" + this.state.toAddress + (this.state.memo ? ":" + this.state.memo : "")
-            }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
             this.setState({
@@ -314,7 +312,7 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _validateAddress(address, props = this.props) {
-        validateAddress({url: blockTradesAPIs.BASE_OL, walletType: props.walletType, newAddress: address})
+        validateAddress({url: cryptoBridgeAPIs.BASE, walletType: props.walletType, newAddress: address, output_coin_type: props.symbol.toLowerCase()})
             .then(isValid => {
                 if (this.state.toAddress === address) {
                     this.setState({
@@ -334,7 +332,9 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getGateFee() {
-        const {gateFee, asset} = this.props;
+        const {asset, transactionFee} = this.props;
+        let gateFee = transactionFee;
+
         return new Asset({
             real: parseFloat(gateFee ? gateFee.replace(",", "") : 0),
             asset_id: asset.get("id"),
@@ -401,7 +401,7 @@ class DepositWithdrawContent extends DecimalChecker {
                 </div>
 
                 <div className="SimpleTrade__withdraw-row">
-                    <label className="left-label">{counterpart.translate("transfer.fee")}</label>
+                    <label className="left-label">{counterpart.translate("transfer.bts_fee")}</label>
                         <div className="inline-label input-wrapper">
                             <input type="text" disabled value={currentFee.getAmount({real: true})} />
 
@@ -586,7 +586,6 @@ class DepositWithdrawContent extends DecimalChecker {
         }
 
         const {name: assetName} = utils.replaceName(asset.get("symbol"), true);
-
         let content = this.props.isDown ?
             <div><Translate className="txtlabel cancel" content="gateway.unavailable_OPEN" component="p" /></div> :
             !this.props.isAvailable ?

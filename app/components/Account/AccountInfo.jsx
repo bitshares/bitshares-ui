@@ -54,7 +54,8 @@ class AccountInfo extends React.Component {
                         QR :
                         <AccountImage size={image_size} account={account.get("name")} custom_image={null}/>}
                 </div>
-                <p><Translate content="account.deposit_address" />!</p>
+
+                { /* <p><Translate content="account.deposit_address" />!</p> */ }
                 <p className={this.props.titleClass}><span className={isLTM ? "lifetime" : ""}>{account.get("name")}</span></p>
                 {/* <div className="secondary">
                     <span className="subheader">#{display_id}</span>

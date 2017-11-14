@@ -39,6 +39,12 @@ class AssetName extends React.Component {
 
 		let excludeList = ["BTWTY", "BANCOR", "BTCSHA", "CROWDFUN", "DRAGON", "TESTME"];
 		let includeBitAssetDescription = isBitAsset && !isPredMarket && excludeList.indexOf(name) === -1;
+		replace=true;
+
+		if (name.indexOf('BRIDGE') == 0) {
+			replacedName = name.replace('BRIDGE.', '');
+		}
+
 
 		if (replace && replacedName !== this.props.name || isBitAsset) {
 			let desc = asset_utils.parseDescription(asset.getIn(["options", "description"]));
@@ -54,16 +60,33 @@ class AssetName extends React.Component {
 			}
 			let tooltip = this.props.noTip ? null : `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
 
-			return (
-				<div
-					className={"inline-block" + (this.props.noTip ? "" : " tooltip")}
-					data-tip={tooltip}
-					data-place={this.props.dataPlace}
-					data-html={true}
-				>
-					<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>
-				</div>
-			);
+			if (prefix === 'bridge.') {
+				return (
+					<div
+						className={"inline-block" + (this.props.noTip ? "" : " tooltip")}
+						data-tip={tooltip}
+						data-place={this.props.dataPlace}
+						data-html={true}
+					>
+						<span>{replacedName}</span>
+					</div>
+				);
+
+			} else {
+				return (
+					<div
+						className={"inline-block" + (this.props.noTip ? "" : " tooltip")}
+						data-tip={tooltip}
+						data-place={this.props.dataPlace}
+						data-html={true}
+					>
+						<span className="asset-prefix-replaced">{prefix}</span><span>{replacedName}</span>
+					</div>
+				);
+
+			}
+
+
 
 		} else {
 			return <span><span className={!noPrefix ? "asset-prefix-replaced" : ""}>{!noPrefix ? prefix : null}</span>{replacedName}</span>;

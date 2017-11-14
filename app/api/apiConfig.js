@@ -15,6 +15,13 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
+export const cryptoBridgeAPIs = {
+    BASE: "https://api.crypto-bridge.org/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/wallets",
+    TRADING_PAIRS: "/trading-pairs",
+};
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
@@ -32,7 +39,7 @@ export const settingsAPIs = {
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"}
     ],
-    DEFAULT_FAUCET: "https://bitshares.openledger.info",
+    DEFAULT_FAUCET: "https://api.crypto-bridge.org",
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };

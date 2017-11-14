@@ -44,7 +44,9 @@ class AccountPage extends React.Component {
                         myAccounts={myAccounts}
                         viewSettings={this.props.viewSettings}
                         passwordLogin={settings.get("passwordLogin")}
+                        settings={this.props.settings}
                     />
+        
                 </div>
                 <div className="grid-block main-content">
                     <div className="grid-container">

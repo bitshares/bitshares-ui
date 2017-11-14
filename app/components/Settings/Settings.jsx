@@ -29,7 +29,7 @@ class Settings extends React.Component {
             menuEntries,
             settingEntries: {
                 general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
-                "showAssetPercent", "passwordLogin", "reset"],
+                "showAssetPercent", "passwordLogin", "showAdvancedFeatures", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
@@ -138,6 +138,7 @@ class Settings extends React.Component {
 
         case "showSettles":
         case "showAssetPercent":
+        case "showAdvancedFeatures":
         case "passwordLogin":
             let reference = defaults[setting][0];
             if (reference.translate) reference = reference.translate;

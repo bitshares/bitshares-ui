@@ -10,6 +10,19 @@ require("file-loader?name=asset-symbols/[name].png!./btc.png");
 require("file-loader?name=asset-symbols/silver.png!./silver.png");
 
 // 3rd party assets
+
+require("file-loader?name=asset-symbols/[name].png!./bco.png");
+require("file-loader?name=asset-symbols/[name].png!./ltc.png");
+require("file-loader?name=asset-symbols/[name].png!./dgb.png");
+require("file-loader?name=asset-symbols/[name].png!./bch.png");
+require("file-loader?name=asset-symbols/[name].png!./doge.png");
+require("file-loader?name=asset-symbols/[name].png!./pivx.png");
+require("file-loader?name=asset-symbols/[name].png!./xvg.png");
+require("file-loader?name=asset-symbols/[name].png!./eot.png");
+require("file-loader?name=asset-symbols/[name].png!./eqt.png");
+require("file-loader?name=asset-symbols/[name].png!./ethca.png");
+require("file-loader?name=asset-symbols/[name].png!./bela.png");
+
 require("file-loader?name=asset-symbols/[name].png!./eth.png");
 require("file-loader?name=asset-symbols/[name].png!./steem.png");
 require("file-loader?name=asset-symbols/[name].png!./mkr.png");

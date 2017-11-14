@@ -41,7 +41,8 @@ class SettingsStore {
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            passwordLogin: true
+            passwordLogin: true,
+            showAdvancedFeatures: false
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -79,12 +80,15 @@ class SettingsStore {
             ],
             themes: [
                 "darkTheme",
-                "lightTheme",
-                "olDarkTheme"
+                "cryptoBridgeTheme"
             ],
             passwordLogin: [
                 {translate: "cloud_login"},
                 {translate: "local_wallet"}
+            ],
+            showAdvancedFeatures: [
+                {translate: "yes"},
+                {translate: "no"}
             ]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
@@ -167,7 +171,7 @@ class SettingsStore {
 
             let bases = {
                 markets_4018d784: [ // BTS MAIN NET
-                    "USD", "OPEN.BTC", "CNY", "BTS", "BTC"
+                    "BRIDGE.BTC", "BTS"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "TEST"

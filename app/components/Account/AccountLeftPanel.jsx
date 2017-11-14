@@ -76,6 +76,43 @@ class AccountLeftPanel extends React.Component {
         }, 250);
     }
 
+    renderAdvancedFeatures(account_name, isMyAccount) {
+        let caret = this.state.showAdvanced ? <span>&#9660;</span> : <span>&#9650;</span>;
+
+        return (
+            <div>
+                <div style={{paddingBottom: 10, paddingTop: 20}}>
+                    <div className="grid-container no-margin advanced-toggle">
+                        <a
+                            onClick={this._toggleAdvanced.bind(this)}
+                            className="button outline small block-button"
+                            style={{
+                                border: "none",
+                                textAlign: "left",
+                                paddingLeft: "1.75rem"
+                            }}
+                            >
+                                <Translate content="account.user_issued_assets.advanced" />
+                                <span>  {caret}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <section className="block-list">
+                        {this.state.showAdvanced ? (<ul className="account-left-menu">
+                            <li><Link to={`/account/${account_name}/member-stats/`} activeClassName="active"><Translate content="account.member.stats"/></Link></li>
+                            {/* <li><Link to={`/account/${account_name}/orders/`} activeClassName="active"><Translate content="account.open_orders"/></Link></li> */}
+                            <li><Link to={`/account/${account_name}/voting/`} activeClassName="active"><Translate content="account.voting"/></Link></li>
+                            <li><Link to={`/account/${account_name}/assets/`} activeClassName="active"><Translate content="account.user_issued_assets.issued_assets"/></Link></li>
+                            <li><Link to={`/account/${account_name}/permissions/`} activeClassName="active"><Translate content="account.permissions"/></Link></li>
+                            <li><Link to={`/account/${account_name}/whitelist/`} activeClassName="active"><Translate content="account.whitelist.title"/></Link></li>
+                            {isMyAccount ? <li><Link to={`/account/${account_name}/vesting/`} activeClassName="active"><Translate content="account.vesting.title"/></Link></li> : null}
+                        </ul>) : null}
+                    </section>
+            </div>
+        )
+    }
+
+
     render() {
         let {account, linkedAccounts, isMyAccount} = this.props;
         let account_name = account.get("name");
@@ -108,7 +145,7 @@ class AccountLeftPanel extends React.Component {
                                 titleClass={this.state.titleClass}
                             />
                             <div className="grid-container no-margin" style={{paddingTop: 20, maxWidth: imageSize.width}}>
-                                <div onClick={this._depositClick.bind(this)} style={{paddingBottom: 15}}><Translate className="button block-button no-margin" content="account.deposit"/></div>
+
                                 <div style={{paddingBottom: 15}}><Link to={`/transfer/?to=${account_name}`}><Translate className="button block-button no-margin" content="account.pay"/></Link></div>
                                 { linkBtn }
                             </div>
@@ -116,9 +153,6 @@ class AccountLeftPanel extends React.Component {
                         <section className="block-list">
                             <ul className="account-left-menu" style={{marginBottom: 0}}>
                                 <li><Link to={`/account/${account_name}/dashboard/`} activeClassName="active"><Translate content="header.dashboard"/></Link></li>
-                                <li><Link to={`/account/${account_name}/member-stats/`} activeClassName="active"><Translate content="account.member.stats"/></Link></li>
-                                {/* <li><Link to={`/account/${account_name}/orders/`} activeClassName="active"><Translate content="account.open_orders"/></Link></li> */}
-                                <li><Link to={`/account/${account_name}/voting/`} activeClassName="active"><Translate content="account.voting"/></Link></li>
 
                                 {/* <li className="menu-subheader" >
                                 <span className="button outline small">
@@ -129,31 +163,9 @@ class AccountLeftPanel extends React.Component {
                     </ul>
                 </section>
 
-                {/* Advanced features*/}
-                <div style={{paddingBottom: 10, paddingTop: 20}}>
-                    <div className="grid-container no-margin advanced-toggle">
-                        <a
-                            onClick={this._toggleAdvanced.bind(this)}
-                            className="button outline small block-button"
-                            style={{
-                                border: "none",
-                                textAlign: "left",
-                                paddingLeft: "1.75rem"
-                            }}
-                            >
-                                <Translate content="account.user_issued_assets.advanced" />
-                                <span>  {caret}</span>
-                            </a>
-                        </div>
-                    </div>
-                    <section className="block-list">
-                        {this.state.showAdvanced ? (<ul className="account-left-menu">
-                            <li><Link to={`/account/${account_name}/assets/`} activeClassName="active"><Translate content="account.user_issued_assets.issued_assets"/></Link></li>
-                            <li><Link to={`/account/${account_name}/permissions/`} activeClassName="active"><Translate content="account.permissions"/></Link></li>
-                            <li><Link to={`/account/${account_name}/whitelist/`} activeClassName="active"><Translate content="account.whitelist.title"/></Link></li>
-                            {isMyAccount ? <li><Link to={`/account/${account_name}/vesting/`} activeClassName="active"><Translate content="account.vesting.title"/></Link></li> : null}
-                        </ul>) : null}
-                    </section>
+                    {/* Advanced features*/}
+                    { this.props.settings.get("showAdvancedFeatures", false) ? this.renderAdvancedFeatures(account_name, isMyAccount) : null }
+
 
                     {isMyAccount ?
                         <div className="regular-padding">

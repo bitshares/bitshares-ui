@@ -27,11 +27,12 @@ let lastLookup = new Date();
 class MarketGroup extends React.Component {
 
     static defaultProps = {
-        maxRows: 20
+        maxRows: 10000
     };
 
     constructor(props) {
         super();
+        console.log(props);
         this.state = this._getInitialState(props);
     }
 
@@ -113,8 +114,10 @@ class MarketGroup extends React.Component {
     }
 
     render() {
+
         let {columns, markets, base, marketStats, starredMarkets,
             current, findMarketTab} = this.props;
+
         let {sortBy, inverseSort, open} = this.state;
 
         if (!markets || !markets.length) {
@@ -285,7 +288,7 @@ class MyMarkets extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         /* Trigger a lookup when switching tabs to find-market */
         if (this.state.activeTab !== "find-market" && nextState.activeTab === "find-market" && !nextProps.searchAssets.size) {
-            this._lookupAssets("OPEN.", true);
+            this._lookupAssets("BRIDGE.", true);
         }
 
         return (
@@ -326,8 +329,39 @@ class MyMarkets extends React.Component {
         this._setMinWidth();
 
         if (this.state.activeTab === "find-market") {
-            this._lookupAssets("OPEN.", true);
+            this._lookupAssets("BRIDGE.", true);
         }
+
+        const url = 'https://api.crypto-bridge.org/api/v1/markets';
+
+        const defaultMarkets = [
+            {
+                id: 'BRIDGE.BCO_BRIDGE.BTC',
+                quote: 'BRIDGE.BCO',
+                base: 'BRIDGE.BTC'
+            },
+            {
+                id: 'BRIDGE.BCO_BRIDGE.BCH',
+                quote: 'BRIDGE.BCO',
+                base: 'BRIDGE.BCH'
+            },
+            {
+                id: 'BRIDGE.BCO_BTS',
+                quote: 'BRIDGE.BCO',
+                base: 'BTS'
+            },
+            {
+                id: 'BRIDGE.BCH_BRIDGE.BTC',
+                quote: 'BRIDGE.BCH',
+                base: 'BRIDGE.BTC'
+            }
+        ]
+
+        fetch(url).then(reply => reply.json().then(result => {
+            this.setState({markets: result});
+        })).catch(err => {
+            this.setState({markets: defaultMarkets});
+        });
     }
 
 
@@ -415,7 +449,7 @@ class MyMarkets extends React.Component {
     }
 
     _lookupAssets(value, force = false) {
-        // console.log("__lookupAssets", value, force);
+         console.log("__lookupAssets", value, force);
         if (!value && value !== "") {
             return;
         }
@@ -438,12 +472,14 @@ class MyMarkets extends React.Component {
             if (quote.length < 1 || now - lastLookup <= 250) {
                 return false;
             }
+            console.log('Getting asset list for quote ' + quote);
             this.getAssetList(quote, 50);
         } else {
             if (base && this.state.lookupBase !== base) {
                 if (base.length < 1 || now - lastLookup <= 250) {
                     return false;
                 }
+                console.log('Getting asset list for base ' + base );
                 this.getAssetList(base, 50);
             }
         }
@@ -495,7 +531,7 @@ class MyMarkets extends React.Component {
         ];
 
         /* By default, show the OPEN.X assets */
-        if (!lookupQuote) lookupQuote = "OPEN.";
+        if (!lookupQuote) lookupQuote = "BRIDGE.";
 
         /* In the find-market tab, only use market tab 0 */
         if (!myMarketTab) activeMarketTab = 0;
@@ -614,13 +650,18 @@ class MyMarkets extends React.Component {
                     if (!baseGroups[market.base]) {
                         baseGroups[market.base] = [];
                     }
-                    baseGroups[market.base].push(
-                        {
-                            id: marketID,
-                            quote: market.quote,
-                            base: market.base
-                        }
-                    );
+
+
+                    if (market.quote.indexOf('BRIDGE') != 99) {
+                        baseGroups[market.base].push(
+                            {
+                                id: marketID,
+                                quote: market.quote,
+                                base: market.base
+                            }
+                        );
+                    }
+
                     return null;
                 } else {
                     return (
@@ -639,6 +680,29 @@ class MyMarkets extends React.Component {
             .toArray();
         }
 
+        let btcMarkets = [];
+        let btsMarkets = [];
+
+
+
+        this.state.markets && this.state.markets.map((m) => {
+                if (m.base === 'BRIDGE.BTC') {
+                    btcMarkets.push(m);
+                }
+                if (m.base === 'BTS') {
+                    btsMarkets.push(m);
+                }
+
+        })
+
+
+        baseGroups['BRIDGE.BTC'] = [];
+        baseGroups['BRIDGE.BTC'] =  btcMarkets
+
+        baseGroups['BTS'] = [];
+        baseGroups['BTS'] =  btsMarkets
+
+
         const hasOthers = otherMarkets && otherMarkets.length;
 
         let hc = "mymarkets-header clickable";
@@ -655,17 +719,7 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div
-                    style={this.props.headerStyle}
-                    className="grid-block shrink left-orderbook-header bottom-header"
-                >
-                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "my-market")}>
-                        <Translate content="exchange.market_name" />
-                    </div>
-                    <div className={allClass} onClick={this._changeTab.bind(this, "find-market")} >
-                        <Translate content="exchange.more" />
-                    </div>
-                </div>
+                
 
                 {this.props.controls ? (
                     <div className="small-12 medium-6" style={{padding: "1rem 0"}}>
@@ -673,67 +727,6 @@ class MyMarkets extends React.Component {
                         {/* {!myMarketTab ? <input type="text" value={this.state.inputValue} onChange={this._lookupAssets.bind(this)} placeholder="SYMBOL:SYMBOL" /> : null} */}
                     </div> ) : null}
 
-                {myMarketTab ?
-                    <div className="grid-block shrink" style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
-                        <label className="no-margin">
-                            <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onChange={() => {MarketsActions.toggleStars();}}/>
-                            <span>&nbsp;<Translate content="exchange.show_star_1" /><Icon className="gold-star" name="fi-star"/> <Translate content="exchange.show_star_2" /></span>
-                        </label>
-                        <div className="float-right" style={{paddingLeft: 20}}>
-                        <input
-                            style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}}
-                            className="no-margin"
-                            type="text"
-                            placeholder="Filter"
-                            maxLength="16"
-                            value={this.state.myMarketFilter}
-                            onChange={(e) => {this.setState({myMarketFilter: e.target.value && e.target.value.toUpperCase()});}}
-                        />
-                        </div>
-
-                    </div> :
-
-                    <div style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
-                        <table>
-                            <tbody>
-                                <tr style={{width: "100%"}}>
-                                    <td>
-                                        <AssetSelector
-                                            onAssetSelect={this._onFoundBaseAsset.bind(this)}
-                                            assets={defaultBases}
-                                            onChange={this._onInputBaseAsset.bind(this)}
-                                            asset={this.state.findBaseInput}
-                                            assetInput={this.state.findBaseInput}
-                                            tabIndex={1}
-                                            style={{width: "100%", paddingBottom: "1.5rem"}}
-                                            onFound={this._onFoundBaseAsset.bind(this)}
-                                            label="exchange.quote"
-                                            noLabel
-                                            inputStyle={{fontSize: "0.9rem"}}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr style={{width: "100%"}}>
-                                    <td>
-                                        <label><Translate content="account.user_issued_assets.name" />:</label>
-                                        <input
-                                            style={{fontSize: "0.9rem", position: "relative", top: 1}}
-                                            type="text"
-                                            value={this.state.inputValue}
-                                            onChange={this._onInputName.bind(this)}
-                                            placeholder={counterpart.translate("exchange.search")}
-                                            maxLength="16"
-                                        />
-                                        {this.state.assetNameError ?
-                                            <div className="error-area" style={{paddingTop: 10}}>
-                                                <span style={{wordBreak: "break-all"}}><Translate content="explorer.asset.invalid" name={this.state.inputValue} /></span>
-                                            </div> : null}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    }
 
 
                 <ul className="mymarkets-tabs">
@@ -749,15 +742,6 @@ class MyMarkets extends React.Component {
                             </li>
                         );
                     })}
-                    {myMarketTab && hasOthers ? (
-                        <li
-                            key={"others"}
-                            style={{textTransform: "uppercase"}}
-                            onClick={this.toggleActiveMarketTab.bind(this, preferredBases.size + 1)}
-                            className={cnames("mymarkets-tab", {active: activeMarketTab === (preferredBases.size + 1)})}
-                        >
-                            <Translate content="exchange.others" />
-                        </li>) : null}
                 </ul>
 
                 <div

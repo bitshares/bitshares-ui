@@ -21,7 +21,7 @@ import notify from "actions/NotificationActions";
 import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
 
-var logo = require("assets/logo-ico-blue.png");
+var logo = require("assets/cryptobridge.png");
 
 const FlagImage = ({flag, width = 20, height = 20}) => {
     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
@@ -332,7 +332,7 @@ class Header extends React.Component {
                 <div className="grid-block show-for-medium shrink">
                     <div className="grp-menu-items-group header-right-menu">
 
-                        {!myAccountCount || !walletBalance ? null : walletBalance}
+                        
 
                         {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
                             {settingsDropdown}

@@ -194,7 +194,7 @@ class BuySell extends React.Component {
         }
         let index = 0;
         let options = feeAssets.map(asset => {
-            let {name, prefix} = utils.replaceName(asset.get("symbol"), asset.get("bitasset") && !asset.getIn(["bitasset", "is_prediction_market"]) && asset.get("issuer") === "1.2.0");
+            let {name, prefix} = utils.replaceName(asset.get("symbol").replace('BRIDGE.', ''), asset.get("bitasset") && !asset.getIn(["bitasset", "is_prediction_market"]) && asset.get("issuer") === "1.2.0");
             return <option key={asset.get("id")} value={index++}>{prefix}{name}</option>;
         });
 

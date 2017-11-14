@@ -15,50 +15,17 @@ class Dashboard extends React.Component {
 
     constructor(props) {
         super();
+
+
+
+
         let marketsByChain = {
             "4018d784":[
-                ["USD", "BTS"],
-                ["USD", "OPEN.BTC"],
-                ["USD", "OPEN.USDT"],
-                ["USD", "OPEN.ETH"],
-                ["USD", "OPEN.DASH"],
-                ["USD", "GOLD"],
-                ["USD", "HERO"],
-                ["CNY", "BTS"],
-                ["CNY", "OPEN.BTC"],
-                ["CNY", "USD"],
-                ["CNY", "OPEN.ETH"],
-                ["CNY", "YOYOW"],
-                ["CNY", "OCT"],
-                ["OPEN.BTC", "BTS"],
-                ["OPEN.BTC", "OPEN.ETH"],
-                ["OPEN.BTC", "OPEN.DASH"],
-                ["OPEN.BTC", "BLOCKPAY"],
-                ["OPEN.BTC", "OPEN.DGD"],
-                ["OPEN.BTC", "OPEN.STEEM"],
-                ["BTS", "OPEN.ETH"],
-                ["BTS", "OPEN.EOS"],
-                ["BTS", "PPY"],
-                ["BTS", "OPEN.STEEM"],
-                ["BTS", "OBITS"],
-                ["BTS", "RUBLE"],
-                ["BTS", "HERO"],
-                ["BTS", "OCT"],
-                ["BTS", "SILVER"],
-                ["BTS", "GOLD"],
-                ["BTS", "BLOCKPAY"],
-                ["BTS", "BTWTY"],
-                ["BTS", "SMOKE"],
-                ["KAPITAL", "OPEN.BTC"],
-                ["USD", "OPEN.STEEM"],
-                ["USD", "OPEN.MAID"],
-                ["OPEN.USDT", "OPEN.BTC"],
-                ["OPEN.BTC", "OPEN.MAID"],
-                ["BTS", "OPEN.MAID"],
-                ["BTS", "OPEN.HEAT"],
-                ["BTS", "OPEN.INCENT"],
-                ["HEMPSWEET", "OPEN.BTC"],
-                ["KAPITAL", "BTS"]
+                ["BRIDGE.BTC", "BRIDGE.BCO"],
+                ["BRIDGE.BTC", "BRIDGE.BCH"],
+                ["BRIDGE.BCH", "BRIDGE.BCO"],
+                ["BTS", "BRIDGE.BCO"],
+
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
@@ -86,6 +53,19 @@ class Dashboard extends React.Component {
         this._setDimensions();
 
         window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
+
+        const url = 'https://api.crypto-bridge.org/api/v1/markets';
+
+        fetch(url).then(reply => reply.json().then(result => {
+            let markets = [];
+            result.map((m) => {
+                if (m.base === 'BRIDGE.BTC')
+                    markets.push([m.base, m.quote]);
+            });
+            this.setState({featuredMarkets: markets});
+        })).catch(err => {
+
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -152,8 +132,9 @@ class Dashboard extends React.Component {
 
         let markets = featuredMarkets
         .map(pair => {
-            let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
-            if (!isLowVolume) validMarkets++;
+            //let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
+            //if (!isLowVolume) validMarkets++;
+            let isLowVolume = false;
             let className = "";
             if (validMarkets > 9) {
                 className += ` show-for-${!accountCount ? "xlarge" : "large"}`;

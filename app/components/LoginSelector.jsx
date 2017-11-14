@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import { isIncognito } from "feature_detect";
-var logo = require("assets/logo-ico-blue.png");
+var logo = require("assets/cryptobridge.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
@@ -30,7 +30,7 @@ export default class LoginSelector extends React.Component {
             <div className="grid-block align-center">
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
-                        <div><img src={logo}/></div>
+                        <div><img style={{'height': 128}} src={logo}/></div>
                         <Translate content="account.intro_text_title" component="h4"/>
                         <Translate unsafe content="account.intro_text_1" component="p" />
 
