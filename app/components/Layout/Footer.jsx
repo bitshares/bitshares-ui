@@ -101,8 +101,8 @@ class Footer extends React.Component {
                         } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
                         {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
                         <span style={updateStyles}>
-                            <Translate content="footer.title"  />
-                            <span className="version">{version}</span>
+                            CryptoBridge Decentralized Exchange
+                            <span className="version">&nbsp;BETA 0.9.3</span>
                         </span>
 
                         {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}

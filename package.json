@@ -1,6 +1,6 @@
 {
   "name": "BitShares2-light",
-  "version": "2.0.171102",
+  "version": "0.9.3",
   "description": "Advanced wallet interface for the BitShares financial blockchain.",
   "homepage": "https://github.com/bitshares/bitshares-ui",
   "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -74,7 +74,7 @@
   },
   "browsersList": "electron 1.7",
   "build": {
-    "productName": "BitShares",
+    "productName": "CryptoBridge",
     "appId": "org.bitshares.graphene",
     "files": [
       "build/electron",
