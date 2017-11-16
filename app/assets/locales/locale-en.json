@@ -84,7 +84,9 @@
     "sync_yes": "The current node is in sync with the blockchain",
     "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
     "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
-    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order."
+    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+    "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+    "over_limit": "The bridge does not have enough of the desired asset for this buy order"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -284,6 +286,27 @@
       "remove_text": "Remove",
       "valid_pub": "Valid Public Key"
     },
+    "signedmessages": {
+      "menuitem": "Signed Messages",
+      "invalidkey": "Private key could not be obtained, is the public key valid?",
+      "title": "Signed Messages",
+      "signmessage": "Sign Message",
+      "verifymessage": "Verify Message",
+      "signing": "Signing, please wait ...",
+      "verifying": "Verifying, please wait ...",
+      "invalidformat": "Signed message format can't be recognized",
+      "invaliduser": "Account of the message sender is invalid",
+      "invalidsignature": "The content of the message could be validated against the signature",
+      "errorverifying": "An error occured while verifying the message",
+      "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
+      "sign": "Sign",
+      "verify": "Verify",
+      "automaticcreation": "Signed message will be created automatically",
+      "entermessage": "Enter message here",
+      "copysuccessful": "Signed message copied to clipboard",
+      "copyunsuccessful": "Failed to copy message",
+      "verifyonchange": "Verify while typing"
+    },
     "votes": {
       "proxy_current": "Your current proxy is",
       "proxy_short": "Proxy",
@@ -435,6 +458,8 @@
     "again": "MAKE ANOTHER TRANSFER",
     "see": "SEE MY TRANSFERS",
     "close": "Close",
+    "copy_address": "Copy Address",
+    "copy_memo": "Copy Memo",
     "memo_unlock": "Unlock your wallet/account in order to see this memo",
     "optional": "Optional"
   },
@@ -894,7 +919,7 @@
   },
   "footer": {
     "title": "BitShares",
-    "block": "Head block",
+    "block": "Block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
     "nosync": "Your active node is out of sync",
@@ -903,7 +928,9 @@
     "update_available": "UPDATE AVAILABLE",
     "synced": "Synced",
     "unsynced": "Out of sync",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "connected": "Connected",
+    "latency": "Latency"
   },
   "exchange": {
     "chart_options": {
@@ -1293,11 +1320,12 @@
     "balance": "Current balance",
     "generate": "Generate",
     "generate_new": "Get new address",
+    "generate_new_memo": "Get new memo",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
-	"convert": "Internal conversion",
+	  "convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
-	"convert_now": "Convert now",
+	  "convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1328,6 +1356,8 @@
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+    "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
     "deposit_limit": "Deposit limit",
     "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
     "rudex": {
@@ -1340,7 +1370,9 @@
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
-    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
+    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+    "contact_TRADE": "Contact Blocktrades",
+    "over_limit": "Limit Reached"
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
