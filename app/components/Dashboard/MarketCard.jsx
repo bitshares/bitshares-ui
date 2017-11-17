@@ -78,10 +78,15 @@ class MarketCard extends React.Component {
     }
 
     render() {
-        let {hide, isLowVolume, base, quote, marketStats} = this.props;
+        let {hide, isLowVolume, base, quote, marketStats, img} = this.props;
         if (isLowVolume || hide) return null;
 
+
         function getImageName(asset) {
+            if (img) {
+                console.log('Using img' + img);
+                return img;
+            }
             let symbol = asset.get("symbol");
             if (symbol === "OPEN.BTC") return symbol;
             let imgName = asset.get("symbol").split(".");
@@ -97,7 +102,9 @@ class MarketCard extends React.Component {
             <div className={cnames("grid-block no-overflow fm-container", this.props.className)} onClick={this.goToMarket.bind(this)}>
                 <div className="grid-block vertical shrink">
                     <div className="v-align">
-                        <img className="align-center" ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`} />
+
+                        {!img ? <img className="align-center" ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`} /> :
+                        <img className="align-center" ref={imgName.toLowerCase()} onError={this._onError.bind(this, imgName)} style={{maxWidth: 70}} src={`${imgName}`} />  }
                     </div>
                 </div>
                 <div className="grid-block vertical no-overflow">

@@ -38,6 +38,7 @@ class Dashboard extends React.Component {
         this.state = {
             width: null,
             showIgnored: false,
+            news: null,
             featuredMarkets: marketsByChain[chainID] || marketsByChain["4018d784"],
             newAssets: [
 
@@ -59,13 +60,25 @@ class Dashboard extends React.Component {
         fetch(url).then(reply => reply.json().then(result => {
             let markets = [];
             result.map((m) => {
-                if (m.base === 'BRIDGE.BTC')
-                    markets.push([m.base, m.quote]);
+                if ( (m.base === 'BRIDGE.BTC') && (m.blacklisted !== true) ) {
+                    markets.push([m.base, m.quote, m.img]);
+                }
+
             });
             this.setState({featuredMarkets: markets});
         })).catch(err => {
 
         });
+
+        const newsUrl = 'https://crypto-bridge.org/news.json';
+
+        fetch(newsUrl).then(reply => reply.json().then(news => {
+            console.log('Setting news: ' + news.content)
+            this.setState({news: news.content});
+        })).catch(err => {
+            console.log('ERROR' + err);
+        });
+
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -153,6 +166,7 @@ class Dashboard extends React.Component {
                     invert={pair[2]}
                     isLowVolume={isLowVolume}
                     hide={validMarkets > 20}
+                    img={pair[2]}
                 />
             );
         }).filter(a => !!a);
@@ -166,9 +180,17 @@ class Dashboard extends React.Component {
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
-                    <div className="block-content-header" style={{marginBottom: 15}}>
-                    <Translate content="exchange.featured"/>
+                <div ref="container" className="grid-container" style={{padding: "10px 10px 0 10px"}}>
+                    <div className="block-content-header" style={{marginBottom: 5}}>
+                        News
+                    </div>
+                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow">
+                        <p dangerouslySetInnerHTML={{ __html: this.state.news }}/>
+                    </div>
+
+
+                    <div className="block-content-header" style={{marginBottom: 5}}>
+                        <Translate content="exchange.featured"/>
                     </div>
                     <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
