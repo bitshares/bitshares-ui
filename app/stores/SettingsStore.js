@@ -308,7 +308,6 @@ class SettingsStore {
     }
 
     onClearStarredMarkets(){
-      console.log('clearing starred markets');
         this.starredMarkets = Immutable.Map({});
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
