@@ -37,7 +37,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             withdrawValue:"",
             amountError: null,
             inputAmount: 0,
-            receiveLoading: true,
+            receiveLoading: false,
             limitLoading: true,
             apiError: false
         };
