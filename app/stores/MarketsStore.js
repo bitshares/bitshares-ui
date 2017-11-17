@@ -70,6 +70,7 @@ class MarketsStore {
         this.allMarketStats = Immutable.Map();
         this.lowVolumeMarkets = Immutable.Map(marketStorage.get("lowVolumeMarkets", {}));
         this.onlyStars = marketStorage.get("onlyStars", false);
+        console.log('onlyStars', this.onlyStars);
 
         this.baseAsset = {
             id: "1.3.0",

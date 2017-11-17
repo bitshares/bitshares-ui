@@ -27,6 +27,7 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -303,6 +304,12 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
+        ss.set(this.starredKey, this.starredMarkets.toJS());
+    }
+
+    onClearStarredMarkets(){
+      console.log('clearing starred markets');
+        this.starredMarkets = Immutable.Map({});
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
