@@ -30,7 +30,7 @@ class Dashboard extends React.Component {
                 ["CNY", "OPEN.ETH"],
                 ["CNY", "DEBITCOIN"],
                 ["CNY", "BTS"],
-                ["BTS", "DEBITCOIN"],
+                ["BTS", "DEBITCOIN"]
             ],
             "39f5e2ed": [
                 ["TEST", "PEG.FAKEUSD"],
