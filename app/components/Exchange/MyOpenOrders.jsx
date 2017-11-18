@@ -97,13 +97,9 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td style={{textAlign: "right", paddingLeft: 0, borderRight: "none"}}>
+                <td colSpan="3" className={isBid ? "shuffle-rev trading-pair" : "trading-pair"} style={{borderLeft: "none", borderRight: "none"}}>
                     <Link to={`/asset/${quote.get("symbol")}`}><AssetName noTip name={quote.get("symbol")} /></Link>
-                </td>
-                <td style={{borderLeft: "none", borderRight: "none"}}>
                     <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
-                </td>
-                <td style={{textAlign: "left", paddingRight: 0, borderLeft: "none"}}>
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
                 </td>
                 <td className={tdClass} style={rightAlign}>
