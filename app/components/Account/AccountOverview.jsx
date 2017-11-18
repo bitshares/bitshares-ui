@@ -282,7 +282,8 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "right"}} className="column-hide-small">
                         <Market24HourChangeComponent
                             refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }} 
-                            fromAsset={asset.get("id")}
+                            fromAsset={asset.get("id")} 
+                            toAsset={preferredUnit} 
                             hide_symbols
                         />
                     </td>
@@ -564,7 +565,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 

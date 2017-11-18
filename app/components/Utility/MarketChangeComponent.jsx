@@ -17,8 +17,6 @@ import {MarketStatsCheck} from "../Utility/EquivalentPrice";
  *  Expects three properties
  *  -'toAsset' which should be a asset id
  *  -'fromAsset' which is the asset id of the original asset amount
- *  -'amount' which is the amount to convert
- *  -'fullPrecision' boolean to tell if the amount uses the full precision of the asset
  */
 
 class MarketChangeComponent extends MarketStatsCheck {
@@ -53,21 +51,21 @@ class MarketChangeComponent extends MarketStatsCheck {
     }
 
     getValue() {
-        let {fromAsset, marketStats, coreAsset} = this.props;
+        let {fromAsset, marketStats, toAsset} = this.props;
         let fromStats;
         let fromSymbol = fromAsset.get("symbol");
 
-        if (coreAsset && marketStats) {
-            let coreSymbol = coreAsset.get("symbol");
-            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
+        if (toAsset && marketStats) {
+            let toSymbol = toAsset.get("symbol");
+            
+            fromStats = marketStats.get(fromSymbol + "_" + toSymbol);
         }
 
         return fromStats && fromStats.change ? fromStats.change : 0;
     }
 
     render() {
-        let {fromAsset} = this.props;
-
+        let {fromAsset, toAsset, marketStats} = this.props;
         let marketChangeValue = this.getValue();
         let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "negative" : "positive";
         let marketChangeFormattedValue = <FormattedNumber 

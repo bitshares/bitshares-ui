@@ -530,14 +530,22 @@ $account-background
         color: $ask-color !important;
     }
 
-    .stats .stat .negative,
-    .value.negative {
+    .stats .stat .negative {
         color: $negative-color !important;
     }
 
-    .stats .stat .positive,
-    .value.positive {
+    .stats .stat .positive {
         color: $positive-color !important;
+    }
+
+    .value.negative {
+        color: $ask-color !important;
+        font-weight: bold;
+    }
+
+    .value.positive {
+        color: $bid-color !important;
+        font-weight: bold;
     }
 
     .active-bucket {
