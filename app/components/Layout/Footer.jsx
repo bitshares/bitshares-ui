@@ -79,7 +79,7 @@ class Footer extends React.Component {
 
         // Current Node Details
         let currentNode = SettingsStore.getState().settings.get("activeNode");
-        let currentNodePing = SettingsStore.getState().apiLatencies[currentNode];
+        let currentNodePing = SettingsStore.getState().apiLatencies[currentNode] ? SettingsStore.getState().apiLatencies[currentNode] : "-";
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
