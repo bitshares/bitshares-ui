@@ -262,12 +262,10 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const inputName = this.props.inputCoinType.toUpperCase();
         const receiveName = (prefix ? prefix : "") + assetName;
 
-        let price = receiveName === "BTS" && inputName === "BTC" ? (this.state.inputAmount / this.state.receiveAmount).toFixed(8) :
-            (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
-        let priceSuffix = receiveName === "BTS" && inputName === "BTC" ? inputName +"/" + receiveName :
-            receiveName +"/" + inputName;
+        let price = (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
+        let priceSuffix = receiveName + "/" + inputName;
 
-        const aboveLimit = this.state.inputAmount > parseFloat(this.state.depositLimit);
+        const aboveLimit = this.state.inputAmount > parseFloat(this.state.depositLimit) || this.state.sendAmount > parseFloat(this.state.depositLimit);
         const aboveLimitStyle = aboveLimit ? {border: "1px solid #a94442"} : null;
 
         return (
@@ -340,7 +338,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                 </div>
                                 <div className="inline-label input-wrapper">
                                     <input disabled type="number" value={aboveLimit ? 0 : price} />
-                                    <div className="input-right-symbol">{receiveName}/{inputName}</div>
+                                    <div className="input-right-symbol">{priceSuffix}</div>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +441,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         return (
             <div className="SimpleTrade__modal">
-                <div className="Modal__header" style={{background: "none", padding: "1rem"}}></div>
+                <div className="Modal__header" style={{background: "none"}}></div>
                 
                 <div
                     className="grid-block vertical no-overflow"
@@ -454,8 +452,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                     }}>
 
                     <div style={{textAlign: "center"}}>
-                        <img style={{margin: 0, height: 60}} src={logo} /><br />
-                        <p style={{fontSize: "1.6rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
+                        <img style={{margin: 0, height: 80}} src={logo} /><br />
+                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
                     </div>
 
                     {this.props.isDown ?
