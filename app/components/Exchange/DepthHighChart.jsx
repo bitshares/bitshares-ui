@@ -320,8 +320,10 @@ class DepthHighChart extends React.Component {
 
 
 		if (settlementPrice) {
+			const settlementColor = (settlementPrice * power) > utils.format_number(flatAsks[0][0], base.get("precision")) ? askColor : bidColor;
 			config.xAxis.plotLines.push({
-				color: "#7B1616",
+				//color: "#7B1616",
+				color: settlementColor,
 				id: "plot_line",
 				dashStyle: "solid",
 				value: settlementPrice * power,
