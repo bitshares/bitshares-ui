@@ -530,11 +530,13 @@ $account-background
         color: $ask-color !important;
     }
 
-    .stats .stat .negative {
+    .stats .stat .negative,
+    .value.negative {
         color: $negative-color !important;
     }
 
-    .stats .stat .positive {
+    .stats .stat .positive,
+    .value.positive {
         color: $positive-color !important;
     }
 
