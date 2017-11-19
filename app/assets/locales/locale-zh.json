@@ -8,7 +8,8 @@
 		"es": "Español",
 		"it": "Italiano",
 		"tr": "Turkish",
-		"ru": "Русский"
+		"ru": "Русский",
+		"ja": "日本語"
 	},
 	"incognito": {
 		"no_support": "当前比特股钱包依赖于本地存储和IndexedDB，在使用隐身浏览时会导致不稳定。我们建议您使用常规浏览方式。",

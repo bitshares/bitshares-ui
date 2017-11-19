@@ -196,10 +196,12 @@ class AccountDepositWithdraw extends React.Component {
                     <Translate content="gateway.title" component="h2" />
                     <div className="grid-block vertical medium-horizontal no-margin no-padding">
                         <div className="medium-6 show-for-medium">
-                            <HelpContent path="components/DepositWithdraw" section="deposit-short"/>
+                            <h3><Translate content="gateway.deposit_or_withdrawal"/></h3>
+                            <p><Translate  content="gateway.deposit_intro"/></p>
                         </div>
                         <div className="medium-5 medium-offset-1">
-                            <HelpContent account={account.get("name")} path="components/DepositWithdraw" section="receive"/>
+                            <h3><Translate content="gateway.receive_bts"/></h3>
+                            <p><Translate  content="gateway.receive_bts_intro"/> <b>{account.get("name") }</b></p>
                         </div>
                     </div>
                     <div>

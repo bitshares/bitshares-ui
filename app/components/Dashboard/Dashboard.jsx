@@ -73,10 +73,8 @@ class Dashboard extends React.Component {
         const newsUrl = 'https://crypto-bridge.org/news.json';
 
         fetch(newsUrl).then(reply => reply.json().then(news => {
-            console.log('Setting news: ' + news.content)
             this.setState({news: news.content});
         })).catch(err => {
-            console.log('ERROR' + err);
         });
 
     }
@@ -182,7 +180,7 @@ class Dashboard extends React.Component {
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "10px 10px 0 10px"}}>
                     <div className="block-content-header" style={{marginBottom: 5}}>
-                        News
+                        <Translate content="exchange.news"/>
                     </div>
                     <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow">
                         <p dangerouslySetInnerHTML={{ __html: this.state.news }}/>

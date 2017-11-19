@@ -7,7 +7,8 @@
     "de": "Deutsch",
     "es": "Español",
     "it": "Italiano",
-    "tr": "Turkish"
+    "tr": "Turkish",
+    "ja": "日本語"
   },
   "header": {
     "title": "BitShares UI",
@@ -770,7 +771,9 @@
     "show_star_1": "Show",
     "show_star_2": "only",
     "quote": "Quote currency:",
-    "search": "Search for more markets here"
+    "search": "Search for more markets here",
+    "featured": "Top-Märkte",
+    "news": "Neuigkeiten"
   },
   "fees": {
     "title": "Gebühren"

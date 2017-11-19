@@ -136,7 +136,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                     </tbody>
                 </table>
                 <div className="button-group" style={{paddingTop: 10}}>
-                    {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div> : null}
+                    {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}><Translate content="gateway.copy_address" /></div> : null}
                     {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
                     <button className={"button"} onClick={this.requestNewDepositAddress}><Translate content="gateway.generate_new" /></button>
                 </div>
