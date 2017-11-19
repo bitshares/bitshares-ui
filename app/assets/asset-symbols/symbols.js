@@ -22,6 +22,7 @@ require("file-loader?name=asset-symbols/[name].png!./eot.png");
 require("file-loader?name=asset-symbols/[name].png!./eqt.png");
 require("file-loader?name=asset-symbols/[name].png!./ethca.png");
 require("file-loader?name=asset-symbols/[name].png!./bela.png");
+require("file-loader?name=asset-symbols/[name].png!./xios.png");
 
 require("file-loader?name=asset-symbols/[name].png!./eth.png");
 require("file-loader?name=asset-symbols/[name].png!./steem.png");
