@@ -1233,7 +1233,7 @@
     "gateway": "ゲートウェイ",
     "symbol": "シンボル",
     "website": "ウェブサイトに行く",
-    "deposit_to": "&lt;b&gt;%(asset)s&lt;/b&gt;を以下のアドレスに送ってください",
+    "deposit_to": "<b>%(asset)s</b>を以下のアドレスに送ってください 111",
     "add_funds": "あなたのCryptoBridgeアカウント&lt;strong&gt;%(account)s&lt;/strong&gt;に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されます。",
     "withdraw_funds": "CryptoBridgeアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
     "balance_asset": "現在の%(asset)s残高",
