@@ -1,8 +1,8 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Immutable from "immutable"
 import SettingsActions from "actions/SettingsActions";
-import { connect } from "alt-react";
+import notify from "actions/NotificationActions";
+import counterpart from "counterpart";
 
 class RestoreFavorites extends React.Component {
     constructor(props){
@@ -11,7 +11,7 @@ class RestoreFavorites extends React.Component {
         this.state = {
             json: null,
             error: null
-        }
+        };
     }
 
     upload(evt){
@@ -33,7 +33,7 @@ class RestoreFavorites extends React.Component {
                 }
 
                 this.setState({json});
-                this.finish();
+                // this.finish();
             } catch(message) {
                 this.setState({error: true});
             }
@@ -52,10 +52,16 @@ class RestoreFavorites extends React.Component {
 
             SettingsActions.addStarMarket(quote, base);
         }
+
+        notify.addNotification({
+            message: counterpart("settings.backup_favorites_success"),
+            level: "success",
+            autoDismiss: 2
+        });
     }
 
     render(){
-        const { state, props } = this;
+        const { state } = this;
 
         return <div>
             <input
@@ -68,12 +74,12 @@ class RestoreFavorites extends React.Component {
               }}
               onChange={this.upload.bind(this)}
             />
-            
+
             {state.error && <h5>
                 <Translate content="settings.backup_favorites_error" />
             </h5>}
 
-            {state.json && 
+            {state.json &&
                 <p>
                     <button onClick={this.finish.bind(this)} className="button success">
                         <Translate content="settings.backup_favorites_finish" />

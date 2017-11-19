@@ -895,6 +895,7 @@
     "backup_favorites": "Restore favorites using a json file",
     "backup_favorites_error": "Could not parse JSON.",
     "backup_favorites_finish": "Import favorites",
+    "backup_favorites_success": "Successfully restored market favorites",
     "backupcreate_backup": "Create local wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
     "backupcreate_favorites": "Create favorites backup",
