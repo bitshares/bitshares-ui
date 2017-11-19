@@ -69,6 +69,7 @@
     "asset": "Asset",
     "market_value": "Marktwert",
     "hour_24": "24hr Wechsel",
+    "hour_24_short": "24hr",
     "recent": "Letzte Aktivität",
     "name": "Konto Name",
     "id": "Konto ID",

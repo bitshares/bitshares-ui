@@ -118,7 +118,7 @@ class AccountMembership extends React.Component {
                             <div>
                                 <h4><Translate content="account.member.referral_link"/></h4>
                                 <Translate content="account.member.referral_text"/>:
-                                <h5>{`https://bitshares.org/wallet?r=${account.name}`}</h5>
+                                <h5>{`https://wallet.bitshares.org/?r=${account.name}`}</h5>
                             </div>) : null}
                             <h4><Translate content="account.member.fee_allocation"/></h4>
                             <table className="table key-value-table">

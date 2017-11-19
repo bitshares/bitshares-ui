@@ -14,7 +14,12 @@ let ss = new ls(STORAGE_KEY);
 
 class SettingsStore {
     constructor() {
-        this.exportPublicMethods({init: this.init.bind(this), getSetting: this.getSetting.bind(this)});
+        this.exportPublicMethods({
+            init: this.init.bind(this),
+            getSetting: this.getSetting.bind(this),
+            getLastBudgetObject: this.getLastBudgetObject.bind(this),
+            setLastBudgetObject: this.setLastBudgetObject.bind(this)
+        });
 
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
@@ -22,6 +27,7 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -301,6 +307,11 @@ class SettingsStore {
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
+    onClearStarredMarkets(){
+        this.starredMarkets = Immutable.Map({});
+        ss.set(this.starredKey, this.starredMarkets.toJS());
+    }
+
     onAddWS(ws) {
         if (typeof ws === "string") {
             ws = {url: ws, location: null};
@@ -339,6 +350,14 @@ class SettingsStore {
     onUpdateLatencies(latencies) {
         ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
+    }
+
+    getLastBudgetObject() {
+        return ss.get(this._getChainKey("lastBudgetObject"), "2.13.1");
+    }
+
+    setLastBudgetObject(value) {
+        ss.set(this._getChainKey("lastBudgetObject"), value);
     }
 }
 
