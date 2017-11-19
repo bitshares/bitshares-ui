@@ -234,6 +234,7 @@ class AccountOverview extends React.Component {
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
             const canDepositWithdraw = !!this.props.backedCoins.get("BRIDGE", []).find(a => a.symbol === asset.get("symbol"));
+            //const canDepositWithdraw = true;
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
 

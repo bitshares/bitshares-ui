@@ -190,7 +190,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         }
 
         if( !receive_address ) {
-            this.setState({loading: true});
+            //this.setState({loading: true});
             requestDepositAddress(this._getDepositObject());
             return emptyRow;
         }
