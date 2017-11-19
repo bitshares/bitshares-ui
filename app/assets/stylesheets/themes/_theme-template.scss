@@ -538,6 +538,16 @@ $account-background
         color: $positive-color !important;
     }
 
+    .value.negative {
+        color: $ask-color !important;
+        font-weight: bold;
+    }
+
+    .value.positive {
+        color: $bid-color !important;
+        font-weight: bold;
+    }
+
     .active-bucket {
         background-color: lighten($light-panel-bg-color, 12%) ;
     }

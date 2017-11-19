@@ -5,6 +5,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
+import {Market24HourChangeComponent} from "../Utility/MarketChangeComponent";
 import AssetName from "../Utility/AssetName";
 import MarginPositions from "./MarginPositions";
 import { RecentTransactions } from "./RecentTransactions";
@@ -71,6 +72,7 @@ class AccountOverview extends React.Component {
         this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
         this.priceRefs = {};
         this.valueRefs = {};
+        this.changeRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -105,6 +107,20 @@ class AccountOverview extends React.Component {
                 if (!aValue && !bValue) return this.sortFunctions.alphabetic(a, b, true);
                 return !this.state.sortDirection ? aValue - bValue : bValue - aValue;
             }
+        },
+        changeValue: function(a, b) {
+            let aRef = this.changeRefs[a.key];
+            let bRef = this.changeRefs[b.key];
+
+            if (aRef && bRef) {
+                let aValue = aRef.getValue();
+                let bValue = bRef.getValue();
+                let aChange = parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
+                let bChange = parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
+                let direction = typeof this.state.sortDirection !== "undefined" ? this.state.sortDirection : true;
+                
+                return direction ? aChange < bChange : aChange > bChange;
+            }
         }
     }
 
@@ -127,6 +143,7 @@ class AccountOverview extends React.Component {
             this._checkMarginStatus(np);
             this.priceRefs = {};
             this.valueRefs = {};
+            this.changeRefs = {};
             setTimeout(this.forceUpdate.bind(this), 500);
         };
     }
@@ -259,6 +276,14 @@ class AccountOverview extends React.Component {
                         <EquivalentPrice
                             refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             fromAsset={asset.get("id")}
+                            hide_symbols
+                        />
+                    </td>
+                    <td style={{textAlign: "right"}} className="column-hide-small">
+                        <Market24HourChangeComponent
+                            refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }} 
+                            fromAsset={asset.get("id")} 
+                            toAsset={preferredUnit} 
                             hide_symbols
                         />
                     </td>
@@ -540,7 +565,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -588,6 +613,7 @@ class AccountOverview extends React.Component {
                                             <th style={{textAlign: "left", paddingLeft: 10}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
+                                            <th onClick={this._toggleSortOrder.bind(this, "changeValue")}  className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
                                             {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                             <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
                                                 <TranslateWithLinks

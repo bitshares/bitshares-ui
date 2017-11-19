@@ -111,6 +111,7 @@
     "asset": "Asset",
     "market_value": "Market Value",
     "hour_24": "24hr Change",
+    "hour_24_short": "24hr",
     "recent": "Recent activity",
     "name": "Account name",
     "id": "Account ID",

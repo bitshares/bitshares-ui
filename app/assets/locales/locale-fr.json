@@ -61,6 +61,7 @@
     "asset": "Actif",
     "market_value": "Valeur",
     "hour_24": "24hrs",
+    "hour_24_short": "24hrs",
     "recent": "Activité recent",
     "name": "Nom du compte",
     "more": "voir plus",

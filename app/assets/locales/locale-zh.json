@@ -99,6 +99,7 @@
 		"assets": "资产",
 		"market_value": "市值",
 		"hour_24": "日涨跌幅%",
+		"hour_24_short": "日涨跌幅%",
 		"recent": "近期活动",
 		"name": "账户名",
 		"member": {
