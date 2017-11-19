@@ -9,6 +9,13 @@
   }
 }
 
+@include font-face(Lato-Light, 'vendors/Lato-Light', 300, normal);
+@mixin LatoLight {
+  font-family: 'Lato-Light', arial, sans-serif;
+  font-weight: lighter;
+  font-style: normal;
+}
+
 @include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
 @mixin RobotoLight {
   font-family: 'Roboto-Light', arial, sans-serif;
@@ -56,7 +63,7 @@
 /* ***** styles ****** */
 
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto-Regular', arial, sans-serif;
+  font-family: 'Roboto-Light', 'Lato-Light', arial, sans-serif;
 }
 
 .monospace {
