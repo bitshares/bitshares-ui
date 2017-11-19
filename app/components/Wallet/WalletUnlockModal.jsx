@@ -16,7 +16,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
-var logo = require("assets/logo-ico-blue.png");
+var logo = require("assets/cryptobridge.png");
 
 class WalletUnlockModal extends React.Component {
 
@@ -247,7 +247,7 @@ class WalletUnlockModal extends React.Component {
             // U N L O C K
             <BaseModal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
                 <div className="text-center">
-                    <img src={logo}/>
+                    <img src={logo} style={{height: '64px'}}/>
                     <div style={{marginTop: "1rem"}}>
                         <Translate component="h4" content={"header.unlock" + (passwordLogin ? "_password" : "")} />
                     </div>
