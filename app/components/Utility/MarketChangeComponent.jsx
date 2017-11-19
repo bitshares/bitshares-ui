@@ -1,13 +1,9 @@
 import React from "react";
-import FormattedAsset from "./FormattedAsset";
 import {FormattedNumber} from "react-intl";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
-import utils from "common/utils";
 import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
-import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import {MarketStatsCheck} from "../Utility/EquivalentPrice";
 
@@ -57,7 +53,7 @@ class MarketChangeComponent extends MarketStatsCheck {
 
         if (toAsset && marketStats) {
             let toSymbol = toAsset.get("symbol");
-            
+
             fromStats = marketStats.get(fromSymbol + "_" + toSymbol);
         }
 
@@ -65,10 +61,9 @@ class MarketChangeComponent extends MarketStatsCheck {
     }
 
     render() {
-        let {fromAsset, toAsset, marketStats} = this.props;
         let marketChangeValue = this.getValue();
-        let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "negative" : "positive";
-        let marketChangeFormattedValue = <FormattedNumber 
+        let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "change-down" : "change-up";
+        let marketChangeFormattedValue = <FormattedNumber
             style='decimal'
             value={marketChangeValue}
             minimumFractionDigits={2}
