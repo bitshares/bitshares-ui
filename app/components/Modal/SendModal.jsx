@@ -11,7 +11,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-
+import ChainTypes from "../Utility/ChainTypes";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -20,15 +20,104 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import {connect} from "alt-react";
 import classnames from "classnames";
 
+class SendModal extends React.Component {
+    
+    static propTypes = {
+        sender: ChainTypes.ChainAccount.isRequired,
+        asset: ChainTypes.ChainAsset.isRequired
+    };
+    
+    constructor(props) {
+        super(props);
+        this.state = SendModal.getInitialState();
+        let currentAccount = AccountStore.getState().currentAccount;
+        if (!this.state.from_name) this.state.from_name = currentAccount;
+    };
+
+
+    static getInitialState() {
+        return {
+            from_name: "",
+            to_name: "",
+            from_account: null,
+            to_account: null,
+            amount: "",
+            asset_id: null,
+            asset: null,
+            memo: "",
+            error: null,
+            propose: false,
+            propose_account: "",
+            feeAsset: null,
+            fee_asset_id: "1.3.0",
+            feeAmount: new Asset({amount: 0}),
+            feeStatus: {}
+        };
+
+    };
+
+    render() {
+        let {from_name} = this.state;
+        return (
+            <div>This is the SendInput Part of the Modal {from_name}</div>
+        );
+    }
+};
+
+SendModal = connect(SendModal, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount
+        };
+    }
+});
+
+export default class SendBaseModal extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            open: false
+        };
+    }
+
+    show() {
+        this.setState({open: true}, () => {
+            ZfApi.publish("send_modal", "open");
+        });
+    }
+
+    onClose() {
+        this.setState({open: false});
+    }
+
+    render() {
+        return (
+            <BaseModal id="send_modal" overlay={true} ref="send_modal">
+                <SendModal />
+            </BaseModal>
+        );
+    }
+}
+
 /* Export functions from Transfer/Transfer.jsx */
 
-export default class SendModal extends React.Component {
+/*
+
+class SendInputModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = SendModal.getInitialState();
 
         let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name) this.state.from_name = currentAccount;
+        if (!this.state.from_name || !this.state.from_account) { 
+            this.setState({from_name: currentAccount, from_account: ChainStore.getAccount(currentAccount)});
+        }
+        
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
@@ -37,8 +126,8 @@ export default class SendModal extends React.Component {
 
     static getInitialState() {
         return {
-            from_name: "",
-            to_name: "",
+            from_name: null,
+            to_name: null,
             from_account: null,
             to_account: null,
             amount: "",
@@ -204,6 +293,7 @@ export default class SendModal extends React.Component {
     }
 
     render() {
+        
         const {account_name} = this.props;
         let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount,
             amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
@@ -222,7 +312,6 @@ export default class SendModal extends React.Component {
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
         if (from_account && from_account.get("balances") && !from_error) {
-
             let account_balances = from_account.get("balances").toJS();
             if (asset_types.length === 1) asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
@@ -234,6 +323,8 @@ export default class SendModal extends React.Component {
             }
         }
 
+        console.log(from_account);
+
         let propose_incomplete = propose && ! propose_account;
         const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
         const isAmountValid = amountValue && !isNaN(amountValue);
@@ -244,7 +335,6 @@ export default class SendModal extends React.Component {
         let tabIndex = 1;
 
         let logo = require("assets/logo-ico-blue.png");
-
         return (
             <BaseModal id="send_modal" overlay={true} ref="send_modal">
                 <div className="grid-block vertical no-overflow">
@@ -256,7 +346,7 @@ export default class SendModal extends React.Component {
                         </div>
                     </div>
                     <div className="SimpleTrade__withdraw-row">
-                        {/*  T O  */}
+                        {//  T O }
                         <div className="content-block">
                             <AccountSelector
                                 label="transfer.to"
@@ -268,7 +358,7 @@ export default class SendModal extends React.Component {
                                 tabIndex={tabIndex++}
                             />
                         </div>
-                        {/*  A M O U N T   */}
+                        {/*  A M O U N T   /}
                         <div className="content-block transfer-input">
                             <AmountSelector
                                 label="transfer.amount"
@@ -284,12 +374,12 @@ export default class SendModal extends React.Component {
                                     <Translate content="transfer.errors.insufficient" />
                                 </p> : null}
                         </div>
-                        {/*  M E M O  */}
+                        {/*  M E M O  /}
                         <div className="content-block transfer-input">
                             {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
                             <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
                             <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                            {/* warning */}
+                            {/* warning /}
                             { this.state.propose ?
                                 <div className="error-area" style={{position: "absolute"}}>
                                     <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
@@ -302,3 +392,21 @@ export default class SendModal extends React.Component {
         );
     }
 }
+
+ModalContent = BindToChainState(ModalContent, {keep_updating: true});
+
+class SendModal extends React.Component {
+
+    show() {
+        ZfApi.publish("send_modal", "open");
+    }
+
+    render() {
+        return (
+            <SendInputModal/>
+        );
+    }
+}
+
+export default SendModal;
+*/

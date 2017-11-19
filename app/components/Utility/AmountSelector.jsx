@@ -70,6 +70,7 @@ class AmountSelector extends React.Component {
     }
 
     render() {
+        //console.log("Calling AmountSelector: " + this.props.label + this.props.asset + this.props.assets + this.props.amount + this.props.placeholder + this.props.error);
         let value = this.props.error ? counterpart.translate(this.props.error) : this.formatAmount(this.props.amount);
         return (
             <div className="amount-selector" style={this.props.style}>
