@@ -138,7 +138,7 @@ class Footer extends React.Component {
                             <div className="footer-block">
                                 <span>
                                     <span className="footer-block-title"><Translate content="footer.latency" /></span>
-                                        &nbsp;{!connected ? "-" : currentNodePing + "ms"}&nbsp;/&nbsp;
+                                        &nbsp;{!connected ? "-" : !currentNodePing ? "-" : currentNodePing + "ms"}&nbsp;/&nbsp;
                                     <span className="footer-block-title"><Translate content="footer.block" /></span>
                                         &nbsp;#{block_height}
                                 </span>
