@@ -85,7 +85,7 @@ class MarketsActions {
 
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
-        const bucketCount = 10000;
+        const bucketCount = 200;
         // let lastLimitOrder = null;
         return (dispatch) => {
 
