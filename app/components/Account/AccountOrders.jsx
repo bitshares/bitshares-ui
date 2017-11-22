@@ -14,7 +14,7 @@ class AccountOrders extends React.Component {
 
     constructor(props){
         super(props);
-        
+
         this.state = {
             selectedOrders: [],
             filterValue: ''
@@ -72,7 +72,7 @@ class AccountOrders extends React.Component {
             this.props.account.get("id"),
             this.state.selectedOrders
         ).then(()=>{
-            this.resetSelected();         
+            this.resetSelected();
         }).catch(err => {
             console.log("cancel orders error:", err);
         })
@@ -98,7 +98,7 @@ class AccountOrders extends React.Component {
             }
         }
     }
-    
+
     setFilterValue(evt){
         this.setState({filterValue: evt.target.value.toLowerCase()});
     }
@@ -130,7 +130,7 @@ class AccountOrders extends React.Component {
         }
 
         let orders = account.get("orders");
-
+        const ordersCount = orders.size;
         if(filterValue){
             orders = this._getFilteredOrders.call(this);
         }
@@ -217,7 +217,7 @@ class AccountOrders extends React.Component {
         return (
             <div className="grid-content no-overflow no-padding" style={{paddingBottom: 15}}>
                 <div style={{maxWidth: "50%", marginBottom: "1em"}}>
-                    {orders && orders.size ? <input type="text" placeholder={counterpart.translate("account.filter_orders")} style={{display: "inline-block", maxWidth: "50%", marginRight: "1em", marginBottom: "0"}} onChange={this.setFilterValue.bind(this)}/> : null}
+                    {orders && ordersCount ? <input type="text" placeholder={counterpart.translate("account.filter_orders")} style={{display: "inline-block", maxWidth: "50%", marginRight: "1em", marginBottom: "0"}} onChange={this.setFilterValue.bind(this)}/> : null}
                     {selectedOrders.length ? <button className="button"><Translate content="account.reset_orders" onClick={this.resetSelected.bind(this)} /></button> : null}
                     {selectedOrders.length ? <button className="button"><Translate content="account.submit_orders" onClick={this.cancelSelected.bind(this)} /></button> : null}
                 </div>
