@@ -1,7 +1,7 @@
 {
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -83,6 +83,7 @@
     "asset": "Dijital Varlık",
     "market_value": "Piyasa Değeri",
     "hour_24": "24 Saat",
+    "hour_24_short": "24 Saat",
     "recent": "Son Hareketler",
     "name": "Hesap Adı",
     "id": "Hesap No",

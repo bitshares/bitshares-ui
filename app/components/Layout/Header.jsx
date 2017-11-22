@@ -126,7 +126,7 @@ class Header extends React.Component {
             notify.addNotification({
                 message: counterpart.translate("header.account_notify", {account: account_name}),
                 level: "success",
-                autoDismiss: 3
+                autoDismiss: 2
             });
         }
         // this.onClickUser(account_name, e);

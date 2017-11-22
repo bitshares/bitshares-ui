@@ -19,6 +19,7 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Deprecate from "./Deprecate";
 // import Incognito from "./components/Layout/Incognito";
 // import { isIncognito } from "feature_detect";
 
@@ -59,7 +60,11 @@ class App extends React.Component {
         let synced = true;
         let dynGlobalObject = ChainStore.getObject("2.1.0");
         if (dynGlobalObject) {
-            let block_time = dynGlobalObject.get("time") + "+00:00";
+            let block_time = dynGlobalObject.get("time");
+            if (!/Z$/.test(block_time)) {
+                block_time += "Z";
+            }
+
             let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
             let now = new Date().getTime() / 1000;
             synced = Math.abs(now - bt) < 5;
@@ -137,7 +142,7 @@ class App extends React.Component {
                 theme: settings.get("themes")
             });
         }
-        
+
 
     }
 
@@ -149,6 +154,7 @@ class App extends React.Component {
 
     render() {
         let {isMobile, theme } = this.state;
+
         let content = null;
 
         let showFooter = 1;
@@ -167,6 +173,8 @@ class App extends React.Component {
             </div>;
         } else if (this.props.location.pathname === "/init-error") {
             content = <div className="grid-frame vertical">{this.props.children}</div>;
+        } else if (__DEPRECATED__) {
+            content = <Deprecate {...this.props} />;
         } else {
             content = (
                 <div className="grid-frame vertical">
@@ -176,7 +184,7 @@ class App extends React.Component {
                         <div className="grid-block vertical">
                             {this.props.children}
                         </div>
-                        
+
                     </div>
                     {showFooter ? <Footer synced={this.state.synced}/> : null}
                     <ReactTooltip ref="tooltip" place="top" type={theme === "lightTheme" ? "dark" : "light"} effect="solid"/>
@@ -217,7 +225,7 @@ class RootIntl extends React.Component {
     render() {
         return (
             <IntlProvider
-                locale={this.props.locale.replace(/cn/, "zh")}
+                locale={this.props.locale}
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >

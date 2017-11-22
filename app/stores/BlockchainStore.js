@@ -38,7 +38,6 @@ class BlockchainStore {
     onGetLatest(payload) {
         let {block, maxBlock} = payload;
         if (typeof block.timestamp === "string") {
-            block.timestamp += "+00:00";
             if (!/Z$/.test(block.timestamp)) {
                 block.timestamp += "Z";
             }

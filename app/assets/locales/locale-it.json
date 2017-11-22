@@ -1,7 +1,7 @@
 {
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -100,6 +100,7 @@
     "asset": "Asset",
     "market_value": "Valore di mercato",
     "hour_24": "Variazione in 24h",
+    "hour_24_short": "24h",
     "recent": "Attività recente",
     "name": "Nome account",
     "id": "ID Account",

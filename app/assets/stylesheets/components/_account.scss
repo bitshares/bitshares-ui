@@ -164,11 +164,12 @@ div.overview-tabs {
     }
 
     div.hide-selector {
-        padding-left: 5px;
+        padding-left: 12px;
+        padding-bottom: 17px;
     }
 
     > div.tab-content {
-        padding: 20px;
+        padding-top: 20px;
     }
 
     &.with-buttons ul.account-overview > li:not(.total-value) > a {
@@ -226,7 +227,7 @@ table.table.dashboard-table {
     }
     > tbody > tr {
         > td {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-align: center;
             border: 1px solid;
 

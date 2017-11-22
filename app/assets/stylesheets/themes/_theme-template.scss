@@ -538,6 +538,16 @@ $account-background
         color: $positive-color !important;
     }
 
+    .value.negative {
+        color: $ask-color !important;
+        font-weight: bold;
+    }
+
+    .value.positive {
+        color: $bid-color !important;
+        font-weight: bold;
+    }
+
     .active-bucket {
         background-color: lighten($light-panel-bg-color, 12%) ;
     }
@@ -861,16 +871,7 @@ $account-background
 
     }
 
-    .orderbook td.orderHistoryBid {
-        > span.price-integer, > span > span.price-integer {
-            font-weight: bold;
-            color: $primary-text-color;
-        }
-    }
-
     td.orderHistoryAsk  {
-
-
         > span.price-integer, > span > span.price-integer {
             font-weight: bold;
             color: $ask-color;
@@ -879,15 +880,6 @@ $account-background
         > span.price-decimal, > span >span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
-        }
-
-    }
-
-    .orderbook td.orderHistoryAsk {
-
-    > span.price-integer, > span > span.price-integer {
-            font-weight: bold;
-            color: $primary-text-color;
         }
     }
 

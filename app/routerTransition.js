@@ -62,7 +62,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     let connectionStart;
 
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
-    if (latencyChecks >= 15) {
+    if (latencyChecks >= 5) {
         apiLatenciesCount = 0;
         ss.set("latencyChecks", 0);
     }
@@ -144,7 +144,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
                     SettingsActions.changeSetting({setting: "activeNode", value: connectionManager.url});
                     callback();
                 });
-            })
+            });
         }).catch(err => {
             console.error(err);
             replaceState("/init-error");

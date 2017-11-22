@@ -6,4 +6,4 @@ Rudex is a gateway service built on the Bitshares Exchange. A gateway service is
 [https://rudex.org](https://rudex.org)
 
 ## Support
-If you have questions or experience delays with sending or receiving assets, you may send email to: support@rudex.org
+[Open a Ticket](https://rudex.freshdesk.com)
