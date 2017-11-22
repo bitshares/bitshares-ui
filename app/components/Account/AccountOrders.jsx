@@ -56,7 +56,7 @@ class AccountOrders extends React.Component {
     }
 
     _cancelLimitOrder(orderID, e) {
-        if(e && e.preventDefault) e.preventDefault();
+        e.preventDefault();
 
         MarketsActions.cancelLimitOrder(
             this.props.account.get("id"),
@@ -65,6 +65,17 @@ class AccountOrders extends React.Component {
         ).catch(err => {
             console.log("cancel order error:", err);
         });
+    }
+
+    _cancelLimitOrders(orderId) {
+        MarketsActions.cancelLimitOrders(
+            this.props.account.get("id"),
+            this.state.selectedOrders
+        ).then(()=>{
+            this.resetSelected();         
+        }).catch(err => {
+            console.log("cancel orders error:", err);
+        })
     }
 
     onFlip(marketId) {
@@ -103,8 +114,7 @@ class AccountOrders extends React.Component {
     }
 
     cancelSelected(){
-        this.state.selectedOrders.forEach(this._cancelLimitOrder.bind(this));
-        this.resetSelected();
+        this._cancelLimitOrders.call(this);
     }
 
     render() {
