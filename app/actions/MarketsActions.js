@@ -416,6 +416,27 @@ class MarketsActions {
         });
     }
 
+    cancelLimitOrders(accountID, orderIDs){
+        let fee_asset_id = accountUtils.getFinalFeeAsset(accountID, "limit_order_cancel");
+
+        var tr = WalletApi.new_transaction();
+        orderIDs.forEach(id => {
+            tr.add_type_operation("limit_order_cancel", {
+                fee: {
+                    amount: 0,
+                    asset_id: fee_asset_id
+                },
+                "fee_paying_account": accountID,
+                "order": id
+            });
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+        .catch(error => {
+            console.log("cancel error:", error);
+        });
+    }
+
     cancelLimitOrderSuccess(ids) {
         return (dispatch) => {
             /* In the case of many cancel orders being issued at the same time,
