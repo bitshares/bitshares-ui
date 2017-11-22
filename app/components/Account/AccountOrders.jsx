@@ -17,25 +17,27 @@ class AccountOrders extends React.Component {
 
         this.state = {
             selectedOrders: [],
-            filterValue: ''
-        }
+            filterValue: ""
+        };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let cancelHeader = document.getElementById("cancelAllOrders");
 
-        cancelHeader.addEventListener("click", function(){
-            let orders = this._getFilteredOrders.call(this);
-            orders = orders.toJS ? orders.toJS() : orders;
+        if (cancelHeader) {
+            cancelHeader.addEventListener("click", function(){
+                let orders = this._getFilteredOrders.call(this);
+                orders = orders.toJS ? orders.toJS() : orders;
 
-            this.setState({selectedOrders: orders});
+                this.setState({selectedOrders: orders});
 
-            let checkboxes = document.querySelectorAll(".orderCancel");
+                let checkboxes = document.querySelectorAll(".orderCancel");
 
-            checkboxes.forEach((item)=>{
-                if(!item.checked) item.checked = true;
-            });
-        }.bind(this));
+                checkboxes.forEach((item)=>{
+                    if(!item.checked) item.checked = true;
+                });
+            }.bind(this));
+        }
     }
 
     _getFilteredOrders(){
