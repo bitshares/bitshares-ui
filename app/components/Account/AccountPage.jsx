@@ -4,7 +4,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import GatewayStore from "stores/GatewayStore";
-import AccountLeftPanel from "./AccountLeftPanel";
+// import AccountLeftPanel from "./AccountLeftPanel";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import { connect } from "alt-react";
@@ -36,7 +36,7 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
+                {/* <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
@@ -45,9 +45,9 @@ class AccountPage extends React.Component {
                         viewSettings={this.props.viewSettings}
                         passwordLogin={settings.get("passwordLogin")}
                     />
-                </div>
+                </div> */}
                 <div className="grid-block main-content">
-                    <div className="grid-container">
+                    <div className="grid-block vertical no-padding">
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
