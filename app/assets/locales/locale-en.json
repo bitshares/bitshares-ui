@@ -1396,7 +1396,10 @@
     "receive_bts": "Receiving BTS",
     "receive_bts_intro": "In order to receive BTS from another person or from an exchange, simply give them your account name: ",
     "contact_TRADE": "Contact Blocktrades",
-    "over_limit": "Limit Reached"
+    "over_limit": "Limit Reached",
+    "cryptobridge_gateway_fee": "Gateway fee",
+    "cryptobridge_bts_fee": "Blockchain withdrawal fee",
+    "cryptobridge_receive": "You will receive"
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

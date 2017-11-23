@@ -414,13 +414,13 @@ class WithdrawModalCryptoBridge extends React.Component {
                 amountWithFees = parseFloat(amountWithFees,10 ) - parseFloat(this.props.transactionFee, 10);
 
 
-                //if (!account_balances['1.3.0']) {
+                if (!account_balances['1.3.0']) {
 
                     networkFee = this.state.feeAmount.getAmount({real: true});
                     //console.log('NETWORK FEE' + networkFee);
                     amountWithFees -= networkFee;
 
-                //}
+                }
 
 
 
@@ -461,9 +461,9 @@ class WithdrawModalCryptoBridge extends React.Component {
 					{invalid_address_message}
                 </div>
 				{withdraw_memo}
-                {this.props.transactionFee >= 0.00001 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}>Gateway fee: {this.props.transactionFee} {coinType.replace('BRIDGE.', '')}</p>:null}
-                {networkFee >= 0 && amountWithFees >= 0.0 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}>Blockchain withdrawal fee: {this.formatAmount(networkFee)} {this.props.output_coin_symbol.replace('BRIDGE.', '')}</p>:null}
-                {this.props.transactionFee >= 0.00001 && amountWithFees >= 0.00001 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}>You will receive: {this.formatAmount(amountWithFees)} {this.props.output_coin_symbol.replace('BRIDGE.', '')}</p>: null}
+                {this.props.transactionFee >= 0.00001 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}><Translate content="gateway.cryptobridge_gateway_fee" />: {this.props.transactionFee} {coinType.replace('BRIDGE.', '')}</p>:null}
+                {networkFee > 0.00001 && amountWithFees >= 0.0 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}><Translate content="gateway.cryptobridge_bts_fee" />: {this.formatAmount(networkFee)} {this.props.output_coin_symbol.replace('BRIDGE.', '')}</p>:null}
+                {this.props.transactionFee >= 0.00001 && amountWithFees >= 0.00001 ? <p className="no-margin" style={{paddingTop: 0, paddingBottom: 5}}><Translate content="gateway.cryptobridge_receive" />: {this.formatAmount(amountWithFees)} {this.props.output_coin_symbol.replace('BRIDGE.', '')}</p>: null}
 
                 <div className="content-block">
                     <input type="submit" className="button"

@@ -1209,6 +1209,9 @@
     "fee_paying_account": "手数料支払いアカウント"
   },
   "gateway": {
+      "cryptobridge_gateway_fee": "ゲートウェイ手数料",
+      "cryptobridge_bts_fee": "ブロックチェーン手数料",
+      "cryptobridge_receive": "受取額",
     "fee": "ゲートウェイ手数料",
     "title": "入金 & 出金",
     "assets": {
@@ -1297,6 +1300,7 @@
       "bank_branch": "支店",
       "bank_account": "アカウントNO",
       "bank_holder": "保有者名"
+
     },
     "meta": {
       "open_website": "ウェブサイトを開く"
