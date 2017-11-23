@@ -111,6 +111,7 @@
     "asset": "Asset",
     "market_value": "Market Value",
     "hour_24": "24hr Change",
+    "hour_24_short": "24hr",
     "recent": "Recent activity",
     "name": "Account name",
     "id": "Account ID",
@@ -119,6 +120,9 @@
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
     "open_orders": "Open Orders",
+    "filter_orders": "Filter",
+    "submit_orders": "Submit",
+    "reset_orders": "Reset",
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
@@ -891,8 +895,15 @@
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
     "backup_brainkey": "Restore using a local wallet brainkey",
+    "backup_favorites": "Restore favorites using a json file",
+    "backup_favorites_error": "Could not parse JSON.",
+    "backup_favorites_finish": "Import favorites",
+    "backup_favorites_success": "Successfully restored market favorites",
     "backupcreate_backup": "Create local wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
+    "backupcreate_favorites": "Create favorites backup",
+    "backup_favoritesbtn": "Backup favorites",
+    "backup_favoritestext": "Back up your favorites to restore them later after updates.",
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
     "delete_select": "Select local wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new local wallet. Please provide a password and name for your new local wallet below, then enter your brainkey.",
@@ -1376,5 +1387,12 @@
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
+    },
+    "migration": {
+        "title": "Notice",
+        "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+        "text_1": "Local wallet detected",
+        "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+        "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
     }
 }

@@ -19,6 +19,7 @@ import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Deprecate from "./Deprecate";
 // import Incognito from "./components/Layout/Incognito";
 // import { isIncognito } from "feature_detect";
 
@@ -153,6 +154,7 @@ class App extends React.Component {
 
     render() {
         let {isMobile, theme } = this.state;
+
         let content = null;
 
         let showFooter = 1;
@@ -171,6 +173,8 @@ class App extends React.Component {
             </div>;
         } else if (this.props.location.pathname === "/init-error") {
             content = <div className="grid-frame vertical">{this.props.children}</div>;
+        } else if (__DEPRECATED__) {
+            content = <Deprecate {...this.props} />;
         } else {
             content = (
                 <div className="grid-frame vertical">
