@@ -61,9 +61,8 @@ class MarketGroup extends React.Component {
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
             nextProps.marketStats !== this.props.marketStats ||
-            nextProps.userMarkets !== this.props.userMarkets,
             nextProps.userMarkets !== this.props.userMarkets ||
-            nextProps.current !== this.props.current        
+            nextProps.current !== this.props.current
         );
     }
 
