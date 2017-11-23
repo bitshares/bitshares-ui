@@ -252,7 +252,8 @@ class Create extends Component {
 
     getBackupName() {
         let name = this.props.wallet.current_wallet
-        let address_prefix = ChainConfig.address_prefix.toLowerCase()
+
+        let address_prefix = 'cryptobridge';
         if(name.indexOf(address_prefix) !== 0)
             name = address_prefix + "_" + name
 
