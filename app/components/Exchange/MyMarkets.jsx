@@ -61,7 +61,9 @@ class MarketGroup extends React.Component {
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
             nextProps.marketStats !== this.props.marketStats ||
-            nextProps.userMarkets !== this.props.userMarkets
+            nextProps.userMarkets !== this.props.userMarkets,
+            nextProps.userMarkets !== this.props.userMarkets ||
+            nextProps.current !== this.props.current        
         );
     }
 
@@ -157,6 +159,7 @@ class MarketGroup extends React.Component {
 
         let index = 0;
 
+        console.log('current=' + current);
         let marketRows = markets
             .map(market => {
                 return (
@@ -719,7 +722,7 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                
+
 
                 {this.props.controls ? (
                     <div className="small-12 medium-6" style={{padding: "1rem 0"}}>
