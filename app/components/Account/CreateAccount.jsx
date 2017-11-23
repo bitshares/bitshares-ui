@@ -96,6 +96,7 @@ class CreateAccount extends React.Component {
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
 
+            console.log('Create account 1');
             AccountActions.createAccount(name, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
                 // User registering his own account
                 if(this.state.registrar_account) {
@@ -107,12 +108,15 @@ class CreateAccount extends React.Component {
                     });
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else { // Account registered by the faucet
+                    console.log('Creating account by faucet2')
                     FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                         this.setState({
                             step: 2,
                             loading: false
                         });
-                    });
+                    }).catch((err) => {
+                        console.log('Fetching acc failed ' + err);
+                    })
 
                 }
             }).catch(error => {

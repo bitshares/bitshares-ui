@@ -53,6 +53,16 @@ export function getActiveWallets(url = (cryptoBridgeAPIs.BASE + cryptoBridgeAPIs
     });
 }
 
+export function estimateInput(outputAmount, inputCoin, outputCoin, url = (blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_INPUT)) {
+    return fetch(url + "?outputAmount=" + encodeURIComponent(outputAmount) +"&inputCoinType=" + encodeURIComponent(inputCoin) + "&outputCoinType=" + encodeURIComponent(outputCoin), {
+        method: "get", headers: new Headers({"Accept": "application/json"})}).then(reply => reply.json().then(result => {
+            return result;
+        })).catch(err => {
+            console.log("error fetching deposit limit of", inputCoin, outputCoin, err);
+        });
+}
+
+
 export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url = cryptoBridgeAPIs.BASE, stateCallback}) {
     let body = {
         inputCoinType,

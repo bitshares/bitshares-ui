@@ -18,7 +18,6 @@ import AssetName from "../Utility/AssetName";
 import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
-import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 
 class AccountVoting extends React.Component {
@@ -30,7 +29,6 @@ class AccountVoting extends React.Component {
     };
 
     static defaultProps = {
-        initialBudget: SettingsStore.getState().viewSettings.get("lastBudgetObject", "2.13.1"),
         globalObject: "2.0.0"
     };
 
@@ -66,7 +64,6 @@ class AccountVoting extends React.Component {
 
     componentDidMount() {
         this.updateAccountData(this.props);
-        this.getBudgetObject();
         this._getVoteObjects();
         this._getVoteObjects("committee");
         this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
@@ -346,8 +343,8 @@ class AccountVoting extends React.Component {
     getBudgetObject() {
         let {lastBudgetObject} = this.state;
         let budgetObject;
-
-        budgetObject = ChainStore.getObject(lastBudgetObject ? lastBudgetObject : "2.13.1");
+        budgetObject = ChainStore.getObject(lastBudgetObject);
+        let idIndex = parseInt(lastBudgetObject.split(".")[2], 10);
         if (budgetObject) {
             let timestamp = budgetObject.get("time");
             if (!/Z$/.test(timestamp)) {
@@ -355,26 +352,35 @@ class AccountVoting extends React.Component {
             }
             let now = new Date();
 
-            let idIndex = parseInt(budgetObject.get("id").split(".")[2], 10);
+            /* Use the last valid budget object to estimate the current budget object id.
+            ** Budget objects are created once per hour
+            */
             let currentID = idIndex + Math.floor((now - new Date(timestamp).getTime()) / 1000 / 60 / 60) - 1;
+            if (idIndex >= currentID) return;
             let newID = "2.13." + Math.max(idIndex, currentID);
+            let newIDInt = parseInt(newID.split(".")[2], 10);
+            FetchChainObjects(ChainStore.getObject, [newID], undefined, {}).then(res => {
+                let [lbo] = res;
+                if (lbo === null) { // The object does not exist, the id was too high
+                    this.setState({lastBudgetObject: `2.13.${newIDInt -1}`}, this.getBudgetObject);
+                } else {
+                    SettingsStore.setLastBudgetObject(newID);
 
-            ChainStore.getObject(newID);
-
-            this.setState({lastBudgetObject: newID});
-        } else {
-            const newBudgetObjectId = parseInt(lastBudgetObject.split(".")[2], 10) - 1;
-            if (typeof newBudgetObjectId === "number" && newBudgetObjectId > 1) {
-
-                const lastId = Math.max(1, newBudgetObjectId - 1);
-                this.setState({
-                    lastBudgetObject: "2.13." + lastId
-                });
-
-                SettingsActions.changeViewSetting.defer({
-                    lastBudgetObject: "2.13." + lastId
-                });
-            }
+                    this.setState({lastBudgetObject: newID});
+                }
+            });
+        }
+        else { // The object does not exist, decrement the ID
+            let newID = `2.13.${idIndex -1}`;
+            FetchChainObjects(ChainStore.getObject, [newID], undefined, {}).then(res => {
+                let [lbo] = res;
+                if (lbo === null) { // The object does not exist, the id was too high
+                    this.setState({lastBudgetObject: `2.13.${idIndex -2}`}, this.getBudgetObject);
+                } else {
+                    SettingsStore.setLastBudgetObject(newID);
+                    this.setState({lastBudgetObject: newID});
+                }
+            });
         }
     }
 
@@ -760,5 +766,10 @@ class AccountVoting extends React.Component {
         );
     }
 }
+AccountVoting = BindToChainState(AccountVoting);
 
-export default BindToChainState(AccountVoting);
+const BudgetObjectWrapper = (props) => {
+    return <AccountVoting {...props} initialBudget={SettingsStore.getLastBudgetObject()} />;
+};
+
+export default BudgetObjectWrapper;

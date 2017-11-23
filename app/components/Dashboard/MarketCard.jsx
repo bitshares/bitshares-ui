@@ -46,8 +46,8 @@ class MarketCard extends React.Component {
     shouldComponentUpdate(np, ns) {
         return (
             this._checkStats(np.marketStats, this.props.marketStats) ||
-            np.base !== this.props.base ||
-            np.quote !== this.props.quote ||
+            np.base.get("id") !== this.props.base.get("id") ||
+            np.quote.get("id") !== this.props.quote.get("id") ||
             ns.imgError !== this.state.imgError
         );
     }

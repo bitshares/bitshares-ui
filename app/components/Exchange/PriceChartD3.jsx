@@ -56,7 +56,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         const pricePrecision = props.base.get("precision");
         const volumePrecision = props.quote.get("precision");
         const priceFormat = format(`.${props.latest && props.latest.full && props.latest.full >= 0.8 ? 2 : Math.min(6, pricePrecision)}f`);
-        const volumeFormat = format(`.${Math.min(6, volumePrecision)}f`);
+        const volumeFormat = format(`.${Math.min(3, volumePrecision)}s`);
         return {priceFormat, volumeFormat};
     }
 
@@ -179,7 +179,7 @@ class CandleStickChartWithZoomPan extends React.Component {
         >
 
             {indicators.macd ? null : <XAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="bottom" orient="bottom" opacity={0.5}/>}
-            <YAxis tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4}/>
+            <YAxis tickFormat={volumeFormat} tickStroke={axisLineColor} stroke={axisLineColor} axisAt="left" orient="left" ticks={4}/>
 
             {indicators.macd ? null : <MouseCoordinateX id={1}
                 rectWidth={125}

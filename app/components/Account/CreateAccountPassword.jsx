@@ -1,4 +1,4 @@
-import React from "react";
+    import React from "react";
 import { connect } from "alt-react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
@@ -106,6 +106,7 @@ class CreateAccountPassword extends React.Component {
 
         AccountActions.createAccountWithPassword(name, password, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
             AccountActions.setPasswordAccount(name);
+
             // User registering his own account
             if(this.state.registrar_account) {
                 FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
@@ -119,7 +120,15 @@ class CreateAccountPassword extends React.Component {
             } else { // Account registered by the faucet
                 FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                     this.setState({
-                        step: 2
+                        step: 2,
+                        loading: false
+                    });
+                    this._unlockAccount(name, password);
+                }).catch((err) => {
+
+                    this.setState({
+                        step: 2,
+                        loading: false
                     });
                     this._unlockAccount(name, password);
                 });
