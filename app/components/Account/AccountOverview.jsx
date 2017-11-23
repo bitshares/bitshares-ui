@@ -367,17 +367,6 @@ class AccountOverview extends React.Component {
                             <td style={{textAlign: "left", paddingLeft: 10}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td className="column-hide-small" colSpan="2"></td>
-                            <td style={{textAlign: "center"}}>
-                                {canBuy  && this.props.isMyAccount ?
-                                <span>
-                                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", a, false)}>
-                                        <Icon name="dollar" className="icon-14px" />
-                                    </a>
-                                </span> : emptyCell}
-                            </td>
                             <td>
                                 {canDepositWithdraw && this.props.isMyAccount ?
                                 <span>
@@ -386,7 +375,6 @@ class AccountOverview extends React.Component {
                                     </a>
                                 </span> : emptyCell}
                             </td>
-                            <td>{emptyCell}</td>
                             <td style={{textAlign: "center"}}>
                                 {directMarketLink}
                             </td>

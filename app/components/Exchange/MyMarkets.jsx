@@ -158,7 +158,6 @@ class MarketGroup extends React.Component {
 
         let index = 0;
 
-        console.log('current=' + current);
         let marketRows = markets
             .map(market => {
                 return (
