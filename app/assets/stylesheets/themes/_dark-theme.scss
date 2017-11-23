@@ -75,4 +75,10 @@ $account-background: #3f3f3f;
     $account-border,
     $account-background
   );
+    .mymarkets-tabs {
+        > li {
+            @include button-focus($secondary-text-color, #222, 0);
+		}
+	}
+
 }

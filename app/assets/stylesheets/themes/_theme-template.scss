@@ -926,12 +926,13 @@ $account-background
     }
 
 
-    .order-table {
-
+    /*
+	.order-table {
         > tbody > tr:nth-of-type(even) {
             background-color: $row-accent-color;
         }
     }
+	*/
 
     .mymarkets-header {
         background-color: $header-color;
@@ -1019,6 +1020,7 @@ $account-background
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
+	
     //bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
@@ -1042,13 +1044,13 @@ $account-background
 
     .mymarkets-tabs {
         > li {
-            @include button-focus($secondary-text-color, $panel-bg-color, 0);
+            @include button-focus($secondary-text-color, $panel-bg-color, 10);
             &:hover {
-                @include button-focus($primary-text-color, $panel-bg-color, 10);
+                @include button-focus($primary-text-color, $panel-bg-color, 0);
             }
 
             &.active {
-                @include button-focus($primary-text-color, $panel-bg-color, 10);
+                @include button-focus($primary-text-color, $panel-bg-color, 0);
             }
         }
     }

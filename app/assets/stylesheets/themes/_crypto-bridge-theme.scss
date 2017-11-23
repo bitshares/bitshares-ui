@@ -83,6 +83,10 @@ $chat-text-color: #191A1F;
   );
 
   .change-up {
-      font-weight: bold;
+    font-weight: bold;
   }
+
+  .table > tbody > tr:nth-of-type(odd) {
+    background-color: darken($bg-color, 4%);
+  } 
 }
