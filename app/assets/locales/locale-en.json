@@ -121,6 +121,9 @@
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
     "open_orders": "Open Orders",
+    "filter_orders": "Filter",
+    "submit_orders": "Submit",
+    "reset_orders": "Reset",
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
@@ -1385,5 +1388,12 @@
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
+    },
+    "migration": {
+        "title": "Notice",
+        "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+        "text_1": "Local wallet detected",
+        "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+        "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
     }
 }
