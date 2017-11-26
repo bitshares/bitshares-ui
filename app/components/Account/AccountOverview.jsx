@@ -118,8 +118,8 @@ class AccountOverview extends React.Component {
                 let aChange = parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
                 let bChange = parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
                 let direction = typeof this.state.sortDirection !== "undefined" ? this.state.sortDirection : true;
-                
-                return direction ? aChange < bChange : aChange > bChange;
+
+                return direction ? aChange - bChange : bChange - aChange;
             }
         }
     }
@@ -281,9 +281,10 @@ class AccountOverview extends React.Component {
                     </td>
                     <td style={{textAlign: "right"}} className="column-hide-small">
                         <Market24HourChangeComponent
-                            refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }} 
-                            fromAsset={asset.get("id")} 
-                            toAsset={preferredUnit} 
+                            refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }}
+                            base={asset.get("id")}
+                            quote={preferredUnit}
+                            marketId={asset.get("symbol")+"_" + preferredUnit}
                             hide_symbols
                         />
                     </td>
@@ -511,15 +512,6 @@ class AccountOverview extends React.Component {
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
 
-        let totalValue =
-            <TotalBalanceValue
-                noTip
-                balances={totalBalanceList}
-                openOrders={orders}
-                debt={debt}
-                collateral={collateral}
-                hide_asset
-            />;
         let portFolioValue =
             <TotalBalanceValue
                 noTip

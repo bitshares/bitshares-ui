@@ -10,10 +10,10 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import { ChainStore } from "bitsharesjs/es";
-import { LimitOrder, CallOrder, Price } from "common/MarketClasses";
+import { LimitOrder, CallOrder } from "common/MarketClasses";
 const rightAlign = {textAlign: "right"};
 import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
-import MarketPrice from "../Utility/MarketPrice";
+import {MarketPrice} from "../Utility/MarketPrice";
 
 class TableHeader extends React.Component {
 

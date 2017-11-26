@@ -5,30 +5,28 @@ import BindToChainState from "./BindToChainState";
 import { connect } from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import ReactTooltip from "react-tooltip";
-import {MarketStatsCheck} from "../Utility/EquivalentPrice";
+import {MarketStats} from "../Utility/MarketPrice";
 
 /**
  *  Displays change in market value for an asset
  *
  *  Expects three properties
- *  -'toAsset' which should be a asset id
- *  -'fromAsset' which is the asset id of the original asset amount
+ *  -'quote' which should be a asset id
+ *  -'base' which is the asset id of the original asset amount
  */
 
-class MarketChangeComponent extends MarketStatsCheck {
+class MarketChangeComponent extends MarketStats {
 
     static propTypes = {
-        toAsset: ChainTypes.ChainAsset.isRequired,
-        fromAsset: ChainTypes.ChainAsset.isRequired,
-        coreAsset: ChainTypes.ChainAsset.isRequired
+        quote: ChainTypes.ChainAsset.isRequired,
+        base: ChainTypes.ChainAsset.isRequired
     };
 
     static defaultProps = {
-        toAsset: "1.3.0",
+        quote: "1.3.0",
         fullPrecision: false,
         noDecimals: false,
         hide_asset: false,
-        coreAsset: "1.3.0"
     };
 
     constructor(props) {
@@ -42,29 +40,20 @@ class MarketChangeComponent extends MarketStatsCheck {
     shouldComponentUpdate(np) {
         return (
             super.shouldComponentUpdate(np) ||
-            np.fromAsset !== this.props.fromAsset
+            np.base !== this.props.base
         );
     }
 
     getValue() {
-        let {fromAsset, marketStats, toAsset} = this.props;
-        let fromStats;
-        let fromSymbol = fromAsset.get("symbol");
-
-        if (toAsset && marketStats) {
-            let toSymbol = toAsset.get("symbol");
-
-            fromStats = marketStats.get(fromSymbol + "_" + toSymbol);
-        }
-
-        return fromStats && fromStats.change ? fromStats.change : 0;
+        let {marketStats} = this.props;
+        return marketStats && marketStats.change ? marketStats.change : 0;
     }
 
     render() {
         let marketChangeValue = this.getValue();
         let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "change-down" : "change-up";
         let marketChangeFormattedValue = <FormattedNumber
-            style='decimal'
+            style="decimal"
             value={marketChangeValue}
             minimumFractionDigits={2}
             maximumFractionDigits={2}
@@ -87,9 +76,9 @@ Market24HourChangeComponent = connect(Market24HourChangeComponent, {
     listenTo() {
         return [MarketsStore];
     },
-    getProps() {
+    getProps(props) {
         return {
-            marketStats: MarketsStore.getState().allMarketStats
+            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId)
         };
     }
 });
