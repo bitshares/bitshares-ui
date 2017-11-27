@@ -196,8 +196,14 @@ class Header extends React.Component {
         ) : null;
 
         let tradeLink = this.props.lastMarket ?
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}><Translate component="span" content="header.exchange" /></a>:
-            <a className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/market/USD_BTS")}><Translate component="span" content="header.exchange" /></a>;
+            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, `/market/${this.props.lastMarket}`)}>
+                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
+                <Translate component="span" content="header.exchange" />
+            </a>:
+            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, "/market/USD_BTS")}>
+                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
+                <Translate component="span" content="header.exchange" />
+            </a>;
 
         // Account selector: Only active inside the exchange
         let accountsDropDown = null, account_display_name, accountsList;
@@ -324,19 +330,22 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount ? null :
                         <li>
-                            <Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}>
+                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}>
+                                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
                                 <Translate content="header.dashboard" />
                             </Link>
                         </li>}
                         <li>{tradeLink}</li>
                         {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
                         <li>
-                            <a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
+                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
                                 <Translate component="span" content="header.explorer" />
                             </a>
                         </li>
                         <li>
-                            <a className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
+                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
                                 <span><Translate content="header.settings" /></span>
                             </a>
                         </li>

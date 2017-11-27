@@ -179,6 +179,10 @@ $account-background
         }
     }
 
+    .icon > svg > path {
+        fill: $primary-text-color;
+    }
+
     .footer {
         @include color($secondary-text-color, $panel-bg-color);
         svg > path {
