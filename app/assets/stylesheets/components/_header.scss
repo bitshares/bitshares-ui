@@ -30,7 +30,7 @@
     > a {
       font-weight: bold;
       line-height: 2rem;
-      padding-left: 0.5rem;
+      padding-left: 0.75rem;
       padding-right: 0.5rem;
       font-size: 0.9rem;
       @include breakpoint(large) {
@@ -38,6 +38,12 @@
         padding-right: 1.75rem;
       }
     }
+  }
+
+  div.account-drop-down div.total-value {
+      text-align: left;
+      font-size: 80%;
+      line-height: initial;
   }
 }
 
@@ -53,6 +59,7 @@ div.header-balance {
 
 div.account-drop-down {
     font-size: 90%;
+    padding-right: 1rem;
     .dropdown-divider {
         padding-bottom: 10px;
     }

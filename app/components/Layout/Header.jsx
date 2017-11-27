@@ -165,8 +165,11 @@ class Header extends React.Component {
         let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
-                            <div className="grp-menu-item header-balance">
-                                <a><TotalBalanceValue.AccountWrapper label="header.account_value" accounts={[this.props.currentAccount]} inHeader={true}/></a>
+                            <div className="total-value">
+                                <TotalBalanceValue.AccountWrapper
+                                    accounts={[this.props.currentAccount]}
+                                    noTip
+                                />
                             </div>) : null;
 
         let dashboard = (
@@ -304,6 +307,10 @@ class Header extends React.Component {
 
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
+        const dropDownContent = ["Send", "Deposit", "Withdraw"].map(a => {
+            return <div>{a}</div>;
+        });
+
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -356,9 +363,9 @@ class Header extends React.Component {
                     <div className="grp-menu-items-group header-right-menu">
 
                         {/* {!myAccountCount || !walletBalance ? null : walletBalance} */}
-                        <div className="grp-menu-item overflow-visible" >
+                        {/* <div className="grp-menu-item overflow-visible" >
                             {flagDropdown}
-                        </div>
+                        </div> */}
 
                         {/* {myAccountCount !== 0 ? null :<div className="grp-menu-item overflow-visible" >
                             {settingsDropdown}
@@ -367,7 +374,37 @@ class Header extends React.Component {
 
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
-                            {accountsDropDown}
+                            {/* {accountsDropDown} */}
+
+                                {/* <Icon style={{marginRight: "1rem", position: "relative", top: -13, left: 8}} size="1x" name="chevron-down" /> */}
+
+                                <div className="dropdown-wrapper active">
+                                    <div>
+                                        <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                        <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
+                                            <span>{currentAccount}</span>
+                                            {walletBalance}
+                                        </div>
+                                    </div>
+                                    <ul className="dropdown" style={{top: 64, overflow: "hidden"}}>
+                                        <li style={{padding: "0px 5px"}}>
+                                            <div className="table-cell"><Icon size="2x" name="power" /></div>
+                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Login</div>
+                                        </li>
+                                        <li style={{padding: "0px 5px"}}>
+                                            <div className="table-cell"><Icon size="2x" name="transfer" /></div>
+                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Send</div>
+                                        </li>
+                                        <li style={{padding: "0px 5px"}}>
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Deposit</div>
+                                        </li>
+                                        <li style={{padding: "0px 5px"}}>
+                                            <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
+                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Withdraw</div>
+                                        </li>
+                                    </ul>
+                                </div>
                         </div>
 
 

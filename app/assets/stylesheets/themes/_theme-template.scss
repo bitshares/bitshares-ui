@@ -285,6 +285,14 @@ $account-background
         }
     }
 
+    .header div.account-drop-down div.total-value {
+        color: $account-green;
+    }
+
+    .header span.icon.lock-unlock > svg > path {
+        fill: $button-bg-color;
+    }
+
     .grp-menu-item button {
         &:hover, &:focus, &:active {
             background-color: $light-panel-bg-color !important;
@@ -312,7 +320,7 @@ $account-background
             > span { font-weight: bold; }
         }
         svg > path { fill: $secondary-text-color; }
-        svg:hover > path { fill: $primary-text-color; }
+        // svg:hover > path { fill: $primary-text-color; }
     }
 
     .settings-cog {
@@ -424,7 +432,7 @@ $account-background
             }
             /* Hover state */
 
-            li:hover span {
+            li:hover > span {
                 @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
                 color: $link-text-color;
             }
