@@ -109,7 +109,7 @@ class OrderRow extends React.Component {
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
                 </td>
                 {isMyAccount ? <td style={{textAlign: "right", paddingLeft: 0}}>
-                  <MarketPrice base={base.get("id")} quote={quote.get("id")} marketId={base.get("symbol")+"_"+quote.get("symbol")} />
+                  <MarketPrice base={base.get("id")} quote={quote.get("id")} marketId={base.get("symbol")+"_"+quote.get("symbol")} invert={false} />
                 </td> : null}
                 <td className={tdClass} style={rightAlign}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />

@@ -644,6 +644,7 @@ class AccountOverview extends React.Component {
                                             <td style={{textAlign: "center"}}>{ordersValue}</td>
                                             <td colSpan="1"></td>
                                             {this.props.isMyAccount ? <td></td> : null}
+                                            {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>
                                 </AccountOrders>
