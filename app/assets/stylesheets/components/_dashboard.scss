@@ -55,7 +55,7 @@ div.fm-container {
 .SimpleTrade__modal {
     // overflow: auto;
     .Modal__header {
-        padding: 20px 2rem;
+        padding: 1rem;
     }
     .Modal__divider {
         margin: 0px;
@@ -72,6 +72,73 @@ div.fm-container {
             padding-bottom: 10px;
         }
 
+    }
+    .SimpleTrade__QR {
+        > canvas {
+            background: white;
+            padding: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+    /* Buttons */
+    .ActionButton_Close {
+        padding: 10px 40px 10px 40px;
+        border-radius: 5px 5px 5px 5px;
+        color: rgb(242, 242, 242);
+        background-color: rgb(245, 27, 27);
+    }
+
+    .SimpleTrade__copyIcon {
+        padding: 0.5rem;    
+        margin-right: 15px;
+        background-color: rgb(65, 116, 184);
+    }
+
+    .SimpleTrade__msg {
+        text-align: right;
+        font-size: 0.8rem;
+    }
+    .SimpleTrade__msg-error {
+        > Icon {
+            position: "relative";
+            top: 0;
+        }
+    }
+    .error-msg {
+        font-style: normal;
+        text-transform: uppercase;
+        text-align: right;
+        font-size: 90%;
+        width: 100%;
+        color: #ff3633;
+        font-weight: bold;
+        > span {
+            vertical-align: top;
+            top: 0px;
+        }
+        > svg {
+            position: "relative";
+            top: 0px;
+        }
+    }
+
+    .SimpleTrade__deposit-info {
+        margin-left: 0.2rem;
+        overflow: "hidden";
+        > .copyIcon {
+            vertical-align: middle;
+        }
+        > .deposit-details {
+            text-align: left;
+            > div:nth-of-type(1) {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+            > div:nth-of-type(2) {
+                font-size: 1rem;
+                color: lightblue;
+            }
+        }
     }
 }
 
@@ -158,3 +225,6 @@ div.input-wrapper {
         }
     }
 }
+
+
+

@@ -61,7 +61,7 @@ class Row extends React.Component {
         let endDate = counterpart.localize(new Date(this.props.expiration), { format: 'short' });
 
         return (
-            <div style={{padding: "5px 0"}}>
+            <div style={{padding: "5px 0", textAlign: "left"}}>
                 {hideOpLabel ? null : (
                     <span className="left-td">
                         <a href onClick={this.showDetails}>

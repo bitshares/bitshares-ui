@@ -92,7 +92,7 @@ class FormattedPrice extends React.Component {
         let {base_asset, base_amount, quote_amount,
           marketDirections, hide_symbols, noPopOver} = this.props;
         const {marketId, first, second} = this.state;
-        let inverted = marketDirections.get(marketId) || this.props.invert;
+        let inverted = (this.props.invert === false) ? false : marketDirections.get(marketId) || this.props.invert;
         if (this.props.force_direction && second.get("symbol") === this.props.force_direction && inverted) {
             inverted = false;
         } else if (this.props.force_direction && first.get("symbol") === this.props.force_direction && !inverted) {

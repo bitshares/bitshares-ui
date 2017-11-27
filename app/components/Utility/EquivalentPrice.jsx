@@ -112,8 +112,6 @@ class EquivalentPrice extends MarketStatsCheck {
         super(props);
     }
 
-    componentD
-
     shouldComponentUpdate(np, nextState) {
         return (
             super.shouldComponentUpdate(np) ||

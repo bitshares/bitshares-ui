@@ -100,6 +100,7 @@
     "asset": "Asset",
     "market_value": "Valore di mercato",
     "hour_24": "Variazione in 24h",
+    "hour_24_short": "24h",
     "recent": "Attività recente",
     "name": "Nome account",
     "id": "ID Account",

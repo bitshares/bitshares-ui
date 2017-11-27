@@ -25,6 +25,7 @@ import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
+import AccountSignedMessages from "./components/Account/AccountSignedMessages";
 import ExchangeContainer from "./components/Exchange/ExchangeContainer";
 import MarketsContainer from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
@@ -119,6 +120,7 @@ const routes = (
             <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
             <Route path="orders" component={AccountOrders} />
             <Route path="whitelist" component={AccountWhitelist} />
+            <Route path="signedmessages" component={AccountSignedMessages} />
             <Redirect from="overview" to="dashboard" />
         </Route>
 
