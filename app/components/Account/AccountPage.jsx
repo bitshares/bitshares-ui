@@ -30,7 +30,7 @@ class AccountPage extends React.Component {
     }
 
     render() {
-        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
+        let {linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
 
         let isMyAccount = AccountStore.isMyAccount(account);
 
@@ -46,8 +46,8 @@ class AccountPage extends React.Component {
                         passwordLogin={settings.get("passwordLogin")}
                     />
                 </div> */}
-                <div className="grid-block main-content">
-                    <div className="grid-block vertical no-padding">
+                <div className="grid-container" style={{padding: "2rem 0"}}>
+                    <div className="grid-block no-padding" style={{height: "100%"}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
@@ -96,7 +96,6 @@ export default connect(AccountPageStoreWrapper, {
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
-            myAccounts:  AccountStore.getState().myAccounts,
             viewSettings: SettingsStore.getState().viewSettings,
             backedCoins: GatewayStore.getState().backedCoins,
             bridgeCoins: GatewayStore.getState().bridgeCoins,

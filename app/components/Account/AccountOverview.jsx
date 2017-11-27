@@ -150,10 +150,12 @@ class AccountOverview extends React.Component {
 
     componentDidMount(){
         this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
+        window.addEventListener("resize", this.adjustHeightOnChangeTab, {passive: true, capture: false});
     }
 
     componentWillUnmount(){
         clearInterval(this.tableHeightMountIntervalInstance);
+        window.removeEventListener("resize", this.adjustHeightOnChangeTab);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
