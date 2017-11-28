@@ -28,19 +28,18 @@ export default class Deprecate extends React.Component {
     render() {
         return (
             <div className="grid-frame">
-                <div className="grid-block vertical">
+                <div className="grid-block vertical" style={{paddingBottom: "3rem"}}>
+                    <div className="grid-content large-offset-2 large-8 shrink">
 
-                <div className="grid-content large-offset-2 large-8 shrink" style={{paddingBottom: "3rem"}}>
+                        <Translate content="migration.title" component="h2" />
+                        <Translate content="migration.announcement_1" unsafe component="p" />
+                        <p><a href="https://wallet.bitshares.org" target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a></p>
 
-                    <Translate content="migration.title" component="h2" />
-                    <Translate content="migration.announcement_1" unsafe component="p" />
-                    <p><a href="https://wallet.bitshares.org" target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a></p>
+                        {this.hasWallet() ? this.renderForWallet() : this.renderForCloud()}
 
-                    {this.hasWallet() ? this.renderForWallet() : this.renderForCloud()}
-
+                    </div>
+                    {this.hasWallet() ? <Settings {...this.props} deprecated /> : null}
                 </div>
-                {this.hasWallet() ? <Settings {...this.props} deprecated /> : null}
-            </div>
             </div>
         );
     }
