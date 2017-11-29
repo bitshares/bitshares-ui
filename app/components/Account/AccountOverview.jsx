@@ -119,7 +119,7 @@ class AccountOverview extends React.Component {
                 let bChange = parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
                 let direction = typeof this.state.sortDirection !== "undefined" ? this.state.sortDirection : true;
 
-                return direction ? aChange < bChange : aChange > bChange;
+                return direction ? aChange - bChange : bChange - aChange;
             }
         }
     }
@@ -485,15 +485,6 @@ class AccountOverview extends React.Component {
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
 
-        let totalValue =
-            <TotalBalanceValue
-                noTip
-                balances={totalBalanceList}
-                openOrders={orders}
-                debt={debt}
-                collateral={collateral}
-                hide_asset
-            />;
         let portFolioValue =
             <TotalBalanceValue
                 noTip
@@ -627,6 +618,7 @@ class AccountOverview extends React.Component {
                                             <td colSpan="3"></td>
                                             <td style={{textAlign: "center"}}>{ordersValue}</td>
                                             <td colSpan="1"></td>
+                                            {this.props.isMyAccount ? <td></td> : null}
                                             {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>

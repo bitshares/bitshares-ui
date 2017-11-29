@@ -13,6 +13,7 @@ import { ChainStore } from "bitsharesjs/es";
 import { LimitOrder, CallOrder } from "common/MarketClasses";
 const rightAlign = {textAlign: "right"};
 import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
+import {MarketPrice} from "../Utility/MarketPrice";
 
 class TableHeader extends React.Component {
 
@@ -34,6 +35,7 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th colSpan="3"><Translate content="account.bts_market" /></th>
+                    {isMyAccount ? <th style={rightAlign}><Translate content="account.quote" /></th> : null}
                     <th style={rightAlign}><Translate content="exchange.price" /></th>
                     <th style={rightAlign}><Translate content="account.qty" /></th>
                     <th style={rightAlign}><Translate content="exchange.total" /></th>
@@ -106,6 +108,9 @@ class OrderRow extends React.Component {
                 <td style={{textAlign: "left", paddingRight: 0, borderLeft: "none"}}>
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
                 </td>
+                {isMyAccount ? <td style={{textAlign: "right", paddingLeft: 0}}>
+                  <MarketPrice base={base.get("id")} quote={quote.get("id")} marketId={base.get("symbol")+"_"+quote.get("symbol")} invert={false} />
+                </td> : null}
                 <td className={tdClass} style={rightAlign}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
                     {priceSymbol}
