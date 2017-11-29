@@ -102,7 +102,7 @@ class Footer extends React.Component {
                         {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
                         <span style={updateStyles}>
                             CryptoBridge Decentralized Exchange
-                            <span className="version">&nbsp;BETA 0.9.3</span>
+                            <span className="version">&nbsp;BETA 0.9.4</span>
                         </span>
 
                         {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}

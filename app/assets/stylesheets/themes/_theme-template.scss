@@ -67,6 +67,10 @@ $account-background
         border-color: $success-color;
     }
 
+    .green {
+        color: $success-color;
+    }
+
     .label.info {
         color: $info-color;
         border-color: $info-color;
@@ -1020,7 +1024,7 @@ $account-background
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
-	
+
     //bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);

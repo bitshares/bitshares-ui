@@ -84,7 +84,7 @@ class VestingBalance extends React.Component {
                                 </tr>
                                 <tr>
                                     <td><Translate content="account.cryptobridge.remaining" /></td>
-                                    <td>{ difference > 0 ? <Translate days={ difference } content="account.cryptobridge.days"/> : <Translate content="account.cryptobridge.available"/> }</td>
+                                    <td>{ difference > 0 ? <Translate days={ difference } content="account.cryptobridge.days"/> : <Translate className='green' content="account.cryptobridge.available"/> }</td>
                                 </tr>
                                 <tr>
                                     <td><Translate content="account.cryptobridge.status" /></td>
@@ -204,7 +204,7 @@ class AccountStakeCreateNew extends React.Component {
             style = {color: 'red'};
         }
 
-        balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal(BCO_ID, account_balances[BCO_ID], 0, 0)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[BCO_ID]}/></span>);
+        balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal(BCO_ID, account_balances[BCO_ID], 0, 0)}> { account_balances[BCO_ID] ? <Translate component="span" content="account.cryptobridge.bco_available"/> : <Translate component="span" content="account.cryptobridge.bco_not_available"/> } <BalanceComponent balance={account_balances[BCO_ID]}/></span>);
         return (
                 <div style={{'marginTop': '20px'}} className="small-12 grid-content1">
 

@@ -181,7 +181,9 @@
         "stake_bco": "Create a new BCO staking position",
         "length": "Staking duration",
         "understand": "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds.",
-        "no_balances": "You have no open BridgeCoin staking positions."
+        "no_balances": "You have no open BridgeCoin staking positions.",
+        "bco_available": "Available: ",
+        "bco_not_available": "No BCO available "
     },
     "member": {
       "stats": "Membership",
