@@ -608,7 +608,7 @@
     "obtain": "to obtain",
     "global_parameters_update": "Updated global parameters",
     "file_write": "Wrote a file",
-    "vesting_balance_create": "created vesting balance of",
+    "vesting_balance_create": " created staking position of",
     "for": "for",
     "bond_create_offer": "Created bond offer",
     "bond_cancel_offer": "Cancelled bond offer",
