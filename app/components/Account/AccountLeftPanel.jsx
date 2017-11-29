@@ -153,6 +153,7 @@ class AccountLeftPanel extends React.Component {
                         <section className="block-list">
                             <ul className="account-left-menu" style={{marginBottom: 0}}>
                                 <li><Link to={`/account/${account_name}/dashboard/`} activeClassName="active"><Translate content="header.dashboard"/></Link></li>
+                                <li><Link to={`/account/${account_name}/staking/`} activeClassName="active"><Translate content="header.staking"/></Link></li>
 
                                 {/* <li className="menu-subheader" >
                                 <span className="button outline small">

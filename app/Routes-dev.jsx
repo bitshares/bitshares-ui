@@ -20,6 +20,7 @@ import {AccountAssetCreate} from "./components/Account/AccountAssetCreate";
 import AccountAssetUpdate from "./components/Account/AccountAssetUpdate";
 import AccountMembership from "./components/Account/AccountMembership";
 import AccountVesting from "./components/Account/AccountVesting";
+import AccountStaking from "./components/Account/AccountStaking";
 import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
@@ -115,6 +116,7 @@ const routes = (
             <Route path="update-asset/:asset" component={AccountAssetUpdate} />
             <Route path="member-stats" component={AccountMembership} />
             <Route path="vesting" component={AccountVesting} />
+            <Route path="staking" component={AccountStaking} />
             <Route path="permissions" component={AccountPermissions} />
             <Route path="voting" component={AccountVoting} />
             <Route path="deposit-withdraw" component={AccountDepositWithdraw} />

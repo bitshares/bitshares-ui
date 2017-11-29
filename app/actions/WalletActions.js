@@ -192,6 +192,63 @@ class WalletActions {
         }
     }
 
+    stakeBalance(account, period, amount) {
+        let tr = new TransactionBuilder();
+
+
+        tr.add_type_operation("vesting_balance_create", {
+            fee: { amount: "0", asset_id: "1.3.0"}, // 1564 BCO
+            creator: account,
+            owner: account,
+            amount: {
+                amount: amount * Math.pow(10, 7),
+                asset_id: "1.3.1564"
+            },
+            policy: [
+                1,{
+                    start_claim: new Date().toISOString().slice(0,19),
+                    vesting_seconds: period
+                }
+            ]
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+        .then(result => {
+
+        })
+        .catch(err => {
+            console.log("vesting_balance_create err:", err);
+        });
+    }
+
+    claimStakingBalance(account, cvb, forceAll = false) {
+        let tr = new TransactionBuilder();
+
+        let balance = cvb.balance.amount,
+            earned = cvb.policy[1].coin_seconds_earned,
+            vestingPeriod = cvb.policy[1].vesting_seconds,
+            //availablePercent = (forceAll || vestingPeriod) === 0 ? 1 : earned / (vestingPeriod * balance);
+            availablePercent = 1;
+
+        tr.add_type_operation("vesting_balance_withdraw", {
+            fee: { amount: "0", asset_id: "1.3.1564"},
+            owner: account,
+            vesting_balance: cvb.id,
+            amount: {
+                amount: Math.floor(balance * availablePercent),
+                asset_id: cvb.balance.asset_id
+            }
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+        .then(result => {
+
+        })
+        .catch(err => {
+            console.log("vesting_balance_withdraw err:", err);
+        });
+    }
+
     claimVestingBalance(account, cvb, forceAll = false) {
         let tr = new TransactionBuilder();
 
