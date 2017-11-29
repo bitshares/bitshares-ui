@@ -8,18 +8,7 @@ import { connect } from "alt-react";
 import utils from "common/utils";
 import FormattedPrice from "./FormattedPrice";
 
-class MarketPrice extends React.Component {
-
-    static propTypes = {
-        quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired,
-        invert: React.PropTypes.bool
-    };
-
-    static defaultProps = {
-        invert: true
-    };
-
+class MarketStats extends React.Component {
     constructor() {
         super();
 
@@ -51,9 +40,32 @@ class MarketPrice extends React.Component {
     componentWillUnmount() {
         clearInterval(this.statsInterval);
     }
+}
+
+class MarketPriceInner extends MarketStats {
+
+    static propTypes = {
+        quote: ChainTypes.ChainAsset.isRequired,
+        base: ChainTypes.ChainAsset.isRequired,
+        invert: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        invert: true
+    };
+
+    constructor(props) {
+        super(props);
+    }
+
+    shouldComponentUpdate(np) {
+        return (
+            super.shouldComponentUpdate(np)
+        );
+    }
 
     render() {
-        let {marketStats, marketStatsInverted} = this.props;
+        let {marketStats, marketStatsInverted, invert} = this.props;
         let price = marketStats && marketStats.price ? marketStats.price : null;
         if (!price && marketStatsInverted && marketStatsInverted.price) {
             price = marketStatsInverted.price.invert();
@@ -66,6 +78,7 @@ class MarketPrice extends React.Component {
                         base_amount={price.base.amount} base_asset={price.base.asset_id}
                         quote_amount={price.quote.amount} quote_asset={price.quote.asset_id}
                         hide_symbols
+                        invert={invert}
                     />
                     : "n/a"
                 }
@@ -74,17 +87,17 @@ class MarketPrice extends React.Component {
     }
 }
 
-MarketPrice = BindToChainState(MarketPrice);
+MarketPriceInner = BindToChainState(MarketPriceInner);
 
-class MarketCardWrapper extends React.Component {
+class MarketPrice extends React.Component {
     render() {
         return (
-            <MarketPrice {...this.props} />
+            <MarketPriceInner {...this.props} />
         );
     }
 }
 
-export default connect(MarketCardWrapper, {
+MarketPrice = connect(MarketPrice, {
     listenTo() {
         return [MarketsStore];
     },
@@ -96,3 +109,8 @@ export default connect(MarketCardWrapper, {
         };
     }
 });
+
+export {
+    MarketPrice,
+    MarketStats
+};

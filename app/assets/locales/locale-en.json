@@ -427,6 +427,7 @@
     "activity": "Activity",
     "eq_value_header": "Value ({asset})",
     "qty": "Qty",
+    "quote": "Quote",
     "total": "Total ({asset})"
   },
   "pagination": {
