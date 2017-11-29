@@ -197,7 +197,7 @@ class WalletActions {
 
 
         tr.add_type_operation("vesting_balance_create", {
-            fee: { amount: "0", asset_id: "1.3.1564"}, // 1564 BCO
+            fee: { amount: "0", asset_id: '1.3.1564'}, // 1564 BCO
             creator: account,
             owner: account,
             amount: {
