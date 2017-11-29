@@ -173,14 +173,15 @@
         "month_3": "3 Month (%(bonus)s bonus)",
         "month_6": "6 Month (%(bonus)s bonus)",
         "month_12": "12 Month (%(bonus)s bonus)",
-        "month_1_plural": "1 Months",
+        "month_1_plural": "1 Month",
         "month_3_plural": "3 Months",
         "month_6_plural": "6 Months",
         "month_12_plural": "12 Months",
         "amount_bco": "Amount of BCO to stake",
         "stake_bco": "Create a new BCO staking position",
         "length": "Staking duration",
-        "understand": "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds."
+        "understand": "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds.",
+        "no_balances": "You have no open BridgeCoin staking positions."
     },
     "member": {
       "stats": "Membership",

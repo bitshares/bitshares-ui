@@ -45,7 +45,6 @@ class VestingBalance extends React.Component {
 
 
             d1.setSeconds(d1.getSeconds() + vb.policy[1].vesting_seconds);
-            console.log(d + ' ' + d1);
             available = false;
             if (new Date() >= d1 ) {
                 available = true;
@@ -109,17 +108,19 @@ class AccountStakeCreateNew extends React.Component {
 
         this.state = {
             amount: 0,
-            selectedPeriod: 600,
+            selectedPeriod: 2678400,
             checked: false,
+            showValidationErrors: false,
             periods: [
                 {
-                    name: '10 minutes',
-                    value: 600
+                    name: '10 minutes (test)',
+                    value: 600,
+                    monthName: '10 minutes'
                 },
-
                 {
                     name: '2 Days (test)',
-                    value: 172800
+                    value: 172800,
+                    monthName: '2 Days'
                 },
 
                 {
@@ -150,10 +151,16 @@ class AccountStakeCreateNew extends React.Component {
         this.setPeriod = this.setPeriod.bind(this);
         this.stakeBalance = this.stakeBalance.bind(this);
         this.getMonths = this.getMonths.bind(this);
+        this.checkTerms = this.checkTerms.bind(this);
     }
 
     onAmountChanged(amount) {
         this.setState({amount: amount.amount});
+    }
+
+    checkTerms() {
+
+        this.setState({checked: !this.state.checked, showValidationErrors: false});
     }
 
 
@@ -165,19 +172,23 @@ class AccountStakeCreateNew extends React.Component {
     }
 
     stakeBalance() {
-        console.log('Staking account ' + this.props.accountId + ' for ' + this.state.selectedPeriod + ' with ' + this.state.amount);
-        WalletActions.stakeBalance(this.props.accountId, this.state.selectedPeriod, this.state.amount);
+        if (!this.state.checked) {
+            this.setState({showValidationErrors: true});
+        } else {
+            WalletActions.stakeBalance(this.props.accountId, this.state.selectedPeriod, this.state.amount);
+        }
     }
 
     getMonths() {
-        return this.state.periods &&this.state.periods.map((item, index) => {
-            console.log(index);
-            if (item.value === this.state.selectedPeriod) {
-                    return index;
+        if (this.state.periods) {
+            for (let i=0;i<this.state.periods.length;i++) {
+                let p = this.state.periods[i];
+                if (p.value && p.value === this.state.selectedPeriod) {
+                    return p.monthName;
+                }
             }
-        });
-
-        //return month;
+        }
+        return false;
     }
 
     render() {
@@ -185,8 +196,13 @@ class AccountStakeCreateNew extends React.Component {
         let key=0;
         let account_balances = this.props.balances.toJS();
         let month = this.getMonths();
-        console.log('Month = '+  month);
-        month=1;
+        let style;
+
+        const staking_text2 = counterpart.translate("account.cryptobridge.staking_text2", {fee: this.props.feeAmount || 0 });
+
+        if (this.state.showValidationErrors) {
+            style = {color: 'red'};
+        }
 
         balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal(BCO_ID, account_balances[BCO_ID], 0, 0)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[BCO_ID]}/></span>);
         return (
@@ -194,7 +210,9 @@ class AccountStakeCreateNew extends React.Component {
 
                         <h5><b><Translate content="account.cryptobridge.title" /></b></h5>
 
-                        <Translate component="p" unsafe content="account.cryptobridge.staking_text1" percent="50%"/>
+                        <p>
+                            <Translate  content="account.cryptobridge.staking_text1" percent="50%" unsafe/>
+                        </p>
                         <p>
                             <Translate content="account.cryptobridge.staking_text2" fee={this.props.feeAmount || 0} unsafe  />
                         </p>
@@ -221,14 +239,15 @@ class AccountStakeCreateNew extends React.Component {
                             return <option key={key++} value={p.value}>{p.name}</option>;
                         })}
                     </select>
-                    <label>
-                        <input type="checkbox" onChange={() => {}} checked={this.state.checked}/>
-                        <Translate unsafe content="account.cryptobridge.understand" amount={ this.state.amount } month={ month } />
-                    </label>
+                    { this.state.amount > 0 ?( <label className={this.state.showValidationErrors ? 'has-errors' : ''}>
+                        <input  type="checkbox" onChange={this.checkTerms} checked={this.state.checked}/>
+                        <Translate style={style} unsafe content="account.cryptobridge.understand" amount={ this.state.amount } month={ month } />
+                    </label> ) : null }
 
                     <p  style={{textAlign: "right"}}>
                         <button onClick={this.stakeBalance} className="button outline"><Translate content="account.cryptobridge.stake_bco" /></button>
                     </p>
+
 
                 </div>
         );
@@ -297,7 +316,6 @@ class AccountVesting extends React.Component {
         }
 
         let account = this.props.account.toJS();
-        console.log(vbs);
         let balances = vbs.map(vb => {
             //console.log('Balance amount ' + vb.balance.amount);
             if (vb.balance.amount && vb.policy && vb.policy[1].coin_seconds_earned && vb.balance.asset_id === '1.3.1564') {
@@ -315,7 +333,7 @@ class AccountVesting extends React.Component {
 
                     {!balances.length ? (
                     <h4 style={{paddingTop: "1rem"}}>
-                        <Translate content={"account.vesting.no_balances"}/>
+                        <Translate content={"account.cryptobridge.no_balances"}/>
                     </h4>) : balances}
                 </div>
             </div>
