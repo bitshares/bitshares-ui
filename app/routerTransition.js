@@ -56,6 +56,21 @@ const filterAndSortURLs = (count, latencies) => {
 let _connectInProgress = false;
 let _connectionCheckPromise = null;
 const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { //appInit is true when called via router onEnter, and false when node is manually selected in access settings
+
+    // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
+    if (__DEPRECATED__) {
+        let dbPromise = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
+        return dbPromise.then(() => {
+            Promise.all([
+                WalletDb.loadDbData().then(() => {
+                    console.log("wallet init done");
+                    callback();
+                }),
+                WalletManagerStore.init()
+            ]);
+        });
+    };
+
     const apiLatencies = SettingsStore.getState().apiLatencies;
     latencyChecks = ss.get("latencyChecks", 1);
     let apiLatenciesCount = Object.keys(apiLatencies).length;
@@ -108,6 +123,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             _connectInProgress = false;
             return callback();
         }
+
         return Promise.all([db, SettingsStore.init()]).then(() => {
             let chainStoreResetPromise = chainChanged ? ChainStore.resetCache() : Promise.resolve();
             return chainStoreResetPromise.then(() => {
