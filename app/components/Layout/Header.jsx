@@ -78,6 +78,7 @@ class Header extends React.Component {
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
             nextProps.currentLocale !== this.props.currentLocale ||
+            nextProps.height !== this.props.height ||
             nextState.active !== this.state.active
         );
     }
@@ -141,11 +142,13 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let tradingAccounts = AccountStore.getMyAccounts();
+        let maxHeight = Math.max(40, height - 64 - 36) + "px";
+        let overflowY = "auto";
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -240,7 +243,7 @@ class Header extends React.Component {
             </ActionSheet.Button>
             {tradingAccounts.length > 1 ?
             <ActionSheet.Content>
-                <ul className="no-first-element-top-border">
+                <ul className="no-first-element-top-border" style={{ maxHeight, overflowY }}>
                      {accountsList}
                 </ul>
             </ActionSheet.Content> : null}
@@ -253,7 +256,7 @@ class Header extends React.Component {
                 </a>
             </ActionSheet.Button>
             <ActionSheet.Content>
-                <ul className="no-first-element-top-border">
+                <ul className="no-first-element-top-border" style={{ maxHeight, overflowY }}>
                     <li>
                         <a href onClick={this._onNavigate.bind(this, "/settings")}>
                             <span><Translate content="header.settings" /></span>
@@ -280,7 +283,7 @@ class Header extends React.Component {
                 </a>
             </ActionSheet.Button>
             <ActionSheet.Content>
-                <ul className="no-first-element-top-border">
+                <ul className="no-first-element-top-border" style={{ maxHeight, overflowY }}>
                     {this.props.locales.map(locale => {
                         return (
                             <li key={locale}>
