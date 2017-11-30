@@ -285,9 +285,39 @@ $account-background
         }
     }
 
-    .header div.account-drop-down div.total-value {
-        color: $account-green;
+    .header div.account-drop-down {
+        div.total-value {
+            color: $account-green;
+        }
+
+        div.dropdown-wrapper {
+            background-color: $account-header;
+            ul {
+                background-color: $account-header;
+            }
+        }
+
+        ul.dropdown.header-menu {
+            > li {
+                > div:first-of-type {
+                    > span.icon > svg {
+                        > path {
+                            fill: white;
+                        }
+                    }
+                }
+
+                &:hover {
+                    background-color: $light-panel-bg-color;
+                }
+
+                &.divider {
+                    border-bottom: 1px solid $account-border;
+                }
+            }
+        }
     }
+
 
     .header span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;

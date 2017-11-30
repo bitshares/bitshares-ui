@@ -59,7 +59,6 @@ div.header-balance {
 
 div.account-drop-down {
     font-size: 90%;
-    padding-right: 1rem;
     .dropdown-divider {
         padding-bottom: 10px;
     }
@@ -114,4 +113,33 @@ div.header-right-menu {
 
 .lower-case {
   text-transform: lowercase;
+}
+
+div.account-drop-down div.dropdown-wrapper {
+    > ul {
+        padding-bottom: 0;
+    }
+    &.active > ul {
+        padding-bottom: 5px;
+    }
+}
+ul.dropdown.header-menu {
+    transition: padding 0s, height 3s linear;
+    border: none;
+    > li {
+        padding: 2px 5px 2px 10px;
+        > div {
+            vertical-align: middle;
+        }
+        > div:first-of-type {
+            padding-top: 5px;
+            > span.icon > svg {
+                height: 1.5rem;
+                width: 1.5rem;
+            }
+        }
+        > div:nth-of-type(2) {
+            padding-left: 8px;
+        }
+    }
 }

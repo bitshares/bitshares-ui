@@ -41,6 +41,8 @@ class Header extends React.Component {
         };
 
         this.unlisten = null;
+        this._closeDropdown = this._closeDropdown.bind(this);
+        this.onBodyClick = this.onBodyClick.bind(this);
     }
 
     componentWillMount() {
@@ -59,6 +61,8 @@ class Header extends React.Component {
         setTimeout(() => {
             ReactTooltip.rebuild();
         }, 1250);
+
+        document.body.addEventListener("click", this.onBodyClick, {capture: false, passive: true});
     }
 
     componentWillUnmount() {
@@ -66,6 +70,8 @@ class Header extends React.Component {
             this.unlisten();
             this.unlisten = null;
         }
+
+        document.body.removeEventListener("click", this.onBodyClick);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -103,6 +109,11 @@ class Header extends React.Component {
     _onNavigate(route, e) {
         e.preventDefault();
         this.context.router.push(route);
+        this._closeDropdown();
+    }
+
+    _closeDropdown() {
+        this.setState({dropdownActive: false});
     }
 
     _onGoBack(e) {
@@ -141,6 +152,21 @@ class Header extends React.Component {
     //     this.context.router.push(`/account/${account}/overview`);
     // }
 
+    onBodyClick(e) {
+        let el = e.target;
+        let insideDropdown = false;
+
+        do {
+            if(el.classList && el.classList.contains("dropdown-wrapper")) {
+                insideDropdown = true;
+                break;
+            }
+
+        } while ((el = el.parentNode));
+
+        if(!insideDropdown) this._closeDropdown();
+    }
+
     render() {
         let {active} = this.state;
         let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
@@ -148,7 +174,7 @@ class Header extends React.Component {
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let tradingAccounts = AccountStore.getMyAccounts();
-        let maxHeight = Math.max(40, height - 64 - 36) + "px";
+        let maxHeight = Math.max(40, height - 67 - 36) + "px";
         let overflowY = "auto";
 
         if (starredAccounts.size) {
@@ -279,7 +305,7 @@ class Header extends React.Component {
                     </li>
                     <li>
                         <a href onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
-                            <span><Translate content="header.help" /></span>
+                            <span></span>
                         </a>
                     </li>
                 </ul>
@@ -383,30 +409,60 @@ class Header extends React.Component {
                                 {/* <Icon style={{marginRight: "1rem", position: "relative", top: -13, left: 8}} size="1x" name="chevron-down" /> */}
 
                                 <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                    <div>
-                                        <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
-                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
-                                            <span>{currentAccount}</span>
-                                            {walletBalance}
-                                        </div>
-                                    </div>
-                                    <ul className="dropdown" style={{top: 64, overflow: "hidden"}}>
-                                        <li style={{padding: "0px 5px"}}>
+                                        <li style={{listStyle: "none", minWidth: 200}}>
+                                            <div className="table-cell">
+                                                <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                            </div>
+                                            <div className="table-cell">
+                                                <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
+                                                    <span>{currentAccount}</span>
+                                                    {walletBalance}
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    <ul className="dropdown header-menu" style={{left: 0, top: 67, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                        <li className="divider">
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
-                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Login</div>
+                                            <div className="table-cell">Login</div>
                                         </li>
-                                        <li style={{padding: "0px 5px"}}>
+
+                                        <li onClick={this._onNavigate.bind(this, "/transfer")}>
                                             <div className="table-cell"><Icon size="2x" name="transfer" /></div>
-                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Send</div>
+                                            <div className="table-cell">Send</div>
                                         </li>
-                                        <li style={{padding: "0px 5px"}}>
+                                        {enableDepositWithdraw ? <li>
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Deposit</div>
-                                        </li>
-                                        <li style={{padding: "0px 5px"}}>
+                                            <div className="table-cell">Deposit</div>
+                                        </li> : null}
+                                        {enableDepositWithdraw ? <li className="divider">
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
-                                            <div className="table-cell" style={{paddingLeft: 5, verticalAlign: "middle"}}>Withdraw</div>
+                                            <div className="table-cell">Withdraw</div>
+                                        </li> : null}
+
+                                        <li onClick={this._onNavigate.bind(this, "/help")}>
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell"><Translate content="header.help" /></div>
                                         </li>
+                                        <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell">Vote</div>
+                                        </li>
+                                        <li>
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell">Upgrade</div>
+                                        </li>
+                                        <li className="divider">
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell">Advanced</div>
+                                        </li>
+
+                                        <li className="divider">
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell">Accounts</div>
+                                        </li>
+
+                                        {accountsList}
                                     </ul>
                                 </div>
                         </div>
