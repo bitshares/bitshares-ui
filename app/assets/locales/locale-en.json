@@ -463,6 +463,7 @@
     "again": "MAKE ANOTHER TRANSFER",
     "see": "SEE MY TRANSFERS",
     "close": "Close",
+    "cancel": "Cancel",
     "copy_address": "Copy Address",
     "copy_memo": "Copy Memo",
     "memo_unlock": "Unlock your wallet/account in order to see this memo",

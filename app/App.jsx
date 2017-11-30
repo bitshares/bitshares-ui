@@ -176,9 +176,10 @@ class App extends React.Component {
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
+            console.log(this.props.params.account_name);
             content = (
                 <div className="grid-frame vertical">
-                    <Header/>
+                    <Header activeAccount={this.props.params.account_name} />
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <div className="grid-block">
                         <div className="grid-block vertical">

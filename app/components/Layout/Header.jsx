@@ -147,7 +147,7 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, activeAccount} = this.props;
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
@@ -303,7 +303,6 @@ class Header extends React.Component {
         </ActionSheet>;
 
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
-
         return (
             <div className="header menu-group primary">
                 <div className="show-for-small-only">
@@ -365,11 +364,11 @@ class Header extends React.Component {
                     </div>
                 </div>
                 {/* Bridge modal */}
-                <SendModal ref="send_modal"
-                    account_name={account_display_name} />
+                <SendModal ref="send_modal" from_name={account_display_name} to_name={activeAccount}  />
             </div>
             
         );
+        
     }
 }
 

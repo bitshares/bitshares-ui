@@ -20,20 +20,37 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import {connect} from "alt-react";
 import classnames from "classnames";
 
-class SendModal extends React.Component {
-    
-    static propTypes = {
-        sender: ChainTypes.ChainAccount.isRequired,
-        asset: ChainTypes.ChainAsset.isRequired
-    };
-    
+export default class SendModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = SendModal.getInitialState();
+        
+        if(this.props.to_name) {
+            console.log("Got Prop Name");
+            this.state.to_name = this.props.to_name;
+            this.state.to_account = ChainStore.getAccount(this.props.to_name);
+        }
+
+        if(this.props.from_name) {
+            console.log("Got Prop From");
+            this.state.from_name = this.props.from_name;
+            this.state.from_account = ChainStore.getAccount(this.props.from_name);
+        }
+
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name) this.state.from_name = currentAccount;
-    };
+        
+        console.log("From Name: " + this.state.from_name);
+        console.log(ChainStore.getAccount(this.props.to_name));
+        console.log("To Name: " + this.state.to_name);
+        console.log(this.state.to_account);
 
+        this.onTrxIncluded = this.onTrxIncluded.bind(this);
+
+        this._updateFee = debounce(this._updateFee.bind(this), 250);
+        this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this._checkBalance = this._checkBalance.bind(this);
+    };
 
     static getInitialState() {
         return {
@@ -56,35 +73,6 @@ class SendModal extends React.Component {
 
     };
 
-    render() {
-        let {from_name} = this.state;
-        return (
-            <div>This is the SendInput Part of the Modal {from_name}</div>
-        );
-    }
-};
-
-SendModal = connect(SendModal, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount
-        };
-    }
-});
-
-export default class SendBaseModal extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            open: false
-        };
-    }
-
     show() {
         this.setState({open: true}, () => {
             ZfApi.publish("send_modal", "open");
@@ -93,59 +81,62 @@ export default class SendBaseModal extends React.Component {
 
     onClose() {
         this.setState({open: false});
+        this._emptyForm();
     }
 
-    render() {
-        return (
-            <BaseModal id="send_modal" overlay={true} ref="send_modal">
-                <SendModal />
-            </BaseModal>
-        );
-    }
-}
-
-/* Export functions from Transfer/Transfer.jsx */
-
-/*
-
-class SendInputModal extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = SendModal.getInitialState();
-
-        let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name || !this.state.from_account) { 
-            this.setState({from_name: currentAccount, from_account: ChainStore.getAccount(currentAccount)});
-        }
-        
-        this.onTrxIncluded = this.onTrxIncluded.bind(this);
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._checkFeeStatus = this._checkFeeStatus.bind(this);
-        this._checkBalance = this._checkBalance.bind(this);
-    };
-
-    static getInitialState() {
-        return {
-            from_name: null,
-            to_name: null,
+    _exmptyForm() {
+        this.setState({
+            from_name: "",
             from_account: null,
+            to_name: "",
             to_account: null,
             amount: "",
-            asset_id: null,
-            asset: null,
-            memo: "",
-            error: null,
-            propose: false,
-            propose_account: "",
-            feeAsset: null,
-            fee_asset_id: "1.3.0",
-            feeAmount: new Asset({amount: 0}),
-            feeStatus: {}
-        };
-    };
+            memo: ""
+        });
+    }
 
-    show() {
-        ZfApi.publish("send_modal", "open");
+    componentWillMount() {
+        console.log("componentWillMount");
+        this.nestedRef = null;
+        this._updateFee();
+        this._checkFeeStatus();
+    }
+
+    shouldComponentUpdate(np, ns) {
+        console.log("shouldComponentUpdate");
+        let { asset_types: current_types } = this._getAvailableAssets();
+        let { asset_types: next_asset_types } = this._getAvailableAssets(ns);
+
+        if (next_asset_types.length === 1) {
+            let asset = ChainStore.getAsset(next_asset_types[0]);
+            if (current_types.length !== 1) {
+                this.onAmountChanged({amount: ns.amount, asset});
+            }
+
+            if (next_asset_types[0] !== this.state.fee_asset_id) {
+                if (asset && this.state.fee_asset_id !== next_asset_types[0]) {
+                    this.setState({
+                        feeAsset: asset,
+                        fee_asset_id: next_asset_types[0]
+                    });
+                }
+            }
+        }
+        return true;
+    }
+
+    componentWillReceiveProps(np) {
+        console.log("componentWillReceiveProps");
+        console.log(np);
+        this.setState({
+            from_name: np.from_name,
+            from_account: ChainStore.getAccount(np.from_name),
+            to_name: (np.to_name ? np.to_name : ""),
+            to_account: (np.to_name ? ChainStore.getAccount(np.to_name) : null),
+            feeStatus: {},
+            fee_asset_id: "1.3.0",
+            feeAmount: new Asset({amount: 0})
+        }, () => {this._updateFee(); this._checkFeeStatus(ChainStore.getAccount(np.from_name));});
     }
 
     _checkBalance() {
@@ -161,6 +152,7 @@ class SendInputModal extends React.Component {
             this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
         }
         if (!balanceObject || !feeAmount) return;
+        if (!amount) return this.setState({balanceError: false});
         const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
@@ -198,6 +190,21 @@ class SendInputModal extends React.Component {
         });
     }
     
+    _setTotal(asset_id, balance_id) {
+        const {feeAmount} = this.state;
+        let balanceObject = ChainStore.getObject(balance_id);
+        let transferAsset = ChainStore.getObject(asset_id);
+
+        let balance = new Asset({amount: balanceObject.get("balance"), asset_id: transferAsset.get("id"), precision: transferAsset.get("precision")});
+
+        if (balanceObject) {
+            if (feeAmount.asset_id === balance.asset_id) {
+                balance.minus(feeAmount);
+            }
+            this.setState({amount: balance.getAmount({real: true})}, this._checkBalance);
+        }
+    }
+
     _getAvailableAssets(state = this.state) {
         const { feeStatus } = this.state;
         function hasFeePoolBalance(id) {
@@ -262,6 +269,10 @@ class SendInputModal extends React.Component {
         });
     }
 
+    setNestedRef(ref) {
+        this.nestedRef = ref;
+    }
+
     toChanged(to_name) {
         this.setState({to_name, error: null});
     }
@@ -275,6 +286,10 @@ class SendInputModal extends React.Component {
             return;
         }
         this.setState({amount, asset, asset_id: asset.get("id"), error: null}, this._checkBalance);
+    }
+
+    onFeeChanged({asset}) {
+        this.setState({feeAsset: asset, fee_asset_id: asset.get("id"), error: null}, this._updateFee);
     }
 
     onMemoChanged(e) {
@@ -292,13 +307,12 @@ class SendInputModal extends React.Component {
         }
     }
 
+
     render() {
-        
-        const {account_name} = this.props;
-        let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount,
-            amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
+        let from_error = null;
+        let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount, amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
-            
+        
         if(from_account && ! from_my_account && ! propose ) {
             from_error = <span>
                 {counterpart.translate("account.errors.not_yours")}
@@ -317,13 +331,13 @@ class SendInputModal extends React.Component {
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
+                let _insufficientFundsError = this.state.balanceError ? "red" : "";
+
+                balance = (<span><Translate component="span" content="transfer.available"/>: <span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer", color: _insufficientFundsError}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><BalanceComponent balance={account_balances[current_asset_id]}/></span></span>);
             } else {
                 balance = "No funds";
             }
         }
-
-        console.log(from_account);
 
         let propose_incomplete = propose && ! propose_account;
         const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
@@ -332,21 +346,22 @@ class SendInputModal extends React.Component {
         const isSendNotValid = !from_account || !isToAccountValid || !isAmountValid || !asset || from_error || propose_incomplete || balanceError;
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
+
+        const logo = require("assets/logo-ico-blue.png");
         let tabIndex = 1;
 
-        let logo = require("assets/logo-ico-blue.png");
         return (
             <BaseModal id="send_modal" overlay={true} ref="send_modal">
                 <div className="grid-block vertical no-overflow">
                     <div style={{textAlign: "center", textTransform: "none"}}>
                         <img style={{margin: 0, height: 60, marginBottom: 10}} src={logo} /><br />
-                        <div style={{whiteSpace: "nowrap", fontSize: "1.8rem", fontWeight: "bold", }}>Send from <span style={{color: "lightblue"}}>{account_name}</span></div>
+                        <div style={{whiteSpace: "nowrap", fontSize: "1.8rem", fontWeight: "bold", }}>Send from <span style={{color: "lightblue"}}>{from_name}</span></div>
                         <div style={{marginTop: 10, fontSize: "0.8rem", width: "40%", marginLeft: "auto", marginRight: "auto"}}>
                             Transfers are used for sending funds to other BitShares Account Holders
                         </div>
                     </div>
-                    <div className="SimpleTrade__withdraw-row">
-                        {//  T O }
+                    <div>
+                        {/* T O */}
                         <div className="content-block">
                             <AccountSelector
                                 label="transfer.to"
@@ -358,55 +373,96 @@ class SendInputModal extends React.Component {
                                 tabIndex={tabIndex++}
                             />
                         </div>
-                        {/*  A M O U N T   /}
+                        
                         <div className="content-block transfer-input">
-                            <AmountSelector
-                                label="transfer.amount"
-                                amount={amount}
-                                onChange={this.onAmountChanged.bind(this)}
-                                asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                assets={asset_types}
-                                display_balance={balance}
-                                tabIndex={tabIndex++}
-                            />
-                            {this.state.balanceError ? 
-                                <p className="has-error no-margin" style={{paddingTop: 10}}>
-                                    <Translate content="transfer.errors.insufficient" />
-                                </p> : null}
+                            <div className="no-margin no-padding">
+                                {/*  A M O U N T  */}
+                                <div className="small-6">
+                                    <AmountSelector
+                                        label="transfer.amount"
+                                        amount={amount}
+                                        onChange={this.onAmountChanged.bind(this)}
+                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                        assets={asset_types}
+                                        display_balance={balance}
+                                        tabIndex={tabIndex++}
+                                    />
+                                    {this.state.balanceError ? 
+                                        <p className="has-error no-margin" style={{paddingTop: 10}}>
+                                            <Translate content="transfer.errors.insufficient" />
+                                        </p> : null}
+                                </div>
+                                {/*  F E E   */}
+                                <div className="small-6">
+                                    <AmountSelector
+                                        label="transfer.fee"
+                                        disabled={true}
+                                        amount={fee}
+                                        onChange={this.onFeeChanged.bind(this)}
+                                        asset={fee_asset_types.length && feeAmount ? feeAmount.asset_id : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                        assets={fee_asset_types}
+                                        tabIndex={tabIndex++}
+                                        error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        {/*  M E M O  /}
+                        {/*  M E M O  */}
                         <div className="content-block transfer-input">
                             {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
                             <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
                             <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                            {/* warning /}
+                            {/* warning */}
                             { this.state.propose ?
                                 <div className="error-area" style={{position: "absolute"}}>
                                     <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
                                 </div>
                             :null}
                         </div>
+                        
+                       
+                        <div className="SimpleTrade__withdraw-row">
+                            <div className="no-margin no-padding">
+                                <div className="small-6"  style={{paddingRight: 10}}>
+                                    <button className={classnames("button no-margin")} type="submit" value="Cancel" tabIndex={tabIndex++}>
+                                        <Translate component="span" content="transfer.cancel" />
+                                    </button>
+                                    {propose ?
+                                        <button className={classnames("button no-margin", {disabled: isSendNotValid})} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                            <Translate component="span" content="propose" />
+                                        </button> :
+                                        <button className={classnames("button no-margin", {disabled: isSendNotValid})} type="submit" value="Submit" tabIndex={tabIndex++}>
+                                            <Translate component="span" content="transfer.send" />
+                                        </button>
+                                    }
+                                </div>
+                                <div className="small-6"  style={{paddingLeft: 10}}>
+                                    <label style={{paddingTop: "0.5rem", paddingRight: "0.5rem"}}><Translate content="propose" />:</label>
+                                    <div className="switch">
+                                        <input type="checkbox" />
+                                        <label />
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
                     </div>
                 </div>
             </BaseModal>
         );
     }
-}
+};
 
-ModalContent = BindToChainState(ModalContent, {keep_updating: true});
-
-class SendModal extends React.Component {
-
-    show() {
-        ZfApi.publish("send_modal", "open");
+SendModal = connect(SendModal, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount
+        };
     }
+});
 
-    render() {
-        return (
-            <SendInputModal/>
-        );
-    }
-}
-
-export default SendModal;
-*/
+/* Export functions from Transfer/Transfer.jsx */
