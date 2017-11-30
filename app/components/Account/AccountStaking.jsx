@@ -113,32 +113,29 @@ class AccountStakeCreateNew extends React.Component {
             showValidationErrors: false,
             periods: [
                 {
-                    name: '10 minutes (test)',
-                    value: 600,
-                    monthName: '10 minutes'
-                },
-                {
-                    name: '2 Days (test)',
-                    value: 172800,
-                    monthName: '2 Days'
-                },
-
-                {
+                    name1: 'account.cryptobridge.month_1',
+                    bonus: '0%',
                     name: counterpart.translate("account.cryptobridge.month_1", {bonus: '0%'}),
                     monthName: counterpart.translate("account.cryptobridge.month_1_plural"),
                     value: 2678400
                 },
                 {
+                    name1: 'account.cryptobridge.month_3',
+                    bonus: '20%',
                     name: counterpart.translate("account.cryptobridge.month_3", {bonus: '20%'}),
                     monthName: counterpart.translate("account.cryptobridge.month_3_plural"),
                     value: 7776000
                 },
                 {
+                    name1: 'account.cryptobridge.month_6',
+                    bonus: '50%',
                     name: counterpart.translate("account.cryptobridge.month_6", {bonus: '50%'}),
                     monthName: counterpart.translate("account.cryptobridge.month_6_plural"),
                     value: 15552000
                 },
                 {
+                    name1: 'account.cryptobridge.month_12',
+                    bonus: '100%',
                     name: counterpart.translate("account.cryptobridge.month_12", {bonus: '100%'}),
                     monthName: counterpart.translate("account.cryptobridge.month_12_plural"),
                     value: 31536000
@@ -198,8 +195,6 @@ class AccountStakeCreateNew extends React.Component {
         let month = this.getMonths();
         let style;
 
-        const staking_text2 = counterpart.translate("account.cryptobridge.staking_text2", {fee: this.props.feeAmount || 0 });
-
         if (this.state.showValidationErrors) {
             style = {color: 'red'};
         }
@@ -236,7 +231,7 @@ class AccountStakeCreateNew extends React.Component {
                         {
                         this.state.periods.map((p) => {
                             if (!p || p === "") {return null; }
-                            return <option key={key++} value={p.value}>{p.name}</option>;
+                            return <option key={key++} value={p.value}><Translate content={p.name1} unsafe bonus={p.bonus} /></option>;
                         })}
                     </select>
                     { this.state.amount > 0 ?( <label className={this.state.showValidationErrors ? 'has-errors' : ''}>
