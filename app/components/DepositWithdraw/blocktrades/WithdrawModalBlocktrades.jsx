@@ -13,8 +13,8 @@ import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset} from "common/MarketClasses";
 import { debounce } from "lodash";
+import {Price, Asset} from "common/MarketClasses";
 
 class WithdrawModalBlocktrades extends React.Component {
 
@@ -378,7 +378,18 @@ class WithdrawModalBlocktrades extends React.Component {
 
             if (asset) {
                 // Remove any assets that do not have valid core exchange rates
-                if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
+                let priceIsValid = false, p;
+                try {
+                    p = new Price({
+                        base: new Asset(asset.getIn(["options", "core_exchange_rate", "base"]).toJS()),
+                        quote: new Asset(asset.getIn(["options", "core_exchange_rate", "quote"]).toJS())
+                    });
+                    priceIsValid = p.isValid();
+                } catch(err) {
+                    priceIsValid = false;
+                }
+
+                if (asset.get("id") !== "1.3.0" && !priceIsValid) {
                     fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
                 }
             }

@@ -40,16 +40,19 @@ class App extends React.Component {
             theme: SettingsStore.getState().settings.get("themes"),
             isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
             incognito: false,
-            incognitoWarningDismissed: false
+            incognitoWarningDismissed: false,
+            height: window && window.innerHeight
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
         this._onSettingsChange = this._onSettingsChange.bind(this);
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
+        this._getWindowHeight = this._getWindowHeight.bind(this);
     }
 
     componentWillUnmount() {
+        window.removeEventListener("resize", this._getWindowHeight);
         NotificationStore.unlisten(this._onNotificationChange);
         SettingsStore.unlisten(this._onSettingsChange);
         ChainStore.unsubscribe(this._chainStoreSub);
@@ -77,6 +80,7 @@ class App extends React.Component {
 
     _setListeners() {
         try {
+            window.addEventListener("resize", this._getWindowHeight, {capture: false, passive: true});
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange);
             ChainStore.subscribe(this._chainStoreSub);
@@ -146,6 +150,10 @@ class App extends React.Component {
 
     }
 
+    _getWindowHeight() {
+        this.setState({height: window && window.innerHeight});
+    }
+
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
     //     console.log("add notification:", this.refs, params);
@@ -179,7 +187,7 @@ class App extends React.Component {
             console.log(this.props.params.account_name);
             content = (
                 <div className="grid-frame vertical">
-                    <Header activeAccount={this.props.params.account_name} />
+                    <Header height={this.state.height} activeAccount={this.props.params.account_name} />
                     <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <div className="grid-block">
                         <div className="grid-block vertical">

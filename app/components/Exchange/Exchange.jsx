@@ -195,7 +195,11 @@ class Exchange extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate() {
+        this._initPsContainer();
+    }
+
+    _initPsContainer() {
         if (this.refs.center && this.psInit) {
             let centerContainer = this.refs.center;
             if (centerContainer) {
@@ -203,6 +207,10 @@ class Exchange extends React.Component {
                 this.psInit = false;
             }
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this._initPsContainer();
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||
             nextProps.baseAsset !== this.props.baseAsset ||
