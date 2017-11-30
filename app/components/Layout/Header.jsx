@@ -78,7 +78,8 @@ class Header extends React.Component {
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
             nextProps.currentLocale !== this.props.currentLocale ||
-            nextState.active !== this.state.active
+            nextState.active !== this.state.active,
+            nextState.dropdownActive !== this.state.dropdownActive
         );
     }
 
@@ -313,11 +314,11 @@ class Header extends React.Component {
 
         return (
             <div className="header menu-group primary">
-                <div className="show-for-small-only">
+                {/*<div className="show-for-small-only">
                     <ul className="primary menu-bar title">
                         <li><a href onClick={this._triggerMenu}><Icon className="icon-32px" name="menu"/></a></li>
                     </ul>
-                </div>
+                </div>*/}
                 {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
                     <ul className="menu-bar">
                         <li>
@@ -378,10 +379,10 @@ class Header extends React.Component {
 
                                 {/* <Icon style={{marginRight: "1rem", position: "relative", top: -13, left: 8}} size="1x" name="chevron-down" /> */}
 
-                                <div className="dropdown-wrapper active">
+                                <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
                                     <div>
                                         <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
-                                        <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
+                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
                                             <span>{currentAccount}</span>
                                             {walletBalance}
                                         </div>
