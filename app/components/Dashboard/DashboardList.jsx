@@ -68,14 +68,17 @@ class DashboardList extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+	
 		return (
 			!utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+			nextProps.showMyAccounts !== this.props.showMyAccounts ||
 			nextProps.width !== this.props.width ||
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
-			!utils.are_equal_shallow(nextState, this.state)
+			!utils.are_equal_shallow(nextState, this.state )
 		);
+		
 	}
 
 	_onStar(account, isStarred, e) {
@@ -113,6 +116,7 @@ class DashboardList extends React.Component {
 	}
 
 	_renderList(accounts) {
+
 		const {width, starredAccounts} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
@@ -196,6 +200,11 @@ class DashboardList extends React.Component {
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
+				let shouldShow = (isMyAccount === this.props.showMyAccounts);
+				
+				if(!shouldShow) 
+					return (null);
+
 				return (
 					<tr key={accountName}>
 						<td onClick={this._onStar.bind(this, accountName, isStarred)}>
@@ -223,6 +232,7 @@ class DashboardList extends React.Component {
 	}
 
 	render() {
+
 		let { width, showIgnored } = this.props;
 		const { dashboardFilter } = this.state;
 
@@ -230,7 +240,8 @@ class DashboardList extends React.Component {
 
 		let hiddenAccounts = showIgnored ? this._renderList(this.props.ignoredAccounts) : null;
 
-		let filterText = counterpart.translate("explorer.accounts.filter") + "...";
+		let filterText = (this.props.showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
+		filterText += "...";
 
 		return (
 			<div style={this.props.style}>
