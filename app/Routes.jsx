@@ -167,6 +167,10 @@ const routes = (
             <Route path="assets" getComponent={(location, cb) => {
                 System.import("components/Account/AccountAssets").then(loadRoute(cb)).catch(errorLoading);
             }}/>
+            <Route path="staking" getComponent={(location, cb) => {
+                System.import("components/Account/AccountStaking").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+
             <Route path="create-asset" getComponent={(location, cb) => {
                 System.import("components/Account/AccountAssetCreate").then(loadRoute(cb, "AccountAssetCreate")).catch(errorLoading);
             }}/>
