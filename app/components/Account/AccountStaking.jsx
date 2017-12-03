@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AmountSelector from "../Utility/AmountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
+import AccountStakeCreateNew from './AccountStakeCreateNew';
 import {ChainStore} from "bitsharesjs/es";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
@@ -102,153 +103,6 @@ class VestingBalance extends React.Component {
     }
 }
 
-class AccountStakeCreateNew extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            amount: 0,
-            selectedPeriod: 2678400,
-            checked: false,
-            showValidationErrors: false,
-            periods: [
-                {
-                    name1: 'account.cryptobridge.month_1',
-                    bonus: '0%',
-                    name: counterpart.translate("account.cryptobridge.month_1", {bonus: '0%'}),
-                    monthName: counterpart.translate("account.cryptobridge.month_1_plural"),
-                    value: 2678400
-                },
-                {
-                    name1: 'account.cryptobridge.month_3',
-                    bonus: '20%',
-                    name: counterpart.translate("account.cryptobridge.month_3", {bonus: '20%'}),
-                    monthName: counterpart.translate("account.cryptobridge.month_3_plural"),
-                    value: 7776000
-                },
-                {
-                    name1: 'account.cryptobridge.month_6',
-                    bonus: '50%',
-                    name: counterpart.translate("account.cryptobridge.month_6", {bonus: '50%'}),
-                    monthName: counterpart.translate("account.cryptobridge.month_6_plural"),
-                    value: 15552000
-                },
-                {
-                    name1: 'account.cryptobridge.month_12',
-                    bonus: '100%',
-                    name: counterpart.translate("account.cryptobridge.month_12", {bonus: '100%'}),
-                    monthName: counterpart.translate("account.cryptobridge.month_12_plural"),
-                    value: 31536000
-                }
-            ]
-
-        }
-        this.onAmountChanged = this.onAmountChanged.bind(this)
-        this._setTotal = this._setTotal.bind(this);
-        this.setPeriod = this.setPeriod.bind(this);
-        this.stakeBalance = this.stakeBalance.bind(this);
-        this.getMonths = this.getMonths.bind(this);
-        this.checkTerms = this.checkTerms.bind(this);
-    }
-
-    onAmountChanged(amount) {
-        this.setState({amount: amount.amount});
-    }
-
-    checkTerms() {
-
-        this.setState({checked: !this.state.checked, showValidationErrors: false});
-    }
-
-
-    _setTotal(asset_id, balance_id) {
-    }
-
-    setPeriod(period) {
-        this.setState({selectedPeriod: parseInt(period.target.value, 10)})
-    }
-
-    stakeBalance() {
-        if (!this.state.checked) {
-            this.setState({showValidationErrors: true});
-        } else {
-            WalletActions.stakeBalance(this.props.accountId, this.state.selectedPeriod, this.state.amount);
-        }
-    }
-
-    getMonths() {
-        if (this.state.periods) {
-            for (let i=0;i<this.state.periods.length;i++) {
-                let p = this.state.periods[i];
-                if (p.value && p.value === this.state.selectedPeriod) {
-                    return p.monthName;
-                }
-            }
-        }
-        return false;
-    }
-
-    render() {
-        let balance = null;
-        let key=0;
-        let account_balances = this.props.balances.toJS();
-        let month = this.getMonths();
-        let style;
-
-        if (this.state.showValidationErrors) {
-            style = {color: 'red'};
-        }
-
-        balance = (<span style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal(BCO_ID, account_balances[BCO_ID], 0, 0)}> { account_balances[BCO_ID] ? <Translate component="span" content="account.cryptobridge.bco_available"/> : <Translate component="span" content="account.cryptobridge.bco_not_available"/> } <BalanceComponent balance={account_balances[BCO_ID]}/></span>);
-        return (
-                <div style={{'marginTop': '20px'}} className="small-12 grid-content1">
-
-                        <h5><b><Translate content="account.cryptobridge.title" /></b></h5>
-
-                        <p>
-                            <Translate  content="account.cryptobridge.staking_text1" percent="50%" unsafe/>
-                        </p>
-                        <p>
-                            <Translate content="account.cryptobridge.staking_text2" fee={this.props.feeAmount || 0} unsafe  />
-                        </p>
-
-                        <Translate component="p" content="account.cryptobridge.staking_text3" unsafe />
-
-
-                        <label style={{'paddingTop': '20px'}}><Translate component="p" unsafe content="account.cryptobridge.amount_bco"/></label>
-                        <AmountSelector
-                                    label="transfer.amount"
-                                    amount={this.state.amount}
-                                    onChange={this.onAmountChanged.bind(this)}
-                                    asset={BCO_ID}
-                                    assets={[BCO_ID]}
-                                    display_balance={balance}
-                                    tabIndex={0}
-                        />
-
-                    <label  style={{'paddingTop': '20px'}}><Translate content="account.cryptobridge.length" /></label>
-                    <select onChange={this.setPeriod} value={this.state.selectedPeriod}>
-                        {
-                        this.state.periods.map((p) => {
-                            if (!p || p === "") {return null; }
-                            return <option key={key++} value={p.value}><Translate content={p.name1} unsafe bonus={p.bonus} /></option>;
-                        })}
-                    </select>
-                    { this.state.amount > 0 ?( <label className={this.state.showValidationErrors ? 'has-errors' : ''}>
-                        <input  type="checkbox" onChange={this.checkTerms} checked={this.state.checked}/>
-                        <Translate style={style} unsafe content="account.cryptobridge.understand" amount={ this.state.amount } month={ month } />
-                    </label> ) : null }
-
-                    <p  style={{textAlign: "right"}}>
-                        <button onClick={this.stakeBalance} className="button outline"><Translate content="account.cryptobridge.stake_bco" /></button>
-                    </p>
-
-
-                </div>
-        );
-    }
-}
-
 class AccountVesting extends React.Component {
     constructor() {
         super();
@@ -332,7 +186,7 @@ class AccountVesting extends React.Component {
                     </h4>) : balances}
                 </div>
             </div>
-);
+        );
     }
 }
 

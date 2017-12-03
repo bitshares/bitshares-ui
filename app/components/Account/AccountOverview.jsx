@@ -291,6 +291,15 @@ class AccountOverview extends React.Component {
                     </td>
                     */
                     }
+
+                    <td style={{textAlign: "right"}} className="column-hide-small">
+                       <EquivalentPrice
+                           refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
+                           fromAsset={asset.get("id")}
+                           hide_symbols
+                       />
+                    </td>
+
                     <td>
                         {canDepositWithdraw && this.props.isMyAccount? (
                             <span>
@@ -323,6 +332,9 @@ class AccountOverview extends React.Component {
                     </td>
     */
 }
+
+
+
                     <td style={{textAlign: "center"}} className="column-hide-small" data-place="bottom" data-tip={counterpart.translate("tooltip." + (includeAsset ? "hide_asset" : "show_asset"))}>
                         <a style={{marginRight: 0}} className={includeAsset ? "order-cancel" : "action-plus"} onClick={this._hideAsset.bind(this, asset_type, includeAsset)}>
                             <Icon name={includeAsset ? "cross-circle" : "plus-circle"} className="icon-14px" />
@@ -530,7 +542,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-    /*
+
         includedBalances.push(
             <tr key="portfolio" className="total-value">
                 <td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td>
@@ -538,7 +550,7 @@ class AccountOverview extends React.Component {
                 <td className="column-hide-small"></td>
                 <td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td>
                 <td colSpan="8"></td></tr>);
-                */
+
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -588,6 +600,16 @@ class AccountOverview extends React.Component {
 
                                             {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                             <th><Translate content="header.payments" /></th>
+
+                                            <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
+                                                                                               <TranslateWithLinks
+                                                                                                   noLink
+                                                                                                   string="account.eq_value_header"
+                                                                                                   keys={[
+                                                                                                       {type: "asset", value: preferredUnit, arg: "asset"}
+                                                                                                   ]}
+                                                                                               />
+                                            </th>
 
                                         { /* <th><Translate content="exchange.buy" /></th> */ }
                                             <th><Translate content="modal.deposit.submit" /></th>

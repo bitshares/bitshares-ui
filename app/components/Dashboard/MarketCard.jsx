@@ -84,7 +84,6 @@ class MarketCard extends React.Component {
 
         function getImageName(asset) {
             if (img) {
-                console.log('Using img' + img);
                 return img;
             }
             let symbol = asset.get("symbol");
