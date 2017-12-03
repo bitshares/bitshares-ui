@@ -446,7 +446,7 @@
     "amount": "Quantity",
     "to": "To",
     "memo": "Memo / Message",
-    "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
+    "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!",
     "fee": "Fee",
     "send": "Send",
     "final": "Final balance",
@@ -1242,8 +1242,8 @@
   },
   "modal": {
     "send": {
-      "header": "Send from <span style=\"color: 'lightblue'\">%(from_name)s</span>",
-      "header_propose": "Propose Send from <span style=\"color: 'lightblue'\">%(from_name)s</span>"
+      "header": "Send from <span style=\"color: lightblue\">%(from_name)s</span>",
+      "header_propose": "Propose Send from <span style=\"color: lightblue\">%(from_name)s</span>"
     },
     "issue": {
       "to": "Issue To",
