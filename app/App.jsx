@@ -184,7 +184,6 @@ class App extends React.Component {
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
-            console.log(this.props.params.account_name);
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height} activeAccount={this.props.params.account_name} />

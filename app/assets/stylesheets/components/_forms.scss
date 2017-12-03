@@ -276,5 +276,23 @@ form.full-width {
     section > input {
         max-width: 100%;
     }
-
 }
+
+#send_modal {
+    .dropdown-wrapper.active .dropdown {
+        max-height: 250px;
+    }
+    #txFeeSelector .dropdown-wrapper.active .dropdown {
+        max-height: 100px;
+    }
+}
+
+button.red, button.green, button.blue {
+    padding: 10px 40px 10px 40px;
+    border-radius: 5px 5px 5px 5px;
+    color: rgb(242, 242, 242);
+}    
+button.red { background-color: rgb(245, 27, 27); }
+button.green { background-color: rgb(48, 185, 14); }
+button.blue { background-color: rgb(65, 116, 184); }
+button.disabled { background-color: rgb(77, 94, 116); }

@@ -1,6 +1,8 @@
 import React from "react";
 import utils from "common/utils";
 import AccountImage from "../Account/AccountImage";
+import AccountStore from "stores/AccountStore";
+import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
 import {ChainStore, PublicKey, ChainValidation} from "bitsharesjs/es";
 import ChainTypes from "../Utility/ChainTypes";
@@ -89,6 +91,11 @@ class AccountSelector extends React.Component {
             this.props.onAccountChanged(newProps.account);
     }
 
+    onLinkAccount(e) {
+        e.preventDefault();
+        AccountActions.linkAccount(this.props.accountName);
+    }
+
     onAction(e) {
         e.preventDefault();
         if(this.props.onAction && !this.getError() && !this.props.disableActionButton) {
@@ -100,6 +107,7 @@ class AccountSelector extends React.Component {
     }
 
     render() {
+        let linkedAccounts = AccountStore.getState().linkedAccounts;
         let error = this.getError();
         let type = this.getNameType(this.props.accountName);
         let lookup_display;
@@ -116,12 +124,20 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
+        let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ? 
+            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")}><Icon name="user" /></span>
+            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon name="plus-circle" /></span>;
+        
+
         return (
             <div className="account-selector" style={this.props.style}>
                 <div className="content-area">
                     {this.props.label ? (
                     <div className="header-area">
-                        {error ? null : <label className="right-label"><span>{member_status}</span> &nbsp; <span>{lookup_display}</span></label>}
+                        {error && !lookup_display ? 
+                            <label className="right-label"><span style={{color: "#E3745B"}}>Unknown Account</span></label> : 
+                            <label className="right-label"><span>{member_status}</span>&nbsp;<span>{lookup_display}</span> &nbsp; {linked_status}</label>
+                        }
                         <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>) : null}
                     <div className="input-area">

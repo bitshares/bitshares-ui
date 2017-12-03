@@ -35,7 +35,7 @@
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
-    "payments_beta": "Sendbeta",
+    "payments_beta": "SENDbeta",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",
@@ -87,7 +87,10 @@
     "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
     "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
     "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
-    "over_limit": "The bridge does not have enough of the desired asset for this buy order"
+    "over_limit": "The bridge does not have enough of the desired asset for this buy order",
+    "propose_tip": "Propose another user to initiate a transaction",
+    "follow_user": "You are following this user",
+    "follow_user_add": "Click to Follow this user"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -437,6 +440,7 @@
   },
   "transfer": {
     "header": "Transfer details",
+    "header_subheader": "Transfers are used for sending funds to<br /> other BitShares Account Holders",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Quantity",
@@ -449,6 +453,7 @@
     "balances": "Balances",
     "available": "Available",
     "errors": {
+      "noFunds": "No funds",
       "req": "Required field",
       "pos": "Amount must be positive",
       "valid": "Please enter a valid, positive number",
@@ -1236,6 +1241,10 @@
     }
   },
   "modal": {
+    "send": {
+      "header": "Send from <span style=\"color: 'lightblue'\">%(from_name)s</span>",
+      "header_propose": "Propose Send from <span style=\"color: 'lightblue'\">%(from_name)s</span>"
+    },
     "issue": {
       "to": "Issue To",
       "amount": "Amount to Issue",

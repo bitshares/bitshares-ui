@@ -148,7 +148,7 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin, activeAccount} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, activeAccount, height} = this.props;
         let locked_tip = counterpart.translate("header.locked_tip");
         let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
@@ -332,7 +332,7 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount ? null : <li><Link to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}><Translate content="header.account" /></Link></li>}
                         {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null}
-                        {currentAccount || myAccounts.length ? <li><a onClick={this._showSend.bind(this)}><Translate component="span" content="header.payments_beta" /></a></li> : null}
+                        {currentAccount || myAccounts.length ? <li><a onClick={this._showSend.bind(this)}><Translate component="span" style={{textTransform: "none"}} content="header.payments_beta" /></a></li> : null}
                         {!(currentAccount || myAccounts.length) ? <li><a className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}><Translate component="span" content="header.explorer" /></a></li> : null}
                         <li>{tradeLink}</li>
                         {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null}
@@ -367,7 +367,7 @@ class Header extends React.Component {
                     </div>
                 </div>
                 {/* Bridge modal */}
-                <SendModal ref="send_modal" from_name={account_display_name} to_name={activeAccount}  />
+                <SendModal ref="send_modal" from_name={currentAccount} to_name={activeAccount}  />
             </div>
             
         );
