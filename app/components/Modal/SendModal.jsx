@@ -535,5 +535,3 @@ SendModal = connect(SendModal, {
         };
     }
 });
-
-/* Export functions from Transfer/Transfer.jsx */
