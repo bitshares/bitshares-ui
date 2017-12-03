@@ -95,6 +95,11 @@ class AccountSelector extends React.Component {
         e.preventDefault();
         AccountActions.linkAccount(this.props.accountName);
     }
+    
+    onUnLinkAccount(e) {
+        e.preventDefault();
+        AccountActions.unlinkAccount(this.props.accountName);
+    }
 
     onAction(e) {
         e.preventDefault();
@@ -125,7 +130,7 @@ class AccountSelector extends React.Component {
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ? 
-            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")}><Icon name="user" /></span>
+            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon name="user" /></span>
             : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon name="plus-circle" /></span>;
         
 
