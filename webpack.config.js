@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
@@ -74,7 +75,7 @@ module.exports = function(env) {
         var cleanDirectories = [outputPath];
 
         // WRAP INTO CSS FILE
-        const extractCSS = new ExtractTextPlugin("app.css");
+        const extractCSS = new ExtractTextPlugin({filename: "app.[contenthash].css"});
         cssLoaders = ExtractTextPlugin.extract({
             fallback: "style-loader",
             use: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
@@ -111,6 +112,13 @@ module.exports = function(env) {
                 }
             }));
         }
+        //index.html!./" + ((__ELECTRON__ || __HASH_HISTORY__) ? "index-electron" : "index") + ".html"
+        plugins.push(new HtmlWebpackPlugin(
+            {
+                showErrors: true,
+                template: env.electron ? 'app/assets/index-electron.html' : 'app/assets/index.html'
+            })
+        );
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(new webpack.DefinePlugin({
@@ -119,6 +127,12 @@ module.exports = function(env) {
         }));
         plugins.push(new webpack.HotModuleReplacementPlugin());
         plugins.push(new webpack.NoEmitOnErrorsPlugin());
+        plugins.push(new HtmlWebpackPlugin(
+            {
+                showErrors: true,
+                template: 'app/assets/index-dev.html'
+            })
+        );
     }
 
     var config = {
@@ -135,9 +149,9 @@ module.exports = function(env) {
         output: {
             publicPath: env.prod ? "" : "/",
             path: outputPath,
-            filename: "[name].js",
+            filename: "[name].[hash].js",
             pathinfo: !env.prod,
-            sourceMapFilename: "[name].js.map"
+            sourceMapFilename: "[name].[hash].js.map"
         },
         devtool: env.prod ? "cheap-module-source-map" : "eval",
         module: {
