@@ -12,7 +12,7 @@ import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import Header from "components/Layout/Header";
-import MobileMenu from "components/Layout/MobileMenu";
+// import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
@@ -187,7 +187,6 @@ class App extends React.Component {
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height}/>
-                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
                     <div className="grid-block">
                         <div className="grid-block vertical">
                             {this.props.children}
