@@ -1,7 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
 import {Link} from "react-router/es";
-import { connect } from "alt-react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
