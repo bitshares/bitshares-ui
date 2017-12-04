@@ -100,6 +100,7 @@
     "show_ignored": "Göster",
     "hide_ignored": "Gizle",
     "accounts": "Hesaplar",
+    "contacts": "Kontaklar",
     "whitelist": {
       "title": "İzin Listesi",
       "black": "Kara Liste",
@@ -313,7 +314,7 @@
     },
     "upgrade": "Hesabı yükselt",
     "unfollow": "Takibi bırak",
-    "follow": "Takib et",
+    "follow": "Kişi ekle",
     "pay": "Ödeme Yap",
     "overview": "Genel Bakış",
     "home": "Başa dön",
@@ -599,7 +600,8 @@
   "explorer": {
     "accounts": {
       "title": "Hesaplar",
-      "filter": "Ara"
+      "filter": "Ara", 
+      "filter_contacts": "Süzgeç kontakları"
     },
     "blocks": {
       "title": "Blokzinciri",
