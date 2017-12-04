@@ -893,7 +893,7 @@ class Exchange extends React.Component {
             showCallLimit = false, latestPrice, changeClass;
 
 
-        let isNullAccount = currentAccount.get("id") === "1.2.3";
+        let notMyAccount = currentAccount.get("id") === "1.2.3" || !this.props.isMyAccount;
 
         const showVolumeChart = this.props.viewSettings.get("showVolumeChart", true);
         const enableChartClamp = this.props.viewSettings.get("enableChartClamp", true);
@@ -1001,7 +1001,7 @@ class Exchange extends React.Component {
 
         let buyForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
+                onBorrow={!notMyAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(base.get("symbol")) || null}
@@ -1010,7 +1010,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form` : `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form`
                 )}
@@ -1046,7 +1046,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
+                onBorrow={!notMyAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === quote.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(quote.get("symbol")) || null}
@@ -1055,7 +1055,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form` : `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form`
                 )}
@@ -1243,7 +1243,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    isNullAccount={isNullAccount}
+                                    notMyAccount={notMyAccount}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}
@@ -1268,7 +1268,7 @@ class Exchange extends React.Component {
                                 <MyOpenOrders
                                     smallScreen={this.props.smallScreen}
                                     className={cnames(
-                                        {disabled: isNullAccount},
+                                        {disabled: notMyAccount},
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
                                         `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
                                     )}
@@ -1364,14 +1364,14 @@ class Exchange extends React.Component {
                         </div>
                     </div>
 
-                    {!isNullAccount && quoteIsBitAsset  ?
+                    {!notMyAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={currentAccount}
                          /> : null}
-                    {!isNullAccount && baseIsBitAsset ?
+                    {!notMyAccount && baseIsBitAsset ?
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

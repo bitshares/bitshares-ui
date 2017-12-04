@@ -188,7 +188,7 @@ class ExchangeSubscriber extends React.Component {
     render() {
         return <div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
-            <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} />
+            <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} isMyAccount={AccountStore.isMyAccount(this.props.currentAccount)}/>
         </div>;
     }
 }

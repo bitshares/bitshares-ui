@@ -339,7 +339,7 @@ class AccountSignedMessages extends React.Component {
 
     render() {
         return (
-            <div className="grid-content">
+            <div className="grid-container">
                 <div className="generic-bordered-box">
                     <Tabs
                         tabsClass="bordered-header no-padding"
@@ -428,7 +428,3 @@ class AccountSignedMessages extends React.Component {
 AccountSignedMessages = BindToChainState(AccountSignedMessages);
 
 export default AccountSignedMessages;
-
-
-
-

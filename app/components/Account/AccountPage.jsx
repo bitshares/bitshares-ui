@@ -21,7 +21,7 @@ class AccountPage extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
+        if (this.props.account) {
             AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
 
@@ -46,8 +46,7 @@ class AccountPage extends React.Component {
                         passwordLogin={settings.get("passwordLogin")}
                     />
                 </div> */}
-                <div className="grid-container" style={{paddingBottom: "2rem"}}>
-                    <div className="grid-block no-padding" style={{height: "100%"}}>
+                    <div className="grid-block no-padding">
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
@@ -70,7 +69,6 @@ class AccountPage extends React.Component {
                         }
                     )}
                     </div>
-                </div>
             </div>
         );
     }

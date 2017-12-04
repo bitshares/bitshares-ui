@@ -75,7 +75,7 @@ div.account-drop-down {
 div.header-right-menu {
     > .grp-menu-item {
         border-left: none;
-        line-height: 2rem;
+        line-height: 1;
 
         > a {
             @include breakpoint(large) {
@@ -116,6 +116,7 @@ div.header-right-menu {
 }
 
 div.account-drop-down div.dropdown-wrapper {
+    padding: 15px 16px 14px 16px;
     > ul {
         padding-bottom: 0;
     }
@@ -140,6 +141,16 @@ ul.dropdown.header-menu {
         }
         > div:nth-of-type(2) {
             padding-left: 8px;
+        }
+
+        &.disabled {
+            color: grey;
+            cursor:not-allowed;
+            opacity: 50%;
+
+            svg > path {
+                fill: grey !important;
+            }
         }
     }
 }

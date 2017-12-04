@@ -292,9 +292,9 @@ $account-background
 
         div.dropdown-wrapper.active, div.dropdown-wrapper:hover {
             transition: background-color 0s;
-            background-color: lighten($account-header, 4%);
+            background-color: $bg-color;
             ul {
-                background-color: lighten($account-header, 4%);
+                background-color: $bg-color;
             }
         }
 
@@ -849,15 +849,17 @@ $account-background
         .menu-bar > li {
 
             > a {
-                color: $primary-text-color;
+                color: $account-dimmed;
             }
 
             > a:hover {
                 background-color: $bg-color !important;
+                color: $primary-text-color;
             }
 
             > a.active {
                 background-color: $bg-color !important;
+                color: $primary-text-color;
             }
         }
     }
@@ -1271,11 +1273,15 @@ $account-background
         color: $info-color;
     }
 
+    td.pub-key {
+        word-break: break-all;
+    }
+
     /* Table view account */
     div.overview-tabs {
         background-color: $account-background;
         > div.service-selector {
-            background-color: $account-header;
+            background-color: $bg-color;
         }
     }
     ul.account-overview {
@@ -1283,10 +1289,10 @@ $account-background
         li {
             > a {
                 color: $account-dimmed;
-                background-color: $account-header;
+                background-color: $bg-color;
                 border: none;
                 &:hover {
-                    background-color: $account-header;
+                    background-color: $bg-color;
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
