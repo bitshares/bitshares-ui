@@ -59,6 +59,7 @@
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "contacts": "Contacten",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -255,8 +256,8 @@
       "memo_key": "Memo Schlüssel"
     },
     "upgrade": "Konto erweitern",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "verwijderen",
+    "follow": "voeg contact toe",
     "pay": "Bezahlen",
     "overview": "Übersicht",
     "bts_market": "Markt",
@@ -500,7 +501,9 @@
   },
   "explorer": {
     "accounts": {
-      "title": "Konten"
+      "title": "Konten", 
+      "filter": "Accounts filteren",
+      "filter_contacts": "Contacten filteren"
     },
     "blocks": {
       "title": "Blockchain",

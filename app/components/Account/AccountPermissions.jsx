@@ -235,7 +235,7 @@ class AccountPermissions extends React.Component {
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(this.props.account.get("id"));
         return (
-            <div className="grid-content">
+            <div className="grid-container">
                 <div className="generic-bordered-box">
                     <Tabs setting="permissionsTabs" tabsClass="no-padding bordered-header" contentClass="grid-content no-overflow no-padding">
 
@@ -359,6 +359,7 @@ class AccountPermissions extends React.Component {
                     </div>
                 </div>
 
+                <div>
                 <RecentTransactions
                     accountsList={accountsList}
                     limit={25}
@@ -366,6 +367,7 @@ class AccountPermissions extends React.Component {
                     filter="account_update"
                     style={{paddingTop: "2rem", paddingBottom: "2rem"}}
                 />
+                </div>
 
             </div>
         );

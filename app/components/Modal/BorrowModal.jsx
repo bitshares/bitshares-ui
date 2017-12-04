@@ -95,11 +95,28 @@ class BorrowModalContent extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        const { short_amount, collateral, collateral_ratio } = this.state;
+
         if (nextProps.account !== this.props.account ||
             nextProps.hasCallOrders !== this.props.hasCallOrders ||
             nextProps.quote_asset.get("id") !== this.props.quote_asset.get("id")
             ) {
-            this.setState(this._initialState(nextProps));
+
+            let newState = this._initialState(nextProps);
+
+            let revalidate = false;
+            if(short_amount || collateral || collateral_ratio){
+                newState.short_amount = short_amount;
+                newState.collateral = collateral;
+                newState.collateral_ratio = collateral_ratio;
+                revalidate = true;
+            }
+
+            this.setState(newState);
+
+            if(revalidate){
+                this._validateFields(newState);
+            }
         }
     }
 

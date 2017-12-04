@@ -45,6 +45,7 @@
     "unlock": "Local Wallet Login",
     "unlock_password": "Cloud Wallet Login",
     "unlock_short": "Login",
+    "lock_short": "Log out",
     "help": "Help",
     "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out.<br/><br/>Closing the browser window will also log you out.",
@@ -120,6 +121,9 @@
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
     "open_orders": "Open Orders",
+    "filter_orders": "Filter",
+    "submit_orders": "Submit",
+    "reset_orders": "Reset",
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
@@ -128,6 +132,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
+    "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
@@ -379,8 +384,8 @@
       "memo_key": "Memo Key"
     },
     "upgrade": "Upgrade account",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "Remove",
+    "follow": "Add contact",
     "pay": "Send to",
     "deposit": "Deposit BTS",
     "deposit_address": "Your deposit address is your account name",
@@ -420,10 +425,11 @@
     "settle": "Settle",
     "no_orders": "No open orders",
     "asset_details": "Asset details",
-    "portfolio": "My Portfolio",
+    "portfolio": "Portfolio",
     "activity": "Activity",
     "eq_value_header": "Value ({asset})",
     "qty": "Qty",
+    "quote": "Quote",
     "total": "Total ({asset})"
   },
   "pagination": {
@@ -678,7 +684,8 @@
   "explorer": {
     "accounts": {
       "title": "Accounts",
-      "filter": "Filter accounts"
+      "filter": "Filter accounts",
+      "filter_contacts": "Filter contacts"
     },
     "blocks": {
       "title": "Blockchain",

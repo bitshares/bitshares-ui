@@ -180,18 +180,18 @@ class Dashboard extends React.Component {
             return <LoginSelector />;
         }
 
-        const entries = ["accounts", "recent"];
+        const entries = ["accounts", "contacts", "recent"];
         const activeIndex = entries.indexOf(currentEntry);
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
-                    <div className="block-content-header" style={{marginBottom: 15}}>
-                    <Translate content="exchange.featured"/>
-                    </div>
-                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
+                <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
+                    {this.props.onlyAccounts ? null : <div className="block-content-header" style={{marginBottom: 15, paddingTop: 0}}>
+                        <Translate content="exchange.featured"/>
+                    </div>}
+                    {this.props.onlyAccounts ? null : <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
-                    </div>
+                    </div>}
 
                     {accountCount ? (
                         <div style={{paddingBottom: "3rem"}}>
@@ -205,7 +205,7 @@ class Dashboard extends React.Component {
                                 })}
                             </div>
 
-                            {currentEntry === "accounts" ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                            {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
                                 <div className="box-content">
                                     <DashboardList
                                         accounts={Immutable.List(names)}
@@ -213,6 +213,7 @@ class Dashboard extends React.Component {
                                         width={width}
                                         onToggleIgnored={this._onToggleIgnored.bind(this)}
                                         showIgnored={showIgnored}
+                                        showMyAccounts={currentEntry === "accounts"}
                                     />
                                     {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
                                 </div>

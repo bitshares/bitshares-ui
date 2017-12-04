@@ -46,8 +46,8 @@ class MarketCard extends React.Component {
     shouldComponentUpdate(np, ns) {
         return (
             this._checkStats(np.marketStats, this.props.marketStats) ||
-            np.base !== this.props.base ||
-            np.quote !== this.props.quote ||
+            np.base.get("id") !== this.props.base.get("id") ||
+            np.quote.get("id") !== this.props.quote.get("id") ||
             ns.imgError !== this.state.imgError
         );
     }
@@ -102,14 +102,6 @@ class MarketCard extends React.Component {
                 </div>
                 <div className="grid-block vertical no-overflow">
                     <div className="fm-name"><AssetName dataPlace="top" name={base.get("symbol")} /> : <AssetName dataPlace="top" name={quote.get("symbol")} /></div>
-                    {/* <div className="fm-volume">price: <div className="float-right">{(!marketStats || !marketStats.close) ? null : utils.format_price(
-                        marketStats.close.quote.amount,
-                        base,
-                        marketStats.close.base.amount,
-                        quote,
-                        true,
-                        this.props.invert
-                    )}</div></div> */}
                     <div className="fm-volume"><Translate content="exchange.price" />: <div className="float-right">{marketStats && marketStats.price ? utils.price_text(marketStats.price.toReal(), base, quote) : null}</div></div>
                     <div className="fm-volume"><Translate content="exchange.volume" />: <div className="float-right">{!marketStats ? null : utils.format_volume(marketStats.volumeBase, quote.get("precision"))}</div></div>
                     <div className="fm-change"><Translate content="exchange.change" />: <div className={cnames("float-right", changeClass)}>{!marketStats ? null : marketStats.change}%</div></div>
