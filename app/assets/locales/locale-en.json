@@ -131,6 +131,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
+    "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
@@ -382,8 +383,8 @@
       "memo_key": "Memo Key"
     },
     "upgrade": "Upgrade account",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "Remove",
+    "follow": "Add contact",
     "pay": "Send to",
     "deposit": "Deposit BTS",
     "deposit_address": "Your deposit address is your account name",
@@ -682,7 +683,8 @@
   "explorer": {
     "accounts": {
       "title": "Accounts",
-      "filter": "Filter accounts"
+      "filter": "Filter accounts",
+      "filter_contacts": "Filter contacts"
     },
     "blocks": {
       "title": "Blockchain",

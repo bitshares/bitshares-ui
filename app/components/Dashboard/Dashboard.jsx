@@ -180,7 +180,7 @@ class Dashboard extends React.Component {
             return <LoginSelector />;
         }
 
-        const entries = ["accounts", "recent"];
+        const entries = ["accounts", "contacts", "recent"];
         const activeIndex = entries.indexOf(currentEntry);
 
         return (
@@ -205,7 +205,7 @@ class Dashboard extends React.Component {
                                 })}
                             </div>
 
-                            {currentEntry === "accounts" ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                            {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
                                 <div className="box-content">
                                     <DashboardList
                                         accounts={Immutable.List(names)}
@@ -213,6 +213,7 @@ class Dashboard extends React.Component {
                                         width={width}
                                         onToggleIgnored={this._onToggleIgnored.bind(this)}
                                         showIgnored={showIgnored}
+                                        showMyAccounts={currentEntry === "accounts"}
                                     />
                                     {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
                                 </div>
