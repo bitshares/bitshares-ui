@@ -135,6 +135,10 @@ const routes = (
             }}/>
         </Route>
 
+        <Route path="accounts" getComponent={(location, cb) => {
+            System.import("components/Dashboard/DashboardAccountsOnly").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+
         <Route path="existing-account" getComponent={(location, cb) => {
             System.import("components/Wallet/ExistingAccount").then(loadRoute(cb, "ExistingAccount")).catch(errorLoading);
         }}>

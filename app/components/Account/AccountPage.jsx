@@ -46,7 +46,7 @@ class AccountPage extends React.Component {
                         passwordLogin={settings.get("passwordLogin")}
                     />
                 </div> */}
-                <div className="grid-container" style={{padding: "2rem 0"}}>
+                <div className="grid-container" style={{paddingBottom: "2rem"}}>
                     <div className="grid-block no-padding" style={{height: "100%"}}>
                     {React.cloneElement(
                         React.Children.only(this.props.children),

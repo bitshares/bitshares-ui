@@ -268,7 +268,7 @@ class AccountOverview extends React.Component {
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                    <td style={{textAlign: "left", paddingLeft: 10}}>
+                    <td style={{textAlign: "left"}}>
                         <LinkToAssetById asset={asset.get("id")} />
                     </td>
                     <td style={{textAlign: "right"}}>
@@ -381,7 +381,7 @@ class AccountOverview extends React.Component {
                     let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                            <td style={{textAlign: "left", paddingLeft: 10}}>
+                            <td style={{textAlign: "left"}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
                             <td></td>
@@ -559,7 +559,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -604,7 +604,7 @@ class AccountOverview extends React.Component {
                                     <thead>
                                         <tr>
                                             {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                            <th style={{textAlign: "left", paddingLeft: 10}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
+                                            <th style={{textAlign: "left"}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
                                             <th onClick={this._toggleSortOrder.bind(this, "changeValue")}  className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>

@@ -290,10 +290,11 @@ $account-background
             color: $account-green;
         }
 
-        div.dropdown-wrapper {
-            background-color: $account-header;
+        div.dropdown-wrapper.active, div.dropdown-wrapper:hover {
+            transition: background-color 0s;
+            background-color: lighten($account-header, 4%);
             ul {
-                background-color: $account-header;
+                background-color: lighten($account-header, 4%);
             }
         }
 

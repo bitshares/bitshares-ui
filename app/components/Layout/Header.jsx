@@ -104,6 +104,7 @@ class Header extends React.Component {
         } else {
             WalletUnlockActions.lock();
         }
+        this._closeDropdown();
     }
 
     _onNavigate(route, e) {
@@ -337,10 +338,6 @@ class Header extends React.Component {
 
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
-        const dropDownContent = ["Send", "Deposit", "Withdraw"].map(a => {
-            return <div>{a}</div>;
-        });
-
         return (
             <div className="header menu-group primary">
                 {/*<div className="show-for-small-only">
@@ -367,7 +364,7 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount ? null :
                         <li>
-                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1})}>
+                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
                                 <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
                                 <Translate content="header.dashboard" />
                             </Link>
@@ -407,64 +404,74 @@ class Header extends React.Component {
                             {/* {accountsDropDown} */}
 
                                 {/* <Icon style={{marginRight: "1rem", position: "relative", top: -13, left: 8}} size="1x" name="chevron-down" /> */}
-
+                                {createAccountLink ? createAccountLink :
                                 <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                        <li style={{listStyle: "none", minWidth: 200}}>
-                                            <div className="table-cell">
-                                                <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                    <li style={{listStyle: "none", minWidth: 200}}>
+                                        <div className="table-cell" onClick={this._toggleLock.bind(this)}>
+                                            <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                        </div>
+                                        <div className="table-cell">
+                                            <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
+                                                <span>{currentAccount}</span>
+                                                {walletBalance}
                                             </div>
-                                            <div className="table-cell">
-                                                <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
-                                                    <span>{currentAccount}</span>
-                                                    {walletBalance}
-                                                </div>
 
-                                            </div>
-                                        </li>
+                                        </div>
+                                    </li>
                                     <ul className="dropdown header-menu" style={{left: 0, top: 67, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-                                        <li className="divider">
+                                        <li className="divider" onClick={this._toggleLock.bind(this)}>
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
-                                            <div className="table-cell">Login</div>
+                                            <div className="table-cell"><Translate content="header.unlock_short" /></div>
                                         </li>
 
                                         <li onClick={this._onNavigate.bind(this, "/transfer")}>
                                             <div className="table-cell"><Icon size="2x" name="transfer" /></div>
-                                            <div className="table-cell">Send</div>
+                                            <div className="table-cell"><Translate content="header.payments" /></div>
                                         </li>
-                                        {enableDepositWithdraw ? <li>
+                                        {enableDepositWithdraw ? <li onClick={this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell">Deposit</div>
+                                            <div className="table-cell"><Translate content="gateway.deposit" /></div>
                                         </li> : null}
-                                        {enableDepositWithdraw ? <li className="divider">
+                                        {enableDepositWithdraw ? <li className="divider" onClick={this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
-                                            <div className="table-cell">Withdraw</div>
+                                            <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
                                         </li> : null}
 
-                                        <li onClick={this._onNavigate.bind(this, "/help")}>
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                        <li className="divider" onClick={this._onNavigate.bind(this, "/help")}>
+                                            <div className="table-cell"><Icon size="2x" name="question-circle" /></div>
                                             <div className="table-cell"><Translate content="header.help" /></div>
                                         </li>
                                         <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell">Vote</div>
+                                            <div className="table-cell"><Icon size="2x" name="thumbs-up" /></div>
+                                            <div className="table-cell"><Translate content="account.voting" /></div>
                                         </li>
-                                        <li>
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell">Upgrade</div>
+                                        <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                            <div className="table-cell"><Icon size="2x" name="warning" /></div>
+                                            <div className="table-cell"><Translate content="account.permissions" /></div>
                                         </li>
-                                        <li className="divider">
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell">Advanced</div>
+                                        <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
+                                            <div className="table-cell"><Icon size="2x" name="assets" /></div>
+                                            <div className="table-cell"><Translate content="explorer.assets.title" /></div>
+                                        </li>
+                                        <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
+                                            <div className="table-cell"><Icon size="2x" name="text" /></div>
+                                            <div className="table-cell"><Translate content="account.signedmessages.menuitem" /></div>
                                         </li>
 
-                                        <li className="divider">
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell">Accounts</div>
+                                        <li onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
+                                            <div className="table-cell"><Icon size="2x" name="list" /></div>
+                                            <div className="table-cell"><Translate content="account.whitelist.title" /></div>
+                                        </li>
+
+                                        <li className="divider" onClick={this._onNavigate.bind(this, "/accounts")}>
+                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
                                         </li>
 
                                         {accountsList}
                                     </ul>
                                 </div>
+                            }
                         </div>
 
 
