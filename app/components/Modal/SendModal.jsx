@@ -4,6 +4,7 @@ import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
+import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
@@ -359,9 +360,13 @@ export default class SendModal extends React.Component {
         // toggle switch
         propose = propose ? false : true;
         
-        this.setState({ propose, propose_account: to_account, from_account: to_account, from_name: to_name, to_account: from_account, to_name: from_name });
+        this.setState({ propose, propose_account: null, from_account: to_account, from_name: to_name, to_account: from_account, to_name: from_name });
     }
  
+    onProposeAccount(propose_account) {
+        this.setState({ propose_account });
+    }
+
     onProposeTooltip() {
         this.onClose();
         this.context.router.push("/help/accounts/proposed");
@@ -380,11 +385,11 @@ export default class SendModal extends React.Component {
         let fee = this.state.feeAmount.getAmount({real: true});
         if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
+            let _error = this.state.balanceError ? "has-error" : "";
             if (asset_types.length === 1) asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                let _error = this.state.balanceError ? "has-error" : null;
 
                 balance = (<span><Translate component="span" content="transfer.available"/>: <span className={_error} style={{borderBottom: "#A09F9F 1px dotted", cursor: "pointer"}} onClick={this._setTotal.bind(this, current_asset_id, account_balances[current_asset_id], fee, feeID)}><BalanceComponent balance={account_balances[current_asset_id]}/></span></span>);
 
@@ -494,6 +499,17 @@ export default class SendModal extends React.Component {
                                     </div>
                                 </div> 
                             </div>
+
+                            {propose ?
+                            <div className="content-block transfer-input">
+                                <label className="left-label"><Translate content="account.propose_from" /></label>
+                                <AccountSelect
+                                    account_names={AccountStore.getMyAccounts()}
+                                    onChange={this.onProposeAccount.bind(this)}
+                                    tabIndex={tabIndex++}
+                                />
+                            </div>
+                            :null}
 
                             <div className="content-block transfer-input" style={{textAlign: "center"}}>
                                 <div className="no-margin no-padding">
