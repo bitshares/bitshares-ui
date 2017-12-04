@@ -70,7 +70,7 @@ class AccountPermissionRow extends React.Component {
                     </div>)
                 : null}
                 </td>
-                <td className={has_private ? "my-key" : ""}>{name_or_key}</td>
+                <td className={(has_private ? "my-key" : "") + " pub-key"}>{name_or_key}</td>
                 <td>{this.props.weights[item_id]}</td>
                 <td>
                     <button className="button outline" onClick={this.props.onRemoveItem.bind(this, item_id, suffix)}>

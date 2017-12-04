@@ -243,7 +243,7 @@ class AccountAssets extends React.Component {
         }).toArray();
 
         return (
-            <div className="grid-content">
+            <div className="grid-container">
 
                     <div className="content-block generic-bordered-box">
                         <div className="block-content-header">

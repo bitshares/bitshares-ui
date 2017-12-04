@@ -219,6 +219,9 @@ ul.account-overview {
 }
 
 table.table.dashboard-table {
+    > thead > tr > th:first-of-type, > tbody > tr > td:first-of-type {
+        padding-left: 1.5rem;
+    }
     > thead > tr > th {
         font-weight: 600;
         font-size: 80%;
@@ -248,7 +251,8 @@ table.table.dashboard-table {
         &.total-value {
             td {
                 vertical-align: middle;
-                padding: 8px 5px;
+                padding-top: 8px;
+                padding-bottom: 8px;
                 border-bottom: none;
                 word-wrap: none;
             }
