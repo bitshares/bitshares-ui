@@ -290,7 +290,21 @@ $account-background
             color: $account-green;
         }
 
-        div.dropdown-wrapper.active, div.dropdown-wrapper:hover {
+        div.dropdown-wrapper {
+            > li {
+                > div.table-cell {
+                    &:nth-child(1):hover {
+                        background-color: $bg-color;
+                    }
+
+                    &:nth-child(2):hover {
+                        background-color: $bg-color;
+                    }
+                }
+            }
+        }
+
+        div.dropdown-wrapper.active {
             transition: background-color 0s;
             background-color: $bg-color;
             ul {

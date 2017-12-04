@@ -319,12 +319,12 @@ class Header extends React.Component {
                         <div className="grp-menu-item overflow-visible account-drop-down">
                                 {createAccountLink ? createAccountLink :
                                 <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                    <li style={{listStyle: "none", minWidth: 200}}>
+                                    <li>
                                         <div className="table-cell" onClick={this._toggleLock.bind(this)}>
-                                            <Icon className="lock-unlock" style={{marginRight: "1rem", position: "relative", top: 0, left: -8}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                            <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                         </div>
-                                        <div className="table-cell">
-                                            <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} style={{lineHeight: "initial", display: "inline-block", paddingRight: 15}}>
+                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell">
+                                            <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
                                                 {walletBalance}
                                             </div>

@@ -116,12 +116,30 @@ div.header-right-menu {
 }
 
 div.account-drop-down div.dropdown-wrapper {
-    padding: 15px 16px 14px 16px;
+    padding: 0 0 0 0;
+
+    > li {
+        list-style: none;
+        min-width: 200px;
+        > div.table-cell {
+            padding: 15px 5px 14px 5px;
+            text-align: center;
+            vertical-align: middle;
+
+            &:nth-child(2) {
+                text-align: left;
+                padding-left: 15px;
+                padding-right: 20px;
+            }
+        }
+    }
     > ul {
         padding-bottom: 0;
     }
-    &.active > ul {
-        padding-bottom: 5px;
+    &.active {
+        > ul {
+            padding-bottom: 5px;
+        }
     }
 }
 ul.dropdown.header-menu {
