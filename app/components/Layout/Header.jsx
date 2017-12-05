@@ -395,7 +395,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1}), "divider"} onClick={this._onNavigate.bind(this, "/settings")}>
+                                        <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
                                             <div className="table-cell"><Icon size="2x" name="cogs" /></div>
                                             <div className="table-cell"><Translate content="header.settings" /></div>
                                         </li>
