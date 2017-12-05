@@ -583,12 +583,8 @@ class AccountOverview extends React.Component {
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
-                    <div className="generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
-
-                            {/* <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
-
-                            </Tab> */}
+                    <div className="tabs-container generic-bordered-box">
+                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
 
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
@@ -603,12 +599,10 @@ class AccountOverview extends React.Component {
                                 <table className="table dashboard-table">
                                     <thead>
                                         <tr>
-                                            {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
                                             <th style={{textAlign: "left"}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
                                             <th onClick={this._toggleSortOrder.bind(this, "changeValue")}  className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
-                                            {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
                                             <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
                                                 <TranslateWithLinks
                                                     noLink
@@ -670,10 +664,6 @@ class AccountOverview extends React.Component {
                                     </div>
                                 </div>
                             </Tab>
-
-                            {/* <Tab title="markets.title" subText={hiddenSubText}>
-
-                            </Tab> */}
 
                             <Tab title="account.activity" subText={hiddenSubText}>
                                 <RecentTransactions

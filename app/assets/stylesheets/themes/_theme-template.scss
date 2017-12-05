@@ -31,7 +31,8 @@ $account-green,
 $account-primarytext,
 $account-dimmed,
 $account-border,
-$account-background
+$account-background,
+$account-tabs-background
 ) {
 
     .font-secondary {
@@ -1292,12 +1293,16 @@ $account-background
     }
 
     /* Table view account */
-    div.overview-tabs {
-        background-color: $account-background;
+    div.tabs-container {
+        background-color: $account-tabs-background;
+    }
+
+    div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
         }
     }
+
     ul.account-overview {
 
         li {
