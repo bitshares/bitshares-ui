@@ -279,6 +279,8 @@ class Header extends React.Component {
             }
         }
 
+        let caret = this.state.dropdownActive ? <span>&#9660;</span> : <span>&#9650;</span>;
+
         return (
             <div className="header menu-group primary">
                 {/*<div className="show-for-small-only">
@@ -341,6 +343,7 @@ class Header extends React.Component {
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
                                                 {walletBalance}
+                                                <span className="caret">{caret}</span>
                                             </div>
 
                                         </div>
@@ -364,11 +367,6 @@ class Header extends React.Component {
                                         <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer")}>
                                             <div className="table-cell"><Icon size="2x" name="server" /></div>
                                             <div className="table-cell"><Translate content="header.explorer" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
-                                            <div className="table-cell"><Icon size="2x" name="cogs" /></div>
-                                            <div className="table-cell"><Translate content="header.settings" /></div>
                                         </li>
 
                                         <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
@@ -399,10 +397,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="thumbs-up" /></div>
                                             <div className="table-cell"><Translate content="account.voting" /></div>
                                         </li>
-                                        <li className={cnames({active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
-                                            <div className="table-cell"><Icon size="2x" name="warning" /></div>
-                                            <div className="table-cell"><Translate content="account.permissions" /></div>
-                                        </li>
+
                                         <li className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
                                             <div className="table-cell"><Icon size="2x" name="assets" /></div>
                                             <div className="table-cell"><Translate content="explorer.assets.title" /></div>
@@ -425,6 +420,11 @@ class Header extends React.Component {
                                         <li className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
                                             <div className="table-cell"><Icon size="2x" name="list" /></div>
                                             <div className="table-cell"><Translate content="account.whitelist.title" /></div>
+                                        </li>
+
+                                        <li className={cnames("divider", {active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                            <div className="table-cell"><Icon size="2x" name="warning" /></div>
+                                            <div className="table-cell"><Translate content="account.permissions" /></div>
                                         </li>
 
                                         <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>

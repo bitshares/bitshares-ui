@@ -315,6 +315,10 @@ $account-tabs-background
             ul {
                 background-color: $bg-color;
             }
+
+            span.caret {
+                color: $link-text-color;
+            }
         }
 
         ul.dropdown.header-menu {

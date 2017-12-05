@@ -248,6 +248,10 @@ div.transfer-input {
     border: 0;
 }
 
+div.account-drop-down > div.dropdown-wrapper:after {
+    z-index: -1;
+}
+
 div.input-wrapper {
     position: relative;
     width: 100%;
