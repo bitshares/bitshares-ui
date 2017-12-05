@@ -443,6 +443,7 @@ export default class SendModal extends React.Component {
                                     onAccountChanged={this.onToAccountChanged.bind(this)}
                                     size={60}
                                     tabIndex={tabIndex++}
+                                    hideImage
                                 />
                             </div>
 
