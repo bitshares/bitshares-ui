@@ -1,4 +1,4 @@
-div.overview-tabs.with-buttons ul {
+div.account-tabs.with-buttons ul {
     width: 100%;
 
     // > li.total-value {
@@ -21,7 +21,7 @@ div.overview-tabs.with-buttons ul {
 }
 
 @include breakpoint(large) {
-    div.overview-tabs.with-buttons ul {
+    div.account-tabs.with-buttons ul {
         > li.tabs-action-buttons {
             padding-left: 1rem;
             > div > button:nth-of-type(2) {
@@ -30,7 +30,7 @@ div.overview-tabs.with-buttons ul {
                 }
             }
             > div > button.button {
-                margin: 0;
+                margin: 10px auto;
             }
         }
     }

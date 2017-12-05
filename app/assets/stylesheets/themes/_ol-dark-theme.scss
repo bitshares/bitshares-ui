@@ -40,6 +40,7 @@ $account-primarytext: white;
 $account-dimmed: #606060;
 $account-border: #323131;
 $account-background: black;
+$account-tabs-background: inherit;
 
 .olDarkTheme {
   @include theme(
@@ -73,6 +74,7 @@ $account-background: black;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $account-tabs-background
   );
 }

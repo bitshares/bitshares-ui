@@ -73,7 +73,7 @@ class AccountPermissionRow extends React.Component {
                 <td className={(has_private ? "my-key" : "") + " pub-key"}>{name_or_key}</td>
                 <td>{this.props.weights[item_id]}</td>
                 <td>
-                    <button className="button outline" onClick={this.props.onRemoveItem.bind(this, item_id, suffix)}>
+                    <button className="button" onClick={this.props.onRemoveItem.bind(this, item_id, suffix)}>
                         <Translate content="account.votes.remove_witness"/></button>
                 </td>
             </tr>
