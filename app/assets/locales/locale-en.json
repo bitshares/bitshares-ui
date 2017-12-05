@@ -162,7 +162,7 @@
       "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
-      "stats": "Membership",
+      "stats": "Membership stats",
       "join": "Joined on",
       "registrar": "Registrar",
       "referrer": "Affiliate Referrer",
@@ -1246,8 +1246,8 @@
   },
   "modal": {
     "send": {
-      "header": "Send from <span style=\"color: lightblue\">%(from_name)s</span>",
-      "header_propose": "Propose Send from <span style=\"color: lightblue\">%(from_name)s</span>"
+      "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+      "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
     },
     "issue": {
       "to": "Issue To",

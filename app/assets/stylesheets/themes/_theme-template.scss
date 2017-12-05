@@ -178,6 +178,10 @@ $account-tabs-background
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
+
+        span.send-name {
+            color: $link-text-color;
+        }
     }
 
     .icon > svg > path {

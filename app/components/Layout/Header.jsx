@@ -319,9 +319,9 @@ class Header extends React.Component {
                             </a>
                         </li>
                         <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
-                                <span><Translate content="header.settings" /></span>
+                            <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
+                                <span><Translate content="header.payments_beta" /></span>
                             </a>
                         </li>
                         {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
@@ -366,7 +366,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="header.explorer" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/settings")}>
+                                        <li className={cnames({active: active.indexOf("/settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
                                             <div className="table-cell"><Icon size="2x" name="cogs" /></div>
                                             <div className="table-cell"><Translate content="header.settings" /></div>
                                         </li>
@@ -376,10 +376,10 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="header.payments" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={this._showSend.bind(this)}>
+                                        {/* <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={this._showSend.bind(this)}>
                                             <div className="table-cell"><Icon size="2x" name="transfer" /></div>
                                             <div className="table-cell"><Translate content="header.payments_beta" /></div>
-                                        </li>
+                                        </li> */}
 
                                         <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
@@ -410,6 +410,11 @@ class Header extends React.Component {
                                         <li className={cnames({active: active.indexOf("/signedmessages") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
                                             <div className="table-cell"><Icon size="2x" name="text" /></div>
                                             <div className="table-cell"><Translate content="account.signedmessages.menuitem" /></div>
+                                        </li>
+
+                                        <li className={cnames({active: active.indexOf("/member-stats") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)}>
+                                            <div className="table-cell"><Icon size="2x" name="text" /></div>
+                                            <div className="table-cell"><Translate content="account.member.stats" /></div>
                                         </li>
 
                                         {isMyAccount ? <li className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
