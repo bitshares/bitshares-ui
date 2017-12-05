@@ -1398,6 +1398,12 @@ $account-background
         color: darken($warning-color, 15%);
     }
 
+    .api-status {
+        .low { color: $bid-color; }
+        .medium { color: $call-color; }
+        .high { color: $ask-color }
+    }
+
     .footer {
         div.footer-status {
             > span.success {
