@@ -574,15 +574,13 @@ class AccountVoting extends React.Component {
         );
 
         return (
-            <div className="grid-content app-tables" ref="appTables">
+            <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
-                    <div className="generic-bordered-box">
-                        {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
-                        */}
-
+                    <div className="tabs-container generic-bordered-box">
+                        
                         <Tabs
                             setting="votingTab"
-                            className="overview-tabs"
+                            className="account-tabs"
                             defaultActiveTab={1}
                             segmented={false}
                             tabsClass="account-overview no-padding bordered-header content-block"
