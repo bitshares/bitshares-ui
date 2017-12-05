@@ -918,7 +918,7 @@ $account-tabs-background
 
     td.orderHistoryBid {
 
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $bid-color;
         }
@@ -932,7 +932,7 @@ $account-tabs-background
     }
 
     td.orderHistoryAsk  {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $ask-color;
         }
@@ -944,7 +944,7 @@ $account-tabs-background
     }
 
     td.orderHistoryCall {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $call-color;
         }
