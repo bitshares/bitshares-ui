@@ -305,7 +305,7 @@ class Header extends React.Component {
                 <div className="grid-block">
                     <ul className="menu-bar">
                         <li>{dashboard}</li>
-                        {!currentAccount ? null :
+                        {!currentAccount || !!createAccountLink ? null :
                         <li>
                             <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
                                 <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
@@ -320,12 +320,19 @@ class Header extends React.Component {
                                 <Translate component="span" content="header.explorer" />
                             </a>
                         </li>
-                        <li className="column-hide-small">
+                        {!!createAccountLink ? null : <li className="column-hide-small">
                             <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
                                 <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
                                 <span><Translate content="header.payments_beta" /></span>
                             </a>
-                        </li>
+                        </li>}
+
+                        {!!createAccountLink ? <li>
+                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
+                                <span><Translate content="header.settings" /></span>
+                            </a>
+                        </li> : null}
                         {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
                     </ul>
                 </div>
@@ -383,9 +390,14 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
                                             <div className="table-cell"><Translate content="gateway.deposit" /></div>
                                         </li>
-                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw}, "divider")} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
                                             <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
+                                        </li>
+
+                                        <li className={cnames({active: active.indexOf("/settings") !== -1}), "divider"} onClick={this._onNavigate.bind(this, "/settings")}>
+                                            <div className="table-cell"><Icon size="2x" name="cogs" /></div>
+                                            <div className="table-cell"><Translate content="header.settings" /></div>
                                         </li>
 
                                         <li className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>
