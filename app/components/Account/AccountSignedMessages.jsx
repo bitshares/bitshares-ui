@@ -432,7 +432,3 @@ class AccountSignedMessages extends React.Component {
 AccountSignedMessages = BindToChainState(AccountSignedMessages);
 
 export default AccountSignedMessages;
-
-
-
-

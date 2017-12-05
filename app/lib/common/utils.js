@@ -6,13 +6,8 @@ import {ChainTypes} from "bitsharesjs/es";
 var {object_type} = ChainTypes;
 
 var Utils = {
-    get_object_id: (obj_id) => {
-        let id_regex_res = id_regex.exec(obj_id);
-        return id_regex_res ? Number.parseInt(id_regex_res[1]) : 0;
-    },
-
     is_object_id: (obj_id) => {
-        if( 'string' != typeof obj_id ) return false
+        if( "string" != typeof obj_id ) return false;
         let match = id_regex.exec(obj_id);
         return (match !== null && obj_id.split(".").length === 3);
     },
@@ -22,30 +17,6 @@ var Utils = {
         if (!prefix || !obj_id) return null;
         prefix = "1." + prefix.toString();
         return obj_id.substring(0, prefix.length) === prefix;
-    },
-
-    get_satoshi_amount(amount, asset) {
-        let precision = asset.toJS ? asset.get("precision") : asset.precision;
-        let assetPrecision = this.get_asset_precision(precision);
-        amount = typeof amount === "string" ? amount : amount.toString();
-
-        let decimalPosition = amount.indexOf(".");
-        if (decimalPosition === -1) {
-            return parseInt(amount, 10) * assetPrecision;
-        } else {
-            let amountLength = amount.length,
-                i;
-            amount = amount.replace(".", "");
-            amount = amount.substr(0, decimalPosition + precision);
-            for (i = 0; i < precision; i++) {
-                decimalPosition += 1;
-                if (decimalPosition > amount.length) {
-                    amount += "0";
-                }
-            };
-
-            return parseInt(amount, 10);
-        }
     },
 
     get_asset_precision: (precision) => {
@@ -67,12 +38,6 @@ var Utils = {
         return inverted ? 1 / price : price;
     },
 
-    round_number: function(number, asset) {
-        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
-        let precision = this.get_asset_precision(assetPrecision);
-        return Math.round(number * precision) / precision;
-    },
-
     format_volume(amount) {
 
         if (amount < 10000) {
@@ -91,54 +56,32 @@ var Utils = {
             zeros += "0";
         }
         let num = numeral(number).format("0,0" + zeros);
-        if( num.indexOf('.') > 0 && !trailing_zeros)
-           return num.replace(/0+$/,"").replace(/\.$/,"")
-        return num
+        if( num.indexOf(".") > 0 && !trailing_zeros)
+            return num.replace(/0+$/,"").replace(/\.$/,"");
+        return num;
     },
 
     format_asset: function(amount, asset, noSymbol, trailing_zeros=true) {
         let symbol;
-        let digits = 0
+        let digits = 0;
         if( asset === undefined )
-           return undefined
-        if( 'symbol' in asset )
+            return undefined;
+        if( "symbol" in asset )
         {
-            // console.log( "asset: ", asset )
-            symbol = asset.symbol
-            digits = asset.precision
+             // console.log( "asset: ", asset )
+            symbol = asset.symbol;
+            digits = asset.precision;
         }
         else
         {
-           // console.log( "asset: ", asset.toJS() )
-           symbol = asset.get('symbol')
-           digits = asset.get('precision')
+            // console.log( "asset: ", asset.toJS() )
+            symbol = asset.get("symbol");
+            digits = asset.get("precision");
         }
         let precision = this.get_asset_precision(digits);
         // console.log( "precision: ", precision )
 
         return `${this.format_number(amount / precision, digits, trailing_zeros)}${!noSymbol ? " " + symbol : ""}`;
-    },
-
-    format_price: function(quoteAmount, quoteAsset, baseAmount, baseAsset, noSymbol,inverted = false, trailing_zeros = true) {
-        if (quoteAsset.size) quoteAsset = quoteAsset.toJS();
-        if (baseAsset.size) baseAsset = baseAsset.toJS();
-
-        let precision = this.get_asset_precision(quoteAsset.precision);
-        let basePrecision = this.get_asset_precision(baseAsset.precision);
-
-        if (inverted) {
-            if (parseInt(quoteAsset.id.split(".")[2], 10) < parseInt(baseAsset.id.split(".")[2], 10)) {
-                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? "" + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
-            } else {
-                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision),trailing_zeros)}${!noSymbol ? "" + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
-            }
-        } else {
-            if (parseInt(quoteAsset.id.split(".")[2], 10) > parseInt(baseAsset.id.split(".")[2], 10)) {
-                return `${this.format_number((quoteAmount / precision) / (baseAmount / basePrecision), Math.max(5, quoteAsset.precision),trailing_zeros)}${!noSymbol ? "" + quoteAsset.symbol + "/" + baseAsset.symbol : ""}`;
-            } else {
-                return `${this.format_number((baseAmount / basePrecision) / (quoteAmount / precision), Math.max(5, baseAsset.precision),trailing_zeros)}${!noSymbol ? "" + baseAsset.symbol + "/" + quoteAsset.symbol : ""}`;
-            }
-        }
     },
 
     price_text: function(price, base, quote) {
@@ -225,52 +168,6 @@ var Utils = {
         };
     },
 
-    get_op_type: function(object) {
-        let type = parseInt(object.split(".")[1], 10);
-
-        for (let id in object_type) {
-            if (object_type[id] === type) {
-                return id;
-            }
-        }
-    },
-
-    add_comma: function(value) {
-        if (typeof value === "number") {
-            value = value.toString();
-        }
-        value = value.trim()
-        value = value.replace( /,/g, "" )
-        if( value == "." || value == "" ) {
-           return value;
-        }
-        else if( value.length ) {
-            // console.log( "before: ",value )
-            let n = Number(value)
-            if( isNaN( n ) )
-                return
-            let parts = value.split('.')
-            // console.log( "split: ", parts )
-            n = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            if( parts.length > 1 )
-                n += "." + parts[1]
-            // console.log( "after: ",transfer.amount )
-            return n;
-       }
-    },
-
-    parse_float_with_comma: function(value) {
-        // let value = new_state.transfer.amount
-        value = value.replace( /,/g, "" )
-        let fvalue = parseFloat(value)
-        if( value.length && isNaN(fvalue) && value != "." )
-           throw "parse_float_with_comma: must be a number"
-         else if( fvalue < 0 )
-           return 0;
-
-        return fvalue;
-    },
-
     are_equal_shallow: function(a, b) {
         if (!a && b || a && !b) {
             return false;
@@ -317,45 +214,6 @@ var Utils = {
         } else {
             return splitString[0] + "." + splitString[1].substr(0, assetPrecision);
         }
-        // let precision = this.get_asset_precision(assetPrecision);
-        // value = Math.floor(value * precision) / precision;
-        // if (isNaN(value) || !isFinite(value)) {
-        //     return 0;
-        // }
-        // return value;
-    },
-
-    getFee: function({opType, options, globalObject, asset, coreAsset, balances}) {
-        let coreFee = {asset: "1.3.0"};
-        coreFee.amount = this.estimateFee(opType, options, globalObject) || 0;
-
-        if (!asset || asset.get("id") === "1.3.0") return coreFee; // Desired fee is in core asset
-
-        let cer = asset.getIn(["options", "core_exchange_rate"]).toJS();
-        if (!coreAsset || cer.base.asset_id === cer.quote.asset_id) return coreFee;
-        let price = this.convertPrice(coreAsset, cer, null, asset.get("id"));
-        let eqValue = this.convertValue(price, coreFee.amount, coreAsset, asset);
-        let fee = {
-            amount: Math.floor(eqValue + 0.5),
-            asset: asset.get("id")
-        };
-
-        let useCoreFee = true; // prefer CORE fee by default
-        if (balances && balances.length) {
-            balances.forEach(b => {
-                if (b.get("asset_type") === "1.3.0" && b.get("balance") < coreFee.amount) { // User has sufficient CORE, use it (cheapeest)
-                    useCoreFee = false;
-                }
-            });
-
-            balances.forEach(b => {
-                if (b.get("asset_type") === fee.asset && b.get("balance") < fee.amount) { // User has insufficient {asset}, use CORE instead
-                    useCoreFee = true;
-                }
-            });
-        }
-
-        return useCoreFee ? coreFee : fee;
     },
 
     convertPrice: function(fromRate, toRate, fromID, toID) {
@@ -365,7 +223,7 @@ var Utils = {
         }
         // Handle case of input simply being a fromAsset and toAsset
         if (fromRate.toJS && this.is_object_type(fromRate.get("id"), "asset")) {
-            fromID = fromRate.get("id")
+            fromID = fromRate.get("id");
             fromRate = fromRate.get("bitasset") ? fromRate.getIn(["bitasset", "current_feed", "settlement_price"]).toJS() : fromRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 
@@ -377,7 +235,7 @@ var Utils = {
         let fromRateQuoteID = fromRate.quote.asset_id;
         let toRateQuoteID = toRate.quote.asset_id;
 
-        let fromRateQuoteAmount, fromRateBaseAmount, finalQuoteID, finalBaseID;
+        let fromRateQuoteAmount, fromRateBaseAmount;
         if (fromRateQuoteID === fromID) {
             fromRateQuoteAmount = fromRate.quote.amount;
             fromRateBaseAmount = fromRate.base.amount;
@@ -435,19 +293,6 @@ var Utils = {
         return eqValue;
     },
 
-    isValidPrice(rate) {
-        if (!rate || !rate.toJS) {
-            return false;
-        }
-        let base = rate.get("base").toJS();
-        let quote = rate.get("quote").toJS();
-        if ((base.amount > 0 && quote.amount > 0) && (base.asset_id !== quote.asset_id)) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-
     sortText(a, b, inverse = false) {
         if (a > b) {
             return inverse ? 1 : -1;
@@ -476,28 +321,8 @@ var Utils = {
     },
 
     get_translation_parts(str) {
-        let result = [];
-        let toReplace = {};
         let re = /{(.*?)}/g;
-        let interpolators = str.split(re);
-        // console.log("split:", str.split(re));
         return str.split(re);
-        // var str = '{{azazdaz}} {{azdazd}}';
-        // var m;
-
-        // while ((m = re.exec(str)) !== null) {
-        //     if (m.index === re.lastIndex) {
-        //         re.lastIndex++;
-        //     }
-        //     console.log("m:", m);
-        //     // View your result using the m-variable.
-        //     // eg m[0] etc.
-        //     //
-        //     toReplace[m[1]] = m[0]
-        //     result.push(m[1])
-        // }
-
-        // return result;
     },
 
     get_percentage(a, b) {
@@ -516,7 +341,6 @@ var Utils = {
         }
 
         let prefix = isBitAsset ? "bit" : toReplace[i] ? toReplace[i].toLowerCase() : null;
-        // if (prefix === "open.") prefix = "";
 
         return {
             name,

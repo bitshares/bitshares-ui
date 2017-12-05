@@ -180,6 +180,10 @@ $account-tabs-background
         }
     }
 
+    .icon > svg > path {
+        fill: $primary-text-color;
+    }
+
     .footer {
         @include color($secondary-text-color, $panel-bg-color);
         svg > path {
@@ -265,7 +269,7 @@ $account-tabs-background
     }
 
     .header .button,  .header .button:active {
-        background-color: $panel-bg-color !important;
+        background-color: transparent !important;
     }
 
     .header a.button.create-account {
@@ -280,6 +284,59 @@ $account-tabs-background
                 fill: lighten($button-bg-color, 10%);
             }
         }
+    }
+
+    .header div.account-drop-down {
+        div.total-value {
+            color: $account-green;
+        }
+
+        div.dropdown-wrapper {
+            > li {
+                > div.table-cell {
+                    &:nth-child(1):hover {
+                        background-color: $bg-color;
+                    }
+
+                    &:nth-child(2):hover {
+                        background-color: $bg-color;
+                    }
+                }
+            }
+        }
+
+        div.dropdown-wrapper.active {
+            transition: background-color 0s;
+            background-color: $bg-color;
+            ul {
+                background-color: $bg-color;
+            }
+        }
+
+        ul.dropdown.header-menu {
+            > li {
+                > div:first-of-type {
+                    > span.icon > svg {
+                        > path {
+                            fill: white;
+                        }
+                    }
+                }
+
+                &:hover {
+                    background-color: $light-panel-bg-color;
+                }
+
+                &.divider {
+                    border-bottom: 1px solid $account-border;
+                }
+            }
+        }
+    }
+
+
+    .header span.icon.lock-unlock > svg > path {
+        fill: $button-bg-color;
     }
 
     .grp-menu-item button {
@@ -309,7 +366,7 @@ $account-tabs-background
             > span { font-weight: bold; }
         }
         svg > path { fill: $secondary-text-color; }
-        svg:hover > path { fill: $primary-text-color; }
+        // svg:hover > path { fill: $primary-text-color; }
     }
 
     .settings-cog {
@@ -421,7 +478,7 @@ $account-tabs-background
             }
             /* Hover state */
 
-            li:hover span {
+            li:hover > span {
                 @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
                 color: $link-text-color;
             }
@@ -802,20 +859,22 @@ $account-tabs-background
     }
 
     .menu-group.primary, .menu-group.primary .menu-bar {
-        background-color: $panel-bg-color;
+        background-color: $account-background;
 
         .menu-bar > li {
 
             > a {
-                color: $primary-text-color;
+                color: $account-dimmed;
             }
 
             > a:hover {
-                background-color: lighten($panel-bg-color, 5%) !important;
+                background-color: $bg-color !important;
+                color: $primary-text-color;
             }
 
             > a.active {
-                background-color: lighten($panel-bg-color, 5%) !important;
+                background-color: $bg-color !important;
+                color: $primary-text-color;
             }
         }
     }
@@ -1229,6 +1288,10 @@ $account-tabs-background
         color: $info-color;
     }
 
+    td.pub-key {
+        word-break: break-all;
+    }
+
     /* Table view account */
     div.tabs-container {
         background-color: $account-tabs-background;
@@ -1236,7 +1299,7 @@ $account-tabs-background
 
     div.account-tabs {
         > div.service-selector {
-            background-color: $account-header;
+            background-color: $bg-color;
         }
     }
 
@@ -1245,10 +1308,10 @@ $account-tabs-background
         li {
             > a {
                 color: $account-dimmed;
-                background-color: $account-header;
+                background-color: $bg-color;
                 border: none;
                 &:hover {
-                    background-color: $account-header;
+                    background-color: $bg-color;
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
