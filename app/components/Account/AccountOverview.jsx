@@ -371,9 +371,11 @@ class AccountOverview extends React.Component {
                             <td style={{textAlign: "left"}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td className="column-hide-small" colSpan="2"></td>
+                            <td>{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td>{emptyCell}</td>
                             <td style={{textAlign: "center"}}>
                                 {canBuy  && this.props.isMyAccount ?
                                 <span>
@@ -624,9 +626,9 @@ class AccountOverview extends React.Component {
                                                 {totalValueText}
                                             </td>
                                             <td colSpan="3"></td>
-                                            <td style={{textAlign: "center"}}>{ordersValue}</td>
+                                            <td style={{textAlign: "right"}}>{ordersValue}</td>
                                             <td colSpan="1"></td>
-                                            {this.props.isMyAccount ? <td></td> : null}
+                                            <td></td>
                                             {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>
@@ -642,10 +644,12 @@ class AccountOverview extends React.Component {
                                                     {totalValueText}
                                                 </td>
                                                 <td>{debtValue}</td>
-                                                <td>{collateralValue}</td>
+                                                <td className="column-hide-medium">{collateralValue}</td>
                                                 <td></td>
                                                 <td>{marginValue}</td>
-                                                <td colSpan="5"></td>
+                                                <td className="column-hide-small"></td>
+                                                <td className="column-hide-small"></td>
+                                                <td colSpan="3"></td>
                                             </tr>
                                         </MarginPositions>
                                     </div>
