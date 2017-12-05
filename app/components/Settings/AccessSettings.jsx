@@ -76,7 +76,7 @@ class ApiNode extends React.Component {
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
             <p style={{marginBottom: 0}}>{displayUrl}</p>
-            {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" style={{color: green, marginBottom: 0}} /></div> : null}
+            {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" className="low" style={{marginBottom: 0}} /></div> : null}
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
             {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
