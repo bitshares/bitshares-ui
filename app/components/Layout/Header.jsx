@@ -6,6 +6,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -89,6 +90,12 @@ class Header extends React.Component {
             nextState.dropdownActive !== this.state.dropdownActive ||
             nextProps.height !== this.props.height
         );
+    }
+
+    _showSend(e) {
+        e.preventDefault();
+        this.refs.send_modal.show();
+        this._closeDropdown();
     }
 
     _triggerMenu(e) {
@@ -285,7 +292,7 @@ class Header extends React.Component {
                             <div style={{marginLeft: "1rem", height: "3rem"}}>
                                 <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
                             </div>
-                        </li>
+                    </li>
                         <li>
                             <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
                                 <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
@@ -369,6 +376,11 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="header.payments" /></div>
                                         </li>
 
+                                        <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={this._showSend.bind(this)}>
+                                            <div className="table-cell"><Icon size="2x" name="transfer" /></div>
+                                            <div className="table-cell"><Translate content="header.payments_beta" /></div>
+                                        </li>
+
                                         <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
                                             <div className="table-cell"><Translate content="gateway.deposit" /></div>
@@ -422,8 +434,12 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </div>
+                {/* Send modal */}
+                <SendModal ref="send_modal" from_name={currentAccount} />
             </div>
+
         );
+
     }
 }
 
