@@ -298,10 +298,8 @@ div.tabs-container {
     }
 
     div.tab-content,
-    div.permissions-buttons,
-    div.recent-transactions,
-    div.action-buttons {
-        margin: 1rem;
+    div.permissions-buttons {
+        margin: 0 1rem;
     }
 
     div.help-content {
@@ -321,9 +319,8 @@ div.tabs-container {
     }
 
     .action-buttons {
-        margin: 10px 0px;
         text-align: right;
-        
+
         button {
             min-width: 5rem;
             margin-left: 0.5rem;

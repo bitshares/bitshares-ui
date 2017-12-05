@@ -318,7 +318,7 @@ $account-tabs-background
                 > div:first-of-type {
                     > span.icon > svg {
                         > path {
-                            fill: white;
+                            fill: $primary-text-color;
                         }
                     }
                 }
@@ -1293,8 +1293,11 @@ $account-tabs-background
     }
 
     /* Table view account */
+    div.grid-content.app-tables {
+        background-color: $account-background;
+    }
     div.tabs-container {
-        background-color: $account-tabs-background;
+        background-color: $account-background;
     }
 
     div.account-tabs {

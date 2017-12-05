@@ -239,7 +239,22 @@ class AccountPermissions extends React.Component {
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="permissionsTab" className="account-tabs" tabsClass="account-overview bordered-header content-block">
+                        <Tabs
+                            defaultActiveTab={1}
+                            segmented={false}
+                            setting="permissionsTab"
+                            className="account-tabs"
+                            tabsClass="account-overview bordered-header content-block"
+                            actionButtons={<div className="action-buttons">
+                                        <button className={reset_buttons_class} onClick={this.onReset} tabIndex={8}>
+                                            <Translate content="account.perm.reset"/>
+                                        </button>
+
+                                        <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={9}>
+                                            <Translate content="account.perm.publish"/>
+                                        </button>
+                                    </div>}
+                        >
 
                             <Tab title="account.perm.active">
                                 <HelpContent path="components/AccountPermActive" />
@@ -344,25 +359,17 @@ class AccountPermissions extends React.Component {
                             </Tab>
                         </Tabs>
 
-                        <div className="action-buttons">
-                            <button className={reset_buttons_class} onClick={this.onReset} tabIndex={8}>
-                                <Translate content="account.perm.reset"/>
-                            </button>
+                        <div className="tab-content">
+                            <div className="divider"></div>
 
-                            <button className={publish_buttons_class} onClick={this.onPublish} tabIndex={9}>
-                                <Translate content="account.perm.publish"/>
-                            </button>
+                            <RecentTransactions
+                                accountsList={accountsList}
+                                limit={25}
+                                compactView={false}
+                                filter="account_update"
+                                style={{paddingBottom: "2rem"}}
+                            />
                         </div>
-
-                        <div className="divider"></div>
-
-                        <RecentTransactions
-                            accountsList={accountsList}
-                            limit={25}
-                            compactView={false}
-                            filter="account_update" 
-                            style={{paddingTop: "2rem", paddingBottom: "2rem"}}
-                        />
                     </div>
                 </div>
             </div>
