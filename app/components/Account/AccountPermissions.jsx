@@ -236,7 +236,7 @@ class AccountPermissions extends React.Component {
         accountsList = accountsList.add(this.props.account.get("id"));
 
         return (
-            <div className="grid-content app-tables" ref="appTables">
+            <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <Tabs defaultActiveTab={1} segmented={false} setting="permissionsTab" className="account-tabs" tabsClass="account-overview bordered-header content-block">
