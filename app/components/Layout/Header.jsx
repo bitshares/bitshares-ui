@@ -171,20 +171,25 @@ class Header extends React.Component {
         if(!insideDropdown) this._closeDropdown();
     }
 
+    _onLinkAccount() {
+        AccountActions.linkAccount(this.props.currentAccount);
+    }
+
+    _onUnLinkAccount() {
+        AccountActions.unlinkAccount(this.props.currentAccount);
+    }
+
     render() {
         let {active} = this.state;
         let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
-        let locked_tip = counterpart.translate("header.locked_tip");
-        let unlocked_tip = counterpart.translate("header.unlocked_tip");
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
-        let overflowY = "auto";
 
         const a = ChainStore.getAccount(currentAccount);
         const isMyAccount = !a ? false : AccountStore.isMyAccount(a);
+        const isContact = this.props.linkedAccounts.has(currentAccount);
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
-
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -338,6 +343,11 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
                                             <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
                                         </li>
+
+                                        {!isMyAccount ? <li className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
+                                            <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
+                                            <div className="table-cell"><Translate content={`account.${isContact ? "unfollow" : "follow"}`} /></div>
+                                        </li> : null}
 
                                         <li className={cnames({active: active.indexOf("/market/") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, tradeUrl)}>
                                             <div className="table-cell"><Icon size="2x" name="trade" /></div>

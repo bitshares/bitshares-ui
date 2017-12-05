@@ -45,8 +45,6 @@ class AccountRow extends React.Component {
         let balance = account.getIn(["balances", "1.3.0"]) || null;
         let accountName = account.get("name");
 
-        console.log(accountName, linkedAccounts.has(accountName));
-
         return (
             <tr key={account.get("id")}>
                 <td>{account.get("id")}</td>
