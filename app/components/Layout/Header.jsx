@@ -141,8 +141,10 @@ class Header extends React.Component {
             notify.addNotification({
                 message: counterpart.translate("header.account_notify", {account: account_name}),
                 level: "success",
-                autoDismiss: 2
+                autoDismiss: 2,
+                position: "br"
             });
+            this._closeDropdown();
         }
         // this.onClickUser(account_name, e);
     }
@@ -243,7 +245,7 @@ class Header extends React.Component {
             </a>;
 
         // Account selector: Only active inside the exchange
-        let accountsDropDown = null, account_display_name, accountsList;
+        let account_display_name, accountsList;
         if (currentAccount) {
             account_display_name = currentAccount.length > 20 ? `${currentAccount.slice(0, 20)}..` : currentAccount;
             if (tradingAccounts.indexOf(currentAccount) < 0 && isMyAccount) {
@@ -252,10 +254,10 @@ class Header extends React.Component {
             if (tradingAccounts.length >= 1) {
                 accountsList = tradingAccounts
                 .sort()
-                .map((name, index) => {
+                .map((name) => {
                     return (
-                        <li className={name === account_display_name ? "current-account" : ""} key={name}>
-                            <a href onClick={this._accountClickHandler.bind(this, name)}>
+                        <li onClick={this._accountClickHandler.bind(this, name)} className={name === account_display_name ? "current-account" : ""} key={name}>
+                            <a href>
                                 <div className="table-cell"><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></div>
                                 <div className="table-cell" style={{paddingLeft: 10}}><span className="lower-case">{name}</span></div>
                             </a>
