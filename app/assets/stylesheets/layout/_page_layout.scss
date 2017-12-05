@@ -94,7 +94,7 @@ div.bordered-header {
 }
 
 .grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .account-tabs {
-  height: 100%;
+  min-height: 100%;
 }
 
 .grid-content.app-tables > .content-block {
