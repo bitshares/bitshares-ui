@@ -40,6 +40,7 @@ $account-primarytext: white;
 $account-dimmed: #afafaf;
 $account-border: #323131;
 $account-background: #3f3f3f;
+$account-tabs-background: #2f2f2f;
 
 .darkTheme {
   @include theme(
@@ -73,6 +74,7 @@ $account-background: #3f3f3f;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $account-tabs-background
   );
 }

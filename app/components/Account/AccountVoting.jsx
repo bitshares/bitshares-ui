@@ -11,7 +11,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {Link} from "react-router/es";
 import ApplicationApi from "api/ApplicationApi";
-import tableHeightHelper from "lib/common/tableHeightHelper";
 import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
@@ -53,8 +52,6 @@ class AccountVoting extends React.Component {
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
         this._getVoteObjects = this._getVoteObjects.bind(this);
-        this.tableHeightMountInterval = tableHeightHelper.tableHeightMountInterval.bind(this);
-        this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
     }
 
     componentWillMount() {
@@ -66,7 +63,6 @@ class AccountVoting extends React.Component {
         this.updateAccountData(this.props);
         this._getVoteObjects();
         this._getVoteObjects("committee");
-        this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
     }
 
     componentWillReceiveProps(np) {
@@ -574,19 +570,16 @@ class AccountVoting extends React.Component {
         );
 
         return (
-            <div className="grid-content app-tables" ref="appTables">
+            <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
-                    <div className="generic-bordered-box">
-                        {/* <HelpContent style={{maxWidth: "800px"}} path="components/AccountVoting" />
-                        */}
+                    <div className="tabs-container generic-bordered-box">
 
                         <Tabs
                             setting="votingTab"
-                            className="overview-tabs"
+                            className="account-tabs"
                             defaultActiveTab={1}
                             segmented={false}
                             tabsClass="account-overview no-padding bordered-header content-block"
-                            onChangeTab={this.adjustHeightOnChangeTab.bind(this)}
                             actionButtons={actionButtons}
                         >
 

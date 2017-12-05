@@ -29,6 +29,12 @@ class AccountPage extends React.Component {
         accountUtils.getPossibleFees(this.props.account, "transfer");
     }
 
+    componentWillReceiveProps(np) {
+        if (np.account) {
+            AccountActions.setCurrentAccount.defer(np.account.get("name"));
+        }
+    }
+
     render() {
         let {linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
 

@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------
+Release 2.0.171205
+---------------------------------------------------------------------
+New features
+--------
+- #558 Add UI for cancelling orders in bulk
+- #167 Contact list support (to be expanded upon)
+- #630 Header and right menu Dropdown
+- #781 - Add/Remove Contacts
+- #556 Add new Send modal (beta)
+- Add GDEX API server
+
+Bug fixes
+--------
+- #765 fixed usage of some undefined properties on withdrawal
+- #771 match styles to new account dashboard look
+- Fix #715 and #772: Dropdown menu can't scroll
+- Fix #723: Missing asset name in translation
+- Set more theme specific API Status colors. (#788)
+---------------------------------------------------------------------
 Release 2.0.171102
 ---------------------------------------------------------------------
 Bug fixes

@@ -7,12 +7,19 @@ import MarketsStore from "stores/MarketsStore";
 import { connect } from "alt-react";
 import utils from "common/utils";
 import FormattedPrice from "./FormattedPrice";
+import marketUtils from "common/market_utils";
 
 class MarketStats extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         this.statsInterval = null;
+        const {marketID, first, second} = marketUtils.getMarketID(props.base, props.quote);
+        this.state = {
+            marketID,
+            first,
+            second
+        };
     }
 
     _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
@@ -25,16 +32,16 @@ class MarketStats extends React.Component {
 
     shouldComponentUpdate(np) {
         return (
-            this._checkStats(np.marketStats, this.props.marketStats) ||
+            this._checkStats(np.allMarketStats.get(this.state.marketID), this.props.allMarketStats.get(this.state.marketID)) ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id")
         );
     }
 
     componentWillMount() {
-        MarketsActions.getMarketStats.defer(this.props.quote, this.props.base);
+        MarketsActions.getMarketStats.defer(this.state.second, this.state.first);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.props.quote, this.props.base), 35 * 1000);
+        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.state.second, this.state.first), 35 * 1000);
     }
 
     componentWillUnmount() {
@@ -46,12 +53,7 @@ class MarketPriceInner extends MarketStats {
 
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired,
-        invert: React.PropTypes.bool
-    };
-
-    static defaultProps = {
-        invert: true
+        base: ChainTypes.ChainAsset.isRequired
     };
 
     constructor(props) {
@@ -65,11 +67,13 @@ class MarketPriceInner extends MarketStats {
     }
 
     render() {
-        let {marketStats, marketStatsInverted, invert} = this.props;
+        let {allMarketStats} = this.props;
+        const {marketID} = this.state;
+        const marketStats = allMarketStats.get(marketID);
         let price = marketStats && marketStats.price ? marketStats.price : null;
-        if (!price && marketStatsInverted && marketStatsInverted.price) {
-            price = marketStatsInverted.price.invert();
-        }
+        // if (!price && marketStatsInverted && marketStatsInverted.price) {
+        //     price = marketStatsInverted.price.invert();
+        // }
 
         return (
             <span className={cnames("", this.props.className)}>
@@ -78,7 +82,7 @@ class MarketPriceInner extends MarketStats {
                         base_amount={price.base.amount} base_asset={price.base.asset_id}
                         quote_amount={price.quote.amount} quote_asset={price.quote.asset_id}
                         hide_symbols
-                        invert={invert}
+                        // invert={invert}
                     />
                     : "n/a"
                 }
@@ -101,11 +105,9 @@ MarketPrice = connect(MarketPrice, {
     listenTo() {
         return [MarketsStore];
     },
-    getProps(props) {
-        let invertedId = props.marketId.split("_")[1] + "_" + props.marketId.split("_")[0];
+    getProps() {
         return {
-            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId),
-            marketStatsInverted: MarketsStore.getState().allMarketStats.get(invertedId)
+            allMarketStats: MarketsStore.getState().allMarketStats
         };
     }
 });

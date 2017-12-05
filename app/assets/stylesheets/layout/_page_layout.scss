@@ -1,7 +1,7 @@
 .page-layout {
   > .grid-block {
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
+    // border-top: 1px solid transparent;
+    // border-bottom: 1px solid transparent;
     > .grid-content, > .grid-block, > .grid-container {
       padding: 0 10px;
     }
@@ -89,13 +89,13 @@ div.bordered-header {
 .grid-content.app-tables {
   box-sizing: border-box;
   padding: 0px;
-  min-height: 100%;
+  height: 100%;
   position: relative;
 }
 
-.grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .overview-tabs {
-  height: 100%;
-}
+// .grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .account-tabs {
+//   height: 100%;
+// }
 
 .grid-content.app-tables > .content-block {
   margin-bottom: 0 !important;

@@ -481,9 +481,10 @@ class AccountStore extends BaseStore {
         // Update current account if no accounts are linked
         if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
-        } else {
-            this.setCurrentAccount(this.state.linkedAccounts.first());
         }
+        // else {
+        //     this.setCurrentAccount(this.state.linkedAccounts.first());
+        // }
     }
 
     checkAccountRefs() {

@@ -31,7 +31,8 @@ $account-green,
 $account-primarytext,
 $account-dimmed,
 $account-border,
-$account-background
+$account-background,
+$account-tabs-background
 ) {
 
     .font-secondary {
@@ -177,6 +178,10 @@ $account-background
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
+
+        span.send-name {
+            color: $link-text-color;
+        }
     }
 
     .icon > svg > path {
@@ -310,6 +315,10 @@ $account-background
             ul {
                 background-color: $bg-color;
             }
+
+            span.caret {
+                color: $link-text-color;
+            }
         }
 
         ul.dropdown.header-menu {
@@ -317,12 +326,12 @@ $account-background
                 > div:first-of-type {
                     > span.icon > svg {
                         > path {
-                            fill: white;
+                            fill: $primary-text-color;
                         }
                     }
                 }
 
-                &:hover {
+                &:hover, &.active {
                     background-color: $light-panel-bg-color;
                 }
 
@@ -917,7 +926,7 @@ $account-background
 
     td.orderHistoryBid {
 
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $bid-color;
         }
@@ -931,7 +940,7 @@ $account-background
     }
 
     td.orderHistoryAsk  {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $ask-color;
         }
@@ -943,7 +952,7 @@ $account-background
     }
 
     td.orderHistoryCall {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $call-color;
         }
@@ -1292,12 +1301,19 @@ $account-background
     }
 
     /* Table view account */
-    div.overview-tabs {
+    div.grid-content.app-tables {
         background-color: $account-background;
+    }
+    div.tabs-container {
+        background-color: $account-background;
+    }
+
+    div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
         }
     }
+
     ul.account-overview {
 
         li {
@@ -1396,6 +1412,12 @@ $account-background
     }
     span.warning {
         color: darken($warning-color, 15%);
+    }
+
+    .api-status {
+        .low { color: $bid-color; }
+        .medium { color: $call-color; }
+        .high { color: $ask-color }
     }
 
     .footer {

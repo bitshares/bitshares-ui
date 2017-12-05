@@ -116,7 +116,13 @@ div.header-right-menu {
 }
 
 div.account-drop-down div.dropdown-wrapper {
-    padding: 0 0 0 0;
+    padding: 0;
+
+    span.caret {
+        position: absolute;
+        right: 12px;
+        top: 20px;
+    }
 
     > li {
         list-style: none;
