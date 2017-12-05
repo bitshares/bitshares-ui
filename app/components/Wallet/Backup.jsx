@@ -85,6 +85,8 @@ class BackupRestore extends Component {
                         </NewWalletName>
                     </DecryptBackup>
                 </Upload>
+                <br />
+                <Link to="/"><button className="blue"><Translate content="wallet.back" /></button></Link>
             </div>
         );
     }

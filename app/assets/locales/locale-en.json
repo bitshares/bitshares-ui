@@ -1096,6 +1096,7 @@
     "verify_prior_backup": "Verify Prior Backup",
     "brainkey_not_verified": "This Brainkey is not verified",
     "cancel": "Cancel",
+    "back": "Back",
     "reset": "Reset",
     "done": "Done",
     "verify": "I've written it down",
