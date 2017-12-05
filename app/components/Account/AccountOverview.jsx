@@ -32,7 +32,6 @@ import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
-import tableHeightHelper from "lib/common/tableHeightHelper";
 
 class AccountOverview extends React.Component {
 
@@ -68,8 +67,6 @@ class AccountOverview extends React.Component {
             ]
         };
 
-        this.tableHeightMountInterval = tableHeightHelper.tableHeightMountInterval.bind(this);
-        this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
@@ -146,16 +143,6 @@ class AccountOverview extends React.Component {
             this.changeRefs = {};
             setTimeout(this.forceUpdate.bind(this), 500);
         };
-    }
-
-    componentDidMount(){
-        this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
-        window.addEventListener("resize", this.adjustHeightOnChangeTab, {passive: true, capture: false});
-    }
-
-    componentWillUnmount(){
-        clearInterval(this.tableHeightMountIntervalInstance);
-        window.removeEventListener("resize", this.adjustHeightOnChangeTab);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -584,7 +571,7 @@ class AccountOverview extends React.Component {
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
+                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
