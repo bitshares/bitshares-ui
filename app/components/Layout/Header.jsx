@@ -391,7 +391,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="warning" /></div>
                                             <div className="table-cell"><Translate content="account.permissions" /></div>
                                         </li>
-                                        <li className={cnames({active: active.indexOf("/assets") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
+                                        <li className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
                                             <div className="table-cell"><Icon size="2x" name="assets" /></div>
                                             <div className="table-cell"><Translate content="explorer.assets.title" /></div>
                                         </li>
@@ -399,6 +399,11 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="text" /></div>
                                             <div className="table-cell"><Translate content="account.signedmessages.menuitem" /></div>
                                         </li>
+
+                                        {isMyAccount ? <li className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
+                                            <div className="table-cell"><Icon size="2x" name="hourglass" /></div>
+                                            <div className="table-cell"><Translate content="account.vesting.title" /></div>
+                                        </li> : null}
 
                                         <li className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
                                             <div className="table-cell"><Icon size="2x" name="list" /></div>
