@@ -10,6 +10,7 @@ import Icon from "../Icon/Icon";
 import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
+import { connect } from "alt-react";
 
 class AccountRow extends React.Component {
     static propTypes = {
@@ -21,37 +22,30 @@ class AccountRow extends React.Component {
         autosubscribe: false
     };
 
-    constructor() {
-        super();
-        this.state = {
-            linkedAccounts: AccountStore.getState().linkedAccounts
-        };
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return (
-            nextState.linkedAccounts !== this.state.linkedAccounts
+            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.account !== this.props.account
         );
     }
 
     _onLinkAccount(account, e) {
         e.preventDefault();
         AccountActions.linkAccount(account);
-        this.setState({linkedAccounts: AccountStore.getState().linkedAccounts});
     }
 
     _onUnLinkAccount(account, e) {
         e.preventDefault();
         AccountActions.unlinkAccount(account);
-        this.setState({linkedAccounts: AccountStore.getState().linkedAccounts});
     }
 
     render() {
-        let {account} = this.props;
-        let {linkedAccounts} = this.state;
+        let {account, linkedAccounts} = this.props;
 
         let balance = account.getIn(["balances", "1.3.0"]) || null;
         let accountName = account.get("name");
+
+        console.log(accountName, linkedAccounts.has(accountName));
 
         return (
             <tr key={account.get("id")}>
@@ -65,6 +59,22 @@ class AccountRow extends React.Component {
     }
 }
 AccountRow = BindToChainState(AccountRow);
+
+let AccountRowWrapper = (props) => {
+    return <AccountRow {...props} />;
+};
+
+AccountRowWrapper = connect(AccountRowWrapper, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts
+        };
+    }
+});
+
 
 class Accounts extends React.Component {
 
@@ -113,7 +123,7 @@ class Accounts extends React.Component {
             })
             .map((account, id) => {
                 return (
-                    <AccountRow key={id} account={account} />
+                    <AccountRowWrapper key={id} account={account} />
                 );
             }).toArray();
         }
