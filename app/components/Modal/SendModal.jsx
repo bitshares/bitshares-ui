@@ -13,7 +13,6 @@ import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
-import Icon from "../Icon/Icon";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
 import counterpart from "counterpart";

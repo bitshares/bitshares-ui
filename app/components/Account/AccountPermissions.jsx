@@ -12,6 +12,7 @@ import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import { RecentTransactions } from "./RecentTransactions";
+import notify from "actions/NotificationActions";
 
 class AccountPermissions extends React.Component {
 
@@ -134,6 +135,13 @@ class AccountPermissions extends React.Component {
         /* Also include owner keys if the user has indicated it is necessary using the checkbox */
         if (this.didChange("owner") || this.state.isOwner) {
             updateObject.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_addresses, s.owner_weights);
+        }
+        if (this.didChange("owner") && s.owner_keys.size === 0 && s.owner_addresses.size === 0 && s.owner_accounts.size === 1 && s.owner_accounts.first() === updated_account.id) {
+            return notify.addNotification({
+                message: "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
+                level: "error",
+                autoDismiss: 10
+            });
         }
         if (s.memo_key && this.didChange("memo") && this.isValidPubKey(s.memo_key)) {
             updateObject.new_options = this.props.account.get("options").toJS();
