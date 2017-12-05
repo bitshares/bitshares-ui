@@ -222,7 +222,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 const {feeAmount} = this.state;
 
                 const amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
-                const gateFee = parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, ""));
+                const gateFee = (typeof this.props.gateFee != "undefined")?parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, "")):0.0;
 
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
@@ -230,7 +230,16 @@ class WithdrawModalBlocktrades extends React.Component {
                     real: amount
                 });
 
-                let balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
+
+                let balanceAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: 0
+                });
+                
+                if (typeof this.props.balance != "undefined") {
+                    balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
+                }
 
                 const gateFeeAmount = new Asset({
                     asset_id: asset.get("id"),

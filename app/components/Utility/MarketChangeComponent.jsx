@@ -78,7 +78,8 @@ Market24HourChangeComponent = connect(Market24HourChangeComponent, {
     },
     getProps(props) {
         return {
-            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId)
+            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId),
+            allMarketStats: MarketsStore.getState().allMarketStats
         };
     }
 });
