@@ -164,6 +164,17 @@ class Asset {
     }
 }
 
+Number.prototype.toFixedSpecial = function(n) {
+    var str = this.toFixed(n);
+    if (str.indexOf('e+') < 0)
+        return str;
+
+    // if number is in scientific notation, pick (b)ase and (p)ower
+    return str.replace('.', '').split('e+').reduce(function(p, b) {
+        return p + Array(b - p.length + 2).join(0);
+    }) + '.' + Array(n + 1).join(0);
+};
+
 /**
     * @brief The price struct stores asset prices in the Graphene system.
     *
@@ -188,18 +199,41 @@ class Price {
 
         base = base.clone();
         quote = quote.clone();
+
         if (real && typeof real === "number") {
             /*
             * In order to make large numbers work properly, we assume numbers
             * larger than 100k do not need more than 5 decimals. Without this we
             * quickly encounter JavaScript floating point errors for large numbers.
             */
+            /*
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
             }
-            let frac = new Fraction(real);
+            */
+
+
+
+            //console.log('real=' + (real).toFixedSpecial(8) );
+            real = (real).toFixedSpecial(8);
+            let numerator;
+            let denominator;
+            let frac;
+            if (real >= 0.00000100) {
+                frac = new Fraction(real);
+                numerator = frac.numerator;
+                denominator = frac.denominator;
+            } else {
+                frac = new Fraction((real * 100) );
+                numerator = String(frac.numerator);
+                denominator = String(frac.denominator) + '00';
+            }
+
             let baseSats = base.toSats(), quoteSats = quote.toSats();
+
             let numRatio = (baseSats / quoteSats), denRatio = quoteSats / baseSats;
+
+
 
             if (baseSats >= quoteSats) {
                 denRatio = 1;
@@ -207,8 +241,11 @@ class Price {
                 numRatio = 1;
             }
 
-            base.amount = frac.numerator * numRatio;
-            quote.amount = frac.denominator * denRatio;
+
+
+
+            base.amount = numerator * numRatio;
+            quote.amount = denominator * denRatio;
         } else if (real === 0) {
             base.amount = 0;
             quote.amount = 0;
