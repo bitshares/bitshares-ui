@@ -7,6 +7,7 @@ import counterpart from "counterpart";
 import FloatingDropdown from "./FloatingDropdown";
 import FormattedAsset from "./FormattedAsset";
 import Immutable from "immutable";
+import classnames from "classnames";
 
 class AssetDropdown extends React.Component {
 
@@ -84,7 +85,10 @@ class AssetSelector extends React.Component {
     }
 
     onKeyDown(event) {
-        if (event.keyCode === 13) this.onFound(event);
+        if (event.keyCode === 13) {
+            this.onFound(event);
+            this.onAction(event);
+        }
     }
 
     componentDidMount() {
@@ -112,6 +116,14 @@ class AssetSelector extends React.Component {
         }
     }
 
+    onAction(e) {
+        e.preventDefault();
+        if(this.props.onAction && !this.getError() && !this.props.disableActionButton) {
+            if (this.props.asset)
+                this.props.onAction(this.props.asset);
+        }
+    }
+
     render() {
         let {disabled, noLabel} = this.props;
         let error = this.getError();
@@ -123,6 +135,9 @@ class AssetSelector extends React.Component {
                 error = counterpart.translate("explorer.asset.not_found", {name: this.props.assetInput});
             }
         }
+
+        let action_class = classnames("button", {"disabled" : !(this.props.asset) || error || this.props.disableActionButton});
+
         return (
             <div className="asset-selector" style={this.props.style}>
                 <div>
@@ -153,7 +168,13 @@ class AssetSelector extends React.Component {
                                 />) : null}
                         </div>
                         { this.props.children }
-                    </div>
+                        { this.props.onAction ? (
+                            <button className={action_class}
+                                onClick={this.onAction.bind(this)}>
+                                <Translate content={this.props.action_label}/>
+                            </button>
+                            ) : null }
+                        </div>
                     </div>
                     <div className="error-area" style={{paddingBottom: "10px"}}>
                         <span style={{wordBreak: "break-all"}}>{error}</span>

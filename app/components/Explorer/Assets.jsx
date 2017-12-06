@@ -5,7 +5,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -98,7 +98,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
-                    <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><FormattedAsset amount={asset.dynamic.current_supply} asset={asset.id} hide_asset={true}/></td>
                     <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
@@ -123,7 +123,7 @@ class Assets extends React.Component {
                 <tr key={asset.symbol}>
                     <td><Link to={`/asset/${asset.symbol}`}><AssetName name={asset.symbol} /></Link></td>
                     <td>{this.linkToAccount(asset.issuer)}</td>
-                    <td><FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} hide_asset={true}/></td>
+                    <td><FormattedAsset amount={asset.dynamic.current_supply} asset={asset.id} hide_asset={true}/></td>
                     <td><Link className="button outline" to={`/market/${marketID}`}><Translate content="header.exchange" /></Link></td>
                 </tr>
             );
@@ -165,7 +165,7 @@ class Assets extends React.Component {
                         </div> : null}
                         <div style={{padding: "0 20px 5px 0", lineHeight: "18px"}}>
                             <LinkToAccountById account={asset.issuer} />
-                            <span> - <FormattedAsset amount={asset.dynamic_data.current_supply} asset={asset.id} /></span>
+                            <span> - <FormattedAsset amount={asset.dynamic.current_supply} asset={asset.id} /></span>
                             {description.expiry ? <span> - {description.expiry}</span> : null}
                         </div>
                     </td>

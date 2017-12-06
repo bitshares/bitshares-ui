@@ -32,9 +32,6 @@ $negative-color: #E1424A;
 $row-accent-color: #3C3C3C;
 $header-color: #484848;
 
-// Chat colors
-$chat-text-color: #191A1F;
-
 // Account table view colors
 $account-header: #1A242F;
 $account-cells: #27384B;
@@ -43,6 +40,7 @@ $account-primarytext: white;
 $account-dimmed: #606060;
 $account-border: #323131;
 $account-background: black;
+$account-tabs-background: inherit;
 
 .olDarkTheme {
   @include theme(
@@ -69,7 +67,6 @@ $account-background: black;
     $negative-color,
     $row-accent-color,
     $header-color,
-    $chat-text-color,
     $input-background,
     $account-header,
     $account-cells,
@@ -77,6 +74,7 @@ $account-background: black;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $account-tabs-background
   );
 }

@@ -29,11 +29,6 @@ class ApiNode extends React.Component {
 
     activate(){
         SettingsActions.changeSetting({setting: "apiServer", value: this.props.url });
-        if (this.props.url.indexOf("testnet") !== -1) {
-            SettingsActions.changeSetting({setting: "faucet_address", value: settingsAPIs.TESTNET_FAUCET });
-        } else {
-            SettingsActions.changeSetting({setting: "faucet_address", value: settingsAPIs.DEFAULT_FAUCET });
-        };
         setTimeout(function(){
             willTransitionTo(this.props.router, this.props.router.replace, ()=>{}, false);
         }.bind(this), 50);
@@ -48,20 +43,17 @@ class ApiNode extends React.Component {
         const { allowActivation, allowRemoval, automatic, autoActive, name, url, displayUrl, ping, up } = props;
 
         let color;
-        let green = "#00FF00";
-        let yellow = "yellow";
-        let red = "red";
         let latencyKey;
 
         if(ping < 400) {
-            color = green;
+            color = "low";
             latencyKey = "low_latency";
         }
         else if(ping >= 400 && ping < 800) {
-            color = yellow;
+            color = "medium";
             latencyKey = "medium_latency";
         } else {
-            color = red;
+            color = "high";
             latencyKey = "high_latency";
         }
         /*
@@ -71,9 +63,9 @@ class ApiNode extends React.Component {
         const isTestnet = url === testnetAPI.url;
 
         var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
-         <Translate style={{color: up ? green : red, marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
-          {up && <span style={{color}}><Translate content={`settings.${latencyKey}`} /></span>}
-          {!up && <span style={{color: "red"}}>__</span>}
+         <Translate className={up ? "low" : "high"} style={{marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
+          {up && <span className={color}><Translate content={`settings.${latencyKey}`} /></span>}
+          {!up && <span className="high">__</span>}
         </div>;
 
         return <div
@@ -84,7 +76,7 @@ class ApiNode extends React.Component {
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
             <p style={{marginBottom: 0}}>{displayUrl}</p>
-            {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" style={{color: green, marginBottom: 0}} /></div> : null}
+            {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" className="low" style={{marginBottom: 0}} /></div> : null}
             {(!allowActivation && !allowRemoval && !automatic) && Status}
 
             {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}

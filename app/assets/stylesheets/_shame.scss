@@ -116,7 +116,6 @@ td > button:last-child, td > .button:last-child, div > button:last-child, div > 
 
 .notification {
   border-radius: 0 !important;
-  top: 50px !important;
   border-top: none !important;
   border-right: none !important;
   border-bottom: none !important;
@@ -124,6 +123,12 @@ td > button:last-child, td > .button:last-child, div > button:last-child, div > 
   border-left-style: solid !important;
   padding: 1rem !important;
   font-size: 100% !important;
+}
+
+.notifications-tr, .notifications-tl {
+    > div.notification {
+        top: 65px !important;
+    }
 }
 
 
@@ -339,6 +344,7 @@ label.inline {
 .asset-prefix-replaced {
   // text-transform: uppercase;
   font-variant: small-caps;
+  text-transform: none;
 }
 
 select {
@@ -348,7 +354,7 @@ select {
 select.bts-select {
     border-radius: 5px;
     cursor:pointer;
-    height: 2em;
+    // height: 2em;
     border: none;
     background: none;
     background-color: transparent;

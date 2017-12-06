@@ -68,14 +68,18 @@ class DashboardList extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+
 		return (
 			!utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+			nextProps.showMyAccounts !== this.props.showMyAccounts ||
 			nextProps.width !== this.props.width ||
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
+			nextProps.linkedAccounts !== this.props.linkedAccounts ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
-			!utils.are_equal_shallow(nextState, this.state)
+			!utils.are_equal_shallow(nextState, this.state )
 		);
+		
 	}
 
 	_onStar(account, isStarred, e) {
@@ -112,8 +116,14 @@ class DashboardList extends React.Component {
 		});
 	}
 
+	_onUnLinkAccount(account, e) {
+		e.preventDefault();
+		AccountActions.unlinkAccount(account);
+	}
+
 	_renderList(accounts) {
-		const {width, starredAccounts} = this.props;
+
+		const {width, starredAccounts, showMyAccounts} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
 
@@ -138,7 +148,7 @@ class DashboardList extends React.Component {
 		}).map(account => {
 
 			if (account) {
-				let collateral = 0, debt = {}, openOrders = {};
+				let collateral = {}, debt = {}, openOrders = {};
 				balanceList = balanceList.clear();
 
 				let accountName = account.get("name");
@@ -164,8 +174,12 @@ class DashboardList extends React.Component {
 					account.get("call_orders").forEach( (callID, key) => {
 						let position = ChainStore.getObject(callID);
 						if (position) {
-							collateral += parseInt(position.get("collateral"), 10);
-
+							let collateralAsset = position.getIn(["call_price", "base", "asset_id"]);
+			                if (!collateral[collateralAsset]) {
+			                    collateral[collateralAsset] = parseInt(position.get("collateral"), 10);
+			                } else {
+			                    collateral[collateralAsset] += parseInt(position.get("collateral"), 10);
+			                }
 							let debtAsset = position.getIn(["call_price", "quote", "asset_id"]);
 							if (!debt[debtAsset]) {
 								debt[debtAsset] = parseInt(position.get("debt"), 10);
@@ -192,12 +206,22 @@ class DashboardList extends React.Component {
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
+				let shouldShow = (isMyAccount === this.props.showMyAccounts);
+				
+				if(!shouldShow) 
+					return (null);
+
 				return (
 					<tr key={accountName}>
 						<td onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
-						<td onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
+						{!showMyAccounts ? 
+							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
+								<Icon name="minus-circle"/>
+							</td> 
+						: null}
+						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
 						<td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
@@ -219,14 +243,16 @@ class DashboardList extends React.Component {
 	}
 
 	render() {
-		let { width, showIgnored } = this.props;
+
+		let { width, showIgnored, showMyAccounts } = this.props;
 		const { dashboardFilter } = this.state;
 
 		let includedAccounts = this._renderList(this.props.accounts);
 
 		let hiddenAccounts = showIgnored ? this._renderList(this.props.ignoredAccounts) : null;
 
-		let filterText = counterpart.translate("explorer.accounts.filter") + "...";
+		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
+		filterText += "...";
 
 		return (
 			<div style={this.props.style}>
@@ -237,12 +263,13 @@ class DashboardList extends React.Component {
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div> : null}
 					</section>) : null}
-				<table className="table table-hover" style={{fontSize: "0.85rem"}}>
+				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (
 					<thead>
 						<tr>
 							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
-							<th onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
+							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
+							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
 							{width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
@@ -280,6 +307,7 @@ export default connect(AccountsListWrapper, {
 		return {
 			locked: WalletUnlockStore.getState().locked,
 			starredAccounts: AccountStore.getState().starredAccounts,
+			linkedAccounts: AccountStore.getState().linkedAccounts,
 			viewSettings: SettingsStore.getState().viewSettings
 		};
 	}

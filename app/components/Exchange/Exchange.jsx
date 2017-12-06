@@ -37,6 +37,22 @@ Highcharts.setOptions({
 });
 
 class Exchange extends React.Component {
+    static propTypes = {
+        marketCallOrders: PropTypes.object.isRequired,
+        activeMarketHistory: PropTypes.object.isRequired,
+        viewSettings: PropTypes.object.isRequired,
+        priceData: PropTypes.array.isRequired,
+        volumeData: PropTypes.array.isRequired
+    };
+
+    static defaultProps = {
+        marketCallOrders: [],
+        activeMarketHistory: {},
+        viewSettings: {},
+        priceData: [],
+        volumeData: []
+    };
+
     constructor(props) {
         super();
 
@@ -44,6 +60,7 @@ class Exchange extends React.Component {
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+        this.psInit = true;
     }
 
     _initialState(props) {
@@ -117,22 +134,6 @@ class Exchange extends React.Component {
         };
     }
 
-    static propTypes = {
-        marketCallOrders: PropTypes.object.isRequired,
-        activeMarketHistory: PropTypes.object.isRequired,
-        viewSettings: PropTypes.object.isRequired,
-        priceData: PropTypes.array.isRequired,
-        volumeData: PropTypes.array.isRequired
-    };
-
-    static defaultProps = {
-        marketCallOrders: [],
-        activeMarketHistory: {},
-        viewSettings: {},
-        priceData: [],
-        volumeData: []
-    };
-
     _getLastMarketKey() {
         const chainID = Apis.instance().chain_id;
         return `lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`;
@@ -148,10 +149,6 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
-        let centerContainer = this.refs.center;
-        if (centerContainer) {
-            Ps.initialize(centerContainer);
-        }
         SettingsActions.changeViewSetting.defer({
             [this._getLastMarketKey()]: this.props.quoteAsset.get("symbol") + "_" + this.props.baseAsset.get("symbol")
         });
@@ -191,10 +188,29 @@ class Exchange extends React.Component {
                 height: innerHeight,
                 width: innerWidth
             });
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.update(centerContainer);
+            }
+        }
+    }
+
+    componentDidUpdate() {
+        this._initPsContainer();
+    }
+
+    _initPsContainer() {
+        if (this.refs.center && this.psInit) {
+            let centerContainer = this.refs.center;
+            if (centerContainer) {
+                Ps.initialize(centerContainer);
+                this.psInit = false;
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
+        this._initPsContainer();
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||
             nextProps.baseAsset !== this.props.baseAsset ||
@@ -395,7 +411,15 @@ class Exchange extends React.Component {
                 amount: 0
             }
         });
-
+        const {marketID, first} = market_utils.getMarketID(this.props.baseAsset, this.props.quoteAsset);
+        const inverted = this.props.marketDirections.get(marketID);
+        const shouldFlip = inverted && first.get("id") !== this.props.baseAsset.get("id") ||
+            !inverted && first.get("id") !== this.props.baseAsset.get("id");
+        if (shouldFlip) {
+            let setting = {};
+            setting[marketID] = !inverted;
+            SettingsActions.changeMarketDirection(setting);
+        }
         console.log("order:", JSON.stringify(order.toObject()));
         return MarketsActions.createLimitOrder2(order).then((result) => {
             if (result.error) {
@@ -729,7 +753,7 @@ class Exchange extends React.Component {
 
     _setReceive(state, isBid) {
         if (state.price.isValid() && state.for_sale.hasAmount()) {
-            state.to_receive = state.for_sale.times(state.price, isBid);
+            state.to_receive = state.for_sale.times(state.price);
             state.toReceiveText = state.to_receive.getAmount({real: true}).toString();
             return true;
         }
@@ -738,7 +762,7 @@ class Exchange extends React.Component {
 
     _setForSale(state, isBid) {
         if (state.price.isValid() && state.to_receive.hasAmount()) {
-            state.for_sale = state.to_receive.times(state.price, isBid);
+            state.for_sale = state.to_receive.times(state.price, true);
             state.forSaleText = state.for_sale.getAmount({real: true}).toString();
             return true;
         }
@@ -869,7 +893,7 @@ class Exchange extends React.Component {
             showCallLimit = false, latestPrice, changeClass;
 
 
-        let isNullAccount = currentAccount.get("id") === "1.2.3";
+        let notMyAccount = currentAccount.get("id") === "1.2.3" || !this.props.isMyAccount;
 
         const showVolumeChart = this.props.viewSettings.get("showVolumeChart", true);
         const enableChartClamp = this.props.viewSettings.get("enableChartClamp", true);
@@ -977,7 +1001,7 @@ class Exchange extends React.Component {
 
         let buyForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
+                onBorrow={!notMyAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(base.get("symbol")) || null}
@@ -986,7 +1010,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form` : `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form`
                 )}
@@ -1022,7 +1046,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
+                onBorrow={!notMyAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === quote.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(quote.get("symbol")) || null}
@@ -1031,7 +1055,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form` : `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form`
                 )}
@@ -1087,6 +1111,7 @@ class Exchange extends React.Component {
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
                 marketReady={marketReady}
                 wrapperClass={`order-${buySellTop ? 3 : 1} xlarge-order-${buySellTop ? 4 : 1}`}
+                currentAccount={this.props.currentAccount.get("id")}
             />
         );
 
@@ -1119,7 +1144,7 @@ class Exchange extends React.Component {
                             showVolumeChart={showVolumeChart}
                         />
 
-                        <div className="grid-block vertical no-padding" id="CenterContent" ref="center">
+                        <div className="grid-block vertical no-padding ps-container" id="CenterContent" ref="center">
                         {!showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" >
                                 {/* Price history chart */}
@@ -1218,7 +1243,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    isNullAccount={isNullAccount}
+                                    notMyAccount={notMyAccount}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}
@@ -1243,7 +1268,7 @@ class Exchange extends React.Component {
                                 <MyOpenOrders
                                     smallScreen={this.props.smallScreen}
                                     className={cnames(
-                                        {disabled: isNullAccount},
+                                        {disabled: notMyAccount},
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
                                         `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
                                     )}
@@ -1339,14 +1364,14 @@ class Exchange extends React.Component {
                         </div>
                     </div>
 
-                    {!isNullAccount && quoteIsBitAsset  ?
+                    {!notMyAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={currentAccount}
                          /> : null}
-                    {!isNullAccount && baseIsBitAsset ?
+                    {!notMyAccount && baseIsBitAsset ?
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

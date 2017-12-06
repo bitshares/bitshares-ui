@@ -9,6 +9,8 @@ import SettingsActions from "actions/SettingsActions";
 import Popover from "react-popover";
 import Translate from "react-translate-component";
 import AssetName from "./AssetName";
+import marketUtils from "common/market_utils";
+import { Asset, Price } from "common/MarketClasses";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -37,9 +39,19 @@ class FormattedPrice extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {isPopoverOpen: false};
+        const {marketID, first, second} = marketUtils.getMarketID(this.props.base_asset, this.props.quote_asset);
+
+        this.state = {isPopoverOpen: false, marketId: marketID, first, second};
         this.togglePopover = this.togglePopover.bind(this);
         this.closePopover = this.closePopover.bind(this);
+    }
+
+    componentWillReceiveProps(np) {
+        if (np.base_asset !== this.props.base_asset ||
+            np.quote_asset !== this.props.quote_asset) {
+            const {marketID, first, second} = marketUtils.getMarketID(np.base_asset, np.quote_asset);
+            this.setState({marketId: marketID, first, second});
+        }
     }
 
     togglePopover(e) {
@@ -53,7 +65,8 @@ class FormattedPrice extends React.Component {
 
     onFlip() {
         let setting = {};
-        setting[this.props.marketId] = !this.props.marketDirections.get(this.props.marketId);
+
+        setting[this.state.marketId] = !this.props.marketDirections.get(this.state.marketId);
         SettingsActions.changeMarketDirection(setting);
     }
 
@@ -69,47 +82,80 @@ class FormattedPrice extends React.Component {
 
     goToMarket(e) {
         e.preventDefault();
-        this.context.router.push(`/market/${this.props.base_asset.get("symbol")}_${this.props.quote_asset.get("symbol")}`);
+        const { marketId, first, second } = this.state;
+        const inverted = this.props.marketDirections.get(marketId);
+        this.context.router.push(`/market/${!inverted ? first.get("symbol") : second.get("symbol")}_${!inverted ? second.get("symbol") : first.get("symbol")}`);
     }
 
     render() {
 
-        let {base_asset, quote_asset, base_amount, quote_amount,
-          marketDirections, marketId, hide_symbols, noPopOver} = this.props;
-
-        let invertPrice = marketDirections.get(marketId);
-        if( (invertPrice) || this.props.invert) {
-            let tmp = base_asset;
-            base_asset = quote_asset;
-            quote_asset = tmp;
-            let tmp_amount = base_amount;
-            base_amount = quote_amount;
-            quote_amount = tmp_amount;
+        let {base_asset, base_amount, quote_amount,
+          marketDirections, hide_symbols, noPopOver} = this.props;
+        const {marketId, first, second} = this.state;
+        let inverted = marketDirections.get(marketId) || this.props.invert;
+        if (this.props.force_direction && second.get("symbol") === this.props.force_direction && inverted) {
+            inverted = false;
+        } else if (this.props.force_direction && first.get("symbol") === this.props.force_direction && !inverted) {
+            inverted = true;
         }
+        let base, quote;
+        if (inverted) {
+            base = second;
+            quote = first;
+        } else {
+            base = first;
+            quote = second;
+        }
+        if (base.get("id") !== base_asset.get("id")) {
+            let tempAmount = base_amount;
+            base_amount = quote_amount;
+            quote_amount = tempAmount;
+        }
+
+        let price;
+        try {
+            price = new Price({
+                quote: new Asset({
+                    asset_id: base.get("id"),
+                    precision: base.get("precision"),
+                    amount: base_amount
+                }),
+                base: new Asset({
+                    asset_id: quote.get("id"),
+                    precision: quote.get("precision"),
+                    amount: quote_amount
+                })
+            });
+        } catch(err) {
+            return null;
+        }
+
 
         let formatted_value = "";
         if (!this.props.hide_value) {
-            let base_precision = utils.get_asset_precision(base_asset.get("precision"));
-            let quote_precision = utils.get_asset_precision(quote_asset.get("precision"));
-            let value = base_amount / base_precision / (quote_amount / quote_precision);
+            let value = price.toReal();
             if (isNaN(value) || !isFinite(value)) {
-                return <span>n/a</span>;
+                return <span>--</span>;
             }
-            let decimals = this.props.decimals ? this.props.decimals : base_asset.get("precision") + quote_asset.get("precision");
+            let decimals = this.props.decimals ? this.props.decimals : price.base.precision;
             decimals = Math.min(8, decimals);
-            if (base_asset.get("id") === "1.3.0") {
-                base_asset.get("precision");
+            if (base.get("id") === "1.3.0") {
+                base.get("precision");
             }
             formatted_value = (
                 <FormattedNumber
                     value={value}
-                    minimumFractionDigits={2}
+                    minimumFractionDigits={Math.max(2, decimals)}
                     maximumFractionDigits={decimals}
                 />
             );
         }
         let symbols = hide_symbols ? "" :
-                      (<span data-place="bottom" data-tip={noPopOver ? "Click to invert the price" : null} className={noPopOver ? "clickable inline-block" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}><AssetName name={base_asset.get("symbol")} />/<AssetName name={quote_asset.get("symbol")} /></span>);
+                      (<span data-place="bottom" data-tip={noPopOver ? "Click to invert the price" : null} className={noPopOver ? "clickable inline-block" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}>
+                          <AssetName name={quote.get("symbol")} />
+                          /
+                          <AssetName name={base.get("symbol")} />
+                      </span>);
 
         const currency_popover_body = !noPopOver && !hide_symbols ? (
           <div>
@@ -129,7 +175,7 @@ class FormattedPrice extends React.Component {
       ) : null;
 
         return (
-            <span>{formatted_value} {popOver ? popOver : symbols}</span>
+            <span className="formatted-price">{formatted_value} {popOver ? popOver : symbols}</span>
         );
     }
 }
@@ -139,8 +185,6 @@ FormattedPrice = BindToChainState(FormattedPrice);
 export default class FormattedPriceWrapper extends React.Component {
 
     render() {
-        let marketId = this.props.quote_asset + "_" + this.props.base_asset;
-
         return (
           <AltContainer
             stores={[SettingsStore]}
@@ -150,7 +194,7 @@ export default class FormattedPriceWrapper extends React.Component {
                 }
             }}
           >
-            <FormattedPrice {...this.props} marketId={marketId}/>
+            <FormattedPrice {...this.props}/>
           </AltContainer>
         );
     }

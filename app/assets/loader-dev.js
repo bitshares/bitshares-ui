@@ -7,4 +7,8 @@ require("whatwg-fetch");
 require("indexeddbshim");
 require("./asset-symbols/symbols.js");
 require("./language-dropdown/flags.js");
-require("./locales/locales.js");
+
+import locales from "assets/locales";
+for (let locale of locales) {
+  require(`file-loader?name=[name].[ext]!./locales/locale-${locale}.json`);
+}

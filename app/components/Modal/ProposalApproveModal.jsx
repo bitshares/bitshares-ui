@@ -1,7 +1,6 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -12,8 +11,6 @@ import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
 import {ChainStore} from "bitsharesjs/es";
-
-let wallet_api = new WalletApi();
 
 class ProposalApproveModal extends React.Component {
 
@@ -84,7 +81,7 @@ class ProposalApproveModal extends React.Component {
             }
         });
 
-        var tr = wallet_api.new_transaction();
+        var tr = WalletApi.new_transaction();
         tr.add_type_operation("proposal_update", proposal);
         WalletDb.process_transaction(tr, null, true, neededKeys);
 

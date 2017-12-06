@@ -37,7 +37,7 @@ class CreateAccountPassword extends React.Component {
             show_identicon: false,
             step: 1,
             showPass: false,
-            generatedPassword: "P" + key.get_random_key().toWif(),
+            generatedPassword: ("P" + key.get_random_key().toWif()).substr(0, 45),
             confirm_password: "",
             understand_1: false,
             understand_2: false,
@@ -88,8 +88,7 @@ class CreateAccountPassword extends React.Component {
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
 
-            FetchChain("getAccount", this.state.accountName).then(() => {
-                console.log("onFinishConfirm");
+            FetchChain("getAccount", this.state.accountName, undefined, {[this.state.accountName]: true}).then(() => {
                 this.props.router.push("/wallet/backup/create?newAccount=true");
             });
         }
@@ -109,7 +108,7 @@ class CreateAccountPassword extends React.Component {
             AccountActions.setPasswordAccount(name);
             // User registering his own account
             if(this.state.registrar_account) {
-                FetchChain("getAccount", name).then(() => {
+                FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                     this.setState({
                         step: 2,
                         loading: false
@@ -118,14 +117,12 @@ class CreateAccountPassword extends React.Component {
                 });
                 TransactionConfirmStore.listen(this.onFinishConfirm);
             } else { // Account registered by the faucet
-                // this.props.router.push(`/wallet/backup/create?newAccount=true`);
-                FetchChain("getAccount", name).then(() => {
+                FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
                     this.setState({
                         step: 2
                     });
+                    this._unlockAccount(name, password);
                 });
-                this._unlockAccount(name, password);
-                // this.props.router.push(`/account/${name}/overview`);
 
             }
         }).catch(error => {
@@ -205,7 +202,7 @@ class CreateAccountPassword extends React.Component {
                     <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
                     <div style={{paddingBottom: "0.5rem"}}>
                         <span className="inline-label">
-                            <input style={{maxWidth: "calc(30rem - 48px)", textOverflow: "ellipsis", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
+                            <input style={{maxWidth: "calc(30rem - 48px)", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
                             <CopyButton
                                 text={this.state.generatedPassword}
                                 tip="tooltip.copy_password"
@@ -217,7 +214,7 @@ class CreateAccountPassword extends React.Component {
 
                 <section>
                     <label className="left-label"><Translate content="wallet.confirm_password" /></label>
-                    <input type="password" value={this.state.confirm_password} onChange={this._onInput.bind(this, "confirm_password")}/>
+                    <input type="password" name="password" id="password" value={this.state.confirm_password} onChange={this._onInput.bind(this, "confirm_password")}/>
                     {this.state.confirm_password && this.state.confirm_password !== this.state.generatedPassword ?
                     <div className="has-error"><Translate content="wallet.confirm_error" /></div> : null}
                 </section>

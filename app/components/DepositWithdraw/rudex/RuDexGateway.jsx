@@ -95,7 +95,7 @@ class RuDexGateway extends React.Component {
         let isDeposit = this.state.action === "deposit";
 
 
-        let supportEmail = "support@rudex.org";
+        let supportUrl = "https://rudex.freshdesk.com";
 
         return (
             <div style={this.props.style}>
@@ -147,7 +147,7 @@ class RuDexGateway extends React.Component {
                                 action={this.state.action}
                             />
                             <label className="left-label">Support</label>
-                            <div><Translate content="gateway.rudex.support_block" /><br /><br /><a href={"mailto:" + supportEmail}>{supportEmail}</a></div>
+                            <div><Translate content="gateway.rudex.support_block" /><br /><br /><a href={supportUrl}>{supportUrl}</a></div>
                         </div>
 
                         {coin && coin.symbol ?

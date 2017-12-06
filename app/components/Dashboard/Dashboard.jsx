@@ -6,15 +6,14 @@ import Translate from "react-translate-component";
 import MarketCard from "./MarketCard";
 import utils from "common/utils";
 import { Apis } from "bitsharesjs-ws";
-var logo = require("assets/logo-ico-blue.png");
 import LoadingIndicator from "../LoadingIndicator";
-import SettingsActions from "actions/SettingsActions";
-import WalletUnlockActions from "actions/WalletUnlockActions";
 import LoginSelector from "../LoginSelector";
+import cnames from "classnames";
+import SettingsActions from "actions/SettingsActions";
 
 class Dashboard extends React.Component {
 
-    constructor() {
+    constructor(props) {
         super();
         let marketsByChain = {
             "4018d784":[
@@ -33,7 +32,6 @@ class Dashboard extends React.Component {
                 ["CNY", "OCT"],
                 ["OPEN.BTC", "BTS"],
                 ["OPEN.BTC", "OPEN.ETH"],
-                ["OPEN.BTC", "KEXCOIN"],
                 ["OPEN.BTC", "OPEN.DASH"],
                 ["OPEN.BTC", "BLOCKPAY"],
                 ["OPEN.BTC", "OPEN.DGD"],
@@ -76,7 +74,8 @@ class Dashboard extends React.Component {
             featuredMarkets: marketsByChain[chainID] || marketsByChain["4018d784"],
             newAssets: [
 
-            ]
+            ],
+            currentEntry: props.currentEntry
         };
 
         this._setDimensions = this._setDimensions.bind(this);
@@ -100,7 +99,8 @@ class Dashboard extends React.Component {
             nextProps.passwordAccount !== this.props.passwordAccount ||
             nextState.width !== this.state.width ||
             nextProps.accountsReady !== this.props.accountsReady ||
-            nextState.showIgnored !== this.state.showIgnored
+            nextState.showIgnored !== this.state.showIgnored ||
+            nextState.currentEntry !== this.state.currentEntry
         );
     }
 
@@ -122,67 +122,18 @@ class Dashboard extends React.Component {
         });
     }
 
-    // _sortMarketsByVolume(a, b) {
-    //     let idA = a[1] + "_" + a[0];
-    //     let idB = b[1] + "_" + b[0];
-    //     let statsA = this.props.marketStats.get(idA);
-    //     let statsB = this.props.marketStats.get(idB);
-    //     if (!statsA || !statsB) return -1;
-    //
-    //     function getEquivalentVolume(stats, market, marketStats) {
-    //         let coreVolume = stats.volumeBaseAsset.asset_id === "1.3.0" ? stats.volumeBaseAsset :
-    //            stats.volumeQuoteAsset.asset_id === "1.3.0" ? stats.volumeQuoteAsset : 0;
-    //
-    //         if (!coreVolume) {
-    //             let options = [
-    //                 `${market[1]}_BTS`,
-    //                 `BTS_${market[1]}`,
-    //                 `${market[0]}_BTS`,
-    //                 `BTS_${market[0]}`,
-    //             ];
-    //             let convertUsingStats;
-    //             for (var i = 0; i < options.length; i++) {
-    //                 convertUsingStats = marketStats.get(options[i]);
-    //                 if (convertUsingStats) break;
-    //             }
-    //
-    //             if (convertUsingStats && convertUsingStats.price) {
-    //                 if (convertUsingStats.price.base.asset_id === "1.3.0") {
-    //                     if (stats.volumeBaseAsset.asset_id === convertUsingStats.price.quote.asset_id) {
-    //                         coreVolume = stats.volumeBaseAsset.times(convertUsingStats.price);
-    //                     } else if (stats.volumeQuoteAsset.asset_id === convertUsingStats.price.quote.asset_id) {
-    //                         coreVolume = stats.volumeQuoteAsset.times(convertUsingStats.price);
-    //                     }
-    //                 } else if (convertUsingStats.price.quote.asset_id === "1.3.0") {
-    //                     if (stats.volumeBaseAsset.asset_id === convertUsingStats.price.base.asset_id) {
-    //                         coreVolume = stats.volumeBaseAsset.times(convertUsingStats.price);
-    //                     } else if (stats.volumeQuoteAsset.asset_id === convertUsingStats.price.base.asset_id) {
-    //                         coreVolume = stats.volumeQuoteAsset.times(convertUsingStats.price);
-    //                     }
-    //                 }
-    //
-    //                 console.log(market, "coreVolume", coreVolume && coreVolume.getAmount(), coreVolume && coreVolume.asset_id);
-    //
-    //             } else {
-    //                 console.log(market, "*** Unable to convert price ***");
-    //             }
-    //         }
-    //
-    //         return coreVolume;
-    //     }
-    //
-    //     let coreVolumeA = getEquivalentVolume(statsA, a, this.props.marketStats);
-    //     let coreVolumeB =  getEquivalentVolume(statsB, b, this.props.marketStats);
-    //
-    //     if (coreVolumeA && coreVolumeB) {
-    //         return coreVolumeB.getAmount() - coreVolumeA.getAmount();
-    //     }
-    //     return 0;
-    // }
+    _onSwitchType(type) {
+        this.setState({
+            currentEntry: type
+        });
+        SettingsActions.changeViewSetting({
+            dashboardEntry: type
+        });
+    }
 
     render() {
         let { linkedAccounts, myIgnoredAccounts, accountsReady, passwordAccount } = this.props;
-        let {width, showIgnored, featuredMarkets, newAssets} = this.state;
+        let {width, showIgnored, featuredMarkets, newAssets, currentEntry} = this.state;
 
         if (passwordAccount && !linkedAccounts.has(passwordAccount)) {
             linkedAccounts = linkedAccounts.add(passwordAccount);
@@ -200,7 +151,6 @@ class Dashboard extends React.Component {
         let validMarkets = 0;
 
         let markets = featuredMarkets
-        // .sort(this._sortMarketsByVolume)
         .map(pair => {
             let isLowVolume = this.props.lowVolumeMarkets.get(pair[1] + "_" + pair[0]) || this.props.lowVolumeMarkets.get(pair[0] + "_" + pair[1]);
             if (!isLowVolume) validMarkets++;
@@ -228,77 +178,58 @@ class Dashboard extends React.Component {
 
         if (!accountCount) {
             return <LoginSelector />;
-            // return (
-            //     <div ref="wrapper" className="grid-block page-layout vertical">
-            //         <div ref="container" className="grid-block vertical medium-horizontal"  style={{padding: "25px 10px 0 10px"}}>
-            //             <div className="grid-container">
-            //                 <div className="Dashboard__intro-text Account_create">
-            //                     <h4><img style={{position: "relative", top: -15, margin: 0}} src={logo}/><Translate content="account.intro_text_title" /></h4>
-            //
-            //                     <Translate unsafe content="account.intro_text_1" component="p" />
-            //                     <Translate unsafe content="account.intro_text_2" component="p" />
-            //                     <Translate unsafe content="account.intro_text_3" component="p" />
-            //                     <Translate unsafe content="account.intro_text_4" component="p" />
-            //                     <div className="button-group">
-            //                         <div className="button create-account" onClick={() => {this.props.router.push("create-account");}}>
-            //                             <Translate content="account.create_new" />
-            //                         </div>
-            //
-            //                         <div className="button create-account" onClick={() => {
-            //                             SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-            //                             WalletUnlockActions.unlock.defer();
-            //                         }}>
-            //                             <Translate content="account.password_login" />
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //             </div>
-            //             {/* <div className="grid-container small-12 medium-7" style={{paddingTop: 44}}>
-            //                 <Translate content="exchange.featured" component="h4" style={{paddingLeft: 30}}/>
-            //                 <div className="grid-block small-up-1 large-up-3 xlarge-up-4 no-overflow fm-outer-container">
-            //                     {markets}
-            //                 </div>
-            //             </div> */}
-            //         </div>
-            //     </div>
-            // );
         }
+
+        const entries = ["accounts", "contacts", "recent"];
+        const activeIndex = entries.indexOf(currentEntry);
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
-                    <div className="block-content-header" style={{marginBottom: 15}}>
-                    <Translate content="exchange.featured"/>
-                    </div>
-                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
+                <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
+                    {this.props.onlyAccounts ? null : <div className="block-content-header" style={{marginBottom: 15, paddingTop: 0}}>
+                        <Translate content="exchange.featured"/>
+                    </div>}
+                    {this.props.onlyAccounts ? null : <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
-                    </div>
+                    </div>}
 
-                    {accountCount ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
-                        <div className="block-content-header" style={{marginBottom: 15}}>
-                            <Translate content="account.accounts" />
+                    {accountCount ? (
+                        <div style={{paddingBottom: "3rem"}}>
+                            <div className="hide-selector" style={{paddingBottom: "1rem"}}>
+                                {entries.map((type, index) => {
+                                    return (
+                                        <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
+                                            <Translate content={`account.${type}`} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                                <div className="box-content">
+                                    <DashboardList
+                                        accounts={Immutable.List(names)}
+                                        ignoredAccounts={Immutable.List(ignored)}
+                                        width={width}
+                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
+                                        showIgnored={showIgnored}
+                                        showMyAccounts={currentEntry === "accounts"}
+                                    />
+                                    {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
+                                </div>
+                            </div> : null}
+
+                            {currentEntry === "recent" ? <RecentTransactions
+                                style={{marginBottom: 20, marginTop: 20}}
+                                accountsList={linkedAccounts}
+                                limit={10}
+                                compactView={false}
+                                fullHeight={true}
+                                showFilters={true}
+                                dashboard
+                            /> : null}
                         </div>
-                        <div className="box-content">
-                            <DashboardList
-                                accounts={Immutable.List(names)}
-                                ignoredAccounts={Immutable.List(ignored)}
-                                width={width}
-                                onToggleIgnored={this._onToggleIgnored.bind(this)}
-                                showIgnored={showIgnored}
-                            />
-                            {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
-                        </div>
-                    </div> : null}
-
-                    {accountCount ? <RecentTransactions
-                        style={{marginBottom: 20, marginTop: 20}}
-                        accountsList={linkedAccounts}
-                        limit={10}
-                        compactView={false}
-                        fullHeight={true}
-                        showFilters={true}
-                    /> : null}
-
+                    ) : null}
                 </div>
             </div>
         );

@@ -1,7 +1,7 @@
 {
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -56,6 +56,8 @@
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
+    "accounts": "Cuentas",
+    "contacts": "Contactos",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -66,6 +68,7 @@
     "asset": "Activo",
     "market_value": "Valor de Mercado",
     "hour_24": "Cambio 24hs",
+    "hour_24_short": "24hs",
     "recent": "Actividad reciente",
     "name": "Nombre de la Cuenta",
     "more": "ver más",
@@ -80,8 +83,6 @@
       "fee_allocation": "Asignación de Comisiones",
       "membership": "Membresía",
       "fees_paid": "Membresía vitalicia paga",
-      "fees_pending": "Comisiones pendientes",
-      "fees_vested": "Comisiones pendientes de consolidación",
       "referrals": "Referidos",
       "rewards": "Reembolso de Honorarios",
       "cashback": "Reembolso",
@@ -173,8 +174,8 @@
       "memo_key": "Llave Memo"
     },
     "upgrade": "Actualizar membresía",
-    "unfollow": "No seguir",
-    "follow": "Seguir",
+    "unfollow": "Retirar",
+    "follow": "Agregar contacto",
     "pay": "Pagar",
     "overview": "Resumen",
     "bts_market": "Mercado",
@@ -395,7 +396,9 @@
   },
   "explorer": {
     "accounts": {
-      "title": "Cuentas"
+      "title": "Cuentas",
+      "filter": "Cuentas de filtro",
+      "filter_contacts": "Contactos de filtro"
     },
     "blocks": {
       "title": "Blockchain",
@@ -720,7 +723,7 @@
     "current_pass": "Current password",
     "generated": "Generated password",
     "understand_1": "I understand that no one can recover my password if I lose or forget it",
-    "understand_2": "I have written down or oherwise stored my password",
+    "understand_2": "I have written down or otherwise stored my password",
     "bts_rules": "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
   },
   "borrow": {
@@ -788,23 +791,6 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
-  },
-  "chat": {
-    "title": "Trollbox",
-    "button": "Chat",
-    "send": "Send",
-    "color": "Username color",
-    "user": "Username",
-    "done": "Done",
-    "reconnect": "Reconnect",
-    "welcome_user": "Welcome to BitShares",
-    "users": "%(userCount)s users online",
-    "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
-    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
-    "rate": "Please wait at least 2s before posting a new message",
-    "disabled": "Chat disabled",
-    "enable": "Enable chat now",
-    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

@@ -1,5 +1,5 @@
 import React, {PropTypes, Component} from "react";
-import {Link} from "react-router";
+import {Link} from "react-router/es";
 import {FormattedDate} from "react-intl";
 import { connect } from "alt-react";
 import WalletActions from "actions/WalletActions";
@@ -13,6 +13,7 @@ import cname from "classnames";
 import Translate from "react-translate-component";
 import {ChainConfig} from "bitsharesjs-ws";
 import {PrivateKey} from "bitsharesjs/es";
+import SettingsActions from "actions/SettingsActions";
 
 const connectObject = {
     listenTo() {
@@ -41,27 +42,6 @@ class BackupCreate extends Component {
     }
 }
 BackupCreate = connect(BackupCreate, connectObject);
-
-class BackupVerify extends Component {
-    render() {
-        return (
-            <div style={{maxWidth: "40rem"}}>
-
-                <h3><Translate content="wallet.verify_prior_backup" /></h3>
-
-                <Upload>
-                    <NameSizeModified/>
-                    <DecryptBackup saveWalletObject={true}>
-                        <h4><Translate content="wallet.verified" /></h4>
-                    </DecryptBackup>
-                    <Reset/>
-                </Upload>
-
-            </div>
-        );
-    }
-}
-BackupVerify = connect(BackupVerify, connectObject);
 
 // layout is a small project
 // class WalletObjectInspector extends Component {
@@ -105,6 +85,8 @@ class BackupRestore extends Component {
                         </NewWalletName>
                     </DecryptBackup>
                 </Upload>
+                <br />
+                <Link to="/"><button className="blue"><Translate content="wallet.back" /></button></Link>
             </div>
         );
     }
@@ -120,9 +102,9 @@ class Restore extends Component {
     }
 
     isRestored() {
-        let new_wallet = this.props.wallet.new_wallet
-        let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet)
-        return has_new_wallet
+        let new_wallet = this.props.wallet.new_wallet;
+        let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet);
+        return has_new_wallet;
     }
 
     render() {
@@ -132,7 +114,7 @@ class Restore extends Component {
         if(has_new_wallet)
             return <span>
                 <h5><Translate content="wallet.restore_success" name={new_wallet.toUpperCase()} /></h5>
-                <Link to="dashboard">
+                <Link to="/dashboard">
                     <div className="button outline">
                         <Translate component="span" content="header.dashboard" />
                     </div>
@@ -151,7 +133,11 @@ class Restore extends Component {
         WalletActions.restore(
             this.props.wallet.new_wallet,
             this.props.backup.wallet_object
-        )
+        );
+        SettingsActions.changeSetting({
+            setting: "passwordLogin",
+            value: false
+        });
     }
 
 }
@@ -476,22 +462,5 @@ class Sha1 extends Component {
 }
 Sha1 = connect(Sha1, connectObject);
 
-class Reset extends Component {
-
-    // static contextTypes = {router: React.PropTypes.func.isRequired}
-
-    render() {
-        let label = this.props.label || <Translate content="wallet.reset" />
-        return  <span className="button cancel"
-            onClick={this.onReset.bind(this)}>{label}</span>
-    }
-
-    onReset() {
-        BackupActions.reset()
-        window.history.back()
-    }
-}
-// Reset = connect(Reset, connectObject);
-
-export {BackupCreate, BackupVerify, BackupRestore, Restore, NewWalletName,
+export {BackupCreate, BackupRestore, Restore, NewWalletName,
     Download, Create, Upload, NameSizeModified, DecryptBackup, Sha1};

@@ -49,6 +49,7 @@ class BlockTradesDepositAddressCache {
 
     cacheInputAddress(exchange_name, account_name, input_coin_type, output_coin_type, address, memo)
     {
+        if (!address) return;
         let wallet = WalletDb.getWallet();
         wallet = null;
 

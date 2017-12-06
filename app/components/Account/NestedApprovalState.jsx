@@ -3,7 +3,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import Icon from "../Icon/Icon";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
 import pu from "common/permission_utils";
 import {cloneDeep} from "lodash";
 import {ChainStore} from "bitsharesjs/es";
@@ -40,15 +40,15 @@ class AccountPermissionTree extends React.Component {
         // if (!account || typeof account === "string") return null;
 
         status.push(
-            <div key={account.get("id")} style={{width: "100%", clear: "both", paddingBottom: 5}}>
+            <div key={account.get("id")} style={{textAlign: "left", width: "100%", clear: "both", paddingBottom: 5}}>
                 <div
                     className="inline-block"
                     style={{
                         paddingLeft: `${5 * this.props.indent}%`
                     }}
                 >
-                    {!isNested && notNestedWeight ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
                     <LinkToAccountById subpage="permissions" account={account.get("id")} />
+                    {!isNested && notNestedWeight ? `${notNestedWeight && notNestedWeight.length === 2 ? `\u00A0\u00A0` : ""}(${notNestedWeight}) ` : null}
                 </div>
                 <div className="float-right" style={{paddingLeft: 20, marginRight: 10}}>
                     {!isNested && !isMultiSig ? (
@@ -116,7 +116,7 @@ class KeyPermissionBranch extends React.Component {
 
         let status = [];
         status.push(
-            <div key={permission.id} style={{width: "100%", paddingBottom: 5}}>
+            <div key={permission.id} style={{textAlign: "left", width: "100%", paddingBottom: 5}}>
                 <div
                     className="inline-block"
                     style={{

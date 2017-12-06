@@ -5,6 +5,7 @@ import {CreateWalletFromBrainkey} from "../Wallet/WalletCreate";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
+import RestoreFavorites from "./RestoreFavorites";
 
 export default class RestoreSettings extends React.Component {
 
@@ -12,7 +13,7 @@ export default class RestoreSettings extends React.Component {
         super();
         this.state = {
             restoreType: 0,
-            types: ["backup", "key", "legacy", "brainkey"]
+            types: ["backup", "key", "legacy", "brainkey", "favorites"]
         };
     }
 
@@ -67,6 +68,14 @@ export default class RestoreSettings extends React.Component {
                 </div>
             );
             break;
+
+        case "favorites":
+            content = (
+                <div>
+                    <RestoreFavorites />
+                </div>
+            );
+            break;           
 
         default:
             content = <ImportKeys privateKey={restoreType === 1} />;

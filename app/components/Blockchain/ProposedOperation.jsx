@@ -6,8 +6,8 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import market_utils from "common/market_utils";
 import utils from "common/utils";
-import LinkToAccountById from "../Blockchain/LinkToAccountById";
-import LinkToAssetById from "../Blockchain/LinkToAssetById";
+import LinkToAccountById from "../Utility/LinkToAccountById";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
@@ -61,7 +61,7 @@ class Row extends React.Component {
         let endDate = counterpart.localize(new Date(this.props.expiration), { format: 'short' });
 
         return (
-            <div style={{padding: "5px 0"}}>
+            <div style={{padding: "5px 0", textAlign: "left"}}>
                 {hideOpLabel ? null : (
                     <span className="left-td">
                         <a href onClick={this.showDetails}>
@@ -203,9 +203,15 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].funding_account)}&nbsp;
-                        <Translate component="span" content="proposal.call_order_update" />
-                        &nbsp;{this.linkToAsset(op[1].delta_debt.asset_id)}
+                        <TranslateWithLinks
+                            string="proposal.call_order_update"
+                            keys={[
+                                {type: "account", value: op[1].funding_account, arg: "account"},
+                                {type: "asset", value: op[1].delta_debt.asset_id, arg: "debtSymbol"},
+                                {type: "amount", value: op[1].delta_debt, arg: "debt"},
+                                {type: "amount", value: op[1].delta_collateral, arg: "collateral"}
+                            ]}
+                        />
                     </span>
                 );
                 break;

@@ -1,5 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
+import { Link } from "react-router";
 import {FormattedDate} from "react-intl";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
@@ -10,13 +11,18 @@ import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import { ChainStore } from "bitsharesjs/es";
 import { LimitOrder, CallOrder } from "common/MarketClasses";
+const rightAlign = {textAlign: "right"};
+import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
+import {MarketPrice} from "../Utility/MarketPrice";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 class TableHeader extends React.Component {
 
     render() {
-        let {baseSymbol, quoteSymbol} = this.props;
+        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, settings} = this.props;
+        let preferredUnit = settings ? settings.get("unit") : "1.3.0";
 
-        return (
+        return !dashboard ? (
             <thead>
                 <tr>
                     <th style={{paddingLeft: 10, textAlign: this.props.leftAlign ? "left" : ""}}><Translate className="header-sub-title" content="exchange.price" /></th>
@@ -24,6 +30,20 @@ class TableHeader extends React.Component {
                     <th style={this.props.leftAlign ? {textAlign: "left"} : null}>{baseSymbol ? <span className="header-sub-title"><AssetName dataPlace="top" name={baseSymbol} /></span> : null}</th>
                     <th style={{width: "28%", textAlign: this.props.leftAlign ? "left" : ""}}><Translate className="header-sub-title" content="transaction.expiration" /></th>
                     <th />
+                </tr>
+            </thead>
+        ) : (
+            <thead>
+                <tr>
+                    <th colSpan="3"><Translate content="account.bts_market" /></th>
+                    <th style={rightAlign}><Translate content="account.quote" /></th>
+                    <th style={rightAlign}><Translate content="exchange.price" /></th>
+                    <th style={rightAlign}><Translate content="account.qty" /></th>
+                    <th style={rightAlign}><Translate content="exchange.total" /></th>
+                    <th><Translate content="exchange.order_value" /> (<AssetName name={preferredUnit} />)</th>
+                    <th><Translate content="account.trade" /></th>
+                    {/* <th><Translate content="transaction.expiration" /></th> */}
+                    {isMyAccount ? <th id="cancelAllOrders" style={{cursor: "pointer"}}><Translate content="wallet.cancel" /></th> : null}
                 </tr>
             </thead>
         );
@@ -42,12 +62,13 @@ class OrderRow extends React.Component {
             nextProps.order.for_sale !== this.props.order.for_sale ||
             nextProps.order.id !== this.props.order.id ||
             nextProps.quote !== this.props.quote ||
-            nextProps.base !== this.props.base
+            nextProps.base !== this.props.base ||
+            nextProps.order.market_base !== this.props.order.market_base
         );
     }
 
     render() {
-        let {base, quote, order, showSymbols} = this.props;
+        let {base, quote, order, showSymbols, dashboard, isMyAccount, settings} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
         let tdClass = isCall ? "orderHistoryCall" : isBid ? "orderHistoryBid" : "orderHistoryAsk";
@@ -55,8 +76,9 @@ class OrderRow extends React.Component {
         let priceSymbol = showSymbols ? <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span> : null;
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
+        let preferredUnit = settings ? settings.get("unit") : "1.3.0";
 
-        return (
+        return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass} style={{paddingLeft: 10}}>
                     <PriceText price={order.getPrice()} base={base} quote={quote} />
@@ -75,6 +97,50 @@ class OrderRow extends React.Component {
                         <Icon name="cross-circle" className="icon-14px" />
                     </a>}
                 </td>
+            </tr>
+        ) : (
+            <tr key={order.id}>
+                <td style={{textAlign: "right", paddingLeft: 0, borderRight: "none"}}>
+                    <Link to={`/asset/${quote.get("symbol")}`}><AssetName noTip name={quote.get("symbol")} /></Link>
+                </td>
+                <td style={{borderLeft: "none", borderRight: "none"}}>
+                    <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
+                </td>
+                <td style={{textAlign: "left", paddingRight: 0, borderLeft: "none"}}>
+                    <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
+                </td>
+                <td style={{textAlign: "right", paddingLeft: 0}}>
+                  <MarketPrice
+                      base={base.get("id")}
+                      quote={quote.get("id")}
+                  />
+                </td>
+                <td className={tdClass} style={rightAlign}>
+                    {/* <PriceText price={order.getPrice()} base={base} quote={quote} /> */}
+                    <FormattedPrice
+                        base_amount={order.sellPrice().base.amount} base_asset={order.sellPrice().base.asset_id}
+                        quote_amount={order.sellPrice().quote.amount} quote_asset={order.sellPrice().quote.asset_id}
+                        hide_symbols
+                    />
+                    {priceSymbol}
+                </td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
+                <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))} {valueSymbol}</td>
+                <td>
+                    <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/>
+                </td>
+                {/* <td>
+                    {isCall ? null : <FormattedDate
+                        value={order.expiration}
+                        format="short"
+                    />}
+                </td> */}
+                <td><Link to={`/market/${quote.get("symbol")}_${base.get("symbol")}`}><Icon name="trade" className="icon-14px" /></Link></td>
+                {isMyAccount ? <td className="text-center" style={{ padding: "2px 5px"}}>
+                    {isCall ? null : <span style={{marginRight: 0}} className="order-cancel">
+                        <input type="checkbox" className="orderCancel" onChange={this.props.onCheckCancel} />
+                    </span>}
+                </td> : null}
             </tr>
         );
         // }
@@ -112,7 +178,7 @@ class MyOpenOrders extends React.Component {
             [base.get("id")]: {precision: base.get("precision")},
             [quote.get("id")]: {precision: quote.get("precision")}
         };
-        let limitOrders = orders.map(order => {
+        let limitOrders = orders.toArray().map(order => {
             let o = ChainStore.getObject(order);
             if (!o) return null;
             let sellBase = o.getIn(["sell_price", "base", "asset_id"]), sellQuote = o.getIn(["sell_price", "quote", "asset_id"]);
@@ -121,9 +187,9 @@ class MyOpenOrders extends React.Component {
             ) {
                 return new LimitOrder(o.toJS(), assets, quote.get("id"));
             }
-        }).filter(a => !!a).toArray();
+        }).filter(a => !!a);
 
-        let callOrders = call_orders.map(order => {
+        let callOrders = call_orders.toArray().map(order => {
             let o = ChainStore.getObject(order);
             if (!o) return null;
             let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
@@ -132,8 +198,7 @@ class MyOpenOrders extends React.Component {
             ) {
                 return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
             }
-        }).filter(a => !!a).filter(a => a.isMarginCalled()).toArray();
-
+        }).filter(a => !!a).filter(a => a.isMarginCalled());
         return limitOrders.concat(callOrders);
     }
 

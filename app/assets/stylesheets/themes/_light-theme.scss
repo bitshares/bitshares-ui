@@ -33,9 +33,6 @@ $negative-color: rgba(225, 66, 74, 1);
 $row-accent-color: #FFFFFF;
 $header-color: #DCDCDC;
 
-// Chat colors
-$chat-text-color: #191A1F;
-
 // Account table view colors
 $account-header: #b1b1b1;
 $account-cells: #dadada;
@@ -44,6 +41,7 @@ $account-primarytext: $primary-text-color;
 $account-dimmed: #5d5d5d;
 $account-border: rgba(50, 49, 49, 0.1);
 $account-background: #e5e6e4;
+$account-tabs-background: #d5d6d4;
 
 .lightTheme {
   @include theme(
@@ -70,7 +68,6 @@ $account-background: #e5e6e4;
     $negative-color,
     $row-accent-color,
     $header-color,
-    $chat-text-color,
     $input-background,
     $account-header,
     $account-cells,
@@ -78,7 +75,8 @@ $account-background: #e5e6e4;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $account-tabs-background
   );
 
   .change-up {

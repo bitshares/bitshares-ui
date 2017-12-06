@@ -48,7 +48,8 @@ class Asset {
     }
 
     toSats(amount = 1) { // Return the full integer amount in 'satoshis'
-        return Math.floor(amount * this.satoshi);
+        // Round to prevent floating point math errors
+        return Math.round(amount * this.satoshi);
     }
 
     setAmount({sats, real}) {
@@ -58,8 +59,7 @@ class Asset {
         if (typeof sats !== "number" && typeof real !== "number") {
             throw new Error("Invalid arguments for setAmount");
         }
-        if (real && typeof real !== "undefined") {
-            if (typeof real !== "number" || isNaN(real)) throw new Error("Invalid argument 'real' for setAmount");
+        if (typeof real === "number") {
             this.amount = this.toSats(real);
             this._clearCache();
         } else if(typeof sats === "number") {
@@ -299,6 +299,22 @@ class Price {
             quote: this.quote.toObject()
         };
     }
+
+    times(p, common = "1.3.0") {
+        const p2 = (
+            (p.base.asset_id === common &&
+            this.quote.asset_id === common) ||
+            (p.quote.asset_id === common &&
+            this.base.asset_id === common)
+        ) ? p.clone() : p.invert();
+
+        const np = p2.toReal() * this.toReal();
+        return new Price({
+            base: p2.base,
+            quote: this.quote,
+            real: np
+        });
+    }
 }
 
 class FeedPrice extends Price {
@@ -400,6 +416,7 @@ class LimitOrder {
         this.assets = assets;
         this.market_base = market_base;
         this.id = order.id;
+        this.sellers = [order.seller];
         this.expiration = order.expiration && new Date(order.expiration);
         this.seller = order.seller;
         this.for_sale = parseInt(order.for_sale, 10); // asset id is sell_price.base.asset_id
@@ -458,9 +475,16 @@ class LimitOrder {
 
     sum(order) {
         let newOrder = this.clone();
+        if (newOrder.sellers.indexOf(order.seller) === -1) {
+            newOrder.sellers.push(order.seller);
+        }
         newOrder.for_sale += order.for_sale;
 
         return newOrder;
+    }
+
+    isMine(id) {
+        return this.sellers.indexOf(id) !== -1;
     }
 
     clone() {
@@ -512,6 +536,7 @@ class CallOrder {
         this.inverted = market_base === order.call_price.base.asset_id;
         this.id = order.id;
         this.borrower = order.borrower;
+        this.borrowers = [order.borrower];
         /* Collateral asset type is call_price.base.asset_id */
         this.for_sale = parseInt(order.collateral, 10);
         this.for_sale_id = order.call_price.base.asset_id;
@@ -600,6 +625,15 @@ class CallOrder {
         return this.call_price;
     }
 
+    getCollateral() {
+        if (this._collateral) return this._collateral;
+        return this._collateral = new Asset({
+            amount: this.for_sale,
+            asset_id: this.for_sale_id,
+            precision: this.assets[this.for_sale_id].precision
+        });
+    }
+
     /*
     * Assume a USD:BTS market
     * The call order will always be selling BTS in order to buy USD
@@ -629,6 +663,9 @@ class CallOrder {
 
     sum(order) {
         let newOrder = this.clone();
+        if (newOrder.borrowers.indexOf(order.borrower) === -1) {
+            newOrder.borrowers.push(order.borrower);
+        }
         newOrder.to_receive += order.to_receive;
         newOrder.for_sale += order.for_sale;
         newOrder._clearCache();
@@ -674,6 +711,28 @@ class CallOrder {
     totalForSale({noCache = false} = {}) {
         if (!noCache && this._total_for_sale) return this._total_for_sale;
         return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
+    }
+
+    getRatio() {
+        return this.getCollateral().getAmount({real: true}) / this.amountToReceive().getAmount({real: true}) / this.getFeedPrice();
+    }
+
+    getStatus() {
+        const mr = this.assets[this.to_receive_id].bitasset.current_feed.maintenance_collateral_ratio / 1000;
+        const cr = this.getRatio();
+
+        if (isNaN(cr)) return null;
+        if (cr < mr) {
+            return "danger";
+        } else if (cr < (mr + 0.5)) {
+            return "warning";
+        } else {
+            return "";
+        }
+    }
+
+    isMine(id) {
+        return this.borrowers.indexOf(id) !== -1;
     }
 }
 

@@ -90,7 +90,7 @@ class AccountStore extends BaseStore {
         } else {
             accountStorage.remove("referralAccount");
         }
-        console.log("referralAccount", referralAccount);
+        if (referralAccount) console.log("referralAccount", referralAccount);
         return referralAccount;
     }
 
@@ -181,7 +181,6 @@ class AccountStore extends BaseStore {
     loadDbData() {
         let linkedAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
-
         return new Promise((resolve, reject) => {
             iDB.load_data("linked_accounts")
             .then(data => {
@@ -227,7 +226,7 @@ class AccountStore extends BaseStore {
 
     addAccountRefs() {
         //  Simply add them to the linkedAccounts list (no need to persist them)
-        let account_refs = AccountRefsStore.getState().account_refs;
+        let account_refs = AccountRefsStore.getAccountRefs();
         if( ! this.initial_account_refs_load && this.account_refs === account_refs) {
             return this.setState({refsLoaded: true});
         }
@@ -482,14 +481,15 @@ class AccountStore extends BaseStore {
         // Update current account if no accounts are linked
         if (this.state.linkedAccounts.size === 0) {
             this.setCurrentAccount(null);
-        } else {
-            this.setCurrentAccount(this.state.linkedAccounts.first());
         }
+        // else {
+        //     this.setCurrentAccount(this.state.linkedAccounts.first());
+        // }
     }
 
     checkAccountRefs() {
         //  Simply add them to the linkedAccounts list (no need to persist them)
-        let account_refs = AccountRefsStore.getState().account_refs;
+        let account_refs = AccountRefsStore.getAccountRefs();
 
         account_refs.forEach(id => {
             let account = ChainStore.getAccount(id);

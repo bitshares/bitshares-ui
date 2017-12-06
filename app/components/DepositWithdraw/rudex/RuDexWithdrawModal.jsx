@@ -10,11 +10,10 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import { validateAddress, WithdrawAddresses } from "common/RuDexMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset} from "common/MarketClasses";
+import {Price, Asset} from "common/MarketClasses";
 import { debounce } from "lodash";
 
 class RuDexWithdrawModal extends React.Component {
@@ -198,9 +197,9 @@ class RuDexWithdrawModal extends React.Component {
 
     _checkBalance() {
         const {feeAmount, withdraw_amount} = this.state;
-        const {asset} = this.props;
-
-        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, this.props.balance);
+        const {asset, balance} = this.props;
+        if (!balance || !feeAmount) return;
+        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
         return hasBalance;
@@ -378,7 +377,18 @@ class RuDexWithdrawModal extends React.Component {
 
             if (asset) {
                 // Remove any assets that do not have valid core exchange rates
-                if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
+                let priceIsValid = false, p;
+                try {
+                    p = new Price({
+                        base: new Asset(asset.getIn(["options", "core_exchange_rate", "base"]).toJS()),
+                        quote: new Asset(asset.getIn(["options", "core_exchange_rate", "quote"]).toJS())
+                    });
+                    priceIsValid = p.isValid();
+                } catch(err) {
+                    priceIsValid = false;
+                }
+
+                if (asset.get("id") !== "1.3.0" && !priceIsValid) {
                     fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
                 }
             }

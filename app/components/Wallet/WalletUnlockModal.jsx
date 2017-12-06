@@ -154,7 +154,7 @@ class WalletUnlockModal extends React.Component {
             );
         }
         return (
-            <form onSubmit={this.onPasswordEnter} noValidate>
+            <form className="full-width" onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, margin: "0 3.5rem "}}>
                 <PasswordInput
                     ref="password_input"
                     onEnter={this.onPasswordEnter}
@@ -165,7 +165,7 @@ class WalletUnlockModal extends React.Component {
 
                 <div>
                     <div className="button-group">
-                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock" /></button>
+                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
                             <div className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
@@ -190,7 +190,7 @@ class WalletUnlockModal extends React.Component {
         let tabIndex = 1;
 
         return (
-            <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20}}>
+            <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, marginRight: "3.5rem"}}>
                 {/* Dummy input to trick Chrome into disabling auto-complete */}
                 <input type="text" className="no-padding no-margin" style={{visibility: "hidden", height: 0}}/>
 
@@ -213,7 +213,7 @@ class WalletUnlockModal extends React.Component {
                                 <label className="left-label"><Translate content="settings.password" /></label>
                             </div>
                             <div className="input-area" style={{marginLeft: "3.5rem"}}>
-                                <input ref="password_input" type="password" tabIndex={tabIndex++} />
+                                <input ref="password_input" name="password" id="password" type="password" tabIndex={tabIndex++} />
                             </div>
                             {this.state.password_error ? <div className="error-area">
                                 <Translate content="wallet.pass_incorrect" />
@@ -225,7 +225,7 @@ class WalletUnlockModal extends React.Component {
 
                 <div style={{marginLeft: "3.5rem"}}>
                     <div className="button-group">
-                        <button tabIndex={tabIndex++} className="button" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
+                        <button tabIndex={tabIndex++} className="button" type="submit" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
                             <div tabIndex={tabIndex++} className=" button"><Translate content="account.perm.cancel" /></div>
                         </Trigger>

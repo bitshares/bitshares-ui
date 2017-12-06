@@ -216,7 +216,7 @@ div.transfer-input {
                 border: none;
             }
 
-            span {
+            > span {
                 font-size: 0.9rem;
                 font-weight: bold;
                 display: block;
@@ -248,8 +248,13 @@ div.transfer-input {
     border: 0;
 }
 
+div.account-drop-down > div.dropdown-wrapper:after {
+    z-index: -1;
+}
+
 div.input-wrapper {
     position: relative;
+    width: 100%;
     div.floating-dropdown {
         background: transparent;
         position: absolute;
@@ -269,3 +274,52 @@ div.dropdown-wrapper.upper-case {
         text-transform: uppercase;
     }
 }
+
+form.full-width {
+
+    section > input {
+        max-width: 100%;
+    }
+}
+
+#send_modal {
+    padding-left: 20px;
+    padding-right: 20px;
+    .right-label, .left-label {
+        padding-bottom: 0px;
+    }
+    .dropdown-wrapper.active .dropdown {
+        max-height: 250px;
+    }
+    #txFeeSelector .dropdown-wrapper.active .dropdown {
+        max-height: 100px;
+    }
+    .account-selector .error-area { display: none; }
+    .account-select { width: 100%; }
+}
+
+#send_modal {
+    padding-left: 20px;
+    padding-right: 20px;
+    .right-label, .left-label {
+        padding-bottom: 0px;
+    }
+    .dropdown-wrapper.active .dropdown {
+        max-height: 250px;
+    }
+    #txFeeSelector .dropdown-wrapper.active .dropdown {
+        max-height: 100px;
+    }
+    .account-selector .error-area { display: none; }
+}
+
+button.red, button.green, button.blue {
+    padding: 10px 0px 10px 0px;
+    width: 8rem;
+    border-radius: 5px 5px 5px 5px;
+    color: rgb(242, 242, 242);
+}
+button.red { background-color: rgb(245, 27, 27); }
+button.green { background-color: rgb(48, 185, 14); }
+button.blue { background-color: rgb(65, 116, 184); }
+button.disabled { background-color: rgb(77, 94, 116); }

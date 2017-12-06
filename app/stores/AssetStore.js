@@ -2,9 +2,6 @@ import BaseStore from "./BaseStore";
 import Immutable from "immutable";
 import alt from "alt-instance";
 import AssetActions from "actions/AssetActions";
-// import {Asset} from "./tcomb_structs";
-import utils from "common/utils";
-
 
 class AssetStore extends BaseStore {
     constructor() {
@@ -17,15 +14,8 @@ class AssetStore extends BaseStore {
 
         this.bindListeners({
             onGetAssetList: AssetActions.getAssetList,
-            onGetAsset: AssetActions.getAsset,
             onLookupAsset: AssetActions.lookupAsset
         });
-        this._export("getAsset");
-    }
-
-    getAsset(id_or_symbol) {
-        let id = utils.is_object_id(id_or_symbol) ? id_or_symbol : this.asset_symbol_to_id[id_or_symbol];
-        return this.assets.get(id);
     }
 
     onGetAssetList(payload) {
@@ -37,9 +27,9 @@ class AssetStore extends BaseStore {
         if (payload.assets) {
             payload.assets.forEach(asset => {
 
-                for (var i = 0; i < payload.dynamic_data.length; i++) {
-                    if (payload.dynamic_data[i].id === asset.dynamic_asset_data_id) {
-                        asset.dynamic_data = payload.dynamic_data[i];
+                for (var i = 0; i < payload.dynamic.length; i++) {
+                    if (payload.dynamic[i].id === asset.dynamic_asset_data_id) {
+                        asset.dynamic = payload.dynamic[i];
                         break;
                     }
                 }
@@ -65,37 +55,6 @@ class AssetStore extends BaseStore {
                 this.asset_symbol_to_id[asset.symbol] = asset.id;
             });
         }
-    }
-
-    onGetAsset(payload) {
-        let {
-            asset
-        } = payload;
-
-        if (payload.asset === null) {
-            this.assets = this.assets.set(
-                payload.symbol,
-                {notFound: true}
-            );
-            return true;
-        }
-
-        // console.log("onGetAsset payload:", payload);
-        asset.dynamic_data = payload.dynamic_data;
-
-        if (payload.bitasset_data) {
-            asset.bitasset_data = payload.bitasset_data;
-            asset.market_asset = true;
-        } else {
-            asset.market_asset = false;
-        }
-
-        this.assets = this.assets.set(
-            asset.id,
-            Asset(asset)
-        );
-
-        this.asset_symbol_to_id[asset.symbol] = asset.id;
     }
 
     onLookupAsset(payload) {

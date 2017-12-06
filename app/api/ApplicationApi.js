@@ -1,8 +1,8 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletDb from "stores/WalletDb";
-import {Aes, ChainValidation, TransactionBuilder, TransactionHelper, ops, FetchChain, ChainStore} from "bitsharesjs/es";
+import {Aes, ChainValidation, TransactionBuilder, TransactionHelper, FetchChain, ChainStore} from "bitsharesjs/es";
 
-class ApplicationApi {
+const ApplicationApi = {
 
     create_account(
         owner_pubkey,
@@ -67,7 +67,7 @@ class ApplicationApi {
                 });
             });
         });
-    }
+    },
 
     /**
         @param propose_account (or null) pays the fee to create the proposal, also used as memo from
@@ -188,7 +188,7 @@ class ApplicationApi {
                 );
             });
         });
-    }
+    },
 
     issue_asset(
         to_account,
@@ -270,9 +270,9 @@ class ApplicationApi {
                 memo: memo_object
             });
 
-            return WalletDb.process_transaction(tr, null, true)
-        })
-    }
+            return WalletDb.process_transaction(tr, null, true);
+        });
+    },
 
     createWorker(options, account) {
         return new Promise((resolve, reject) => {
@@ -303,7 +303,13 @@ class ApplicationApi {
             }
             WalletDb.process_transaction(tr, null, true).then(resolve).catch(reject);
         });
+    },
+
+    updateAccount(updateObject) {
+        let tr = new TransactionBuilder();
+        tr.add_type_operation("account_update", updateObject);
+        return WalletDb.process_transaction(tr, null, true);
     }
-}
+};
 
 export default ApplicationApi;

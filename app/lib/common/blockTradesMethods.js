@@ -45,6 +45,15 @@ export function estimateOutput(inputAmount, inputCoin, outputCoin, url = (blockT
     });
 }
 
+export function estimateInput(outputAmount, inputCoin, outputCoin, url = (blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_INPUT)) {
+    return fetch(url + "?outputAmount=" + encodeURIComponent(outputAmount) +"&inputCoinType=" + encodeURIComponent(inputCoin) + "&outputCoinType=" + encodeURIComponent(outputCoin), {
+        method: "get", headers: new Headers({"Accept": "application/json"})}).then(reply => reply.json().then(result => {
+            return result;
+        })).catch(err => {
+            console.log("error fetching deposit limit of", inputCoin, outputCoin, err);
+        });
+}
+
 export function getActiveWallets(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.ACTIVE_WALLETS)) {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;
@@ -53,6 +62,7 @@ export function getActiveWallets(url = (blockTradesAPIs.BASE_OL + blockTradesAPI
     });
 }
 
+let depositRequests = {};
 export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url = blockTradesAPIs.BASE_OL, stateCallback}) {
     let body = {
         inputCoinType,
@@ -61,25 +71,30 @@ export function requestDepositAddress({inputCoinType, outputCoinType, outputAddr
     };
 
     let body_string = JSON.stringify(body);
-
+    if (depositRequests[body_string]) return;
+    depositRequests[body_string] = true;
     fetch( url + "/simple-api/initiate-trade", {
         method:"post",
         headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
         body: body_string
     }).then( reply => { reply.json()
         .then( json => {
+            delete depositRequests[body_string];
             // console.log( "reply: ", json )
             let address = {"address": json.inputAddress || "unknown", "memo": json.inputMemo, error: json.error || null};
             if (stateCallback) stateCallback(address);
         }, error => {
             // console.log( "error: ",error  );
-            if (stateCallback) stateCallback({"address": "unknown", "memo": null});
+            delete depositRequests[body_string];
+            if (stateCallback) stateCallback(null);
         });
     }, error => {
         // console.log( "error: ",error  );
-        if (stateCallback) stateCallback({"address": "unknown", "memo": null});
+        delete depositRequests[body_string];
+        if (stateCallback) stateCallback(null);
     }).catch(err => {
         console.log("fetch error:", err);
+        delete depositRequests[body_string];
     });
 }
 

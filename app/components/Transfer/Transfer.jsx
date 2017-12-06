@@ -121,6 +121,7 @@ class Transfer extends React.Component {
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
             this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
         }
+        if (!balanceObject || !feeAmount) return;
         const hasBalance = checkBalance(amount, asset, feeAmount, balanceObject);
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
@@ -237,6 +238,10 @@ class Transfer extends React.Component {
         this.setState({ propose_account });
     }
 
+    resetForm(){
+        this.setState({memo: '', to_name: '', amount: ''});
+    }
+
     onSubmit(e) {
         e.preventDefault();
         this.setState({error: null});
@@ -252,6 +257,7 @@ class Transfer extends React.Component {
             this.state.propose ? this.state.propose_account : null,
             this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
         ).then( () => {
+            this.resetForm.call(this);
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {

@@ -575,7 +575,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 			let conversion_limit = this.getCachedOrFreshDepositLimit("conversion", conversion_input_coin_type, conversion_output_coin_type);
 
             if (this.unMounted) return;
-            
+
             this.setState({
                 coin_info_request_state: this.coin_info_request_states.request_complete,
                 coins_by_type: coins_by_type,
@@ -719,14 +719,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     // functions for managing input addresses
     getCachedInputAddress(input_coin_type, output_coin_type, memo)
     {
-        let account_name = this.props.account.get('name');
+        let account_name = this.props.account.get("name");
         return this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type);
     }
 
     cacheInputAddress(input_coin_type, output_coin_type, address, memo)
     {
-        let account_name = this.props.account.get('name');
-        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, input_coin_type, output_coin_type, address, memo);
+        let account_name = this.props.account.get("name");
+        this.deposit_address_cache.cacheInputAddress(
+            this.props.gateway,
+            account_name,
+            input_coin_type,
+            output_coin_type,
+            address,
+            memo
+        );
     }
 
     getCachedOrGeneratedInputAddress(input_coin_type, output_coin_type)
@@ -1198,7 +1205,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     <tr>
                         <th><Translate content="gateway.deposit" /></th>
                         <th ><Translate content="gateway.balance" /></th>
-                        <th ><Translate content="gateway.deposit_to" /></th>
+                        <th ><Translate content="gateway.deposit_to" asset={this.state.deposit_input_coin_type}/></th>
                     </tr>
                 </thead>;
 

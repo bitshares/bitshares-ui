@@ -52,6 +52,11 @@ describe("Asset", function() {
         assert.equal(asset.asset_id, "1.3.0", "Asset should be 1.3.0");
         assert.equal(asset.amount, 100000, "Amount should be 242");
         assert.equal(asset.satoshi, 100000, "Satoshi should be 10000");
+
+        let asset2 = new Asset({asset_id: "1.3.861", real: "0.00030", precision: 8});
+        assert.equal(asset2.asset_id, "1.3.861", "Asset should be 1.3.861");
+        assert.equal(asset2.amount, 30000, "Amount should be 30000");
+        assert.equal(asset2.satoshi, 100000000, "Satoshi should be 100000000");
     });
 
     it("Can be added", function() {

@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Router, Route, IndexRoute, browserHistory, hashHistory } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
 // Components imported here for react hot loader (does not work with async route loading)
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
+import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
 import FeesContainer from "./components/Blockchain/FeesContainer";
@@ -25,12 +26,13 @@ import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
 import AccountOrders from "./components/Account/AccountOrders";
+import AccountSignedMessages from "./components/Account/AccountSignedMessages";
 import ExchangeContainer from "./components/Exchange/ExchangeContainer";
 import MarketsContainer from "./components/Exchange/MarketsContainer";
 import Transfer from "./components/Transfer/Transfer";
 import SettingsContainer from "./components/Settings/SettingsContainer";
 import BlockContainer from "./components/Blockchain/BlockContainer";
-import AssetContainer from "./components/Blockchain/AssetContainer";
+import Asset from "./components/Blockchain/Asset";
 import CreateAccount from "./components/Account/CreateAccount";
 import CreateAccountPassword from "./components/Account/CreateAccountPassword";
 import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
@@ -92,7 +94,7 @@ const routes = (
         <Route path="market/:marketID" component={ExchangeContainer} />
         <Route path="settings" component={SettingsContainer} />
         <Route path="block/:height" component={BlockContainer} />
-        <Route path="asset/:symbol" component={AssetContainer} />
+        <Route path="asset/:symbol" component={Asset} />
         <Route path="create-account" component={LoginSelector}>
             <Route path="wallet" component={CreateAccount} />
             <Route path="password" component={CreateAccountPassword} />
@@ -106,9 +108,12 @@ const routes = (
             <Route path="balance-claim" component={BalanceClaimActive} />
         </Route>
 
+
+        <Route path="/accounts" component={DashboardAccountsOnly} />
+        
         <Route path="/account/:account_name" component={AccountPage} >
             <IndexRoute component={AccountOverview} />
-            <Route path="overview" component={AccountOverview} />
+            <Route path="dashboard" component={AccountOverview} />
             <Route path="assets" component={AccountAssets} />
             <Route path="create-asset" component={AccountAssetCreate} />
             <Route path="update-asset/:asset" component={AccountAssetUpdate} />
@@ -119,6 +124,8 @@ const routes = (
             <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
             <Route path="orders" component={AccountOrders} />
             <Route path="whitelist" component={AccountWhitelist} />
+            <Route path="signedmessages" component={AccountSignedMessages} />
+            <Redirect from="overview" to="dashboard" />
         </Route>
 
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />

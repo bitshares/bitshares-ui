@@ -9,8 +9,11 @@ import {ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
+import Icon from "../Icon/Icon";
 
 const {operations} = grapheneChainTypes;
+const alignLeft = {textAlign: "left"};
+const alignRight = {textAlign: "right"};
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -191,11 +194,12 @@ class RecentTransactions extends React.Component {
             });
         }
 
-        const display_history = history.length ?
+        let display_history = history.length ?
             history.slice(0, limit)
             .map(o => {
                 return (
                     <Operation
+                        style={alignLeft}
                         key={o.id}
                         op={o.op}
                         result={o.result}
@@ -206,45 +210,44 @@ class RecentTransactions extends React.Component {
                         hideOpLabel={compactView}
                     />
                 );
-            }) : <tr><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>;
+            }) : [<tr key="no_recent"><td colSpan={compactView ? "2" : "3"}><Translate content="operation.no_recent" /></td></tr>];
+        display_history.push(
+            <tr className="total-value" key="total_value">
+                <td className="column-hide-tiny">
+                </td>
+                <td style={alignRight}>
+                    {historyCount > 0 ?
+                    <span>
+                        <a
+                            className="inline-block"
+                            onClick={this._downloadCSV.bind(this)}
+                            data-tip={counterpart.translate("transaction.csv_tip")}
+                            data-place="bottom"
+                        >
+                            <Icon name="excel" className="icon-14px" />
+                        </a>
+
+                    </span> : null}
+                </td>
+                <td style={{textAlign: "center"}}>
+                    &nbsp;{this.props.showMore && historyCount > this.props.limit || 20 && limit < historyCount ? (
+                        <a onClick={this._onIncreaseLimit.bind(this)}>
+                            <Icon name="chevron-down" className="icon-14px" />
+                        </a>
+                    ) : null}
+                </td>
+            </tr>
+        );
 
         return (
             <div className="recent-transactions no-overflow" style={style}>
                 <div className="generic-bordered-box">
-                    <div ref="header">
+                    {this.props.dashboard ? null : <div ref="header">
 
                         <div className="block-content-header">
                             <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
-
-                            {historyCount > 0 ?
-                            <span style={{fontSize: "60%", textTransform: "lowercase"}}>
-                                &nbsp;(
-                                <a
-                                    className="inline-block"
-                                    onClick={this._downloadCSV.bind(this)}
-                                    data-tip={counterpart.translate("transaction.csv_tip")}
-                                    data-place="bottom"
-                                >
-                                    <Translate content="transaction.csv" />
-                                </a>
-                                )
-                            </span> : null}
-
-                            {this.props.showFilters ? (
-                            <div className="float-right">
-                                <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 0}} className="bts-select" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
-                            </div>) : null}
                         </div>
-
-                        <table className={"table" + (compactView ? " compact" : "")}>
-                            <thead>
-                                <tr>
-                                    {compactView ? null : <th className="column-hide-tiny" style={{width: "20%"}}><Translate content="explorer.block.op" /></th>}
-                                    <th><Translate content="account.votes.info" /></th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                    </div>}
 
                     <div
                         className="box-content grid-block no-margin"
@@ -252,7 +255,18 @@ class RecentTransactions extends React.Component {
                             maxHeight: maxHeight - headerHeight
                         } : null}
                         ref="transactions">
-                        <table className={"table" + (compactView ? " compact" : "")}>
+                        <table className={"table" + (compactView ? " compact" : "") + (this.props.dashboard ? " dashboard-table" : "")}>
+                            <thead>
+                                <tr>
+                                    {compactView ? null : <th style={alignLeft} className="column-hide-tiny">
+                                        {this.props.showFilters ? (
+                                            <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5, width: "auto"}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                        ) : null}
+                                    </th>}
+                                    <th style={alignLeft}><Translate content="account.votes.info" /></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                             <TransitionWrapper
                                 component="tbody"
                                 transitionName="newrow"
@@ -287,13 +301,7 @@ class RecentTransactions extends React.Component {
                     </div>
                 }
                 </div>
-                {this.props.showMore && historyCount > this.props.limit || 20 && limit < historyCount ? (
-                    <div className="account-info more-button">
-                        <button className="button outline small" onClick={this._onIncreaseLimit.bind(this)}>
-                            <Translate content="account.more" />
-                        </button>
-                    </div>
-                    ) : null}
+
             </div>
         );
     }

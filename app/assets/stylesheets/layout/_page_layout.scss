@@ -1,9 +1,9 @@
 .page-layout {
   > .grid-block {
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    > .grid-content, > .grid-block {
-      padding: 10px;
+    // border-top: 1px solid transparent;
+    // border-bottom: 1px solid transparent;
+    > .grid-content, > .grid-block, > .grid-container {
+      padding: 0 10px;
     }
   }
 
@@ -12,7 +12,7 @@
   }
 
   .main-content {
-    padding-top: 1.5rem;
+    padding-top: 0px ;
     background-color: #f3f3f3;
   }
 
@@ -75,7 +75,7 @@ div.bordered-header {
 
 .block-content-header {
   font-size: 1.4375rem;
-  padding: 0.5rem 0;
+  padding: 1.5rem 0;
 
   @include breakpoint(small only) {
       font-size: 1.125rem;
@@ -84,4 +84,19 @@ div.bordered-header {
 
 .table-cell{
   display: table-cell;
+}
+
+.grid-content.app-tables {
+  box-sizing: border-box;
+  padding: 0px;
+  height: 100%;
+  position: relative;
+}
+
+// .grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .account-tabs {
+//   height: 100%;
+// }
+
+.grid-content.app-tables > .content-block {
+  margin-bottom: 0 !important;
 }
