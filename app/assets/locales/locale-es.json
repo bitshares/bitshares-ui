@@ -56,6 +56,8 @@
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
+    "accounts": "Cuentas",
+    "contacts": "Contactos",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -172,8 +174,8 @@
       "memo_key": "Llave Memo"
     },
     "upgrade": "Actualizar membresía",
-    "unfollow": "No seguir",
-    "follow": "Seguir",
+    "unfollow": "Retirar",
+    "follow": "Agregar contacto",
     "pay": "Pagar",
     "overview": "Resumen",
     "bts_market": "Mercado",
@@ -394,7 +396,9 @@
   },
   "explorer": {
     "accounts": {
-      "title": "Cuentas"
+      "title": "Cuentas",
+      "filter": "Cuentas de filtro",
+      "filter_contacts": "Contactos de filtro"
     },
     "blocks": {
       "title": "Blockchain",

@@ -497,7 +497,7 @@ class AccountAssetUpdate extends React.Component {
                 <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
                     <Translate content="header.update_asset" />
                 </button>
-                <button className="button outline" onClick={this._reset.bind(this)}>
+                <button className="button" onClick={this._reset.bind(this)}>
                     <Translate content="account.perm.reset" />
                 </button>
                 <br/>
@@ -545,11 +545,13 @@ class AccountAssetUpdate extends React.Component {
         let isPredictionMarketAsset = asset.getIn(["bitasset", "is_prediction_market"]);
 
         return (
-            <div className="grid-block">
-                <div className="grid-content">
-                    <h3><Translate content="header.update_asset" />: {symbol}</h3>
-
-                        <Tabs setting="updateAssetTab" contentClass="grid-block shrink small-vertical medium-horizontal">
+            <div className="grid-content app-tables no-padding" ref="appTables">
+                <div className="content-block small-12">
+                    <div className="tabs-container generic-bordered-box">
+                        <div className="tabs-header">
+                            <h3><Translate content="header.update_asset" />: {symbol}</h3>
+                        </div>
+                        <Tabs setting="updateAssetTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" contentClass="grid-block shrink small-vertical medium-horizontal no-padding" segmented={false}>
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-8 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
@@ -890,26 +892,18 @@ class AccountAssetUpdate extends React.Component {
                                         style={{width: "100%", paddingLeft: "10px"}}
                                     />
 
-                                    <div style={{paddingTop: "0.5rem"}}>
-                                        <hr/>
+                                    <div class="action-buttons">
                                         <button className={classnames("button", {disabled: !validClaim})} onClick={this._onClaimFees.bind(this)}>
                                             <Translate content="explorer.asset.fee_pool.claim_fees" />
                                         </button>
                                         <button className="button outline" onClick={this._reset.bind(this)}>
                                             <Translate content="account.perm.reset" />
                                         </button>
-                                        <br/>
-                                        <br/>
-                                        {/*<p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_claim_fees" /></p>*/}
                                     </div>
-
                                 </div>
                             </Tab>
                         </Tabs>
-
-
-
-
+                    </div>
                 </div>
             </div>
         );

@@ -351,7 +351,7 @@ class AccountWrapper extends React.Component {
                 </span>
             );
         } else {
-            return <TotalBalanceValue label={this.props.label} inHeader={this.props.inHeader} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/>;
+            return <TotalBalanceValue {...this.props} balances={balanceList} openOrders={openOrders} debt={debt} collateral={collateral}/>;
 
         }
 

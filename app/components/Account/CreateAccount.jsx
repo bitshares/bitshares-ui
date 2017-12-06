@@ -385,6 +385,7 @@ class CreateAccount extends React.Component {
                             this._renderGetStartedText()
                         }
                     </div>
+                    <Link to="/"><button className="blue"><Translate content="wallet.back" /></button></Link>
             </div>
         );
     }

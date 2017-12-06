@@ -35,6 +35,7 @@
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
+    "payments_beta": "Send (Beta)",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",
@@ -45,6 +46,7 @@
     "unlock": "Local Wallet Login",
     "unlock_password": "Cloud Wallet Login",
     "unlock_short": "Login",
+    "lock_short": "Log out",
     "help": "Help",
     "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out.<br/><br/>Closing the browser window will also log you out.",
@@ -86,7 +88,10 @@
     "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
     "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
     "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
-    "over_limit": "The bridge does not have enough of the desired asset for this buy order"
+    "over_limit": "The bridge does not have enough of the desired asset for this buy order",
+    "propose_tip": "Propose another user to initiate a transaction",
+    "follow_user": "You are following this user",
+    "follow_user_add": "Click to Follow this user"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -131,6 +136,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
+    "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
@@ -156,7 +162,7 @@
       "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
-      "stats": "Membership",
+      "stats": "Membership stats",
       "join": "Joined on",
       "registrar": "Registrar",
       "referrer": "Affiliate Referrer",
@@ -382,8 +388,8 @@
       "memo_key": "Memo Key"
     },
     "upgrade": "Upgrade account",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "Remove contact",
+    "follow": "Add contact",
     "pay": "Send to",
     "deposit": "Deposit BTS",
     "deposit_address": "Your deposit address is your account name",
@@ -423,7 +429,7 @@
     "settle": "Settle",
     "no_orders": "No open orders",
     "asset_details": "Asset details",
-    "portfolio": "My Portfolio",
+    "portfolio": "Portfolio",
     "activity": "Activity",
     "eq_value_header": "Value ({asset})",
     "qty": "Qty",
@@ -436,18 +442,20 @@
   },
   "transfer": {
     "header": "Transfer details",
+    "header_subheader": "Transfers are used for sending funds to<br /> other BitShares Account Holders",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Quantity",
     "to": "To",
     "memo": "Memo / Message",
-    "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
+    "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!",
     "fee": "Fee",
     "send": "Send",
     "final": "Final balance",
     "balances": "Balances",
     "available": "Available",
     "errors": {
+      "noFunds": "No funds",
       "req": "Required field",
       "pos": "Amount must be positive",
       "valid": "Please enter a valid, positive number",
@@ -463,6 +471,7 @@
     "again": "MAKE ANOTHER TRANSFER",
     "see": "SEE MY TRANSFERS",
     "close": "Close",
+    "cancel": "Cancel",
     "copy_address": "Copy Address",
     "copy_memo": "Copy Memo",
     "memo_unlock": "Unlock your wallet/account in order to see this memo",
@@ -682,7 +691,8 @@
   "explorer": {
     "accounts": {
       "title": "Accounts",
-      "filter": "Filter accounts"
+      "filter": "Filter accounts",
+      "filter_contacts": "Filter contacts"
     },
     "blocks": {
       "title": "Blockchain",
@@ -1093,6 +1103,7 @@
     "verify_prior_backup": "Verify Prior Backup",
     "brainkey_not_verified": "This Brainkey is not verified",
     "cancel": "Cancel",
+    "back": "Back",
     "reset": "Reset",
     "done": "Done",
     "verify": "I've written it down",
@@ -1234,6 +1245,10 @@
     }
   },
   "modal": {
+    "send": {
+      "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+      "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+    },
     "issue": {
       "to": "Issue To",
       "amount": "Amount to Issue",
@@ -1325,6 +1340,7 @@
     "symbol": "Symbol",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
+    "deposit_address": "Deposit address",
     "add_funds": "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
     "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
     "balance_asset": "Current %(asset)s balance",

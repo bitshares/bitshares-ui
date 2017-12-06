@@ -188,11 +188,11 @@ class ExchangeSubscriber extends React.Component {
     render() {
         return <div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
-            <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} />
+            <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} isMyAccount={AccountStore.isMyAccount(this.props.currentAccount)}/>
         </div>;
     }
 }
 
-ExchangeSubscriber = BindToChainState(ExchangeSubscriber, {keep_updating: true, show_loader: true});
+ExchangeSubscriber = BindToChainState(ExchangeSubscriber, {keep_updating: true});
 
 export default ExchangeContainer;

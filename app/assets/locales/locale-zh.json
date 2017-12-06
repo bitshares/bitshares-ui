@@ -382,6 +382,7 @@
 		"show_ignored": "显示已忽略账户",
 		"hide_ignored": "显示已忽略账户",
 		"accounts": "账户",
+		"contacts": "往来",
 		"home": "首页",
 		"no_price": "无可用价格信息",
 		"create_new": "创建新账户",
@@ -642,7 +643,8 @@
 	"explorer": {
 		"accounts": {
 			"title": "账户",
-			"filter": "过滤账户"
+			"filter": "过滤账户", 
+			"filter_contacts": "过滤器接触"
 		},
 		"blocks": {
 			"title": "区块链",
