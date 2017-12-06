@@ -54,6 +54,20 @@
     "buy_min": "Recibirá como minimo esta cantidad. Si hay pedidos que coinciden con un precio más barato del cual usted especificó, recibirá mas de esta cantidad.",
     "borrow": "pedir prestado %(asset)s desde la red. Esto crea un contrato inteligente que bloquea su colateral hasta que modifique la posición o se requiera una llamada a mergen.",
     "memo_tip": "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios."
+    "generate": "La contraseña generada fue creada por su navegador, localmente. <br /><br /><strong>Nadie más que tú tiene acceso a ella</strong>.<br /><br /> Pégalo a continuación y guarda una copia en un lugar seguro ",
+    "copy_password": "Haga clic aquí para copiar la contraseña en su portapapeles",
+    "sync_yes": "El nodo actual está sincronizado con la cadena de bloques",
+    "sync_no": "El nodo actual no está sincronizado con la cadena de bloques, intente cambiar a otro",
+    "disconnected": "No estás conectado a la API de un nodo , intenta volver a cargar o establecer un nuevo punto de acceso en la Configuración",
+    "market_fee": "El proprietario de %(asset)s cobra una tarifa de mercado de %(percent)s%% para pedidos de compra. Esta tarifa se deducirá de la cantidad que reciba cuando su pedido se ejecuta, no se paga al hacer un pedido.",
+    "bridge_TRADE": "BlockTrades es un puente que soporta el comercio instantáneo de activos. Los detalles y los términos se pueden encontrar en https://blocktrades.us",
+    "over_limit": "El puente no tiene suficiente del activo deseado para esta orden de compra",
+    "propose_tip": "Proponer otro usuario para iniciar una transacción",
+    "follow_user": "Usted está siguiendo a este usuario",
+    "follow_user_add": "Haga clic para seguir a este usuario"
+  },
+  "propose": "Propose",
+  "cancel": "Cancel",
   },
   "account": {
     "accounts": "Cuentas",
