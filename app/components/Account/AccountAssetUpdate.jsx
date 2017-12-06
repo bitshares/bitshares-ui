@@ -136,7 +136,7 @@ class AccountAssetUpdate extends React.Component {
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
-                AssetActions.getAsset(this.props.asset.get("id"));
+                ChainStore.getAsset(this.props.asset.get("id"));
             }, 3000);
         });
     }
@@ -428,9 +428,8 @@ class AccountAssetUpdate extends React.Component {
         let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
         let basePrecision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(Math.pow(10, precision)).toString();
-        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(Math.pow(10, basePrecision)).toString();
-
+        let cr_quote_amount = parseFloat(core_exchange_rate.quote.amount) * precision;
+        let cr_base_amount = parseFloat(core_exchange_rate.base.amount) * basePrecision;
         let originalPermissions = assetUtils.getFlagBooleans(asset.getIn(["options", "issuer_permissions"]), asset.get("bitasset") !== undefined);
         // Loop over flags
         let flags = [];
@@ -498,7 +497,7 @@ class AccountAssetUpdate extends React.Component {
                 <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
                     <Translate content="header.update_asset" />
                 </button>
-                <button className="button outline" onClick={this._reset.bind(this)}>
+                <button className="button" onClick={this._reset.bind(this)}>
                     <Translate content="account.perm.reset" />
                 </button>
                 <br/>
@@ -546,11 +545,13 @@ class AccountAssetUpdate extends React.Component {
         let isPredictionMarketAsset = asset.getIn(["bitasset", "is_prediction_market"]);
 
         return (
-            <div className="grid-block">
-                <div className="grid-content">
-                    <h3><Translate content="header.update_asset" />: {symbol}</h3>
-
-                        <Tabs setting="updateAssetTab" contentClass="grid-block shrink small-vertical medium-horizontal">
+            <div className="grid-content app-tables no-padding" ref="appTables">
+                <div className="content-block small-12">
+                    <div className="tabs-container generic-bordered-box">
+                        <div className="tabs-header">
+                            <h3><Translate content="header.update_asset" />: {symbol}</h3>
+                        </div>
+                        <Tabs setting="updateAssetTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" contentClass="grid-block shrink small-vertical medium-horizontal no-padding" segmented={false}>
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-8 grid-content">
                                     <h3><Translate content="account.user_issued_assets.primary" /></h3>
@@ -626,7 +627,6 @@ class AccountAssetUpdate extends React.Component {
                                         </div>
                                         <div>
                                             <h5><Translate content="exchange.price" />: <FormattedPrice
-                                                invert
                                                 style={{fontWeight: "bold"}}
                                                 quote_amount={cr_quote_amount}
                                                 quote_asset={core_exchange_rate.quote.asset_id}
@@ -635,6 +635,10 @@ class AccountAssetUpdate extends React.Component {
                                             /></h5>
                                         </div>
                                     </label>
+                                    <div>
+                                        <Translate content="account.user_issued_assets.cer_warning_1" component="label" className="has-error"/>
+                                        <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
+                                    </div>
 
                                     {confirmButtons}
                                 </div>
@@ -888,26 +892,18 @@ class AccountAssetUpdate extends React.Component {
                                         style={{width: "100%", paddingLeft: "10px"}}
                                     />
 
-                                    <div style={{paddingTop: "0.5rem"}}>
-                                        <hr/>
+                                    <div class="action-buttons">
                                         <button className={classnames("button", {disabled: !validClaim})} onClick={this._onClaimFees.bind(this)}>
                                             <Translate content="explorer.asset.fee_pool.claim_fees" />
                                         </button>
                                         <button className="button outline" onClick={this._reset.bind(this)}>
                                             <Translate content="account.perm.reset" />
                                         </button>
-                                        <br/>
-                                        <br/>
-                                        {/*<p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_claim_fees" /></p>*/}
                                     </div>
-
                                 </div>
                             </Tab>
                         </Tabs>
-
-
-
-
+                    </div>
                 </div>
             </div>
         );

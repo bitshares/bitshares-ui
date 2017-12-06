@@ -1,7 +1,7 @@
 import React from "react";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
-import AccountImage from "./AccountImage";
+import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -37,7 +37,8 @@ class AccountItemRow extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.action !== this.props.action ||
             nextProps.isActive !== this.props.isActive ||
-            nextProps.idx !== this.props.idx
+            nextProps.idx !== this.props.idx ||
+            nextProps.proxy !== this.props.proxy
         );
     }
 
@@ -47,7 +48,6 @@ class AccountItemRow extends React.Component {
 
     render() {
         let {account, type, action, isActive} = this.props;
-        let name = account.get("name");
         let item_id = account.get("id");
 
         let {url, votes} = getWitnessOrCommittee(type, account);
@@ -55,18 +55,25 @@ class AccountItemRow extends React.Component {
         let link = url && url.length > 0 && url.indexOf("http") === -1 ? "http://" + url : url;
         const isSupported = action === "remove";
         return (
-            <tr>
-                <td style={{textAlign: "center", backgroundColor: isSupported ? "green" : null}}><Translate content={`settings.${isSupported ? "yes" : "no"}`}/></td>
-                <td>
-                    <AccountImage size={{height: 30, width: 30}} account={name}/>
+            <tr className={(isSupported ? "": "unsupported")}>
+                <td style={{textAlign: "right"}}>
+                    {this.props.idx + 1}
                 </td>
-                <td><LinkToAccountById account={account.get("id")} /></td>
-                <td><a href={link} target="_blank" rel="noopener noreferrer">{url.length < 45 ? url : url.substr(0, 45) + "..."}</a></td>
-                <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} /></td>
-                <td><Translate content={`account.votes.${isActive ? "active_short" : "inactive"}`} /></td>
+                <td style={{textAlign: "left"}}><LinkToAccountById account={account.get("id")} /></td>
                 <td>
-                    <button className="button outline" onClick={this.onAction.bind(this, item_id)}>
-                        <Translate content="account.votes.toggle"/></button>
+                    {link && link.indexOf(".") !== -1 ?
+                    <a href={link} target="_blank" rel="noopener noreferrer">
+                        <Icon name="share" />
+                    </a> : null}
+                </td>
+                <td><FormattedAsset amount={votes} asset="1.3.0" decimalOffset={5} hide_asset /></td>
+                <td><Translate content={`account.votes.${isActive ? "active_short" : "inactive"}`} /></td>
+                <td style={{textAlign: "center"}}><Translate content={`settings.${isSupported ? "yes" : "no"}`}/></td>
+                <td className={this.props.proxy ? "" : "clickable"} onClick={this.props.proxy ? () => {} : this.onAction.bind(this, item_id)}>
+                    {!this.props.proxy ?
+                        <Icon name={isSupported ? "checkmark-circle" : "minus-circle"} /> :
+                        <Icon name="locked" />
+                }
                 </td>
             </tr>
         );
@@ -166,6 +173,7 @@ class VotingAccountsList extends React.Component {
                     isSelected={this.props.items.indexOf(i) !== -1}
                     action={action}
                     isActive={isActive}
+                    proxy={this.props.proxy}
                 />
             );
         });
@@ -195,15 +203,16 @@ class VotingAccountsList extends React.Component {
                 /> : null}
                 {this.props.title && item_rows.length ? <h4>{this.props.title}</h4> : null}
                 {item_rows.length ? (
-                <table className="table">
+                <table className="table dashboard-table">
                     <thead>
                         <tr>
-                            <th style={{maxWidth: cw[0]}}><Translate content="account.votes.supported"/></th>
-                            <th colSpan="2" style={{maxWidth: cw[1]}}><Translate content={`account.votes.${this.props.type}`}/></th>
-                            <th style={{maxWidth: cw[2]}}><Translate content="account.votes.url"/></th>
+                            <th style={{textAlign: "right"}}>#</th>
+                            <th style={{textAlign: "left", maxWidth: cw[1]}}><Translate content="account.votes.name" /></th>
+                            <th style={{maxWidth: cw[2]}}><Translate content="account.votes.about"/></th>
                             <th style={{maxWidth: cw[3]}}><Translate content="account.votes.votes" /></th>
                             <th style={{maxWidth: cw[4]}}><Translate content="account.votes.status.title" /></th>
-                            <th style={{maxWidth: cw[5]}}><Translate content="account.perm.action" /></th>
+                            <th style={{maxWidth: cw[0]}}><Translate content="account.votes.supported"/></th>
+                            <th style={{maxWidth: cw[5]}}><Translate content="account.votes.toggle" /></th>
                         </tr>
                     </thead>
                     <tbody>

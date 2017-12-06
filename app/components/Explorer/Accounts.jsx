@@ -6,8 +6,11 @@ import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import {debounce} from "lodash";
 import ChainTypes from "../Utility/ChainTypes";
+import Icon from "../Icon/Icon";
 import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
+import AccountStore from "stores/AccountStore";
+import { connect } from "alt-react";
 
 class AccountRow extends React.Component {
     static propTypes = {
@@ -19,14 +22,34 @@ class AccountRow extends React.Component {
         autosubscribe: false
     };
 
+    shouldComponentUpdate(nextProps) {
+        return (
+            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.account !== this.props.account
+        );
+    }
+
+    _onLinkAccount(account, e) {
+        e.preventDefault();
+        AccountActions.linkAccount(account);
+    }
+
+    _onUnLinkAccount(account, e) {
+        e.preventDefault();
+        AccountActions.unlinkAccount(account);
+    }
+
     render() {
-        let {account} = this.props;
+        let {account, linkedAccounts} = this.props;
+
         let balance = account.getIn(["balances", "1.3.0"]) || null;
+        let accountName = account.get("name");
 
         return (
             <tr key={account.get("id")}>
                 <td>{account.get("id")}</td>
-                <td><Link to={`/account/${account.get("name")}/overview`}>{account.get("name")}</Link></td>
+                {linkedAccounts.has(accountName) ? <td onClick={this._onUnLinkAccount.bind(this, accountName)}><Icon name="minus-circle" /></td> : <td onClick={this._onLinkAccount.bind(this, accountName)}><Icon name="plus-circle" /></td>}
+                <td><Link to={`/account/${accountName}/overview`}>{accountName}</Link></td>
                 <td>{!balance? "n/a" : <BalanceComponent balance={balance} />}</td>
                 <td>{!balance ? "n/a" : <BalanceComponent balance={balance} asPercentage={true} />}</td>
             </tr>
@@ -34,6 +57,22 @@ class AccountRow extends React.Component {
     }
 }
 AccountRow = BindToChainState(AccountRow);
+
+let AccountRowWrapper = (props) => {
+    return <AccountRow {...props} />;
+};
+
+AccountRowWrapper = connect(AccountRowWrapper, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            linkedAccounts: AccountStore.getState().linkedAccounts
+        };
+    }
+});
+
 
 class Accounts extends React.Component {
 
@@ -82,7 +121,7 @@ class Accounts extends React.Component {
             })
             .map((account, id) => {
                 return (
-                    <AccountRow key={id} account={account} />
+                    <AccountRowWrapper key={id} account={account} />
                 );
             }).toArray();
         }
@@ -99,6 +138,7 @@ class Accounts extends React.Component {
                             <thead>
                                 <tr>
                                     <th><Translate component="span" content="explorer.assets.id" /></th>
+                                    <th><Icon name="user" /></th>
                                     <th><Translate component="span" content="account.name" /></th>
                                     <th><Translate component="span" content="gateway.balance" /></th>
                                     <th><Translate component="span" content="account.percent" /></th>

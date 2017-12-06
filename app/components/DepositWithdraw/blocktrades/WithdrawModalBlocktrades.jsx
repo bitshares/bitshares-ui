@@ -10,12 +10,11 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset} from "common/MarketClasses";
 import { debounce } from "lodash";
+import {Price, Asset} from "common/MarketClasses";
 
 class WithdrawModalBlocktrades extends React.Component {
 
@@ -202,7 +201,6 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     onSubmit() {
-
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
                 ZfApi.publish(this.getWithdrawModalId(), "open");
@@ -223,12 +221,38 @@ class WithdrawModalBlocktrades extends React.Component {
 
                 const {feeAmount} = this.state;
 
-                let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                const amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
+                const gateFee = (typeof this.props.gateFee != "undefined")?parseFloat(String.prototype.replace.call(this.props.gateFee, /,/g, "")):0.0;
+
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: amount
                 });
+
+
+                let balanceAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: 0
+                });
+                
+                if (typeof this.props.balance != "undefined") {
+                    balanceAmount = sendAmount.clone(this.props.balance.get("balance"));
+                }
+
+                const gateFeeAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: gateFee
+                });
+
+                sendAmount.plus(gateFeeAmount);
+
+                /* Insufficient balance */
+                if (balanceAmount.lt(sendAmount)) {
+                    sendAmount = balanceAmount;
+                }
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
@@ -363,7 +387,18 @@ class WithdrawModalBlocktrades extends React.Component {
 
             if (asset) {
                 // Remove any assets that do not have valid core exchange rates
-                if (asset.get("id") !== "1.3.0" && !utils.isValidPrice(asset.getIn(["options", "core_exchange_rate"]))) {
+                let priceIsValid = false, p;
+                try {
+                    p = new Price({
+                        base: new Asset(asset.getIn(["options", "core_exchange_rate", "base"]).toJS()),
+                        quote: new Asset(asset.getIn(["options", "core_exchange_rate", "quote"]).toJS())
+                    });
+                    priceIsValid = p.isValid();
+                } catch(err) {
+                    priceIsValid = false;
+                }
+
+                if (asset.get("id") !== "1.3.0" && !priceIsValid) {
                     fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
                 }
             }
@@ -460,6 +495,11 @@ class WithdrawModalBlocktrades extends React.Component {
             balance = "No funds";
         }
 
+        const disableSubmit =
+            this.state.error ||
+            this.state.balanceError ||
+            !this.state.withdraw_amount;
+
         return (<form className="grid-block vertical full-width-content">
             <div className="grid-container">
                 <div className="content-block">
@@ -532,7 +572,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (disableSubmit ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 

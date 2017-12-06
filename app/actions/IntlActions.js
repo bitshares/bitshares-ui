@@ -1,9 +1,11 @@
 import alt from "alt-instance";
 
+import localeCodes from "assets/locales";
+
 var locales = {};
 if (__ELECTRON__) {
-    ["cn", "de", "es", "fr", "ko", "tr", "ru"].forEach(locale => {
-        locales[locale] = require("json-loader!assets/locales/locale-" + locale + ".json");
+    localeCodes.forEach(locale => {
+        locales[locale] = require(`json-loader!assets/locales/locale-${locale}.json`);
     });
 }
 
@@ -20,7 +22,7 @@ class IntlActions {
             };
         } else {
             return (dispatch) => {
-                fetch("locale-" + locale + ".json").then( (reply) => {
+                fetch(`${__BASE_URL__}locale-${locale}.json`).then( (reply) => {
                     return reply.json().then(result => {
                         dispatch({
                             locale,

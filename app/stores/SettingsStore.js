@@ -14,7 +14,12 @@ let ss = new ls(STORAGE_KEY);
 
 class SettingsStore {
     constructor() {
-        this.exportPublicMethods({init: this.init.bind(this), getSetting: this.getSetting.bind(this)});
+        this.exportPublicMethods({
+            init: this.init.bind(this),
+            getSetting: this.getSetting.bind(this),
+            getLastBudgetObject: this.getLastBudgetObject.bind(this),
+            setLastBudgetObject: this.setLastBudgetObject.bind(this)
+        });
 
         this.bindListeners({
             onChangeSetting: SettingsActions.changeSetting,
@@ -22,6 +27,7 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -41,7 +47,6 @@ class SettingsStore {
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            disableChat: false,
             passwordLogin: true
         });
 
@@ -52,7 +57,7 @@ class SettingsStore {
         let defaults = {
             locale: [
                 "en",
-                "cn",
+                "zh",
                 "fr",
                 "ko",
                 "de",
@@ -61,7 +66,7 @@ class SettingsStore {
                 "tr",
                 "ru"
             ],
-            apiServer: [],
+            apiServer: apiServer,
             unit: [
                 CORE_ASSET,
                 "USD",
@@ -75,10 +80,6 @@ class SettingsStore {
                 {translate: "no"}
             ],
             showAssetPercent: [
-                {translate: "yes"},
-                {translate: "no"}
-            ],
-            disableChat: [
                 {translate: "yes"},
                 {translate: "no"}
             ],
@@ -100,6 +101,18 @@ class SettingsStore {
         this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
 
         let savedDefaults = ss.get("defaults_v1", {});
+        /* Fix for old clients after changing cn to zh */
+        if (savedDefaults && savedDefaults.locale) {
+            let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
+            if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
+        }
+        if (savedDefaults.apiServer) {
+            savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
+                return !defaults.apiServer.find(b => {
+                    return b.url === a.url;
+                });
+            });
+        }
         this.defaults = merge({}, defaults, savedDefaults);
 
         (savedDefaults.apiServer || []).forEach(api => {
@@ -301,6 +314,11 @@ class SettingsStore {
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
+    onClearStarredMarkets(){
+        this.starredMarkets = Immutable.Map({});
+        ss.set(this.starredKey, this.starredMarkets.toJS());
+    }
+
     onAddWS(ws) {
         if (typeof ws === "string") {
             ws = {url: ws, location: null};
@@ -310,10 +328,8 @@ class SettingsStore {
     }
 
     onRemoveWS(index) {
-        if (index !== 0) { // Prevent removing the default apiServer
-            this.defaults.apiServer.splice(index, 1);
-            ss.set("defaults_v1", this.defaults);
-        }
+        this.defaults.apiServer.splice(index, 1);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onClearSettings(resolve) {
@@ -339,6 +355,14 @@ class SettingsStore {
     onUpdateLatencies(latencies) {
         ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
+    }
+
+    getLastBudgetObject() {
+        return ss.get(this._getChainKey("lastBudgetObject"), "2.13.1");
+    }
+
+    setLastBudgetObject(value) {
+        ss.set(this._getChainKey("lastBudgetObject"), value);
     }
 }
 

@@ -16,8 +16,9 @@
         > span {
             position: relative;
             top: 7px;
-            > span:nth-of-type(2) {
-                font-size: 0.9rem;
+            font-size: 0.95rem;
+            > .footer-block-title {
+                font-size: 0.85rem;
             }
         }
     }
@@ -47,6 +48,7 @@
     > div > div:last-of-type {
         padding-left: 1rem;
         border-left: 1px solid $border-color;
+        overflow: hidden;
     }
 }
 

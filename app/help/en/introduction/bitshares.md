@@ -1,9 +1,23 @@
 # BitShares
 
-As mentioned already, Graphene solely describes a *technology* or *protocol*.
-However it evolves to an ecosystem only in combination with an actual blockchain
-such as BitShares.
+## Support
 
+>If you have an issue related to a Gateway provider, please be sure to contact them directly. See Gateways in the left menu.
+
+### Bitshares Chat
+You can chat with other member of the Bitshares community in real time at:
+
+- [Telegram](https://t.me/BitSharesDEX)
+- [Discord](https://discord.gg/GsjQfAJ)
+
+### Developers
+If you are a sofware developer, you may contribute via a bounty system at:
+
+- [Github UI](https://github.com/bitshares/bitshares-ui)
+- [Github Core](https://github.com/bitshares/bitshares-core) 
+
+## Introduction
+Welcome to the worlds fastest decentralized exchange (The DEX).
 BitShares looks to extend the innovation of the blockchain to all industries
 that rely upon the internet to provide their services. Whether its banking,
 stock exchanges, lotteries, voting, music, auctions or many others, a digital
@@ -20,9 +34,9 @@ BitShares does for business what bitcoin did for money by utilizing distributed
 consensus technology to create companies that are inherently global,
 transparent, trustworthy, efficient and most importantly profitable.
 
-## This Wallet
+## Wallet
+This wallet allows access most features of the BitShares network including
 
-The wallet currently open in this browser window allows to access all
-functionalities of the BitShares network including
-[BitAssets](../assets/mpa.md), [User-Issued Assets](../assets/uia.md) and the
-[decentralized exchange](../dex/introduction.md).
+- [BitAssets](/help/assets/mpa.md)
+- [User-Issued Assets](/help/assets/uia.md)
+- [The DEX](/help/dex/introduction.md)

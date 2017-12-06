@@ -1,7 +1,7 @@
 {
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -52,6 +52,8 @@
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
+    "accounts": "Comptes",
+    "contacts": "Contacts",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -61,6 +63,7 @@
     "asset": "Actif",
     "market_value": "Valeur",
     "hour_24": "24hrs",
+    "hour_24_short": "24hrs",
     "recent": "Activité recent",
     "name": "Nom du compte",
     "more": "voir plus",
@@ -155,8 +158,8 @@
       "memo_key": "Memo Key"
     },
     "upgrade": "Mettre à niveau",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "Retirer",
+    "follow": "Ajouter le contact",
     "pay": "Payer",
     "overview": "Sommaire",
     "history": "Historique",
@@ -329,7 +332,9 @@
   },
   "explorer": {
     "accounts": {
-      "title": "Comptes"
+      "title": "Comptes",
+      "filter": "Filtrer les comptes",
+      "filter_contacts": "Filtrer les contacts"
     },
     "blocks": {
       "title": "Blockchain",
@@ -547,23 +552,6 @@
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
     "deposit_limit": "Deposit limit"
-  },
-  "chat": {
-    "title": "Trollbox",
-    "button": "Chat",
-    "send": "Send",
-    "color": "Username color",
-    "user": "Username",
-    "done": "Done",
-    "reconnect": "Reconnect",
-    "welcome_user": "Welcome to BitShares",
-    "users": "%(userCount)s users online",
-    "welcome": "This is a peer to peer chatroom, with no moderation and no guaranteed unique usernames. It can be disabled in the settings. Message frequency is limited to one per 2 seconds, and message length to 140 characters. For a list of available commands, type /help.",
-    "disconnected": "You are currently not connected to any peers or the central server, please click below to reconnect. If you are unable to connect, this might mean the server is down, please try again later.",
-    "rate": "Please wait at least 2s before posting a new message",
-    "disabled": "Chat disabled",
-    "enable": "Enable chat now",
-    "telegram_link": "For a more active discussion group, try the Bitshares Telegram group: <a href='https://t.me/BitSharesDEX' target='blank' rel='noopener noreferrer'>https://t.me/BitSharesDEX</a>"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

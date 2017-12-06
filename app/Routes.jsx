@@ -122,7 +122,7 @@ const routes = (
             System.import("components/Blockchain/BlockContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="asset/:symbol" getComponent={(location, cb) => {
-            System.import("components/Blockchain/AssetContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Blockchain/Asset").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="create-account" getComponent={(location, cb) => {
             System.import("components/LoginSelector").then(loadRoute(cb)).catch(errorLoading);
@@ -134,6 +134,10 @@ const routes = (
                 System.import("components/Account/CreateAccountPassword").then(loadRoute(cb)).catch(errorLoading);
             }}/>
         </Route>
+
+        <Route path="accounts" getComponent={(location, cb) => {
+            System.import("components/Dashboard/DashboardAccountsOnly").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
 
         <Route path="existing-account" getComponent={(location, cb) => {
             System.import("components/Wallet/ExistingAccount").then(loadRoute(cb, "ExistingAccount")).catch(errorLoading);
@@ -193,6 +197,9 @@ const routes = (
             }}/>
             <Route path="whitelist" getComponent={(location, cb) => {
                 System.import("components/Account/AccountWhitelist").then(loadRoute(cb)).catch(errorLoading);
+            }}/>
+            <Route path="signedmessages" getComponent={(location, cb) => {
+                System.import("components/Account/AccountSignedMessages").then(loadRoute(cb)).catch(errorLoading);
             }}/>
             <Redirect from="overview" to="dashboard" />
         </Route>

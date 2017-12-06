@@ -54,31 +54,6 @@ class ValueComponent extends MarketStatsCheck {
     }
 
     getValue() {
-        let {amount, toAsset, fromAsset, coreAsset, fullPrecision, marketStats} = this.props;
-        let toStats, fromStats;
-
-        let toID = toAsset.get("id");
-        let toSymbol = toAsset.get("symbol");
-        let fromID = fromAsset.get("id");
-        let fromSymbol = fromAsset.get("symbol");
-
-        if (!fullPrecision) {
-            amount = utils.get_asset_amount(amount, fromAsset);
-        }
-
-        if (coreAsset && marketStats) {
-            let coreSymbol = coreAsset.get("symbol");
-
-            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
-            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
-        }
-
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close : fromAsset, toStats && toStats.close ? toStats.close : toAsset, fromID, toID);
-
-        return utils.convertValue(price, amount, fromAsset, toAsset);
-    }
-
-    render() {
         let {amount, toAsset, fromAsset, fullPrecision, marketStats, coreAsset} = this.props;
         let toStats, fromStats;
 
@@ -91,7 +66,6 @@ class ValueComponent extends MarketStatsCheck {
             amount = utils.get_asset_amount(amount, fromAsset);
         }
 
-        // console.log("marketStats:", marketStats.toJS());
         if (coreAsset && marketStats) {
             let coreSymbol = coreAsset.get("symbol");
             toStats = marketStats.get(toSymbol + "_" + coreSymbol);
@@ -106,19 +80,35 @@ class ValueComponent extends MarketStatsCheck {
                                         toID);
 
         let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
+        return eqValue;
+    }
+
+    render() {
+        let {amount, toAsset, fromAsset, fullPrecision} = this.props;
+
+        let toID = toAsset.get("id");
+        let toSymbol = toAsset.get("symbol");
+
+        if (!fullPrecision) {
+            amount = utils.get_asset_amount(amount, fromAsset);
+        }
+
+        let eqValue = this.getValue();
 
         if (!eqValue && eqValue !== 0) {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
-        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : 0}/>;
+        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}/>;
     }
 }
 ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
 
 class EquivalentValueComponent extends React.Component {
     render() {
-        return <ValueComponent {...this.props} />;
+        let {refCallback, ...others} = this.props;
+
+        return <ValueComponent {...others} ref={refCallback} />;
     }
 }
 
@@ -140,10 +130,13 @@ class BalanceValueComponent extends React.Component {
     }
 
     render() {
-        let amount = Number(this.props.balance.get("balance"));
-        let fromAsset = this.props.balance.get("asset_type");
+        const {balance} = this.props;
+        const isBalanceObject = !!balance.getIn(["balance", "amount"]);
 
-        return <EquivalentValueComponent hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
+        let amount = Number(isBalanceObject ? balance.getIn(["balance", "amount"]) : balance.get("balance"));
+        let fromAsset = isBalanceObject ? balance.getIn(["balance", "asset_id"]) : balance.get("asset_type");
+        if (isNaN(amount)) return <span>--</span>;
+        return <EquivalentValueComponent refCallback={this.props.refCallback} hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
     }
 }
 BalanceValueComponent = BindToChainState(BalanceValueComponent, {keep_updating: true});

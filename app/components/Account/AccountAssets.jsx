@@ -12,7 +12,6 @@ import notify from "actions/NotificationActions";
 import utils from "common/utils";
 import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
-import PrivateKeyStore from "stores/PrivateKeyStore";
 import IssueModal from "../Modal/IssueModal";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import { connect } from "alt-react";
@@ -20,6 +19,7 @@ import assetUtils from "common/asset_utils";
 import { Map, List } from "immutable";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import {Tabs, Tab} from "../Utility/Tabs";
 
 class AccountAssets extends React.Component {
 
@@ -131,7 +131,7 @@ class AccountAssets extends React.Component {
                 });
 
                 // Update the data for the asset
-                AssetActions.getAsset(issue.asset_id);
+                ChainStore.getAsset(issue.asset_id);
             } else {
                 notify.addNotification({
                     message: `Failed to issue asset`,//: ${this.state.wallet_public_name}
@@ -222,20 +222,20 @@ class AccountAssets extends React.Component {
                         <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
                         <td>
                             {!asset.bitasset_data_id ? (
-                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
+                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button">
                                 <Translate content="transaction.trxTypes.asset_issue" />
                             </button>) : null}
                         </td>
 
                         <td>
                             {!asset.bitasset_data_id ? (
-                            <button onClick={this._reserveButtonClick.bind(this, asset.id)} className="button outline">
+                            <button onClick={this._reserveButtonClick.bind(this, asset.id)} className="button">
                                 <Translate content="transaction.trxTypes.asset_reserve" />
                             </button>) : null}
                         </td>
 
                         <td>
-                            <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
+                            <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button">
                                 <Translate content="transaction.trxTypes.asset_update" />
                             </button>
                         </td>
@@ -244,32 +244,35 @@ class AccountAssets extends React.Component {
         }).toArray();
 
         return (
-            <div className="grid-content">
+            <div className="grid-content app-tables no-padding" ref="appTables">
+                <div className="content-block small-12">
+                    <div className="tabs-container generic-bordered-box">
 
-                    <div className="content-block generic-bordered-box">
-                        <div className="block-content-header">
-                            <Translate content="account.user_issued_assets.issued_assets" />
-                        </div>
-                        <div className="box-content">
-                            <table className="table dashboard-table">
-                                <thead>
-                                <tr>
-                                    <th><Translate content="account.user_issued_assets.symbol" /></th>
-                                    <th style={{maxWidth: "200px"}}><Translate content="account.user_issued_assets.description" /></th>
-                                    <Translate component="th" content="markets.supply" />
-                                    <th><Translate content="account.user_issued_assets.max_supply" /></th>
-                                    <th style={{textAlign: "center"}} colSpan="3"><Translate content="account.perm.action" /></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {myAssets}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        <Tabs segmented={false} setting="issuedAssetsTab" className="account-tabs" tabsClass="account-overview bordered-header content-block">
 
-                    <div className="content-block">
-                        <Link to={`/account/${account_name}/create-asset/`}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
+                            <Tab title="account.user_issued_assets.issued_assets">
+                                <div className="content-block">
+                                    <table className="table dashboard-table">
+                                        <thead>
+                                        <tr>
+                                            <th><Translate content="account.user_issued_assets.symbol" /></th>
+                                            <th style={{maxWidth: "200px"}}><Translate content="account.user_issued_assets.description" /></th>
+                                            <Translate component="th" content="markets.supply" />
+                                            <th><Translate content="account.user_issued_assets.max_supply" /></th>
+                                            <th style={{textAlign: "center"}} colSpan="3"><Translate content="account.perm.action" /></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {myAssets}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="content-block">
+                                    <Link to={`/account/${account_name}/create-asset/`}><button className="button"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
+                                </div>
+                            </Tab>
+                        </Tabs>
                     </div>
 
                     <BaseModal id="issue_asset" overlay={true}>
@@ -292,6 +295,7 @@ class AccountAssets extends React.Component {
                             />
                         </div>
                     </BaseModal>
+                </div>
             </div>
         );
     }

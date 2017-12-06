@@ -9,12 +9,19 @@
   }
 }
 
-// @include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
-// @mixin RobotoLight {
-//   font-family: 'Roboto-Light', arial, sans-serif;
-//   font-weight: lighter;
-//   font-style: normal;
-// }
+@include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
+@mixin RobotoLight {
+  font-family: 'Roboto-Light', arial, sans-serif;
+  font-weight: lighter;
+  font-style: normal;
+}
+
+@include font-face(Roboto-Medium, 'vendors/Roboto-Medium', normal, normal);
+@mixin RobotoMedium {
+  font-family: 'Roboto-Medium', arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
 
 @include font-face(Roboto-Regular, 'vendors/Roboto-Regular', normal, normal);
 @mixin RobotoRegular {
@@ -49,7 +56,7 @@
 /* ***** styles ****** */
 
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto-Light', arial, sans-serif;
+  font-family: 'Roboto-Regular', arial, sans-serif;
 }
 
 .monospace {
@@ -57,7 +64,7 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 label, label > span {
-  @include RobotoCondensed;
+  @include RobotoMedium;
   text-transform: uppercase;
 }
 
@@ -72,7 +79,7 @@ label, label > span {
 }
 
 button, .button {
-  @include RobotoCondensed;
+  @include RobotoRegular;
   text-transform: uppercase;
 }
 
@@ -90,7 +97,7 @@ button, .button {
 // }
 
 .txtlabel {
-  @include RobotoCondensed;
+  @include RobotoRegular;
   text-transform: uppercase;
 }
 
@@ -102,24 +109,34 @@ button, .button {
   @include RobotoRegular;
 }
 
-.footer .logo {
+.button {
   @include RobotoCondensed;
+}
+
+.footer .logo {
+  @include RobotoRegular;
 }
 
 .tabs > .tab-item {
-  @include RobotoCondensed;
+  @include RobotoRegular;
 }
 
 .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-  @include RobotoCondensed;
+  @include RobotoRegular;
 }
 
 .table > thead > tr > th {
-  @include RobotoCondensed;
+  @include RobotoRegular;
 }
 
-.table.dashboard-table > thead > tr > th {
-  @include RobotoRegular;
+.table.dashboard-table {
+    > thead > tr > th {
+        @include RobotoRegular;
+    }
+
+    > tbody > tr > td {
+        @include RobotoRegular;
+    }
 }
 
 // .key-value-table tr > td:first-child {
@@ -132,55 +149,55 @@ button, .button {
 
 .win32 {
   h1, h2, h3, h4, h5, h6 {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
   label, label > span {
-    @include RobotoCondensed;
+    @include RobotoRegular;
   }
 
   button, .button {
-    @include RobotoCondensed;
+    @include RobotoLight;
   }
 
   .content-block > h3 {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
   .page-header > h3 {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
   a.currency, span.currency {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
   .txtlabel {
-    @include RobotoCondensed;
+    @include RobotoRegular;
   }
 
   span.time {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
   .account-drop-down a.button {
-    @include SegoeUIRegular;
+    @include RobotoCondensed;
   }
 
   .footer .logo {
-    @include RobotoCondensed;
+    @include RobotoRegular;
   }
 
   .tabs > .tab-item {
-    @include RobotoCondensed;
+    @include RobotoRegular;
   }
 
   .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-    @include RobotoCondensed;
+    @include RobotoRegular;
   }
 
    .key-value-table tr > td:first-child {
-    @include SegoeUILight;
+    @include RobotoRegular;
   }
 
 }

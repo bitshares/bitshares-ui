@@ -122,9 +122,8 @@ class EquivalentPrice extends MarketStatsCheck {
         );
     }
 
-
-    render() {
-        const {coreAsset, fromAsset, toAsset, marketStats, forceDirection, ...others} = this.props;
+    getFinalPrice(real = false) {
+        const {coreAsset, fromAsset, toAsset, marketStats} = this.props;
         const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
         const fromMarket = fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
         let toPrice, fromPrice;
@@ -135,9 +134,8 @@ class EquivalentPrice extends MarketStatsCheck {
             toPrice = marketStats.get(toMarket).price.clone();
         }
 
-        if (toAsset.get("id") === fromAsset.get("id")) {
-            return <span>1.00</span>;
-        }
+        if (toAsset.get("id") === fromAsset.get("id")) return 1;
+
         let finalPrice;
         if (toPrice && fromPrice) {
             finalPrice = toPrice.times(fromPrice);
@@ -146,25 +144,38 @@ class EquivalentPrice extends MarketStatsCheck {
         } else  if (fromPrice) {
             finalPrice = fromPrice;
         }
-        if (!finalPrice) return <span>--</span>;
+        if (!finalPrice) return null;
         const finalId = finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
         if (
-            finalId.indexOf(toAsset.get("id")) !== -1 &&
-            finalId.indexOf(fromAsset.get("id")) !== -1
-        ) {
-            return (
-                <FormattedPrice
-                    force_direction={forceDirection ? toAsset.get("symbol") : false}
-                    base_amount={finalPrice.base.amount}
-                    base_asset={finalPrice.base.asset_id}
-                    quote_amount={finalPrice.quote.amount}
-                    quote_asset={finalPrice.quote.asset_id}
-                    {...others}
-                />
-            );
-        } else {
-            return <span>--</span>;
+            finalId.indexOf(toAsset.get("id")) === -1 ||
+            finalId.indexOf(fromAsset.get("id")) === -1) {
+            return null;
         }
+        if (real) return finalPrice.toReal();
+        return finalPrice;
+    }
+
+    render() {
+        const { toAsset, forceDirection, ...others} = this.props;
+
+        const finalPrice = this.getFinalPrice();
+
+        if (finalPrice === 1) {
+            return <span>1.00</span>;
+        }
+
+        if (!finalPrice) return <span>--</span>;
+
+        return (
+            <FormattedPrice
+                force_direction={forceDirection ? toAsset.get("symbol") : false}
+                base_amount={finalPrice.base.amount}
+                base_asset={finalPrice.base.asset_id}
+                quote_amount={finalPrice.quote.amount}
+                quote_asset={finalPrice.quote.asset_id}
+                {...others}
+            />
+        );
     }
 }
 
@@ -187,6 +198,7 @@ export default class EquivalentPriceWrapper extends React.Component {
           >
             <EquivalentPrice
                 {...this.props}
+                ref={this.props.refCallback}
             />
           </AltContainer>
         );
