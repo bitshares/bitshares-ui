@@ -267,7 +267,7 @@ class DashboardList extends React.Component {
 					{!this.props.compact ? (
 					<thead>
 						<tr>
-							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+							<th><Icon className="grey-star" name="fi-star"/></th>
 							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
 							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
