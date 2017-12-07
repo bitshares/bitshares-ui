@@ -462,7 +462,8 @@
       "balance": "The final balance must be larger than 0",
       "insufficient": "Insufficient funds",
       "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+      "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s"
     },
     "back": "BACK",
     "confirm": "CONFIRM",
@@ -1400,7 +1401,40 @@
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
     "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
     "contact_TRADE": "Contact Blocktrades",
-    "over_limit": "Limit Reached"
+    "over_limit": "Limit Reached",
+    "agreement":{
+      "hint":"I have read and agreed to",
+      "name":"《Service Agreement》",
+      "register":"Agree",
+      "notice": "Please check the agreement to continue"
+    },
+    "deposit_to": "Please send your %(asset)s to the address below",
+    "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+    "time": "Time",
+    "info": "Info",
+    "status": "Status",
+    "asset_unavailable": "The gateway for %(asset)s is not in service",
+    "user_unavailable": "User informaction is current unavailable, please try again later",
+    "frozen": "The user account %(account)s was frozen",
+    "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+    "support_gdex": "For support, please contact GDEX",
+    "withdraw_history_status":{
+      "confirming": "confirming",
+      "auditing": "withdraw auditing",
+      "audited": "auditting completed",
+      "refused": "auditting failed",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
+    },
+    "deposit_history_status":{
+      "confirming": "deposit confirming",
+      "waiting": "waiting for deposit",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
+    }
+
   },
     "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
