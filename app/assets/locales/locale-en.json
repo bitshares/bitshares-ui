@@ -406,7 +406,8 @@
       "not_found": "The account %(name)s does not exist, are you sure you spelled it correctly?",
       "invalid": "Invalid account name",
       "unknown": "Unknown account",
-      "not_yours": "Not your account"
+      "not_yours": "Not your account",
+      "memo_missing": "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page."
     },
     "collaterals": "Margin Positions",
     "eq_value": "Estimated",
