@@ -40,7 +40,7 @@ export const settingsAPIs = {
 };
 
 export const  gdexAPIs = {
-    BASE: "http://api.gdex.vip",
+    BASE: "https://api.gdex.io",
     ASSET_LIST: "/gateway/asset/assetList",
     ASSET_DETAIL: "/gateway/asset/assetDetail",
     GET_DEPOSIT_ADDRESS: "/gateway/address/getAddress",

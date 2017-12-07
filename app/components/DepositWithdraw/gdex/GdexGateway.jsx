@@ -212,7 +212,7 @@ class GdexGateway extends React.Component {
 
         let {account} = this.props;
         let {coins, activeCoin, action , isAvailable, user_info, isAgree, agreeChecked,agreeNotice} = this.state;
-        let issuer = {name: "holder", id: "1.2.29", mail: "support@gdex.io", qq:"602573197", telgram:"https://t.me/GDEXer"};
+        let issuer = {name: "gdex-wallet", id: "1.2.466056", mail: "support@gdex.io", qq:"602573197", telgram:"https://t.me/GDEXer"};
         let supportContent=<div>
             {/*<label className="left-label">Support</label>*/}
             <br/><br/>
