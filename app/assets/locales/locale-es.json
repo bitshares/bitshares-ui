@@ -747,11 +747,13 @@
     "assets": {
       "title": "Activos",
       "market": "SmartCoins",
-      "user": "Activos Emitidos por Usuarios (UIA)",
+      "user": "Activos Emitidos por Usuarios",
+      "prediction": "Activos del mercado de predicción",
       "symbol": "Simbolo",
       "id": "ID",
       "issuer": "Emisor",
       "precision": "Precisión"
+      "units": "Unidades"
     },
     "asset": {
       "title": "Activo",
@@ -769,31 +771,44 @@
         "title": "Price Feed",
         "settlement_price": "Precio de liquidación",
         "maintenance_collateral_ratio": "Relación colateral de mantenimiento (MCR)",
-        "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)"
+        "maximum_short_squeeze_ratio": "Maximo short de relaciòn squeeze (MSSR)"
       },
       "fee_pool": {
         "title": "Fondo de Comisiones",
         "core_exchange_rate": "Core exchange rate (CER)",
         "pool_balance": "Balance del Fondo",
-        "unclaimed_issuer_income": "Unclaimed issuer income"
+        "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
+        "claim_fees": "Reclamar tarifas",
+        "fund_text": "El conjunto de comisiones se usa para pagar tarifas en %(core)s convirtiendo la comisiòn en %(asset)s a %(core)s. Si la comisiòn de la piscina se queda sin fondos, las comisiones ya no se pueden pagar en %(asset)s y seran el predeterminada a %(core)s",
+        "claim_text": "El emisor del activo puede reclamar cualquier comisiòn acumulada aquí."
       },
       "permissions": {
         "title": "Permisos",
         "max_market_fee": "Comisión de mercado máxima",
         "max_supply": "Emisión máxima",
-        "blacklist_authorities": "Blacklist authorities",
-        "blacklist_markets": "Blacklist markets",
-        "whitelist_authorities": "Whitelist authorities",
-        "whitelist_markets": "Whitelist markets"
+        "blacklist_authorities": "Autoridades de la lista negra",
+        "blacklist_markets": "Mercados de la lista negra",
+        "whitelist_authorities": "Autoridades de lista blanca",
+        "whitelist_markets": "Mercados de la lista blanca"
       },
       "price_feed_data": {
-        "title": "Price Feed Data",
+        "title": "Precio Feed Datos",
         "settlement_price": "Precio de liquidación",
         "core_exchange_rate": "CER",
         "maintenance_collateral_ratio": "MCR",
         "maximum_short_squeeze_ratio": "MSSR",
-        "publisher": "Publisher",
+        "publisher": "Editor",
         "published": "Publicado"
+      },
+      "margin_positions": {
+        "title": "posiciòn a margen"
+      },
+      "whitelist": {
+            "whitelist_authorities": "Autoridades de lista blanca",
+            "blacklist_authorities": "autoridades de lista negra",
+            "whitelist_markets": "Lista blanca de mercado",
+            "blacklist_markets": "Lista negra de mercado",
+            "enable_flag": "El indicador de lista blanca debe estar habilitado para establecer autoridades de lista blanca"
       }
     },
     "witnesses": {
@@ -818,28 +833,37 @@
     },
     "workers": {
       "title": "Presupuestos por Trabajos",
-      "period": "Worker duration",
-      "daily_pay": "Daily pay (BTS)",
+      "period": "Duración del trabajador",
+      "daily_pay": "Pago diario (BTS)",
       "website": "Website",
-      "vesting_pay": "Salary vesting period (days)",
-      "create": "Create a new worker proposal",
-      "create_text_1": "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
-      "create_text_2": "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
-      "name_text": "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
-      "date_text": "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
-      "pay_text": "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
-      "url_text": "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
-      "vesting_text": "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
+      "vesting_pay": "Período de adjudicación salarial (days)",
+      "create": "Crear una nueva propuesta de trabajador",
+      "create_text_1": "Para crear su nuevo trabajador, complete el siguiente formulario. El trabajador se creará utilizando su cuenta actualmente activa, que ya debe ser un miembro vitalicio.",
+      "create_text_2": "Considere cuidadosamente los parámetros que elige, ya que no se pueden cambiar una vez que haya publicado su trabajador.",
+      "name_text": "El nombre de su trabajador debe ser breve y descriptivo, algo como esto: 'Objetivo del trabajador - Nombre de la cuenta'",
+      "date_text": "La fecha de inicio debe ser de al menos una semana en el futuro para que las personas tengan tiempo de descubrir, evaluar y votar a su trabajador.",
+      "pay_text": "El pago diario define cuánto quiere que le paguen por día y se define en BTS. La mejor práctica actual es definir un salario en USD / CNY, y comprometerse a quemar cualquier superávit que reciba como resultado del aumento del precio de BTS. Mientras su trabajador esté activo y tenga suficientes votos para estar por encima del trabajador de reembolso, recibirá este salario diario.",
+      "url_text": "Debe proporcionar un sitio web, un documento de github o un documento de Google Docs que describan con más detalle el propósito del trabajador y cómo piensa utilizar el salario del trabajador..",
+      "vesting_text": "El período de adjudicación define la cantidad de días que las ganancias de los trabajadores se acumularán antes de ser totalmente exigible."
     },
     "proposals": {
       "title": "Propuestas"
     },
     "account": {
       "title": "Cuenta"
+    },
+    "fees": {
+      "type": "Tipo de comisiòn",
+      "fee": "Tarifa estándar",
+      "feeeq": "(equivalent)",
+      "feeltm": "Precio para socios de por vida",
+      "feeltmeq": "(equivalent)"
     }
   },
   "settings": {
-    "passwordLogin": "Login using the account model",
+    "passwordLogin": "Modo de acceso",
+    "cloud_login": "Inicio de sesión en el Cloud Wallet",
+    "local_wallet": "Acceso local a la billetera",
     "inverseMarket": "Invertir orientación del Mercado",
     "unit": "Unidad preferida para esta cuenta",
     "confirmMarketOrder": "Pedir confirmación en órdenes de mercado",
@@ -852,12 +876,69 @@
     "add_ws": "Agregar nueva API websocket",
     "remove_ws": "Remover API websocket",
     "faucet_address": "Faucet Address",
+    "faucet_address_text": "La dirección del faucet se usa para pagar la tarifa de registro para nuevos usuarios.",
+      "showSettles": "Show settle orders in depth chart",
+    "showAssetPercent": "Show asset percentages on the account page",
+    "yes": "Yes",
+    "no": "No",
+    "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
+    "themes": "Theme",
+    "darkTheme": "Dark theme",
+    "lightTheme": "Light theme",
+    "olDarkTheme": "Openledger dark",
+    "reset": "Reset settings",
+    "general": "General",
+    "wallet": "Local Wallet",
+    "accounts": "Accounts",
+    "no_accounts": "This local wallet does not contain any accounts.",
+    "password": "Password",
+    "backup": "Backup",
+    "restore": "Restore/Import",
+    "access": "Access",
+    "general_text": "Adjust the basic settings.",
+    "wallet_text": "Control the details of your local wallet.",
+    "accounts_text": "Your accounts list.",
+    "password_text": "Change your password.",
+    "backup_text": "Create backups here.",
+    "restore_text": "Restore from a backup or import keys.",
+    "access_text": "",
+    "view_keys": "View keys",
+    "backup_backup": "Restore from a backup file (.bin)",
+    "backup_key": "Import a private key",
+    "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
+    "backup_brainkey": "Restore using a local wallet brainkey",
+    "backup_favorites": "Restore favorites using a json file",
+    "backup_favorites_error": "Could not parse JSON.",
+    "backup_favorites_finish": "Import favorites",
+    "backup_favorites_success": "Successfully restored market favorites",
+    "backupcreate_backup": "Create local wallet backup",
+    "backupcreate_brainkey": "Create brainkey backup",
+    "backupcreate_favorites": "Create favorites backup",
+    "backup_favoritesbtn": "Backup favorites",
+    "backup_favoritestext": "Back up your favorites to restore them later after updates.",
+    "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
+    "delete_select": "Select local wallet to delete",
+    "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new local wallet. Please provide a password and name for your new local wallet below, then enter your brainkey.",
+    "restore_key_count": "# of keys",
     "restore_default_success": "Settings have been reset successfully",
     "api_closest": "Choose closest automatically",
-    "wallet_required": "Wallet model required",
-    "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-    "enable_wallet": "Enable wallet model",
-    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes"
+    "wallet_required": "Local wallet required",
+    "wallet_required_text": "In order to restore a backup you will need to switch to a local wallet first, do so by clicking the button below",
+    "enable_wallet": "Enable local wallet",
+    "active_node": "Active Node",
+    "node_up": "UP",
+    "node_down": "DOWN",
+    "available_nodes": "Available Nodes",
+    "add_api": "Add Node",
+    "remove_api": "Remove Node",
+    "remove": "Remove",
+    "activate": "Activate",
+    "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
+    "valid_node_url": "Node URL must begin with ws:// or wss://",
+    "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes",
+    "low_latency": "Low latency",
+    "medium_latency": "Medium latency",
+    "high_latency": "High latency"    
   },
   "footer": {
     "title": "BitShares",
