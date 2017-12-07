@@ -63,6 +63,7 @@ class WithdrawModalCryptoBridge extends React.Component {
     }
 
     _updateFee(fee_asset_id = this.props.asset.get('id')) {
+        console.log(this.props.asset.get('id'));
         checkFeeStatusAsync(
             {accountID: this.props.account.get("id"),
             feeID: fee_asset_id,
@@ -72,6 +73,7 @@ class WithdrawModalCryptoBridge extends React.Component {
                 content: this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + this.state.memo : "")
             }})
         .then(({fee, hasBalance, hasPoolBalance}) => {
+
             this.setState({
                 feeAmount: fee,
                 hasBalance,
@@ -205,6 +207,7 @@ class WithdrawModalCryptoBridge extends React.Component {
 
                 const {feeAmount} = this.state;
 
+
                 if (feeAmount && feeAmount.asset_id !== "1.3.0") {
                     amount = amount - feeAmount.getAmount({real: true});
                 }
@@ -215,9 +218,7 @@ class WithdrawModalCryptoBridge extends React.Component {
 
 		        ZfApi.publish(this.getWithdrawModalId(), "close");
 
-
-
-
+                console.log('SENDING: ' , feeAmount.asset_id);
 
                 AccountActions.transfer(
                     this.props.account.get("id"),
@@ -408,24 +409,27 @@ class WithdrawModalCryptoBridge extends React.Component {
         let amountWithFees;
         let networkFee = 0;
 
+
+
         if (this.state.withdraw_amount ) {
             amountWithFees = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
             if (this.props.transactionFee >= 0) {
                 amountWithFees = parseFloat(amountWithFees,10 ) - parseFloat(this.props.transactionFee, 10);
 
 
-                if (!account_balances['1.3.0']) {
+                //if (!account_balances['1.3.0']) {
 
                     networkFee = this.state.feeAmount.getAmount({real: true});
                     //console.log('NETWORK FEE' + networkFee);
                     amountWithFees -= networkFee;
 
-                }
+                //}
 
 
 
             }
         }
+        console.log(networkFee);
 
 
         return (<form className="grid-block vertical full-width-content">
