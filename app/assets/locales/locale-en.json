@@ -431,10 +431,10 @@
     "asset_details": "Asset details",
     "portfolio": "Portfolio",
     "activity": "Activity",
-    "eq_value_header": "Value ({asset})",
+    "eq_value_header": "Value",
     "qty": "Qty",
     "quote": "Quote",
-    "total": "Total ({asset})"
+    "total": "Total"
   },
   "pagination": {
     "newer": "Newer",

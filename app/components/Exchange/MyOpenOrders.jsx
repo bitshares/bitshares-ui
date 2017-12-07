@@ -40,7 +40,7 @@ class TableHeader extends React.Component {
                     <th style={rightAlign}><Translate content="exchange.price" /></th>
                     <th style={rightAlign}><Translate content="account.qty" /></th>
                     <th style={rightAlign}><Translate content="exchange.total" /></th>
-                    <th><Translate content="exchange.order_value" /> (<AssetName name={preferredUnit} />)</th>
+                    <th><Translate content="exchange.order_value" /></th>
                     <th><Translate content="account.trade" /></th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     {isMyAccount ? <th id="cancelAllOrders" style={{cursor: "pointer"}}><Translate content="wallet.cancel" /></th> : null}

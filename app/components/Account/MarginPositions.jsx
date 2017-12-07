@@ -436,13 +436,7 @@ const CollateralTable = ({callOrders, account, className, children, preferredUni
                     </div>
                 </th>
                 <th>
-                    <TranslateWithLinks
-                        noLink
-                        string="account.total"
-                        keys={[
-                            {type: "asset", value: preferredUnit, arg: "asset"}
-                        ]}
-                    />
+                    <Translate content="account.total" />
                 </th>
                 <th style={alignRight} className="column-hide-small">
                     <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>

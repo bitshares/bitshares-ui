@@ -391,9 +391,9 @@
     "asset_details": "Dettagli asset",
     "portfolio": "Il mio Portfolio",
     "activity": "Attività",
-    "eq_value_header": "Valore ({asset})",
+    "eq_value_header": "Valore",
     "qty": "Qtà",
-    "total": "Totale ({asset})"
+    "total": "Totale"
   },
   "pagination": {
     "newer": "Più recenti",
