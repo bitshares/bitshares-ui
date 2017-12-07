@@ -212,6 +212,9 @@ const routes = (
         <Route path="/init-error" getComponent={(location, cb) => {
             System.import("components/InitError").then(loadRoute(cb)).catch(errorLoading);
         }}/>
+        <Route path="/news" getComponent={(location, cb) => {
+            System.import("components/News").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
         <Route path="/help" getComponent={(location, cb) => {
             System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
         }}>
