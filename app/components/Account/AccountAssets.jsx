@@ -252,7 +252,7 @@ class AccountAssets extends React.Component {
 
                             <Tab title="account.user_issued_assets.issued_assets">
                                 <div className="content-block">
-                                    <table className="table dashboard-table">
+                                    <table className="table dashboard-table table-hover">
                                         <thead>
                                         <tr>
                                             <th><Translate content="account.user_issued_assets.symbol" /></th>

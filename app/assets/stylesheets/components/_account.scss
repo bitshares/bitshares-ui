@@ -237,13 +237,13 @@ table.table.dashboard-table {
         font-weight: 600;
         font-size: 80%;
         text-align: center;
-        border: 1px solid;
+        border: none;
     }
     > tbody > tr {
         > td {
             font-size: 0.8rem;
             text-align: center;
-            border: 1px solid;
+            border: none;
 
             &.worker-name {
                 max-width: 15rem;

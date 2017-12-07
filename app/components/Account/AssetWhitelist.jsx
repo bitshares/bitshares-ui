@@ -37,7 +37,7 @@ class AssetWhitelist extends React.Component {
 
         return (
             <div>
-                <table className="table dashboard-table">
+                <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
                             <th><Translate content="explorer.account.title" /></th>
@@ -91,7 +91,7 @@ class AssetWhitelist extends React.Component {
 
         return (
             <div>
-                <table className="table dashboard-table">
+                <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
                             <th><Translate content="explorer.asset.title" /></th>
