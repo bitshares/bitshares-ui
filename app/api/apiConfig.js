@@ -30,6 +30,7 @@ export const settingsAPIs = {
         {url: "wss://bitshares-api.wancloud.io/ws", location:  "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
+        {url: "wss://us-ny.bitshares.apasia.tech/ws", location: "New York, USA"},
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"},
         {url: "wss://ws.gdex.top", location: "China"},
