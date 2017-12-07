@@ -100,7 +100,7 @@ class Header extends React.Component {
 
     _triggerMenu(e) {
         e.preventDefault();
-        ZfApi.publish("mobile-menu", "toggle");
+        ZfApi.publish("sidemenu", "toggle");
     }
 
     _toggleLock(e) {
@@ -224,16 +224,6 @@ class Header extends React.Component {
                                 />
                             </div>) : null;
 
-        let dashboard = (
-            <a
-                style={{padding: "12px 1.75rem"}}
-                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
-            >
-                <img style={{margin: 0, height: 40}} src={logo} />
-            </a>
-        );
-
         let createAccountLink = myAccountCount === 0 ? (
             <ActionSheet.Button title="" setActiveState={() => {}}>
                 <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")} style={{padding: "1rem", border: "none"}} >
@@ -249,12 +239,6 @@ class Header extends React.Component {
         //         : <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
         //     </div>
         // ) : null;
-
-        let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
-        let tradeLink = <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
-                <Translate component="span" content="header.exchange" />
-            </a>;
 
         // Account selector: Only active inside the exchange
         let account_display_name, accountsList;
@@ -283,11 +267,11 @@ class Header extends React.Component {
 
         return (
             <div className="header menu-group primary">
-                {/*<div className="show-for-small-only">
+                {<div>
                     <ul className="primary menu-bar title">
-                        <li><a href onClick={this._triggerMenu}><Icon className="icon-32px" name="menu"/></a></li>
+                        <li><a href onClick={this._triggerMenu} className="sidemenu-link"><Icon className="icon-32px" name="menu"/></a></li>
                     </ul>
-                </div>*/}
+                </div>}
                 {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
                     <ul className="menu-bar">
                         <li>
@@ -303,38 +287,6 @@ class Header extends React.Component {
                     </ul>
                 </div> : null}
                 <div className="grid-block">
-                    <ul className="menu-bar">
-                        <li>{dashboard}</li>
-                        {!currentAccount || !!createAccountLink ? null :
-                        <li>
-                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
-                                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
-                                <Translate content="header.dashboard" />
-                            </Link>
-                        </li>}
-                        <li className="column-hide-small">{tradeLink}</li>
-                        {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
-                        <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
-                                <Translate component="span" content="header.explorer" />
-                            </a>
-                        </li>
-                        {!!createAccountLink ? null : <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
-                                <span><Translate content="header.payments_beta" /></span>
-                            </a>
-                        </li>}
-
-                        {!!createAccountLink ? <li>
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
-                                <span><Translate content="header.settings" /></span>
-                            </a>
-                        </li> : null}
-                        {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
-                    </ul>
                 </div>
                 <div className="grid-block shrink">
                     <div className="grp-menu-items-group header-right-menu">
@@ -365,16 +317,6 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
                                             <div className="table-cell"><Translate content={`account.${isContact ? "unfollow" : "follow"}`} /></div>
                                         </li> : null}
-
-                                        <li className={cnames({active: active.indexOf("/market/") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                                            <div className="table-cell"><Icon size="2x" name="trade" /></div>
-                                            <div className="table-cell"><Translate content="header.exchange" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                            <div className="table-cell"><Icon size="2x" name="server" /></div>
-                                            <div className="table-cell"><Translate content="header.explorer" /></div>
-                                        </li>
 
                                         <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
                                             <div className="table-cell"><Icon size="2x" name="transfer" /></div>
@@ -451,8 +393,6 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </div>
-                {/* Send modal */}
-                <SendModal ref="send_modal" from_name={currentAccount} />
             </div>
 
         );

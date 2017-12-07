@@ -12,6 +12,7 @@ import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import Header from "components/Layout/Header";
+import Sidemenu from "components/Layout/Sidemenu";
 // import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
@@ -25,7 +26,12 @@ import Deprecate from "./Deprecate";
 
 class App extends React.Component {
 
-    constructor() {
+    static contextTypes = {
+        location: React.PropTypes.object.isRequired,
+        router: React.PropTypes.object.isRequired
+    };
+
+    constructor(props, context) {
         super();
 
         // Check for mobile device to disable chat
@@ -41,7 +47,9 @@ class App extends React.Component {
             isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
             incognito: false,
             incognitoWarningDismissed: false,
-            height: window && window.innerHeight
+            height: window && window.innerHeight,
+
+            active: context.location.pathname
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
@@ -160,8 +168,13 @@ class App extends React.Component {
     //     this.refs.notificationSystem.addNotification(params);
     // }
 
+    _onNavigate(route, e) {
+        e.preventDefault();
+        this.context.router.push(route);
+    }
+
     render() {
-        let {isMobile, theme } = this.state;
+        let {isMobile, theme,active} = this.state;
 
         let content = null;
 
@@ -187,6 +200,7 @@ class App extends React.Component {
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height}/>
+                    <Sidemenu />
                     <div className="grid-block">
                         <div className="grid-block vertical">
                             {this.props.children}
