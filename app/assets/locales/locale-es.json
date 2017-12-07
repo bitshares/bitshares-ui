@@ -391,7 +391,10 @@
     "unfollow": "Retirar",
     "follow": "Agregar contacto",
     "pay": "Pagar",
+    "deposit": "Depositar BTS",
+    "deposit_address": "Su dirección de depósito es su nombre de cuenta",
     "overview": "Resumen",
+    "home": "Casa",
     "bts_market": "Mercado",
     "history": "Historial",
     "payees": "Beneficiarios",
@@ -404,19 +407,24 @@
       "invalid": "Nombre de cuenta no válido",
       "unknown": "Cuenta desconocida",
       "not_yours": "No es el propietario de la cuenta"
+           "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos."
     },
     "collaterals": "Posiciones Colaterales",
-    "eq_value": "Valor Equivalente",
+    "eq_value": "Estimated",
+    "no_price": "--",
+    "percent": "Porcentaje de oferta total",
     "please_create_account": "Por favor cree una cuenta",
     "create_account": "Crear cuenta",
+    "create_new": "Crear una nueva cuenta",
+    "password_login": "Iniciar la sesión con contraseña",
     "identicon": "Identicon",
-    "pay_from": "Pagar Desde",
+    "pay_from": "Pagar con la cuenta,
     "existing_accounts": "Cuentas Existentes",
     "name_input": {
-      "name_is_taken": "Account name is already taken.",
-      "not_found": "Account not found.",
-      "premium_name_faucet": "This is a premium name. Premium names are more expensive and can't be registered for free by faucet. Try to select another name containing at least one dash, number or no vowels.",
-      "premium_name_warning": "This is a premium name that is more expensive to register. Regular names have at least one dash, number or no vowels."
+      "name_is_taken": "El nombre de la cuenta ya está tomado.",
+      "not_found": "Cuenta no encontrada.",
+      "premium_name_faucet": "Este es un nombre premium. Los nombres premium son más caros y no pueden registrarse de forma gratuita con faucet. Intente seleccionar otro nombre que contenga al menos un guion, número o sin vocales.",
+      "premium_name_warning": "Este es un nombre premium que es más caro registrar. Los nombres comunes tienen al menos un guion, número o sin vocales."
     },
     "settle": "Settle",
     "other_scam": "This account is not known to be an official account, please verify the destination before transferring"
