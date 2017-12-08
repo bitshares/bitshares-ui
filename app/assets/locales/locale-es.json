@@ -294,7 +294,7 @@
       "memo_warning": "ADVERTENCIA: Si reemplaza la tecla memo no podrá leer las notas viejas cuando inicie la sesión con su contraseña, y a menos que importe la nueva clave privada memo en su billetera anterior esa billetera no podrá decodificar nuevos memos",
       "use_text": "Utilizar",
       "remove_text": "Eliminar",
-       "valid_pub": "Llàve publica valida",
+       "valid_pub": "Llàve publica valida"
         },
     "signedmessages": {
       "menuitem": "Mensajes firmados",
@@ -407,7 +407,7 @@
       "invalid": "Nombre de cuenta no válido",
       "unknown": "Cuenta desconocida",
       "not_yours": "No es el propietario de la cuenta",
-           "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos.",
+           "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos."
     },
     "collaterals": "Posiciones Colaterales",
     "eq_value": "Estimated",
