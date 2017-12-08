@@ -95,6 +95,10 @@ class DashboardList extends React.Component {
 		this.context.router.push(`/account/${name}`);
 	}
 
+        _createAccount() {
+            this.context.router.push("/create-account");
+        }
+
 	_onFilter(e) {
 		this.setState({dashboardFilter: e.target.value.toLowerCase()});
 
@@ -258,10 +262,13 @@ class DashboardList extends React.Component {
 			<div style={this.props.style}>
 				{!this.props.compact ? (
 					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
-						<input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-						{this.props.ignoredAccounts.length ? <div onClick={this.props.onToggleIgnored} style={{position: "absolute", top: 0, right: 0}} className="button outline small">
+						<input placeholder={filterText} style={{display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                                                <div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
+							<Translate content="header.create_account" />
+						</div>
+                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
-						</div> : null}
+						</div>:null}
 					</section>) : null}
 				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (
