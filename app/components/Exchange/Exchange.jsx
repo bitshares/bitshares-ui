@@ -326,9 +326,11 @@ class Exchange extends React.Component {
                 return null;
             }
         } else {
-            let sellSum = (sell.asset_id == fee.asset_id) ? (fee.getAmount() + sell.getAmount()) : sell.getAmount();
+            let sellSum = (sell.asset_id === fee.asset_id) ? (fee.getAmount() + sell.getAmount()) : sell.getAmount();
             if (sellSum <= sellBalance) { // Sufficient balance in asset to pay fee
                 return fee.asset_id;
+            } else if (coreFee.getAmount() <= coreBalance && fee.asset_id !== "1.3.0") { // Sufficient balance in core asset to pay fee
+                return "1.3.0";
             } else {
                 return null; // Unable to pay fee
             }
