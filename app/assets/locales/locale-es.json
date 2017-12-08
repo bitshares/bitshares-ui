@@ -1162,7 +1162,7 @@
     "import_password": "Ingrese la contraseña del archivo de importación",
     "import_pass_match": "La contraseña coincide. Descifrando la copia de seguridad ahora...",
     "submit": "Enviar",
-    "import_balance": "Importar balance(s)",
+    "import_balance": "Importar balance(s)",  
     "import_bts": "Importar a BTS 0.9.3c exportar llave",
     "import_private_key": "Importar llave privada",
     "wallet_browser": "Su navegador web es su billetera",
