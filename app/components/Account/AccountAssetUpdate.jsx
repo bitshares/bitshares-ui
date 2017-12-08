@@ -492,17 +492,13 @@ class AccountAssetUpdate extends React.Component {
         }
 
         let confirmButtons = (
-            <div style={{paddingTop: "0.5rem"}}>
-                <hr/>
+            <div>
                 <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
                     <Translate content="header.update_asset" />
                 </button>
                 <button className="button" onClick={this._reset.bind(this)}>
                     <Translate content="account.perm.reset" />
                 </button>
-                <br/>
-                <br/>
-                <p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>
             </div>
         );
 
@@ -551,10 +547,15 @@ class AccountAssetUpdate extends React.Component {
                         <div className="tabs-header">
                             <h3><Translate content="header.update_asset" />: {symbol}</h3>
                         </div>
-                        <Tabs setting="updateAssetTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" contentClass="grid-block shrink small-vertical medium-horizontal no-padding" segmented={false}>
+                        <Tabs
+                            setting="updateAssetTab"
+                            className="account-tabs"
+                            tabsClass="account-overview bordered-header content-block"
+                            contentClass="grid-block shrink small-vertical medium-horizontal" segmented={false}
+                            actionButtons={confirmButtons}
+                        >
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 large-8 grid-content">
-                                    <h3><Translate content="account.user_issued_assets.primary" /></h3>
                                     <label><Translate content="account.user_issued_assets.precision" />
                                         <span>: {asset.get("precision")}</span>
                                     </label>
@@ -640,7 +641,7 @@ class AccountAssetUpdate extends React.Component {
                                         <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
                                     </div>
 
-                                    {confirmButtons}
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </div>
 
                             </Tab>
@@ -658,13 +659,12 @@ class AccountAssetUpdate extends React.Component {
                                     onAccountChanged={this.onAccountChanged.bind(this)}
                                     onChangeList={this.onChangeList.bind(this)}
                                 >
-                                    {confirmButtons}
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </AssetWhitelist>
                             </Tab>
 
                             <Tab title="account.user_issued_assets.description">
                                 <div className="small-12 large-8 grid-content">
-                                    <Translate component="h3" content="account.user_issued_assets.description" />
                                     <label>
                                         <textarea
                                             style={{height: "7rem"}}
@@ -719,7 +719,7 @@ class AccountAssetUpdate extends React.Component {
                                     </div>) : null}
 
 
-                                    {confirmButtons}
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </div>
                             </Tab>
 
@@ -734,13 +734,12 @@ class AccountAssetUpdate extends React.Component {
                                         assetPrecision={asset.get("precision")}
                                         assetSymbol={asset.get("symbol")}
                                     />
-                                {confirmButtons}
+                                {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </div>
                             </Tab>) : null}
 
                             <Tab title="account.user_issued_assets.update_owner">
                                 <div className="small-12 large-8 grid-content">
-                                    <Translate component="h3" content="account.user_issued_assets.update_owner" />
                                     <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
                                             label="account.user_issued_assets.current_issuer"
@@ -759,7 +758,7 @@ class AccountAssetUpdate extends React.Component {
                                         error={null}
                                         tabIndex={1}
                                      />
-                                    {confirmButtons}
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </div>
                             </Tab>
 
@@ -771,7 +770,7 @@ class AccountAssetUpdate extends React.Component {
                                     />
                                     <p className="grid-content has-error"><Translate content="account.user_issued_assets.perm_warning" /></p>
                                     {permissions}
-                                {confirmButtons}
+                                {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
 
                                 </div>
                             </Tab>
@@ -820,7 +819,7 @@ class AccountAssetUpdate extends React.Component {
 
                                     <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                     {flags}
-                                    {confirmButtons}
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
                                 </div>
                             </Tab>
 
@@ -828,10 +827,9 @@ class AccountAssetUpdate extends React.Component {
                                 <div className="small-12 large-8 grid-content">
 
                                     {/* Fund fee pool */}
-                                    <Translate component="h3" content="transaction.trxTypes.asset_fund_fee_pool" />
                                     <Translate component="p" content="explorer.asset.fee_pool.fund_text" asset={asset.get("symbol")} core={core.get("symbol")} />
 
-                                    <div style={{paddingBottom: "1rem"}}>
+                                    <div style={{paddingBottom: "1.5rem"}}>
                                         <Translate content="explorer.asset.fee_pool.pool_balance" /><span>: </span>
                                         <FormattedAsset amount={asset.getIn(["dynamic", "fee_pool"])} asset={"1.3.0"} />
                                     </div>
@@ -855,11 +853,10 @@ class AccountAssetUpdate extends React.Component {
                                         assets={["1.3.0"]}
                                         placeholder="0.0"
                                         tabIndex={2}
-                                        style={{width: "100%", paddingLeft: "10px"}}
+                                        style={{width: "100%", paddingTop: 16}}
                                     />
 
-                                    <div style={{paddingTop: "0.5rem"}}>
-                                        <hr/>
+                                    <div style={{paddingTop: "1rem"}}>
                                         <button className={classnames("button", {disabled: fundPoolAmount <= 0})} onClick={this._onFundPool.bind(this)}>
                                             <Translate content="transaction.trxTypes.asset_fund_fee_pool" />
                                         </button>
@@ -869,6 +866,7 @@ class AccountAssetUpdate extends React.Component {
                                         <br/>
                                         <br/>
                                         <p><Translate content="account.user_issued_assets.approx_fee" />: <FormattedFee opType="asset_fund_fee_pool" /></p>
+                                        <hr />
                                     </div>
 
                                     {/* Claim fees, disabled until witness node update gets pushed to openledger*/}
@@ -889,10 +887,10 @@ class AccountAssetUpdate extends React.Component {
                                         assets={[asset.get("id")]}
                                         placeholder="0.0"
                                         tabIndex={1}
-                                        style={{width: "100%", paddingLeft: "10px"}}
+                                        style={{width: "100%", paddingTop: 16}}
                                     />
 
-                                    <div class="action-buttons">
+                                    <div style={{paddingTop: "1rem"}}>
                                         <button className={classnames("button", {disabled: !validClaim})} onClick={this._onClaimFees.bind(this)}>
                                             <Translate content="explorer.asset.fee_pool.claim_fees" />
                                         </button>
