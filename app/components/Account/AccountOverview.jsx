@@ -540,13 +540,7 @@ class AccountOverview extends React.Component {
             />;
 
         const preferredUnit = settings.get("unit") || this.props.core_asset.get("symbol");
-        const totalValueText = <TranslateWithLinks
-            noLink
-            string="account.total"
-            keys={[
-                {type: "asset", value: preferredUnit, arg: "asset"}
-            ]}
-        />;
+        const totalValueText = <Translate content="account.total" />;
 
         includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
@@ -590,16 +584,10 @@ class AccountOverview extends React.Component {
                                         <tr>
                                             <th style={{textAlign: "left"}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
-                                            <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
+                                            <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "changeValue")}  className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
-                                                <TranslateWithLinks
-                                                    noLink
-                                                    string="account.eq_value_header"
-                                                    keys={[
-                                                        {type: "asset", value: preferredUnit, arg: "asset"}
-                                                    ]}
-                                                />
+                                                <Translate content="account.eq_value_header" />
                                             </th>
                                             {showAssetPercent ? <th style={{textAlign: "right"}}><Translate component="span" content="account.percent" /></th> : null}
                                             <th><Translate content="header.payments" /></th>
