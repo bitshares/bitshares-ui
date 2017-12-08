@@ -16,7 +16,7 @@
     "de": "Deutsch",
     "es": "Español",
     "it": "Italiano",
-    "tr": "Türkçe"
+    "tr": "Türkçe",
     "ru": "Русский"
   },
   "incognito": {
@@ -80,7 +80,7 @@
     "copy_tip": "Haga clic aquí para copiar el texto a su portapapeles",
     "withdraw_full": "Haga clic para retirar el saldo completo",
     "withdraw_address": "Si aún no tienes una %(asset)s dirección, busca un proveedor de billetera y crea uno para completar el retiro del saldo.",
-    "memo_tip": "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios."
+    "memo_tip": "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios.",
     "generate": "La contraseña generada fue creada por su navegador, localmente. <br /><br /><strong>Nadie más que tú tiene acceso a ella</strong>.<br /><br /> Pégalo a continuación y guarda una copia en un lugar seguro ",
     "copy_password": "Haga clic aquí para copiar la contraseña en su portapapeles",
     "sync_yes": "El nodo actual está sincronizado con la cadena de bloques",
@@ -182,7 +182,7 @@
       "upgrade_lifetime": "Comprar Suscripción Vitalicia",
       "subscribe": "Comprar Suscripción Anual",
       "expires": "expira",
-      "membership_expiration": "Vencimiento de la Membresía"
+      "membership_expiration": "Vencimiento de la Membresía",
       "fees_cashback": "Estadísticas de comisìon",
       "coindays": "días de monedas",
       "earned": "Días de monedas ganadas",
@@ -293,8 +293,8 @@
       "new_memo": "Nueva clave memo",
       "memo_warning": "ADVERTENCIA: Si reemplaza la tecla memo no podrá leer las notas viejas cuando inicie la sesión con su contraseña, y a menos que importe la nueva clave privada memo en su billetera anterior esa billetera no podrá decodificar nuevos memos",
       "use_text": "Utilizar",
-      "remove_text": "Eliminar"
-       "valid_pub": "Llàve publica valida"
+      "remove_text": "Eliminar",
+       "valid_pub": "Llàve publica valida",
         },
     "signedmessages": {
       "menuitem": "Mensajes firmados",
@@ -406,8 +406,8 @@
       "not_found": "La cuenta %(name)s no existe, está seguro de haberla escrito correctamente?",
       "invalid": "Nombre de cuenta no válido",
       "unknown": "Cuenta desconocida",
-      "not_yours": "No es el propietario de la cuenta"
-           "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos."
+      "not_yours": "No es el propietario de la cuenta",
+           "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos.",
     },
     "collaterals": "Posiciones Colaterales",
     "eq_value": "Estimated",
@@ -418,7 +418,7 @@
     "create_new": "Crear una nueva cuenta",
     "password_login": "Iniciar la sesión con contraseña",
     "identicon": "Identicon",
-    "pay_from": "Pagar con la cuenta,
+    "pay_from": "Pagar con la cuenta",
     "existing_accounts": "Cuentas Existentes",
     "name_input": {
       "name_is_taken": "El nombre de la cuenta ya está tomado.",
@@ -471,7 +471,7 @@
     "broadcast": "Su transferencia ha sido transmitida a la red",
     "again": "HACER OTRA TRANSFERENCIA",
     "see": "VER MIS TRANSFERENCIAS",
-    "close": "Cerrar"
+    "close": "Cerrar",
     "cancel": "Cancelar",
     "copy_address": "Copiar dirección",
     "copy_memo": "Copiar Memo",
@@ -506,7 +506,7 @@
     "annual_upgrade_account": "{account} fue actualizado a miembro anual",
     "unlisted_by": "{lister} delistada la cuenta {listee}",
     "whitelisted_by": "{lister} puso en la lista blanca de la cuenta {listee}",
-    "blacklisted_by": "{lister} puso en la lista negra la cuenta {listee}"
+    "blacklisted_by": "{lister} puso en la lista negra la cuenta {listee}",
     "transfer_account": "{account} propiedad transferida a {to}",
     "asset_update_feed_producers": "{account} actualizado los productores para el activo {asset}",
     "asset_settle": "{account} solicitó la liquidación de {amount}",
@@ -655,7 +655,7 @@
       "custom": "Personalizado",
       "assert": "Afirmar operación",
       "balance_claim": "Solicitar balance",
-      "override_transfer": "Anular transferencia"
+      "override_transfer": "Anular transferencia",
       "transfer_to_blind": "Transferencia a la cuenta cegada",
       "blind_transfer": "Transferencia cegada",
       "transfer_from_blind": "Transferencia desde cuenta cegada",
@@ -752,7 +752,7 @@
       "symbol": "Simbolo",
       "id": "ID",
       "issuer": "Emisor",
-      "precision": "Precisión"
+      "precision": "Precisión",
       "units": "Unidades"
     },
     "asset": {
@@ -777,7 +777,7 @@
         "title": "Fondo de Comisiones",
         "core_exchange_rate": "Core exchange rate (CER)",
         "pool_balance": "Balance del Fondo",
-        "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
+        "unclaimed_issuer_income": "Ingresos del emisor no reclamados",
         "claim_fees": "Reclamar tarifas",
         "fund_text": "El conjunto de comisiones se usa para pagar tarifas en %(core)s convirtiendo la comisiòn en %(asset)s a %(core)s. Si la comisiòn de la piscina se queda sin fondos, las comisiones ya no se pueden pagar en %(asset)s y seran el predeterminada a %(core)s",
         "claim_text": "El emisor del activo puede reclamar cualquier comisiòn acumulada aquí."
@@ -943,7 +943,7 @@
   "footer": {
     "title": "BitShares",
     "block": "Bloque de cabecera",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
     "backup": "Se requiere una copia de seguridad",
     "nosync": "Su nodo activo no está sincronizado",
     "connection": "Sin conexión Blockchain",
@@ -1049,7 +1049,7 @@
     "show_star_1": "Mostrar",
     "show_star_2": "Solo",
     "quote": "Quote currency:",
-    "search": "Busque más mercados aquí"
+    "search": "Busque más mercados aquí",
     "order_value": "Valor del pedido"
    },
   "fees": {
@@ -1163,7 +1163,6 @@
     "import_pass_match": "La contraseña coincide. Descifrando la copia de seguridad ahora...",
     "submit": "Enviar",
     "import_balance": "Importar balance(s)",
-    "no_accounts": "No se encontraron cuentas",
     "import_bts": "Importar a BTS 0.9.3c exportar llave",
     "import_private_key": "Importar llave privada",
     "wallet_browser": "Su navegador web es su billetera",
@@ -1294,7 +1293,7 @@
     "qrcode":{
       "label":"qrcode",
       "title":"Llave privada codigo QR",
-      "input_message":"Por favor ingrese una contraseña utilizada para encriptar el código QR.<br/>Una contraseña vacía mostrará un código QR no encriptado ".
+      "input_message":"Por favor ingrese una contraseña utilizada para encriptar el código QR.<br/>Una contraseña vacía mostrará un código QR no encriptado. "
     }
   },
   "init_error": {
