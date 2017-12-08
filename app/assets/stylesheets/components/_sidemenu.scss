@@ -1,8 +1,74 @@
-.panel-left.sidemenu .block-list .sidemenu-list {
-  li > a {
-    padding-left: 1.6rem;
-    .icon {
-      margin-right: 1rem;
+@media only screen and (max-width: 960px)  {
+  .sidemenu-outer {
+    display: block;
+    position: fixed;
+    z-index: 1000;
+    height: 3rem;
+  }
+
+  .sidemenu-outer.active {
+    height: 100%;
+    max-width: none;
+  }
+
+  .sidemenu-outer:not(.active) .sidemenu {
+    background: transparent;
+  }
+
+}
+
+@media only screen and (min-width: 960px)  {
+  .sidemenu-wrapper {
+    position: absolute;
+    z-index: 1001;
+  }
+
+  .block-list li > a.sidemenu-link {
+    display: none;
+  }
+
+  .sidemenu-outer:hover {
+    overflow: visible;
+  }
+}
+
+.sidemenu-outer {
+    max-width: 3rem;
+}
+
+.sidemenu .block-list li > a.sidemenu-link:hover {
+  background: transparent;
+}
+
+.sidemenu-wrapper {
+  height: 100%;
+
+  .sidemenu {
+    height: 100%;
+
+    .sidemenu-list {
+
+      > li > a {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        white-space: nowrap;
+
+        .icon {
+          margin-right: 1rem;
+        }
+
+        &.active {
+          border-right-width: 3px;
+          border-right-style: solid;
+        }
+
+        &.disabled {
+          opacity: .3;
+        }
+      }
     }
   }
 }
+
+
+

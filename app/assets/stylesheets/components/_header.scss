@@ -20,7 +20,7 @@
         border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 64px;
+  min-height: 3rem;
   // text-transform: uppercase;
   .menu-bar > li {
 
@@ -43,7 +43,7 @@
   div.account-drop-down div.total-value {
       text-align: left;
       font-size: 80%;
-      line-height: initial;
+      line-height: .8rem;
   }
 }
 
@@ -128,14 +128,15 @@ div.account-drop-down div.dropdown-wrapper {
         list-style: none;
         min-width: 200px;
         > div.table-cell {
-            padding: 15px 5px 14px 5px;
+            height: 3rem;
+            padding: .5rem 0;
             text-align: center;
             vertical-align: middle;
 
             &:nth-child(2) {
                 text-align: left;
-                padding-left: 15px;
-                padding-right: 20px;
+                padding-left: .5rem;
+                padding-right: .5rem;
             }
         }
     }

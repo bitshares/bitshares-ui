@@ -48,8 +48,6 @@ class App extends React.Component {
             incognito: false,
             incognitoWarningDismissed: false,
             height: window && window.innerHeight,
-
-            active: context.location.pathname
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
@@ -168,11 +166,6 @@ class App extends React.Component {
     //     this.refs.notificationSystem.addNotification(params);
     // }
 
-    _onNavigate(route, e) {
-        e.preventDefault();
-        this.context.router.push(route);
-    }
-
     render() {
         let {isMobile, theme,active} = this.state;
 
@@ -199,10 +192,10 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height}/>
-                    <Sidemenu />
                     <div className="grid-block">
+                        <Sidemenu />
                         <div className="grid-block vertical">
+                            <Header height={this.state.height}/>
                             {this.props.children}
                         </div>
 

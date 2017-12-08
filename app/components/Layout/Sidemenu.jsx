@@ -40,7 +40,8 @@ class Sidemenu extends React.Component {
     constructor(props, context) {
         super();
         this.state = {
-            active: context.location.pathname
+            active: context.location.pathname,
+            open: false
         };
 
         this.unlisten = null;
@@ -81,7 +82,8 @@ class Sidemenu extends React.Component {
             nextProps.currentAccount !== this.props.currentAccount ||
             nextProps.passwordLogin !== this.props.passwordLogin ||
             nextProps.locked !== this.props.locked ||
-            nextState.active !== this.state.active
+            nextState.active !== this.state.active ||
+            nextState.open !== this.state.open
         );
     }
 
@@ -99,6 +101,14 @@ class Sidemenu extends React.Component {
 
     _closeSidemenu() {
         ZfApi.publish("sidemenu", "close");
+    }
+
+    _toggleMobileMenu(e) {
+        e.preventDefault();
+        console.log(this.state.open);
+        this.setState({
+            open: !this.state.open
+        });
     }
 
     onBodyClick(e) {
@@ -119,23 +129,25 @@ class Sidemenu extends React.Component {
     render() {
         let {active} = this.state;
         let {currentAccount} = this.props;
-
+        const a = ChainStore.getAccount(currentAccount);
+        const isMyAccount = !a ? false : AccountStore.isMyAccount(a);
+        const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
         let myAccounts = AccountStore.getMyAccounts();
         let myAccountCount = myAccounts.length;
 
         let dashboard = (
             <a
-                style={{padding: "12px 1.75rem"}}
+                style={{padding: ".5rem .5rem"}}
                 className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
-                <img style={{margin: 0, height: 40}} src={logo} />
+                <img style={{margin: 0, height: "2rem"}} src={logo} />
             </a>
         );
 
         let createAccountLink = myAccountCount === 0 ? (
             <ActionSheet.Button title="" setActiveState={() => {}}>
-                <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")} style={{padding: "1rem", border: "none"}} >
+                <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")}>
                     <Icon className="icon-14px" name="user"/> <Translate content="header.create_account" />
                 </a>
             </ActionSheet.Button>
@@ -146,45 +158,111 @@ class Sidemenu extends React.Component {
                 <Icon name="trade"/>
                 <Translate component="span" content="header.exchange" />
             </a>;
+        let isWalletActive = active.indexOf("transfer") !== -1
+            || active.indexOf("deposit-withdraw") !== -1
+            || active.indexOf("dashboard") !== -1;
+        let isAccountActive = active.indexOf("member-stats") !== -1
+            || active.indexOf("voting") !== -1
+            || active.indexOf("assets") !== -1
+            || active.indexOf("voting") !== -1
+            || active.indexOf("signedmessages") !== -1
+            || active.indexOf("vesting") !== -1
+            || active.indexOf("whitelist") !== -1
+            || active.indexOf("permissions") !== -1
 
         return (
-            <div>
-                <Panel className="sidemenu" id="sidemenu" position="left">
-                    <section className="block-list">
-                        <ul className="sidemenu-list">
-                            <li>{dashboard}</li>
-                            {!currentAccount || !!createAccountLink ? null :
-                            <li>
-                                <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
-                                    <Icon name="dashboard"/>
-                                    <Translate content="header.dashboard" />
-                                </a>
-                            </li>}
-                            <li>{tradeLink}</li>
-                            {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
-                            <li>
-                                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                    <Icon name="server"/>
-                                    <Translate component="span" content="header.explorer" />
-                                </a>
-                            </li>
-                            {!!createAccountLink ? null : <li>
-                                <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
-                                    <Icon name="transfer"/>
-                                    <span><Translate content="header.payments_beta" /></span>
-                                </a>
-                            </li>}
+            <div className={cnames({ active: this.state.open }) + " sidemenu-outer grid-block vertical"}>
+                <div className="sidemenu-wrapper">
+                    <div className="sidemenu">
+                        <section className="block-list">
+                            <ul className="sidemenu-list">
+                                <li><a href style={{ width: "3rem", height: "3rem", padding: ".5rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
+                                <li>{dashboard}</li>
+                                {!currentAccount || !!createAccountLink ? null :
+                                <li>
+                                    <a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({selected: isWalletActive, disabled: !isMyAccount, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                        <Icon name="dashboard"/>
+                                        <Translate content="wallet.title" />
+                                    </a>
+                                    {isWalletActive && isMyAccount ? (<section className="block-list">
+                                        <ul className="sidemenu-list">
 
-                            {!!createAccountLink ? <li>
-                                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
-                                    <Icon name="cogs"/>
-                                    <span><Translate content="header.settings" /></span>
-                                </a>
-                            </li> : null}
-                            {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
-                        </ul>
-                    </section>
-                </Panel>
+                                            <li><a className={cnames({active: active.indexOf("/transfer") !== -1})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
+                                                <Icon name="transfer" />
+                                                <Translate content="header.payments" />
+                                            </a></li>
+
+                                            {<li><a onClick={this._showSend.bind(this)}>
+                                                <Icon name="transfer" />
+                                                <Translate content="header.payments_beta" />
+                                            </a></li>}
+
+                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                                <Icon name="deposit" />
+                                                <Translate content="gateway.deposit" />
+                                            </a></li>
+                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                                <Icon name="withdraw" />
+                                                <Translate content="modal.withdraw.submit" />
+                                            </a></li>
+                                        </ul>
+                                    </section>) : null}
+                                </li>}
+                                {!currentAccount || !!createAccountLink ? null :
+                                <li>
+                                    <a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)} className={cnames({selected: isAccountActive, disabled: !isMyAccount, active: active.indexOf("member-stats") !== -1})}>
+                                        <Icon name="user"/>
+                                        <Translate content="header.account" />
+                                    </a>
+                                    {isAccountActive && isMyAccount ? (<section className="block-list">
+                                        <ul className="sidemenu-list">
+
+                                            <li><a className={cnames({active: active.indexOf("/voting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
+                                                <Icon name="thumbs-up" />
+                                                <Translate content="account.voting" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
+                                                <Icon name="assets" />
+                                                <Translate content="explorer.assets.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/signedmessages") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
+                                                <Icon name="text" />
+                                                <Translate content="account.signedmessages.menuitem" />
+                                            </a></li>
+
+                                            {isMyAccount ? <li><a className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
+                                                <Icon name="hourglass" />
+                                                <Translate content="account.vesting.title" />
+                                            </a></li> : null}
+
+                                            <li><a className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
+                                                <Icon name="list" />
+                                                <Translate content="account.whitelist.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames("divider", {active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                                <Icon name="warning" />
+                                                <Translate content="account.permissions" />
+                                            </a></li>
+
+                                        </ul>
+                                    </section>) : null}
+                                </li>}
+                                <li>{tradeLink}</li>
+                                {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
+                                <li>
+                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
+                                        <Icon name="server"/>
+                                        <Translate component="span" content="header.explorer" />
+                                    </a>
+                                </li>
+                                {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
+                            </ul>
+                        </section>
+                    </div>
+                </div>
                 {/* Send modal */}
                 <SendModal ref="send_modal" from_name={currentAccount} />
             </div>

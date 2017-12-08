@@ -212,6 +212,46 @@ $account-tabs-background
         @include color($secondary-text-color, $bg-color);
     }
 
+    .sidemenu {
+        @include color($light-text-color, $light-panel-bg-color);
+    }
+
+    .sidemenu-list {
+
+        > li > a:hover, > li > label:hover, > li select:hover {
+            color: $light-text-color;
+            background-color: lighten($panel-bg-color, 5%);
+        }
+        > li > a.active {
+            color: $light-text-color;
+            background-color: lighten($panel-bg-color, 4%);
+            border-right-color: darken($button-bg-color, 4%);
+        }
+
+        > li > a.selected {
+            background-color: lighten($panel-bg-color, 4%);
+        }
+
+        .sidemenu-list {
+          background-color: darken($panel-bg-color, 4%);
+
+          > li > a {
+            color: darken($light-text-color, 40%);
+
+            .icon {
+              fill: darken($light-text-color, 40%);
+            }
+          }
+          > li > a:hover, > li > label:hover, > li select:hover {
+              color: $light-text-color;
+              background-color: darken($panel-bg-color, 6%);
+          }
+
+          > li > a.active {
+            background-color: darken($panel-bg-color, 8%);
+          }
+        }
+    }
 
     .page-layout {
         background-color: $bg-color;
