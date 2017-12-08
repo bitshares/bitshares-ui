@@ -319,7 +319,7 @@ class Exchange extends React.Component {
     _verifyFee(fee, sell, sellBalance, coreBalance) {
         let coreFee = this._getFee();
 
-        if (fee.asset_id === "1.3.0") { // Very strange check
+        if (fee.asset_id === "1.3.0") {
             if (coreFee.getAmount() <= coreBalance) {
                 return "1.3.0";
             } else {
