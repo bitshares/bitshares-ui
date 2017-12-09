@@ -125,7 +125,6 @@ class Dashboard extends React.Component {
     }
 
     _onSwitchType(type) {
-        console.log("_onSwitchType:" + type);
         this.setState({
             currentEntry: type
         });
