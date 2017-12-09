@@ -86,7 +86,7 @@ class SettingsStore {
             themes: [
                 "darkTheme",
                 "lightTheme",
-                "olDarkTheme"
+                "midnightTheme"
             ],
             passwordLogin: [
                 {translate: "cloud_login"},
