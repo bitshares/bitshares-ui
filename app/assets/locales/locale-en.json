@@ -250,7 +250,11 @@
       "precision_warning": "Warning: The number of decimals may not be changed after creation",
       "visible": "Hide asset from search and markets",
       "cer_warning_1": "Warning",
-      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset.",
+      "feed_producers": "Feed producers",
+      "add_feed": "Add new feed producer",
+      "feed_not_allowed_1": "Cannot set feed producers on a witness- or committee-fed asset",
+      "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers"
     },
     "connections": {
       "known": "Known by",

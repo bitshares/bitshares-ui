@@ -21,6 +21,7 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 import AssetWhitelist from "./AssetWhitelist";
+import AssetFeedProducers from "./AssetFeedProducers";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(assetConstants.GRAPHENE_MAX_SHARE_SUPPLY);
 
@@ -553,9 +554,10 @@ class AccountAssetUpdate extends React.Component {
                             tabsClass="account-overview bordered-header content-block"
                             contentClass="grid-block shrink small-vertical medium-horizontal" segmented={false}
                             actionButtons={confirmButtons}
+                            onChangeTab={(i) => {this.setState({activeTab: i});}}
                         >
                             <Tab title="account.user_issued_assets.primary">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <label><Translate content="account.user_issued_assets.precision" />
                                         <span>: {asset.get("precision")}</span>
                                     </label>
@@ -664,7 +666,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             <Tab title="account.user_issued_assets.description">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <label>
                                         <textarea
                                             style={{height: "7rem"}}
@@ -726,7 +728,7 @@ class AccountAssetUpdate extends React.Component {
 
                             {isBitAsset ? (
                             <Tab title="account.user_issued_assets.bitasset_opts">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <BitAssetOptions
                                         bitasset_opts={bitasset_opts}
                                         onUpdate={this.onChangeBitAssetOpts.bind(this)}
@@ -739,7 +741,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>) : null}
 
                             <Tab title="account.user_issued_assets.update_owner">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
                                             label="account.user_issued_assets.current_issuer"
@@ -763,7 +765,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             <Tab title="account.permissions">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
                                         path = {"components/AccountAssetCreate"}
                                         section="permissions"
@@ -776,7 +778,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             <Tab title="account.user_issued_assets.flags">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
                                         path = {"components/AccountAssetCreate"}
                                         section="flags"
@@ -824,7 +826,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             <Tab title="explorer.asset.fee_pool.title">
-                                <div className="small-12 large-8 grid-content">
+                                <div className="small-12 large-8 large-offset-2 grid-content">
 
                                     {/* Fund fee pool */}
                                     <Translate component="p" content="explorer.asset.fee_pool.fund_text" asset={asset.get("symbol")} core={core.get("symbol")} />
@@ -886,7 +888,7 @@ class AccountAssetUpdate extends React.Component {
                                         asset={asset.get("id")}
                                         assets={[asset.get("id")]}
                                         placeholder="0.0"
-                                        tabIndex={1}
+                                    tabIndex={1}
                                         style={{width: "100%", paddingTop: 16}}
                                     />
 
@@ -900,13 +902,22 @@ class AccountAssetUpdate extends React.Component {
                                     </div>
                                 </div>
                             </Tab>
+
+                            {isBitAsset ?
+                            <Tab title="account.user_issued_assets.feed_producers">
+                                <AssetFeedProducers
+                                    asset={this.props.asset}
+                                    account={this.props.account}
+                                    witnessFed={flagBooleans["witness_fed_asset"]}
+                                    committeeFed={flagBooleans["committee_fed_asset"]}
+                                />
+                            </Tab> : null}
                         </Tabs>
                     </div>
                 </div>
             </div>
         );
     }
-
 }
 AccountAssetUpdate = BindToChainState(AccountAssetUpdate);
 
