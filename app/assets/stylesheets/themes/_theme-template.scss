@@ -539,7 +539,7 @@ $account-tabs-background
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -549,6 +549,17 @@ $account-tabs-background
         &:focus {
             border-color: #aaa;
         }
+    }
+
+    // Typeahead   
+    input[role="combobox"] {
+        padding: 5px 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .typeahead > div {
+        width: 100%;
     }
 
     ul.button-group.segmented {
