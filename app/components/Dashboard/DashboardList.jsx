@@ -222,7 +222,7 @@ class DashboardList extends React.Component {
 							</td> 
 						: null}
 						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
-							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
+							<span className={isLTM ? "lifetime" : ""} style={{cursor: "pointer"}}>{accountName}</span>
 						</td>
 						<td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
 							<TotalBalanceValue balances={[]} openOrders={openOrders}/>
