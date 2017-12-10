@@ -59,7 +59,7 @@ class TypeAhead extends React.Component {
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
             />
-            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "30px"}} onClick={this.focus.bind(this)} />
+            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
         </div>
     }
 }
