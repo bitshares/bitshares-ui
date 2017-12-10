@@ -679,7 +679,7 @@ class AccountVoting extends React.Component {
                                         </table>
                                     </div>)} */}
 
-                                    <table className="table dashboard-table">
+                                    <table className="table dashboard-table table-hover">
 
                                         {workerTableIndex === 2 ? null :
                                         workerTableIndex === 0 ?

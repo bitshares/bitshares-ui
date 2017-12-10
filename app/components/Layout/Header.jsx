@@ -342,11 +342,11 @@ class Header extends React.Component {
                         <div className="grp-menu-item overflow-visible account-drop-down">
                                 {createAccountLink ? createAccountLink :
                                 <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                    <li>
+                                    <li style={{display: "flex"}}>
                                         <div className="table-cell" onClick={this._toggleLock.bind(this)}>
                                             <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                         </div>
-                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell">
+                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
                                                 {walletBalance}
@@ -355,7 +355,7 @@ class Header extends React.Component {
 
                                         </div>
                                     </li>
-                                    <ul className="dropdown header-menu" style={{left: 0, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
                                         <li className="divider" onClick={this._toggleLock.bind(this)}>
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
                                             <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>

@@ -26,15 +26,31 @@ export const settingsAPIs = {
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://bts.ai.la/ws", location: "Hong Kong"},
         {url: "wss://bitshares.apasia.tech/ws", location: "Bangkok, Thailand"},
+        {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
         {url: "wss://bitshares.dacplay.org/ws", location:  "Hangzhou, China"},
         {url: "wss://bitshares-api.wancloud.io/ws", location:  "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
-        {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
+        {url: "wss://us-ny.bitshares.apasia.tech/ws", location: "New York, USA"},
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://node.testnet.bitshares.eu", location: "Public Testnet Server (Frankfurt, Germany)"},
-        {url: "wss://ws.gdex.top", location: "China"}
+        {url: "wss://ws.gdex.top", location: "China"},
+        {url: "wss://dex.rnglab.org", location: "Netherlands"}
     ],
     DEFAULT_FAUCET: "https://bitshares.openledger.info",
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };
+
+export const  gdexAPIs = {
+    BASE: "https://api.gdex.io",
+    ASSET_LIST: "/gateway/asset/assetList",
+    ASSET_DETAIL: "/gateway/asset/assetDetail",
+    GET_DEPOSIT_ADDRESS: "/gateway/address/getAddress",
+    CHECK_WITHDRAY_ADDRESS: "/gateway/address/checkAddress",
+    DEPOSIT_RECORD_LIST: "/gateway/deposit/recordList",
+    DEPOSIT_RECORD_DETAIL: "/gateway/deposit/recordDetail",
+    WITHDRAW_RECORD_LIST: "/gateway/withdraw/recordList",
+    WITHDRAW_RECORD_DETAIL: "/gateway/withdraw/recordDetail",
+    GET_USER_INFO: "/gateway/user/getUserInfo",
+    USER_AGREEMENT: "/gateway/user/isAgree"
+}

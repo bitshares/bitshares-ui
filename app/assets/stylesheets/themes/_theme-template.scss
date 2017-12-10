@@ -1319,21 +1319,16 @@ $account-tabs-background
         li {
             > a {
                 color: $account-dimmed;
-                background-color: $bg-color;
+                background-color: transparent;
                 border: none;
-                &:hover {
-                    background-color: $bg-color;
-                    color: $account-primarytext;
-                }
                 > div.tab-subtext {
                     color: $account-green;
                 }
             }
-            &.is-active {
+            &.is-active, &:hover {
                 background-color: lighten($account-header, 4%);
                 > a {
                     color: $account-primarytext;
-                    background-color: lighten($account-header, 4%);
                 }
             }
             &.total-value {
@@ -1355,12 +1350,6 @@ $account-tabs-background
             background-color: $account-header;
             color: $account-primarytext;
             border-color: $account-border;
-            &:first-of-type {
-                border-left: 1px solid $account-border;
-            }
-            &:last-of-type {
-                border-right: 1px solid $account-border;
-            }
         }
         > tbody > tr {
             > td {

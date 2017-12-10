@@ -198,7 +198,13 @@ class MyOpenOrders extends React.Component {
             ) {
                 return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
             }
-        }).filter(a => !!a).filter(a => a.isMarginCalled());
+        }).filter(a => !!a).filter(a => {
+            try {
+                return a.isMarginCalled();
+            } catch(err) {
+                return false;
+            }
+        });
         return limitOrders.concat(callOrders);
     }
 
