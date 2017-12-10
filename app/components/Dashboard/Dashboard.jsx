@@ -63,6 +63,9 @@ class Dashboard extends React.Component {
                 if ( (m.base === 'BRIDGE.BTC') && (m.blacklisted !== true) ) {
                     markets.push([m.base, m.quote, m.img]);
                 }
+                if ( (m.base === 'BRIDGE.ZNY') && (m.blacklisted !== true) ) {
+                    markets.push([m.base, m.quote, m.img]);
+                }
 
             });
             this.setState({featuredMarkets: markets});
