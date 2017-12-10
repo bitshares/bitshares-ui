@@ -60,6 +60,10 @@ class AssetName extends React.Component {
 			}
 			let tooltip = this.props.noTip ? null : `<div><strong>${includeBitAssetDescription ? "bit" : (realPrefix ? realPrefix.toUpperCase() : realPrefix) || ""}${replacedName}</strong><br />${includeBitAssetDescription ? "" : "<br />" + (desc.short ? desc.short : desc.main || "")}${!isBitAsset || includeBitAssetDescription ? optional : ""}</div>`;
 
+			if (name === 'BRIDGE.BRIM') {
+				replacedName = 'BR1M';
+			}
+
 			if (prefix === 'bridge.') {
 				return (
 					<div
