@@ -158,12 +158,13 @@ class MarketGroup extends React.Component {
 
         let index = 0;
 
+        console.log(base);
         let marketRows = markets
             .map(market => {
                 return (
                     <MarketRow
                         key={market.id}
-                        name={base === "others" ? <span><AssetName name={market.quote} />:<AssetName name={market.base} /></span> : <AssetName dataPlace="left" name={market.quote} />}
+                        name={base === "OTHER" ? <span><AssetName name={market.quote} /> : <AssetName name={market.base} /></span> : <AssetName dataPlace="left" name={market.quote} />}
                         quote={market.quote}
                         base={market.base}
                         columns={columns}
@@ -683,6 +684,7 @@ class MyMarkets extends React.Component {
 
         let btcMarkets = [];
         let btsMarkets = [];
+        let myOtherMarkets = [];
 
 
 
@@ -690,12 +692,17 @@ class MyMarkets extends React.Component {
                 if (m.base === 'BRIDGE.BTC') {
                     btcMarkets.push(m);
                 }
-                if (m.base === 'BTS') {
+                else if (m.base === 'BTS') {
                     btsMarkets.push(m);
+
+                } else {
+                    myOtherMarkets.push(m);
                 }
 
         })
 
+        baseGroups['OTHER'] = [];
+        baseGroups['OTHER'] =  myOtherMarkets;
 
         baseGroups['BRIDGE.BTC'] = [];
         baseGroups['BRIDGE.BTC'] =  btcMarkets
@@ -739,7 +746,7 @@ class MyMarkets extends React.Component {
                                 onClick={this.toggleActiveMarketTab.bind(this, index)}
                                 className={cnames("mymarkets-tab", {active: activeMarketTab === index})}
                             >
-                                <AssetName name={base} dataPlace="left"/>
+                                { base === 'OTHER' ? <Translate content="exchange.others" /> :  <AssetName name={base} dataPlace="left"/> }
                             </li>
                         );
                     })}

@@ -1296,7 +1296,7 @@
     "intermediate": "中間アカウント",
     "asset_to_withdraw": "出金するアセット:",
     "support_block": "サポートが必要な場合は、OpenLedgerにご連絡ください:",
-    "support_block_cb": "サポートが必要な場合は、CryptoBridgeにご連絡ください:",
+    "support_block_cb": "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",
     "valid_address": "有効な%(coin_type)sのアドレスを入力してください",
     "withdraw_coin": "%(coin)s (%(symbol)s) を出金",
   "convert_coin": "%(coin)s (%(symbol)s) に変換",
