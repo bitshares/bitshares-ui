@@ -36,8 +36,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue:"",
             amountError: null,
-            inputAmount: 1,
-            receiveLoading: true,
+            inputAmount: 0,
+            receiveLoading: false,
             limitLoading: true,
             apiError: false
         };
@@ -96,13 +96,47 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         });
     }
 
+    _onAmountChange(value, e) {
+        const regexp_numeral = new RegExp(/[[:digit:]]/);
+        const target = e.target;
+
+        // Ensure input is valid
+        if(!regexp_numeral.test(target.value)) {
+            target.value = target.value.replace(/[^0-9.]/g, "");
+        }
+
+        // Catch initial decimal input
+        if(target.value.charAt(0) == ".") { 
+            target.value = "0."; 
+        }
+
+        // Catch double decimal and remove if invalid
+        if(target.value.charAt(target.value.length) != target.value.search(".")) { 
+            target.value.substr(1);
+        }
+
+        target.value = utils.limitByPrecision(target.value, 8);
+
+        switch(value) {
+            case "input":
+                this.setState({inputAmount: target.value}, this._estimateOutput.bind(this));
+                break;
+
+            case "output":
+                this.setState({outputAmount: target.value}, this._estimateInput.bind(this));
+                break;
+        }
+    }
+
     _estimateOutput(props = this.props) {
         this.setState({receiveAmount: 0, sendAmount: this.state.inputAmount});
+        if(!this.state.inputAmount) { return; }
+
         this.setState({receiveLoading: true});
         estimateOutput(this.state.inputAmount, props.inputCoinType, props.outputCoinType).then(res => {
             this.setState({
-                inputAmount: parseFloat(res.inputAmount),
-                receiveAmount: parseFloat(res.outputAmount),
+                inputAmount: res.inputAmount,
+                receiveAmount: res.outputAmount,
                 receiveLoading: false
             });
         }).catch(err => {
@@ -113,12 +147,13 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
     _estimateInput(props = this.props) {
         this.setState({receiveAmount: this.state.outputAmount, sendAmount: 0});
-        this.setState({receiveLoading: true});
+        if(!this.state.outputAmount) { return; }
 
+        this.setState({receiveLoading: true});
         estimateInput(this.state.outputAmount, props.inputCoinType, props.outputCoinType).then(res => {
             this.setState({
-                inputAmount: parseFloat(res.inputAmount).toFixed(8),
-                sendAmount: parseFloat(res.inputAmount).toFixed(8),
+                inputAmount: res.inputAmount,
+                sendAmount: utils.limitByPrecision(res.inputAmount,8),
                 receiveLoading: false
             });
         }).catch(err => {
@@ -204,20 +239,15 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         newWnd.opener = null;
     }
 
-    _onAmountChange(value, e) {
-        switch(value) {
-            case "input":
-                this.setState({inputAmount: parseFloat(e.target.value)}, this._estimateOutput.bind(this));
-                break;
-
-            case "output":
-                this.setState({outputAmount: parseFloat(e.target.value)}, this._estimateInput.bind(this));
-                break;
-        }
-    }
 
     _onDropDownSelect(e) {
         SettingsActions.changeViewSetting({preferredBridge: e});
+    }
+
+    onBlockTradesContact() {
+        console.log("Open New Tab");
+        let win = window.open("https://www.blocktrades.us/contact", "_blank");
+        win.focus();
     }
 
     _renderDeposit() {
@@ -232,12 +262,10 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const inputName = this.props.inputCoinType.toUpperCase();
         const receiveName = (prefix ? prefix : "") + assetName;
 
-        let price = receiveName === "BTS" && inputName === "BTC" ? (this.state.inputAmount / this.state.receiveAmount).toFixed(8) :
-            (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
-        let priceSuffix = receiveName === "BTS" && inputName === "BTC" ? inputName +"/" + receiveName :
-            receiveName +"/" + inputName;
+        let price = (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
+        let priceSuffix = receiveName + "/" + inputName;
 
-        const aboveLimit = this.state.inputAmount > parseFloat(this.state.depositLimit);
+        const aboveLimit = this.state.inputAmount > parseFloat(this.state.depositLimit) || this.state.sendAmount > parseFloat(this.state.depositLimit);
         const aboveLimitStyle = aboveLimit ? {border: "1px solid #a94442"} : null;
 
         return (
@@ -251,8 +279,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                 <div className="SimpleTrade__withdraw-row">
                     <div className="grid-block">
                         <label className="left-label">BRIDGE</label>
-                        <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip">
-                            &nbsp;<a href="https://www.blocktrades.us/contact"><Icon style={{position: "relative", top: 0}} name="question-circle" /></a>
+                        <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip" onClick={this.onBlockTradesContact.bind(this)}>
+                            &nbsp;<Icon style={{position: "relative", top: 0}} name="question-circle" />
                         </span>
                     </div>
                     <div className="inline-label input-wrapper">
@@ -264,15 +292,14 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         <div className="no-margin no-padding">
                             <div className="small-6" style={{paddingRight: 10}}>
                                 <div className="grid-block">
-                                    <label className="left-label"><Translate content="transfer.send" />
-                                        {aboveLimit ? 
-                                            <div className="error-msg inline-block tooltip" data-tip={counterpart.translate("tooltip.over_limit")}>
-                                                <Translate content="gateway.over_limit" />&nbsp;<Icon name="question-circle" />
-                                            </div> : null}
-                                    </label>
+                                    <label className="left-label"><Translate content="transfer.send" /></label>
+                                    {aboveLimit ? 
+                                        <div className="error-msg inline-block tooltip" data-tip={counterpart.translate("tooltip.over_limit")}>
+                                            <Translate content="gateway.over_limit" />&nbsp;<Icon name="question-circle" />
+                                        </div> : null}
                                 </div>
                                 <div className="inline-label input-wrapper">
-                                    <input style={aboveLimitStyle} type="number" defaultValue={1} value={this.state.sendAmount || 0} onInput={this._onAmountChange.bind(this, "input")}/>
+                                    <input style={aboveLimitStyle} type="text" value={this.state.sendAmount} onInput={this._onAmountChange.bind(this, "input")}/>
                                     <div className="form-label select floating-dropdown">
                                         <FloatingDropdown
                                             entries={bridgeAssets}
@@ -300,7 +327,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                             <div className="small-6" style={{paddingRight: 10}}>
                                 <label className="left-label"><Translate content="exchange.receive" /></label>
                                 <div className="inline-label input-wrapper">
-                                    <input style={aboveLimitStyle} type="number" value={this.state.receiveAmount || 0} onInput={this._onAmountChange.bind(this, "output")} />
+                                    <input style={aboveLimitStyle} type="text" value={this.state.receiveAmount} onInput={this._onAmountChange.bind(this, "output")} />
                                     <div className="input-right-symbol">{receiveName}</div>
                                 </div>
                             </div>
@@ -311,7 +338,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                 </div>
                                 <div className="inline-label input-wrapper">
                                     <input disabled type="number" value={aboveLimit ? 0 : price} />
-                                    <div className="input-right-symbol">{receiveName}/{inputName}</div>
+                                    <div className="input-right-symbol">{priceSuffix}</div>
                                 </div>
                             </div>
                         </div>
@@ -324,7 +351,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     <CopyButton text={addressValue} className={"SimpleTrade__copyIcon"} />
                                 </div>
                                 <div className="deposit-details">
-                                    <div><Translate component="div" unsafe content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
+                                    <div><Translate unsafe content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
                                     <div>{addressValue}</div>
                                 </div>
                             </div>
@@ -334,7 +361,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                         <CopyButton text={receive_address.memo} className={"SimpleTrade__copyIcon"} />
                                     </div>
                                     <div className="deposit-details">
-                                        <div><Translate component="div" unsafe content="gateway.purchase_notice_memo" /></div>
+                                        <div><Translate unsafe content="gateway.purchase_notice_memo" /></div>
                                         <div>{receive_address.memo}</div>
                                     </div>
                                 </div> : null}
@@ -414,7 +441,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         return (
             <div className="SimpleTrade__modal">
-                <div className="Modal__header" style={{background: "none", padding: "1rem"}}></div>
+                <div className="Modal__header" style={{background: "none"}}></div>
                 
                 <div
                     className="grid-block vertical no-overflow"
@@ -425,8 +452,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                     }}>
 
                     <div style={{textAlign: "center"}}>
-                        <img style={{margin: 0, height: 60}} src={logo} /><br />
-                        <p style={{fontSize: "1.6rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
+                        <img style={{margin: 0, height: 80}} src={logo} /><br />
+                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
                     </div>
 
                     {this.props.isDown ?

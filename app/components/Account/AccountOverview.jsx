@@ -5,6 +5,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import SettleModal from "../Modal/SettleModal";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
+import {Market24HourChangeComponent} from "../Utility/MarketChangeComponent";
 import AssetName from "../Utility/AssetName";
 import MarginPositions from "./MarginPositions";
 import { RecentTransactions } from "./RecentTransactions";
@@ -31,7 +32,6 @@ import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
-import tableHeightHelper from "lib/common/tableHeightHelper";
 
 class AccountOverview extends React.Component {
 
@@ -67,10 +67,9 @@ class AccountOverview extends React.Component {
             ]
         };
 
-        this.tableHeightMountInterval = tableHeightHelper.tableHeightMountInterval.bind(this);
-        this.adjustHeightOnChangeTab = tableHeightHelper.adjustHeightOnChangeTab.bind(this);
         this.priceRefs = {};
         this.valueRefs = {};
+        this.changeRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -105,6 +104,20 @@ class AccountOverview extends React.Component {
                 if (!aValue && !bValue) return this.sortFunctions.alphabetic(a, b, true);
                 return !this.state.sortDirection ? aValue - bValue : bValue - aValue;
             }
+        },
+        changeValue: function(a, b) {
+            let aRef = this.changeRefs[a.key];
+            let bRef = this.changeRefs[b.key];
+
+            if (aRef && bRef) {
+                let aValue = aRef.getValue();
+                let bValue = bRef.getValue();
+                let aChange = parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
+                let bChange = parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
+                let direction = typeof this.state.sortDirection !== "undefined" ? this.state.sortDirection : true;
+
+                return direction ? aChange - bChange : bChange - aChange;
+            }
         }
     }
 
@@ -127,16 +140,9 @@ class AccountOverview extends React.Component {
             this._checkMarginStatus(np);
             this.priceRefs = {};
             this.valueRefs = {};
+            this.changeRefs = {};
             setTimeout(this.forceUpdate.bind(this), 500);
         };
-    }
-
-    componentDidMount(){
-        this.tableHeightMountIntervalInstance = this.tableHeightMountInterval();
-    }
-
-    componentWillUnmount(){
-        clearInterval(this.tableHeightMountIntervalInstance);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -249,7 +255,7 @@ class AccountOverview extends React.Component {
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                    <td style={{textAlign: "left", paddingLeft: 10}}>
+                    <td style={{textAlign: "left"}}>
                         <LinkToAssetById asset={asset.get("id")} />
                     </td>
                     <td style={{textAlign: "right"}}>
@@ -259,6 +265,15 @@ class AccountOverview extends React.Component {
                         <EquivalentPrice
                             refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             fromAsset={asset.get("id")}
+                            hide_symbols
+                        />
+                    </td>
+                    <td style={{textAlign: "right"}} className="column-hide-small">
+                        <Market24HourChangeComponent
+                            refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }}
+                            base={asset.get("id")}
+                            quote={preferredUnit}
+                            marketId={asset.get("symbol")+"_" + preferredUnit}
                             hide_symbols
                         />
                     </td>
@@ -353,12 +368,14 @@ class AccountOverview extends React.Component {
                     let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
                     if (includeAsset && visible || !includeAsset && !visible) balances.push(
                         <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
-                            <td style={{textAlign: "left", paddingLeft: 10}}>
+                            <td style={{textAlign: "left"}}>
                                 <LinkToAssetById asset={asset.get("id")} />
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td className="column-hide-small" colSpan="2"></td>
+                            <td>{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td className="column-hide-small">{emptyCell}</td>
+                            <td>{emptyCell}</td>
                             <td style={{textAlign: "center"}}>
                                 {canBuy  && this.props.isMyAccount ?
                                 <span>
@@ -486,15 +503,6 @@ class AccountOverview extends React.Component {
 
         let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
 
-        let totalValue =
-            <TotalBalanceValue
-                noTip
-                balances={totalBalanceList}
-                openOrders={orders}
-                debt={debt}
-                collateral={collateral}
-                hide_asset
-            />;
         let portFolioValue =
             <TotalBalanceValue
                 noTip
@@ -540,7 +548,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="8"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -562,14 +570,10 @@ class AccountOverview extends React.Component {
         const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
 
         return (
-            <div className="grid-content app-tables" ref="appTables">
+            <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
-                    <div className="generic-bordered-box">
-                        <Tabs defaultActiveTab={1} segmented={false} setting="overviewTab" className="overview-tabs" tabsClass="account-overview no-padding bordered-header content-block" onChangeTab={this.adjustHeightOnChangeTab.bind(this)}>
-
-                            {/* <Tab disabled className="total-value" title={<span>{counterpart.translate("account.eq_value")}&nbsp;<AssetName name={preferredUnit} noTip /></span>} subText={totalValue}>
-
-                            </Tab> */}
+                    <div className="tabs-container generic-bordered-box">
+                        <Tabs defaultActiveTab={0} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
@@ -581,14 +585,13 @@ class AccountOverview extends React.Component {
                                     </div> : null}
                                 </div>
 
-                                <table className="table dashboard-table">
+                                <table className="table dashboard-table table-hover">
                                     <thead>
                                         <tr>
-                                            {/*<th><Translate component="span" content="modal.settle.submit" /></th>*/}
-                                            <th style={{textAlign: "left", paddingLeft: 10}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
+                                            <th style={{textAlign: "left"}} className="clickable" onClick={this._toggleSortOrder.bind(this, "alphabetic")}><Translate component="span" content="account.asset" /></th>
                                             <th style={{textAlign: "right"}}><Translate content="account.qty" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "priceValue")} className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="exchange.price" /> (<AssetName name={preferredUnit} />)</th>
-                                            {/*<<th style={{textAlign: "right"}}><Translate component="span" content="account.bts_market" /></th>*/}
+                                            <th onClick={this._toggleSortOrder.bind(this, "changeValue")}  className="column-hide-small clickable" style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
                                             <th onClick={this._toggleSortOrder.bind(this, "totalValue")} style={{textAlign: "right"}} className="column-hide-small clickable">
                                                 <TranslateWithLinks
                                                     noLink
@@ -623,8 +626,9 @@ class AccountOverview extends React.Component {
                                                 {totalValueText}
                                             </td>
                                             <td colSpan="3"></td>
-                                            <td style={{textAlign: "center"}}>{ordersValue}</td>
+                                            <td style={{textAlign: "right"}}>{ordersValue}</td>
                                             <td colSpan="1"></td>
+                                            <td></td>
                                             {this.props.isMyAccount ? <td></td> : null}
                                         </tr>
                                     </tbody>
@@ -640,19 +644,17 @@ class AccountOverview extends React.Component {
                                                     {totalValueText}
                                                 </td>
                                                 <td>{debtValue}</td>
-                                                <td>{collateralValue}</td>
+                                                <td className="column-hide-medium">{collateralValue}</td>
                                                 <td></td>
                                                 <td>{marginValue}</td>
-                                                <td colSpan="5"></td>
+                                                <td className="column-hide-small"></td>
+                                                <td className="column-hide-small"></td>
+                                                <td colSpan="3"></td>
                                             </tr>
                                         </MarginPositions>
                                     </div>
                                 </div>
                             </Tab>
-
-                            {/* <Tab title="markets.title" subText={hiddenSubText}>
-
-                            </Tab> */}
 
                             <Tab title="account.activity" subText={hiddenSubText}>
                                 <RecentTransactions

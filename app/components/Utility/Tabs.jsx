@@ -122,7 +122,7 @@ class Tabs extends React.Component {
 
     render() {
         let {children, contentClass, tabsClass, style, segmented} = this.props;
-        const collapseTabs = this.state.width < 900;
+        const collapseTabs = this.state.width < 900 && React.Children.count(children) > 2;
 
         let activeContent = null;
 

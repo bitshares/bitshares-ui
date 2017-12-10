@@ -195,7 +195,11 @@ class Exchange extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate() {
+        this._initPsContainer();
+    }
+
+    _initPsContainer() {
         if (this.refs.center && this.psInit) {
             let centerContainer = this.refs.center;
             if (centerContainer) {
@@ -203,6 +207,10 @@ class Exchange extends React.Component {
                 this.psInit = false;
             }
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this._initPsContainer();
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||
             nextProps.baseAsset !== this.props.baseAsset ||
@@ -308,10 +316,9 @@ class Exchange extends React.Component {
         return this.state.feeStatus[asset.get("id")] && this.state.feeStatus[asset.get("id")].fee;
     }
 
-    _verifyFee(fee, sellAmount, sellBalance, coreBalance) {
+    _verifyFee(fee, sell, sellBalance, coreBalance) {
         let coreFee = this._getFee();
 
-        let sellSum = fee.getAmount() + sellAmount;
         if (fee.asset_id === "1.3.0") {
             if (coreFee.getAmount() <= coreBalance) {
                 return "1.3.0";
@@ -319,12 +326,13 @@ class Exchange extends React.Component {
                 return null;
             }
         } else {
+            let sellSum = (sell.asset_id === fee.asset_id) ? (fee.getAmount() + sell.getAmount()) : sell.getAmount();
             if (sellSum <= sellBalance) { // Sufficient balance in asset to pay fee
                 return fee.asset_id;
             } else if (coreFee.getAmount() <= coreBalance && fee.asset_id !== "1.3.0") { // Sufficient balance in core asset to pay fee
                 return "1.3.0";
             } else {
-                return null; // Unable to pay fee in either asset
+                return null; // Unable to pay fee
             }
         }
     }
@@ -340,8 +348,7 @@ class Exchange extends React.Component {
         });
 
         let fee = this._getFee(feeAsset);
-
-        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+        let feeID = this._verifyFee(fee,current.for_sale, sellBalance.getAmount(), coreBalance.getAmount());
         if (!feeID) {
             return notify.addNotification({
                 message: "Insufficient funds to pay fees",
@@ -472,7 +479,7 @@ class Exchange extends React.Component {
             amount: coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0
         });
         let fee = this._getFee(feeAsset);
-        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+        let feeID = this._verifyFee(fee, current.for_sale, sellBalance.getAmount(), coreBalance.getAmount());
 
         if (feeID) {
             this._createLimitOrder(type, feeID);
@@ -489,7 +496,7 @@ class Exchange extends React.Component {
             amount: coreBalance ? parseInt(ChainStore.getObject(coreBalance).toJS().balance, 10) : 0
         });
         let fee = this._getFee(feeAsset);
-        let feeID = this._verifyFee(fee, current.for_sale.getAmount(), sellBalance.getAmount(), coreBalance.getAmount());
+        let feeID = this._verifyFee(fee, current.for_sale, sellBalance.getAmount(), coreBalance.getAmount());
 
         if (feeID) {
             this._createLimitOrder(type, feeID);
@@ -807,7 +814,6 @@ class Exchange extends React.Component {
         let current = this.state[type];
         // const isBid = type === "bid";
         current.for_sale.setAmount({real: parseFloat(e.target.value) || 0});
-
         if (current.price.isValid()) {
             this._setReceive(current, isBid);
         } else {
@@ -885,7 +891,7 @@ class Exchange extends React.Component {
             showCallLimit = false, latestPrice, changeClass;
 
 
-        let isNullAccount = currentAccount.get("id") === "1.2.3";
+        let notMyAccount = currentAccount.get("id") === "1.2.3" || !this.props.isMyAccount;
 
         const showVolumeChart = this.props.viewSettings.get("showVolumeChart", true);
         const enableChartClamp = this.props.viewSettings.get("enableChartClamp", true);
@@ -993,7 +999,7 @@ class Exchange extends React.Component {
 
         let buyForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
+                onBorrow={!notMyAccount && baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === base.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(base.get("symbol")) || null}
@@ -1002,7 +1008,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form` : `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form`
                 )}
@@ -1038,7 +1044,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
-                onBorrow={!isNullAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
+                onBorrow={!notMyAccount && quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(a => a.symbol === quote.get("symbol"))}
                 currentBridges={this.props.bridgeCoins.get(quote.get("symbol")) || null}
@@ -1047,7 +1053,7 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: isNullAccount},
+                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
                     this.state.flipBuySell ? `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form` : `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form`
                 )}
@@ -1235,7 +1241,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    isNullAccount={isNullAccount}
+                                    notMyAccount={notMyAccount}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}
@@ -1260,7 +1266,7 @@ class Exchange extends React.Component {
                                 <MyOpenOrders
                                     smallScreen={this.props.smallScreen}
                                     className={cnames(
-                                        {disabled: isNullAccount},
+                                        {disabled: notMyAccount},
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
                                         `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
                                     )}
@@ -1356,14 +1362,14 @@ class Exchange extends React.Component {
                         </div>
                     </div>
 
-                    {!isNullAccount && quoteIsBitAsset  ?
+                    {!notMyAccount && quoteIsBitAsset  ?
                         <BorrowModal
                             ref="borrowQuote"
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={currentAccount}
                          /> : null}
-                    {!isNullAccount && baseIsBitAsset ?
+                    {!notMyAccount && baseIsBitAsset ?
                         <BorrowModal
                             ref="borrowBase"
                             quote_asset={baseAsset.get("id")}

@@ -7,7 +7,9 @@ let icons = ["user", "trash", "chevron-down", "menu", "database", "download", "s
     "accounts", "witnesses", "assets", "proposals", "blocks", "committee_members", "workers", "key",
     "checkmark-circle", "checkmark", "piggy", "locked", "unlocked" , "markets", "fi-star" ,"fees",
     "thumb-tack", "clock", "clippy", "shuffle", "transfer", "dollar", "deposit", "withdraw",
-    "settle", "trade", "adjust", "excel", "share", "minus-circle"];
+    "settle", "trade", "adjust", "excel", "share", "minus-circle", "cogs", "dashboard",
+    "server", "power", "thumbs-up", "folder", "warning", "gift", "text", "list",
+    "hourglass"];
 
 let icons_map = {};
 for (let i of icons) icons_map[i] = require(`./${i}.svg`);

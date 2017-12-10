@@ -88,7 +88,7 @@ class TransactionConfirm extends React.Component {
                     </div>
                 ),
                 level: "success",
-                autoDismiss: 5
+                autoDismiss: 3
             });
         }
 

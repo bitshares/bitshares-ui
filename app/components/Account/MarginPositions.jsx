@@ -424,7 +424,7 @@ PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper, {keep_updating: true})
 const CollateralTable = ({callOrders, account, className, children, preferredUnit}) => {
 
     return (
-        <table className={"table " + className}>
+        <table className={"table table-hover " + className}>
             <thead>
             <tr>
                 <th style={alignLeft}><Translate content="explorer.asset.title" /></th>
@@ -452,7 +452,7 @@ const CollateralTable = ({callOrders, account, className, children, preferredUni
                 <th style={alignRight} className="column-hide-small">
                     <Translate content="exchange.price" />
                 </th>
-                <th style={alignLeft}><Translate content="explorer.assets.units" /></th>
+                <th className="column-hide-small" style={alignLeft}><Translate content="explorer.assets.units" /></th>
                 <th><Translate content="borrow.adjust_short" /></th>
                 <th><Translate content="transfer.close" /></th>
             </tr>

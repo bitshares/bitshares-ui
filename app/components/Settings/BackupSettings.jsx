@@ -2,6 +2,7 @@ import React from "react";
 import {BackupCreate} from "../Wallet/Backup";
 import BackupBrainkey from "../Wallet/BackupBrainkey";
 import counterpart from "counterpart";
+import BackupFavorites from "./BackupFavorites";
 
 export default class BackupSettings extends React.Component {
 
@@ -9,7 +10,7 @@ export default class BackupSettings extends React.Component {
         super();
         this.state = {
             restoreType: 0,
-            types: ["backup", "brainkey"]
+            types: ["backup", "brainkey", "favorites"]
         };
     }
 
@@ -35,6 +36,10 @@ export default class BackupSettings extends React.Component {
 
         case "brainkey":
             content = <BackupBrainkey />;
+            break;
+
+        case "favorites":
+            content = <BackupFavorites />;
             break;
 
         default:

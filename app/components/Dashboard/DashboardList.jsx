@@ -68,14 +68,18 @@ class DashboardList extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+
 		return (
 			!utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+			nextProps.showMyAccounts !== this.props.showMyAccounts ||
 			nextProps.width !== this.props.width ||
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
+			nextProps.linkedAccounts !== this.props.linkedAccounts ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
-			!utils.are_equal_shallow(nextState, this.state)
+			!utils.are_equal_shallow(nextState, this.state )
 		);
+		
 	}
 
 	_onStar(account, isStarred, e) {
@@ -112,8 +116,14 @@ class DashboardList extends React.Component {
 		});
 	}
 
+	_onUnLinkAccount(account, e) {
+		e.preventDefault();
+		AccountActions.unlinkAccount(account);
+	}
+
 	_renderList(accounts) {
-		const {width, starredAccounts} = this.props;
+
+		const {width, starredAccounts, showMyAccounts} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
 
@@ -196,11 +206,21 @@ class DashboardList extends React.Component {
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
+				let shouldShow = (isMyAccount === this.props.showMyAccounts);
+				
+				if(!shouldShow) 
+					return (null);
+
 				return (
 					<tr key={accountName}>
 						<td onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
+						{!showMyAccounts ? 
+							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
+								<Icon name="minus-circle"/>
+							</td> 
+						: null}
 						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
@@ -223,14 +243,16 @@ class DashboardList extends React.Component {
 	}
 
 	render() {
-		let { width, showIgnored } = this.props;
+
+		let { width, showIgnored, showMyAccounts } = this.props;
 		const { dashboardFilter } = this.state;
 
 		let includedAccounts = this._renderList(this.props.accounts);
 
 		let hiddenAccounts = showIgnored ? this._renderList(this.props.ignoredAccounts) : null;
 
-		let filterText = counterpart.translate("explorer.accounts.filter") + "...";
+		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
+		filterText += "...";
 
 		return (
 			<div style={this.props.style}>
@@ -246,6 +268,7 @@ class DashboardList extends React.Component {
 					<thead>
 						<tr>
 							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
+							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
 							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
@@ -284,6 +307,7 @@ export default connect(AccountsListWrapper, {
 		return {
 			locked: WalletUnlockStore.getState().locked,
 			starredAccounts: AccountStore.getState().starredAccounts,
+			linkedAccounts: AccountStore.getState().linkedAccounts,
 			viewSettings: SettingsStore.getState().viewSettings
 		};
 	}

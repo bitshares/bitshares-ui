@@ -27,6 +27,7 @@ class SettingsStore {
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
+            onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
@@ -65,7 +66,7 @@ class SettingsStore {
                 "tr",
                 "ru"
             ],
-            apiServer: [],
+            apiServer: apiServer,
             unit: [
                 CORE_ASSET,
                 "USD",
@@ -104,6 +105,13 @@ class SettingsStore {
         if (savedDefaults && savedDefaults.locale) {
             let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
             if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
+        }
+        if (savedDefaults.apiServer) {
+            savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
+                return !defaults.apiServer.find(b => {
+                    return b.url === a.url;
+                });
+            });
         }
         this.defaults = merge({}, defaults, savedDefaults);
 
@@ -306,6 +314,11 @@ class SettingsStore {
         ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
+    onClearStarredMarkets(){
+        this.starredMarkets = Immutable.Map({});
+        ss.set(this.starredKey, this.starredMarkets.toJS());
+    }
+
     onAddWS(ws) {
         if (typeof ws === "string") {
             ws = {url: ws, location: null};
@@ -315,10 +328,8 @@ class SettingsStore {
     }
 
     onRemoveWS(index) {
-        if (index !== 0) { // Prevent removing the default apiServer
-            this.defaults.apiServer.splice(index, 1);
-            ss.set("defaults_v1", this.defaults);
-        }
+        this.defaults.apiServer.splice(index, 1);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onClearSettings(resolve) {
