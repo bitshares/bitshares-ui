@@ -37,7 +37,7 @@ class TypeAhead extends React.Component {
         const { value } = state;
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
-            <label><Translate content="gateway.symbol" /></label>
+            <label className="left-label"><Translate content="gateway.symbol" /></label>
             <Autocomplete
                 ref="autocomplete"
                 items={props.items || [
@@ -45,7 +45,6 @@ class TypeAhead extends React.Component {
                     { id: 'bar', label: 'bar' },
                     { id: 'baz', label: 'baz' },
                 ]}
-                getItemValue={(item) => item.label}
                 shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
                 getItemValue={item => item.label}
                 renderItem={(item, highlighted) =>

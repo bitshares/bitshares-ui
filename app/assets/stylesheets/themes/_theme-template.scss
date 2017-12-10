@@ -560,6 +560,9 @@ $account-tabs-background
 
     .typeahead > div {
         width: 100%;
+        > div {
+            z-index: 1003;
+        }
     }
 
     ul.button-group.segmented {

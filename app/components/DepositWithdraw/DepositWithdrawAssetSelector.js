@@ -9,16 +9,35 @@ import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 
 class DepositWithdrawAssetSelector  extends React.Component {
+   constructor (props) {
+        super(props);
+    }
+
     render(){
         const { props } = this;
 
-        let getCoinOption = (item)=>{
-            return {id: item.symbol, label: item.symbol}
-        }
+        let getCoinOption = (item) => {
+            /* Gateway Specific Settings */
+            let gateway;
+            let backedCoin;
+
+            if(item.intermediateAccount && (item.intermediateAccount == "openledger-dex" || item.intermediateAccount == "openledger-wallet")) {
+                gateway = "OPEN";
+                backedCoin = item.backingCoinType;
+            } else if(item.gatewayWallet && (item.gatewayWallet == "rudex" || item.gatewayWallet == "rudex-gateway")) {
+                gateway = "RUDEX";
+                backedCoin = item.backingCoin;
+            } else {
+                console.log("Not Found");
+                console.log(item);
+            }
+            
+            return { id: item.symbol, label: backedCoin, gateway: gateway };
+        };
 
         let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
 
-        return <TypeAhead items={coinItems} />
+        return <TypeAhead items={coinItems} {...this.props} />
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
