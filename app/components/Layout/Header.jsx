@@ -261,7 +261,7 @@ class Header extends React.Component {
 
         let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
         let tradeLink = <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
+                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
                 <Translate component="span" content="header.exchange" />
             </a>;
 
@@ -317,7 +317,7 @@ class Header extends React.Component {
                         {!currentAccount || !!createAccountLink ? null :
                         <li>
                             <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
-                                <Icon size="2x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
+                                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
                                 <Translate content="header.dashboard" />
                             </Link>
                         </li>}
@@ -325,13 +325,13 @@ class Header extends React.Component {
                         {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
                         <li className="column-hide-small">
                             <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
+                                <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="server"/>
                                 <Translate component="span" content="header.explorer" />
                             </a>
                         </li>
                         {!!createAccountLink ? null : <li className="column-hide-small">
                             <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
+                                <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
                                 <span><Translate content="header.payments_beta" /></span>
                             </a>
                         </li>}
