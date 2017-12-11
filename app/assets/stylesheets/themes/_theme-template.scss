@@ -1433,6 +1433,10 @@ $account-tabs-background
             }
         }
     }
+
+    tr > td > a.primary-text {
+        color: $primary-text-color;
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
