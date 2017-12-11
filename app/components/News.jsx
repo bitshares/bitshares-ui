@@ -1,59 +1,52 @@
 import React from "react";
-import counterpart from 'counterpart';
-import steem from 'steem'
+import counterpart from "counterpart";
+import steem from "steem";
 import Translate from "react-translate-component";
 
 import LoadingIndicator from "./LoadingIndicator";
 
-const query = {tag: 'bitshares.fdn',limit: 20};
-
-// const wrapper = {padding: "1rem 3rem"};
-const pageTitle = {padding: "0px 0px 12px 17px"};
+const query = {tag: "bitshares.fdn",limit: 20};
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
-const headerStyle = {backgroundColor: "#1a2430"};
 const rowHeight = {height: "2rem"};
-const bodyRow = {backgroundColor: "#26384c"};
 const bodyCell = {
     border: "3px solid #2e343c",
     padding: "0.5rem 1rem",
     lineHeight: "2rem",
 };
 
-const headerText = {color: "#ffffff", fontWeight: "bold"}
-const leftCell = { ...alignLeft, ...bodyCell }
-const rightCell = { ...alignRight, ...bodyCell }
+const leftCell = { ...alignLeft, ...bodyCell };
+const rightCell = { ...alignRight, ...bodyCell };
 
-const secondCol = { ...leftCell, width: "180px"}
+const secondCol = { ...leftCell, width: "180px"};
 
 const SomethingWentWrong = () => (
     <p><Translate content="news.errors.fetch" /></p>
 );
 
+const ReusableLink = ({ data, url }) => (
+    <a
+        href={`https://steemit.com${url}`}
+        rel="noreferrer noopener"
+        target="_blank"
+        style={{display: "block", color: "#ffffff"}}
+    >{data}</a>
+);
+
 const NewsTable = ({ data, width }) => {
     return (
         <table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
-            <thead style={headerStyle}>
+            <thead>
                 <tr>
-                    <th style={rightCell}><span style={headerText}>
-                        <Translate content="account.votes.line" />
-                    </span></th>
-                    <th style={leftCell}><span style={headerText}>
-                        <Translate content="explorer.block.date" />
-                    </span></th>
-                    <th style={leftCell}><span style={headerText}>
-                        <Translate content="news.subject" />
-                    </span></th>
-                    <th style={leftCell}><span style={headerText}>
-                        <Translate content="news.author" />
-                    </span></th>
+                    <th style={rightCell}><Translate component="span" content="account.votes.line" /></th>
+                    <th style={leftCell}><Translate component="span" content="explorer.block.date" /></th>
+                    <th style={leftCell}><Translate component="span" content="news.subject" /></th>
+                    <th style={leftCell}><Translate component="span" content="news.author" /></th>
                 </tr>
             </thead>
             <tbody>
                 {data.map((singleNews, iter) => {
-                    console.log(singleNews.title)
-                    console.log(singleNews.title.length, width)
                     const theAuthor = singleNews.parentAuthor ? singleNews.parentAuthor : singleNews.author
                     const formattedDate = counterpart.localize(new Date(singleNews.active));
                     const smartTitle = (singleNews.title.length * 6) > (width-450)
@@ -61,47 +54,18 @@ const NewsTable = ({ data, width }) => {
                         : singleNews.title
                     return(
                         <tr
-                            style={bodyRow}
                             key={`${singleNews.title.slice(0,10)}${iter}`}
                         >
-                            <td style={rightCell}>
-                                <a 
-                                    href={`https://steemit.com${singleNews.url}`}
-                                    rel="noreferrer noopener"
-                                    target="_blank"
-                                    style={{display: "block", color: "#ffffff"}}
-                                >{iter+1}</a>
-                            </td>
-                            <td style={secondCol}>
-                                <a
-                                    href={`https://steemit.com${singleNews.url}`}
-                                    rel="noreferrer noopener"
-                                    target="_blank"
-                                    style={{display: "block", color: "#ffffff"}}
-                                >{formattedDate}</a>
-                            </td>
-                            <td style={leftCell}>
-                                <a
-                                    href={`https://steemit.com${singleNews.url}`}
-                                    rel="noreferrer noopener"
-                                    target="_blank"
-                                    style={{display: "block", color: "#ffffff"}}
-                                >{smartTitle}</a>
-                            </td>
-                            <td style={leftCell}>
-                                <a
-                                    href={`https://steemit.com${singleNews.url}`}
-                                    rel="noreferrer noopener"
-                                    target="_blank"
-                                    style={{display: "block", color: "#ffffff"}}
-                                >{theAuthor}</a>
-                            </td>
+                            <td style={rightCell}><ReusableLink data={iter+1} url={singleNews.url}/></td>
+                            <td style={secondCol}><ReusableLink data={formattedDate} url={singleNews.url}/></td>
+                            <td style={leftCell}><ReusableLink data={smartTitle} url={singleNews.url}/></td>
+                            <td style={leftCell}><ReusableLink data={theAuthor} url={singleNews.url}/></td>
                         </tr>
 
                     )
                 })}
             </tbody>
-            <thead style={headerStyle}>
+            <thead>
                 <tr style={rowHeight}>
                     <th style={rightCell} />
                     <th style={leftCell} />
@@ -115,14 +79,14 @@ const NewsTable = ({ data, width }) => {
 
 class News extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             isLoading: true,
             isWrong: false,
             discussions: [],
             width: 1200
-        }
-        this.updateDimensions = this.updateDimensions.bind(this)
+        };
+        this.updateDimensions = this.updateDimensions.bind(this);
     }
 
     updateDimensions() {
