@@ -5,6 +5,7 @@ import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
@@ -117,6 +118,14 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
+
+        // Set Accounts Tab as active tab
+        if(route == "/accounts") {
+            SettingsActions.changeViewSetting({
+                dashboardEntry: "accounts"
+            });
+        }
+
         this.context.router.push(route);
         this._closeDropdown();
     }
