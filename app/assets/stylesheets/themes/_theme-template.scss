@@ -31,11 +31,16 @@ $account-green,
 $account-primarytext,
 $account-dimmed,
 $account-border,
-$account-background
+$account-background,
+$account-tabs-background
 ) {
 
     .font-secondary {
         color: $secondary-text-color;
+    }
+
+    svg > path {
+      transition: all 0.3s ease 0s;
     }
 
     #content-wrapper {
@@ -177,6 +182,14 @@ $account-background
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
+
+        span.send-name {
+            color: $link-text-color;
+        }
+    }
+
+    .icon > svg > path {
+        fill: $primary-text-color;
     }
 
     .footer {
@@ -264,7 +277,7 @@ $account-background
     }
 
     .header .button,  .header .button:active {
-        background-color: $panel-bg-color !important;
+        background-color: transparent !important;
     }
 
     .header a.button.create-account {
@@ -279,6 +292,63 @@ $account-background
                 fill: lighten($button-bg-color, 10%);
             }
         }
+    }
+
+    .header div.account-drop-down {
+        div.total-value {
+            color: $account-green;
+        }
+
+        div.dropdown-wrapper {
+            > li {
+                > div.table-cell {
+                    &:nth-child(1):hover {
+                        background-color: $bg-color;
+                    }
+
+                    &:nth-child(2):hover {
+                        background-color: $bg-color;
+                    }
+                }
+            }
+        }
+
+        div.dropdown-wrapper.active {
+            transition: background-color 0s;
+            background-color: $bg-color;
+            ul {
+                background-color: $bg-color;
+            }
+
+            span.caret {
+                color: $link-text-color;
+            }
+        }
+
+        ul.dropdown.header-menu {
+            > li {
+                > div:first-of-type {
+                    > span.icon > svg {
+                        > path {
+                            fill: $primary-text-color;
+                        }
+                    }
+                }
+
+                &:hover, &.active {
+                    background-color: $light-panel-bg-color;
+                }
+
+                &.divider {
+                    border-bottom: 1px solid $account-border;
+                }
+            }
+        }
+    }
+
+
+    .header span.icon.lock-unlock > svg > path {
+        fill: $button-bg-color;
     }
 
     .grp-menu-item button {
@@ -308,7 +378,7 @@ $account-background
             > span { font-weight: bold; }
         }
         svg > path { fill: $secondary-text-color; }
-        svg:hover > path { fill: $primary-text-color; }
+        // svg:hover > path { fill: $primary-text-color; }
     }
 
     .settings-cog {
@@ -420,7 +490,7 @@ $account-background
             }
             /* Hover state */
 
-            li:hover span {
+            li:hover > span {
                 @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
                 color: $link-text-color;
             }
@@ -801,20 +871,24 @@ $account-background
     }
 
     .menu-group.primary, .menu-group.primary .menu-bar {
-        background-color: $panel-bg-color;
+        background-color: $account-background;
 
-        .menu-bar > li {
+        li {
 
             > a {
+                color: $account-dimmed;
+                .icon > svg > path {
+                  fill: $account-dimmed;
+                }
+            }
+
+            > a:hover, > a.active{
+                background-color: $bg-color !important;
                 color: $primary-text-color;
-            }
 
-            > a:hover {
-                background-color: lighten($panel-bg-color, 5%) !important;
-            }
-
-            > a.active {
-                background-color: lighten($panel-bg-color, 5%) !important;
+                .icon > svg > path {
+                  fill: $primary-text-color;
+                }
             }
         }
     }
@@ -858,7 +932,7 @@ $account-background
 
     td.orderHistoryBid {
 
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $bid-color;
         }
@@ -872,7 +946,7 @@ $account-background
     }
 
     td.orderHistoryAsk  {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $ask-color;
         }
@@ -884,7 +958,7 @@ $account-background
     }
 
     td.orderHistoryCall {
-        > span.price-integer, > span > span.price-integer {
+        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $call-color;
         }
@@ -1228,33 +1302,47 @@ $account-background
         color: $info-color;
     }
 
+    td.pub-key {
+        word-break: break-all;
+    }
+
     /* Table view account */
-    div.overview-tabs {
+    div.grid-content.app-tables {
         background-color: $account-background;
+    }
+    div.tabs-container {
+        background-color: $account-background;
+    }
+
+    div.account-tabs {
         > div.service-selector {
-            background-color: $account-header;
+            background-color: $bg-color;
         }
     }
-    ul.account-overview {
 
+    ul.account-overview {
         li {
+            transition: all 0.3s ease 0s;
+
             > a {
                 color: $account-dimmed;
-                background-color: $account-header;
+                background-color: transparent;
                 border: none;
+
+                transition: all 0.3s ease 0s;
+
                 &:hover {
-                    background-color: $account-header;
+                    background-color: lighten($account-header, 4%);
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
                     color: $account-green;
                 }
             }
-            &.is-active {
+            &.is-active, &:hover {
                 background-color: lighten($account-header, 4%);
                 > a {
                     color: $account-primarytext;
-                    background-color: lighten($account-header, 4%);
                 }
             }
             &.total-value {
@@ -1276,12 +1364,6 @@ $account-background
             background-color: $account-header;
             color: $account-primarytext;
             border-color: $account-border;
-            &:first-of-type {
-                border-left: 1px solid $account-border;
-            }
-            &:last-of-type {
-                border-right: 1px solid $account-border;
-            }
         }
         > tbody > tr {
             > td {
@@ -1335,6 +1417,12 @@ $account-background
         color: darken($warning-color, 15%);
     }
 
+    .api-status {
+        .low { color: $bid-color; }
+        .medium { color: $call-color; }
+        .high { color: $ask-color }
+    }
+
     .footer {
         div.footer-status {
             > span.success {
@@ -1347,12 +1435,12 @@ $account-background
     }
 }
 
-.olDarkTheme .gate_fee .amount-selector {
+.midnightTheme .gate_fee .amount-selector {
   width: 100%;
   display: inline-block;
 }
 
-.olDarkTheme .gate_fee .right-selector {
+.midnightTheme .gate_fee .right-selector {
     text-align: right;
     width: 26%;
     display: inline-block;
@@ -1360,7 +1448,7 @@ $account-background
     text-transform: uppercase;
 }
 
-.olDarkTheme .gate_fee .right-selector .right-selector-input {
+.midnightTheme .gate_fee .right-selector .right-selector-input {
     text-align: right;
     width: 100%;
 }

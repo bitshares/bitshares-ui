@@ -66,7 +66,7 @@ class SettingsStore {
                 "tr",
                 "ru"
             ],
-            apiServer: [],
+            apiServer: apiServer,
             unit: [
                 CORE_ASSET,
                 "USD",
@@ -86,7 +86,7 @@ class SettingsStore {
             themes: [
                 "darkTheme",
                 "lightTheme",
-                "olDarkTheme"
+                "midnightTheme"
             ],
             passwordLogin: [
                 {translate: "cloud_login"},
@@ -99,12 +99,21 @@ class SettingsStore {
         };
 
         this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
-
+        if (this.settings.get("themes") === "olDarkTheme") {
+            this.settings = this.settings.set("themes", "midnightTheme");
+        }
         let savedDefaults = ss.get("defaults_v1", {});
         /* Fix for old clients after changing cn to zh */
         if (savedDefaults && savedDefaults.locale) {
             let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
             if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
+        }
+        if (savedDefaults.apiServer) {
+            savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
+                return !defaults.apiServer.find(b => {
+                    return b.url === a.url;
+                });
+            });
         }
         this.defaults = merge({}, defaults, savedDefaults);
 
@@ -321,10 +330,8 @@ class SettingsStore {
     }
 
     onRemoveWS(index) {
-        if (index !== 0) { // Prevent removing the default apiServer
-            this.defaults.apiServer.splice(index, 1);
-            ss.set("defaults_v1", this.defaults);
-        }
+        this.defaults.apiServer.splice(index, 1);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onClearSettings(resolve) {

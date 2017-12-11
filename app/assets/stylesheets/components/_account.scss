@@ -156,7 +156,7 @@ div.hide-selector {
     }
 }
 
-div.overview-tabs {
+div.account-tabs {
     > div.service-selector {
         margin-bottom: 0;
         border: none;
@@ -169,7 +169,12 @@ div.overview-tabs {
     }
 
     > div.tab-content {
-        padding-top: 20px;
+
+         @include breakpoint(large) {
+             max-width: rem-calc(1200);
+             margin-left: auto !important;
+             margin-right: auto !important;
+         }
     }
 
     &.with-buttons ul.account-overview > li:not(.total-value) > a {
@@ -192,6 +197,10 @@ div.overview-tabs {
                 text-align: right;
             }
         }
+    }
+
+    ul > li.tabs-action-buttons {
+        margin: 5px auto;
     }
 }
 ul.account-overview {
@@ -219,17 +228,20 @@ ul.account-overview {
 }
 
 table.table.dashboard-table {
+    > thead > tr > th:first-of-type, > tbody > tr > td:first-of-type {
+        padding-left: 1.5rem;
+    }
     > thead > tr > th {
         font-weight: 600;
         font-size: 80%;
         text-align: center;
-        border: 1px solid;
+        border: none;
     }
     > tbody > tr {
         > td {
             font-size: 0.8rem;
             text-align: center;
-            border: 1px solid;
+            border: none;
 
             &.worker-name {
                 max-width: 15rem;
@@ -248,7 +260,8 @@ table.table.dashboard-table {
         &.total-value {
             td {
                 vertical-align: middle;
-                padding: 8px 5px;
+                padding-top: 8px;
+                padding-bottom: 8px;
                 border-bottom: none;
                 word-wrap: none;
             }
@@ -275,5 +288,47 @@ div.hide-selector > div.new-worker-button {
         top: -10px;
         float: right;
         clear: both;
+    }
+}
+
+div.tabs-container {
+    > div {
+        padding: 0px;
+    }
+
+    div.permissions-buttons > button {
+        margin: 0rem;
+        margin-left: 1rem;
+        font-size: 1.2em;
+    }
+
+    div.tab-content,
+    div.permissions-buttons {
+        margin: 0 1rem;
+    }
+
+    div.help-content {
+        max-width: 800px;
+    }
+
+    div.tabs-header > h1,
+    div.tabs-header > h2,
+    div.tabs-header > h3,
+    div.tabs-header > h4,
+    div.tabs-header > h5 {
+        margin: 10px 15px;
+    }
+
+    td .button span {
+        white-space: nowrap;
+    }
+
+    .action-buttons {
+        text-align: right;
+
+        button {
+            min-width: 5rem;
+            margin-left: 0.5rem;
+        }
     }
 }

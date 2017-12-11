@@ -4,7 +4,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import GatewayStore from "stores/GatewayStore";
-import AccountLeftPanel from "./AccountLeftPanel";
+// import AccountLeftPanel from "./AccountLeftPanel";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import { connect } from "alt-react";
@@ -21,7 +21,7 @@ class AccountPage extends React.Component {
     };
 
     componentDidMount() {
-        if (this.props.account && AccountStore.isMyAccount(this.props.account)) {
+        if (this.props.account) {
             AccountActions.setCurrentAccount.defer(this.props.account.get("name"));
         }
 
@@ -29,14 +29,20 @@ class AccountPage extends React.Component {
         accountUtils.getPossibleFees(this.props.account, "transfer");
     }
 
+    componentWillReceiveProps(np) {
+        if (np.account) {
+            AccountActions.setCurrentAccount.defer(np.account.get("name"));
+        }
+    }
+
     render() {
-        let {myAccounts, linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
+        let {linkedAccounts, account_name, searchAccounts, settings, wallet_locked, account, hiddenAssets} = this.props;
 
         let isMyAccount = AccountStore.isMyAccount(account);
 
         return (
             <div className="grid-block page-layout">
-                <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
+                {/* <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
                     <AccountLeftPanel
                         account={account}
                         isMyAccount={isMyAccount}
@@ -45,9 +51,8 @@ class AccountPage extends React.Component {
                         viewSettings={this.props.viewSettings}
                         passwordLogin={settings.get("passwordLogin")}
                     />
-                </div>
-                <div className="grid-block main-content">
-                    <div className="grid-container">
+                </div> */}
+                    <div className="grid-block no-padding">
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
@@ -70,7 +75,6 @@ class AccountPage extends React.Component {
                         }
                     )}
                     </div>
-                </div>
             </div>
         );
     }
@@ -96,7 +100,6 @@ export default connect(AccountPageStoreWrapper, {
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             wallet_locked: WalletUnlockStore.getState().locked,
-            myAccounts:  AccountStore.getState().myAccounts,
             viewSettings: SettingsStore.getState().viewSettings,
             backedCoins: GatewayStore.getState().backedCoins,
             bridgeCoins: GatewayStore.getState().bridgeCoins,

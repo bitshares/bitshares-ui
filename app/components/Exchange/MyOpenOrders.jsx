@@ -14,6 +14,7 @@ import { LimitOrder, CallOrder } from "common/MarketClasses";
 const rightAlign = {textAlign: "right"};
 import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 class TableHeader extends React.Component {
 
@@ -35,7 +36,7 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th colSpan="3"><Translate content="account.bts_market" /></th>
-                    {isMyAccount ? <th style={rightAlign}><Translate content="account.quote" /></th> : null}
+                    <th style={rightAlign}><Translate content="account.quote" /></th>
                     <th style={rightAlign}><Translate content="exchange.price" /></th>
                     <th style={rightAlign}><Translate content="account.qty" /></th>
                     <th style={rightAlign}><Translate content="exchange.total" /></th>
@@ -108,11 +109,19 @@ class OrderRow extends React.Component {
                 <td style={{textAlign: "left", paddingRight: 0, borderLeft: "none"}}>
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
                 </td>
-                {isMyAccount ? <td style={{textAlign: "right", paddingLeft: 0}}>
-                  <MarketPrice base={base.get("id")} quote={quote.get("id")} marketId={base.get("symbol")+"_"+quote.get("symbol")} />
-                </td> : null}
+                <td style={{textAlign: "right", paddingLeft: 0}}>
+                  <MarketPrice
+                      base={base.get("id")}
+                      quote={quote.get("id")}
+                  />
+                </td>
                 <td className={tdClass} style={rightAlign}>
-                    <PriceText price={order.getPrice()} base={base} quote={quote} />
+                    {/* <PriceText price={order.getPrice()} base={base} quote={quote} /> */}
+                    <FormattedPrice
+                        base_amount={order.sellPrice().base.amount} base_asset={order.sellPrice().base.asset_id}
+                        quote_amount={order.sellPrice().quote.amount} quote_asset={order.sellPrice().quote.asset_id}
+                        hide_symbols
+                    />
                     {priceSymbol}
                 </td>
                 <td style={rightAlign}>{utils.format_number(order[!isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} {amountSymbol}</td>
@@ -189,7 +198,13 @@ class MyOpenOrders extends React.Component {
             ) {
                 return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
             }
-        }).filter(a => !!a).filter(a => a.isMarginCalled());
+        }).filter(a => !!a).filter(a => {
+            try {
+                return a.isMarginCalled();
+            } catch(err) {
+                return false;
+            }
+        });
         return limitOrders.concat(callOrders);
     }
 

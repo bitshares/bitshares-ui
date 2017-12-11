@@ -28,13 +28,15 @@ class Tab extends React.Component {
         changeTab: PropTypes.func,
         isActive: PropTypes.bool.isRequired,
         index: PropTypes.number.isRequired,
-        className: PropTypes.string
+        className: PropTypes.string,
+        isLinkTo: PropTypes.string
     };
 
     static defaultProps = {
         isActive: false,
         index: 0,
-        className: ""
+        className: "",
+        isLinkTo: ""
     };
 
     render() {
@@ -42,10 +44,10 @@ class Tab extends React.Component {
         let c = cnames({"is-active": isActive}, className);
 
         if (this.props.collapsed) {
-            return <option value={index}>{typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}</option>;
+            return <option value={index} data-is-link-to={this.props.isLinkTo} >{typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}</option>;
         }
         return (
-            <li className={c} onClick={!disabled ? changeTab.bind(this, index) : null}>
+            <li className={c} onClick={!disabled ? changeTab.bind(this, index,this.props.isLinkTo) : null}>
                 <a>
                     {typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}
                     {this.props.subText ? <div className="tab-subtext">{this.props.subText}</div> : null}
@@ -70,7 +72,11 @@ class Tabs extends React.Component {
         contentClass: "",
         style: {}
     };
-
+    
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    };
+    
     constructor(props) {
         super();
         this.state = {
@@ -107,9 +113,19 @@ class Tabs extends React.Component {
         }
     }
 
-    _changeTab(value) {
+    _changeTab(value,isLinkTo) {
+        
+        
+        console.log("tab value "+value+". isLinkTo="+isLinkTo)
+
         if (value === this.state.activeTab) return;
         // Persist current tab if desired
+        
+        if (isLinkTo !== "") {
+            this.context.router.push(isLinkTo);
+            return;
+        }
+        
         if (this.props.setting) {
             SettingsActions.changeViewSetting({
                 [this.props.setting]: value
@@ -122,7 +138,7 @@ class Tabs extends React.Component {
 
     render() {
         let {children, contentClass, tabsClass, style, segmented} = this.props;
-        const collapseTabs = this.state.width < 900;
+        const collapseTabs = this.state.width < 900 && React.Children.count(children) > 2;
 
         let activeContent = null;
 
@@ -160,7 +176,7 @@ class Tabs extends React.Component {
                                     value={this.state.activeTab}
                                     style={{marginTop: 10, marginBottom: 10}}
                                     className="bts-select"
-                                    onChange={(e) => {this._changeTab(parseInt(e.target.value, 10));}}
+                                    onChange={(e) => { let ind = parseInt(e.target.value, 10); this._changeTab(ind,e.target[ind].attributes["data-is-link-to"].value);}}
                                 >
                                     {tabs}
                                 </select>

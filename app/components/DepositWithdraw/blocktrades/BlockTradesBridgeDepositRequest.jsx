@@ -1205,7 +1205,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     <tr>
                         <th><Translate content="gateway.deposit" /></th>
                         <th ><Translate content="gateway.balance" /></th>
-                        <th ><Translate content="gateway.deposit_to" /></th>
+                        <th ><Translate content="gateway.deposit_to" asset={this.state.deposit_input_coin_type}/></th>
                     </tr>
                 </thead>;
 
