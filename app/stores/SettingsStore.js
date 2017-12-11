@@ -99,7 +99,9 @@ class SettingsStore {
         };
 
         this.settings = Immutable.Map(merge(this.defaultSettings.toJS(), ss.get("settings_v3")));
-
+        if (this.settings.get("themes") === "olDarkTheme") {
+            this.settings = this.settings.set("themes", "midnightTheme");
+        }
         let savedDefaults = ss.get("defaults_v1", {});
         /* Fix for old clients after changing cn to zh */
         if (savedDefaults && savedDefaults.locale) {
