@@ -149,6 +149,7 @@
     "perfect-scrollbar": "git+https://github.com/bitshares/perfect-scrollbar.git",
     "qrcode.react": "^0.7.1",
     "react": "^15.6.1",
+    "react-autocomplete": "^1.7.2",
     "react-clipboard.js": "^1.0.1",
     "react-dom": "^15.6.1",
     "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
