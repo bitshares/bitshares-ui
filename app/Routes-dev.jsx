@@ -25,7 +25,7 @@ import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw"
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
-import AccountOrders from "./components/Account/AccountOrders";
+// import AccountOrders from "./components/Account/AccountOrders";
 import AccountSignedMessages from "./components/Account/AccountSignedMessages";
 import ExchangeContainer from "./components/Exchange/ExchangeContainer";
 import MarketsContainer from "./components/Exchange/MarketsContainer";
@@ -110,10 +110,13 @@ const routes = (
 
 
         <Route path="/accounts" component={DashboardAccountsOnly} />
-        
+
         <Route path="/account/:account_name" component={AccountPage} >
             <IndexRoute component={AccountOverview} />
-            <Route path="dashboard" component={AccountOverview} />
+            {/* <Route path="dashboard" component={AccountOverview} /> */}
+            {/* <Route path="deposit-withdraw" component={AccountDepositWithdraw} /> */}
+            {/* <Route path="orders" component={AccountOrders} /> */}
+
             <Route path="assets" component={AccountAssets} />
             <Route path="create-asset" component={AccountAssetCreate} />
             <Route path="update-asset/:asset" component={AccountAssetUpdate} />
@@ -121,11 +124,11 @@ const routes = (
             <Route path="vesting" component={AccountVesting} />
             <Route path="permissions" component={AccountPermissions} />
             <Route path="voting" component={AccountVoting} />
-            <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
-            <Route path="orders" component={AccountOrders} />
             <Route path="whitelist" component={AccountWhitelist} />
             <Route path="signedmessages" component={AccountSignedMessages} />
-            <Redirect from="overview" to="dashboard" />
+            <Redirect from="overview" to="/account/:account_name" />
+            <Redirect from="dashboard" to="/account/:account_name" />
+            <Redirect from="orders" to="/account/:account_name" />
         </Route>
 
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
