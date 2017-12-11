@@ -148,7 +148,7 @@ class Sidemenu extends React.Component {
         let isWalletActive = active.indexOf("transfer") !== -1
             || active.indexOf("deposit-withdraw") !== -1
             || active.indexOf("overview") !== -1
-            || (active.indexOf("account") !== -1 && active.indexOf("dashboard") !== -1);
+            || active === `/account/${currentAccount}`;
         let isAccountActive = active.indexOf("member-stats") !== -1
             || active.indexOf("voting") !== -1
             || (active.indexOf("account") !== -1 && active.indexOf("assets") !== -1)
@@ -166,7 +166,7 @@ class Sidemenu extends React.Component {
                             <ul className="sidemenu-list">
                                 <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
                                 <li style={{border: 0}}>{dashboard}</li>
-                                <li className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                <li className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active === `/account/${currentAccount}`})}>
                                     <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}`)}>
                                         <Icon name="dashboard"/>
                                         <Translate content="wallet.title" />

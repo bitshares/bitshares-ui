@@ -437,13 +437,14 @@ $account-tabs-background
             color: $secondary-text-color;
             white-space: nowrap;
             text-overflow: ellipsis;
-            &.disabled {
-              cursor: not-allowed;
-              opacity: .3;
-              &:hover {
-                background: transparent;
-              }
-            }
+        }
+
+        li.disabled a {
+          cursor: not-allowed;
+          opacity: .3;
+          &:hover {
+            background: transparent;
+          }
         }
         li > a:hover, li > label:hover, li select:hover, li.active > a {
             color: $light-text-color;
