@@ -37,7 +37,7 @@ const routes = (
             System.import("components/Explorer/Explorer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="/explorer/fees" getComponent={(location, cb) => {
-            System.import("components/Blockchain/FeesContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Explorer/FeesContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="/explorer/blocks" getComponent={(location, cb) => {
             System.import("components/Explorer/BlocksContainer").then(loadRoute(cb)).catch(errorLoading);
@@ -110,7 +110,7 @@ const routes = (
             System.import("components/Transfer/Invoice").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="explorer/markets" getComponent={(location, cb) => {
-            System.import("components/Exchange/MarketsContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Explorer/MarketsContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="market/:marketID" getComponent={(location, cb) => {
             System.import("components/Exchange/ExchangeContainer").then(loadRoute(cb)).catch(errorLoading);

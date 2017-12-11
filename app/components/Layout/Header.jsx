@@ -322,8 +322,8 @@ class Header extends React.Component {
                         <li className="column-hide-small">{tradeLink}</li>
                         {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
                         <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="server"/>
+                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
                                 <Translate component="span" content="header.explorer" />
                             </a>
                         </li>
@@ -378,7 +378,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="header.exchange" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer")}>
+                                        <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
                                             <div className="table-cell"><Icon size="2x" name="server" /></div>
                                             <div className="table-cell"><Translate content="header.explorer" /></div>
                                         </li>
