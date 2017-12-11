@@ -167,7 +167,7 @@ class Sidemenu extends React.Component {
                                 <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
                                 <li style={{border: 0}}>{dashboard}</li>
                                 <li>
-                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}`)} className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
                                         <Icon name="dashboard"/>
                                         <Translate content="wallet.title" />
                                     </a>
@@ -238,17 +238,12 @@ class Sidemenu extends React.Component {
                                 </li>
                                 <li>{tradeLink}</li>
                                 <li>
-                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/explorer/") === -1 && isExplorerActive, selected: isExplorerActive})} onClick={this._onNavigate.bind(this, "/explorer")}>
-                                        <Icon name="server"/>
-                                        <Translate component="span" content="header.explorer" />
+                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/explorer/blocks") !== -1 && isExplorerActive, selected: isExplorerActive})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                        <Icon name="blocks"/>
+                                        <Translate component="span" content="explorer.blocks.title" />
                                     </a>
                                     {isExplorerActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
-
-                                            <li><a className={cnames({active: active.indexOf("/explorer/blocks") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/blocks`)}>
-                                                <Icon name="blocks" />
-                                                <Translate content="explorer.blocks.title" />
-                                            </a></li>
 
                                             <li><a className={cnames({active: active.indexOf("/explorer/assets") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/assets`)}>
                                                 <Icon name="assets" />

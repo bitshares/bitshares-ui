@@ -5,6 +5,7 @@ import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
@@ -115,6 +116,14 @@ class Header extends React.Component {
 
     _onNavigate(route, e) {
         e.preventDefault();
+
+        // Set Accounts Tab as active tab
+        if(route == "/accounts") {
+            SettingsActions.changeViewSetting({
+                dashboardEntry: "accounts"
+            });
+        }
+
         this.context.router.push(route);
         this._closeDropdown();
     }
@@ -249,10 +258,10 @@ class Header extends React.Component {
                 .sort()
                 .map((name) => {
                     return (
-                        <li onClick={this._accountClickHandler.bind(this, name)} className={name === account_display_name ? "current-account" : ""} key={name}>
-                            <a className="divider">
+                        <li onClick={this._accountClickHandler.bind(this, name)} className={"account-item " + cnames({active: active.indexOf(name) !== -1})} key={name}>
+                            <a>
                                 <AccountImage size={{height: 1.6, width: 1.6}} unit="rem" account={name}/>
-                                <span>{name}</span>
+                                <span className={"lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</span>
                             </a>
                         </li>
                     );
@@ -324,7 +333,6 @@ class Header extends React.Component {
                                            <Icon name="folder" />
                                            <Translate content="explorer.accounts.title" />
                                         </a></li>
-
                                         {accountsList}
                                     </ul>
                                 </div>

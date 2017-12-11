@@ -32,7 +32,7 @@
       line-height: 2rem;
       padding-left: 1.25rem;
       padding-right: 0.75rem;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       @include breakpoint(large) {
         padding-left: 1.75rem;
         padding-right: 1.75rem;
@@ -146,11 +146,11 @@ div.account-drop-down div.dropdown-wrapper {
         padding-bottom: 0;
     }
 
-    .current-account {
+    .account-item {
       vertical-align: middle;
     }
 
-    .current-account .account-image {
+    .account-item .account-image {
       display: inline;
       width: 1.6rem;
       height: 1.6rem;
