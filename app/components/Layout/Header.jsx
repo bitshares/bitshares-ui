@@ -277,11 +277,9 @@ class Header extends React.Component {
                 .sort()
                 .map((name) => {
                     return (
-                        <li onClick={this._accountClickHandler.bind(this, name)} className={name === account_display_name ? "current-account" : ""} key={name}>
-                            <a href>
-                                <div className="table-cell"><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></div>
-                                <div className="table-cell" style={{paddingLeft: 10}}><span className="lower-case">{name}</span></div>
-                            </a>
+                        <li className={cnames({active: active.indexOf(name) !== -1})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
+                            <div style={{paddingTop: 0}} className="table-cell"><AccountImage style={{position: "relative", top: 4}} size={{height: 20, width: 20}} account={name}/></div>
+                            <div className="table-cell" style={{paddingLeft: 10}}><a className={"lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</a></div>
                         </li>
                     );
                 });
@@ -316,7 +314,7 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount || !!createAccountLink ? null :
                         <li>
-                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}/overview`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1})}>
                                 <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
                                 <Translate content="header.dashboard" />
                             </Link>
