@@ -151,12 +151,12 @@ class Sidemenu extends React.Component {
             || (active.indexOf("account") !== -1 && active.indexOf("dashboard") !== -1);
         let isAccountActive = active.indexOf("member-stats") !== -1
             || active.indexOf("voting") !== -1
-            || active.indexOf("assets") !== -1
-            || active.indexOf("voting") !== -1
+            || (active.indexOf("account") !== -1 && active.indexOf("assets") !== -1)
             || active.indexOf("signedmessages") !== -1
             || active.indexOf("vesting") !== -1
             || active.indexOf("whitelist") !== -1
-            || active.indexOf("permissions") !== -1
+            || active.indexOf("permissions") !== -1;
+        let isExplorerActive = active.indexOf("explorer") !== -1;
 
         return (
             <div className={cnames({ active: this.state.open }) + " sidemenu-outer grid-block vertical"}>
@@ -203,7 +203,7 @@ class Sidemenu extends React.Component {
                                     {isAccountActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
 
-                                            <li><a className={cnames({active: active.indexOf("/voting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
+                                            <li><a className={cnames({active: active.indexOf("/voting") !== -1 && active.indexOf("/account") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
                                                 <Icon name="thumbs-up" />
                                                 <Translate content="account.voting" />
                                             </a></li>
@@ -228,7 +228,7 @@ class Sidemenu extends React.Component {
                                                 <Translate content="account.whitelist.title" />
                                             </a></li>
 
-                                            <li><a className={cnames("divider", {active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                            <li><a className={cnames({active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
                                                 <Icon name="warning" />
                                                 <Translate content="account.permissions" />
                                             </a></li>
@@ -238,10 +238,49 @@ class Sidemenu extends React.Component {
                                 </li>
                                 <li>{tradeLink}</li>
                                 <li>
-                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
+                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/explorer/") === -1 && isExplorerActive, selected: isExplorerActive})} onClick={this._onNavigate.bind(this, "/explorer")}>
                                         <Icon name="server"/>
                                         <Translate component="span" content="header.explorer" />
                                     </a>
+                                    {isExplorerActive ? (<section className="block-list">
+                                        <ul className="sidemenu-list">
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/blocks") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/blocks`)}>
+                                                <Icon name="blocks" />
+                                                <Translate content="explorer.blocks.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/assets") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/assets`)}>
+                                                <Icon name="assets" />
+                                                <Translate content="explorer.assets.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/accounts") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/accounts`)}>
+                                                <Icon name="accounts" />
+                                                <Translate content="explorer.accounts.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/witnesses") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/witnesses`)}>
+                                                <Icon name="witnesses" />
+                                                <Translate content="explorer.witnesses.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/committee-members") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/committee-members`)}>
+                                                <Icon name="committee_members" />
+                                                <Translate content="explorer.committee_members.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/markets") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/markets`)}>
+                                                <Icon name="markets" />
+                                                <Translate content="markets.title" />
+                                            </a></li>
+
+                                            <li><a className={cnames({active: active.indexOf("/explorer/fees") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/fees`)}>
+                                                <Icon name="fees" />
+                                                <Translate content="fees.title" />
+                                            </a></li>
+                                        </ul>
+                                    </section>) : null}
                                 </li>
                             </ul>
                         </section>
