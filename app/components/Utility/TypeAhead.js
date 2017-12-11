@@ -1,5 +1,5 @@
-import Autocomplete from 'react-autocomplete'
-import React from 'react'
+import Autocomplete from "react-autocomplete"
+import React from "react"
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component"
 
@@ -7,7 +7,7 @@ class TypeAhead extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            value: '',
+            value: "",
         }
     }
 
@@ -41,16 +41,16 @@ class TypeAhead extends React.Component {
             <Autocomplete
                 ref="autocomplete"
                 items={props.items || [
-                    { id: 'foo', label: 'foo' },
-                    { id: 'bar', label: 'bar' },
-                    { id: 'baz', label: 'baz' },
+                    { id: "foo", label: "foo" },
+                    { id: "bar", label: "bar" },
+                    { id: "baz", label: "baz" },
                 ]}
                 shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
                 getItemValue={item => item.label}
                 renderItem={(item, highlighted) =>
                     <div
                         key={item.id}
-                        style={{ backgroundColor: highlighted ? '#eee' : 'transparent', color: '#000', padding: '5px'}}
+                        style={{ backgroundColor: highlighted ? "#eee" : "transparent", color: "#000", padding: "5px"}}
                     >
                     {item.label}
                     </div>
