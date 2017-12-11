@@ -1,11 +1,11 @@
 import React from "react";
-import counterpart from 'counterpart';
-import steem from 'steem';
+import counterpart from "counterpart";
+import steem from "steem";
 import Translate from "react-translate-component";
 
 import LoadingIndicator from "./LoadingIndicator";
 
-const query = {tag: 'bitshares.fdn',limit: 20};
+const query = {tag: "bitshares.fdn",limit: 20};
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
