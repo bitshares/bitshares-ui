@@ -64,12 +64,10 @@
         &.dashboard-link:hover {
           background: transparent;
         }
-
-        &.active {
+      }
+      > li.active > a {
           border-right-width: 3px;
           border-right-style: solid;
-        }
-
       }
     }
   }

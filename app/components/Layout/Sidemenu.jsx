@@ -166,15 +166,15 @@ class Sidemenu extends React.Component {
                             <ul className="sidemenu-list">
                                 <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
                                 <li style={{border: 0}}>{dashboard}</li>
-                                <li>
-                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}`)} className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                <li className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}`)}>
                                         <Icon name="dashboard"/>
                                         <Translate content="wallet.title" />
                                     </a>
                                     {isWalletActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
 
-                                            <li><a className={cnames({active: active.indexOf("/transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}>
+                                            <li className={cnames({active: active.indexOf("/transfer") !== -1})}><a onClick={this._onNavigate.bind(this, "/transfer")}>
                                                 <Icon name="transfer" />
                                                 <Translate content="header.payments" />
                                             </a></li>
@@ -184,51 +184,51 @@ class Sidemenu extends React.Component {
                                                 <Translate content="header.payments_beta" />
                                             </a></li>}
 
-                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                            <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})}><a onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                                 <Icon name="deposit" />
                                                 <Translate content="gateway.deposit" />
                                             </a></li>
-                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                            <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})}><a onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                                 <Icon name="withdraw" />
                                                 <Translate content="modal.withdraw.submit" />
                                             </a></li>
                                         </ul>
                                     </section>) : null}
                                 </li>
-                                <li>
-                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)} className={cnames({selected: isAccountActive, disabled: myAccountCount === 0, active: active.indexOf("member-stats") !== -1})}>
+                                <li className={cnames({selected: isAccountActive, disabled: myAccountCount === 0, active: active.indexOf("member-stats") !== -1})}>
+                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)}>
                                         <Icon name="user"/>
                                         <Translate content="header.account" />
                                     </a>
                                     {isAccountActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
 
-                                            <li><a className={cnames({active: active.indexOf("/voting") !== -1 && active.indexOf("/account") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
+                                            <li className={cnames({active: active.indexOf("/voting") !== -1 && active.indexOf("/account") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
                                                 <Icon name="thumbs-up" />
                                                 <Translate content="account.voting" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
+                                            <li className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
                                                 <Icon name="assets" />
                                                 <Translate content="explorer.assets.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/signedmessages") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
+                                            <li className={cnames({active: active.indexOf("/signedmessages") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
                                                 <Icon name="text" />
                                                 <Translate content="account.signedmessages.menuitem" />
                                             </a></li>
 
-                                            {isMyAccount ? <li><a className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
+                                            {isMyAccount ? <li className={cnames({active: active.indexOf("/vesting") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
                                                 <Icon name="hourglass" />
                                                 <Translate content="account.vesting.title" />
                                             </a></li> : null}
 
-                                            <li><a className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
+                                            <li className={cnames({active: active.indexOf("/whitelist") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
                                                 <Icon name="list" />
                                                 <Translate content="account.whitelist.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                            <li className={cnames({active: active.indexOf("/permissions") !== -1})}><a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
                                                 <Icon name="warning" />
                                                 <Translate content="account.permissions" />
                                             </a></li>
@@ -237,40 +237,39 @@ class Sidemenu extends React.Component {
                                     </section>) : null}
                                 </li>
                                 <li>{tradeLink}</li>
-                                <li>
-                                    <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/explorer/blocks") !== -1 && isExplorerActive, selected: isExplorerActive})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                <li className={cnames({active: active.indexOf("/explorer/blocks") !== -1 && isExplorerActive, selected: isExplorerActive})}>
+                                    <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
                                         <Icon name="blocks"/>
                                         <Translate component="span" content="explorer.blocks.title" />
                                     </a>
                                     {isExplorerActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
-
-                                            <li><a className={cnames({active: active.indexOf("/explorer/assets") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/assets`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/assets") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/assets`)}>
                                                 <Icon name="assets" />
                                                 <Translate content="explorer.assets.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/explorer/accounts") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/accounts`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/accounts") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/accounts`)}>
                                                 <Icon name="accounts" />
                                                 <Translate content="explorer.accounts.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/explorer/witnesses") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/witnesses`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/witnesses") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/witnesses`)}>
                                                 <Icon name="witnesses" />
                                                 <Translate content="explorer.witnesses.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/explorer/committee-members") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/committee-members`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/committee-members") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/committee-members`)}>
                                                 <Icon name="committee_members" />
                                                 <Translate content="explorer.committee_members.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/explorer/markets") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/markets`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/markets") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/markets`)}>
                                                 <Icon name="markets" />
                                                 <Translate content="markets.title" />
                                             </a></li>
 
-                                            <li><a className={cnames({active: active.indexOf("/explorer/fees") !== -1})} onClick={this._onNavigate.bind(this, `/explorer/fees`)}>
+                                            <li className={cnames({active: active.indexOf("/explorer/fees") !== -1})}><a onClick={this._onNavigate.bind(this, `/explorer/fees`)}>
                                                 <Icon name="fees" />
                                                 <Translate content="fees.title" />
                                             </a></li>
