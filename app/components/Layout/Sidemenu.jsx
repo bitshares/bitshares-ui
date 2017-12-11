@@ -237,6 +237,12 @@ class Sidemenu extends React.Component {
                                     </section>) : null}
                                 </li>
                                 <li>{tradeLink}</li>
+                                <li className={cnames({active: active.indexOf("/news") !== -1})}>
+                                    <a onClick={this._onNavigate.bind(this, `/news`)}>
+                                        <Icon name="news"/>
+                                        <Translate content="news.news" />
+                                    </a>
+                                </li>
                                 <li className={cnames({active: active.indexOf("/explorer/blocks") !== -1 && isExplorerActive, selected: isExplorerActive})}>
                                     <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
                                         <Icon name="blocks"/>
