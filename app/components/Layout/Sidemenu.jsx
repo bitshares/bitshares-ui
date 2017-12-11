@@ -90,7 +90,7 @@ class Sidemenu extends React.Component {
     _showSend(e) {
         e.preventDefault();
         this.refs.send_modal.show();
-        this._toogleMobileMenu();
+        this._toggleMobileMenu();
     }
 
     _onNavigate(route, e) {
@@ -147,7 +147,8 @@ class Sidemenu extends React.Component {
             </a>;
         let isWalletActive = active.indexOf("transfer") !== -1
             || active.indexOf("deposit-withdraw") !== -1
-            || active.indexOf("overview") !== -1;
+            || active.indexOf("overview") !== -1
+            || (active.indexOf("account") !== -1 && active.indexOf("dashboard") !== -1);
         let isAccountActive = active.indexOf("member-stats") !== -1
             || active.indexOf("voting") !== -1
             || active.indexOf("assets") !== -1
@@ -164,16 +165,16 @@ class Sidemenu extends React.Component {
                         <section className="block-list">
                             <ul className="sidemenu-list">
                                 <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
-                                <li>{dashboard}</li>
+                                <li style={{border: 0}}>{dashboard}</li>
                                 <li>
                                     <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
                                         <Icon name="dashboard"/>
                                         <Translate content="wallet.title" />
                                     </a>
-                                    {isWalletActive && isMyAccount ? (<section className="block-list">
+                                    {isWalletActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
 
-                                            <li><a className={cnames({active: active.indexOf("/transfer") !== -1})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
+                                            <li><a className={cnames({active: active.indexOf("/transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}>
                                                 <Icon name="transfer" />
                                                 <Translate content="header.payments" />
                                             </a></li>
@@ -183,11 +184,11 @@ class Sidemenu extends React.Component {
                                                 <Translate content="header.payments_beta" />
                                             </a></li>}
 
-                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                                 <Icon name="deposit" />
                                                 <Translate content="gateway.deposit" />
                                             </a></li>
-                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                            <li><a className={cnames({active: active.indexOf("/deposit-withdraw") !== -1, disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                                 <Icon name="withdraw" />
                                                 <Translate content="modal.withdraw.submit" />
                                             </a></li>
@@ -199,7 +200,7 @@ class Sidemenu extends React.Component {
                                         <Icon name="user"/>
                                         <Translate content="header.account" />
                                     </a>
-                                    {isAccountActive && isMyAccount ? (<section className="block-list">
+                                    {isAccountActive ? (<section className="block-list">
                                         <ul className="sidemenu-list">
 
                                             <li><a className={cnames({active: active.indexOf("/voting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>

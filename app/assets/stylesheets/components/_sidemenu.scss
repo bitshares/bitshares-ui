@@ -30,6 +30,10 @@
   .sidemenu-outer:hover {
     overflow: visible;
   }
+
+  .sidemenu-outer:hover .sidemenu-wrapper {
+      box-shadow: .2rem 0 .2rem 0 rgba(0,0,0,0.2);
+  }
 }
 
 .sidemenu-outer {
