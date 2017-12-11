@@ -26,12 +26,7 @@ import Deprecate from "./Deprecate";
 
 class App extends React.Component {
 
-    static contextTypes = {
-        location: React.PropTypes.object.isRequired,
-        router: React.PropTypes.object.isRequired
-    };
-
-    constructor(props, context) {
+    constructor() {
         super();
 
         // Check for mobile device to disable chat
@@ -47,7 +42,7 @@ class App extends React.Component {
             isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
             incognito: false,
             incognitoWarningDismissed: false,
-            height: window && window.innerHeight,
+            height: window && window.innerHeight
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
@@ -167,7 +162,7 @@ class App extends React.Component {
     // }
 
     render() {
-        let {isMobile, theme,active} = this.state;
+        let {isMobile, theme } = this.state;
 
         let content = null;
 
