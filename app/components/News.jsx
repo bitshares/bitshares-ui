@@ -25,12 +25,13 @@ const SomethingWentWrong = () => (
     <p><Translate content="news.errors.fetch" /></p>
 );
 
-const ReusableLink = ({ data, url }) => (
+const ReusableLink = ({ data, url, isLink = false}) => (
     <a
         href={`https://steemit.com${url}`}
         rel="noreferrer noopener"
         target="_blank"
-        style={{display: "block", color: "#ffffff"}}
+        style={{display: "block"}}
+        className={!isLink ? "primary-text" : ""}
     >{data}</a>
 );
 
@@ -58,7 +59,7 @@ const NewsTable = ({ data, width }) => {
                         >
                             <td style={rightCell}><ReusableLink data={iter+1} url={singleNews.url}/></td>
                             <td style={secondCol}><ReusableLink data={formattedDate} url={singleNews.url}/></td>
-                            <td style={leftCell}><ReusableLink data={smartTitle} url={singleNews.url}/></td>
+                            <td style={leftCell}><ReusableLink data={smartTitle} url={singleNews.url} isLink/></td>
                             <td style={leftCell}><ReusableLink data={theAuthor} url={singleNews.url}/></td>
                         </tr>
 

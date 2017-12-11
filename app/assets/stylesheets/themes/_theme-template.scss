@@ -1430,6 +1430,10 @@ $account-tabs-background
             }
         }
     }
+
+    tr > td > a.primary-text {
+        color: $primary-text-color;
+    }
 }
 
 .olDarkTheme .gate_fee .amount-selector {
