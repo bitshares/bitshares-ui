@@ -336,48 +336,23 @@ $account-tabs-background
         }
 
         div.dropdown-wrapper {
-            > li {
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
-                }
+            transition: none;
+            ul.dropdown {
+              @include color($light-text-color, $light-panel-bg-color);
+              transition: none;
             }
         }
 
         div.dropdown-wrapper.active {
-            transition: background-color 0s;
-            background-color: $bg-color;
-            ul {
-                background-color: $bg-color;
+            @include color($light-text-color, $light-panel-bg-color);
+
+            .dropdown {
+              border: none;
+              border-radius: 0;
             }
 
             span.caret {
                 color: $link-text-color;
-            }
-        }
-
-        ul.dropdown.header-menu {
-            > li {
-                > div:first-of-type {
-                    > span.icon > svg {
-                        > path {
-                            fill: $primary-text-color;
-                        }
-                    }
-                }
-
-                &:hover, &.active {
-                    background-color: $light-panel-bg-color;
-                }
-
-                &.divider {
-                    border-bottom: 1px solid $account-border;
-                }
             }
         }
     }
@@ -477,12 +452,27 @@ $account-tabs-background
         li {
             border-bottom: 1px solid $border-color;
         }
+        li:last-of-type {
+          border-bottom: none;
+        }
         li > a {
             color: $secondary-text-color;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            &.disabled {
+              cursor: not-allowed;
+              opacity: .3;
+              &:hover {
+                background: transparent;
+              }
+            }
         }
         li > a:hover, li > label:hover, li select:hover, li.active > a {
             color: $light-text-color;
             background-color: lighten($bg-color, 4%);
+        }
+        li > a > .icon {
+          margin-right: .6rem;
         }
         li:first-child {
             border-top: 1px solid $border-color;

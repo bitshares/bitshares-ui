@@ -90,22 +90,17 @@ class Sidemenu extends React.Component {
     _showSend(e) {
         e.preventDefault();
         this.refs.send_modal.show();
-        this._closeSidemenu();
+        this._toogleMobileMenu();
     }
 
     _onNavigate(route, e) {
         e.preventDefault();
         this.context.router.push(route);
-        this._closeSidemenu();
+        this._toggleMobileMenu();
     }
 
-    _closeSidemenu() {
-        ZfApi.publish("sidemenu", "close");
-    }
-
-    _toggleMobileMenu(e) {
-        e.preventDefault();
-        console.log(this.state.open);
+  _toggleMobileMenu(e) {
+        e && e.preventDefault();
         this.setState({
             open: !this.state.open
         });
@@ -123,7 +118,7 @@ class Sidemenu extends React.Component {
 
         } while ((el = el.parentNode));
 
-        if(!insideSidemenu) this._closeSidemenu();
+        if(!insideSidemenu && this.state.open) this._toggleMobileMenu();
     }
 
     render() {
@@ -137,21 +132,13 @@ class Sidemenu extends React.Component {
 
         let dashboard = (
             <a
-                style={{padding: ".5rem .5rem"}}
-                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
+                className="dashboard-link"
+                style={{ paddingLeft: ".5rem", height: "3.84rem" }}
                 onClick={this._onNavigate.bind(this, "/dashboard")}
             >
-                <img style={{margin: 0, height: "2rem"}} src={logo} />
+                <img style={{height: "2.64rem", width: "2rem"}} src={logo} />
             </a>
         );
-
-        let createAccountLink = myAccountCount === 0 ? (
-            <ActionSheet.Button title="" setActiveState={() => {}}>
-                <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")}>
-                    <Icon className="icon-14px" name="user"/> <Translate content="header.create_account" />
-                </a>
-            </ActionSheet.Button>
-        ) : null;
 
         let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
         let tradeLink = <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
@@ -160,7 +147,7 @@ class Sidemenu extends React.Component {
             </a>;
         let isWalletActive = active.indexOf("transfer") !== -1
             || active.indexOf("deposit-withdraw") !== -1
-            || active.indexOf("dashboard") !== -1;
+            || active.indexOf("overview") !== -1;
         let isAccountActive = active.indexOf("member-stats") !== -1
             || active.indexOf("voting") !== -1
             || active.indexOf("assets") !== -1
@@ -176,11 +163,10 @@ class Sidemenu extends React.Component {
                     <div className="sidemenu">
                         <section className="block-list">
                             <ul className="sidemenu-list">
-                                <li><a href style={{ width: "3rem", height: "3rem", padding: ".5rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
+                                <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
                                 <li>{dashboard}</li>
-                                {!currentAccount || !!createAccountLink ? null :
                                 <li>
-                                    <a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({selected: isWalletActive, disabled: !isMyAccount, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
+                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/overview`)} className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active.indexOf("account/") !== -1 && active.indexOf("dashboard") !== -1})}>
                                         <Icon name="dashboard"/>
                                         <Translate content="wallet.title" />
                                     </a>
@@ -207,10 +193,9 @@ class Sidemenu extends React.Component {
                                             </a></li>
                                         </ul>
                                     </section>) : null}
-                                </li>}
-                                {!currentAccount || !!createAccountLink ? null :
+                                </li>
                                 <li>
-                                    <a onClick={this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)} className={cnames({selected: isAccountActive, disabled: !isMyAccount, active: active.indexOf("member-stats") !== -1})}>
+                                    <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)} className={cnames({selected: isAccountActive, disabled: myAccountCount === 0, active: active.indexOf("member-stats") !== -1})}>
                                         <Icon name="user"/>
                                         <Translate content="header.account" />
                                     </a>
@@ -249,16 +234,14 @@ class Sidemenu extends React.Component {
 
                                         </ul>
                                     </section>) : null}
-                                </li>}
+                                </li>
                                 <li>{tradeLink}</li>
-                                {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
                                 <li>
                                     <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer")}>
                                         <Icon name="server"/>
                                         <Translate component="span" content="header.explorer" />
                                     </a>
                                 </li>
-                                {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
                             </ul>
                         </section>
                     </div>
@@ -273,12 +256,13 @@ class Sidemenu extends React.Component {
 
 export default connect(Sidemenu, {
     listenTo() {
-        return [AccountStore];
+        return [AccountStore, WalletUnlockStore];
     },
     getProps() {
         const chainID = Apis.instance().chain_id;
         return {
             currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+            locked: WalletUnlockStore.getState().locked,
         };
     }
 });

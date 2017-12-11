@@ -3,7 +3,7 @@
     display: block;
     position: fixed;
     z-index: 1000;
-    height: 3rem;
+    height: 3.84rem;
   }
 
   .sidemenu-outer.active {
@@ -20,7 +20,7 @@
 @media only screen and (min-width: 960px)  {
   .sidemenu-wrapper {
     position: absolute;
-    z-index: 1001;
+    z-index: 1000;
   }
 
   .block-list li > a.sidemenu-link {
@@ -33,7 +33,7 @@
 }
 
 .sidemenu-outer {
-    max-width: 3rem;
+    flex: 0 0 3rem;
 }
 
 .sidemenu .block-list li > a.sidemenu-link:hover {
@@ -50,11 +50,14 @@
 
       > li > a {
         padding-left: 1rem;
-        padding-right: 1rem;
-        white-space: nowrap;
+        padding-right: 3rem;
 
         .icon {
           margin-right: 1rem;
+        }
+
+        &.dashboard-link:hover {
+          background: transparent;
         }
 
         &.active {
@@ -62,9 +65,6 @@
           border-right-style: solid;
         }
 
-        &.disabled {
-          opacity: .3;
-        }
       }
     }
   }

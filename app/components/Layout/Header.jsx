@@ -250,9 +250,9 @@ class Header extends React.Component {
                 .map((name) => {
                     return (
                         <li onClick={this._accountClickHandler.bind(this, name)} className={name === account_display_name ? "current-account" : ""} key={name}>
-                            <a href>
-                                <div className="table-cell"><AccountImage style={{position: "relative", top: 5}} size={{height: 20, width: 20}} account={name}/></div>
-                                <div className="table-cell" style={{paddingLeft: 10}}><span className="lower-case">{name}</span></div>
+                            <a className="divider">
+                                <AccountImage size={{height: 1.6, width: 1.6}} unit="rem" account={name}/>
+                                <span>{name}</span>
                             </a>
                         </li>
                     );
@@ -299,31 +299,31 @@ class Header extends React.Component {
 
                                         </div>
                                     </li>
-                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-                                        <li className="divider" onClick={this._toggleLock.bind(this)}>
-                                            <div className="table-cell"><Icon size="2x" name="power" /></div>
-                                            <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
-                                        </li>
+                                    <ul className="dropdown header-menu block-list" style={{left: 0, top: "3.84rem", maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                        <li><a className="divider" onClick={this._toggleLock.bind(this)}>
+                                            <Icon name="power" />
+                                            <Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} />
+                                        </a></li>
 
-                                        {!isMyAccount ? <li className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
-                                            <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
-                                            <div className="table-cell"><Translate content={`account.${isContact ? "unfollow" : "follow"}`} /></div>
-                                        </li> : null}
+                                        {!isMyAccount ? <li><a className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
+                                            <Icon name={`${isContact ? "minus" : "plus"}-circle`} />
+                                            <Translate content={`account.${isContact ? "unfollow" : "follow"}`} />
+                                        </a></li> : null}
 
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
-                                            <div className="table-cell"><Icon size="2x" name="cogs" /></div>
-                                            <div className="table-cell"><Translate content="header.settings" /></div>
-                                        </li>
+                                        <li><a className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
+                                            <Icon name="cogs" />
+                                            <Translate content="header.settings" />
+                                        </a></li>
 
-                                        <li className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>
-                                            <div className="table-cell"><Icon size="2x" name="question-circle" /></div>
-                                            <div className="table-cell"><Translate content="header.help" /></div>
-                                        </li>
+                                        <li><a className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>
+                                            <Icon name="question-circle" />
+                                            <Translate content="header.help" />
+                                        </a></li>
 
-                                        <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                        </li>
+                                        <li><a className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                           <Icon name="folder" />
+                                           <Translate content="explorer.accounts.title" />
+                                        </a></li>
 
                                         {accountsList}
                                     </ul>

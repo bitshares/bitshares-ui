@@ -20,7 +20,7 @@
         border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 3rem;
+  min-height: 3.84rem;
   // text-transform: uppercase;
   .menu-bar > li {
 
@@ -120,16 +120,17 @@ div.account-drop-down div.dropdown-wrapper {
 
     span.caret {
         position: absolute;
-        right: 12px;
-        top: 20px;
+        right: 1rem;
+        top: 1.4rem;
     }
 
     > li {
         list-style: none;
         min-width: 200px;
+
         > div.table-cell {
-            height: 3rem;
-            padding: .5rem 0;
+            height: 3.84rem;
+            padding: .92rem 0;
             text-align: center;
             vertical-align: middle;
 
@@ -141,41 +142,22 @@ div.account-drop-down div.dropdown-wrapper {
         }
     }
     > ul {
+        border: 0;
         padding-bottom: 0;
     }
-    &.active {
-        > ul {
-            padding-bottom: 5px;
-        }
+
+    .current-account {
+      vertical-align: middle;
     }
-}
-ul.dropdown.header-menu {
-    transition: padding 0s, height 3s linear;
-    border: none;
-    > li {
-        padding: 2px 5px 2px 10px;
-        > div {
-            vertical-align: middle;
-        }
-        > div:first-of-type {
-            padding-top: 5px;
-            > span.icon > svg {
-                height: 1.5rem;
-                width: 1.5rem;
-            }
-        }
-        > div:nth-of-type(2) {
-            padding-left: 8px;
-        }
 
-        &.disabled {
-            color: grey;
-            cursor:not-allowed;
-            opacity: 50%;
+    .current-account .account-image {
+      display: inline;
+      width: 1.6rem;
+      height: 1.6rem;
 
-            svg > path {
-                fill: grey !important;
-            }
-        }
+      canvas {
+        vertical-align: middle;
+        margin: -.1rem .1rem -.45rem -.1rem;
+      }
     }
 }
