@@ -11,6 +11,7 @@ import { connect } from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import classNames from "classnames";
+import Explorer from "./Explorer";
 
 require("./witnesses.scss");
 
@@ -328,7 +329,7 @@ class Witnesses extends React.Component {
             currentAccount = ChainStore.getObject(current.get("witness_account"));
         }
 
-        return (
+        let content =
             <div className="grid-block">
                 <div className="grid-block page-layout">
                     <div className="grid-block vertical small-5 medium-3">
@@ -385,7 +386,8 @@ class Witnesses extends React.Component {
                     </div>
                 </div>
             </div>
-        );
+        ;
+        return (<Explorer tab="witnesses" content={content}/>);
     }
 }
 Witnesses = BindToChainState(Witnesses, {keep_updating: true});

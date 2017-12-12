@@ -1,5 +1,5 @@
-import ss from "common/sessionStorage";
-const session = new ss("__bts__");
+import ss from "common/localStorage";
+const session = new ss("__gdex__");
 
 class GdexCache {
 
