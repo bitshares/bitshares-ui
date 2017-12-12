@@ -397,7 +397,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
                                             <div className="table-cell"><Translate content="gateway.deposit" /></div>
                                         </li>
-                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                        <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
                                             <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
                                         </li>
@@ -405,6 +405,11 @@ class Header extends React.Component {
                                         <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
                                             <div className="table-cell"><Icon size="2x" name="cogs" /></div>
                                             <div className="table-cell"><Translate content="header.settings" /></div>
+                                        </li>
+
+                                        <li className={cnames({active: active.indexOf("/news") !== -1})} onClick={this._onNavigate.bind(this, "/news")}>
+                                            <div className="table-cell"><Icon size="2x" name="news" /></div>
+                                            <div className="table-cell"><Translate content="news.news" /></div>
                                         </li>
 
                                         <li className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>

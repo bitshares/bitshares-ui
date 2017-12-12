@@ -543,7 +543,7 @@ $account-tabs-background
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -554,6 +554,22 @@ $account-tabs-background
             border-color: #aaa;
         }
     }
+
+    // Typeahead
+    .typeahead > div {
+        > div {
+            z-index: 1003;
+            background-color: $input-background !important;
+            > div {
+                color: $primary-text-color !important;
+                background-color: transparent !important;
+                &:hover, &:active, &:focus, &:visited {
+                    background-color: darken($input-background, 10%) !important;
+                }
+            }
+        }
+    }
+
 
     ul.button-group.segmented {
         > li.is-active > a {
@@ -1141,6 +1157,8 @@ $account-tabs-background
     }
 
 
+
+
     div.fm-container:hover {
         background-color: darken($light-panel-bg-color, 5%);
         cursor: pointer;
@@ -1432,6 +1450,10 @@ $account-tabs-background
                 color: $alert-color;
             }
         }
+    }
+
+    tr > td > a.primary-text {
+        color: $primary-text-color;
     }
 }
 
