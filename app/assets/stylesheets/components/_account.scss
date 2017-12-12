@@ -169,8 +169,6 @@ div.account-tabs {
     }
 
     > div.tab-content {
-        padding-top: 20px;
-        padding-bottom: 1rem;
 
          @include breakpoint(large) {
              max-width: rem-calc(1200);
@@ -237,13 +235,13 @@ table.table.dashboard-table {
         font-weight: 600;
         font-size: 80%;
         text-align: center;
-        border: 1px solid;
+        border: none;
     }
     > tbody > tr {
         > td {
             font-size: 0.8rem;
             text-align: center;
-            border: 1px solid;
+            border: none;
 
             &.worker-name {
                 max-width: 15rem;
