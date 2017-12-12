@@ -555,19 +555,21 @@ $account-tabs-background
         }
     }
 
-    // Typeahead   
-    input[role="combobox"] {
-        padding: 5px 10px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
+    // Typeahead
     .typeahead > div {
-        width: 100%;
         > div {
             z-index: 1003;
+            background-color: $input-background !important;
+            > div {
+                color: $primary-text-color !important;
+                background-color: transparent !important;
+                &:hover, &:active, &:focus, &:visited {
+                    background-color: darken($input-background, 10%) !important;
+                }
+            }
         }
     }
+
 
     ul.button-group.segmented {
         > li.is-active > a {
@@ -1153,6 +1155,8 @@ $account-tabs-background
             background-color: $input-background;
         }
     }
+
+
 
 
     div.fm-container:hover {
