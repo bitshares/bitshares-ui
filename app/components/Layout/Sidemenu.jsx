@@ -141,10 +141,6 @@ class Sidemenu extends React.Component {
         );
 
         let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
-        let tradeLink = <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                <Icon name="trade"/>
-                <Translate component="span" content="header.exchange" />
-            </a>;
         let isWalletActive = active.indexOf("transfer") !== -1
             || active.indexOf("deposit-withdraw") !== -1
             || active.indexOf("overview") !== -1
@@ -236,7 +232,12 @@ class Sidemenu extends React.Component {
                                         </ul>
                                     </section>) : null}
                                 </li>
-                                <li>{tradeLink}</li>
+                                <li className={cnames({active: active.indexOf("market/") !== -1})}>
+                                    <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, tradeUrl)}>
+                                        <Icon name="trade"/>
+                                        <Translate component="span" content="header.exchange" />
+                                    </a>
+                                </li>
                                 <li className={cnames({active: active.indexOf("/news") !== -1})}>
                                     <a onClick={this._onNavigate.bind(this, `/news`)}>
                                         <Icon name="news"/>

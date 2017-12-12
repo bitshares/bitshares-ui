@@ -25,7 +25,7 @@ class Icon extends React.Component {
         if(this.props.className) {
             classes += " " + this.props.className;
         }
-        return <span className={classes} style={this.props.style || {}} dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}}/>;
+        return <span className={classes} style={this.props.style || {}} dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}} onClick={this.props.onClick} />;
     }
 }
 
