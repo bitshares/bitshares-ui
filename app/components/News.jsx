@@ -10,14 +10,14 @@ const query = {tag: "bitshares.fdn",limit: 20};
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
 const rowHeight = {height: "2rem"};
-const bodyCell = {
-    border: "3px solid #2e343c",
-    padding: "0.5rem 1rem",
-    lineHeight: "2rem",
-};
+const bodyCell = {padding: "0.5rem 1rem"};
+const headerCell = {padding: "0.85rem 1rem"}
 
 const leftCell = { ...alignLeft, ...bodyCell };
 const rightCell = { ...alignRight, ...bodyCell };
+
+const leftCellHeader = { ...alignLeft, ...headerCell };
+const rightCellHeader = { ...alignRight, ...headerCell };
 
 const secondCol = { ...leftCell, width: "180px"};
 
@@ -40,10 +40,10 @@ const NewsTable = ({ data, width }) => {
         <table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
             <thead>
                 <tr>
-                    <th style={rightCell}><Translate component="span" content="account.votes.line" /></th>
-                    <th style={leftCell}><Translate component="span" content="explorer.block.date" /></th>
-                    <th style={leftCell}><Translate component="span" content="news.subject" /></th>
-                    <th style={leftCell}><Translate component="span" content="news.author" /></th>
+                    <th style={rightCellHeader}><Translate component="span" content="account.votes.line" /></th>
+                    <th style={leftCellHeader}><Translate component="span" content="explorer.block.date" /></th>
+                    <th style={leftCellHeader}><Translate component="span" content="news.subject" /></th>
+                    <th style={leftCellHeader}><Translate component="span" content="news.author" /></th>
                 </tr>
             </thead>
             <tbody>
