@@ -79,7 +79,7 @@ class DashboardList extends React.Component {
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state )
 		);
-		
+
 	}
 
 	_onStar(account, isStarred, e) {
@@ -91,8 +91,11 @@ class DashboardList extends React.Component {
 		}
 	}
 
-	_goAccount(name) {
+	_goAccount(name, tab) {
 		this.context.router.push(`/account/${name}`);
+		SettingsActions.changeViewSetting({
+			overviewTab: tab
+		});
 	}
 
 	_onFilter(e) {
@@ -207,34 +210,34 @@ class DashboardList extends React.Component {
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
 				let shouldShow = (isMyAccount === this.props.showMyAccounts);
-				
-				if(!shouldShow) 
+
+				if(!shouldShow)
 					return (null);
 
 				return (
 					<tr key={accountName}>
-						<td onClick={this._onStar.bind(this, accountName, isStarred)}>
+						<td className="clickable" onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
-						{!showMyAccounts ? 
+						{!showMyAccounts ?
 							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
 								<Icon name="minus-circle"/>
-							</td> 
+							</td>
 						: null}
-						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
+						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, accountName, 0)} className={"clickable" + (isMyAccount ? " my-account" : "")}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
-						<td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} openOrders={openOrders}/>
+						<td className="clickable" onClick={this._goAccount.bind(this, accountName, 1)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} openOrders={openOrders}/>
 						</td>
-						{width >= 750 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} collateral={collateral}/>
+						{width >= 750 ? <td className="clickable" onClick={this._goAccount.bind(this, accountName, 2)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} collateral={collateral}/>
 						</td> : null}
-						{width >= 1200 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} debt={debt}/>
+						{width >= 1200 ? <td className="clickable" onClick={this._goAccount.bind(this, accountName, 2)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} debt={debt}/>
 						</td> : null}
-						<td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
+						<td className="clickable" onClick={this._goAccount.bind(this, accountName, 0)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
 						</td>
 					</tr>
 				);
