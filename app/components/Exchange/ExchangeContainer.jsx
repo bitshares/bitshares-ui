@@ -131,11 +131,18 @@ class ExchangeSubscriber extends React.Component {
 
         emitter.on("cancel-order", limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on("close-call", callListener = MarketsActions.closeCallOrderSuccess);
-        emitter.on("call-order-update", newCallListener = MarketsActions.callOrderUpdate);
+
+        emitter.on("call-order-update", newCallListener = (call_order) => {
+            let {asset_id: coBase} = call_order.call_price.base;
+            let {asset_id: coQuote} = call_order.call_price.quote;
+            let baseId = this.props.baseAsset.get("id"), quoteId = this.props.quoteAsset.get("id");
+            if ((coBase === baseId || coBase === quoteId) && (coQuote === baseId || coQuote === quoteId)) {
+                MarketsActions.callOrderUpdate(call_order);
+            }
+        });
         emitter.on("bitasset-update", feedUpdateListener = MarketsActions.feedUpdate);
         emitter.on("settle-order-update", settleOrderListener = (object) => {
             let {isMarketAsset, marketAsset} = market_utils.isMarketAsset(this.props.quoteAsset, this.props.baseAsset);
-            console.log("settle-order-update:", object, "isMarketAsset:", isMarketAsset, "marketAsset:", marketAsset);
 
             if (isMarketAsset && marketAsset.id === object.balance.asset_id) {
                 MarketsActions.settleOrderUpdate(marketAsset.id);

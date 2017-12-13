@@ -402,7 +402,7 @@ class MarketsStore {
     }
 
     onCallOrderUpdate(call_order) {
-        if (call_order && this.quoteAsset && this.baseAsset) {
+        if (call_order && this.quoteAsset && this.baseAsset && this.feedPrice) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
 
                 const assets = {
@@ -426,7 +426,7 @@ class MarketsStore {
                         this._depthChart();
                     }
                 } catch(err) {
-                    console.error("Unable to construct calls array, invalid feed price or prediction market?");
+                    console.error("Unable to construct calls array, invalid feed price or prediction market?", call_order, this.quoteAsset && this.quoteAsset.get("id"), this.baseAsset && this.baseAsset.get("id"));
                 }
 
             }
