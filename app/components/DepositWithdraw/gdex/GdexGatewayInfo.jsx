@@ -269,7 +269,7 @@ class GdexGatewayInfo extends React.Component {
                                 output_coin_id = {coin.outerAssetId}
                                 output_coin_symbol={coin.outerSymbol}
                                 output_supports_memos={coin.needMemo==1}
-                                minWithdrawAmount = {coin.minTransctionAmount}
+                                minWithdrawAmount = {coin.minTransactionAmount}
                                 memo_prefix={withdraw_memo_prefix}
                                 memo_rule={this.props.memo_rule}
                                 modal_id={withdraw_modal_id}

@@ -417,7 +417,7 @@
 		"broadcast": "你的转账已经向网络广播",
 		"again": "发起新的转账",
 		"see": "查看我的转账记录",
-		"available": "可用余额: ",
+		"available": "可用余额",
 		"broadcasting": "交易广播中...",
 		"close": "关闭",
 		"pay_from": "支付自",

@@ -14,9 +14,9 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {fetchWithdrawRule, userAgreement} from "../../../lib/common/gdexMethods";
 var NodeRSA = require('node-rsa');
 let gdexPublicKey=new NodeRSA('-----BEGIN PUBLIC KEY-----\n'+
-    'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEus8waPubXY6hOD1ElIzKo16gwmVgAtO1NDR1\n'+
-    'YjQ9fY0GOkUg7bAbbhg5Rn/4ve6tiuorGOkoHh/VoiQ9f5mfxz6KV2fDnyy2O19Y2RTBw0OJ2qyT\n'+
-    '5vyYY2uZGtqcGCElybOhMfDNItnyaw7N8Oh3bMGsJiqH0yayXjV6NLqo6wIDAQAB\n'+
+    'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCH+QtHPKcWxdL25xL4pCuu16tKh6yPx/TFnd/8\n'+
+    'cSt2TC+sPuYsD0h/sy4VKNxhBb7F7U/TLXjMxNcSfPVPjPM3X2LvOlmU9LOEcJGrmlmOOiyO/kws\n'+
+    'yKKOhR4UyZ1NghhfHjuyDBj6V8fCL+xBZTJWsh/X61Z0wLCwOzXcQCsNJwIDAQAB\n'+
     '-----END PUBLIC KEY-----');
 
 class GdexGateway extends React.Component {
@@ -77,7 +77,7 @@ class GdexGateway extends React.Component {
                     coin.status = asset.withdrawStatus;
                     coin.gateFee = asset.withdrawFees;
                     coin.needMemo = asset.needMemo;
-                    coin.minTransctionAmount = asset.minWithdrawAmount;
+                    coin.minTransactionAmount = asset.minWithdrawAmount;
                     coin.type = asset.type;
                 } else if (asset.type==2) {
                     // outer asset
@@ -90,7 +90,7 @@ class GdexGateway extends React.Component {
                     coin.status = asset.depositStatus;
                     coin.gateFee = asset.depositFees;
                     coin.needMemo = asset.needMemo;
-                    coin.minTransctionAmount =  asset.minDepositAmount;
+                    coin.minTransactionAmount =  asset.minDepositAmount;
                     coin.type = asset.type;
                 } else{coin = null;}
                 if(coin) result.push(coin);
