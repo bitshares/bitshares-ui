@@ -310,7 +310,7 @@
       "verifying": "Verifying, please wait ...",
       "invalidformat": "Signed message format can't be recognized",
       "invaliduser": "Account of the message sender is invalid",
-      "invalidsignature": "The content of the message could be validated against the signature",
+      "invalidsignature": "The content of the message could not be validated against the signature",
       "errorverifying": "An error occured while verifying the message",
       "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
       "sign": "Sign",
