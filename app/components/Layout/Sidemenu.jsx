@@ -1,34 +1,17 @@
 import React from "react";
-import {Link} from "react-router/es";
+import { Link } from "react-router/es";
 import { connect } from "alt-react";
-import ActionSheet from "react-foundation-apps/src/action-sheet";
-import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import SettingsStore from "stores/SettingsStore";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
-import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
-import WalletUnlockActions from "actions/WalletUnlockActions";
-import WalletManagerStore from "stores/WalletManagerStore";
 import cnames from "classnames";
-import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import { Apis } from "bitsharesjs-ws";
-import notify from "actions/NotificationActions";
-import Panel from "react-foundation-apps/src/panel";
-// import IntlActions from "actions/IntlActions";
-import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
+import { ChainStore } from "bitsharesjs";
 
 var logo = require("assets/logo-ico-blue.png");
-
-// const FlagImage = ({flag, width = 20, height = 20}) => {
-//     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
-// };
 
 class Sidemenu extends React.Component {
 
@@ -99,7 +82,7 @@ class Sidemenu extends React.Component {
         this._toggleMobileMenu();
     }
 
-  _toggleMobileMenu(e) {
+    _toggleMobileMenu(e) {
         e && e.preventDefault();
         this.setState({
             open: !this.state.open
@@ -109,58 +92,49 @@ class Sidemenu extends React.Component {
     onBodyClick(e) {
         let el = e.target;
         let insideSidemenu = false;
-
         do {
             if(el.classList && (el.classList.contains("sidemenu") || el.classList.contains("sidemenu-link"))) {
                 insideSidemenu = true;
                 break;
             }
-
         } while ((el = el.parentNode));
-
         if(!insideSidemenu && this.state.open) this._toggleMobileMenu();
     }
 
     render() {
-        let {active} = this.state;
-        let {currentAccount} = this.props;
+        const {active} = this.state;
+        const {currentAccount} = this.props;
         const a = ChainStore.getAccount(currentAccount);
         const isMyAccount = !a ? false : AccountStore.isMyAccount(a);
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
-        let myAccounts = AccountStore.getMyAccounts();
-        let myAccountCount = myAccounts.length;
-
-        let dashboard = (
-            <a
-                className="dashboard-link"
-                style={{ paddingLeft: ".5rem", height: "3.84rem" }}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
-            >
-                <img style={{height: "2.64rem", width: "2rem"}} src={logo} />
-            </a>
-        );
-
-        let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
-        let isWalletActive = active.indexOf("transfer") !== -1
+        const myAccounts = AccountStore.getMyAccounts();
+        const myAccountCount = myAccounts.length;
+        const tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
+        const isWalletActive = active.indexOf("transfer") !== -1
             || active.indexOf("deposit-withdraw") !== -1
             || active.indexOf("overview") !== -1
             || active === `/account/${currentAccount}`;
-        let isAccountActive = active.indexOf("member-stats") !== -1
+        const isAccountActive = active.indexOf("member-stats") !== -1
             || active.indexOf("voting") !== -1
             || (active.indexOf("account") !== -1 && active.indexOf("assets") !== -1)
             || active.indexOf("signedmessages") !== -1
             || active.indexOf("vesting") !== -1
             || active.indexOf("whitelist") !== -1
             || active.indexOf("permissions") !== -1;
-        let isExplorerActive = active.indexOf("explorer") !== -1;
+        const isExplorerActive = active.indexOf("explorer") !== -1;
 
         return (
             <div className={cnames({ active: this.state.open }) + " sidemenu-outer grid-block vertical"}>
                 <div className="sidemenu-wrapper">
                     <div className="sidemenu">
                         <ul className="block-list">
-                            <li><a href style={{ width: "3.84rem", height: "3.84rem", padding: ".92rem" }} onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
-                            <li style={{border: 0}}>{dashboard}</li>
+                            <li><a href onClick={this._toggleMobileMenu.bind(this)} className="sidemenu-link"><Icon className="icon-2x" name="menu"/></a></li>
+                            <li>
+                                <a className="dashboard-link"
+                                   onClick={this._onNavigate.bind(this, "/dashboard")}>
+                                    <img src={logo} />
+                                </a>
+                            </li>
                             <li className={cnames({selected: isWalletActive, disabled: myAccountCount === 0, active: active === `/account/${currentAccount}`})}>
                                 <a onClick={myAccountCount === 0 ? () => {} : this._onNavigate.bind(this, `/account/${currentAccount}`)}>
                                     <Icon name="dashboard"/>
@@ -225,7 +199,7 @@ class Sidemenu extends React.Component {
                                 </ul>) : null}
                             </li>
                             <li className={cnames({active: active.indexOf("market/") !== -1})}>
-                                <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, tradeUrl)}>
+                                <a onClick={this._onNavigate.bind(this, tradeUrl)}>
                                     <Icon name="trade"/>
                                     <Translate component="span" content="header.exchange" />
                                 </a>
@@ -237,7 +211,7 @@ class Sidemenu extends React.Component {
                                 </a>
                             </li>
                             <li className={cnames({active: active.indexOf("/explorer/blocks") !== -1 && isExplorerActive, selected: isExplorerActive})}>
-                                <a style={{flexFlow: "row"}} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                <a onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
                                     <Icon name="blocks"/>
                                     <Translate component="span" content="explorer.blocks.title" />
                                 </a>

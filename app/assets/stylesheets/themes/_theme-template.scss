@@ -202,16 +202,6 @@ $account-tabs-background
         }
     }
 
-    .panel-left {
-        @include color($light-text-color, $light-panel-bg-color);
-        .block-list li > a {
-            color: $light-text-color;
-            &:hover {
-                background-color: darken($light-panel-bg-color, 4%);
-            }
-        }
-    }
-
     .tabs {
         @include color($secondary-text-color, $bg-color);
     }
@@ -221,6 +211,11 @@ $account-tabs-background
         > .block-list li.active > a {
             border-right-color: $button-bg-color;
         }
+    }
+
+    .sidemenu-outer:hover .sidemenu-wrapper,
+    .sidemenu-outer.active {
+        box-shadow: .2rem 0 .2rem 0 rgba(0,0,0,0.2);
     }
 
     .page-layout {
@@ -430,13 +425,13 @@ $account-tabs-background
         li > a > .icon {
           margin-right: .6rem;
         }
-        li:first-child {
-            border-top: 1px solid $border-color;
-        }
         header {
             margin-left: 0;
             margin-bottom: 1rem;
             color: $secondary-text-color;
+        }
+        ul {
+          border-top: 1px solid $border-color;
         }
         ul, li.selected:not(.active):not(:hover) > a {
           background-color: darken($light-panel-bg-color, 8%);
