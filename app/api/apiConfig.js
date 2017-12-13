@@ -54,5 +54,6 @@ export const  gdexAPIs = {
     WITHDRAW_RECORD_LIST: "/gateway/withdraw/recordList",
     WITHDRAW_RECORD_DETAIL: "/gateway/withdraw/recordDetail",
     GET_USER_INFO: "/gateway/user/getUserInfo",
-    USER_AGREEMENT: "/gateway/user/isAgree"
+    USER_AGREEMENT: "/gateway/user/isAgree",
+    WITHDRAW_RULE: "/gateway/withdraw/rule"
 }

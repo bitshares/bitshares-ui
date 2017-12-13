@@ -3,7 +3,6 @@ import {fetchAssets, fetchUserInfo} from "common/gdexMethods";
 import LoadingIndicator from "../../LoadingIndicator";
 import Translate from "react-translate-component";
 import GdexGatewayInfo from "./GdexGatewayInfo";
-// import {TransactionWrapper} from "../../Account/RecentTransactions";
 import { connect } from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -12,7 +11,13 @@ import GdexHistory from "./GdexHistory";
 import GdexAgreementModal from "./GdexAgreementModal";
 import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import {userAgreement} from "../../../lib/common/gdexMethods";
+import {fetchWithdrawRule, userAgreement} from "../../../lib/common/gdexMethods";
+var NodeRSA = require('node-rsa');
+let gdexPublicKey=new NodeRSA('-----BEGIN PUBLIC KEY-----\n'+
+    'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEus8waPubXY6hOD1ElIzKo16gwmVgAtO1NDR1\n'+
+    'YjQ9fY0GOkUg7bAbbhg5Rn/4ve6tiuorGOkoHh/VoiQ9f5mfxz6KV2fDnyy2O19Y2RTBw0OJ2qyT\n'+
+    '5vyYY2uZGtqcGCElybOhMfDNItnyaw7N8Oh3bMGsJiqH0yayXjV6NLqo6wIDAQAB\n'+
+    '-----END PUBLIC KEY-----');
 
 class GdexGateway extends React.Component {
 
@@ -20,10 +25,9 @@ class GdexGateway extends React.Component {
         super();
         const action = props.viewSettings.get(`${props.provider}Action`, "deposit");
 
-        // const action = props.viewSettings.get(`${props.provider}Action`, "deposit");
         this.state = {
             coins:null,
-            activeCoin: this._getActiveCoin(props, {action}),
+            activeCoinInfo: this._getActiveCoinInfo(props, {action}),
             action,
             down: false,
             isAvailable:true,
@@ -31,22 +35,28 @@ class GdexGateway extends React.Component {
             isAgree:false,
             agreeChecked:true,
             agreeNotice:false,
-            locale:props.viewSettings.get("locale")
+            locale:props.viewSettings.get("locale"),
+            intermediate: null,
+            memo_rule: null
         };
         this.user_info_cache = new GdexCache();
     }
 
 
-    _getActiveCoin(props, state) {
-        let cachedCoin = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
-        let firstTimeCoin = null;
+    _getActiveCoinInfo(props, state) {
+        let cachedCoinName = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
+        let cachedCoinId = props.viewSettings.get(`activeCoinId_${props.provider}`, null);
+        let firstTimeCoinName = null;
         if (state.action == "deposit") {
-            firstTimeCoin = "BTC";
+            firstTimeCoinName = "BTC";
         } else{
-            firstTimeCoin = "GDEX.BTC";
+            firstTimeCoinName = "GDEX.BTC";
         }
-        let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
-        return activeCoin;
+        let firstTimeCoinId=1002
+        let activeCoinName = cachedCoinName ? cachedCoinName : firstTimeCoinName;
+        let activeCoinId = cachedCoinId ? cachedCoinId : firstTimeCoinId;
+        this._getWithdrawRule(activeCoinId);
+        return {"name":activeCoinName, "id": activeCoinId};
     }
 
     _transformCoin(data){
@@ -94,23 +104,24 @@ class GdexGateway extends React.Component {
 
     _getUserInfo(userName=null, isAgree=null){
         if(!userName) userName = this.props.account.get("name")
-        if(!isAgree) userName = this.state.isAgree
+        if(!isAgree) isAgree = this.state.isAgree
+        //User must agree to the agreement
+        if(!isAgree) return;
 
         var result = fetchUserInfo({"userAccount": userName,"isAgree":isAgree});
         let _this = this;
         result.then(
             function(res){
                 var user = res.user;
+                _this.setState({isAgree:true,user_info: {"user_id":user.uid,"status": user.status}});
                 if(user.status==0 && user.agreeAgreement){
-                    _this.setState({isAgree:true,user_info: {"user_id":user.uid,"status": user.status}});
                     _this.user_info_cache.cacheUserInfo(userName, user.uid, user.status);
                 }else{
-                    console.log("user account is frozen");
+                    _this.user_info_cache.delUserInfo(userName);
                 }
             });
         result.catch(err => {
             console.log("Exception in fetching user info: " + err);
-            // _this.setState({isAvailable:false});
         });
     }
 
@@ -165,22 +176,57 @@ class GdexGateway extends React.Component {
         this._getCoins();
     }
 
+    _getWithdrawAssetId(assetName){
+        let assetType=1;
+        let assetSymbol="innerSymbol";
+        if(this.state.action=="deposit"){
+            assetType=2;
+            assetSymbol="outerSymbol";
+        }
+        let assetId = this.state.coins.filter(coin =>{
+            return coin.type==assetType && coin[assetSymbol]== assetName;
+        })[0].innerAssetId;
+        return assetId;
+    }
 
     onSelectCoin(e) {
+        let activeCoinInfo = this.state.activeCoinInfo;
+        activeCoinInfo.name = e.target.value;
+        let assetId = this._getWithdrawAssetId(e.target.value);
+        activeCoinInfo.id = assetId;
         this.setState({
-            activeCoin: e.target.value
+            activeCoinInfo: activeCoinInfo
         });
-
+        this._getWithdrawRule(assetId);
         let setting = {};
         setting[`activeCoin_${this.props.provider}_${this.state.action}`] = e.target.value;
+        setting[`activeCoinId_${this.props.provider}`] = assetId;
         SettingsActions.changeViewSetting(setting);
     }
 
+    _getWithdrawRule(assetId){
+        var result = fetchWithdrawRule({"assetId":assetId});
+        let _this = this;
+        result.then(
+            function(data){
+                var intermediate = gdexPublicKey.decryptPublic(data.transferToAccount, "utf-8");
+                _this.setState({"intermediate": intermediate, "memo_rule": data.memoRule});
+            },
+            function(errMsg){
+                console.log("fail" + errMsg);
+                _this.setState({"intermediate": null});
+            });
+        result.catch(err => {
+            console.log(err);
+            _this.setState({"intermediate": null});
+        });
+
+    }
     changeAction(type) {
-        let activeCoin = this._getActiveCoin(this.props, {action: type});
+        let activeCoinInfo = this._getActiveCoinInfo(this.props, {action: type});
         this.setState({
             action: type,
-            activeCoin: activeCoin
+            activeCoinInfo: activeCoinInfo
         });
         SettingsActions.changeViewSetting({[`${this.props.provider}Action`]: type});
     }
@@ -209,10 +255,10 @@ class GdexGateway extends React.Component {
 
     }
     render(){
-
         let {account} = this.props;
-        let {coins, activeCoin, action , isAvailable, user_info, isAgree, agreeChecked,agreeNotice} = this.state;
-        let issuer = {name: "gdex-wallet", id: "1.2.466056", mail: "support@gdex.io", qq:"602573197", telgram:"https://t.me/GDEXer"};
+        let {coins, activeCoinInfo, action , isAvailable, user_info, isAgree, agreeChecked,
+            agreeNotice, intermediate, memo_rule} = this.state;
+	let issuer = {mail: "support@gdex.io", qq:"602573197", telgram:"https://t.me/GDEXer"};
         let supportContent=<div>
             {/*<label className="left-label">Support</label>*/}
             <br/><br/>
@@ -275,13 +321,13 @@ class GdexGateway extends React.Component {
         });
 
         let coin = coins.filter(coin => {
-            return coin[assetSymbol] == activeCoin;
+            return coin[assetSymbol] == activeCoinInfo.name;
         })[0];
 
 
         let infos =null;
         if(!coin || coin.status!=0){
-            infos = <label className="left-label"><Translate className="txtlabel cancel" content="gateway.asset_unavailable" asset={activeCoin}  component="h4"/></label>
+            infos = <label className="left-label"><Translate className="txtlabel cancel" content="gateway.asset_unavailable" asset={activeCoinInfo.name}  component="h4"/></label>
         } else if(!user_info) {
             infos = <label className="left-label"><Translate className="txtlabel cancel" content="gateway.user_unavailable" component="h4"/></label>;
         } else if(user_info.status!=0){
@@ -297,7 +343,7 @@ class GdexGateway extends React.Component {
                             <select
                                 className="external-coin-types bts-select"
                                 onChange={this.onSelectCoin.bind(this)}
-                                value={activeCoin}
+                                value={activeCoinInfo.name}
                             >
                                 {coinOptions}
                             </select>
@@ -320,11 +366,12 @@ class GdexGateway extends React.Component {
                             <GdexGatewayInfo
                                 account={account}
                                 coin={coin}
-                                issuer_account={issuer.name}
+                                issuer_account={intermediate}
                                 user_id={user_info.user_id}
                                 action={this.state.action}
                                 gateway={"gdex"}
                                 btsCoin={coin.innerSymbol}
+                                memo_rule={memo_rule}
                             />
                         </div>
                         <GdexHistory
