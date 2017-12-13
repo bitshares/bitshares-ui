@@ -7,7 +7,6 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import SendModal from "../Modal/SendModal";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -20,13 +19,8 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import { Apis } from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
-// import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
-
-// const FlagImage = ({flag, width = 20, height = 20}) => {
-//     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
-// };
+import { ChainStore } from "bitsharesjs";
 
 class Header extends React.Component {
 
@@ -97,11 +91,6 @@ class Header extends React.Component {
         this._closeDropdown();
     }
 
-    _triggerMenu(e) {
-        e.preventDefault();
-        ZfApi.publish("sidemenu", "toggle");
-    }
-
     _toggleLock(e) {
         e.preventDefault();
         if (WalletDb.isLocked()) {
@@ -160,15 +149,7 @@ class Header extends React.Component {
             });
             this._closeDropdown();
         }
-        // this.onClickUser(account_name, e);
     }
-
-    // onClickUser(account, e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //
-    //     this.context.router.push(`/account/${account}/overview`);
-    // }
 
     onBodyClick(e) {
         let el = e.target;
@@ -217,34 +198,24 @@ class Header extends React.Component {
             });
         }
 
-
         let myAccounts = AccountStore.getMyAccounts();
         let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
-                            <div className="total-value" >
-                                <TotalBalanceValue.AccountWrapper
-                                    accounts={[this.props.currentAccount]}
-                                    noTip
-                                    style={{minHeight: 15}}
-                                />
-                            </div>) : null;
+            <div className="total-value" >
+                <TotalBalanceValue.AccountWrapper
+                    accounts={[this.props.currentAccount]}
+                    noTip
+                />
+            </div>) : null;
 
         let createAccountLink = myAccountCount === 0 ? (
             <ActionSheet.Button title="" setActiveState={() => {}}>
-                <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")} style={{padding: "1rem", border: "none"}} >
-                    <Icon className="icon-14px" name="user"/> <Translate content="header.create_account" />
+                <a className="button create-account" onClick={this._onNavigate.bind(this, "/create-account")}>
+                    <Icon name="user"/> <Translate content="header.create_account" />
                 </a>
             </ActionSheet.Button>
         ) : null;
-
-        // let lock_unlock = ((!!this.props.current_wallet) || passwordLogin) ? (
-        //     <div className="grp-menu-item" >
-        //     { this.props.locked ?
-        //         <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={locked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="locked"/></a>
-        //         : <a style={{padding: "1rem"}} href onClick={this._toggleLock.bind(this)} data-class="unlock-tooltip" data-offset="{'left': 50}" data-tip={unlocked_tip} data-place="bottom" data-html><Icon className="icon-14px" name="unlocked"/></a> }
-        //     </div>
-        // ) : null;
 
         // Account selector: Only active inside the exchange
         let account_display_name, accountsList;
@@ -273,70 +244,57 @@ class Header extends React.Component {
 
         return (
             <div className="header menu-group primary">
-                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
+                {!__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
                     <ul className="menu-bar">
                         <li>
-                            <div style={{marginLeft: "1rem", height: "3rem"}}>
-                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
-                            </div>
-                    </li>
+                            <div onClick={this._onGoBack.bind(this)}>{"<"}</div>
+                        </li>
                         <li>
-                            <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
-                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
-                            </div>
+                            <div onClick={this._onGoForward.bind(this)}>></div>
                         </li>
                     </ul>
                 </div> : null}
-                <div className="grid-block">
-                </div>
+                <div className="grid-block"></div>
                 <div className="grid-block shrink">
-                    <div className="grp-menu-items-group header-right-menu">
-
-                        <div className="grp-menu-item overflow-visible account-drop-down">
-                                {createAccountLink ? createAccountLink :
-                                <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                    <li style={{display: "flex"}}>
-                                        <div className="table-cell" onClick={this._toggleLock.bind(this)}>
-                                            <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                    <div className="header-right-menu">
+                        <div className="overflow-visible account-drop-down">
+                            {createAccountLink ? createAccountLink : <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
+                                <li className="account-header-link">
+                                    <div className="lock-unlock-wrapper grid-block shrink" onClick={this._toggleLock.bind(this)}>
+                                        <Icon className="lock-unlock" size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                    </div>
+                                    <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="grid-block account-name-wrapper">
+                                        <div>
+                                          {currentAccount}
+                                          {walletBalance}
                                         </div>
-                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
-                                            <div style={{lineHeight: "1.2rem", display: "inline-block", paddingRight: ".5rem"}}>
-                                                <span>{currentAccount}</span>
-                                                {walletBalance}
-                                                <span className="caret">{caret}</span>
-                                            </div>
-
-                                        </div>
-                                    </li>
-                                    <ul className="dropdown header-menu block-list" style={{left: 0, top: "3.84rem", maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-                                        <li><a onClick={this._toggleLock.bind(this)}>
-                                            <Icon name="power" />
-                                            <Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} />
-                                        </a></li>
-
-                                        {!isMyAccount ? <li><a onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
-                                            <Icon name={`${isContact ? "minus" : "plus"}-circle`} />
-                                            <Translate content={`account.${isContact ? "unfollow" : "follow"}`} />
-                                        </a></li> : null}
-
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1})}><a onClick={this._onNavigate.bind(this, "/settings")}>
-                                            <Icon name="cogs" />
-                                            <Translate content="header.settings" />
-                                        </a></li>
-
-                                        <li className={cnames({active: active.indexOf("/help") !== -1})}><a onClick={this._onNavigate.bind(this, "/help")}>
-                                            <Icon name="question-circle" />
-                                            <Translate content="header.help" />
-                                        </a></li>
-
-                                        <li className={cnames({active: active.indexOf("/accounts") !== -1})}><a onClick={this._onNavigate.bind(this, "/accounts")}>
-                                           <Icon name="folder" />
-                                           <Translate content="explorer.accounts.title" />
-                                        </a></li>
-                                        {accountsList}
-                                    </ul>
-                                </div>
-                            }
+                                        <span className="caret">{caret}</span>
+                                    </div>
+                                </li>
+                                <ul className="dropdown header-menu block-list" style={{maxHeight: !this.state.dropdownActive ? 0 : maxHeight}}>
+                                    <li><a onClick={this._toggleLock.bind(this)}>
+                                        <Icon name="power" />
+                                        <Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} />
+                                    </a></li>
+                                    {!isMyAccount ? <li><a onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
+                                        <Icon name={`${isContact ? "minus" : "plus"}-circle`} />
+                                        <Translate content={`account.${isContact ? "unfollow" : "follow"}`} />
+                                    </a></li> : null}
+                                    <li className={cnames({active: active.indexOf("/settings") !== -1})}><a onClick={this._onNavigate.bind(this, "/settings")}>
+                                        <Icon name="cogs" />
+                                        <Translate content="header.settings" />
+                                    </a></li>
+                                    <li className={cnames({active: active.indexOf("/help") !== -1})}><a onClick={this._onNavigate.bind(this, "/help")}>
+                                        <Icon name="question-circle" />
+                                        <Translate content="header.help" />
+                                    </a></li>
+                                    <li className={cnames({active: active.indexOf("/accounts") !== -1})}><a onClick={this._onNavigate.bind(this, "/accounts")}>
+                                       <Icon name="folder" />
+                                       <Translate content="explorer.accounts.title" />
+                                    </a></li>
+                                    {accountsList}
+                                </ul>
+                            </div>}
                         </div>
                     </div>
                 </div>
