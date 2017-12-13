@@ -936,6 +936,7 @@ class MarketsStore {
     }
 
     _calcMarketStats(history, baseAsset, quoteAsset, recent, market) {
+        if (!history) return;
         let yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         yesterday = yesterday.getTime();

@@ -157,8 +157,9 @@ class ExchangeSubscriber extends React.Component {
 
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
             let currentSub = this.state.sub.split("_");
-            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
-            return this._subToMarket(nextProps);
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(() => {
+                this._subToMarket(nextProps);
+            });
         }
     }
 
