@@ -218,16 +218,8 @@ $account-tabs-background
 
     .sidemenu {
         @include color($light-text-color, $light-panel-bg-color);
-    }
-
-    .sidemenu-list {
-
-        > li.active > a {
-            border-right-color: darken($button-bg-color, 4%);
-        }
-
-        .sidemenu-list {
-          background-color: darken($light-panel-bg-color, 10%);
+        > .block-list li.active > a {
+            border-right-color: $button-bg-color;
         }
     }
 
@@ -356,24 +348,6 @@ $account-tabs-background
         color: $secondary-text-color;
     }
 
-    .header-right-menu {
-        a:hover {background-color: lighten($panel-bg-color, 4%);}
-        a.active {background-color: lighten($panel-bg-color, 4%);}
-        li.current-account > a {
-            color: $info-color;
-            &:hover {
-                color: $info-color;
-            }
-            > span { font-weight: bold; }
-        }
-        svg > path { fill: $secondary-text-color; }
-        // svg:hover > path { fill: $primary-text-color; }
-    }
-
-    .settings-cog {
-        svg > path { fill: $secondary-text-color; }
-    }
-
     // cards
 
 
@@ -446,9 +420,12 @@ $account-tabs-background
             background: transparent;
           }
         }
-        li > a:hover, li > label:hover, li select:hover, li.active > a {
+        li > a:hover, li > label:hover, li select:hover, li.active > a:hover {
+            background-color: lighten($bg-color, 8%);
+        }
+        li.active > a {
             color: $light-text-color;
-            background-color: lighten($bg-color, 4%);
+            background-color: lighten($bg-color, 12%);
         }
         li > a > .icon {
           margin-right: .6rem;
@@ -460,6 +437,9 @@ $account-tabs-background
             margin-left: 0;
             margin-bottom: 1rem;
             color: $secondary-text-color;
+        }
+        ul, li.selected:not(.active):not(:hover) > a {
+          background-color: darken($light-panel-bg-color, 8%);
         }
     }
 

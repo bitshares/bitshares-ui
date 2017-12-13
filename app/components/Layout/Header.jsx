@@ -309,27 +309,27 @@ class Header extends React.Component {
                                         </div>
                                     </li>
                                     <ul className="dropdown header-menu block-list" style={{left: 0, top: "3.84rem", maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-                                        <li><a className="divider" onClick={this._toggleLock.bind(this)}>
+                                        <li><a onClick={this._toggleLock.bind(this)}>
                                             <Icon name="power" />
                                             <Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} />
                                         </a></li>
 
-                                        {!isMyAccount ? <li><a className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
+                                        {!isMyAccount ? <li><a onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
                                             <Icon name={`${isContact ? "minus" : "plus"}-circle`} />
                                             <Translate content={`account.${isContact ? "unfollow" : "follow"}`} />
                                         </a></li> : null}
 
-                                        <li><a className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
+                                        <li className={cnames({active: active.indexOf("/settings") !== -1})}><a onClick={this._onNavigate.bind(this, "/settings")}>
                                             <Icon name="cogs" />
                                             <Translate content="header.settings" />
                                         </a></li>
 
-                                        <li><a className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>
+                                        <li className={cnames({active: active.indexOf("/help") !== -1})}><a onClick={this._onNavigate.bind(this, "/help")}>
                                             <Icon name="question-circle" />
                                             <Translate content="header.help" />
                                         </a></li>
 
-                                        <li><a className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                        <li className={cnames({active: active.indexOf("/accounts") !== -1})}><a onClick={this._onNavigate.bind(this, "/accounts")}>
                                            <Icon name="folder" />
                                            <Translate content="explorer.accounts.title" />
                                         </a></li>

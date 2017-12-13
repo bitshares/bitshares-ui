@@ -51,9 +51,9 @@
   .sidemenu {
     height: 100%;
 
-    .sidemenu-list {
+    .block-list {
 
-      > li > a {
+      li > a {
         padding-left: 1rem;
         padding-right: 3rem;
 
@@ -65,9 +65,8 @@
           background: transparent;
         }
       }
-      > li.active > a {
-          border-right-width: 3px;
-          border-right-style: solid;
+      li > a {
+          border-right: .18rem solid transparent;
       }
     }
   }
