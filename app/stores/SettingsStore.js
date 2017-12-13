@@ -174,7 +174,7 @@ class SettingsStore {
                     "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
                     "YOYOW", "HERO", "RUBLE", "SMOKE", "STEALTH", "BRIDGE.BCO",
                     "BRIDGE.BTC", "KEXCOIN", "PPY", "OPEN.EOS", "OPEN.OMG", "CVCOIN",
-                    "BRIDGE.ZNY", "BRIDGE.MONA", "BRIDGE.BCO", "OPEN.LTC"
+                    "BRIDGE.ZNY", "BRIDGE.MONA", "OPEN.LTC"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"
