@@ -26,7 +26,9 @@ class MarketRow extends React.Component {
 
     constructor() {
         super();
-        
+        this.state = { 
+            flash: false 
+        };
         this.statsInterval = null;
     }
 
@@ -48,10 +50,12 @@ class MarketRow extends React.Component {
         clearInterval(this.statsInterval);
     }
 
-    componentDidUpdate() {
-        let {quote, base} = this.props;
-        let marketID = quote.get("symbol") + "_" + base.get("symbol");
-        this.props.onMarketChanged(marketID);
+    componentWillReceiveProps(nextProps) {
+        if(this.props !== nextProps) {
+            let {quote, base} = nextProps;
+            let marketID = quote.get("symbol") + "_" + base.get("symbol");
+            this.setState({flash: this.props.onMarketChanged(marketID)});
+        }
     }
 
     shouldComponentUpdate(nextProps) {
@@ -70,7 +74,8 @@ class MarketRow extends React.Component {
     }
 
     render() {
-        let {quote, base, noSymbols, stats, starred, flash} = this.props;
+        let {quote, base, noSymbols, stats, starred} = this.props;
+        let {flash} = this.state;
 
         if (!quote || !base) {
             return null;
@@ -94,7 +99,7 @@ class MarketRow extends React.Component {
             buttonClass += " no-margin";
             buttonStyle = {marginBottom: 0, fontSize: "0.75rem" , padding: "4px 10px" , borderRadius: "0px" , letterSpacing: "0.05rem"};
         }
-
+        
         let columns = this.props.columns.map(column => {
             switch (column.name) {
             case "star":
@@ -106,9 +111,10 @@ class MarketRow extends React.Component {
                 );
 
             case "vol":
+                let change_on_vol = utils.format_number(stats && stats.change ? stats.change : 0, 2);
                 let amount = stats ? stats.volumeBase : 0;
                 return (
-                    <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
+                    <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + (flash ? change_on_vol > 0 ? " pulsate-up" : " pulsate-down" : "")} key={column.index}>
                         {utils.format_volume(amount)}
                     </td>
                 );
@@ -150,9 +156,10 @@ class MarketRow extends React.Component {
                     precision = 8;
                 }
 
+                let change_on_price = utils.format_number(stats && stats.change ? stats.change : 0, 2);
 
                 return (
-                    <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
+                    <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + (flash ? change_on_price > 0 ? " pulsate-up" : " pulsate-down" : "")} key={column.index}>
                         {utils.format_number(finalPrice, finalPrice > 1000 ? 0 : finalPrice > 10 ? 2 : precision)}
                     </td>
                 );

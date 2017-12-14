@@ -59,7 +59,6 @@ class MarketGroup extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
-            nextState.marketsCache !== this.state.marketsCache ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
             nextProps.marketStats !== this.props.marketStats ||
             nextProps.userMarkets !== this.props.userMarkets
@@ -82,7 +81,7 @@ class MarketGroup extends React.Component {
             marketsCache[id][2] = true;
         }
         
-        if(marketsCache[id][2] && timestamp-(10*1000) > marketsCache[id][0]) {
+        if(marketsCache[id][2] && timestamp-(2*1000) > marketsCache[id][0]) {
             //console.log("Market Change: " + id + " expired (" + timestamp + ")");
             marketsCache[id][2] = false;
         }
@@ -91,6 +90,8 @@ class MarketGroup extends React.Component {
         marketsCache[id][1] = change;        
 
         this.setState({marketsCache: marketsCache});
+
+        return marketsCache[id][2];
     }
 
     _inverseSort() {
@@ -196,7 +197,6 @@ class MarketGroup extends React.Component {
                         noSymbols={true}
                         stats={marketStats.get(market.id)}
                         starred={starredMarkets.has(market.id)}
-                        flash={marketsCache[market.id] && marketsCache[market.id][2]}
                         current={current === market.id}
                         isChecked={this.props.userMarkets.has(market.id)}
                         isDefault={this.props.defaultMarkets && this.props.defaultMarkets.has(market.id)}
