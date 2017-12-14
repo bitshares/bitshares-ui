@@ -224,7 +224,7 @@ class AccountOrders extends React.Component {
                     {selectedOrders.length ? <button className="button"><Translate content="account.submit_orders" onClick={this.cancelSelected.bind(this)} /></button> : null}
                 </div>
 
-                <table className="table table-striped dashboard-table">
+                <table className="table table-striped dashboard-table table-hover">
                     <TableHeader settings={this.props.settings} dashboard isMyAccount={this.props.isMyAccount}/>
                     {tables}
                     {this.props.children}

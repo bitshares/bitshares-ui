@@ -15,7 +15,7 @@ before_package:
   echo Before package
 after_test:
   - 7z a build\html5_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_ -r
+  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_'' -r
 test_script:
   - npm run package
   - npm run build
@@ -31,8 +31,6 @@ deploy:
   provider: GitHub
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: "Automated release from Travis CI with added files from AppVeyor build"
-  auth_token:
-    secure: F/9ssjiE7swLmbl4JXtgpgv40kr3u6q+nbcNCs+Rw2S0VEMYBAXDwmKHQuAH8uDB
   artifact: WindowsApp, html5_history_dist, hash_history_dist
   draft: true
   force_update: true
