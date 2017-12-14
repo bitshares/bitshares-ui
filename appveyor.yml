@@ -15,7 +15,7 @@ before_package:
   echo Before package
 after_test:
   - 7z a build\html5_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_ -r
+  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_'' -r
 test_script:
   - npm run package
   - npm run build
