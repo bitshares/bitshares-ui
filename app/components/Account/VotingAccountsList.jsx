@@ -203,7 +203,7 @@ class VotingAccountsList extends React.Component {
                 /> : null}
                 {this.props.title && item_rows.length ? <h4>{this.props.title}</h4> : null}
                 {item_rows.length ? (
-                <table className="table dashboard-table">
+                <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
                             <th style={{textAlign: "right"}}>#</th>

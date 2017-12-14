@@ -131,11 +131,18 @@ class ExchangeSubscriber extends React.Component {
 
         emitter.on("cancel-order", limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on("close-call", callListener = MarketsActions.closeCallOrderSuccess);
-        emitter.on("call-order-update", newCallListener = MarketsActions.callOrderUpdate);
+
+        emitter.on("call-order-update", newCallListener = (call_order) => {
+            let {asset_id: coBase} = call_order.call_price.base;
+            let {asset_id: coQuote} = call_order.call_price.quote;
+            let baseId = this.props.baseAsset.get("id"), quoteId = this.props.quoteAsset.get("id");
+            if ((coBase === baseId || coBase === quoteId) && (coQuote === baseId || coQuote === quoteId)) {
+                MarketsActions.callOrderUpdate(call_order);
+            }
+        });
         emitter.on("bitasset-update", feedUpdateListener = MarketsActions.feedUpdate);
         emitter.on("settle-order-update", settleOrderListener = (object) => {
             let {isMarketAsset, marketAsset} = market_utils.isMarketAsset(this.props.quoteAsset, this.props.baseAsset);
-            console.log("settle-order-update:", object, "isMarketAsset:", isMarketAsset, "marketAsset:", marketAsset);
 
             if (isMarketAsset && marketAsset.id === object.balance.asset_id) {
                 MarketsActions.settleOrderUpdate(marketAsset.id);
@@ -157,8 +164,9 @@ class ExchangeSubscriber extends React.Component {
 
         if (nextProps.quoteAsset.get("symbol") !== this.props.quoteAsset.get("symbol") || nextProps.baseAsset.get("symbol") !== this.props.baseAsset.get("symbol")) {
             let currentSub = this.state.sub.split("_");
-            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]);
-            return this._subToMarket(nextProps);
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(() => {
+                this._subToMarket(nextProps);
+            });
         }
     }
 
@@ -193,6 +201,6 @@ class ExchangeSubscriber extends React.Component {
     }
 }
 
-ExchangeSubscriber = BindToChainState(ExchangeSubscriber, {keep_updating: true});
+ExchangeSubscriber = BindToChainState(ExchangeSubscriber, {keep_updating: true, show_loader: true});
 
 export default ExchangeContainer;

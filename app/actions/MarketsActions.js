@@ -20,6 +20,8 @@ let subBatchResults = Immutable.List();
 let dispatchSubTimeout = null;
 let subBatchTime = 500;
 
+let currentMarket = null;
+
 function clearBatchTimeouts() {
     clearTimeout(dispatchCancelTimeout);
     clearTimeout(dispatchSubTimeout);
@@ -70,6 +72,8 @@ class MarketsActions {
                 ])
                 .then(result => {
                     dispatch({history: result[0], last: result[1], market: marketName, base, quote});
+                }).catch(err => {
+                    console.log("getMarketStats error:", err);
                 });
             }
         };
@@ -82,6 +86,7 @@ class MarketsActions {
     subscribeMarket(base, quote, bucketSize) {
         clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
+        currentMarket = base.get("id") + "_" + quote.get("id");;
 
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(quote, base);
 
@@ -89,7 +94,14 @@ class MarketsActions {
         // let lastLimitOrder = null;
         return (dispatch) => {
 
-            let subscription = (subResult) => {
+            let subscription = (marketId, subResult) => {
+                /*
+                ** When switching markets rapidly we might receive sub notifications
+                ** from the previous markets, in that case disregard them
+                */
+                if (marketId !== currentMarket) {
+                    return;
+                }
                 /* In the case of many market notifications arriving at the same time,
                 * we queue them in a batch here and dispatch them all at once at a frequency
                 * defined by "subBatchTime"
@@ -229,7 +241,7 @@ class MarketsActions {
                 if (__DEV__) console.time("Fetch market data");
                 return Promise.all([
                     Apis.instance().db_api().exec("subscribe_to_market", [
-                        subscription, base.get("id"), quote.get("id")
+                        subscription.bind(this, base.get("id") + "_" + quote.get("id")),  base.get("id"), quote.get("id")
                     ]),
                     Apis.instance().db_api().exec("get_limit_orders", [
                         base.get("id"), quote.get("id"), 300

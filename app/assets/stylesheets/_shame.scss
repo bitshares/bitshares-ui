@@ -24,7 +24,7 @@
 }
 
 a {
-  transition: all 0.3s ease 0s;
+   transition: all 0.3s ease 0s;
 }
 
 // border is needed when centering
@@ -444,4 +444,8 @@ section progress {
 
 h4 {
     font-weight: 600;
+}
+
+ul > li {
+    transition: background-color 0.3s ease 0s;
 }

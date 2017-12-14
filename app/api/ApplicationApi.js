@@ -1,6 +1,8 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import notify from "actions/NotificationActions";
 import WalletDb from "stores/WalletDb";
 import {Aes, ChainValidation, TransactionBuilder, TransactionHelper, FetchChain, ChainStore} from "bitsharesjs/es";
+import counterpart from "counterpart";
 
 const ApplicationApi = {
 
@@ -126,7 +128,12 @@ const ApplicationApi = {
                 memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
 
                 if(! memo_from_privkey) {
-                    throw new Error("Missing private memo key for sender: " + memo_sender)
+                    notify.addNotification({
+                        message: counterpart.translate("account.errors.memo_missing"),
+                        level: "error",
+                        autoDismiss: 10
+                    });
+                    throw new Error("Missing private memo key for sender: " + memo_sender);
                 }
             }
 

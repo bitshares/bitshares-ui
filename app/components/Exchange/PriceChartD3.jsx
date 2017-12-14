@@ -225,7 +225,7 @@ class CandleStickChartWithZoomPan extends React.Component {
 
         let gridWidth = width - margin.left - margin.right;
 
-        let showGrid = false;
+        let showGrid = true;
         let yGrid = showGrid ? { innerTickSize: -1 * gridWidth, tickStrokeOpacity: 0.1 } : {};
 
         return <Chart
