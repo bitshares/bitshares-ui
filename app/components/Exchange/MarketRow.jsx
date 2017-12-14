@@ -26,7 +26,7 @@ class MarketRow extends React.Component {
 
     constructor() {
         super();
-
+        
         this.statsInterval = null;
     }
 
@@ -48,6 +48,12 @@ class MarketRow extends React.Component {
         clearInterval(this.statsInterval);
     }
 
+    componentDidUpdate() {
+        let {quote, base} = this.props;
+        let marketID = quote.get("symbol") + "_" + base.get("symbol");
+        this.props.onMarketChanged(marketID);
+    }
+
     shouldComponentUpdate(nextProps) {
         return (
             !utils.are_equal_shallow(nextProps, this.props)
@@ -64,7 +70,7 @@ class MarketRow extends React.Component {
     }
 
     render() {
-        let {quote, base, noSymbols, stats, starred} = this.props;
+        let {quote, base, noSymbols, stats, starred, flash} = this.props;
 
         if (!quote || !base) {
             return null;
@@ -109,10 +115,12 @@ class MarketRow extends React.Component {
 
             case "change":
                 let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                let changeClass = change === "0.00" ? "" : change > 0 ? "change-up" : "change-down";
+
+                let changeClass = !flash && change === "0.00" ? "" : change > 0 ? " change-up" : " change-down";
+                changeClass = flash ? change > 0 ? " pulsate-up" : " pulsate-down" : changeClass;
 
                 return (
-                    <td onClick={this._onClick.bind(this, marketID)} className={"text-right " + changeClass} key={column.index}>
+                    <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + changeClass} key={column.index}>
                         {change + "%"}
                     </td>
                 );

@@ -39,6 +39,7 @@ class MarketGroup extends React.Component {
         let open = props.findMarketTab ? true : props.viewSettings.get(`myMarketsBase_${props.index}`);
         return {
             open: open !== undefined ? open : true,
+            marketsCache: [],
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
             sortBy: props.viewSettings.get("myMarketsSort", "volume"),
             inputValue: ""
@@ -58,10 +59,38 @@ class MarketGroup extends React.Component {
         return (
             !utils.are_equal_shallow(nextState, this.state) ||
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
+            nextState.marketsCache !== this.state.marketsCache ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
             nextProps.marketStats !== this.props.marketStats ||
             nextProps.userMarkets !== this.props.userMarkets
         );
+    }
+
+    _hasMarketChanged(id) {
+        let {marketStats} = this.props;
+        let {marketsCache} = this.state;
+        
+        let timestamp = new Date().getTime();
+        let change = utils.format_number(marketStats.get(id) && marketStats.get(id).change ? marketStats.get(id).change : 0, 2);
+
+        if(!marketsCache[id]) { 
+            marketsCache[id] = [timestamp, "0.00", false];
+        }
+        
+        if(change != marketsCache[id][1] && marketsCache[id][1] != "0.00") { 
+            //console.log("Market Change: " + id + " changed to " + change + " (" + timestamp + ")");
+            marketsCache[id][2] = true;
+        }
+        
+        if(marketsCache[id][2] && timestamp-(10*1000) > marketsCache[id][0]) {
+            //console.log("Market Change: " + id + " expired (" + timestamp + ")");
+            marketsCache[id][2] = false;
+        }
+
+        marketsCache[id][0] = timestamp;
+        marketsCache[id][1] = change;        
+
+        this.setState({marketsCache: marketsCache});
     }
 
     _inverseSort() {
@@ -113,9 +142,8 @@ class MarketGroup extends React.Component {
     }
 
     render() {
-        let {columns, markets, base, marketStats, starredMarkets,
-            current, findMarketTab} = this.props;
-        let {sortBy, inverseSort, open} = this.state;
+        let {columns, markets, base, marketStats, starredMarkets, current, findMarketTab} = this.props;
+        let {sortBy, inverseSort, open, marketsCache} = this.state;
 
         if (!markets || !markets.length) {
             return null;
@@ -168,10 +196,12 @@ class MarketGroup extends React.Component {
                         noSymbols={true}
                         stats={marketStats.get(market.id)}
                         starred={starredMarkets.has(market.id)}
+                        flash={marketsCache[market.id] && marketsCache[market.id][2]}
                         current={current === market.id}
                         isChecked={this.props.userMarkets.has(market.id)}
                         isDefault={this.props.defaultMarkets && this.props.defaultMarkets.has(market.id)}
                         onCheckMarket={this._onToggleUserMarket.bind(this)}
+                        onMarketChanged={this._hasMarketChanged.bind(this)}
                     />
                 );
             }).filter(a => {

@@ -573,3 +573,24 @@ form.hide-container {
 tbody.orderbook > tr.my-order > td {
     font-weight: bold;
 }
+
+.pulsate-up {
+    -webkit-animation: pulsate-up .5s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    color: inherit;
+}
+.pulsate-down {
+    -webkit-animation: pulsate-down .5s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    color: inherit;
+}
+@-webkit-keyframes pulsate-up {
+    0% { color: #00cc00; }
+    50% { color: #66ff33; }
+    100% { color: #00cc00; }
+}
+@-webkit-keyframes pulsate-down {
+    0% { color: #E1424A; }
+    50% { color: #dd222c; }
+    100% { color: #E1424A; }
+}
