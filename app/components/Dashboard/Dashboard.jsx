@@ -10,6 +10,8 @@ import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
+import { connect } from "alt-react";
 
 class Dashboard extends React.Component {
 
@@ -236,4 +238,17 @@ class Dashboard extends React.Component {
     }
 }
 
-export default Dashboard;
+let DashboardWrapper = (props) => {
+    return <Dashboard {...props} />;
+};
+
+export default DashboardWrapper = connect(DashboardWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

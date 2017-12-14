@@ -325,7 +325,7 @@ class AccountAssetCreate extends React.Component {
 
             case "max_supply":
                 shouldRestoreCursor = true;
-                
+
                 const regexp_numeral = new RegExp(/[[:digit:]]/);
 
                 // Ensure input is valid
@@ -334,12 +334,12 @@ class AccountAssetCreate extends React.Component {
                 }
 
                 // Catch initial decimal input
-                if(target.value.charAt(0) == ".") { 
-                    target.value = "0."; 
+                if(target.value.charAt(0) == ".") {
+                    target.value = "0.";
                 }
 
                 // Catch double decimal and remove if invalid
-                if(target.value.charAt(target.value.length) != target.value.search(".")) { 
+                if(target.value.charAt(target.value.length) != target.value.search(".")) {
                     target.value.substr(1);
                 }
 
@@ -583,6 +583,17 @@ class AccountAssetCreate extends React.Component {
             );
         }
 
+        const confirmButtons = (
+            <div>
+                <button className="button" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")}>
+                    <Translate content="account.perm.reset" />
+                </button>
+                <button className={classnames("button", {disabled: !isValid})} onClick={this._createAsset.bind(this)}>
+                    <Translate content="header.create_asset" />
+                </button>
+            </div>
+        );
+
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
@@ -591,11 +602,17 @@ class AccountAssetCreate extends React.Component {
                             <h3><Translate content="header.create_asset" /></h3>
                         </div>
 
-                        <Tabs setting="createAssetTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block" contentClass="grid-block shrink small-vertical medium-horizontal no-padding" segmented={false}>
+                        <Tabs
+                            setting="createAssetTab"
+                            className="account-tabs"
+                            tabsClass="account-overview no-padding bordered-header content-block"
+                            contentClass="grid-block shrink small-vertical medium-horizontal"
+                            segmented={false}
+                            actionButtons={confirmButtons}
+                        >
 
                             <Tab title="account.user_issued_assets.primary">
                                 <div className="small-12 grid-content">
-                                    <h3><Translate content="account.user_issued_assets.primary" /></h3>
                                     <label><Translate content="account.user_issued_assets.symbol" />
                                         <input type="text" value={update.symbol} onChange={this._onUpdateInput.bind(this, "symbol")}/>
                                     </label>
@@ -695,12 +712,13 @@ class AccountAssetCreate extends React.Component {
                                         <Translate content="account.user_issued_assets.cer_warning_1" component="label" className="has-error"/>
                                         <Translate content="account.user_issued_assets.cer_warning_2" component="p" />
                                     </div>
+                                    {<p><Translate content="account.user_issued_assets.approx_fee" />: {createFee}</p>}
                                 </div>
                             </Tab>
 
                             <Tab title="account.user_issued_assets.description">
                                 <div className="small-12 grid-content">
-                                    <Translate component="h3" content="account.user_issued_assets.description" />
+                                    <Translate component="label" content="account.user_issued_assets.description" />
                                     <label>
                                         <textarea
                                             style={{height: "7rem"}}
@@ -710,7 +728,7 @@ class AccountAssetCreate extends React.Component {
                                         />
                                     </label>
 
-                                    <Translate component="h3" content="account.user_issued_assets.short" />
+                                    <Translate component="label" content="account.user_issued_assets.short" />
                                     <label>
                                         <input
                                             type="text"
@@ -720,7 +738,7 @@ class AccountAssetCreate extends React.Component {
                                         />
                                     </label>
 
-                                    <Translate component="h3" content="account.user_issued_assets.market" />
+                                    <Translate component="label" content="account.user_issued_assets.market" />
                                         <AssetSelector
                                             label="account.user_issued_assets.name"
                                             onChange={this._onInputMarket.bind(this)}
@@ -819,18 +837,6 @@ class AccountAssetCreate extends React.Component {
                                 </div>
                             </Tab>
                         </Tabs>
-
-                        <div className="action-buttons">
-                            <button className="button" onClick={this._reset.bind(this)} value={counterpart.translate("account.perm.reset")}>
-                                <Translate content="account.perm.reset" />
-                            </button>
-                            <button className={classnames("button", {disabled: !isValid})} onClick={this._createAsset.bind(this)}>
-                                <Translate content="header.create_asset" />
-                            </button>
-                            <br/>
-                            <br/>
-                            <p><Translate content="account.user_issued_assets.approx_fee" />: {createFee}</p>
-                        </div>
                     </div>
                 </div>
             </div>

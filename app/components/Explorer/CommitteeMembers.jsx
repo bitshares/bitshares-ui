@@ -9,6 +9,7 @@ import Translate from "react-translate-component";
 import { connect } from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
+import Explorer from "./Explorer";
 
 class CommitteeMemberCard extends React.Component {
 
@@ -269,7 +270,7 @@ class CommitteeMembers extends React.Component {
             }
         }
 
-        return (
+        let content = 
             <div className="grid-block">
                 <div className="grid-block page-layout vertical medium-horizontal">
                     <div className="grid-block shrink">
@@ -298,7 +299,10 @@ class CommitteeMembers extends React.Component {
                         </div>
                 </div>
             </div>
-        );
+        ;
+        
+        return (<Explorer tab="committee_members" content={content}/>);
+        
     }
 }
 CommitteeMembers = BindToChainState(CommitteeMembers, {keep_updating: true});

@@ -29,7 +29,7 @@ class AssetName extends React.Component {
 	}
 
 	render() {
-		let {name, replace, asset, noPrefix} = this.props;
+		let {name, replace, asset, noPrefix, customClass} = this.props;
 		let isBitAsset = asset.has("bitasset");
 		let isPredMarket = isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
@@ -56,7 +56,7 @@ class AssetName extends React.Component {
 
 			return (
 				<div
-					className={"inline-block" + (this.props.noTip ? "" : " tooltip")}
+					className={"inline-block" + (this.props.noTip ? "" : " tooltip") + (customClass ? " " + customClass : "")}
 					data-tip={tooltip}
 					data-place={this.props.dataPlace}
 					data-html={true}
@@ -66,7 +66,7 @@ class AssetName extends React.Component {
 			);
 
 		} else {
-			return <span><span className={!noPrefix ? "asset-prefix-replaced" : ""}>{!noPrefix ? prefix : null}</span>{replacedName}</span>;
+			return <span className={customClass ? customClass : null}><span className={!noPrefix ? "asset-prefix-replaced" : ""}>{!noPrefix ? prefix : null}</span>{replacedName}</span>;
 		}
 
 	}
