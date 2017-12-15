@@ -107,7 +107,8 @@ export default class BackupBrainkey extends Component {
     onSubmit(e) {
         e.preventDefault();
         var was_locked = WalletDb.isLocked()
-        if(WalletDb.validatePassword(this.state.password, true)) {
+        let {success} = WalletDb.validatePassword(this.state.password, true);
+        if(success) {
             var brainkey = WalletDb.getBrainKey()
             if(was_locked) WalletDb.onLock()
             this.setState({ brainkey })
