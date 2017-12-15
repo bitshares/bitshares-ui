@@ -468,7 +468,8 @@
       "insufficient": "Insufficient funds",
       "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
       "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
-      "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s"
+      "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
+      "memo_error":"The transfer memo parsing error, please try again later."
     },
     "back": "BACK",
     "confirm": "CONFIRM",
