@@ -419,10 +419,10 @@ export default class SendModal extends React.Component {
                         <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
                         { !propose ?
                             <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
-                                <Translate unsafe content="modal.send.header" fromName={from_name} />
+                                <Translate unsafe content="modal.send.header" with={{fromName: from_name}} />
                             </div> :
                             <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
-                                <Translate unsafe content="modal.send.header_propose" fromName={from_name} />
+                                <Translate unsafe content="modal.send.header_propose" with={{fromName: from_name}} />
                             </div>
                         }
 
