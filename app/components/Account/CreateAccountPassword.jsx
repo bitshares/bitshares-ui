@@ -49,10 +49,12 @@ class CreateAccountPassword extends React.Component {
     }
 
     componentWillMount() {
-        SettingsActions.changeSetting({
-            setting: "passwordLogin",
-            value: true
-        });
+        if (!WalletDb.getWallet()) {
+            SettingsActions.changeSetting({
+                setting: "passwordLogin",
+                value: true
+            });
+        }
     }
 
     componentDidMount() {
@@ -95,6 +97,12 @@ class CreateAccountPassword extends React.Component {
     }
 
     _unlockAccount(name, password) {
+        
+        SettingsActions.changeSetting({
+                setting: "passwordLogin",
+                value: true
+        });
+        
         WalletDb.validatePassword(password, true, name);
         WalletUnlockActions.checkLock.defer();
     }
