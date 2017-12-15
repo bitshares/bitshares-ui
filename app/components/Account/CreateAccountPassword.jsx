@@ -322,7 +322,7 @@ class CreateAccountPassword extends React.Component {
 
                 <div>
 
-                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}} className="no-overflow">{this.state.generatedPassword}</div></div>}
+                    {!this.state.showPass ? <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> : <div><h5><Translate content="settings.password" />:</h5><div style={{fontWeight: "bold", wordWrap: "break-word"}}>{this.state.generatedPassword}</div></div>}
                 </div>
                 <div className="divider" />
                 <p className="txtlabel warning"><Translate unsafe content="wallet.password_lose_warning" /></p>
