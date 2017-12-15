@@ -40,7 +40,7 @@ class MarketsActions {
         return size;
     }
 
-    getMarketStats(base, quote) {
+    getMarketStats(base, quote, refresh=false) {
         return (dispatch) => {
             let market = quote.get("id") + "_" + base.get("id");
             let marketName = quote.get("symbol") + "_" + base.get("symbol");
@@ -50,9 +50,7 @@ class MarketsActions {
             endDate.setDate(endDate.getDate() + 1);
             startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
-            let refresh = false;
-
-            if (marketStats[market]) {
+            if (marketStats[market] && !refresh) {
                 if ((now - marketStats[market].lastFetched) < statTTL) {
                     return false;
                 } else {

@@ -1264,7 +1264,15 @@
     "withdraw": {
       "amount": "Amount to Withdraw",
       "address": "Withdraw to Address",
-      "submit": "Withdraw"
+      "submit": "Withdraw",
+      "quantity": "Quantity",
+      "estimated_value": "Estimated Value",
+      "memo": "Memo",
+      "fee": "Fee",
+      "gateway_fee": "Gateway Fee",
+      "withdraw": "Withdraw",
+      "cancel": "Cancel",
+      "available": "Available: "
     },
     "deposit": {
       "amount": "Amount to Deposit",

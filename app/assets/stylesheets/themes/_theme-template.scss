@@ -276,6 +276,13 @@ $account-tabs-background
         }
     }
 
+    .button.danger {
+        @include color(white, $alert-color);
+        &:hover, &:focus, &:active {
+            @include color(white, lighten($alert-color, 4%), true);
+        }
+    }
+
     .header .button,  .header .button:active {
         background-color: transparent !important;
     }

@@ -32,6 +32,7 @@ import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
+import BalanceWrapper from "./BalanceWrapper";
 
 class AccountOverview extends React.Component {
 
@@ -729,47 +730,8 @@ class AccountOverview extends React.Component {
 
 AccountOverview = BindToChainState(AccountOverview);
 
-class BalanceWrapper extends React.Component {
-
-    static propTypes = {
-        balances: ChainTypes.ChainObjectsList,
-        orders: ChainTypes.ChainObjectsList
-    };
-
-    static defaultProps = {
-        balances: Immutable.List(),
-        orders: Immutable.List()
-    };
-
-    componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins();
-            GatewayActions.fetchBridgeCoins();
-        }
+export default class AccountOverviewWrapper extends React.Component {
+    render(){
+        return <BalanceWrapper {...this.props} wrap={AccountOverview} />
     }
-
-    render() {
-        let balanceAssets = this.props.balances.map(b => {
-            return b && b.get("asset_type");
-        }).filter(b => !!b);
-
-        let ordersByAsset = this.props.orders.reduce((orders, o) => {
-            let asset_id = o.getIn(["sell_price", "base", "asset_id"]);
-            if (!orders[asset_id]) orders[asset_id] = 0;
-            orders[asset_id] += parseInt(o.get("for_sale"), 10);
-            return orders;
-        }, {});
-
-        for (let id in ordersByAsset) {
-            if (balanceAssets.indexOf(id) === -1) {
-                balanceAssets.push(id);
-            }
-        }
-
-        return (
-            <AccountOverview {...this.state} {...this.props} orders={ordersByAsset} balanceAssets={Immutable.List(balanceAssets)} />
-        );
-    };
 }
-
-export default BindToChainState(BalanceWrapper);

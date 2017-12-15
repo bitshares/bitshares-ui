@@ -94,6 +94,38 @@ export class MarketStatsCheck extends React.Component {
     }
 }
 
+export function equivalentPrice(coreAsset, fromAsset, toAsset, marketStats, real = false){
+        const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
+        const fromMarket = fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
+        let toPrice, fromPrice;
+        if (marketStats.get(fromMarket) && marketStats.get(fromMarket).price) {
+            fromPrice = marketStats.get(fromMarket).price.clone();
+        }
+        if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
+            toPrice = marketStats.get(toMarket).price.clone();
+        }
+
+        if (toAsset.get("id") === fromAsset.get("id")) return 1;
+
+        let finalPrice;
+        if (toPrice && fromPrice) {
+            finalPrice = toPrice.times(fromPrice);
+        } else if (toPrice) {
+            finalPrice = toPrice;
+        } else  if (fromPrice) {
+            finalPrice = fromPrice;
+        }
+        if (!finalPrice) return null;
+        const finalId = finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
+        if (
+            finalId.indexOf(toAsset.get("id")) === -1 ||
+            finalId.indexOf(fromAsset.get("id")) === -1) {
+            return null;
+        }
+        if (real) return finalPrice.toReal();
+        return finalPrice;
+}
+
 class EquivalentPrice extends MarketStatsCheck {
 
     static propTypes = {
@@ -124,35 +156,7 @@ class EquivalentPrice extends MarketStatsCheck {
 
     getFinalPrice(real = false) {
         const {coreAsset, fromAsset, toAsset, marketStats} = this.props;
-        const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
-        const fromMarket = fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
-        let toPrice, fromPrice;
-        if (marketStats.get(fromMarket) && marketStats.get(fromMarket).price) {
-            fromPrice = marketStats.get(fromMarket).price.clone();
-        }
-        if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
-            toPrice = marketStats.get(toMarket).price.clone();
-        }
-
-        if (toAsset.get("id") === fromAsset.get("id")) return 1;
-
-        let finalPrice;
-        if (toPrice && fromPrice) {
-            finalPrice = toPrice.times(fromPrice);
-        } else if (toPrice) {
-            finalPrice = toPrice;
-        } else  if (fromPrice) {
-            finalPrice = fromPrice;
-        }
-        if (!finalPrice) return null;
-        const finalId = finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
-        if (
-            finalId.indexOf(toAsset.get("id")) === -1 ||
-            finalId.indexOf(fromAsset.get("id")) === -1) {
-            return null;
-        }
-        if (real) return finalPrice.toReal();
-        return finalPrice;
+        return equivalentPrice(coreAsset, fromAsset, toAsset, marketStats, real);
     }
 
     render() {

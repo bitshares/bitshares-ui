@@ -13,6 +13,9 @@ class DepositWithdrawAssetSelector  extends React.Component {
         super(props);
     }
 
+    componentDidMount(){
+    }
+
     render(){
         const { props } = this;
 
@@ -32,12 +35,14 @@ class DepositWithdrawAssetSelector  extends React.Component {
                 console.log(item);
             }
             
-            return { id: item.symbol, label: backedCoin, gateway: gateway };
+            return { id: item.symbol, label: gateway + "." + backedCoin, gateway: gateway };
         };
 
-        let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
+        let coinItems = [{label: "BTS", id: "BTS"}].concat(props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)));
 
-        return <TypeAhead items={coinItems} {...this.props} />
+        return <div style={{marginBottom: '1em'}}>
+          <TypeAhead items={coinItems} {...this.props} />
+        </div>
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
@@ -65,7 +70,7 @@ export default connect(DepositStoreWrapper, {
         return {
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
             rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
-            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", [])
+            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", []),
         };
     }
 });

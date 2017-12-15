@@ -50,6 +50,7 @@ import InitError from "./components/InitError";
 import LoginSelector from "./components/LoginSelector";
 import CreateWorker from "./components/Account/CreateWorker";
 import DepositWithdrawAssetSelector from "./components/DepositWithdraw/DepositWithdrawAssetSelector";
+import WithdrawModal from "./components/DepositWithdraw/WithdrawModalNew";
 
 const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
@@ -144,6 +145,7 @@ const routes = (
         </Route>
 
         <Route path="/deposit-withdraw-typeahead" component={DepositWithdrawAssetSelector} />
+        <Route path="/withdraw-modal" component={WithdrawModal} />
     </Route>
 );
 
