@@ -12,6 +12,7 @@ import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import Header from "components/Layout/Header";
+import Sidemenu from "components/Layout/Sidemenu";
 // import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
@@ -186,9 +187,10 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height}/>
                     <div className="grid-block">
+                        <Sidemenu />
                         <div className="grid-block vertical">
+                            <Header height={this.state.height}/>
                             {this.props.children}
                         </div>
 

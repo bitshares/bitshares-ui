@@ -13,7 +13,7 @@ class Identicon extends Component {
     }
 
   shouldComponentUpdate(nextProps) {
-      return nextProps.size.height !== this.props.size.height || nextProps.size.width !== this.props.size.width || nextProps.account !== this.props.account;
+      return nextProps.size.height !== this.props.size.height || nextProps.size.width !== this.props.size.width || nextProps.account !== this.props.account || nextProps.unit !== this.props.unit;
   }
 
   render() {
@@ -21,7 +21,9 @@ class Identicon extends Component {
       let {height, width} = this.props.size;
       let hash = account ? sha256(account) : null;
       return (
-           <canvas id={this.canvas_id} ref="canvas" style={{height: height, width: width}} width={width * 2} height={height * 2} data-jdenticon-hash={hash} />
+           <canvas id={this.canvas_id}
+                   ref="canvas"
+                   style={{height: height + this.props.unit, width: width + this.props.unit}} width={width > 14 ? width * 2 : 30} height={height > 14 ? height * 2 : 30} data-jdenticon-hash={hash} />
       );
   }
 
@@ -50,7 +52,8 @@ class Identicon extends Component {
 
 Identicon.propTypes = {
   size: PropTypes.object.isRequired,
-  account: PropTypes.string
+  account: PropTypes.string,
+  unit: PropTypes.string
 };
 
 export default Identicon;
