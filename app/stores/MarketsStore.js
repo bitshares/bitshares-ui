@@ -98,8 +98,6 @@ class MarketsStore {
             onFeedUpdate: MarketsActions.feedUpdate,
             onToggleStars: MarketsActions.toggleStars
         });
-
-        window.test = this;
     }
 
     onGetCollateralPositions(payload) {

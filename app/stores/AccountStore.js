@@ -11,7 +11,6 @@ import {Apis} from "bitsharesjs-ws";
 import AccountRefsStore from "stores/AccountRefsStore";
 import AddressIndex from "stores/AddressIndex";
 import ls from "common/localStorage";
-window.ChainStore = ChainStore;
 
 let accountStorage = new ls("__graphene__");
 
