@@ -555,19 +555,6 @@ $account-tabs-background
         }
     }
 
-<<<<<<< HEAD
-    // Typeahead   
-    input[role="combobox"] {
-        padding: 5px 10px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .typeahead > div {
-        width: 100%;
-    }
-
-=======
     // Typeahead
     .typeahead > div {
         > div {
@@ -584,7 +571,6 @@ $account-tabs-background
     }
 
 
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
     ul.button-group.segmented {
         > li.is-active > a {
             background: $input-background;
