@@ -60,10 +60,17 @@ class Dashboard extends React.Component {
         fetch(url).then(reply => reply.json().then(result => {
             let markets = [];
             result.map((m) => {
+                console.log(m.id);
                 if ( (m.base === 'BRIDGE.BTC') && (m.blacklisted !== true) ) {
                     markets.push([m.base, m.quote, m.img]);
                 }
                 if ( (m.base === 'BRIDGE.ZNY') && (m.blacklisted !== true) ) {
+                    markets.push([m.base, m.quote, m.img]);
+                }
+                if ( (m.base === 'BRIDGE.MONA') && (m.blacklisted !== true) ) {
+                    markets.push([m.base, m.quote, m.img]);
+                }
+                if ( (m.base === 'BRIDGE.DOGE') && (m.blacklisted !== true) ) {
                     markets.push([m.base, m.quote, m.img]);
                 }
 
