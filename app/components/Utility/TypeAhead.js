@@ -1,6 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Autocomplete from 'react-autocomplete'
 import React from 'react'
+=======
+import Autocomplete from "react-autocomplete"
+import React from "react"
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
 =======
 import Autocomplete from "react-autocomplete"
 import React from "react"
@@ -13,7 +18,11 @@ class TypeAhead extends React.Component {
         super(props)
         this.state = {
 <<<<<<< HEAD
+<<<<<<< HEAD
             value: '',
+=======
+            value: "",
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
 =======
             value: "",
 >>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
@@ -47,6 +56,7 @@ class TypeAhead extends React.Component {
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <label><Translate content="gateway.symbol" /></label>
             <Autocomplete
                 ref="autocomplete"
@@ -57,6 +67,8 @@ class TypeAhead extends React.Component {
                 ]}
                 getItemValue={(item) => item.label}
 =======
+=======
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
             <label className="left-label"><Translate content="gateway.symbol" /></label>
             <Autocomplete
                 ref="autocomplete"
@@ -65,6 +77,9 @@ class TypeAhead extends React.Component {
                     { id: "bar", label: "bar" },
                     { id: "baz", label: "baz" },
                 ]}
+<<<<<<< HEAD
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
+=======
 >>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
                 shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
                 getItemValue={item => item.label}
@@ -72,7 +87,11 @@ class TypeAhead extends React.Component {
                     <div
                         key={item.id}
 <<<<<<< HEAD
+<<<<<<< HEAD
                         style={{ backgroundColor: highlighted ? '#eee' : 'transparent', color: '#000', padding: '5px'}}
+=======
+                        style={{ backgroundColor: highlighted ? "#eee" : "transparent", color: "#000", padding: "5px"}}
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
 =======
                         style={{ backgroundColor: highlighted ? "#eee" : "transparent", color: "#000", padding: "5px"}}
 >>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
@@ -85,7 +104,11 @@ class TypeAhead extends React.Component {
                 onSelect={this.onSelect.bind(this)}
             />
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "30px"}} onClick={this.focus.bind(this)} />
+=======
+            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
+>>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
 =======
             <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
 >>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
