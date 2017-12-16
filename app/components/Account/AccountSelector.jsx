@@ -130,8 +130,8 @@ class AccountSelector extends React.Component {
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
-            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon name="user" /></span>
-            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon name="plus-circle" /></span>;
+            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="user" /></span>
+            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="plus-circle" /></span>;
 
 
         return (
@@ -141,7 +141,7 @@ class AccountSelector extends React.Component {
                     <div className={"header-area" + (this.props.hideImage ? " no-margin" : "")}>
                         {error && !lookup_display ?
                             <label className="right-label"><span style={{color: "#E3745B"}}>Unknown Account</span></label> :
-                            <label className="right-label"><span>{member_status}</span>&nbsp;<span>{lookup_display}</span> &nbsp; {linked_status}</label>
+                            <label className="right-label"><span>{member_status}</span>&nbsp;<span style={{marginRight:"1.5em"}}> {lookup_display}</span> &nbsp; {linked_status}</label>
                         }
                         <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>) : null}

@@ -10,6 +10,8 @@ import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
+import { connect } from "alt-react";
 
 class Dashboard extends React.Component {
 
@@ -24,12 +26,14 @@ class Dashboard extends React.Component {
                 ["USD", "OPEN.DASH"],
                 ["USD", "GOLD"],
                 ["USD", "HERO"],
+                ["USD", "GDEX.BTC"],
                 ["CNY", "BTS"],
                 ["CNY", "OPEN.BTC"],
                 ["CNY", "USD"],
                 ["CNY", "OPEN.ETH"],
                 ["CNY", "YOYOW"],
                 ["CNY", "OCT"],
+		["CNY", "GDEX.BTC"],
                 ["OPEN.BTC", "BTS"],
                 ["OPEN.BTC", "OPEN.ETH"],
                 ["OPEN.BTC", "OPEN.DASH"],
@@ -49,6 +53,7 @@ class Dashboard extends React.Component {
                 ["BTS", "BLOCKPAY"],
                 ["BTS", "BTWTY"],
                 ["BTS", "SMOKE"],
+		["BTS", "GDEX.BTC"],
                 ["KAPITAL", "OPEN.BTC"],
                 ["USD", "OPEN.STEEM"],
                 ["USD", "OPEN.MAID"],
@@ -236,4 +241,17 @@ class Dashboard extends React.Component {
     }
 }
 
-export default Dashboard;
+let DashboardWrapper = (props) => {
+    return <Dashboard {...props} />;
+};
+
+export default DashboardWrapper = connect(DashboardWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

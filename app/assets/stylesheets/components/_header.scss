@@ -32,7 +32,7 @@
       line-height: 2rem;
       padding-left: 1.25rem;
       padding-right: 0.75rem;
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       @include breakpoint(large) {
         padding-left: 1.75rem;
         padding-right: 1.75rem;
@@ -151,6 +151,7 @@ div.account-drop-down div.dropdown-wrapper {
 ul.dropdown.header-menu {
     transition: padding 0s, height 3s linear;
     border: none;
+    z-index: 1004;
     > li {
         padding: 2px 5px 2px 10px;
         > div {

@@ -37,7 +37,7 @@ const routes = (
             System.import("components/Explorer/Explorer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="/explorer/fees" getComponent={(location, cb) => {
-            System.import("components/Blockchain/FeesContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Explorer/FeesContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="/explorer/blocks" getComponent={(location, cb) => {
             System.import("components/Explorer/BlocksContainer").then(loadRoute(cb)).catch(errorLoading);
@@ -110,7 +110,7 @@ const routes = (
             System.import("components/Transfer/Invoice").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="explorer/markets" getComponent={(location, cb) => {
-            System.import("components/Exchange/MarketsContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Explorer/MarketsContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="market/:marketID" getComponent={(location, cb) => {
             System.import("components/Exchange/ExchangeContainer").then(loadRoute(cb)).catch(errorLoading);
@@ -165,9 +165,16 @@ const routes = (
             <IndexRoute getComponent={(location, cb) => {
                 System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
             }}/>
-            <Route path="dashboard" getComponent={(location, cb) => {
+            {/* <Route path="dashboard" getComponent={(location, cb) => {
                 System.import("components/Account/AccountOverview").then(loadRoute(cb)).catch(errorLoading);
-            }}/>
+            }}/> */}
+            {/* <Route path="deposit-withdraw" getComponent={(location, cb) => {
+                System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
+            }}/> */}
+            {/* <Route path="orders" getComponent={(location, cb) => {
+                System.import("components/Account/AccountOrders").then(loadRoute(cb)).catch(errorLoading);
+            }}/> */}
+
             <Route path="assets" getComponent={(location, cb) => {
                 System.import("components/Account/AccountAssets").then(loadRoute(cb)).catch(errorLoading);
             }}/>
@@ -189,19 +196,15 @@ const routes = (
             <Route path="voting" getComponent={(location, cb) => {
                 System.import("components/Account/AccountVoting").then(loadRoute(cb)).catch(errorLoading);
             }}/>
-            <Route path="deposit-withdraw" getComponent={(location, cb) => {
-                System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
-            }}/>
-            <Route path="orders" getComponent={(location, cb) => {
-                System.import("components/Account/AccountOrders").then(loadRoute(cb)).catch(errorLoading);
-            }}/>
             <Route path="whitelist" getComponent={(location, cb) => {
                 System.import("components/Account/AccountWhitelist").then(loadRoute(cb)).catch(errorLoading);
             }}/>
             <Route path="signedmessages" getComponent={(location, cb) => {
                 System.import("components/Account/AccountSignedMessages").then(loadRoute(cb)).catch(errorLoading);
             }}/>
-            <Redirect from="overview" to="dashboard" />
+            <Redirect from="overview" to="/account/:account_name" />
+            <Redirect from="dashboard" to="/account/:account_name" />
+            <Redirect from="orders" to="/account/:account_name" />
         </Route>
         <Route path="deposit-withdraw" getComponent={(location, cb) => {
             System.import("components/Account/AccountDepositWithdraw").then(loadRoute(cb)).catch(errorLoading);
@@ -211,6 +214,9 @@ const routes = (
         }}/>
         <Route path="/init-error" getComponent={(location, cb) => {
             System.import("components/InitError").then(loadRoute(cb)).catch(errorLoading);
+        }}/>
+        <Route path="/news" getComponent={(location, cb) => {
+            System.import("components/News").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="/help" getComponent={(location, cb) => {
             System.import("components/Help").then(loadRoute(cb)).catch(errorLoading);
