@@ -64,7 +64,8 @@ class AccountOverview extends React.Component {
                 // "OPEN.MAID",
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
-            ]
+            ],
+            marketsCache: []
         };
 
         this.priceRefs = {};
@@ -189,6 +190,33 @@ class AccountOverview extends React.Component {
         this.props.router.push(route);
     }
 
+    _storeMarketChange(id, change) {
+        let {marketsCache} = this.state;
+        
+        let timestamp = new Date().getTime();
+
+        if(!marketsCache[id]) { 
+            marketsCache[id] = [timestamp, "0.00", false];
+        }
+        
+        if(change != marketsCache[id][1] && marketsCache[id][1] != "0.00") { 
+            console.log("Market Change: " + id + " changed to " + change + " (" + timestamp + ")");
+            marketsCache[id][2] = true;
+        }
+        
+        if(marketsCache[id][2] && timestamp-(2*1000) > marketsCache[id][0]) {
+            //console.log("Market Change: " + id + " expired (" + timestamp + ")");
+            marketsCache[id][2] = false;
+        }
+
+        marketsCache[id][0] = timestamp;
+        marketsCache[id][1] = change;        
+
+        this.setState({marketsCache: marketsCache});
+
+        return marketsCache[id][2];
+    }
+
     _renderBalances(balanceList, optionalAssets, visible) {
         const {core_asset} = this.props;
         let {settings, hiddenAssets, orders} = this.props;
@@ -274,6 +302,7 @@ class AccountOverview extends React.Component {
                             base={asset.get("id")}
                             quote={preferredUnit}
                             marketId={asset.get("symbol")+"_" + preferredUnit}
+                            onMarketChanged={this._storeMarketChange.bind(this)}
                             hide_symbols
                         />
                     </td>

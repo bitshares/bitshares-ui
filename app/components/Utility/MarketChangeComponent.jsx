@@ -31,6 +31,9 @@ class MarketChangeComponent extends MarketStats {
 
     constructor(props) {
         super(props);
+        this.state = {
+            flash: false
+        };
     }
 
     componentDidMount() {
@@ -44,14 +47,21 @@ class MarketChangeComponent extends MarketStats {
         );
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.props !== nextProps) {
+            this.setState({flash: this.props.onMarketChanged(this.props.base.get("id"), this.getValue())});
+        }
+    }
+    
     getValue() {
         let {marketStats} = this.props;
         return marketStats && marketStats.change ? marketStats.change : 0;
     }
 
     render() {
+        let {flash} = this.state;
         let marketChangeValue = this.getValue();
-        let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "change-down" : "change-up";
+        let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? flash ? "pulsate-down" : "change-down" : flash ? "pulsate-up" : "change-up";
         let marketChangeFormattedValue = <FormattedNumber
             style="decimal"
             value={marketChangeValue}
