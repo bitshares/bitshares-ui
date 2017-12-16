@@ -9,21 +9,6 @@ import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 
 class DepositWithdrawAssetSelector  extends React.Component {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    render(){
-        const { props } = this;
-
-        let getCoinOption = (item)=>{
-            return {id: item.symbol, label: item.symbol}
-        }
-
-        let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
-
-        return <TypeAhead items={coinItems} />
-=======
-=======
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
    constructor (props) {
         super(props);
     }
@@ -53,10 +38,6 @@ class DepositWithdrawAssetSelector  extends React.Component {
         let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
 
         return <TypeAhead items={coinItems} {...this.props} />
-<<<<<<< HEAD
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
-=======
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);

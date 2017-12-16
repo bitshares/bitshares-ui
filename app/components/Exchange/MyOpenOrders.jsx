@@ -106,27 +106,10 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-<<<<<<< HEAD
                 <td>{!isInverted ? !isBid ? <Translate content="exchange.buy" /> : <Translate content="exchange.sell" /> : !isBid ? <Translate content="exchange.sell" /> : <Translate content="exchange.buy" />}</td>
                 <td>
                     {utils.format_number(order[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))}&nbsp;
                     <AssetName customClass={quoteColor} noTip name={quote.get("symbol")} />
-=======
-                <td className={"trading-pair"} style={{color: quoteColor, borderLeft: "none", borderRight: "none", width: 100}}>
-                    <Link to={`/asset/${quote.get("symbol")}`}><AssetName customClass={quoteColor} noTip name={quote.get("symbol")} /></Link>
-                </td>
-                <td className={isBid ? "shuffle-rev" : null} style={{borderLeft: "none", borderRight: "none", width: 50}}>
-                    <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
-                </td>
-                <td style={{borderLeft: "none", borderRight: "none", width: 100}}>
-                    <Link to={`/asset/${base.get("symbol")}`}><AssetName customClass={baseColor} noTip name={base.get("symbol")} /></Link>
-                </td>
-                <td style={{textAlign: "right", paddingLeft: 0}}>
-                  <MarketPrice
-                      base={base.get("id")}
-                      quote={quote.get("id")}
-                  />
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
                 </td>
                 <td>
                     {utils.format_number(order[isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} &nbsp;
