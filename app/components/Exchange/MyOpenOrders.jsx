@@ -79,10 +79,7 @@ class OrderRow extends React.Component {
         let preferredUnit = settings ? settings.get("unit") : "1.3.0";
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
-<<<<<<< HEAD
         let isInverted = direction && base.get("id") == "1.3.0" ? true : false;
-=======
->>>>>>> ae46d0d20466358c2ee9977fb0a1921aa7933b42
 
         return !dashboard ? (
             <tr key={order.id}>
