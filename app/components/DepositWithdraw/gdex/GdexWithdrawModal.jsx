@@ -67,6 +67,10 @@ class GdexWithdrawModal extends React.Component {
     }
 
     componentWillReceiveProps(np) {
+        if(np.output_coin_name != this.props.output_coin_name){
+            this.setState({"withdraw_address": WithdrawAddresses.getLast(np.output_coin_name),
+                "withdraw_address_selected":WithdrawAddresses.getLast(np.output_coin_name)});
+        }
         if (np.account !== this.state.from_account && np.account !== this.props.account) {
             this.setState({
                 from_account: np.account,

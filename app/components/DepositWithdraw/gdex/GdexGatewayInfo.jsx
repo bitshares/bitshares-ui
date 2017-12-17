@@ -40,24 +40,30 @@ class GdexGatewayInfo extends React.Component {
         document.addEventListener("copy", this._copy);
     }
 
-    _requestDepositAddress(user_id = null ,user_name = null){
-        if(this.props.action != "deposit"){
-            this.setState({"receive_address":null});
+    getDepositAddress(){
+        this._getDepositAddress(this.props.user_id, this.props.account.get("name"), this.props.coin, this.props.action);
+    }
+
+    _getDepositAddress(user_id, user_name, coin, action){
+        // The coin can only support withdraw sometime, no need to call get deposit address
+        if(action != "deposit") return;
+
+        let cached_receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, user_name, coin.outerSymbol, coin.innerSymbol);
+        if(cached_receive_address && cached_receive_address!=this.state.receive_address) {
+            this.setState({"receive_address":cached_receive_address});
             return;
         }
-
-        if (!user_id) user_id = this.props.user_id;
-        if (!user_name) user_name = this.props.account.get("name");
+        // Get address from server side
         var _this = this;
         requestDepositAddress({
-            btsAssetId: this.props.coin.innerAssetId,
-            outAssetId: this.props.coin.outerAssetId,
+            btsAssetId: coin.innerAssetId,
+            outAssetId: coin.outerAssetId,
             uid: user_id,
             userAccount: user_name
         }).then(data =>{
             if(data.address && data.address.address){
                 var receive_address = {"address":data.address.address,"memo":null};
-                _this.deposit_address_cache.cacheInputAddress(_this.props.gateway, user_name, _this.props.coin.outerSymbol, _this.props.coin.innerSymbol, receive_address.address, "");
+                _this.deposit_address_cache.cacheInputAddress(_this.props.gateway, user_name, coin.outerSymbol, coin.innerSymbol, receive_address.address, "");
                 _this.setState({"receive_address":receive_address});
             } else{
             }
@@ -66,35 +72,13 @@ class GdexGatewayInfo extends React.Component {
         });
     }
 
-    componentWillMount() {
-        this._updateDepositAddress();
+    componentWillMount(){
+        this.getDepositAddress();
     }
 
     componentWillReceiveProps(np) {
-        if (np.user_id !== this.props.user_id) {
-            this._updateDepositAddress(np.user_id, np.account.get("name"));
-        }
-    }
-
-    _updateDepositAddress(user_id=null, user_name=null){
-        var changeAccount = true
-        if(!user_id) {
-            user_id =this.props.user_id;
-            changeAccount = false;
-        }
-        if(!user_name){
-            user_name = this.props.account.get("name");
-            changeAccount = false;
-        }
-        let receive_address = this.state.receive_address;
-        if( !receive_address || changeAccount)  {
-            let account_name = user_name;
-            receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.coin.outerSymbol, this.props.coin.innerSymbol);
-            if(receive_address){
-                this.setState({"receive_address":receive_address});
-            } else{
-                this._requestDepositAddress(user_id, user_name);
-            }
+        if (np.user_id !== this.props.user_id || np.action!==this.props.action || np.coin != this.props.coin ) {
+            this._getDepositAddress(np.user_id, np.account.get("name"), np.coin, np.action);
         }
     }
 
@@ -135,7 +119,7 @@ class GdexGatewayInfo extends React.Component {
             return emptyRow;
         let account_balances_object = this.props.account.get("balances");
         const { coin } = this.props;
-        var balance = "0 " + this.props.coin.assetName;
+        var balance = "0 " + coin.assetName;
         let account_balances = account_balances_object.toJS();
         let asset_types = Object.keys(account_balances);
         if (asset_types.length > 0) {
@@ -150,7 +134,7 @@ class GdexGatewayInfo extends React.Component {
         let deposit_address_fragment = null;
         let clipboardText = "";
 
-        var withdraw_memo_prefix = this.props.coin.outerSymbol + ":";
+        var withdraw_memo_prefix = coin.outerSymbol + ":";
         if (this.props.action === "deposit")
         {
             if(receive_address){
@@ -169,11 +153,11 @@ class GdexGatewayInfo extends React.Component {
                                 <tbody>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_deposit" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.coin.outerSymbol}</td>
+                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{coin.outerSymbol}</td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.coin.innerSymbol} replace={false} /></td>
+                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={coin.innerSymbol} replace={false} /></td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.intermediate" />
@@ -199,8 +183,8 @@ class GdexGatewayInfo extends React.Component {
                     </div>
                     <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.deposit_inst" />
-                        <label className="left-label"><Translate content="gateway.deposit_to" asset={this.props.coin.outerSymbol} />:</label>
-                        <p style={{color:"red"}}><Translate content="gateway.deposit_warning" asset={this.props.coin.outerSymbol} /></p>
+                        <label className="left-label"><Translate content="gateway.deposit_to" asset={coin.outerSymbol} />:</label>
+                        <p style={{color:"red"}}><Translate content="gateway.deposit_warning" asset={coin.outerSymbol} /></p>
 
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
                                 {deposit_address_fragment}
@@ -209,7 +193,7 @@ class GdexGatewayInfo extends React.Component {
                             </div>
                             <div className="button-group" style={{paddingTop: 10}}>
                                 {deposit_address_fragment && receive_address ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div>
-                                    : <div className="button" onClick={this._requestDepositAddress()}>Refresh</div>}
+                                    : <div className="button" onClick={this.getDepositAddress.bind(this)}>Refresh</div>}
                                 {/*{memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}*/}
                             </div>
                         </div>
@@ -226,11 +210,11 @@ class GdexGatewayInfo extends React.Component {
                                 <tbody>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_withdraw" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.coin.innerSymbol} replace={false} /></td>
+                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={coin.innerSymbol} replace={false} /></td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.coin.outerSymbol}</td>
+                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{coin.outerSymbol}</td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.intermediate" />
@@ -264,7 +248,7 @@ class GdexGatewayInfo extends React.Component {
                                 account={this.props.account.get("name")}
                                 issuer={this.props.issuer_account.get("name")}
                                 asset={coin.innerSymbol}
-                                output_coin_name={this.props.coin.outerAssetName}
+                                output_coin_name={coin.outerAssetName}
                                 gateFee={coin.gateFee}
                                 output_coin_id = {coin.outerAssetId}
                                 output_coin_symbol={coin.outerSymbol}
