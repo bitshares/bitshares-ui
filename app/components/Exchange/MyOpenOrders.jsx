@@ -40,7 +40,7 @@ class TableHeader extends React.Component {
                     <th><Translate content="exchange.quote_short" /></th>
                     <th><Translate content="exchange.price" /></th>
                     <th colSpan="3"><Translate content="exchange.market" /></th>
-                    <th><Translate content="exchange.order_value" /></th>
+                    <th><Translate content="exchange.value" /></th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     <th><Translate content="account.trade" /></th>
                     {isMyAccount ? <th id="cancelAllOrders" style={{cursor: "pointer"}}><Translate content="wallet.cancel" /></th> : null}
@@ -79,7 +79,8 @@ class OrderRow extends React.Component {
         let preferredUnit = settings ? settings.get("unit") : "1.3.0";
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
-        let isInverted = direction && base.get("id") == "1.3.0" ? true : false;
+        let orderType = (direction || (!direction && base.get("id") == "1.3.0") || (base.get("id") != "1.3.0" && quote.get("id") != "1.3.0")) ? isBid ? <Translate content="exchange.buy" /> : <Translate content="exchange.sell" /> : isBid ? <Translate content="exchange.sell" /> : <Translate content="exchange.buy" />;
+
 
         return !dashboard ? (
             <tr key={order.id}>
@@ -103,7 +104,7 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td>{!isInverted ? !isBid ? <Translate content="exchange.buy" /> : <Translate content="exchange.sell" /> : !isBid ? <Translate content="exchange.sell" /> : <Translate content="exchange.buy" />}</td>
+                <td>{orderType}</td>
                 <td>
                     {utils.format_number(order[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))}&nbsp;
                     <AssetName customClass={quoteColor} noTip name={quote.get("symbol")} />
