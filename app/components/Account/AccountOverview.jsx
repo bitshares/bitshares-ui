@@ -65,7 +65,7 @@ class AccountOverview extends React.Component {
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
             ],
-            marketsCache: []
+            marketsCache: [],
         };
 
         this.priceRefs = {};
@@ -196,11 +196,10 @@ class AccountOverview extends React.Component {
         let timestamp = new Date().getTime();
 
         if(!marketsCache[id]) { 
-            marketsCache[id] = [timestamp, "0.00", false];
+            marketsCache[id] = [timestamp, 0, false];
         }
         
         if(change != marketsCache[id][1] && marketsCache[id][1] != "0.00") { 
-            console.log("Market Change: " + id + " changed to " + change + " (" + timestamp + ")");
             marketsCache[id][2] = true;
         }
 
@@ -212,13 +211,13 @@ class AccountOverview extends React.Component {
         marketsCache[id][1] = change;        
 
         this.setState({marketsCache: marketsCache});
-
-        return marketsCache[id][2];
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {
         const {core_asset} = this.props;
         let {settings, hiddenAssets, orders} = this.props;
+        let {marketsCache} = this.state;
+
         let preferredUnit = settings.get("unit") || core_asset.get("symbol");
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -279,23 +278,26 @@ class AccountOverview extends React.Component {
             const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
+            const changeClass = !marketsCache[asset.get("id")] ? "" : marketsCache[asset.get("id")][1] == 0 ? "" : marketsCache[asset.get("id")][1] < 0 ? marketsCache[asset.get("id")][2] ? "pulsate-down" : "change-down" : marketsCache[asset.get("id")][2] ? "pulsate-up" : "change-up";
+            //console.log(changeClass);
+            //console.log(marketsCache[asset.get("id")]);
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
                         <LinkToAssetById asset={asset.get("id")} />
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td style={{textAlign: "right"}} className={(changeClass)}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
-                    <td style={{textAlign: "right"}} className="column-hide-small">
+                    <td style={{textAlign: "right"}} className={"column-hide-small " + (changeClass)}>
                         <EquivalentPrice
                             refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             fromAsset={asset.get("id")}
                             hide_symbols
                         />
                     </td>
-                    <td style={{textAlign: "right"}} className="column-hide-small">
+                    <td style={{textAlign: "right"}} className={"column-hide-small " + (changeClass)}>
                         <Market24HourChangeComponent
                             refCallback={(c) => { if (c && c.refs.bound_component) this.changeRefs[asset.get("symbol")] = c.refs.bound_component; }}
                             base={asset.get("id")}
