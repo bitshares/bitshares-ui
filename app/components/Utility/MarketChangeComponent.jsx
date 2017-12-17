@@ -47,7 +47,7 @@ class MarketChangeComponent extends MarketStats {
     componentWillReceiveProps(np) {
         if(this.props !== np) { 
             let {marketStats} = np;
-            this.setState({flash: this.props.onMarketChanged(np.base.get("id"), marketStats && marketStats.change ? marketStats.change : 0)});
+            this.props.onMarketChanged(np.base.get("id"), marketStats && marketStats.change ? marketStats.change : 0);
         }
     }
 
