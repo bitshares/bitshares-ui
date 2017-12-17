@@ -203,9 +203,8 @@ class AccountOverview extends React.Component {
             console.log("Market Change: " + id + " changed to " + change + " (" + timestamp + ")");
             marketsCache[id][2] = true;
         }
-        
+
         if(marketsCache[id][2] && timestamp-(2*1000) > marketsCache[id][0]) {
-            //console.log("Market Change: " + id + " expired (" + timestamp + ")");
             marketsCache[id][2] = false;
         }
 
