@@ -117,18 +117,9 @@ class GdexGatewayInfo extends React.Component {
         let emptyRow = <div style={{display:"none", minHeight: 150}}></div>;
         if( !this.props.account || !this.props.issuer_account || !this.props.coin )
             return emptyRow;
-        let account_balances_object = this.props.account.get("balances");
-        const { coin } = this.props;
-        var balance = "0 " + coin.assetName;
-        let account_balances = account_balances_object.toJS();
-        let asset_types = Object.keys(account_balances);
-        if (asset_types.length > 0) {
-            let current_asset_id = this.props.btsCoin.get("id");
-            if( current_asset_id )
-            {
-                balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
-            }
-        }
+        const { coin, btsCoin } = this.props;
+        // asset is not loaded
+        if(!btsCoin) return emptyRow;
         let receive_address = this.state.receive_address;
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
@@ -143,6 +134,11 @@ class GdexGatewayInfo extends React.Component {
             }
             withdraw_memo_prefix = "";
         }
+        let balance = null;
+        let account_balances_object = this.props.account.get("balances");
+
+        if(account_balances_object) balance = account_balances_object.toJS()[btsCoin.get("id")];
+
         if (this.props.action === "deposit") {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
@@ -257,7 +253,7 @@ class GdexGatewayInfo extends React.Component {
                                 memo_prefix={withdraw_memo_prefix}
                                 memo_rule={this.props.memo_rule}
                                 modal_id={withdraw_modal_id}
-                                balance={this.props.account.get("balances").toJS()[this.props.btsCoin.get("id")]} />
+                                balance={balance} />
                         </div>
                     </BaseModal>
                 </div>
