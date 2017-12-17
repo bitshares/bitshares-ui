@@ -31,9 +31,6 @@ class MarketChangeComponent extends MarketStats {
 
     constructor(props) {
         super(props);
-        this.state = {
-            flash: false
-        };
     }
 
     componentDidMount() {
@@ -47,12 +44,13 @@ class MarketChangeComponent extends MarketStats {
         );
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(this.props !== nextProps) {
-            this.setState({flash: this.props.onMarketChanged(this.props.base.get("id"), this.getValue())});
+    componentWillReceiveProps(np) {
+        if(this.props !== np) { 
+            let {marketStats} = np;
+            this.setState({flash: this.props.onMarketChanged(np.base.get("id"), marketStats && marketStats.change ? marketStats.change : 0)});
         }
     }
-    
+
     getValue() {
         let {marketStats} = this.props;
         return marketStats && marketStats.change ? marketStats.change : 0;
