@@ -287,7 +287,7 @@ class AccountOverview extends React.Component {
                     <td style={{textAlign: "left"}}>
                         <LinkToAssetById asset={asset.get("id")} />
                     </td>
-                    <td style={{textAlign: "right"}} className={(changeClass)}>
+                    <td style={{textAlign: "right"}}>
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
                     <td style={{textAlign: "right"}} className={"column-hide-small " + (changeClass)}>
@@ -307,7 +307,7 @@ class AccountOverview extends React.Component {
                             hide_symbols
                         />
                     </td>
-                    <td style={{textAlign: "right"}} className="column-hide-small">
+                    <td style={{textAlign: "right"}} className={"column-hide-small " + (changeClass)}>
                         {hasBalance || hasOnOrder ?
                             <BalanceValueComponent
                                 balance={balance}
