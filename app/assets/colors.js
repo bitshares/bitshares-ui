@@ -1,5 +1,5 @@
 module.exports = {
-    olDarkTheme: {
+    midnightTheme: {
         bidColor: "#50D2C2",
         bidFillColor: "rgba(80, 210, 194, 0.5)",
         askColor: "#E3745B",

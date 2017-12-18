@@ -148,7 +148,6 @@ class Fees extends React.Component {
         }
 
         return(
-            <div className="grid-block page-layout">
                 <div className="grid-block vertical" style={{overflow:"visible"}}>
                     <div className="grid-block small-12 shrink" style={{ overflow:"visible"}}>
                         <HelpContent path = {"components/Fees"} />
@@ -159,7 +158,6 @@ class Fees extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
         );
     }
 }
