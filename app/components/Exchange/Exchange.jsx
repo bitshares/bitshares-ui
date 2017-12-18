@@ -517,10 +517,11 @@ class Exchange extends React.Component {
     _changeBucketSize(size, e) {
         if (e) e.preventDefault();
         if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize.defer(size);
+            MarketsActions.changeBucketSize(size);
             let currentSub = this.props.sub.split("_");
-            MarketsActions.unSubscribeMarket.defer(currentSub[0], currentSub[1]);
-            this.props.subToMarket(this.props, size);
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(() => {
+                this.props.subToMarket(this.props, size);
+            });
         }
     }
 

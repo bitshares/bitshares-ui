@@ -1,18 +1,3 @@
-div.Account_create {
-    button.submit-button, div.backup-submit .button {
-        font-size: 1.3rem;
-        font-weight: bold;
-    }
-
-    label > a {
-        text-decoration: underline;
-    }
-
-    div.divider {
-        max-width: 30rem;
-    }
-}
-
 div.divider {
     margin: 20px 0;
     border-bottom: 1px solid $border-color;
@@ -39,6 +24,10 @@ div.account-creation {
     margin-top: 2rem;
     padding: 2rem 2rem 1rem 2rem;
 
+    p {
+        max-width: 95vw;
+    }
+
     div.confirm-checks {
         max-width: 95vw;
         text-align: left;
@@ -51,7 +40,7 @@ div.account-creation {
         }
         p {
             word-wrap: break-word;
-            max-width: 30rem;
+            // max-width: 30rem;
             text-align: left;
         }
     }
@@ -110,8 +99,8 @@ div.account-creation {
 
         p {
             max-width: 35rem;
-            margin-left: inherit;
-            margin-right: inherit;
+            // margin-left: inherit;
+            // margin-right: inherit;
         }
     }
     div.creation-options {

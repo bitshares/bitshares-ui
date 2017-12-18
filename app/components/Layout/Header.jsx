@@ -316,7 +316,7 @@ class Header extends React.Component {
                         <li>
                             <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1})}>
                                 <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
-                                <Translate content="header.dashboard" />
+                                <Translate className="column-hide-small" content="header.dashboard" />
                             </Link>
                         </li>}
                         <li className="column-hide-small">{tradeLink}</li>
