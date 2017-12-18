@@ -111,12 +111,9 @@ class MarketRow extends React.Component {
                     );
 
                 case "vol":
-                    let change_on_vol = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                    let changeClass_on_vol = change_on_vol === "0.00" ? "" : change_on_vol > 0 ? flash ? " pulsate-up" : " change-up" : flash ? " pulsate-down" : " change-down";
-
                     let amount = stats ? stats.volumeBase : 0;
                     return (
-                        <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + changeClass_on_vol} key={column.index}>
+                        <td onClick={this._onClick.bind(this, marketID)} className="text-right" key={column.index}>
                             {utils.format_volume(amount)}
                         </td>
                     );
