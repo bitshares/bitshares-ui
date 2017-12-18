@@ -15,6 +15,7 @@ import { EquivalentValueComponent } from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 const rightAlign = {textAlign: "right"};
+const leftAlign = {textAlign: "left"};
 
 class TableHeader extends React.Component {
 
@@ -36,11 +37,12 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th><Translate content="exchange.type" /></th>
-                    <th><Translate content="exchange.order" /></th>
-                    <th><Translate content="exchange.quote_short" /></th>
-                    <th><Translate content="exchange.price" /></th>
-                    <th colSpan="3"><Translate content="exchange.market" /></th>
-                    <th><Translate content="exchange.value" /></th>
+                    <th style={rightAlign}><Translate content="exchange.order" /></th>
+                    <th style={rightAlign}>&nbsp;</th>
+                    <th style={leftAlign}><Translate content="exchange.quote_short" /></th>
+                    <th style={rightAlign}><Translate content="exchange.price" /></th>
+                    <th style={rightAlign} colSpan="2"><Translate content="exchange.market" /></th>
+                    <th style={rightAlign}><Translate content="exchange.value" /></th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     <th><Translate content="account.trade" /></th>
                     {isMyAccount ? <th id="cancelAllOrders" style={{cursor: "pointer"}}><Translate content="wallet.cancel" /></th> : null}
@@ -79,8 +81,7 @@ class OrderRow extends React.Component {
         let preferredUnit = settings ? settings.get("unit") : "1.3.0";
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
-        let orderType = (direction || (!direction && base.get("id") == "1.3.0") || (base.get("id") != "1.3.0" && quote.get("id") != "1.3.0")) ? isBid ? <Translate content="exchange.buy" /> : <Translate content="exchange.sell" /> : isBid ? <Translate content="exchange.sell" /> : <Translate content="exchange.buy" />;
-
+        let orderType = isBid ? "Buy" : "Sell";
 
         return !dashboard ? (
             <tr key={order.id}>
@@ -105,15 +106,16 @@ class OrderRow extends React.Component {
         ) : (
             <tr key={order.id}>
                 <td>{orderType}</td>
-                <td>
+                <td style={rightAlign}>
                     {utils.format_number(order[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), base.get("precision"))}&nbsp;
                     <AssetName customClass={quoteColor} noTip name={quote.get("symbol")} />
                 </td>
-                <td>
+                <td> <Icon className="shuffle" name="shuffle" onClick={this.props.onFlip}/> </td>
+                <td style={leftAlign}>
                     {utils.format_number(order[isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), quote.get("precision"))} &nbsp;
                     <AssetName customClass={baseColor} noTip name={base.get("symbol")} />
                 </td>  
-                <td>
+                <td style={rightAlign}>
                     <FormattedPrice
                         base_amount={order.sellPrice().base.amount} base_asset={order.sellPrice().base.asset_id}
                         quote_amount={order.sellPrice().quote.amount} quote_asset={order.sellPrice().quote.asset_id}
@@ -121,7 +123,7 @@ class OrderRow extends React.Component {
                         force_direction={base.get("symbol")}
                     />
                 </td>                
-                <td colSpan="3">
+                <td style={rightAlign} colSpan="2">
                     {isBid ? 
                         <MarketPrice
                             base={base.get("id")}
@@ -139,7 +141,7 @@ class OrderRow extends React.Component {
                     }
                     <span className="clickable inline-block" onClick={this.props.onFlip}><AssetName name={quote.get("symbol")} />/<AssetName name={base.get("symbol")} /></span>
                 </td>
-                <td>
+                <td style={rightAlign}>
                     <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/> <AssetName name={preferredUnit} />
                 </td>
                 {/* <td>
