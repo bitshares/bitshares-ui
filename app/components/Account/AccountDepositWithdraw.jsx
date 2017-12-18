@@ -262,7 +262,7 @@ class AccountDepositWithdraw extends React.Component {
             return <option key={index} value={index}>{services_obj.name}</option>;
         });
 
-        const serviceNames = ["OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
+        const serviceNames = ["GDEX", "OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
         const currentServiceName = serviceNames[activeService];
         const currentServiceDown = servicesDown.get(currentServiceName);
 

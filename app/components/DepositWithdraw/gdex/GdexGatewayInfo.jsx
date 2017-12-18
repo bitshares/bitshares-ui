@@ -22,6 +22,7 @@ class GdexGatewayInfo extends React.Component {
         issuer_account: ChainTypes.ChainAccount,
         gateway: React.PropTypes.string,
         btsCoin: ChainTypes.ChainAsset,
+        memo_rule: React.PropTypes.string
     };
 
     static defaultProps = {
@@ -40,10 +41,14 @@ class GdexGatewayInfo extends React.Component {
     }
 
     _requestDepositAddress(user_id = null ,user_name = null){
-        var _this = this;
+        if(this.props.action != "deposit"){
+            this.setState({"receive_address":null});
+            return;
+        }
+
         if (!user_id) user_id = this.props.user_id;
         if (!user_name) user_name = this.props.account.get("name");
-
+        var _this = this;
         requestDepositAddress({
             btsAssetId: this.props.coin.innerAssetId,
             outAssetId: this.props.coin.outerAssetId,
@@ -52,7 +57,6 @@ class GdexGatewayInfo extends React.Component {
         }).then(data =>{
             if(data.address && data.address.address){
                 var receive_address = {"address":data.address.address,"memo":null};
-                // let account_name = this.props.account.get("name");
                 _this.deposit_address_cache.cacheInputAddress(_this.props.gateway, user_name, _this.props.coin.outerSymbol, _this.props.coin.innerSymbol, receive_address.address, "");
                 _this.setState({"receive_address":receive_address});
             } else{
@@ -205,7 +209,7 @@ class GdexGatewayInfo extends React.Component {
                             </div>
                             <div className="button-group" style={{paddingTop: 10}}>
                                 {deposit_address_fragment && receive_address ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div>
-                                    : <div className="button" onClick={this._requestDepositAddress.bind(this)}>Refresh</div>}
+                                    : <div className="button" onClick={this._requestDepositAddress()}>Refresh</div>}
                                 {/*{memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}*/}
                             </div>
                         </div>
@@ -265,8 +269,9 @@ class GdexGatewayInfo extends React.Component {
                                 output_coin_id = {coin.outerAssetId}
                                 output_coin_symbol={coin.outerSymbol}
                                 output_supports_memos={coin.needMemo==1}
-                                minWithdrawAmount = {coin.minTransctionAmount}
+                                minWithdrawAmount = {coin.minTransactionAmount}
                                 memo_prefix={withdraw_memo_prefix}
+                                memo_rule={this.props.memo_rule}
                                 modal_id={withdraw_modal_id}
                                 balance={this.props.account.get("balances").toJS()[this.props.btsCoin.get("id")]} />
                         </div>

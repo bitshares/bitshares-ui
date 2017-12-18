@@ -1270,16 +1270,6 @@ $account-tabs-background
         }
     }
 
-    div.Account_create {
-        button.submit-button, div.backup-submit .button {
-            background-color: $warning-color;
-        }
-
-        label > a {
-            color: $secondary-text-color;
-        }
-    }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
