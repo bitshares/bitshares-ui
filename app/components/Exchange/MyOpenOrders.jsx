@@ -127,16 +127,19 @@ class OrderRow extends React.Component {
                             base={base.get("id")}
                             quote={quote.get("id")}
                             force_direction={base.get("symbol")}
+                            hide_symbols
                         />  
                         :
                         <MarketPrice
                             base={base.get("id")}
                             quote={quote.get("id")}
                             force_direction={base.get("symbol")}
+                            hide_symbols
                         />
                     }
+                    <span className="clickable inline-block" onClick={this.props.onFlip}><AssetName name={quote.get("symbol")} />/<AssetName name={base.get("symbol")} /></span>
                 </td>
-                    <td>
+                <td>
                     <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/> <AssetName name={preferredUnit} />
                 </td>
                 {/* <td>
