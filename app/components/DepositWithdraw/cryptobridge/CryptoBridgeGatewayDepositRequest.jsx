@@ -95,7 +95,13 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     addDepositAddress( receive_address ) {
         this.setState({loading: false});
         let account_name = this.props.account.get("name");
-        this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
+        try {
+            this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
+        } catch (err) {
+
+        }
+
+
         this.setState( {receive_address} );
     }
 

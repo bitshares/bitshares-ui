@@ -53,19 +53,26 @@ class BlockTradesDepositAddressCache {
         let wallet = WalletDb.getWallet();
         wallet = null;
 
-        const index = this.getIndexForDepositKeyInExchange(account_name, input_coin_type, output_coin_type);
-        if (!wallet) {
-            let deposit_keys = ss.get("deposit_keys", {});
-            deposit_keys[exchange_name] = deposit_keys[exchange_name] || {};
-            deposit_keys[exchange_name][index] = deposit_keys[exchange_name][index] || [];
-            deposit_keys[exchange_name][index].push({"address": address, "memo": memo});
-            ss.set("deposit_keys", deposit_keys);
-        } else {
-            wallet.deposit_keys = wallet.deposit_keys || {};
-            wallet.deposit_keys[exchange_name] = wallet.deposit_keys[exchange_name] || {};
-            wallet.deposit_keys[exchange_name][index] = wallet.deposit_keys[exchange_name][index] || [];
-            wallet.deposit_keys[exchange_name][index].push({"address": address, "memo": memo});
-            WalletDb._updateWallet();
+        try {
+
+
+
+            const index = this.getIndexForDepositKeyInExchange(account_name, input_coin_type, output_coin_type);
+            if (!wallet) {
+                let deposit_keys = ss.get("deposit_keys", {});
+                deposit_keys[exchange_name] = deposit_keys[exchange_name] || {};
+                deposit_keys[exchange_name][index] = deposit_keys[exchange_name][index] || [];
+                deposit_keys[exchange_name][index].push({"address": address, "memo": memo});
+                ss.set("deposit_keys", deposit_keys);
+            } else {
+                wallet.deposit_keys = wallet.deposit_keys || {};
+                wallet.deposit_keys[exchange_name] = wallet.deposit_keys[exchange_name] || {};
+                wallet.deposit_keys[exchange_name][index] = wallet.deposit_keys[exchange_name][index] || [];
+                wallet.deposit_keys[exchange_name][index].push({"address": address, "memo": memo});
+                WalletDb._updateWallet();
+            }
+        } catch (err) {
+
         }
 
     }

@@ -22,10 +22,15 @@ const localStorage = (key) => {
         },
 
         set(key, object) {
-            if (object && object.toJS) {
-                object = object.toJS();
+            try {
+                if (object && object.toJS) {
+                    object = object.toJS();
+                }
+                ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+            } catch (err) {
+
             }
-            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+
         },
 
         remove(key) {
