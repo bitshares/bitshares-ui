@@ -39,9 +39,9 @@ $account-tabs-background
         color: $secondary-text-color;
     }
 
-    svg > path {
-      transition: all 0.3s ease 0s;
-    }
+    // svg > path {
+    //   transition: all 0.3s ease 0s;
+    // }
 
     #content-wrapper {
         @include color($primary-text-color, $bg-color);
@@ -1330,14 +1330,14 @@ $account-tabs-background
 
     ul.account-overview {
         li {
-            transition: all 0.3s ease 0s;
+            transition: background-color 0.3s ease 0s;
 
             > a {
                 color: $account-dimmed;
                 background-color: transparent;
                 border: none;
 
-                transition: all 0.3s ease 0s;
+                transition: color 0.3s ease 0s;
 
                 &:hover {
                     background-color: lighten($account-header, 4%);

@@ -65,7 +65,7 @@ class AccountOverview extends React.Component {
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
             ],
-            marketsCache: [],
+            marketsCache: {}
         };
 
         this.priceRefs = {};
@@ -126,6 +126,10 @@ class AccountOverview extends React.Component {
         this._checkMarginStatus();
     }
 
+    componentWillUnmount() {
+        this.dismounted = true;
+    }
+
     _checkMarginStatus(props = this.props) {
         checkMarginStatus(props.account).then(status => {
             let globalMarginStatus = null;
@@ -142,7 +146,8 @@ class AccountOverview extends React.Component {
             this.priceRefs = {};
             this.valueRefs = {};
             this.changeRefs = {};
-            setTimeout(this.forceUpdate.bind(this), 500);
+            setTimeout(() => {
+                if (!this.dismounted) this.forceUpdate.bind(this);}, 500);
         };
     }
 
@@ -154,7 +159,15 @@ class AccountOverview extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
-            !utils.are_equal_shallow(nextState, this.state)
+            this.state.sortKey !== nextState.sortKey ||
+            this.state.sortDirection !== nextState.sortDirection ||
+            this.state.settleAsset !== nextState.settleAsset ||
+            this.state.showHidden !== nextState.showHidden ||
+            this.state.depositAsset !== nextState.depositAsset ||
+            this.state.withdrawAsset !== nextState.withdrawAsset ||
+            this.state.bridgeAsset !== nextState.bridgeAsset ||
+            !utils.are_equal_shallow(nextState.alwaysShowAssets, this.state.alwaysShowAssets) ||
+            !utils.are_equal_shallow(nextState.marketsCache, this.state.marketsCache)
         );
     }
 
@@ -192,25 +205,33 @@ class AccountOverview extends React.Component {
 
     _storeMarketChange(id, change) {
         let {marketsCache} = this.state;
-        
+
         let timestamp = new Date().getTime();
 
-        if(!marketsCache[id]) { 
-            marketsCache[id] = [timestamp, 0, false];
-        }
-        
-        if(change != marketsCache[id][1] && marketsCache[id][1] != "0.00") { 
-            marketsCache[id][2] = true;
+        let current = marketsCache[id];
+        if(!current) {
+            current = {timestamp, change: 0, animate: false};
         }
 
-        if(marketsCache[id][2] && timestamp-(2*1000) > marketsCache[id][0]) {
-            marketsCache[id][2] = false;
+        if(change !== current.change && current.change !== 0) {
+            current.animate = true;
         }
 
-        marketsCache[id][0] = timestamp;
-        marketsCache[id][1] = change;        
+        if(current.animate && timestamp-(2*1000) > current.timestamp) {
+            current.animate = false;
+        }
 
-        this.setState({marketsCache: marketsCache});
+        current.timestamp = timestamp;
+        current.change = parseFloat(change);
+
+        marketsCache[id] = current;
+        this.setState({marketsCache});
+        if (current.animate) {
+            setTimeout(() => {
+                marketsCache[id].animate = false;
+                if (!this.dismounted) this.setState({marketsCache});
+            }, 2000);
+        }
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {
@@ -278,9 +299,17 @@ class AccountOverview extends React.Component {
             const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
-            const changeClass = !marketsCache[asset.get("id")] ? "" : marketsCache[asset.get("id")][1] == 0 ? "" : marketsCache[asset.get("id")][1] < 0 ? marketsCache[asset.get("id")][2] ? "pulsate-down" : "change-down" : marketsCache[asset.get("id")][2] ? "pulsate-up" : "change-up";
-            //console.log(changeClass);
-            //console.log(marketsCache[asset.get("id")]);
+
+            // Determine change class for price change flash animation
+            let changeClass = "";
+            let current = marketsCache[asset.get("id")];
+            if (current && current.change !== 0) {
+                if (current.change < 0) {
+                    changeClass = current.animate ? " pulsate-down" : "change-down";
+                } else if (current.change > 0) {
+                    changeClass = current.animate ? " pulsate-up" : "change-up";
+                }
+            }
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>

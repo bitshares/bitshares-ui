@@ -195,10 +195,15 @@ class MyOpenOrders extends React.Component {
             let o = ChainStore.getObject(order);
             if (!o) return null;
             let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
-            if (sellBase === baseID && sellQuote === quoteID ||
-                sellBase === quoteID && sellQuote === baseID
-            ) {
-                return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
+            try {
+                if (sellBase === baseID && sellQuote === quoteID ||
+                    sellBase === quoteID && sellQuote === baseID
+                ) {
+                    return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
+                }
+            } catch(err) {
+                console.log(err);
+                return null;
             }
         }).filter(a => !!a).filter(a => {
             try {

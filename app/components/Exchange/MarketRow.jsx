@@ -26,8 +26,8 @@ class MarketRow extends React.Component {
 
     constructor() {
         super();
-        this.state = { 
-            flash: false 
+        this.state = {
+            marketsCache: {change: 0, animate: false}
         };
         this.statsInterval = null;
     }
@@ -48,19 +48,60 @@ class MarketRow extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.statsInterval);
+        clearTimeout(this.flashTimeout);
     }
 
     componentWillReceiveProps(nextProps) {
-        if(this.props !== nextProps) {
-            let {quote, base} = nextProps;
-            let marketID = quote.get("symbol") + "_" + base.get("symbol");
-            this.setState({flash: this.props.onMarketChanged(marketID)});
+        if(nextProps.stats !== this.props.stats) {
+            this.animateRow(nextProps);
+            // this.setState({flash: true});
+            // this.flashTimeout = setTimeout(() => {
+            //     this.setState({flash: false});
+            // }, 2000);
         }
     }
 
-    shouldComponentUpdate(nextProps) {
+    animateRow(props = this.props) {
+        let {stats, marketID: id} = props;
+        let {marketsCache} = this.state;
+        let change = parseFloat(stats && stats.change ? stats.change : 0);
+
+        let timestamp = new Date().getTime();
+
+        let current = marketsCache;
+        if(!current) {
+            current = {timestamp, change: 0, animate: false};
+        }
+
+        if(change !== current.change && current.change !== 0) {
+            console.log("change !== current.change", change !== current.change, "current.change !== 0", current.change !== 0, "change:", change, "current.change", current.change);
+            current.animate = true;
+        }
+
+        if(current.animate && timestamp-(2*1000) > current.timestamp) {
+            current.animate = false;
+        }
+
+        current.timestamp = timestamp;
+        current.change = parseFloat(change);
+
+        console.log("market:", id, "change:", current.change, "previous change:", marketsCache && marketsCache.change, "parsed change:", change, "animate:", current.animate);
+        if (current.animate && !marketsCache.animate) {
+            setTimeout(() => {
+                marketsCache.animate = false;
+                if (!this.dismounted) this.setState({marketsCache});
+            }, 2000);
+        }
+        marketsCache = current;
+        this.setState({marketsCache});
+
+        return current;
+    }
+
+    shouldComponentUpdate(nextProps, ns) {
         return (
-            !utils.are_equal_shallow(nextProps, this.props)
+            !utils.are_equal_shallow(nextProps, this.props) ||
+            !utils.are_equal_shallow(ns.marketsCache, this.state.marketsCache)
         );
     }
 
@@ -75,7 +116,7 @@ class MarketRow extends React.Component {
 
     render() {
         let {quote, base, noSymbols, stats, starred} = this.props;
-        let {flash} = this.state;
+        let {marketsCache} = this.state;
 
         if (!quote || !base) {
             return null;
@@ -99,7 +140,7 @@ class MarketRow extends React.Component {
             buttonClass += " no-margin";
             buttonStyle = {marginBottom: 0, fontSize: "0.75rem" , padding: "4px 10px" , borderRadius: "0px" , letterSpacing: "0.05rem"};
         }
-        
+
         let columns = this.props.columns.map(column => {
             switch (column.name) {
                 case "star":
@@ -120,8 +161,8 @@ class MarketRow extends React.Component {
 
                 case "change":
                     let change = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                    let changeClass = change === "0.00" ? "" : change > 0 ? flash ? " pulsate-up" : " change-up" : flash ? " pulsate-down" : " change-down";
-                    
+                    let changeClass = change === "0.00" ? "" : stats.change > 0 ? marketsCache.animate ? " pulsate-up" : " change-up" : marketsCache.animate ? " pulsate-down" : " change-down";
+
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + changeClass} key={column.index}>
                             {change + "%"}
@@ -154,7 +195,7 @@ class MarketRow extends React.Component {
                     }
 
                     let change_on_price = utils.format_number(stats && stats.change ? stats.change : 0, 2);
-                    let changeClass_on_price = change_on_price === "0.00" ? "" : change_on_price > 0 ? flash ? " pulsate-up" : " change-up" : flash ? " pulsate-down" : " change-down";
+                    let changeClass_on_price = change_on_price === "0.00" ? "" : change_on_price > 0 ? marketsCache.animate ? " pulsate-up" : " change-up" : marketsCache.animate ? " pulsate-down" : " change-down";
 
                     return (
                         <td onClick={this._onClick.bind(this, marketID)} className={"text-right" + changeClass_on_price} key={column.index}>
