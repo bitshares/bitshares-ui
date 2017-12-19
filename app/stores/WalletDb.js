@@ -15,6 +15,9 @@ import AccountActions from "actions/AccountActions";
 import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
+import SettingsActions from "actions/SettingsActions";
+import notify from "actions/NotificationActions";
+import counterpart from "counterpart";
 
 let aes_private = null;
 let _passwordKey = null;
@@ -359,7 +362,24 @@ class WalletDb extends BaseStore {
                 }
             });
 
-            return !!_passwordKey;
+            /* If the unlock fails and the user has a wallet, check the password against the wallet as well */
+            if (!_passwordKey && !!this.state.wallet) {
+                let {success, cloudMode} = this.validatePassword(password, true);
+                if (success && !cloudMode) {
+                    notify.addNotification({
+                        message: counterpart.translate("wallet.local_switch"),
+                        level: "success",
+                        timeout: 5
+                    });
+                    SettingsActions.changeSetting({
+                        setting: "passwordLogin",
+                        value: false
+                    });
+                    return {success: true, cloudMode: false};
+                }
+            }
+
+            return {success: !!_passwordKey, cloudMode: true};
 
         } else {
             let wallet = this.state.wallet;
@@ -372,10 +392,10 @@ class WalletDb extends BaseStore {
                     let encryption_plainbuffer = password_aes.decryptHexToBuffer( wallet.encryption_key );
                     aes_private = Aes.fromSeed( encryption_plainbuffer );
                 }
-                return true;
+                return {success: true, cloudMode: false};
             } catch(e) {
                 console.error(e);
-                return false;
+                return {success: false, cloudMode: false};
             }
         }
     }
@@ -383,8 +403,9 @@ class WalletDb extends BaseStore {
     /** This may lock the wallet unless <b>unlock</b> is used. */
     changePassword( old_password, new_password, unlock = false ) {
         return new Promise( resolve => {
-            let wallet = this.state.wallet
-            if( ! this.validatePassword( old_password ))
+            let wallet = this.state.wallet;
+            let {success} = this.validatePassword( old_password );
+            if( !success )
                 throw new Error("wrong password")
 
             let old_password_aes = Aes.fromSeed( old_password )

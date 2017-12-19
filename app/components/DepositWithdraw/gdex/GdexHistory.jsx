@@ -103,7 +103,12 @@ class GdexHistory extends React.Component {
                     });
                 }
             }).catch(res =>{
-                console.log(res);
+                _this.setState({
+                    totalNum: 0,
+                    nextPageEnabled: false,
+                    allData: {},
+                    pageNum: 0,
+                });
             });
     }
     getTransactionHistory(){

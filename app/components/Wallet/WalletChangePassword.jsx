@@ -106,7 +106,8 @@ class WalletPassword extends Component {
 
     onPassword(e) {
         e.preventDefault();
-        if( WalletDb.validatePassword(this.state.password) ) {
+        let {success} = WalletDb.validatePassword(this.state.password, true);
+        if( success ) {
             this.setState({ verified: true })
             this.props.onValid(this.state.password)
         } else
