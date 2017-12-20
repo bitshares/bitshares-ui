@@ -105,7 +105,7 @@ class WalletUnlockModal extends React.Component {
         const password = passwordLogin ? this.refs.password_input.value : this.refs.password_input.value();
         const account = passwordLogin ? this.state.account && this.state.account.get("name") : null;
         this.setState({password_error: null});
-        WalletDb.validatePassword(
+        let {cloudMode} = WalletDb.validatePassword(
             password || "",
             true, //unlock
             account
@@ -118,7 +118,7 @@ class WalletUnlockModal extends React.Component {
                 this.refs.password_input.clear();
             } else {
                 this.refs.password_input.value = "";
-                AccountActions.setPasswordAccount(account);
+                if (cloudMode) AccountActions.setPasswordAccount(account);
             }
             ZfApi.publish(this.props.modalId, "close");
             this.props.resolve();

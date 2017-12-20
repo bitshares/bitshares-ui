@@ -310,7 +310,7 @@
       "verifying": "Verifying, please wait ...",
       "invalidformat": "Signed message format can't be recognized",
       "invaliduser": "Account of the message sender is invalid",
-      "invalidsignature": "The content of the message could be validated against the signature",
+      "invalidsignature": "The content of the message could not be validated against the signature",
       "errorverifying": "An error occured while verifying the message",
       "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
       "sign": "Sign",
@@ -891,7 +891,7 @@
     "themes": "Theme",
     "darkTheme": "Dark",
     "lightTheme": "Light",
-    "midnight": "Midnight",
+    "midnightTheme": "Midnight",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
     "general": "General",
@@ -1235,7 +1235,8 @@
     "understand_2": "I have written down or otherwise stored my password",
     "understand_3": " I understand that I will lose access to my funds if I lose my password",
     "bts_rules": "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
-    "ok_done": "OK, take me to the dashboard"
+    "ok_done": "OK, take me to the dashboard",
+    "local_switch": "Local wallet detected matching the given password, switching to local wallet mode"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",

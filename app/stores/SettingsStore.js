@@ -108,6 +108,10 @@ class SettingsStore {
             let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
             if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
         }
+        if (savedDefaults && savedDefaults.themes) {
+            let olIdx = savedDefaults.themes.findIndex(a => a === "olDarkTheme");
+            if (olIdx !== -1) savedDefaults.themes[olIdx] = "midnightTheme";
+        }
         if (savedDefaults.apiServer) {
             savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
                 return !defaults.apiServer.find(b => {
