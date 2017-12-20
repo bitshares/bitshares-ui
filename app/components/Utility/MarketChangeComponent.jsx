@@ -44,14 +44,22 @@ class MarketChangeComponent extends MarketStats {
         );
     }
 
+    componentWillReceiveProps(np) {
+        if(this.props !== np) {
+            let {marketStats} = np;
+            this.props.onMarketChanged(np.base.get("id"), marketStats && marketStats.change ? marketStats.change : 0);
+        }
+    }
+
     getValue() {
         let {marketStats} = this.props;
         return marketStats && marketStats.change ? marketStats.change : 0;
     }
 
     render() {
+        let {flash} = this.state;
         let marketChangeValue = this.getValue();
-        let dayChangeClass = parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? "change-down" : "change-up";
+        let dayChangeClass = ""; //parseFloat(marketChangeValue) === 0 ? "" : parseFloat(marketChangeValue) < 0 ? (flash ? "pulsate-down" : "change-down") : flash ? "pulsate-up" : "change-up";
         let marketChangeFormattedValue = <FormattedNumber
             style="decimal"
             value={marketChangeValue}

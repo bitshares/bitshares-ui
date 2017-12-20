@@ -573,3 +573,25 @@ form.hide-container {
 tbody.orderbook > tr.my-order > td {
     font-weight: bold;
 }
+
+.pulsate-up {
+    -webkit-animation: pulsate-up 2s ease-out;
+    -webkit-animation-iteration-count: 1;
+    // opacity: 0.5;
+    color: #00cc00;
+}
+.pulsate-down {
+    -webkit-animation: pulsate-down 2s ease-out;
+    -webkit-animation-iteration-count: 1;
+    color: #E1424A;
+}
+@-webkit-keyframes pulsate-up {
+    0% { color: #00cc00; }
+    50% { color: #d9ffcc; }
+    100% { color: #00cc00; }
+}
+@-webkit-keyframes pulsate-down {
+    0% { color: #E1424A; }
+    50% { color: #f5bdc0; }
+    100% { color: #E1424A; }
+}
