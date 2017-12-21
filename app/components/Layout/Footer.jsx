@@ -80,14 +80,6 @@ class Footer extends React.Component {
         // Current Node Details
         let currentNode = SettingsStore.getState().settings.get("activeNode");
         let currentNodePing = SettingsStore.getState().apiLatencies[currentNode];
-        let color;
-        let green = "#00FF00";
-        let red = "red";
-        if(currentNodePing < 800) {
-            color = green;
-        } else {
-            color = red;
-        }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
@@ -139,14 +131,16 @@ class Footer extends React.Component {
                     (<div className="grid-block shrink">
                         <div className="tooltip" onClick={this.onAccess.bind(this)} data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`) + " " + currentNode} data-place="top">
                             <div className="footer-status">
-                                { !synced || !connected ?
-                                    <span className="warning"><Translate content={`footer.${!synced ? "unsynced" : "disconnected"}`} /></span> :
-                                    <span className="success" style={{color}}><Translate content="footer.synced" /></span>}
+                                { !connected ?
+                                    <span className="warning"><Translate content="footer.disconnected" /></span> :
+                                    <span className="success"><Translate content="footer.connected" /></span>}
                             </div>
                             <div className="footer-block">
                                 <span>
-                                    <Translate content="footer.block" />
-                                    <span>&nbsp;#{block_height}</span>
+                                    <span className="footer-block-title"><Translate content="footer.latency" /></span>
+                                        &nbsp;{!connected ? "-" : !currentNodePing ? "-" : currentNodePing + "ms"}&nbsp;/&nbsp;
+                                    <span className="footer-block-title"><Translate content="footer.block" /></span>
+                                        &nbsp;#{block_height}
                                 </span>
                             </div>
                         </div>

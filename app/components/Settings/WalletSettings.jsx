@@ -31,12 +31,23 @@ export default class WalletSettings extends React.Component {
 
     render() {
         let {lookupActive} = this.state;
+        let {deprecated} = this.props;
+
+        if (deprecated) {
+            return (
+                <div>
+                    <ChangeActiveWallet />
+                    <WalletDelete />
+                </div>
+            );
+        }
 
         return (
             <div>
 
                 <ChangeActiveWallet />
                 <WalletDelete />
+
                 <section style={{padding: "15px 0"}} className="block-list">
                     <header><Translate content="wallet.balance_claims" />:</header>
 

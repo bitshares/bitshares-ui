@@ -20,6 +20,7 @@ import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import AccountImage from "../Account/AccountImage";
+import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -218,6 +219,14 @@ class AccountDepositWithdraw extends React.Component {
             template: (<BitKapital viewSettings={this.props.viewSettings} account={account}/>)
         });
 
+        serList.push({
+            name: "GDEX",
+            template: (
+                <div>
+                    <GdexGateway account={account} provider={"gdex"}/>
+                </div>
+            )
+        });
         return serList;
     }
 
@@ -253,7 +262,7 @@ class AccountDepositWithdraw extends React.Component {
             return <option key={index} value={index}>{services_obj.name}</option>;
         });
 
-        const serviceNames = ["OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
+        const serviceNames = ["GDEX", "OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
         const currentServiceName = serviceNames[activeService];
         const currentServiceDown = servicesDown.get(currentServiceName);
 

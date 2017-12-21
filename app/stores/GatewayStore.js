@@ -49,7 +49,7 @@ class GatewayStore {
     }
 
     onFetchBridgeCoins({coins, bridgeCoins, wallets, down} = {}) {
-        if (coins && bridgeCoins) {
+        if (coins && bridgeCoins && wallets) {
             let coins_by_type = {};
             coins.forEach(coin_type => coins_by_type[coin_type.coinType] = coin_type);
             bridgeCoins = bridgeCoins.filter(a => {

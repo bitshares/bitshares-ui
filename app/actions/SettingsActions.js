@@ -22,6 +22,10 @@ class SettingsActions {
         return {quote, base};
     }
 
+    clearStarredMarkets(){
+        return true;
+    }
+
     setUserMarket(quote, base, value) {
         return {quote, base, value};
     }

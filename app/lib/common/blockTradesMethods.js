@@ -45,6 +45,15 @@ export function estimateOutput(inputAmount, inputCoin, outputCoin, url = (blockT
     });
 }
 
+export function estimateInput(outputAmount, inputCoin, outputCoin, url = (blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_INPUT)) {
+    return fetch(url + "?outputAmount=" + encodeURIComponent(outputAmount) +"&inputCoinType=" + encodeURIComponent(inputCoin) + "&outputCoinType=" + encodeURIComponent(outputCoin), {
+        method: "get", headers: new Headers({"Accept": "application/json"})}).then(reply => reply.json().then(result => {
+            return result;
+        })).catch(err => {
+            console.log("error fetching deposit limit of", inputCoin, outputCoin, err);
+        });
+}
+
 export function getActiveWallets(url = (blockTradesAPIs.BASE_OL + blockTradesAPIs.ACTIVE_WALLETS)) {
     return fetch(url).then(reply => reply.json().then(result => {
         return result;

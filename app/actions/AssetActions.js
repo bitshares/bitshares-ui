@@ -25,14 +25,35 @@ class AssetActions {
         });
 
         return (dispatch) => {
-            return WalletDb.process_transaction(tr, null, true).then(result => {
+            return WalletDb.process_transaction(tr, null, true).then(() => {
                 dispatch(true);
             }).catch(error => {
                 console.log("[AssetActions.js:150] ----- fundPool error ----->", error);
                 dispatch(false);
             });
         };
+    }
 
+    updateFeedProducers(account, asset, producers) {
+        let tr = WalletApi.new_transaction();
+        tr.add_type_operation("asset_update_feed_producers", {
+            "fee": {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            "issuer": account,
+            "asset_to_update": asset.get("id"),
+            "new_feed_producers": producers
+        });
+
+        return (dispatch) => {
+            return WalletDb.process_transaction(tr, null, true).then(() => {
+                dispatch(true);
+            }).catch(error => {
+                console.log("[AssetActions.js:150] ----- updateFeedProducers error ----->", error);
+                dispatch(false);
+            });
+        };
     }
 
     claimPoolFees(account_id, asset, amount) {

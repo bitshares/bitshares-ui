@@ -185,7 +185,7 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
                         <thead>
                         <tr>
                             <th><Translate content="gateway.symbol" /></th>
-                            <th><Translate content="gateway.deposit_to" /></th>
+                            <th><Translate content="gateway.deposit_address" /></th>
                             <th><Translate content="gateway.balance" /></th>
                             <th><Translate content="gateway.withdraw" /></th>
                         </tr>

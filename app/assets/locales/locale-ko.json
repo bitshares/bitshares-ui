@@ -1,7 +1,7 @@
 {
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Francais",
     "ko": "한국어",
     "de": "Deutsch",
@@ -66,6 +66,7 @@
     "asset": "자산",
     "market_value": "시장가치",
     "hour_24": "24시간 변동액",
+    "hour_24_short": "24시간",
     "recent": "최근 활동",
     "name": "계정명",
     "more": "더 보기",

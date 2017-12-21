@@ -1,4 +1,65 @@
 ---------------------------------------------------------------------
+Release 2.0.171219
+---------------------------------------------------------------------
+New features
+--------
+- #874: Check cloud wallet password against local wallet
+- New faucet according to infrastructure worker proposal (#867)
+- Add some new markets to the default lists #843
+- Create a typeahead component for selecting asset symbols (#847)
+- Added gold and silver to margin positions #833
+- Improved navigation in of explorer components #647
+- Rename Openledger Dark theme to Midnight
+- #452 private feed producers
+- #699: Add News section with content from Steemit
+- Add RPC Node wss://us-ny.bitshares.apasia.tech/ws (#817)
+- Add API node: wss://dex.rnglab.org (#810)
+- Show pricechart grid
+
+Bug fixes
+--------
+- Fix #875: overflow hidden hiding password characters
+- Add button to create new account #800
+- Fixed login mode change on registration page visit #831
+- Fix invalid signed message signature notice in English (#859)
+- Correctly parse signed message (#864)
+- Remove duplicated asset in topMarkets (#860)
+- Fix some potential Exchange issues with switching markets and bucketsizes
+- fix address and balance issue for gdex api (#879)
+- Fix Fees layout scrolling issues #647
+- Fix some Header active and hover states
+- Fine Tune UI #819
+- Fix Issue #807 - Accounts Tab Settings
+- fixed wrong positioning of elements in account selector #796
+- Fixed: Unable to specify bitCNY as Fee ... #803
+- Fixed: Cancel button doesn't work when creating assets #799
+- Update locale-es.json (#806)
+- Remove border from tables and add a row hover state #813
+- Fix #777: Missing error message when memo key is missing
+- Fix some minor header and dropdown css issues
+- Catch a price comparison error
+- Prevent cross-pollination of market data fix #811
+
+---------------------------------------------------------------------
+Release 2.0.171205
+---------------------------------------------------------------------
+New features
+--------
+- #558 Add UI for cancelling orders in bulk
+- #167 Contact list support (to be expanded upon)
+- #630 Header and right menu Dropdown
+- #781 - Add/Remove Contacts
+- #556 Add new Send modal (beta)
+- Add GDEX API server
+
+Bug fixes
+--------
+- #765 fixed usage of some undefined properties on withdrawal
+- #771 match styles to new account dashboard look
+- Fix #715 and #772: Dropdown menu can't scroll
+- Fix #723: Missing asset name in translation
+- Set more theme specific API Status colors. (#788)
+---------------------------------------------------------------------
 Release 2.0.171102
 ---------------------------------------------------------------------
 Bug fixes

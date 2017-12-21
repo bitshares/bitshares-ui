@@ -1,4 +1,5 @@
 import DashboardContainer from "./components/Dashboard/DashboardContainer";
+import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
 import FeesContainer from "./components/Blockchain/FeesContainer";
@@ -40,3 +41,4 @@ import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import CreateWorker from "./components/Account/CreateWorker";
+import News from "./components/News";
