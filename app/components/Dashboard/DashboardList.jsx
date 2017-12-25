@@ -14,6 +14,7 @@ import {ChainStore} from "bitsharesjs/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
+import WalletDb from "stores/WalletDb";
 
 const starSort = function(a, b, inverse, starredAccounts) {
 	let aName = a.get("name");
@@ -97,6 +98,10 @@ class DashboardList extends React.Component {
 			overviewTab: tab
 		});
 	}
+
+        _createAccount() {
+            this.context.router.push("/create-account/wallet");
+        }
 
 	_onFilter(e) {
 		this.setState({dashboardFilter: e.target.value.toLowerCase()});
@@ -256,15 +261,20 @@ class DashboardList extends React.Component {
 
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
-
+                
+                let hasLocalWallet = !!WalletDb.getWallet();
+                
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
 					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
-						<input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-						{this.props.ignoredAccounts.length ? <div onClick={this.props.onToggleIgnored} style={{position: "absolute", top: 0, right: 0}} className="button outline small">
+						<input placeholder={filterText} style={{display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                                                {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
+							<Translate content="header.create_account" />
+						</div>):null}
+                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
-						</div> : null}
+						</div>:null}
 					</section>) : null}
 				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (

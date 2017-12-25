@@ -88,10 +88,17 @@ class News extends React.Component {
             width: 1200
         };
         this.updateDimensions = this.updateDimensions.bind(this);
+        this.orderDiscussions = this.orderDiscussions.bind(this);
     }
 
     updateDimensions() {
         this.setState({ width: window.innerWidth });
+    }
+
+    orderDiscussions(discussions) {
+        const orderedDiscussions = discussions
+            .sort((a, b) => (new Date(b.active) - new Date(a.active)))
+        this.setState({discussions: orderedDiscussions, isLoading: false})
     }
 
     componentDidMount() {
@@ -99,7 +106,7 @@ class News extends React.Component {
         window.addEventListener("resize", this.updateDimensions);
         steem.api.getDiscussionsByBlog(query, (err, discussions) => {
             if (err) this.setState({isLoading: false, isWrong: true})
-            this.setState({discussions, isLoading: false})
+            this.orderDiscussions(discussions)
         });
     }
 

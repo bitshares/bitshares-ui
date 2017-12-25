@@ -368,8 +368,8 @@ $account-tabs-background
     }
 
     .header-right-menu {
-        a:hover {background-color: lighten($panel-bg-color, 4%);}
-        a.active {background-color: lighten($panel-bg-color, 4%);}
+        // a:hover {background-color: lighten($panel-bg-color, 4%);}
+        // a.active {background-color: lighten($panel-bg-color, 4%);}
         li.current-account > a {
             color: $info-color;
             &:hover {
@@ -1267,16 +1267,6 @@ $account-tabs-background
         &::after {
             border: none;
             background-color: lighten($positive-color, 5%);
-        }
-    }
-
-    div.Account_create {
-        button.submit-button, div.backup-submit .button {
-            background-color: $warning-color;
-        }
-
-        label > a {
-            color: $secondary-text-color;
         }
     }
 

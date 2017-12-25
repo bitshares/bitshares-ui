@@ -79,7 +79,7 @@ class AccountSignedMessages extends React.Component {
             // cut the sections
             messageContent = message.split(MSG_HEAD)[1]; // everything before the head is ignored
             messageMeta = messageContent.split(MSG_META);
-            messageContent = messageMeta[0].trim();
+            messageContent = messageMeta[0].replace(/^\n|\n$/g, "");
             messageSignature = messageMeta[1].split(MSG_SIGNATURE);
             messageMeta = messageSignature[0].trim();
             messageSignature = messageSignature[1].split(MSG_FOOT)[0].trim(); // everything after footer is ignored
