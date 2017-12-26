@@ -316,7 +316,7 @@ class Header extends React.Component {
                         <li>
                             <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1})}>
                                 <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
-                                <Translate content="header.dashboard" />
+                                <Translate className="column-hide-small" content="header.dashboard" />
                             </Link>
                         </li>}
                         <li className="column-hide-small">{tradeLink}</li>
@@ -412,7 +412,7 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="news.news" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/help") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help")}>
+                                        <li className={cnames({active: active.indexOf("/help/introduction/bitshares") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
                                             <div className="table-cell"><Icon size="2x" name="question-circle" /></div>
                                             <div className="table-cell"><Translate content="header.help" /></div>
                                         </li>

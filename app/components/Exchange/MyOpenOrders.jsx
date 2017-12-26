@@ -102,13 +102,13 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td className={"trading-pair"} style={{color: quoteColor, borderLeft: "none", borderRight: "none", width: 100}}>
+                <td className={"trading-pair"} style={{color: quoteColor, textAlign: "right", borderLeft: "none", borderRight: "none"}}>
                     <Link to={`/asset/${quote.get("symbol")}`}><AssetName customClass={quoteColor} noTip name={quote.get("symbol")} /></Link>
                 </td>
-                <td className={isBid ? "shuffle-rev" : null} style={{borderLeft: "none", borderRight: "none", width: 50}}>
+                <td className={isBid ? "shuffle-rev" : null} style={{borderLeft: "none", borderRight: "none"}}>
                     <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
                 </td>
-                <td style={{borderLeft: "none", borderRight: "none", width: 100}}>
+                <td style={{textAlign: "left", borderLeft: "none", borderRight: "none"}}>
                     <Link to={`/asset/${base.get("symbol")}`}><AssetName customClass={baseColor} noTip name={base.get("symbol")} /></Link>
                 </td>
                 <td style={{textAlign: "right", paddingLeft: 0}}>
