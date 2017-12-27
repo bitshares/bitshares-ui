@@ -186,7 +186,6 @@ class AccountOrders extends React.Component {
                         quote={marketQuote}
                         cancel_text={cancel}
                         showSymbols={false}
-                        direction={direction}
                         invert={true}
                         onCancel={this._cancelLimitOrder.bind(this, order.id)}
                         price={limitOrder.getPrice()}
