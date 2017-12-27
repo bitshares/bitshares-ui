@@ -130,12 +130,14 @@ class OrderRow extends React.Component {
                             base={base.get("id")}
                             quote={quote.get("id")}
                             hide_symbols
+                            hide_asset
                         />  
                         :
                         <MarketPrice
                             base={base.get("id")}
                             quote={quote.get("id")}
                             hide_symbols
+                            hide_asset
                         />
                     }
                 </td>
@@ -156,7 +158,6 @@ class OrderRow extends React.Component {
                 </td> : null}
             </tr>
         );
-        // }
     }
 }
 
