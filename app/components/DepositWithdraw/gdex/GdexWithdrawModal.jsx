@@ -67,6 +67,10 @@ class GdexWithdrawModal extends React.Component {
     }
 
     componentWillReceiveProps(np) {
+        if(np.output_coin_name != this.props.output_coin_name){
+            this.setState({"withdraw_address": WithdrawAddresses.getLast(np.output_coin_name),
+                "withdraw_address_selected":WithdrawAddresses.getLast(np.output_coin_name)});
+        }
         if (np.account !== this.state.from_account && np.account !== this.props.account) {
             this.setState({
                 from_account: np.account,
@@ -235,8 +239,14 @@ class GdexWithdrawModal extends React.Component {
     _checkBalance() {
         let {feeAmount, withdraw_amount} = this.state;
         let {asset, balance, minWithdrawAmount} = this.props;
-        if (!balance || !feeAmount) return;
+        if (!balance){
+            // does not own any asset
+            this.setState({balanceError: true});
+            return;
+        }
+        if(!feeAmount) return;
         const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
+        // balance is zero
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
         if (typeof withdraw_amount === "string") withdraw_amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
