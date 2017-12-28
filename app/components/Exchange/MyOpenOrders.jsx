@@ -99,8 +99,8 @@ class OrderRow extends React.Component {
                 </td>
             </tr>
         ) : (
-            <tr key={order.id} onClick={this.props.onFlip}>
-                <td colSpan="5" style={leftAlign}>
+            <tr key={order.id}>
+                <td colSpan="5" style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? 
                         <Translate 
                             content="exchange.buy_description" 
@@ -117,14 +117,14 @@ class OrderRow extends React.Component {
                             quoteName={<AssetName customClass={baseColor} name={base.get("symbol")} />}
                         />}
                 </td>
-                <td style={leftAlign}>
+                <td style={leftAlign} onClick={this.props.onFlip}>
                     <FormattedPrice
                         base_amount={order.sellPrice().base.amount} base_asset={order.sellPrice().base.asset_id}
                         quote_amount={order.sellPrice().quote.amount} quote_asset={order.sellPrice().quote.asset_id}
                         hide_symbols
                     />
                 </td>
-                <td style={leftAlign}>
+                <td style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? 
                         <MarketPrice
                             base={base.get("id")}
@@ -141,7 +141,7 @@ class OrderRow extends React.Component {
                         />
                     }
                 </td>
-                <td style={leftAlign}>
+                <td style={leftAlign} onClick={this.props.onFlip}>
                     <EquivalentValueComponent hide_asset amount={order.amountForSale().getAmount()} fromAsset={order.amountForSale().asset_id} noDecimals={true} toAsset={preferredUnit}/> <AssetName name={preferredUnit} />
                 </td>
                 {/* <td>
