@@ -424,7 +424,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null,
             allowed_mappings_for_conversion: null,
-            conversion_memo: null
+            conversion_memo: null,
+
+            announcements: []
         };
     }
 
@@ -433,6 +435,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 		this.setState({
             url: checkUrl
         });
+
+        let announcements_url = checkUrl + "/announcements/enabled/trade";
+        let announcements_promise = fetch(announcements_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+
+        Promise.resolve(announcements_promise).then((result) => {
+            this.state.announcements = result;
+        })
+		.catch((error) => {
+            this.state.announcements = [];
+		});
 
         // get basic data from blocktrades
 		let coin_types_url = checkUrl + "/coins";
@@ -1113,7 +1127,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
 
-        let deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
+        let announcements, deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
 
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
@@ -1455,9 +1469,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 </tbody>;
             }
 
+            if (this.state.announcements.length > 0) {
+                announcements =
+                <div className="blocktrades-announcements-container">
+                    {this.state.announcements.map(function(data, index) {
+                        return <div className="blocktrades-announcements" key={index}>{data.message}</div>;
+                    }, this)}
+                </div>;
+            }
+
             return (
                 <div>
                     <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.bridge_text" /></div>
+                    {announcements}
                     <table className="table">
                         {deposit_header}
                         {deposit_body}
