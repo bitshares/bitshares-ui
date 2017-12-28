@@ -121,6 +121,7 @@ class OrderRow extends React.Component {
                     <FormattedPrice
                         base_amount={order.sellPrice().base.amount} base_asset={order.sellPrice().base.asset_id}
                         quote_amount={order.sellPrice().quote.amount} quote_asset={order.sellPrice().quote.asset_id}
+                        force_direction={base.get("symbol")}
                         hide_symbols
                     />
                 </td>
@@ -129,6 +130,7 @@ class OrderRow extends React.Component {
                         <MarketPrice
                             base={base.get("id")}
                             quote={quote.get("id")}
+                            force_direction={base.get("symbol")}
                             hide_symbols
                             hide_asset
                         />  
@@ -136,6 +138,7 @@ class OrderRow extends React.Component {
                         <MarketPrice
                             base={base.get("id")}
                             quote={quote.get("id")}
+                            force_direction={base.get("symbol")}
                             hide_symbols
                             hide_asset
                         />
