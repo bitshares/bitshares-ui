@@ -1473,7 +1473,20 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 announcements =
                 <div className="blocktrades-announcements-container">
                     {this.state.announcements.map(function(data, index) {
-                        return <div className="blocktrades-announcements" key={index}>{data.message}</div>;
+
+                        let add_color = 'txtann info';
+
+                        if (data.status === 10) {
+                            add_color = 'txtann error';
+                        } else if (data.status === 20) {
+                            add_color = 'txtann warning';
+                        } else if (data.status === 30) {
+                            add_color = 'txtann success';
+                        } else if (data.status === 40) {
+                            add_color = 'txtann info';
+                        }
+
+                        return <div className={"blocktrades-announcements " + add_color} key={index}>{data.message}</div>;
                     }, this)}
                 </div>;
             }
