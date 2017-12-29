@@ -1493,6 +1493,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             add_color = 'txtann info';
                         }
 
+                        if (data.format === 1) {
+                            data.message.replace(/\r\n|\r|\n/g, '<br />');
+                        }
+
                         return <div className={"blocktrades-announcements " + add_color} key={index}>{data.message}</div>;
                     }, this)}
                 </div>;
