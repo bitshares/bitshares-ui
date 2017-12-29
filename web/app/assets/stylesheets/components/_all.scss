@@ -1,0 +1,29 @@
+@import "account";
+@import "blocktrades";
+@import "cards";
+@import "console";
+@import "existing_accounts";
+@import "footer";
+@import "forms";
+@import "header";
+@import "loading-indicator";
+@import "pagination";
+@import "tables";
+@import "wallet";
+@import "chatbox";
+@import "dashboard";
+@import "settings";
+@import "exchange";
+@import "bitkapital";
+@import "account-create";
+@import "help";
+
+.lifetime {
+    background: url("../fresh-bolt2.png") no-repeat 100% 50%;
+    background-size: auto 80%;
+    padding-right: 0.75rem;
+}
+
+.bottom-border {
+    border-bottom: 1px solid #444;
+}

@@ -1,0 +1,66 @@
+@import "theme-template";
+
+// variables
+
+$light-text-color: #fff;
+$dark-text-color: #444;
+$primary-text-color: #ffffff;
+$secondary-text-color: darken($primary-text-color, 20%);
+$link-text-color: #4A90E2;
+$error-text-color: #E3745B;
+
+$bg-color: #2a2a2a;
+$panel-bg-color: #3f3f3f;
+$light-panel-bg-color: #6a6a6a;
+$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$button-bg-color: #4A90E2;
+$secondary-button-bg-color: #999999;
+$input-background: lighten($bg-color, 8%);
+
+$alert-color: $error-text-color;
+$info-color: #A0D3E8;
+$success-color: #50D2C2;
+$warning-color: #FCAB53;
+$fee-color: $secondary-text-color;
+
+// Exchange colors
+$bid-color: #6BA583;
+$ask-color: #E3745B;
+$call-color: #BBBF2B;
+$positive-color: #258A14;
+$negative-color: #DB0000;
+$row-accent-color: #3C3C3C;
+$header-color: #484848;
+
+// Chat colors
+$chat-text-color: #191A1F;
+
+.darkTheme {
+  @include theme(
+    $primary-text-color,
+    $bg-color,
+    $dark-text-color,
+    $link-text-color,
+    $light-text-color,
+    $secondary-text-color,
+    $success-color,
+    $info-color,
+    $warning-color,
+    $alert-color,
+    $super-light-panel-bg-color,
+    $panel-bg-color,
+    $button-bg-color,
+    $secondary-button-bg-color,
+    $fee-color,
+    $bid-color,
+    $ask-color,
+    $call-color,
+    $light-panel-bg-color,
+    $positive-color,
+    $negative-color,
+    $row-accent-color,
+    $header-color,
+    $chat-text-color,
+    $input-background
+  );
+}

@@ -1,0 +1,28 @@
+.BuySell__inputs {
+    > div {
+        padding: 20px;
+    }
+
+    .inputs__header {
+        padding-bottom: 20px;
+    }
+
+    .inputs__input {
+        position: relative;
+        > div {
+            padding-bottom: 5px;
+        }
+
+        span.inputs__symbol {
+            position: absolute;
+            top: 32px;
+            right: 5px;
+        }
+    }
+
+    .BuySell__balance {
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}

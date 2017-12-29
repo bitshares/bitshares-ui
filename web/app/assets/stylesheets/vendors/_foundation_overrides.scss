@@ -1,0 +1,150 @@
+.title-bar.primary {
+  padding: 0;
+
+  .title {
+    font-size: 1.0625rem;
+  }
+}
+
+.button {
+  margin-bottom: 0;
+}
+
+.title-bar.primary .action-sheet a {
+  color: $body-font-color;
+}
+
+.action-sheet {
+  width: auto;
+  min-width: 12em;
+
+  ul {
+      font-size: 14px;
+
+      a {
+          border-top: none;
+      }
+  }
+
+  .no-first-element-top-border > :first-child > a {
+    border-top: none;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+  ul > :last-child > a {
+    border-bottom: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+.has-error,
+div.has-error > label,
+div.has-error > input,
+div.has-error > input:hover,
+div.has-error > input:focus {
+  border-color: #a94442;
+  color: #a94442;
+}
+
+.menu-bar.primary > li > a.active {
+  background: #414141;
+  color: #fff;
+}
+
+.menu-bar.secondary > li > a.active {
+  background: #ededed;
+  color: #000;
+}
+
+.inline {
+  display: inline-block;
+}
+
+a {
+  cursor: pointer;
+  color: #008CBA;
+}
+
+
+.tabs {
+  border-bottom: 1px solid #444;
+  margin-bottom: 1rem;
+  > .tab-item {
+    background: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease 0s;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 0.8rem;
+    &.is-active {
+      background: none;
+      border-bottom: 2px solid #f00;
+      &:hover, &:focus, &:active {
+        background: none;
+      }
+    }
+    &:hover, &:focus, &:active {
+      background: none;
+    }
+  }
+}
+
+.label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
+  background-color: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  text-transform: uppercase;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.74rem;
+}
+
+.notification {
+  // Extend the base selector to get core styles
+  @extend %notification;
+  // Use the layout mixin to position and structure the notification
+  @include notification-layout(
+    $x: right, // Can be left, middle, or right
+    $y: bottom // Can be top or bottom
+  );
+}
+
+.modal {
+  padding: 1rem 1rem 1rem 1rem;
+  h3 {
+    margin-bottom: 1rem;
+  }
+  .button-group {
+    margin-bottom: 0;
+  }
+}
+
+.inline-label {
+  margin-bottom: 0;
+}
+
+.block-list {
+  margin-right: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  li > a {
+    padding: 0.6rem;
+  }
+
+  li {
+      border-top: none !important;
+
+      &.with-dropdown > select {
+          -webkit-appearance: menulist;
+          -moz-appearance: menulist;
+          appearance: menulist;
+      }
+  }
+}
+
+
+
+code {
+  color: inherit;
+  background-color: inherit;
+  border: none;
+}
