@@ -1,0 +1,1 @@
+[Taniklar](introduction/witness) BitShares'in blok üreticileridirler. İşlemlerin geçerliliklerini teyit eder ve ağın güvenliğini sağlarlar. Dilediğiniz kadar tanığa oy verebilirsiniz, hepsi aynı miktarda alır. Tanık tekliflerini buradan takip edebilirsiniz: [BitSharestalk - Stakeholder Proposals Board](https://bitsharestalk.org/index.php/board,75.0.html).

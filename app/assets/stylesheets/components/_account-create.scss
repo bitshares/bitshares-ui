@@ -1,0 +1,109 @@
+div.divider {
+    margin: 20px 0;
+    border-bottom: 1px solid $border-color;
+}
+
+.login-selector {
+    justify-content: space-around;
+    > div.box {
+        cursor: pointer;
+        position: relative;
+        padding: 1rem;
+        padding-bottom: 4.5rem;
+        border: 1px solid $border-color;
+        margin-top: 2rem;
+
+        .button {
+            font-size: 1.2rem;
+            position: absolute;
+            bottom: 1rem;
+        }
+    }
+}
+div.account-creation {
+    margin-top: 2rem;
+    padding: 2rem 2rem 1rem 2rem;
+
+    p {
+        max-width: 95vw;
+    }
+
+    div.confirm-checks {
+        max-width: 95vw;
+        text-align: left;
+    }
+
+    div.sub-content {
+        padding-top: 2rem;
+        table {
+            text-align: left;
+        }
+        p {
+            word-wrap: break-word;
+            // max-width: 30rem;
+            text-align: left;
+        }
+    }
+    h4 {
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+
+    label {
+        text-align: left;
+    }
+    div.button-group {
+        padding-top: 2rem;
+        label {
+            > span {
+                text-transform: none;
+                font-size: 90%;
+            }
+            &:first-of-type {
+                margin-right: 3rem;
+            }
+        }
+    }
+    div.button {
+        margin-right: 0;
+        margin-top: 3px;
+        min-width: 8rem;
+        text-transform: none;
+        font-size: 1.1rem;
+    }
+
+    div.creation-options, div.button-group {
+        display: flex;
+        justify-content: space-between;
+    }
+    div.creation-options {
+        padding-top: 2.5rem;
+        text-transform: uppercase;
+        font-size:95%;
+        font-weight: 600;
+        margin: 0 -1rem;
+    }
+
+    p {
+        max-width: 80vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@include breakpoint(medium) {
+    div.account-creation {
+        margin-top: 2rem;
+        padding: 2rem 4rem 1rem 4rem;
+
+        p {
+            max-width: 35rem;
+            // margin-left: inherit;
+            // margin-right: inherit;
+        }
+    }
+    div.creation-options {
+        margin: 0 -3rem;
+    }
+}
