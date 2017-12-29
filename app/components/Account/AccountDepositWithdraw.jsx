@@ -142,7 +142,7 @@ class AccountDepositWithdraw extends React.Component {
 
                         {olService === "fiat" ?
                         <div>
-                            <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.fiat_text" /></div>
+                            <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.fiat_text" unsafe /></div>
 
                             <OpenLedgerFiatDepositWithdrawal
                                 rpc_url={settingsAPIs.RPC_URL}

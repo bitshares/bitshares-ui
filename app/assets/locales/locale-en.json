@@ -1330,6 +1330,11 @@
     "id": "Proposal object id"
   },
   "gateway": {
+    "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+     "copy_memo": "Copy memo",
+    "please_generate_address": "Please, get new address ",
+    "generate_new": "Get new address",
+    "copy_address": "Copy address",
     "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
@@ -1380,14 +1385,14 @@
     "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
     "intermediate": "Intermediate account",
     "asset_to_withdraw": "Asset to withdraw:",
-    "support_block": "For support, please contact OpenLedger at:",
+    "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	  "convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
-    "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
+    "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
     "meta": {
       "open_website": "Open Website"
     },
