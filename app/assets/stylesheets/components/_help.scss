@@ -1,0 +1,18 @@
+.help-content {
+    max-width: 600px;
+}
+.help-content > table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.help-content > table td, help-content > table th {
+    border:1px solid;
+    padding: 5px;
+}
+
+.help-content > table > thead th {
+    text-align: left;
+    padding: 5px;
+    border: 1px solid;
+}
