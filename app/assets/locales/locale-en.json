@@ -1002,7 +1002,7 @@
     "volume": "Volume",
     "vol_short": "Vol",
     "spread": "Spread",
-    "quantity": "Amount",
+    "quantity": "Quantity",
     "buy": "Buy",
     "buy_min": "Buy at least",
     "sell": "Sell",
@@ -1057,7 +1057,10 @@
     "show_star_2": "only",
     "quote": "Quote currency:",
     "search": "Search for more markets here",
-    "order_value": "Order value"
+    "price_market": "Market Price",
+    "description": "Description",
+    "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+    "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
   },
   "fees": {
     "title": "Fee Schedule"
@@ -1416,7 +1419,6 @@
       "register":"Agree",
       "notice": "Please check the agreement to continue"
     },
-    "deposit_to": "Please send your %(asset)s to the address below",
     "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
     "time": "Time",
     "info": "Info",
