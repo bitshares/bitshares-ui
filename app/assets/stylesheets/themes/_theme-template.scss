@@ -368,8 +368,8 @@ $account-tabs-background
     }
 
     .header-right-menu {
-        a:hover {background-color: lighten($panel-bg-color, 4%);}
-        a.active {background-color: lighten($panel-bg-color, 4%);}
+        // a:hover {background-color: lighten($panel-bg-color, 4%);}
+        // a.active {background-color: lighten($panel-bg-color, 4%);}
         li.current-account > a {
             color: $info-color;
             &:hover {
