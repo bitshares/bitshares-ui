@@ -94,6 +94,13 @@ class Asset extends React.Component {
                 sqr = 1000;
             }
 
+            if (settlePrice.toJS) {
+                let settlePriceToJS = settlePrice.toJS();
+                if (settlePriceToJS.base.asset_id == settlePriceToJS.quote.asset_id) {
+                    return null;
+                }
+            }
+
             try {
                 const feedPrice = new FeedPrice({
                     priceObject: settlePrice,
