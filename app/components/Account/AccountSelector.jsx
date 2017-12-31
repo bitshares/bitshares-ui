@@ -12,6 +12,7 @@ import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
 import FloatingDropdown from "../Utility/FloatingDropdown";
+import TypeAhead from "../Utility/TypeAhead";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -34,7 +35,8 @@ class AccountSelector extends React.Component {
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
-        allowUppercase: React.PropTypes.bool // use it if you need to allow uppercase letters
+        allowUppercase: React.PropTypes.bool, // use it if you need to allow uppercase letters
+        typeahead: React.PropTypes.array 
     };
 
     static defaultProps = {
@@ -66,7 +68,14 @@ class AccountSelector extends React.Component {
     }
 
     onInputChanged(event) {
-        let value = event.target.value.trim();
+        
+        let value = null;
+        if (typeof event === "string") {
+            value = event;
+        } else {
+            value = event.target.value.trim();
+        }
+        
         if (!this.props.allowUppercase) {
             value = value.toLowerCase();
         }
@@ -132,8 +141,10 @@ class AccountSelector extends React.Component {
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
             <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="user" /></span>
             : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="plus-circle" /></span>;
-
-
+            
+            
+        let InputType = 'TypeAhead';
+            
         return (
             <div className="account-selector" style={this.props.style}>
                 <div className="content-area">
@@ -150,11 +161,12 @@ class AccountSelector extends React.Component {
                             {type === "pubkey" ? <div className="account-image"><Icon name="key" size="4x"/></div> :
                             this.props.hideImage ? null : <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
                                 account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
-                                <input
+                                
+                            <InputType items={this.props.typeahead} 
                                     style={{textTransform: "lowercase", fontVariant: "initial"}}
-                                    type="text"
                                     name="username"
                                     id="username"
+                                    type="text"
                                     value={this.props.accountName || ""}
                                     placeholder={this.props.placeholder || counterpart.translate("account.name")}
                                     ref="user_input"

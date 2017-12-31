@@ -19,7 +19,7 @@ class TypeAhead extends React.Component {
         let { autocomplete } = this.refs;
         autocomplete.refs.input.click();
         autocomplete.refs.input.focus();
-        e.stopPropagation();
+//        e.stopPropagation();
     }
 
     onChange(e){
