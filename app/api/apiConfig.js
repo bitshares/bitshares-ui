@@ -35,7 +35,8 @@ export const settingsAPIs = {
         {url: "wss://ws.gdex.top", location: "China"},
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
-        {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"}
+        {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"},
+        {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"}
     ],
     DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding",  // 2017-12-infrastructure worker proposal
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
