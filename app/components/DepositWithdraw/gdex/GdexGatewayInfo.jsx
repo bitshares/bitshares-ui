@@ -68,6 +68,7 @@ class GdexGatewayInfo extends React.Component {
             } else{
             }
         }).catch(err =>{
+            _this.setState({"receive_address":null});
             console.log(err);
         });
     }
