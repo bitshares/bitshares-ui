@@ -1,6 +1,6 @@
 {
   "name": "BitShares2-light",
-  "version": "2.0.171205",
+  "version": "2.0.171219",
   "description": "Advanced wallet interface for the BitShares financial blockchain.",
   "homepage": "https://github.com/bitshares/bitshares-ui",
   "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -170,7 +170,7 @@
     "tcomb": "2.5.2",
     "whatwg-fetch": "^2.0.1",
     "zxcvbn": "^4.4.2",
-    "node-rsa":"^0.4.2"
+    "node-rsa": "^0.4.2"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",

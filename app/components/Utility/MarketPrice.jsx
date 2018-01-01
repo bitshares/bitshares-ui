@@ -81,8 +81,8 @@ class MarketPriceInner extends MarketStats {
                     <FormattedPrice
                         base_amount={price.base.amount} base_asset={price.base.asset_id}
                         quote_amount={price.quote.amount} quote_asset={price.quote.asset_id}
-                        hide_symbols
-                        // invert={invert}
+                        force_direction={this.props.force_direction}
+                        hide_symbols={this.props.hide_symbols}
                     />
                     : "n/a"
                 }
