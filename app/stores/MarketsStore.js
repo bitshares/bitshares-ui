@@ -1075,7 +1075,7 @@ class MarketsStore {
             result.settles.forEach(settle => {
                 // let key = settle.owner + "_" + settle.balance.asset_id;
 
-                settle.settlement_date = new Date(settle.settlement_date);
+                settle.settlement_date = new Date(settle.settlement_date + "Z");
 
                 this.marketSettleOrders = this.marketSettleOrders.add(
                     new SettleOrder(settle, assets, this.quoteAsset.get("id"), this.feedPrice, this.bitasset_options)
