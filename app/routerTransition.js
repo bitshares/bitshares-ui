@@ -1,5 +1,6 @@
-import {Apis, Manager} from "bitsharesjs-ws";
+import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
 import {ChainStore} from "bitsharesjs/es";
+import chainIds from "chain/chainIds";
 
 // Stores
 import iDB from "idb-instance";
@@ -59,6 +60,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
 
     // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
     if (__DEPRECATED__) {
+        ChainConfig.setChainId(chainIds.MAIN_NET);
         let dbPromise = iDB.init_instance(window.openDatabase ? (shimIndexedDB || indexedDB) : indexedDB).init_promise;
         return dbPromise.then(() => {
             Promise.all([

@@ -77,6 +77,8 @@ class OrderRow extends React.Component {
         let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
         let preferredUnit = settings ? settings.get("unit") : "1.3.0";
+        let quoteColor = !isBid ? "value negative" : "value positive";
+        let baseColor = isBid ? "value negative" : "value positive";
 
         return !dashboard ? (
             <tr key={order.id}>
@@ -100,14 +102,14 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id}>
-                <td style={{textAlign: "right", paddingLeft: 0, borderRight: "none"}}>
-                    <Link to={`/asset/${quote.get("symbol")}`}><AssetName noTip name={quote.get("symbol")} /></Link>
+                <td className={"trading-pair"} style={{color: quoteColor, textAlign: "right", borderLeft: "none", borderRight: "none"}}>
+                    <Link to={`/asset/${quote.get("symbol")}`}><AssetName customClass={quoteColor} noTip name={quote.get("symbol")} /></Link>
                 </td>
-                <td style={{borderLeft: "none", borderRight: "none"}}>
+                <td className={isBid ? "shuffle-rev" : null} style={{borderLeft: "none", borderRight: "none"}}>
                     <a onClick={this.props.onFlip}>&nbsp;<Icon className="shuffle" name="shuffle"/>&nbsp;</a>
                 </td>
-                <td style={{textAlign: "left", paddingRight: 0, borderLeft: "none"}}>
-                    <Link to={`/asset/${base.get("symbol")}`}><AssetName noTip name={base.get("symbol")} /></Link>
+                <td style={{textAlign: "left", borderLeft: "none", borderRight: "none"}}>
+                    <Link to={`/asset/${base.get("symbol")}`}><AssetName customClass={baseColor} noTip name={base.get("symbol")} /></Link>
                 </td>
                 <td style={{textAlign: "right", paddingLeft: 0}}>
                   <MarketPrice
@@ -198,7 +200,13 @@ class MyOpenOrders extends React.Component {
             ) {
                 return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
             }
-        }).filter(a => !!a).filter(a => a.isMarginCalled());
+        }).filter(a => !!a).filter(a => {
+            try {
+                return a.isMarginCalled();
+            } catch(err) {
+                return false;
+            }
+        });
         return limitOrders.concat(callOrders);
     }
 

@@ -14,6 +14,7 @@ import {ChainStore} from "bitsharesjs/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
+import WalletDb from "stores/WalletDb";
 
 const starSort = function(a, b, inverse, starredAccounts) {
 	let aName = a.get("name");
@@ -79,7 +80,7 @@ class DashboardList extends React.Component {
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state )
 		);
-		
+
 	}
 
 	_onStar(account, isStarred, e) {
@@ -91,9 +92,16 @@ class DashboardList extends React.Component {
 		}
 	}
 
-	_goAccount(name) {
+	_goAccount(name, tab) {
 		this.context.router.push(`/account/${name}`);
+		SettingsActions.changeViewSetting({
+			overviewTab: tab
+		});
 	}
+
+        _createAccount() {
+            this.context.router.push("/create-account/wallet");
+        }
 
 	_onFilter(e) {
 		this.setState({dashboardFilter: e.target.value.toLowerCase()});
@@ -207,34 +215,34 @@ class DashboardList extends React.Component {
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
 				let shouldShow = (isMyAccount === this.props.showMyAccounts);
-				
-				if(!shouldShow) 
+
+				if(!shouldShow)
 					return (null);
 
 				return (
 					<tr key={accountName}>
-						<td onClick={this._onStar.bind(this, accountName, isStarred)}>
+						<td className="clickable" onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
-						{!showMyAccounts ? 
+						{!showMyAccounts ?
 							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
 								<Icon name="minus-circle"/>
-							</td> 
+							</td>
 						: null}
-						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, `${accountName}/overview`)} className={isMyAccount ? "my-account" : ""}>
+						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, accountName, 0)} className={"clickable" + (isMyAccount ? " my-account" : "")}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
-						<td onClick={this._goAccount.bind(this, `${accountName}/orders`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} openOrders={openOrders}/>
+						<td className="clickable" onClick={this._goAccount.bind(this, accountName, 1)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} openOrders={openOrders}/>
 						</td>
-						{width >= 750 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} collateral={collateral}/>
+						{width >= 750 ? <td className="clickable" onClick={this._goAccount.bind(this, accountName, 2)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} collateral={collateral}/>
 						</td> : null}
-						{width >= 1200 ? <td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={[]} debt={debt}/>
+						{width >= 1200 ? <td className="clickable" onClick={this._goAccount.bind(this, accountName, 2)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={[]} debt={debt}/>
 						</td> : null}
-						<td onClick={this._goAccount.bind(this, `${accountName}/overview`)} style={{textAlign: "right"}}>
-							<TotalBalanceValue balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
+						<td className="clickable" onClick={this._goAccount.bind(this, accountName, 0)} style={{textAlign: "right"}}>
+							<TotalBalanceValue noTip balances={balanceList} collateral={collateral} debt={debt} openOrders={openOrders}/>
 						</td>
 					</tr>
 				);
@@ -253,15 +261,20 @@ class DashboardList extends React.Component {
 
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
-
+                
+                let hasLocalWallet = !!WalletDb.getWallet();
+                
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
 					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
-						<input placeholder={filterText} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-						{this.props.ignoredAccounts.length ? <div onClick={this.props.onToggleIgnored} style={{position: "absolute", top: 0, right: 0}} className="button outline small">
+						<input placeholder={filterText} style={{display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+                                                {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
+							<Translate content="header.create_account" />
+						</div>):null}
+                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
-						</div> : null}
+						</div>:null}
 					</section>) : null}
 				<table className="table table-hover dashboard-table" style={{fontSize: "0.85rem"}}>
 					{!this.props.compact ? (

@@ -408,14 +408,16 @@
 			"balance": "最终余额必须大于0",
 			"insufficient": "余额不足",
 			"noFeeBalance": "当前所选资产余额不足以支付手续费, 请换一种用来支付手续费的资产。",
-			"noPoolBalance": "这个资产没有充足的手续费池余额用来支付手续费了，请联系资产所有者或换一种资产。"
+			"noPoolBalance": "这个资产没有充足的手续费池余额用来支付手续费了，请联系资产所有者或换一种资产。",
+			"minimum_amount": "最小提现金额：%(amount)s %(symbol)s",
+			"memo_error":"转账备注解析错误，请稍候再试。"
 		},
 		"back": "返回",
 		"confirm": "确认发送",
 		"broadcast": "你的转账已经向网络广播",
 		"again": "发起新的转账",
 		"see": "查看我的转账记录",
-		"available": "可用余额: ",
+		"available": "可用余额",
 		"broadcasting": "交易广播中...",
 		"close": "关闭",
 		"pay_from": "支付自",
@@ -1266,7 +1268,40 @@
 		"service": "转账服务",
 		"purchase": "购买 %(asset)s",
 		"purchase_1": "快速简便地从外部钱包使用 %(inputAsset)s 购买 %(outputAsset)s 。这项服务由 <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> 提供",
-		"deposit_limit": "充值限额"
+		"deposit_limit": "充值限额",
+		"agreement":{
+			"hint":"我已阅读并同意",
+			"name":"《用户服务协议》",
+			"register":"确认",
+			"notice": "未同意用户协议"
+		},
+		"deposit_to": "请将你的 %(asset)s 资产充值到以下地址",
+		"deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
+		"time": "创建时间",
+		"info": "交易信息",
+		"status": "状态",
+		"unavailable": "网关服务暂时不可用，请稍候再试",
+		"asset_unavailable": "%(asset)s资产暂停服务",
+		"user_unavailable": "获取用户信息失败，请稍候再试",
+		"frozen": "账户%(account)s充提服务被冻结",
+		"transaction_history_info": "交易 %(amount)s %(assetName)s ，流水号： %(txid)s ",
+		"support_gdex": "请通过以下方式联系我们，获得客户支持",
+		"withdraw_history_status":{
+			"confirming": "提现确认中",
+			"auditing": "提现审核中",
+			"audited": "完成审核",
+			"refused": "审核拒绝",
+			"transfering":"提现转账中",
+			"success":"提现成功",
+			"fail":"提现失败"
+		},
+		"deposit_history_status":{
+			"confirming": "充值确认中",
+			"waiting": "等待转账",
+			"transfering":"转账确认中",
+			"success":"充值成功",
+			"fail":"充值失败"
+		}
 	},
 	"fees": {
 		"title": "费率表"

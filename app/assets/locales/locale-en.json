@@ -250,7 +250,11 @@
       "precision_warning": "Warning: The number of decimals may not be changed after creation",
       "visible": "Hide asset from search and markets",
       "cer_warning_1": "Warning",
-      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset.",
+      "feed_producers": "Feed producers",
+      "add_feed": "Add new feed producer",
+      "feed_not_allowed_1": "Cannot set feed producers on a witness- or committee-fed asset",
+      "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers"
     },
     "connections": {
       "known": "Known by",
@@ -261,7 +265,7 @@
       "owner": "Owner Permissions",
       "memo_key": "Memo key",
       "publish": "Save",
-      "reset": "Cancel",
+      "reset": "Reset",
       "add": "Add Permission",
       "type": "Type",
       "key": "Key/Name",
@@ -306,7 +310,7 @@
       "verifying": "Verifying, please wait ...",
       "invalidformat": "Signed message format can't be recognized",
       "invaliduser": "Account of the message sender is invalid",
-      "invalidsignature": "The content of the message could be validated against the signature",
+      "invalidsignature": "The content of the message could not be validated against the signature",
       "errorverifying": "An error occured while verifying the message",
       "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
       "sign": "Sign",
@@ -406,7 +410,8 @@
       "not_found": "The account %(name)s does not exist, are you sure you spelled it correctly?",
       "invalid": "Invalid account name",
       "unknown": "Unknown account",
-      "not_yours": "Not your account"
+      "not_yours": "Not your account",
+      "memo_missing": "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page."
     },
     "collaterals": "Margin Positions",
     "eq_value": "Estimated",
@@ -462,7 +467,9 @@
       "balance": "The final balance must be larger than 0",
       "insufficient": "Insufficient funds",
       "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+      "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
+      "memo_error":"The transfer memo parsing error, please try again later."
     },
     "back": "BACK",
     "confirm": "CONFIRM",
@@ -882,8 +889,9 @@
     "no": "No",
     "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
     "themes": "Theme",
-    "darkTheme": "Dark theme",
-    "lightTheme": "Light theme",
+    "darkTheme": "Dark",
+    "lightTheme": "Light",
+    "midnightTheme": "Midnight",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
     "general": "General",
@@ -1227,7 +1235,8 @@
     "understand_2": "I have written down or otherwise stored my password",
     "understand_3": " I understand that I will lose access to my funds if I lose my password",
     "bts_rules": "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
-    "ok_done": "OK, take me to the dashboard"
+    "ok_done": "OK, take me to the dashboard",
+    "local_switch": "Local wallet detected matching the given password, switching to local wallet mode"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
@@ -1400,16 +1409,57 @@
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
     "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
     "contact_TRADE": "Contact Blocktrades",
-    "over_limit": "Limit Reached"
-  },
-    "trx_error": {
-        "expire": "Your transaction has expired without being confirmed, please try again later."
+    "over_limit": "Limit Reached",
+    "agreement":{
+      "hint":"I have read and agreed to",
+      "name":"《Service Agreement》",
+      "register":"Agree",
+      "notice": "Please check the agreement to continue"
     },
-    "migration": {
-        "title": "Notice",
-        "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
-        "text_1": "Local wallet detected",
-        "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
-        "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+    "deposit_to": "Please send your %(asset)s to the address below",
+    "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+    "time": "Time",
+    "info": "Info",
+    "status": "Status",
+    "asset_unavailable": "The gateway for %(asset)s is not in service",
+    "user_unavailable": "User informaction is current unavailable, please try again later",
+    "frozen": "The user account %(account)s was frozen",
+    "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+    "support_gdex": "For support, please contact GDEX",
+    "withdraw_history_status":{
+      "confirming": "confirming",
+      "auditing": "withdraw auditing",
+      "audited": "auditting completed",
+      "refused": "auditting failed",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
+    },
+    "deposit_history_status":{
+      "confirming": "deposit confirming",
+      "waiting": "waiting for deposit",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
     }
+
+  },
+  "trx_error": {
+      "expire": "Your transaction has expired without being confirmed, please try again later."
+  },
+  "migration": {
+      "title": "Notice",
+      "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+      "text_1": "Local wallet detected",
+      "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+      "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+  },
+  "news": {
+      "news": "News",
+      "author": "Author",
+      "subject": "Subject",
+      "errors": {
+        "fetch": "Ops... Something went wrong fetching the news"
+      }
+  }
 }

@@ -255,7 +255,7 @@ class RecentTransactions extends React.Component {
                             maxHeight: maxHeight - headerHeight
                         } : null}
                         ref="transactions">
-                        <table className={"table" + (compactView ? " compact" : "") + (this.props.dashboard ? " dashboard-table" : "")}>
+                        <table className={"table" + (compactView ? " compact" : "") + (this.props.dashboard ? " dashboard-table table-hover" : "")}>
                             <thead>
                                 <tr>
                                     {compactView ? null : <th style={alignLeft} className="column-hide-tiny">
