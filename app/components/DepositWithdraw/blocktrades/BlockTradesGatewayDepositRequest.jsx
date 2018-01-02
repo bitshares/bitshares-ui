@@ -84,6 +84,12 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         document.removeEventListener("copy", this._copy);
     }
 
+    componentWillReceiveProps(np) {
+        if (np.account !== this.props.account) {
+            getDepositAddress({coin: np.receive_coin_type,  account: np.account.get("name"),  stateCallback: this.addDepositAddress});
+        }
+    }
+
     addDepositAddress( receive_address ) {
         if(receive_address.error){
             receive_address.error.message === "no_address" ? this.setState({emptyAddressDeposit: true}) : this.setState({emptyAddressDeposit: false})
@@ -208,7 +214,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             var withdraw_memo_prefix = "";
         }
 
-        if (!this.props.isAvailable || (isDeposit && !this.props.deposit_account && !this.state.receive_address)) {
+        if (!this.props.isAvailable || (isDeposit && !this.props.deposit_account && !receive_address || (receive_address && receive_address.address === "unknown"))) {
             return <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="h4" /></div>;
         }
 
