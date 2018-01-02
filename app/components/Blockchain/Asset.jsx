@@ -74,7 +74,6 @@ class Asset extends React.Component {
 
     componentWillMount() {
         if (this.props.asset.has("bitasset")) {
-            console.log("asset:", this.props.asset.get("id"));
             const assets = {
                 [this.props.asset.get("id")]: this.props.asset.toJS(),
                 [this.props.backingAsset.get("id")]: this.props.backingAsset.toJS()
@@ -110,8 +109,8 @@ class Asset extends React.Component {
                     });
                     this.setState({callOrders});
                 });
-            } catch(err) {
-                console.log(err);
+            } catch(e) {
+                // console.log(err);
             }
 
         }
@@ -664,11 +663,8 @@ class Asset extends React.Component {
 
     render() {
         var asset = this.props.asset.toJS();
-        var priceFeed = ('bitasset' in asset) ? this.renderPriceFeed(asset) : null;
-        var priceFeedData = ('bitasset' in asset) ? this.renderPriceFeedData(asset) : null;
-
-        //console.log("This: ", this);
-        // console.log("Asset: ", asset); //TODO Remove
+        var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset) : null;
+        var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset) : null;
 
         return (
             <div className="grid-block page-layout">
