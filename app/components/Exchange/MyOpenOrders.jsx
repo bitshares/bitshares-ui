@@ -188,7 +188,7 @@ class MyOpenOrders extends React.Component {
     }
 
     _getOrders() {
-        const { currentAccount, base, quote } = this.props;
+        const { currentAccount, base, quote, feedPrice } = this.props;
         const orders = currentAccount.get("orders"), call_orders = currentAccount.get("call_orders");
         const baseID = base.get("id"), quoteID = quote.get("id");
         const assets = {
@@ -207,13 +207,17 @@ class MyOpenOrders extends React.Component {
         }).filter(a => !!a);
 
         let callOrders = call_orders.toArray().map(order => {
-            let o = ChainStore.getObject(order);
-            if (!o) return null;
-            let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
-            if (sellBase === baseID && sellQuote === quoteID ||
-                sellBase === quoteID && sellQuote === baseID
-            ) {
-                return this.props.feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), this.props.feedPrice) : null;
+            try {
+                let o = ChainStore.getObject(order);
+                if (!o) return null;
+                let sellBase = o.getIn(["call_price", "base", "asset_id"]), sellQuote = o.getIn(["call_price", "quote", "asset_id"]);
+                if (sellBase === baseID && sellQuote === quoteID ||
+                    sellBase === quoteID && sellQuote === baseID
+                ) {
+                    return feedPrice ? new CallOrder(o.toJS(), assets, quote.get("id"), feedPrice) : null;
+                }
+            } catch(e) {
+                return null;
             }
         }).filter(a => !!a).filter(a => {
             try {
