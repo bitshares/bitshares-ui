@@ -71,7 +71,9 @@ class QrcodeModal extends React.Component {
                         <div className="form-group">
                             {this.state.isShowQrcode ?
                                 <section style={pos}>
-                                    <QRCode size={256} value={this.state.keyString}/>
+                                    <span style={{background: "#fff", padding: ".75rem", display: "inline-block"}}>
+                                        <QRCode size={256} value={this.state.keyString}/>
+                                    </span>
                                 </section>
                                 :
                                 <section>
