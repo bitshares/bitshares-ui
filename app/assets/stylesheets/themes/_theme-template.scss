@@ -844,10 +844,37 @@ $account-tabs-background
     }
 
     .help-content {
+        @include RobotoLight;
+        font-weight: 100;
+        ul {
+            list-style: none;
+        }
+        li {
+            @include image($bg-color);
+            background-size: 7px 10px;
+            padding-left: 12px;
+        }
+        a {
+            color: $link-text-color;
+        }
+        a:hover {
+            background-color: $link-text-color;
+            color: $bg-color;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            width: 100%;
+            background-color: $panel-bg-color;
+        }
         code {
             color: $primary-text-color;
             background-color: transparent;
             border-color: $dark-text-color;
+        }
+        blockquote {
+            color: $secondary-text-color;
+            border-left: 3px solid $panel-bg-color;
         }
     }
 
