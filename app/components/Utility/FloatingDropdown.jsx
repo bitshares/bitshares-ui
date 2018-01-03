@@ -3,7 +3,16 @@ import utils from "common/utils";
 
 class Dropdown extends React.Component {
 
+    static propTypes = {
+        scroll_length: React.PropTypes.number
+    }
+
+    static defaultProps = {
+        scroll_length: 9
+    }
+
     constructor(props) {
+        const scroll_length = props.scroll_length;
         super(props);
         this.state = {
             active: false
@@ -101,7 +110,7 @@ class Dropdown extends React.Component {
             return (
                 <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")  + (this.props.upperCase ? " upper-case" : "")}>
                     <div style={{paddingRight: 15}}>{value ? value : <span className="hidden">A</span>}</div>
-                    <ul className="dropdown" style={{overflow: entries.length > 9 ? "auto": "hidden"}}>
+                    <ul className="dropdown" style={{overflow: entries.length > this.props.scroll_length ? "auto": "hidden"}}>
                         {options}
                     </ul>
                 </div>
