@@ -5,13 +5,24 @@ import { isIncognito } from "feature_detect";
 var logo = require("assets/logo-ico-blue.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
+import ActionSheet from "react-foundation-apps/src/action-sheet";
+import SettingsStore from "stores/SettingsStore";
+import IntlActions from "actions/IntlActions";
+
+const FlagImage = ({flag, width = 50, height = 50}) => {
+     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
+};
 
 export default class LoginSelector extends React.Component {
 
     constructor(props){
         super(props);
 
-        this.state = {step: 1};
+        this.state = {
+            step: 1,
+            locales: SettingsStore.getState().defaults.locale,
+            currentLocale: SettingsStore.getState().settings.get("locale")
+        };
     }
 
     componentWillMount(){
@@ -26,6 +37,29 @@ export default class LoginSelector extends React.Component {
 
     render() {
         const childCount = React.Children.count(this.props.children);
+        
+        const flagDropdown = <ActionSheet>
+            <ActionSheet.Button title="" style={{width:"64px"}}>
+                <a style={{padding: "1rem", border: "none"}} className="button">
+                    <FlagImage flag={this.state.currentLocale} />
+                </a>
+            </ActionSheet.Button>
+            <ActionSheet.Content>
+                <ul className="no-first-element-top-border">
+                    {this.state.locales.map(locale => {
+                        return (
+                            <li key={locale}>
+                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale); this.setState({currentLocale: locale});}}>
+                                    <div className="table-cell"><FlagImage width="20" height="20" flag={locale} /></div>
+                                    <div className="table-cell" style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></div>
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </ActionSheet.Content>
+        </ActionSheet>;
+        
         return (
             <div className="grid-block align-center">
                 <div className="grid-block shrink vertical">
@@ -33,7 +67,15 @@ export default class LoginSelector extends React.Component {
                         <div><img src={logo}/></div>
                         <Translate content="account.intro_text_title" component="h4"/>
                         <Translate unsafe content="account.intro_text_1" component="p" />
-
+                       
+                        <div className="shrink text-center">
+                            <div className="grp-menu-item overflow-visible account-drop-down">
+                                <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
+                                {flagDropdown}
+                                </div>
+                            </div>
+                        </div>
+                        
                         {!!childCount ? null :
                         <div className="button-group">
                             <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>

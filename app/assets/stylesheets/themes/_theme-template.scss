@@ -35,6 +35,20 @@ $account-background,
 $account-tabs-background
 ) {
 
+  .fz_12{
+    font-size: 12px;
+  }
+
+  .spinner-button-circle .circle-wrapper{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 7px;
+    margin-top: -2px;
+    .circle:before{
+      background-color: #fff;
+    }
+  }
+
     .font-secondary {
         color: $secondary-text-color;
     }
@@ -320,7 +334,7 @@ $account-tabs-background
                 background-color: $bg-color;
             }
 
-            span.caret {
+            div.hamburger {
                 color: $link-text-color;
             }
         }

@@ -270,12 +270,6 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
         if(base && quote) {
             bidRows = combinedBids
-            .filter(a => {
-                if (this.state.showAllBids || combinedBids.length <= rowCount) {
-                    return true;
-                }
-                return a.getPrice() >= highestBid.getPrice() / 5;
-            })
             .map((order, index) => {
                 return (horizontal ?
                     <OrderBookRowHorizontal
@@ -301,13 +295,7 @@ class OrderBook extends React.Component {
                 );
             });
 
-            let tempAsks = combinedAsks
-            .filter(a => {
-                if (this.state.showAllAsks || combinedBids.length <= rowCount) {
-                    return true;
-                }
-                return a.getPrice() <= lowestAsk.getPrice() * 5;
-            });
+            let tempAsks = combinedAsks;
             if (!horizontal) {
                 tempAsks.sort((a,b) => {
                     return b.getPrice() - a.getPrice();
