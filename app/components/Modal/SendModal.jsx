@@ -411,11 +411,9 @@ export default class SendModal extends React.Component {
 
         const logo = require("assets/logo-ico-blue.png");
         let tabIndex = 1;
-        
-        let controlledUsers = [
-           
-        ];
-        
+       
+        let greenAccounts = AccountStore.getState().linkedAccounts.toArray(); 
+       
         return (
             <BaseModal id="send_modal" overlay={true} ref="send_modal">
                 <div className="grid-block vertical no-overflow">
@@ -445,7 +443,7 @@ export default class SendModal extends React.Component {
                                     onChange={this.toChanged.bind(this)}
                                     onAccountChanged={this.onToAccountChanged.bind(this)}
                                     size={60}
-                                    typeahead={controlledUsers}
+                                    typeahead={greenAccounts}
                                     tabIndex={tabIndex++}
                                     hideImage
                                 />
