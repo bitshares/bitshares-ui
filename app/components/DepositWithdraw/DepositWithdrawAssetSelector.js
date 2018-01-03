@@ -9,18 +9,19 @@ import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 
 class DepositWithdrawAssetSelector  extends React.Component {
-   constructor (props) {
+    constructor (props) {
         super(props);
     }
 
     render(){
         const { props } = this;
+        let idMap = {};
 
         let getCoinOption = (item) => {
             /* Gateway Specific Settings */
             let gateway;
             let backedCoin;
-
+            
             if(item.intermediateAccount && (item.intermediateAccount == "openledger-dex" || item.intermediateAccount == "openledger-wallet")) {
                 gateway = "OPEN";
                 backedCoin = item.backingCoinType;
@@ -32,12 +33,18 @@ class DepositWithdrawAssetSelector  extends React.Component {
                 console.log(item);
             }
             
-            return { id: item.symbol, label: backedCoin, gateway: gateway };
+            // Return null if backedCoin is already stored
+            if(!idMap[backedCoin]) {
+                idMap[backedCoin] = true;
+                return { id: backedCoin, label: backedCoin, gateway: gateway };
+            } else {
+                return null;
+            }
         };
 
-        let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
+        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; });
 
-        return <TypeAhead items={coinItems} {...this.props} />
+        return <TypeAhead items={coinItems} {...this.props} />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
