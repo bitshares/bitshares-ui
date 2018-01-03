@@ -426,6 +426,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_conversion: null,
             conversion_memo: null,
 
+            // announcements data
             announcements: []
         };
     }
@@ -442,17 +443,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     .then(response => response.json());
 
         Promise.resolve(announcements_promise).then((result) => {
-            this.state.announcements = result;
-            this.state.announcements.sort((a, b) => {
+
+            result.sort((a, b) => {
                 if (a.priority < b.priority)
                     return -1;
                 if (a.priority > b.priority)
                     return 1;
                 return 0;
             });
+
+            this.setState({
+                announcements: result
+            });
+
         })
 		.catch((error) => {
-            this.state.announcements = [];
+            this.setState( {
+                announcements: []
+            });
 		});
 
         // get basic data from blocktrades
