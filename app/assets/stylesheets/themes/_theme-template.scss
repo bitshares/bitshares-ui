@@ -315,7 +315,7 @@ $account-tabs-background
 
         div.dropdown-wrapper {
             > li {
-                .icon > svg rect {
+                .icon.hamburger > svg rect {
                     fill: $account-dimmed;
                 }
 
@@ -339,7 +339,7 @@ $account-tabs-background
             }
 
             > li {
-                .icon > svg rect {
+                .icon.hamburger > svg rect {
                     fill: $link-text-color;
                 }
             }
