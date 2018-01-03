@@ -315,6 +315,10 @@ $account-tabs-background
 
         div.dropdown-wrapper {
             > li {
+                .icon > svg rect {
+                    fill: $account-dimmed;
+                }
+
                 > div.table-cell {
                     &:nth-child(1):hover {
                         background-color: $bg-color;
@@ -334,8 +338,10 @@ $account-tabs-background
                 background-color: $bg-color;
             }
 
-            div.hamburger {
-                color: $link-text-color;
+            > li {
+                .icon > svg rect {
+                    fill: $link-text-color;
+                }
             }
         }
 
