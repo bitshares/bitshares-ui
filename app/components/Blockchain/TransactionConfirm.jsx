@@ -48,6 +48,10 @@ class TransactionConfirm extends React.Component {
         } else {
             TransactionConfirmActions.broadcast(this.props.transaction, this.props.resolve, this.props.reject);
         }
+
+        // This needs to be synchronous or everything gets unsubscribed
+        // from componentWillUnmount before the message is sent
+        PubSub.publishSync("transaction_confirm_modal", "confirm");
     }
 
     onCloseClick(e) {
