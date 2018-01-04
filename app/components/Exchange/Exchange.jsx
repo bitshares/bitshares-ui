@@ -1118,194 +1118,193 @@ class Exchange extends React.Component {
             <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
                     {/* Main vertical block with content */}
-
-                    {/* Left Column - Open Orders */}
-                    {leftOrderBook ? (
-                    <div className="grid-block left-column shrink no-overflow">
-                        {orderBook}
-                    </div>) : null}
-
-                    {/* Center Column */}
-                    <div style={{paddingTop: 0}} className={cnames("grid-block main-content vertical no-overflow")} >
-
+                    <div className="grid-block left-column no-padding no-margin no-overflow vertical">
                         {/* Top bar with info */}
-                        <ExchangeHeader
-                            quoteAsset={quoteAsset} baseAsset={baseAsset}
-                            hasPrediction={hasPrediction} starredMarkets={starredMarkets}
-                            lowestAsk={lowestAsk} highestBid={highestBid}
-                            lowestCallPrice={lowestCallPrice}
-                            showCallLimit={showCallLimit} feedPrice={feedPrice}
-                            marketReady={marketReady} latestPrice={latestPrice}
-                            showDepthChart={showDepthChart}
-                            onSelectIndicators={this._onSelectIndicators.bind(this)}
-                            marketStats={marketStats}
-                            onToggleCharts={this._toggleCharts.bind(this)}
-                            showVolumeChart={showVolumeChart}
-                        />
-
+                        <div className="grid-block vertical no-overflow no-padding no-margin" style={{height:"100px"}}>
+                            <ExchangeHeader
+                                quoteAsset={quoteAsset} baseAsset={baseAsset}
+                                hasPrediction={hasPrediction} starredMarkets={starredMarkets}
+                                lowestAsk={lowestAsk} highestBid={highestBid}
+                                lowestCallPrice={lowestCallPrice}
+                                showCallLimit={showCallLimit} feedPrice={feedPrice}
+                                marketReady={marketReady} latestPrice={latestPrice}
+                                showDepthChart={showDepthChart}
+                                onSelectIndicators={this._onSelectIndicators.bind(this)}
+                                marketStats={marketStats}
+                                onToggleCharts={this._toggleCharts.bind(this)}
+                                showVolumeChart={showVolumeChart}
+                            />
+                        </div>
+                
+                        {/* Center Column */}
+                        <div style={{paddingTop: 0}} className={cnames("grid-block right-column no-padding no-margin main-content no-overflow")} >
+                            
+                            {leftOrderBook ? (
+                            <div className="grid-block left-column shrink no-overflow">
+                                {orderBook}
+                            </div>) : null}
+                        
                         <div className="grid-block vertical no-padding ps-container" id="CenterContent" ref="center">
-                        {!showDepthChart ? (
-                            <div className="grid-block shrink no-overflow" id="market-charts" >
-                                {/* Price history chart */}
-                                <PriceChartD3
-                                    priceData={this.props.priceData}
-                                    volumeData={this.props.volumeData}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    height={height}
-                                    leftOrderBook={leftOrderBook}
-                                    marketReady={marketReady}
-                                    indicators={indicators}
-                                    indicatorSettings={indicatorSettings}
-                                    latest={latestPrice}
-                                    theme={this.props.settings.get("themes")}
-                                    zoom={this.state.currentPeriod}
-                                    tools={tools}
-                                    showVolumeChart={showVolumeChart}
-                                    enableChartClamp={enableChartClamp}
+                            {!showDepthChart ? (
+                                <div className="grid-block shrink no-overflow" id="market-charts" >
+                                    {/* Price history chart */}
+                                    <PriceChartD3
+                                        priceData={this.props.priceData}
+                                        volumeData={this.props.volumeData}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        height={height}
+                                        leftOrderBook={leftOrderBook}
+                                        marketReady={marketReady}
+                                        indicators={indicators}
+                                        indicatorSettings={indicatorSettings}
+                                        latest={latestPrice}
+                                        theme={this.props.settings.get("themes")}
+                                        zoom={this.state.currentPeriod}
+                                        tools={tools}
+                                        showVolumeChart={showVolumeChart}
+                                        enableChartClamp={enableChartClamp}
 
-                                    buckets={buckets} bucketSize={bucketSize}
-                                    currentPeriod={this.state.currentPeriod}
-                                    changeBucketSize={this._changeBucketSize.bind(this)}
-                                    changeZoomPeriod={this._changeZoomPeriod.bind(this)}
-                                    onSelectIndicators={this._onSelectIndicators.bind(this)}
-                                    onChangeIndicators={this._changeIndicator.bind(this)}
-                                    onChangeTool={(key) => {
-                                        let tools = cloneDeep(this.state.tools);
-                                        for (let k in tools) {
-                                            if (k === key) {
-                                                tools[k] = !tools[k];
-                                            } else {
-                                                tools[k] = false;
+                                        buckets={buckets} bucketSize={bucketSize}
+                                        currentPeriod={this.state.currentPeriod}
+                                        changeBucketSize={this._changeBucketSize.bind(this)}
+                                        changeZoomPeriod={this._changeZoomPeriod.bind(this)}
+                                        onSelectIndicators={this._onSelectIndicators.bind(this)}
+                                        onChangeIndicators={this._changeIndicator.bind(this)}
+                                        onChangeTool={(key) => {
+                                            let tools = cloneDeep(this.state.tools);
+                                            for (let k in tools) {
+                                                if (k === key) {
+                                                    tools[k] = !tools[k];
+                                                } else {
+                                                    tools[k] = false;
+                                                }
                                             }
-                                        }
-                                        this.setState({tools}, () => {
-                                            this.setState({tools: {fib: false, trendline: false}});
-                                        });
-                                    }}
-                                    onChangeChartHeight={this.onChangeChartHeight.bind(this)}
-                                    chartHeight={chartHeight}
-                                    onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
-                                    onToggleChartClamp={() => {SettingsActions.changeViewSetting({enableChartClamp: !enableChartClamp});}}
-                                    onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
-                                />
-                            </div>) : (
-                            <div className="grid-block vertical no-padding shrink" >
-                                <DepthHighChart
-                                    marketReady={marketReady}
-                                    orders={marketLimitOrders}
-                                    showCallLimit={showCallLimit}
-                                    call_orders={marketCallOrders}
-                                    flat_asks={flatAsks}
-                                    flat_bids={flatBids}
-                                    flat_calls={ showCallLimit ? flatCalls : []}
-                                    flat_settles={this.props.settings.get("showSettles") && flatSettles}
-                                    settles={marketSettleOrders}
-                                    invertedCalls={invertedCalls}
-                                    totalBids={totals.bid}
-                                    totalAsks={totals.ask}
-                                    base={base}
-                                    quote={quote}
-                                    height={height}
-                                    onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
-                                    spread={spread}
-                                    LCP={showCallLimit ? lowestCallPrice : null}
-                                    leftOrderBook={leftOrderBook}
-                                    hasPrediction={hasPrediction}
-                                    noFrame={false}
-                                    verticalOrderbook={leftOrderBook}
-                                    theme={this.props.settings.get("themes")}
-                                    centerRef={this.refs.center}
-                                />
-                            </div>)}
+                                            this.setState({tools}, () => {
+                                                this.setState({tools: {fib: false, trendline: false}});
+                                            });
+                                        }}
+                                        onChangeChartHeight={this.onChangeChartHeight.bind(this)}
+                                        chartHeight={chartHeight}
+                                        onToggleVolume={() => {SettingsActions.changeViewSetting({showVolumeChart: !showVolumeChart});}}
+                                        onToggleChartClamp={() => {SettingsActions.changeViewSetting({enableChartClamp: !enableChartClamp});}}
+                                        onChangeIndicatorSetting={this._changeIndicatorSetting.bind(this)}
+                                    />
+                                </div>) : (
+                                <div className="grid-block vertical no-padding shrink" >
+                                    <DepthHighChart
+                                        marketReady={marketReady}
+                                        orders={marketLimitOrders}
+                                        showCallLimit={showCallLimit}
+                                        call_orders={marketCallOrders}
+                                        flat_asks={flatAsks}
+                                        flat_bids={flatBids}
+                                        flat_calls={ showCallLimit ? flatCalls : []}
+                                        flat_settles={this.props.settings.get("showSettles") && flatSettles}
+                                        settles={marketSettleOrders}
+                                        invertedCalls={invertedCalls}
+                                        totalBids={totals.bid}
+                                        totalAsks={totals.ask}
+                                        base={base}
+                                        quote={quote}
+                                        height={height}
+                                        onClick={this._depthChartClick.bind(this, base, quote)}
+                                        settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
+                                        spread={spread}
+                                        LCP={showCallLimit ? lowestCallPrice : null}
+                                        leftOrderBook={leftOrderBook}
+                                        hasPrediction={hasPrediction}
+                                        noFrame={false}
+                                        verticalOrderbook={leftOrderBook}
+                                        theme={this.props.settings.get("themes")}
+                                        centerRef={this.refs.center}
+                                    />
+                                </div>)}
 
-                            <div className="grid-block no-overflow wrap shrink" >
-                                {hasPrediction ? <div className="small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><p>{description}</p></div> : null}
+                                <div className="grid-block no-overflow wrap shrink" >
+                                    {hasPrediction ? <div className="small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><p>{description}</p></div> : null}
 
-                                {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
-                                {buyForm}
-                                {sellForm}
+                                    {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
+                                    {buyForm}
+                                    {sellForm}
 
-                                <MarketHistory
-                                    className={cnames(
-                                        !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
-                                        "no-padding no-overflow middle-content small-12 medium-6 order-5 xlarge-order-3"
+                                    <MarketHistory
+                                        className={cnames(
+                                            !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
+                                            "no-padding no-overflow middle-content small-12 medium-6 order-5 xlarge-order-3"
+                                        )}
+                                        headerStyle={{paddingTop: 0}}
+                                        history={activeMarketHistory}
+                                        currentAccount={currentAccount}
+                                        myHistory={currentAccount.get("history")}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        notMyAccount={notMyAccount}
+                                    />
+
+                                    {!leftOrderBook ? orderBook : null}
+
+                                    <ConfirmOrderModal
+                                        type="buy"
+                                        ref="buy"
+                                        onForce={this._forceBuy.bind(this, "buy", buyFeeAsset, baseBalance, coreBalance)}
+                                        diff={buyDiff}
+                                        hasOrders={combinedAsks.length > 0}
+                                    />
+
+                                    <ConfirmOrderModal
+                                        type="sell"
+                                        ref="sell"
+                                        onForce={this._forceSell.bind(this, "sell", sellFeeAsset, quoteBalance, coreBalance)}
+                                        diff={sellDiff}
+                                        hasOrders={combinedBids.length > 0}
+                                    />
+
+                                    {marketLimitOrders.size > 0 && base && quote ? (
+                                    <MyOpenOrders
+                                        smallScreen={this.props.smallScreen}
+                                        className={cnames(
+                                            {disabled: notMyAccount},
+                                            !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
+                                            `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
+                                        )}
+                                        key="open_orders"
+                                        orders={marketLimitOrders}
+                                        currentAccount={currentAccount}
+                                        base={base}
+                                        quote={quote}
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                        onCancel={this._cancelLimitOrder.bind(this)}
+                                        flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
+                                        feedPrice={this.props.feedPrice}
+                                    />) : null}
+                                </div>
+
+
+                                {/* Settle Orders */}
+
+                                {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
+                                <OpenSettleOrders
+                                    key="settle_orders"
+                                    className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
+                                        `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
                                     )}
-                                    headerStyle={{paddingTop: 0}}
-                                    history={activeMarketHistory}
-                                    currentAccount={currentAccount}
-                                    myHistory={currentAccount.get("history")}
+                                    orders={marketSettleOrders}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    notMyAccount={notMyAccount}
-                                />
-
-                                {!leftOrderBook ? orderBook : null}
-
-                                <ConfirmOrderModal
-                                    type="buy"
-                                    ref="buy"
-                                    onForce={this._forceBuy.bind(this, "buy", buyFeeAsset, baseBalance, coreBalance)}
-                                    diff={buyDiff}
-                                    hasOrders={combinedAsks.length > 0}
-                                />
-
-                                <ConfirmOrderModal
-                                    type="sell"
-                                    ref="sell"
-                                    onForce={this._forceSell.bind(this, "sell", sellFeeAsset, quoteBalance, coreBalance)}
-                                    diff={sellDiff}
-                                    hasOrders={combinedBids.length > 0}
-                                />
-
-                                {marketLimitOrders.size > 0 && base && quote ? (
-                                <MyOpenOrders
-                                    smallScreen={this.props.smallScreen}
-                                    className={cnames(
-                                        {disabled: notMyAccount},
-                                        !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
-                                        `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
-                                    )}
-                                    key="open_orders"
-                                    orders={marketLimitOrders}
-                                    currentAccount={currentAccount}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    onCancel={this._cancelLimitOrder.bind(this)}
-                                    flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
-                                    feedPrice={this.props.feedPrice}
                                 />) : null}
-                            </div>
 
 
-                            {/* Settle Orders */}
-
-                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
-                            <OpenSettleOrders
-                                key="settle_orders"
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
-                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
-                                )}
-                                orders={marketSettleOrders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />) : null}
-
-
-                        </div>{ /* end CenterContent */}
-
-
-                    </div>{/* End of Main Content Column */}
-
+                            </div>{ /* end CenterContent */}
+                        </div>{/* End of Main Content Column */}
+                    </div>
                     {/* Right Column - Market History */}
                     <div className="grid-block shrink right-column no-overflow vertical show-for-medium" style={{paddingTop: 0, minWidth: 358, maxWidth: 400}}>
                         {/* Market History */}
@@ -1361,24 +1360,23 @@ class Exchange extends React.Component {
                                     theme={this.props.settings.get("themes")}
                                 /> : null}
                         </div>
+                        {!notMyAccount && quoteIsBitAsset  ?
+                            <BorrowModal
+                                ref="borrowQuote"
+                                quote_asset={quoteAsset.get("id")}
+                                backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                                account={currentAccount}
+                             /> : null}
+                        {!notMyAccount && baseIsBitAsset ?
+                            <BorrowModal
+                                ref="borrowBase"
+                                quote_asset={baseAsset.get("id")}
+                                backing_asset={baseAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                                account={currentAccount}
+                            /> : null}
+                        {/* End of Second Vertical Block */}
                     </div>
-
-                    {!notMyAccount && quoteIsBitAsset  ?
-                        <BorrowModal
-                            ref="borrowQuote"
-                            quote_asset={quoteAsset.get("id")}
-                            backing_asset={quoteAsset.getIn(["bitasset", "options", "short_backing_asset"])}
-                            account={currentAccount}
-                         /> : null}
-                    {!notMyAccount && baseIsBitAsset ?
-                        <BorrowModal
-                            ref="borrowBase"
-                            quote_asset={baseAsset.get("id")}
-                            backing_asset={baseAsset.getIn(["bitasset", "options", "short_backing_asset"])}
-                            account={currentAccount}
-                        /> : null}
-                {/* End of Second Vertical Block */}
-                </div>
+            </div>
         );
     }
 }
