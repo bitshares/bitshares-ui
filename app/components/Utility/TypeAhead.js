@@ -7,7 +7,7 @@ class TypeAhead extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            value: this.props.defaultValue,
+            value: this.props.defaultValue
         };
     }
 
@@ -37,7 +37,7 @@ class TypeAhead extends React.Component {
         const { value } = state;
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
-            <label className="left-label"><Translate content="gateway.asset" /></label>
+            {!!this.props.label ? <label className="left-label"><Translate content={this.props.label} /></label> : null}
             <Autocomplete
                 ref="autocomplete"
                 items={props.items || [
@@ -60,7 +60,7 @@ class TypeAhead extends React.Component {
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
             />
-            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
+        <Icon name="chevron-down" style={{position: "absolute", right: 10, top: !!this.props.label ? 35 : 7}} onClick={this.focus.bind(this)} />
         </div>;
     }
 }

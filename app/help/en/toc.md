@@ -1,4 +1,4 @@
-#### Table of Contents
+#### Help
 
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
