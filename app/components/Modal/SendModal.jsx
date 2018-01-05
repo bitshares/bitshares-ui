@@ -90,10 +90,6 @@ export default class SendModal extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-
-        var close_func = (name, msg) => { if (msg == "confirm") this.onClose(); };
-        ZfApi.subscribe("transaction_confirm_modal", close_func);
-
         this.setState({error: null});
         const {asset, amount} = this.state;
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
@@ -114,9 +110,7 @@ export default class SendModal extends React.Component {
             let msg = e.message ? e.message.split( '\n' )[1] || e.message : null;
             console.log( "error: ", e, msg);
             this.setState({error: msg});
-        }).finally( () => {
-          ZfApi.unsubscribe("transaction_confirm_modal", close_func);
-        });
+        } );
     }
 
     _initForm() {
