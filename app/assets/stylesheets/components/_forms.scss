@@ -60,7 +60,13 @@ div.account-image {
     display: block;
     flex: auto;
   }
-
+  
+  .tooltip{  
+    &:hover {
+      cursor:pointer;
+    }
+  }
+  
   .header-area {
       margin-left: 3.5rem;
   }

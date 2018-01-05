@@ -21,7 +21,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
             /* Gateway Specific Settings */
             let gateway;
             let backedCoin;
-            
+
             if(item.intermediateAccount && (item.intermediateAccount == "openledger-dex" || item.intermediateAccount == "openledger-wallet")) {
                 gateway = "OPEN";
                 backedCoin = item.backingCoinType;
@@ -32,7 +32,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
                 console.log("Not Found");
                 console.log(item);
             }
-            
+
             // Return null if backedCoin is already stored
             if(!idMap[backedCoin]) {
                 idMap[backedCoin] = true;
@@ -44,7 +44,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 
         let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; });
 
-        return <TypeAhead items={coinItems} {...this.props} />;
+        return <TypeAhead items={coinItems} {...this.props} label="gateway.asset" />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
