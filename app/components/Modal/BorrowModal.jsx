@@ -184,9 +184,18 @@ class BorrowModalContent extends React.Component {
     }
 
     _maximizeCollateral() {
-        let maximizedCollateral = Math.floor(
-          this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset) - 10
-        );
+        let currentPosition = this.props ? this._getCurrentPosition(this.props) : {};
+        let initialCollateral = 0;
+
+        if (currentPosition.collateral) {
+            initialCollateral = utils.get_asset_amount(currentPosition.collateral, this.props.backing_asset);
+        }
+
+        // Make sure we don't go over the maximum collateral ratio of
+        let maximizedCollateral = Math.floor(Math.min(
+          this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset) + initialCollateral - 10,
+          (this.state.short_amount / this._getFeedPrice()) * 1000.0
+        ));
 
         this._onCollateralChange(new Object({ amount: maximizedCollateral.toString() }));
     }
@@ -433,9 +442,6 @@ class BorrowModalContent extends React.Component {
                                     <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
                                     {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
                                 </div>
-                                <div className="text-right">
-                                    <div href className="button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
-                                </div>
                             </div>
                           ) : null}
                         <div className="no-padding grid-content button-group no-overflow">
@@ -444,6 +450,7 @@ class BorrowModalContent extends React.Component {
                             {/*<Trigger close={this.props.modalId}>
                                 <div className="button"><Translate content="account.perm.cancel" /></div>
                             </Trigger>*/}
+                            <div href className="float-right button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
                         </div>
                     </div>
                 </form>
