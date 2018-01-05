@@ -18,8 +18,14 @@
 
     .main-content {
         .top-bar {
-            border-bottom: 1px solid $border-color;
+            //border-bottom: 1px solid $border-color;
         }
+    }
+}
+    
+.show-for-large {
+    a {
+        color:white!important;
     }
 }
 
@@ -230,8 +236,9 @@ ul.market-stats {
 }
 
 .top-stats li {
-    border-right: 1px solid $border-color;
+    /*border-right: 1px solid $border-color;*/
     min-height: 42px;
+    margin-left:25px;
 }
 
 .bottom-stats li {

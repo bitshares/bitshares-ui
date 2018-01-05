@@ -1053,21 +1053,21 @@ $account-tabs-background
     li.stat.input {
         &:hover {background-color: lighten($panel-bg-color, 4%);}
     }
-    .stats .stat {
-        > span {
-            > span:first-of-type {
-                color: $primary-text-color;
-            }
-
-            > span.symbol-text {
-                color: #468EDE;
-            }
-        }
+    .stats .stressed-stat {
+        
+        padding: 10px 0;
+        font-size:14px;
+     
         &.is-call {
             >span > b {
                 color: $call-color;
             }
-        }
+        }        
+    }
+    
+    .stat-text {
+            font-size:11px;
+            color:gray;
     }
 
     .buy-sell-box {

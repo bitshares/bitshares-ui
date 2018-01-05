@@ -5,7 +5,7 @@ import utils from "common/utils";
 import cnames from "classnames";
 import ReactTooltip from "react-tooltip";
 
-export default class PriceStatWithLabel extends React.Component {
+export default class PriceStat extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -53,10 +53,8 @@ export default class PriceStatWithLabel extends React.Component {
         let changeComp = !change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null;
 
         return (
-            <li className={cnames("stat", this.props.className)} data-place="bottom" data-tip={toolTip}>
+            <li className={cnames("stressed-stat", this.props.className)} data-place="bottom" data-tip={toolTip}>
                 <span>
-                    {content ? <span><Translate content={content} />:</span> : null}
-                    <br/>
                     <b className="value stat-primary">
                         {!ready ? 0 : value}&nbsp;
                         {changeComp}
@@ -71,6 +69,7 @@ export default class PriceStatWithLabel extends React.Component {
                     </b>
                     <span className="symbol-text"><AssetName name={quote.get("symbol")} /></span>
                  </span> : null}
+                {content ? <div className="stat-text"><Translate content={content} /></div> : null}
             </li>
         );
     }
