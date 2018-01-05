@@ -72,11 +72,11 @@ class Tabs extends React.Component {
         contentClass: "",
         style: {}
     };
-    
+
     static contextTypes = {
         router: React.PropTypes.object.isRequired
     };
-    
+
     constructor(props) {
         super();
         this.state = {
@@ -114,18 +114,14 @@ class Tabs extends React.Component {
     }
 
     _changeTab(value,isLinkTo) {
-        
-        
-        console.log("tab value "+value+". isLinkTo="+isLinkTo)
-
         if (value === this.state.activeTab) return;
         // Persist current tab if desired
-        
+
         if (isLinkTo !== "") {
             this.context.router.push(isLinkTo);
             return;
         }
-        
+
         if (this.props.setting) {
             SettingsActions.changeViewSetting({
                 [this.props.setting]: value
