@@ -7,8 +7,9 @@ class TypeAhead extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            value: "",
+            value: props.value,
         }
+        
     }
 
     componentWillReceiveProps(nextProps){
@@ -37,7 +38,6 @@ class TypeAhead extends React.Component {
         const { value } = state;
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
-            <label className="left-label"><Translate content="gateway.symbol" /></label>
             <Autocomplete
                 ref="autocomplete"
                 items={props.items || [
@@ -59,7 +59,7 @@ class TypeAhead extends React.Component {
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
             />
-            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
+            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "7px"}} onClick={this.focus.bind(this)} />
         </div>
     }
 }
