@@ -1,9 +1,8 @@
 import React from "react";
 import { connect } from "alt-react";
-import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import { Apis } from "bitsharesjs-ws";
-import { settingsAPIs, rudexAPIs } from "api/apiConfig";
+import { rudexAPIs } from "api/apiConfig";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";

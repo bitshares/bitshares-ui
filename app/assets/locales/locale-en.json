@@ -1280,7 +1280,7 @@
       "gateway": "Gateway",
       "disabled": "Gateway service disabled",
       "wallet_error": "Gateway wallet disabled",
-      "select_gateway": "Please select a gateway opperator",
+      "select_gateway": "Please select a gateway operator",
       "address_generation_error": "Unable to generate address",
       "bts_transfer_description": "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
       "close": "Close",
