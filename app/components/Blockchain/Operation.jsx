@@ -23,10 +23,9 @@ const {operations} = grapheneChainTypes;
 require("./operations.scss");
 
 operations["create_room"] = 44;
-operations["create_room_2"] = 45;
-operations["buy_in"] = 46;
-operations["buy_out"] = 47;
-operations["game"] = 48;
+operations["buy_in"] = 45;
+operations["buy_out"] = 46;
+operations["game"] = 47;
 
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
@@ -207,14 +206,14 @@ class Operation extends React.Component {
 
              case "buy_out":
                 color = "success";
-
+                op[1].amount.amount = parseFloat(op[1].amount.amount * 100000);
                 column = (
                     <span className="right-td">
                         <TranslateWithLinks
                             string="operation.buy_out"
                             keys={[
                                 {type: "account", value: op[1].player, arg: "player"},
-                                {type: "amount", value: op[1].amount, arg: "amount", decimalOffset: op[1].amount.asset_id === "1.3.1" ? 4 : null},
+                                {type: "amount", value: op[1].amount, arg: "amount", decimalOffset: op[1].amount.asset_id === "1.3.0" ? 5 : null},
                                 {type: "account", value: op[1].game_server, arg: "game_server"}
                             ]}
                         />
