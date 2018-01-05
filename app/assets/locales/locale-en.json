@@ -36,6 +36,7 @@
     "exchange": "Exchange",
     "payments": "Send",
     "payments_beta": "Send (Beta)",
+    "payments_legacy": "Send (legacy)",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",

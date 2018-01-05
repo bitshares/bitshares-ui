@@ -1,4 +1,39 @@
 ---------------------------------------------------------------------
+Release 2.0.180105
+---------------------------------------------------------------------
+New features
+--------
+- #901: Add "Maximize Collateral" button to Borrow Modal.
+- Add new GDEX assets
+- #557 New Deposit Modal (beta)
+- #828: Clearly identify known accounts when sending
+- Update Help Page's Styleguide
+- Blocktrades Announcements
+- Change Caret To Burger (#931)
+- Moved language selection to account register page #883
+- Add South Africa API node
+- Add Kansas City, USA API Node
+
+Bug fixes
+--------
+- Fix for Issue #956
+- Fix #949: Change icon color to fit the theme
+- Show call price instead of market price in margin positions, fixes #921
+- Update russian translations
+- Fix #938: Add white background to qrcode
+- Fixed floating width of login/register modal #883
+- "undefined" when copy deposit address with CTRL+C
+- Fix #932: Remove filtering of orders with extreme prices
+- Fix #927: Inverting market assets
+- Remove Transwiser from CSP
+- Revise and update Chinese translation
+- Fix Issue #919
+- #823: Fixed exchange input filter events prevent from pasting data
+- Fix incorrect news publish date, part of #887
+- Bugfix: cleanup when fetch address error in gdex api (#886)
+- #733 - Open Order Assets
+
+---------------------------------------------------------------------
 Release 2.0.171219
 ---------------------------------------------------------------------
 New features
