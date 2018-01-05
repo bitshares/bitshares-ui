@@ -233,9 +233,6 @@ div.input-wrapper {
 #deposit_modal_new {
     .selectWrapper {
         border-radius: 5px;
-        border: 0px;
-        color: #e0e0e0;
-        background: #2b2d36;
     }
     .copyIcon { 
         padding: 0.3rem;    
@@ -248,8 +245,9 @@ div.input-wrapper {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
+            height: 650px;
             
-            .header {
+            .Modal__header {
                 text-align: center;
                 > img {
                     margin: 0px;
@@ -260,6 +258,10 @@ div.input-wrapper {
                     font-weight: bold;
                     margin-bottom: 0px;
                 }
+            }
+
+            .Modal__body {
+                height: 90%;
             }
             
             .container-row {
@@ -287,11 +289,10 @@ div.input-wrapper {
         
             .deposit-directly {
                 text-align: center;
-                p:nth-of-type(1) {
-                    color: $info-color;
+                > p:nth-of-type(1) {
                     font-size: 2rem;
                 }
-                p:nth-of-type(2) {
+                > p:nth-of-type(2) {
                     font-size: 0.8rem;
                     width: 70%;
                     margin-right: auto;
@@ -319,8 +320,8 @@ div.input-wrapper {
                         margin-bottom: 0.25rem;
                     }
                     div:nth-of-type(2) > div:nth-of-type(2) {
-                        font-size: 1.1rem;
-                        color: lightblue;
+                        font-size: 1.05rem;
+                        color: #337ab7;
                     }
                 }
             }

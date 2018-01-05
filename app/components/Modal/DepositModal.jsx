@@ -12,11 +12,14 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
+import ChainTypes from "../Utility/ChainTypes";
 
 class DepositModalContent extends DecimalChecker {
+    
     constructor() {
         super();
 
+        
         this.state = {
             depositAddress: "",
             selectedAsset: "BTS",
@@ -24,8 +27,8 @@ class DepositModalContent extends DecimalChecker {
             fetchingAddress: false,
             backingAsset: null,
             gatewayStatus: {
-                OPEN: { id: "OPEN", name: "OPENLEDGER", enabled: false, selected: false, support_url: "https://openledger.freshdesk.com" }, 
-                RUDEX: { id: "RUDEX", name: "RUDEX", enabled: false, selected: false, support_url: "https://rudex.freshdesk.com" }
+                OPEN: { id: "OPEN", name: "OPENLEDGER", enabled: false, selected: false, support_url: "https://wallet.bitshares.org/#/help/gateways/openledger" }, 
+                RUDEX: { id: "RUDEX", name: "RUDEX", enabled: false, selected: false, support_url: "https://wallet.bitshares.org/#/help/gateways/rudex" }
             }
         };
 
@@ -206,15 +209,16 @@ class DepositModalContent extends DecimalChecker {
         return (
             <div className="DepositModal">
                 <div className="canvas grid-block vertical no-overflow">
-                    <div className="header">
+                    <div className="Modal__header">
                         <img src={logo} /><br />
                         <p>
                             {usingGateway && account ?
-                                <Translate unsafe content="modal.deposit.header" accountName={account} />
+                                <Translate content="modal.deposit.header" account_name={<span className="send-name">{account}</span>} />
                                 : <Translate content="modal.deposit.header_short" />
                             }
                         </p>
                     </div>
+                    <div className="Modal__body">
                         <div className="container-row">
                             <div className="no-margin no-padding">
                                 <div className="inline-label input-wrapper">
@@ -237,10 +241,10 @@ class DepositModalContent extends DecimalChecker {
                                         </label>
 
                                         <div className="inline-label input-wrapper">
-                                            <select className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={this.onGatewayChanged.bind(this)}>
-                                                <option value="" key=""><Translate content="modal.deposit.select_gateway" /></option>
-                                                {gatewayStatus.RUDEX.enabled ? <option value="RUDEX" key="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
-                                                {gatewayStatus.OPEN.enabled ? <option value="OPEN" key="OPEN">{gatewayStatus.OPEN.name}</option> : null}
+                                            <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={this.onGatewayChanged.bind(this)}>
+                                                <Translate component="option" value="" content="modal.deposit.select_gateway" />
+                                                {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
+                                                {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}
                                             </select>
                                             <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "10px"}} />
                                         </div>
@@ -294,10 +298,13 @@ class DepositModalContent extends DecimalChecker {
                                 </p>
                             </div> 
                         : null}
-                    <div className="container-row" style={{paddingBottom: 35}}>
-                        <button className="ActionButton_Close" style={{width: "100%"}}onClick={this.onClose.bind(this)}>
-                            <Translate content="modal.deposit.close" />
-                        </button>
+                    </div>
+                    <div className="Modal__footer">
+                        <div className="container-row" style={{paddingBottom: 35}}>
+                            <button className="ActionButton_Close" style={{width: "100%"}}onClick={this.onClose.bind(this)}>
+                                <Translate content="modal.deposit.close" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -314,7 +321,6 @@ export default class DepositModal extends React.Component {
     }
     
     show() {
-        console.log(this.props.modalId);
         this.setState({open: true}, () => {
             ZfApi.publish(this.props.modalId, "open");
         });
@@ -326,9 +332,10 @@ export default class DepositModal extends React.Component {
 
     render() {
         return (
+            this.state.open ?
             <BaseModal style={{maxWidth: 500}} className={this.props.modalId} onClose={this.onClose.bind(this)} overlay={true} id={this.props.modalId}>
-                {this.state.open ? <DepositModalContent {...this.props} open={this.state.open} /> : null}
-            </BaseModal>
+                <DepositModalContent {...this.props} open={this.state.open} />
+            </BaseModal> : null
         );
     }
 }
