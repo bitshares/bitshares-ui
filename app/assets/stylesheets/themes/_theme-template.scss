@@ -117,6 +117,22 @@ $account-tabs-background
         color: $alert-color;
     }
 
+    .txtann.success {
+        color: $success-color;
+    }
+
+    .txtann.info {
+        color: $info-color;
+    }
+
+    .txtann.warning {
+        color: $warning-color;
+    }
+
+    .txtann.error {
+        color: $alert-color;
+    }
+
     // notification
 
     .notification {

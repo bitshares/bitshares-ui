@@ -96,6 +96,10 @@ button, .button {
 //   font-variant: small-caps;
 // }
 
+.txtann {
+  @include RobotoRegular;
+}
+
 .txtlabel {
   @include RobotoRegular;
   text-transform: uppercase;
