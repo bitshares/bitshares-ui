@@ -1334,10 +1334,11 @@
   },
   "gateway": {
     "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
-     "copy_memo": "Copy memo",
+    "copy_memo": "Copy memo",
     "please_generate_address": "Please, get new address ",
     "generate_new": "Get new address",
     "copy_address": "Copy address",
+    "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
     "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
@@ -1409,7 +1410,8 @@
       "support_block": "For support, please contact RuDEX at:",
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
       "min_amount_error": "Please enter number >= minimum",
-      "coming_soon": "Coming soon"
+      "coming_soon": "Coming soon",
+      "under_construction": "Under Construction"
     },
     "unavailable": "The gateway service for this asset is currently down, please try again later",
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
@@ -1449,7 +1451,6 @@
       "success":"success",
       "fail":"fail"
     }
-
   },
   "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."
