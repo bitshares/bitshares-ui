@@ -89,7 +89,7 @@ div.fm-container {
     }
 
     .SimpleTrade__copyIcon {
-        padding: 0.5rem;    
+        padding: 0.5rem;
         margin-right: 15px;
         background-color: rgb(65, 116, 184);
     }
@@ -185,7 +185,8 @@ div.fm-container {
 #simple_withdraw_modal,
 #simple_bridge_modal,
 #simple_bridge_modal_ask,
-#send_modal,
+#send_modal_header,
+#send_modal_portfolio,
 #deposit_modal_new {
     overflow: auto !important;
     max-width: 500px;
@@ -234,19 +235,19 @@ div.input-wrapper {
     .selectWrapper {
         border-radius: 5px;
     }
-    .copyIcon { 
-        padding: 0.3rem;    
+    .copyIcon {
+        padding: 0.3rem;
         vertical-align: middle;
         background-color: rgb(65, 116, 184);
     }
-    
+
     .DepositModal {
         .canvas {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
             height: 650px;
-            
+
             .Modal__header {
                 text-align: center;
                 > img {
@@ -263,7 +264,7 @@ div.input-wrapper {
             .Modal__body {
                 height: 90%;
             }
-            
+
             .container-row {
                 padding-bottom: 1rem;
             }
@@ -286,7 +287,7 @@ div.input-wrapper {
                 color: rgb(242, 242, 242);
                 background-color: rgb(245, 27, 27);
             }
-        
+
             .deposit-directly {
                 text-align: center;
                 > p:nth-of-type(1) {
@@ -302,14 +303,14 @@ div.input-wrapper {
             .deposit-info {
                 margin-left: 0.2rem;
                 overflow: "hidden";
-                
-                
+
+
 
                 > .maxDeposit {
                     font-weight: bold;
                     font-size: 0.9rem;
                 }
-                
+
                 .deposit-details {
                     text-align: left;
                     > .copyIcon {
@@ -326,11 +327,10 @@ div.input-wrapper {
                 }
             }
         }
-        
+
 
     }
     .close-button {
         display: none;
     }
 }
-
