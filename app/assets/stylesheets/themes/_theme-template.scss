@@ -873,11 +873,82 @@ $account-tabs-background
         color: $secondary-text-color;
     }
 
+    .help-content-layout div {
+        background-color: $bg-color !important;
+        .help-toc {
+            ul {
+                margin: 0px;
+                li {
+                    padding-top: 3px;
+                    padding-left: 5px;
+                    background: none;
+                    color: $secondary-text-color;
+                    a {
+                        color: $secondary-text-color;
+                    }
+                    a:hover {
+                        color: $light-text-color;
+                    }
+                    ul {
+                        margin-left: 1.1rem;
+                    }
+                }
+                li:hover {
+                    background-color: $header-color;
+                    a {
+                        color: $light-text-color;
+                    }
+                    a:hover {
+                        background-color: $header-color;
+                        color: $light-text-color;
+                    }
+                }
+            }
+            h4 {
+                color: $secondary-text-color;
+            }
+            a {
+                display: block;
+            }
+        }
+    }
+
     .help-content {
+        @include RobotoLight;
+        font-weight: 100;
+        padding: 10px;
+        p {
+            font-weight: 600;
+        }
+        ul {
+            list-style: none;
+        }
+        li {
+            @include image($bg-color);
+            background-size: 7px 10px;
+            padding-left: 12px;
+        }
+        a {
+            color: $link-text-color;
+        }
+        a:hover {
+            background-color: $link-text-color;
+            color: $bg-color;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            width: 100%;
+            background-color: $panel-bg-color;
+        }
         code {
             color: $primary-text-color;
             background-color: transparent;
             border-color: $dark-text-color;
+        }
+        blockquote {
+            color: $secondary-text-color;
+            border-left: 3px solid $panel-bg-color;
         }
     }
 
