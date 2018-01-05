@@ -56,6 +56,7 @@ class TypeAhead extends React.Component {
                     </div>
                 }
                 value={value}
+                selectOnBlur={this.props.selectOnBlur}
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
             />

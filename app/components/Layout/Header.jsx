@@ -485,7 +485,6 @@ class Header extends React.Component {
                 <DepositModal
                     ref="deposit_modal_new"
                     modalId="deposit_modal_new"
-                    asset="BTS" 
                     account={currentAccount}
                     backedCoins={this.props.backedCoins}
                 />

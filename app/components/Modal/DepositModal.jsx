@@ -3,8 +3,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
 import utils from "common/utils";
-import BindToChainState from "../Utility/BindToChainState";
-import {requestDepositAddress, validateAddress} from "common/blockTradesMethods";
+import {requestDepositAddress} from "common/blockTradesMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
@@ -12,17 +11,15 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
-import ChainTypes from "../Utility/ChainTypes";
 
 class DepositModalContent extends DecimalChecker {
     
     constructor() {
         super();
 
-        
         this.state = {
             depositAddress: "",
-            selectedAsset: "BTS",
+            selectedAsset: "",
             selectedGateway: null,
             fetchingAddress: false,
             backingAsset: null,
@@ -42,9 +39,12 @@ class DepositModalContent extends DecimalChecker {
 
     componentWillMount() {
         let {asset} = this.props;
-        let backedAsset = asset.split(".");
 
+        if(!asset) return;
+
+        let backedAsset = asset.split(".");
         let usingGateway = this.state.gatewayStatus[backedAsset[0]] ? true : false;
+
         if(usingGateway) {
             let assetName = backedAsset[1];
             let assetGateway = backedAsset[0];
@@ -195,6 +195,15 @@ class DepositModalContent extends DecimalChecker {
             depositAddress = { address: account };
         }
 
+        // Count available gateways
+        let nAvailableGateways = 0;
+        for (let g in gatewayStatus) {
+            this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
+                if(g == "OPEN" && selectedAsset == c.backingCoinType && c.depositAllowed && c.isAvailable) { nAvailableGateways++; }
+                if(g == "RUDEX" && selectedAsset == c.backingCoin && c.depositAllowed) { nAvailableGateways++; }
+            });
+        }
+
         const QR = depositAddress && depositAddress.address && !depositAddress.error ?
             <div className="QR"><QRCode size={140} value={depositAddress.address}/></div> :
             <div>
@@ -224,11 +233,12 @@ class DepositModalContent extends DecimalChecker {
                                 <div className="inline-label input-wrapper">
                                     <DepositWithdrawAssetSelector
                                         defaultValue={selectedAsset}
-                                        onSelect={this.onAssetSelected.bind(this)} />
+                                        onSelect={this.onAssetSelected.bind(this)} 
+                                        selectOnBlur />
                                 </div>
                             </div>
                         </div>
-                        {usingGateway ?
+                        {usingGateway && selectedAsset ?
                             <div className="container-row">
                                 <div className="no-margin no-padding">
                                     <section className="block-list">
@@ -237,12 +247,13 @@ class DepositModalContent extends DecimalChecker {
                                             <span className="floatRight error-msg">
                                                 {selectedGateway && !gatewayStatus[selectedGateway].enabled ? <Translate content="modal.deposit.disabled" /> : null}
                                                 {depositAddress && depositAddress.error ? <Translate content="modal.deposit.wallet_error" /> : null}
+                                                {!selectedGateway && nAvailableGateways == 0 ? <Translate content="modal.deposit.no_gateway_available" /> : null}
                                             </span>
                                         </label>
 
                                         <div className="inline-label input-wrapper">
                                             <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={this.onGatewayChanged.bind(this)}>
-                                                <Translate component="option" value="" content="modal.deposit.select_gateway" />
+                                                {!selectedGateway && nAvailableGateways != 0 ? <Translate component="option" value="" content="modal.deposit.select_gateway" /> : null}
                                                 {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
                                                 {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}
                                             </select>
@@ -311,7 +322,6 @@ class DepositModalContent extends DecimalChecker {
         );
     }
 }
-DepositModal = BindToChainState(DepositModal);
 
 export default class DepositModal extends React.Component {
     constructor() {
