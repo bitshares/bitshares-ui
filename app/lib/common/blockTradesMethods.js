@@ -62,6 +62,38 @@ export function getActiveWallets(url = (blockTradesAPIs.BASE_OL + blockTradesAPI
     });
 }
 
+export function getDepositAddress({coin, account, stateCallback}) {
+    let body = {
+        coin,
+        account
+    };
+
+    let body_string = JSON.stringify(body);
+
+    fetch( blockTradesAPIs.BASE_OL + "/simple-api/get-last-address", {
+        method:"POST",
+        headers: new Headers( { "Accept": "application/json", "Content-Type":"application/json" } ),
+        body: body_string
+    }).then(
+        data => {
+            data.json()
+        .then( json => {
+            let address = {"address": json.address, "memo": json.memo || null, error: json.error || null, loading: false};
+            if (stateCallback) stateCallback(address);
+        }, error => {
+             console.log( "error: ",error  );
+            if (stateCallback) stateCallback({"address": error.message, "memo": null});
+        });
+    }, error => {
+         console.log( "error: ",error  );
+        if (stateCallback) stateCallback({"address": error.message, "memo": null});
+
+    }).catch(err => {
+        console.log("fetch error:", err);
+    });
+}
+
+
 let depositRequests = {};
 export function requestDepositAddress({inputCoinType, outputCoinType, outputAddress, url = blockTradesAPIs.BASE_OL, stateCallback}) {
     let body = {

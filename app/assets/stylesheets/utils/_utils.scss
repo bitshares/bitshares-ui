@@ -15,3 +15,11 @@
   //not good in dark theme
   //border-color: lighten($color, $number);
 }
+
+@mixin image($color) {
+  @if $color == #FFF {
+    background: url(../ul-arrow-black.png) no-repeat left 8px;
+  } @else {
+    background: url(../ul-arrow.png) no-repeat left 8px;
+  }
+}

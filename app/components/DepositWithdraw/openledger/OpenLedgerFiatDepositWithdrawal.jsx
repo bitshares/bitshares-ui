@@ -181,7 +181,9 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
         if (!this.props.account || !this.props.issuer_account)
             return  <div></div>;
 
-        return      <table className="table">
+        return <div></div>
+
+     /*         <table className="table">
                         <thead>
                         <tr>
                             <th><Translate content="gateway.symbol" /></th>
@@ -216,7 +218,7 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
                                 deposit_allowed={this.state.allowedFiatCurrencies.deposit.indexOf("CNY") > -1}
                                 withdraw_allowed={this.state.allowedFiatCurrencies.withdraw.indexOf("CNY") > -1}/>
                         </tbody>
-                    </table>;
+                    </table>;*/
     }
 }; // OpenLedgerFiatDepositWithdrawal
 OpenLedgerFiatDepositWithdrawal = BindToChainState(OpenLedgerFiatDepositWithdrawal, {keep_updating:true});

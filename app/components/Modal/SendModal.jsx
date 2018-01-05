@@ -485,6 +485,7 @@ export default class SendModal extends React.Component {
                                             display_balance={balance_fee}
                                             tabIndex={tabIndex++}
                                             error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
+                                            scroll_length={2}
                                         />
                                     </div>
                                     {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
