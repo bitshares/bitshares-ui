@@ -1120,7 +1120,7 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
                     <div className="grid-block left-column no-padding no-margin no-overflow vertical">
                         {/* Top bar with info */}
-                        <div className="grid-block vertical no-overflow no-padding no-margin" style={{height:"100px"}}>
+                        <div className="grid-block main-content vertical no-overflow no-padding no-margin" style={{height:"100px"}}>
                             <ExchangeHeader
                                 quoteAsset={quoteAsset} baseAsset={baseAsset}
                                 hasPrediction={hasPrediction} starredMarkets={starredMarkets}
@@ -1137,7 +1137,7 @@ class Exchange extends React.Component {
                         </div>
                 
                         {/* Center Column */}
-                        <div style={{paddingTop: 0}} className={cnames("grid-block right-column no-padding no-margin main-content no-overflow")} >
+                        <div style={{paddingTop: 0}} className={cnames("grid-block no-padding no-margin main-content no-overflow")} >
                             
                             {leftOrderBook ? (
                             <div className="grid-block left-column shrink no-overflow">
