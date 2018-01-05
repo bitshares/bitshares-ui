@@ -13,6 +13,7 @@ import BlockTradesDepositAddressCache from "../../../lib/common/BlockTradesDepos
 import {requestDepositAddress} from "../../../lib/common/gdexMethods";
 import QRCode from "qrcode.react";
 import GdexWithdrawModal from "./GdexWithdrawModal";
+import counterpart from "counterpart";
 
 class GdexGatewayInfo extends React.Component {
     static propTypes = {
@@ -97,7 +98,10 @@ class GdexGatewayInfo extends React.Component {
 
     _copy(e) {
         try {
-            e.clipboardData.setData("text/plain", this.state.clipboardText);
+            if (this.state.clipboardText)
+                e.clipboardData.setData("text/plain", this.state.clipboardText);
+            else
+                e.clipboardData.setData("text/plain", counterpart.translate("gateway.use_copy_button").toUpperCase());
             e.preventDefault();
         } catch(err) {
             console.error(err);
