@@ -8,6 +8,8 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
+import DepositModal from "../Modal/DepositModal";
+import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -98,6 +100,13 @@ class Header extends React.Component {
         this.refs.send_modal.show();
         this._closeDropdown();
     }
+
+    _showDeposit(e) {
+        e.preventDefault();
+        this.refs.deposit_modal_new.show();
+        this._closeDropdown();
+    }
+
 
     _triggerMenu(e) {
         e.preventDefault();
@@ -397,10 +406,17 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="deposit" /></div>
                                             <div className="table-cell"><Translate content="gateway.deposit" /></div>
                                         </li>
+                                        
+                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._showDeposit.bind(this)}>
+                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                            <div className="table-cell"><Translate content="modal.deposit.submit_beta" /></div>
+                                        </li>
+
                                         <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
                                             <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
                                         </li>
+
 
                                         <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
                                             <div className="table-cell"><Icon size="2x" name="cogs" /></div>
@@ -465,6 +481,14 @@ class Header extends React.Component {
                 </div>
                 {/* Send modal */}
                 <SendModal ref="send_modal" from_name={currentAccount} />
+                {/* Deposit modal */}
+                <DepositModal
+                    ref="deposit_modal_new"
+                    modalId="deposit_modal_new"
+                    asset="BTS" 
+                    account={currentAccount}
+                    backedCoins={this.props.backedCoins}
+                />
             </div>
 
         );
@@ -474,11 +498,12 @@ class Header extends React.Component {
 
 export default connect(Header, {
     listenTo() {
-        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore];
+        return [AccountStore, WalletUnlockStore, WalletManagerStore, SettingsStore, GatewayStore];
     },
     getProps() {
         const chainID = Apis.instance().chain_id;
         return {
+            backedCoins: GatewayStore.getState().backedCoins,
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
             locked: WalletUnlockStore.getState().locked,

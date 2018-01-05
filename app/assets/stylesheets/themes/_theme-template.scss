@@ -573,7 +573,7 @@ $account-tabs-background
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"] {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"], select[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;

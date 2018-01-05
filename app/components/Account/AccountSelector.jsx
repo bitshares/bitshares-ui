@@ -36,7 +36,7 @@ class AccountSelector extends React.Component {
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: React.PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: React.PropTypes.array 
+        typeahead: React.PropTypes.array
     };
 
     static defaultProps = {
@@ -68,14 +68,14 @@ class AccountSelector extends React.Component {
     }
 
     onInputChanged(event) {
-        
+
         let value = null;
         if (typeof event === "string") {
             value = event;
         } else {
             value = event.target.value.trim();
         }
-        
+
         if (!this.props.allowUppercase) {
             value = value.toLowerCase();
         }
@@ -138,23 +138,23 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
-        let typeAheadAccounts = [];     
-            
-        let isGreenAccount = false;    
+        let typeAheadAccounts = [];
+
+        let isGreenAccount = false;
         let lookup_name = this.props.account ? this.props.account.get("name"):"";
-            
+
         if (this.props.typeahead) {
             this.props.typeahead.map(function(account){
                 typeAheadAccounts.push({id:account,label:account})
             });
-            
+
             isGreenAccount = this.props.typeahead.indexOf(lookup_name) !== -1;
-        }        
-        
+        }
+
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
             <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon className={""+(isGreenAccount? " green":"")} style={{position:"absolute",top:"-0.35em",right:".2em"}} name="user" /></span>
             : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="plus-circle" /></span>;
-        
+
         return (
             <div className="account-selector" style={this.props.style}>
                 <div className="content-area">
@@ -172,11 +172,11 @@ class AccountSelector extends React.Component {
                             this.props.hideImage ? null : <AccountImage size={{height: this.props.size || 80, width: this.props.size || 80}}
                                 account={this.props.account ? this.props.account.get("name") : null} custom_image={null}/>}
                                 {(typeof this.props.typeahead !== "undefined")?
-                                 <TypeAhead items={typeAheadAccounts} 
+                                 <TypeAhead items={typeAheadAccounts}
                                     style={{textTransform: "lowercase", fontVariant: "initial"}}
                                     name="username"
                                     id="username"
-                                    value={this.props.accountName || ""}
+                                    defaultValue={this.props.accountName || ""}
                                     placeholder={this.props.placeholder || counterpart.translate("account.name")}
                                     ref="user_input"
                                     onSelect={this.onInputChanged.bind(this)}
