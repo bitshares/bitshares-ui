@@ -50,23 +50,19 @@ export default class PriceStat extends React.Component {
         let value2 = volume2 ? utils.format_volume(volume2) :
             null;
 
-        let changeComp = !change ? null : change !== null ? <span className={changeClass}>&nbsp;{changeClass === "change-up" ? <span>&#8593;</span> : <span>&#8595;</span>}</span> : null;
-
         return (
             <li className={cnames("stressed-stat", this.props.className)} data-place="bottom" data-tip={toolTip}>
                 <span>
-                    <b className="value stat-primary">
+                    <span className="value stat-primary">
                         {!ready ? 0 : value}&nbsp;
-                        {changeComp}
-                    </b>
-                    <span className="symbol-text"><AssetName name={base.get("symbol")} />{quote && !volume ? <span>/<AssetName name={quote.get("symbol")} /></span> : null}</span>
+                    </span>
+                    <span className="symbol-text"><AssetName name={base.get("symbol")} /></span>
                 </span>
                 {typeof volume2 === "number" ? <span>
                     <span></span>
-                    <b className="value stat-primary">
+                    <span className="value stat-primary">
                         {!ready ? 0 : <span> / {value2}</span>}&nbsp;
-                        {changeComp}
-                    </b>
+                    </span>
                     <span className="symbol-text"><AssetName name={quote.get("symbol")} /></span>
                  </span> : null}
                 {content ? <div className="stat-text"><Translate content={content} /></div> : null}

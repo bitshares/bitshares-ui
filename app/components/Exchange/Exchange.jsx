@@ -1114,25 +1114,7 @@ class Exchange extends React.Component {
             />
         );
 
-        return (
-        <div>
-            <div className="no-overflow no-padding no-margin" style={{display:"flex",height:"100%","flexDirection":"column"}}>
-                    {/* Top bar with info */}
-                    <ExchangeHeader
-                        quoteAsset={quoteAsset} baseAsset={baseAsset}
-                        hasPrediction={hasPrediction} starredMarkets={starredMarkets}
-                        lowestAsk={lowestAsk} highestBid={highestBid}
-                        lowestCallPrice={lowestCallPrice}
-                        showCallLimit={showCallLimit} feedPrice={feedPrice}
-                        marketReady={marketReady} latestPrice={latestPrice}
-                        showDepthChart={showDepthChart}
-                        onSelectIndicators={this._onSelectIndicators.bind(this)}
-                        marketStats={marketStats}
-                        onToggleCharts={this._toggleCharts.bind(this)}
-                        showVolumeChart={showVolumeChart}
-                    />
-            </div>
-            <div className="grid-block page-layout market-layout">
+        return (<div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
                     {/* Main vertical block with content */}
 
@@ -1380,7 +1362,6 @@ class Exchange extends React.Component {
                         /> : null}
                 {/* End of Second Vertical Block */}
                 </div>
-            </div>
         );
     }
 }

@@ -1056,7 +1056,7 @@ $account-tabs-background
     .stats .stressed-stat {
         
         padding: 10px 0;
-        font-size:15px;
+        font-size:18px;
      
         &.is-call {
             >span > b {
@@ -1065,8 +1065,6 @@ $account-tabs-background
         }   
         
         &.daily_change {
-            font-size:16px;
-            
             &.positive {
                 color:$account-green!important;
             }

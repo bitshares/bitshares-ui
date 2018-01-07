@@ -79,7 +79,7 @@ export default class ExchangeHeader extends React.Component {
                                     <Translate component="div" className="stat-text" content="account.hour_24" />
                                 </li>
 
-                                {(volumeBase >= 0) ? <PriceStatWithLabel ready={marketReady} decimals={0} volume={true} price={volumeBase} className="column-hide-small" volume2={volumeQuote} base={baseAsset} quote={quoteAsset} content="exchange.volume_24"/> : null}
+                                {(volumeBase >= 0) ? <PriceStatWithLabel ready={marketReady} decimals={0} volume={true} price={volumeQuote} className="column-hide-small" base={quoteAsset} content="exchange.volume_24"/> : null}
 
                                 {!hasPrediction && feedPrice ?
                                 <PriceStatWithLabel toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="column-hide-small" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} content="exchange.settle"/> : null}
