@@ -71,10 +71,10 @@ export default class ExchangeHeader extends React.Component {
                                 {latestPrice ?
                                 <PriceStatWithLabel ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} content="exchange.latest"/> : null}
 
-                                <li className="stressed-stat daily_change">
+                                <li className={"stressed-stat daily_change " + dayChangeClass}>
                                     <span>
-                                    <b className={"value " + dayChangeClass}>{marketReady ? dayChange : 0}</b>
-                                    <span>%</span>
+                                    <b className="value">{marketReady ? dayChange : 0}</b>
+                                    <span> %</span>
                                     </span>
                                     <Translate component="div" className="stat-text" content="account.hour_24" />
                                 </li>

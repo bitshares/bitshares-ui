@@ -15,11 +15,15 @@
         padding-bottom: 0 !important;
         border-top: none;
     }
+}
 
-    .main-content {
-        .top-bar {
-            //border-bottom: 1px solid $border-color;
-        }
+.top-bar {        
+    .shuffle {
+        margin: 0 10px;
+    }
+
+    ul {
+        line-height:1.2;
     }
 }
     
