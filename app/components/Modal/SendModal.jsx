@@ -103,6 +103,7 @@ export default class SendModal extends React.Component {
             this.state.propose ? this.state.propose_account : null,
             this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
         ).then( () => {
+            this.onClose();
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.listen(this.onTrxIncluded);
         }).catch( e => {
@@ -110,8 +111,6 @@ export default class SendModal extends React.Component {
             console.log( "error: ", e, msg);
             this.setState({error: msg});
         } );
-
-        this.onClose();
     }
 
     _initForm() {
@@ -405,7 +404,7 @@ export default class SendModal extends React.Component {
         let propose_incomplete = propose && ! propose_account;
         const amountValue = parseFloat(String.prototype.replace.call(amount, /,/g, ""));
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isToAccountValid = to_account && to_account.get("name") === to_name && from_account !== to_account;
+        const isToAccountValid = to_account && to_account.get("name") === to_name;
         const isSendNotValid = !from_account || !isToAccountValid || !isAmountValid || !asset || from_error || propose_incomplete || balanceError || (!AccountStore.isMyAccount(from_account) && !propose);
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
