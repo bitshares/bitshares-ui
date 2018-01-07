@@ -1,20 +1,20 @@
 import React from "react";
 import { connect } from "alt-react";
-import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import { Apis } from "bitsharesjs-ws";
-import { settingsAPIs, rudexAPIs } from "api/apiConfig";
+import { rudexAPIs } from "api/apiConfig";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 
 class DepositWithdrawAssetSelector  extends React.Component {
-   constructor (props) {
+    constructor (props) {
         super(props);
     }
 
     render(){
         const { props } = this;
+        let idMap = {};
 
         let getCoinOption = (item) => {
             /* Gateway Specific Settings */
@@ -31,13 +31,19 @@ class DepositWithdrawAssetSelector  extends React.Component {
                 console.log("Not Found");
                 console.log(item);
             }
-            
-            return { id: item.symbol, label: backedCoin, gateway: gateway };
+
+            // Return null if backedCoin is already stored
+            if(!idMap[backedCoin]) {
+                idMap[backedCoin] = true;
+                return { id: backedCoin, label: backedCoin, gateway: gateway };
+            } else {
+                return null;
+            }
         };
 
-        let coinItems = props.openLedgerBackedCoins.map(getCoinOption).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption));
+        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; });
 
-        return <TypeAhead items={coinItems} {...this.props} />
+        return <TypeAhead items={coinItems} {...this.props} label="gateway.asset" />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
