@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------
+Release 2.0.180108
+---------------------------------------------------------------------
+New features
+--------
+- Add Winex gateway service (ETH, ETC, HSR)
+
+Bug fixes
+--------
+- #982: Clear send modal form inputs on closing
+- Increase precision of Collateral Slider in BorrowModal
+- Update Russian locale
+- #976 - Indicate clickable orderbook rows
+- #557 - Deposit Modal Fixes
+
+---------------------------------------------------------------------
 Release 2.0.180105
 ---------------------------------------------------------------------
 New features
