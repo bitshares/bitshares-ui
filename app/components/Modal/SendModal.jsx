@@ -60,15 +60,13 @@ export default class SendModal extends React.Component {
     show() {
         this.setState({open: true}, () => {
             ZfApi.publish(this.props.id, "open");
+            this._initForm();
         });
-        this._initForm();
     }
 
-    onClose() {
-        this.setState({open: false}, () => {
-            ZfApi.publish(this.props.id, "close");
-        });
+    onClose(publishClose = true) {
         this.setState({
+            open: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -85,6 +83,8 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {}
+        }, () => {
+            if (publishClose) ZfApi.publish(this.props.id, "close");
         });
     }
 
@@ -127,7 +127,6 @@ export default class SendModal extends React.Component {
             this.setState({from_name: currentAccount});
         }
 
-        console.log("_initForm", this.props.asset_id, this.state.asset_id);
         if (this.props.asset_id && this.state.asset_id !== this.props.asset_id) {
             let asset = ChainStore.getAsset(this.props.asset_id);
             if (asset) {
@@ -164,6 +163,8 @@ export default class SendModal extends React.Component {
                 }
             }
         }
+
+        if (!ns.open && !this.state.open) return false;
         return true;
     }
 
@@ -426,7 +427,7 @@ export default class SendModal extends React.Component {
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
         return (
-            <BaseModal id={this.props.id} className="send_modal" overlay={true}>
+            <BaseModal id={this.props.id} className="send_modal" overlay={true} onClose={this.onClose.bind(this, false)}>
                 <div className="grid-block vertical no-overflow">
                     <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
                         <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
@@ -443,7 +444,7 @@ export default class SendModal extends React.Component {
                             <Translate unsafe content="transfer.header_subheader" />
                         </div>
                     </div>
-                    <form noValidate>
+                    {this.state.open ? <form noValidate>
                         <div>
                             {/* T O */}
                             <div className="content-block">
@@ -546,7 +547,7 @@ export default class SendModal extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </form> : null}
                 </div>
             </BaseModal>
         );
