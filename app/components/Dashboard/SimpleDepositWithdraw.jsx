@@ -10,7 +10,6 @@ import AccountActions from "actions/AccountActions";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
 import {requestDepositAddress, validateAddress, WithdrawAddresses, getDepositAddress} from "common/blockTradesMethods";
-import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
@@ -40,7 +39,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
     constructor(props) {
         super();
-        console.log("constructor");
         this.state = {
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue:"",
