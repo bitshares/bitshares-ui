@@ -65,18 +65,16 @@ export default class SendModal extends React.Component {
     };
 
     show() {
-        this.setState({open: true}, () => {
+        this.setState({open: true, hidden: false}, () => {
             ZfApi.publish(this.props.id, "open");
+            this._initForm();
         });
-        this._initForm();
     }
 
-    onClose() {
+    onClose(publishClose = true) {
         ZfApi.unsubscribe("transaction_confirm_actions");
-        this.setState({open: false}, () => {
-            ZfApi.publish(this.props.id, "close");
-        });
         this.setState({
+            open: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -94,6 +92,8 @@ export default class SendModal extends React.Component {
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
             hidden: false
+        }, () => {
+            if (publishClose) ZfApi.publish(this.props.id, "close");
         });
     }
 
@@ -138,7 +138,6 @@ export default class SendModal extends React.Component {
             this.setState({from_name: currentAccount});
         }
 
-        console.log("_initForm", this.props.asset_id, this.state.asset_id);
         if (this.props.asset_id && this.state.asset_id !== this.props.asset_id) {
             let asset = ChainStore.getAsset(this.props.asset_id);
             if (asset) {
@@ -175,6 +174,8 @@ export default class SendModal extends React.Component {
                 }
             }
         }
+
+        if (!ns.open && !this.state.open) return false;
         return true;
     }
 
@@ -438,7 +439,7 @@ export default class SendModal extends React.Component {
 
         return (
             <div id="send_modal_wrapper" className={hidden ? "hide" : ""}>
-                <BaseModal id={this.props.id} className="send_modal" overlay={true}>
+                <BaseModal id={this.props.id} className="send_modal" overlay={true} onClose={this.onClose.bind(this, false)}>
                     <div className="grid-block vertical no-overflow">
                         <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
                             <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
@@ -450,12 +451,11 @@ export default class SendModal extends React.Component {
                                     <Translate unsafe content="modal.send.header_propose" with={{fromName: from_name}} />
                                 </div>
                             }
-
                             <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
                                 <Translate unsafe content="transfer.header_subheader" />
                             </div>
                         </div>
-                        <form noValidate>
+                        {this.state.open ? <form noValidate>
                             <div>
                                 {/* T O */}
                                 <div className="content-block">
@@ -471,6 +471,32 @@ export default class SendModal extends React.Component {
                                         hideImage
                                     />
                                 </div>
+
+                                <div className="content-block transfer-input">
+                                    {/*  A M O U N T  */}
+                                    <AmountSelector
+                                        label="transfer.amount"
+                                        amount={amount}
+                                        onChange={this.onAmountChanged.bind(this)}
+                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                        assets={asset_types}
+                                        display_balance={balance}
+                                        tabIndex={tabIndex++}
+                                    />
+                                </div>
+                                {/*  M E M O  */}
+                                <div className="content-block transfer-input">
+                                    {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
+                                    <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
+                                    <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                                    {/* warning */}
+                                    { this.state.propose ?
+                                        <div className="error-area" style={{position: "absolute"}}>
+                                            <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
+                                        </div>
+                                    :null}
+                                </div>
+
                                 <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
                                         {/*  F E E  */}
@@ -532,7 +558,7 @@ export default class SendModal extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </form> : null}
                     </div>
                 </BaseModal>
             </div>
