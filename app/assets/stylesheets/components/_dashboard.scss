@@ -89,7 +89,7 @@ div.fm-container {
     }
 
     .SimpleTrade__copyIcon {
-        padding: 0.5rem;    
+        padding: 0.5rem;
         margin-right: 15px;
         background-color: rgb(65, 116, 184);
     }
@@ -175,7 +175,8 @@ div.fm-container {
 #simple_deposit_modal_ask,
 #simple_withdraw_modal,
 #simple_bridge_modal,
-#simple_bridge_modal_ask {
+#simple_bridge_modal_ask,
+#deposit_modal_new {
     padding: 0;
 }
 
@@ -184,7 +185,10 @@ div.fm-container {
 #simple_withdraw_modal,
 #simple_bridge_modal,
 #simple_bridge_modal_ask,
-#send_modal {
+#send_modal,
+#send_modal_header,
+#send_modal_portfolio,
+#deposit_modal_new {
     overflow: auto !important;
     max-width: 500px;
 }
@@ -227,5 +231,108 @@ div.input-wrapper {
     }
 }
 
+// deposit Modal
+#deposit_modal_new {
+    .selectWrapper {
+        border-radius: 5px;
+    }
+    .copyIcon {
+        padding: 0.3rem;
+        vertical-align: middle;
+        background-color: rgb(65, 116, 184);
+    }
+
+    .DepositModal {
+        .canvas {
+            padding-top: 1rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            height: 650px;
+
+            .Modal__header {
+                text-align: center;
+                > img {
+                    margin: 0px;
+                    height: 80px;
+                }
+                > p {
+                    font-size: 1.8rem;
+                    font-weight: bold;
+                    margin-bottom: 0px;
+                }
+            }
+
+            .Modal__body {
+                height: 90%;
+            }
 
 
+            .container-row {
+                padding-bottom: 1rem;
+            }
+            .floatRight {
+                position: relative;
+                float: right;
+            }
+            .error-msg {
+                color: $alert-color;
+                text-transform: uppercase;
+            }
+
+            .QR > canvas {
+                background: white;
+                padding: 0.5rem;
+            }
+            .ActionButton_Close {
+                padding: 10px 40px 10px 40px;
+                border-radius: 5px 5px 5px 5px;
+                color: rgb(242, 242, 242);
+                background-color: rgb(245, 27, 27);
+            }
+
+            .deposit-directly {
+                text-align: center;
+                > p:nth-of-type(1) {
+                    font-size: 2rem;
+                }
+                > p:nth-of-type(2) {
+                    font-size: 0.8rem;
+                    width: 70%;
+                    margin-right: auto;
+                    margin-left: auto;
+                }
+            }
+            .deposit-info {
+                margin-left: 0.2rem;
+                overflow: "hidden";
+
+
+
+                > .maxDeposit {
+                    font-weight: bold;
+                    font-size: 0.9rem;
+                }
+
+                .deposit-details {
+                    text-align: left;
+                    > .copyIcon {
+                        margin-right: 15px;
+                    }
+                    div:nth-of-type(2) > div:nth-of-type(1) {
+                        font-size: 0.8rem;
+                        margin-bottom: 0.25rem;
+                    }
+                    div:nth-of-type(2) > div:nth-of-type(2) {
+                        font-size: 0.95rem;
+                        color: #337ab7;
+                    }
+                }
+            }
+        }
+
+
+    }
+    .close-button {
+        display: none;
+    }
+}

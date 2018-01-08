@@ -14,6 +14,7 @@ import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress} from "common/RuDexMethods";
 import { rudexAPIs } from "api/apiConfig";
 import utils from "common/utils";
+import counterpart from "counterpart";
 
 class RuDexGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -50,7 +51,10 @@ class RuDexGatewayDepositRequest extends React.Component {
 
     _copy(e) {
         try {
-            e.clipboardData.setData("text/plain", this.state.clipboardText);
+            if (this.state.clipboardText)
+                e.clipboardData.setData("text/plain", this.state.clipboardText);
+            else
+                e.clipboardData.setData("text/plain", counterpart.translate("gateway.use_copy_button").toUpperCase());
             e.preventDefault();
         } catch(err) {
             console.error(err);

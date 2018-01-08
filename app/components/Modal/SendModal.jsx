@@ -26,7 +26,7 @@ export default class SendModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = SendModal.getInitialState();
+        this.state = this.getInitialState(props);
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
@@ -41,7 +41,7 @@ export default class SendModal extends React.Component {
         });
     };
 
-    static getInitialState() {
+    getInitialState() {
         return {
             from_name: "",
             to_name: "",
@@ -66,7 +66,7 @@ export default class SendModal extends React.Component {
 
     show() {
         this.setState({open: true}, () => {
-            ZfApi.publish("send_modal", "open");
+            ZfApi.publish(this.props.id, "open");
         });
         this._initForm();
     }
@@ -74,7 +74,7 @@ export default class SendModal extends React.Component {
     onClose() {
         ZfApi.unsubscribe("transaction_confirm_actions");
         this.setState({open: false}, () => {
-            ZfApi.publish("send_modal", "close");
+            ZfApi.publish(this.props.id, "close");
         });
         this.setState({
             from_name: "",
@@ -136,6 +136,17 @@ export default class SendModal extends React.Component {
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name) {
             this.setState({from_name: currentAccount});
+        }
+
+        console.log("_initForm", this.props.asset_id, this.state.asset_id);
+        if (this.props.asset_id && this.state.asset_id !== this.props.asset_id) {
+            let asset = ChainStore.getAsset(this.props.asset_id);
+            if (asset) {
+                this.setState({
+                    asset_id: this.props.asset_id,
+                    asset
+                });
+            }
         }
     }
 
@@ -423,9 +434,11 @@ export default class SendModal extends React.Component {
         const logo = require("assets/logo-ico-blue.png");
         let tabIndex = 1;
 
+        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
+
         return (
             <div id="send_modal_wrapper" className={hidden ? "hide" : ""}>
-                <BaseModal id="send_modal" overlay={true} ref="send_modal">
+                <BaseModal id={this.props.id} className="send_modal" overlay={true}>
                     <div className="grid-block vertical no-overflow">
                         <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
                             <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
@@ -453,36 +466,11 @@ export default class SendModal extends React.Component {
                                         onChange={this.toChanged.bind(this)}
                                         onAccountChanged={this.onToAccountChanged.bind(this)}
                                         size={60}
+                                        typeahead={greenAccounts}
                                         tabIndex={tabIndex++}
                                         hideImage
                                     />
                                 </div>
-
-                                <div className="content-block transfer-input">
-                                    {/*  A M O U N T  */}
-                                    <AmountSelector
-                                        label="transfer.amount"
-                                        amount={amount}
-                                        onChange={this.onAmountChanged.bind(this)}
-                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                        assets={asset_types}
-                                        display_balance={balance}
-                                        tabIndex={tabIndex++}
-                                    />
-                                </div>
-                                {/*  M E M O  */}
-                                <div className="content-block transfer-input">
-                                    {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
-                                    <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
-                                    <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                                    {/* warning */}
-                                    { this.state.propose ?
-                                        <div className="error-area" style={{position: "absolute"}}>
-                                            <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
-                                        </div>
-                                    :null}
-                                </div>
-
                                 <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
                                         {/*  F E E  */}
@@ -497,6 +485,7 @@ export default class SendModal extends React.Component {
                                                 display_balance={balance_fee}
                                                 tabIndex={tabIndex++}
                                                 error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
+                                                scroll_length={2}
                                             />
                                         </div>
                                         {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
