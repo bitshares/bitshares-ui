@@ -16,6 +16,16 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
+export const widechainAPIs = {
+    BASE : "https://gateway.winex.pro/api/v0/ol/support",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    NEW_DEPOSIT_ADDRESS: "/new-deposit-address",
+    WITHDRAW_HISTORY:"/latelyWithdraw",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_HISTORY:"/latelyRecharge"
+};
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
