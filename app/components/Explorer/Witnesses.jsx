@@ -359,7 +359,7 @@ class Witnesses extends React.Component {
                                     </tr>
                                     <tr>
                                         <td><Translate content="explorer.witnesses.next_vote"/></td>
-                                        <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time)} /></td>
+                                        <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time + "Z")} /></td>
                                     </tr>
                                     <tr>
                                        <td> <Translate component="h4" content="markets.filter" /> </td>

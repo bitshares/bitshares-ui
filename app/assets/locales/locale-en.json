@@ -36,6 +36,7 @@
     "exchange": "Exchange",
     "payments": "Send",
     "payments_beta": "Send (Beta)",
+    "payments_legacy": "Send (legacy)",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",
@@ -91,7 +92,8 @@
     "over_limit": "The bridge does not have enough of the desired asset for this buy order",
     "propose_tip": "Propose another user to initiate a transaction",
     "follow_user": "You are following this user",
-    "follow_user_add": "Click to Follow this user"
+    "follow_user_add": "Click to Follow this user",
+    "gateway": "Gateways back desposits by 100% real assets"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -1002,7 +1004,7 @@
     "volume": "Volume",
     "vol_short": "Vol",
     "spread": "Spread",
-    "quantity": "Amount",
+    "quantity": "Quantity",
     "buy": "Buy",
     "buy_min": "Buy at least",
     "sell": "Sell",
@@ -1057,7 +1059,10 @@
     "show_star_2": "only",
     "quote": "Quote currency:",
     "search": "Search for more markets here",
-    "order_value": "Order value"
+    "price_market": "Market Price",
+    "description": "Description",
+    "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+    "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
   },
   "fees": {
     "title": "Fee Schedule"
@@ -1269,8 +1274,21 @@
       "submit": "Withdraw"
     },
     "deposit": {
+      "header": "Deposit to %(account_name)s",
+      "header_short": "Deposit",
+      "asset": "Asset",
+      "gateway": "Gateway",
+      "disabled": "Gateway service disabled",
+      "wallet_error": "Gateway wallet disabled",
+      "no_gateway_available": "No gateway available",
+      "select_gateway": "Please select a gateway operator",
+      "address_generation_error": "Unable to generate address",
+      "bts_transfer_description": "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
+      "close": "Close",
+      "cancel": "Cancel",
       "amount": "Amount to Deposit",
-      "submit": "Deposit"
+      "submit": "Deposit",
+      "submit_beta": "Deposit (beta)"
     },
     "convert": {
       "amount": "Amount to Convert",
@@ -1330,6 +1348,12 @@
     "id": "Proposal object id"
   },
   "gateway": {
+    "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+    "copy_memo": "Copy memo",
+    "please_generate_address": "Please, get new address ",
+    "generate_new": "Get new address",
+    "copy_address": "Copy address",
+    "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
     "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
@@ -1347,6 +1371,7 @@
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",
+    "asset": "Asset",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
     "deposit_address": "Deposit address",
@@ -1380,14 +1405,14 @@
     "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
     "intermediate": "Intermediate account",
     "asset_to_withdraw": "Asset to withdraw:",
-    "support_block": "For support, please contact OpenLedger at:",
+    "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	  "convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
-    "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
+    "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
     "meta": {
       "open_website": "Open Website"
     },
@@ -1401,7 +1426,8 @@
       "support_block": "For support, please contact RuDEX at:",
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
       "min_amount_error": "Please enter number >= minimum",
-      "coming_soon": "Coming soon"
+      "coming_soon": "Coming soon",
+      "under_construction": "Under Construction"
     },
     "unavailable": "The gateway service for this asset is currently down, please try again later",
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
@@ -1416,7 +1442,6 @@
       "register":"Agree",
       "notice": "Please check the agreement to continue"
     },
-    "deposit_to": "Please send your %(asset)s to the address below",
     "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
     "time": "Time",
     "info": "Info",
@@ -1442,7 +1467,6 @@
       "success":"success",
       "fail":"fail"
     }
-
   },
   "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."
