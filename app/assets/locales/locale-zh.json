@@ -1459,5 +1459,23 @@
         "errors": {
           "fetch": "获取新闻时发生错误……"
         }
-    }
+    },
+  "winex":
+	{
+		"gateway": {
+			"support_block": "获得客户支持，请联络 Winex:",
+			"fee":"网关手续费",
+			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回"
+
+		},
+		"withdraw": {
+			"winAmount": "最低提现数量:%(min_amount)s %(asset)s",
+			"finalNumber": "预计到账：%(final_number)s"
+		},
+		"transfer": {
+			"errors": {
+				"minWithdraw": "最低提币数量：%(min_amount)s"
+			}
+		}
+	}
 }
