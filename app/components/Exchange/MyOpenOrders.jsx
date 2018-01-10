@@ -275,7 +275,7 @@ class MyOpenOrders extends React.Component {
                 className={this.props.className}
             >
 
-                <div className="exchange-bordered small-12" style={{height: 266}}>
+                <div className="exchange-bordered small-12" style={{height: 206}}>
                     <div className="exchange-content-header">
                         <Translate content="exchange.my_orders" />
                     </div>

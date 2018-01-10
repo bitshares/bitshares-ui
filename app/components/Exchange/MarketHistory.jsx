@@ -161,7 +161,7 @@ class MarketHistory extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div className="exchange-bordered small-12" style={{height: 266}}>
+                <div className="exchange-bordered small-12" style={{height: 206}}>
                     <div style={this.props.headerStyle} className="grid-block shrink left-orderbook-header bottom-header">
                             <div className={cnames(myHistoryClass, {disabled: isNullAccount})} onClick={this._changeTab.bind(this, "my_history")} >
                                 <Translate content="exchange.my_history" />
@@ -185,9 +185,9 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{maxHeight: 210, overflow: "hidden"}}
+                        style={{maxHeight: 150, overflow: "hidden"}}
                     >
-                        <table className="table order-table text-right fixed-table market-right-padding">
+                        <table className="table order-table text-right fixed-table market-right-padding ">
                             <TransitionWrapper
                                 component="tbody"
                                 transitionName="newrow"

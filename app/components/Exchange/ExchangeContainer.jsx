@@ -91,6 +91,9 @@ class ExchangeContainer extends React.Component {
                         },
                         miniDepthChart: () => {
                             return SettingsStore.getState().viewSettings.get("miniDepthChart", true);
+                        },
+                        miniSettle: () => {
+                            return SettingsStore.getState().viewSettings.get("miniSettle", true);
                         }
                     }}
                   >
