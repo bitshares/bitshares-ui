@@ -29,6 +29,7 @@ import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import { checkFeeStatusAsync } from "common/trxHelper";
+import LoadingIndicator from "../LoadingIndicator";
 
 Highcharts.setOptions({
     global: {

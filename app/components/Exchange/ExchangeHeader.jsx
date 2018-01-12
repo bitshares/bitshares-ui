@@ -41,6 +41,7 @@ export default class ExchangeHeader extends React.Component {
         const dayChangeClass = parseFloat(dayChange) === 0 ? "" : parseFloat(dayChange) < 0 ? "negative" : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
+        const dayChangeWithSign = (dayChange>0)?"+"+dayChange:dayChange;
 
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
@@ -73,7 +74,7 @@ export default class ExchangeHeader extends React.Component {
 
                                 <li className={"stressed-stat daily_change " + dayChangeClass}>
                                     <span>
-                                    <b className="value">{marketReady ? dayChange : 0}</b>
+                                    <b className="value">{marketReady ? dayChangeWithSign : 0}</b>
                                     <span> %</span>
                                     </span>
                                     <Translate component="div" className="stat-text" content="account.hour_24" />
@@ -92,9 +93,7 @@ export default class ExchangeHeader extends React.Component {
                             </ul>
                             <ul className="market-stats stats top-stats">
                                 <li className="stat input clickable v-align" style={{padding: "3px 15px 0 15px"}} onClick={this.props.onToggleCharts}>
-                                    <div className="v-align indicators">
                                        {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
-                                    </div>
                                 </li>
                             </ul>
                         </div>

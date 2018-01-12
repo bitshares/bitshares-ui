@@ -17,7 +17,10 @@
     }
 }
 
-.top-bar {        
+.top-bar { 
+    
+    border-bottom: 1px solid grey;
+    
     .shuffle {
         margin: 0 10px;
     }
