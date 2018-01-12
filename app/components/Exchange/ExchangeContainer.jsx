@@ -192,29 +192,12 @@ class ExchangeSubscriber extends React.Component {
             this.setState({ sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}` });
         }
     }
-    
-    /*
-                <div className="no-overflow no-padding no-margin" style={{display:"flex",height:"100%","flexDirection":"column"}}>
-                    <ExchangeHeader
-                        quoteAsset={quoteAsset} baseAsset={baseAsset}
-                        hasPrediction={hasPrediction} starredMarkets={starredMarkets}
-                        lowestAsk={lowestAsk} highestBid={highestBid}
-                        lowestCallPrice={lowestCallPrice}
-                        showCallLimit={showCallLimit} feedPrice={feedPrice}
-                        marketReady={marketReady} latestPrice={latestPrice}
-                        showDepthChart={showDepthChart}
-                        onSelectIndicators={this._onSelectIndicators.bind(this)}
-                        marketStats={marketStats}
-                        onToggleCharts={this._toggleCharts.bind(this)}
-                        showVolumeChart={showVolumeChart}
-                    />
-            </div> */
+                
 
     render() {
-        return <div className="grid-block vertical">
-            {!this.props.marketReady ? <LoadingIndicator /> : null}
+        return (
             <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} isMyAccount={AccountStore.isMyAccount(this.props.currentAccount)}/>
-        </div>;
+        );
     }
 }
 
