@@ -1059,9 +1059,7 @@ $account-tabs-background
         font-size:18px;
      
         &.is-call {
-            >span > b {
-                color: $call-color;
-            }
+                color: $call-color!important;
         }   
         
         &.daily_change {
