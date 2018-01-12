@@ -1116,7 +1116,6 @@ class Exchange extends React.Component {
 
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
-            <div className="no-overflow no-padding no-margin" style={{display:"flex",height:"120px","flexDirection":"column"}}>
                     <ExchangeHeader
                         quoteAsset={quoteAsset} baseAsset={baseAsset}
                         hasPrediction={hasPrediction} starredMarkets={starredMarkets}
@@ -1130,7 +1129,6 @@ class Exchange extends React.Component {
                         onToggleCharts={this._toggleCharts.bind(this)}
                         showVolumeChart={showVolumeChart}
                     />
-            </div>
             <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
                     {/* Main vertical block with content */}
