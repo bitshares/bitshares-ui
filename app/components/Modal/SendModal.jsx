@@ -422,7 +422,7 @@ export default class SendModal extends React.Component {
         accountsList = accountsList.add(from_account);
 
         const logo = require("assets/logo-ico-blue.png");
-        let tabIndex = 1;
+        let tabIndex = 200;  // tabindex is applied globally irrespective of overlays, etc.  Make sure we're at the top
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
