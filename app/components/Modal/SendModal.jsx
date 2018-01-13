@@ -175,8 +175,7 @@ export default class SendModal extends React.Component {
             }
         }
 
-        if (!ns.open && !this.state.open) return false;
-        return true;
+        return ns.open;
     }
 
     componentWillReceiveProps(np) {
