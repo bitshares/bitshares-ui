@@ -35,6 +35,7 @@ class TypeAhead extends React.Component {
     render(){
         const { props, state } = this;
         const { value } = state;
+        const inputProps = props.tabIndex ? { tabIndex: props.tabIndex } : null;
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
             {!!this.props.label ? <label className="left-label"><Translate content={this.props.label} /></label> : null}
@@ -59,6 +60,7 @@ class TypeAhead extends React.Component {
                 selectOnBlur={this.props.selectOnBlur}
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
+                inputProps={inputProps}
             />
         <Icon name="chevron-down" style={{position: "absolute", right: 10, top: !!this.props.label ? 35 : 7}} onClick={this.focus.bind(this)} />
         </div>;
