@@ -183,6 +183,23 @@ class BorrowModalContent extends React.Component {
         this._setUpdatedPosition(newState);
     }
 
+    _maximizeCollateral() {
+        let currentPosition = this.props ? this._getCurrentPosition(this.props) : {};
+        let initialCollateral = 0;
+
+        if (currentPosition.collateral) {
+            initialCollateral = utils.get_asset_amount(currentPosition.collateral, this.props.backing_asset);
+        }
+
+        // Make sure we don't go over the maximum collateral ratio of
+        let maximizedCollateral = Math.floor(Math.min(
+          this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset) + initialCollateral - 10,
+          (this.state.short_amount / this._getFeedPrice()) * 1000.0
+        ));
+
+        this._onCollateralChange(new Object({ amount: maximizedCollateral.toString() }));
+    }
+
     _setUpdatedPosition(newState) {
         this.setState({
             newPosition: (parseFloat(newState.short_amount) / parseFloat(newState.collateral))
@@ -418,18 +435,22 @@ class BorrowModalContent extends React.Component {
                             {errors.collateral_balance ? <div style={{paddingTop: "0.5rem"}}>{errors.collateral_balance}</div> : null}
                         </div>
                         {!isPredictionMarket ? (
-                            <div className={collateralRatioClass}>
-                                <Translate component="label" content="borrow.coll_ratio" />
-                                <input min="0" max="6" step="0.05" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
-                                <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
-                                {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
-                            </div>) : null}
+                            <div>
+                                <div className={collateralRatioClass}>
+                                    <Translate component="label" content="borrow.coll_ratio" />
+                                    <input min="0" max="6" step="0.01" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
+                                    <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
+                                    {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
+                                </div>
+                            </div>
+                          ) : null}
                         <div className="no-padding grid-content button-group no-overflow">
                             <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
                             <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props));}} href className="button info"><Translate content="wallet.reset" /></div>
                             {/*<Trigger close={this.props.modalId}>
                                 <div className="button"><Translate content="account.perm.cancel" /></div>
                             </Trigger>*/}
+                            <div href className="float-right button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
                         </div>
                     </div>
                 </form>

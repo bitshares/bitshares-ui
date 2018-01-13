@@ -191,10 +191,11 @@ class MarginPosition extends React.Component {
                     />
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
-                    <EquivalentPrice
-                        forceDirection={false}
-                        fromAsset={co.call_price.base.asset_id}
-                        toAsset={co.call_price.quote.asset_id}
+                    <FormattedPrice
+                        base_amount={debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
+                        base_asset={co.call_price.quote.asset_id}
+                        quote_amount={debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
+                        quote_asset={co.call_price.base.asset_id}
                         hide_symbols
                     />
                 </td>

@@ -424,7 +424,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             allowed_mappings_for_deposit: null,
             allowed_mappings_for_withdraw: null,
             allowed_mappings_for_conversion: null,
-            conversion_memo: null
+            conversion_memo: null,
+
+            // announcements data
+            announcements: []
         };
     }
 
@@ -433,6 +436,32 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 		this.setState({
             url: checkUrl
         });
+
+        let announcements_url = checkUrl + "/announcements/enabled/trade";
+        let announcements_promise = fetch(announcements_url,
+                                        {method: 'get', headers: new Headers({"Accept": "application/json"})})
+                                    .then(response => response.json());
+
+        Promise.resolve(announcements_promise).then((result) => {
+
+            result.sort((a, b) => {
+                if (a.priority < b.priority)
+                    return -1;
+                if (a.priority > b.priority)
+                    return 1;
+                return 0;
+            });
+
+            this.setState({
+                announcements: result
+            });
+
+        })
+		.catch((error) => {
+            this.setState( {
+                announcements: []
+            });
+		});
 
         // get basic data from blocktrades
 		let coin_types_url = checkUrl + "/coins";
@@ -610,7 +639,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 				allowed_mappings_for_conversion : null
             });
 		});
-	}
+    }
 
     // functions for periodically updating our deposit limit and estimates
     updateEstimates()
@@ -1113,7 +1142,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (!this.props.account || !this.props.issuer_account || !this.props.gateway)
             return  <div></div>;
 
-        let deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
+        let announcements, deposit_body, deposit_header, withdraw_body, withdraw_header, conversion_body, conversion_header, withdraw_modal_id, conversion_modal_id;
 
         if (this.state.coin_info_request_state == this.coin_info_request_states.request_failed)
         {
@@ -1455,9 +1484,36 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 </tbody>;
             }
 
+            if (this.state.announcements.length > 0) {
+                announcements =
+                <div className="blocktrades-announcements-container">
+                    {this.state.announcements.map(function(data, index) {
+
+                        let add_color = 'txtann info';
+
+                        if (data.status === 10) {
+                            add_color = 'txtann error';
+                        } else if (data.status === 20) {
+                            add_color = 'txtann warning';
+                        } else if (data.status === 30) {
+                            add_color = 'txtann success';
+                        } else if (data.status === 40) {
+                            add_color = 'txtann info';
+                        }
+
+                        if (data.format === 1) {
+                            data.message.replace(/\r\n|\r|\n/g, '<br />');
+                        }
+
+                        return <div className={"blocktrades-announcements " + add_color} key={index}>{data.message}</div>;
+                    }, this)}
+                </div>;
+            }
+
             return (
                 <div>
                     <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.bridge_text" /></div>
+                    {announcements}
                     <table className="table">
                         {deposit_header}
                         {deposit_body}
