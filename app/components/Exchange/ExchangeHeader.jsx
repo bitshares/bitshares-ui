@@ -34,9 +34,6 @@ export default class ExchangeHeader extends React.Component {
     }
 
     changeVolumeBase() {
-
-        console.log("switch volume base . isLeft = "+this.state.volumeShowQuote)
-
         this.setState({
             volumeShowQuote: !this.state.volumeShowQuote
         });
