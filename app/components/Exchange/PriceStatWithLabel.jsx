@@ -51,7 +51,7 @@ export default class PriceStat extends React.Component {
             null;
 
         return (
-            <li className={cnames("stressed-stat", this.props.className)} data-place="bottom" data-tip={toolTip}>
+            <li className={cnames("stressed-stat", this.props.className)} onClick={this.props.onClick} data-place="bottom" data-tip={toolTip}>
                 <span>
                     <span className="value stat-primary">
                         {!ready ? 0 : value}&nbsp;
