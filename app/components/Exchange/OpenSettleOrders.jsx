@@ -100,32 +100,10 @@ class OpenSettleOrders extends React.Component {
             return null;
         }
 
-        return this.props.rawOnly ? (
+        return (
             <tbody ref="orders">
                 {activeOrders}
             </tbody>
-        ) : (
-            <div
-                key="open_orders"
-                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"
-            >
-                <div className="small-12 medium-6 large-6 xlarge-4 order-1" style={{paddingBottom: "1rem"}}>
-                    <div className="exchange-bordered">
-                        <div className="exchange-content-header">
-                            <Translate content="exchange.settle_orders" />
-                        </div>
-
-                        <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="orders">
-                            <table className="table order-table text-right table-hover">
-                                <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                                <tbody ref="orders">
-                                    {activeOrders}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         );
     }
 }

@@ -12,6 +12,7 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import { connect } from "alt-react";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import MarketHistory from "./MarketHistory";
 import AssetName from "../Utility/AssetName";
 import { ChainTypes as grapheneChainTypes } from "bitsharesjs/es";
 const {operations} = grapheneChainTypes;
@@ -21,20 +22,6 @@ import ReactTooltip from "react-tooltip";
 import getLocale from "browser-locale";
 import { ChainStore } from "bitsharesjs/es";
 import { LimitOrder, CallOrder } from "common/MarketClasses";
-
-
-/* Based of 
- - MarketHistory.jsx
- - MyOpenOrders.jsx
- - OpenSettleOrders.jsx
- - From Exchange.jsx */
-
-/* Active Tab Statuses:
- - my_order: User Open Orders (default)
- - my_history: User Transaction History
- - market_history: Market Transaction History
- - market_settle: Market Settle Orders
-*/
 
 class MarketDataTabs extends React.Component {
     constructor(props) {
@@ -127,8 +114,6 @@ class MarketDataTabs extends React.Component {
     render() {
         let {historyMarket, historyUser, userOrders, settleOrders, base, quote, baseSymbol, quoteSymbol, isNullAccount} = this.props;
         let {activeTab} = this.state;
-        let containerRowsHistoryUser = null;
-        let containerRowsHistoryMarket = null;
         let recentOpenOrdersCount = 0;
         let recentSettleCount = 0;
 
@@ -143,88 +128,6 @@ class MarketDataTabs extends React.Component {
             settleOrders.forEach(element => {
                 if(Date.now() < element.settlement_date) { recentSettleCount++; }
             });
-        }
-
-        if(historyUser && historyUser.size) {
-            let keyIndex = -1;
-            let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
-            containerRowsHistoryUser = historyUser.filter(a => {
-                let opType = a.getIn(["op", 0]);
-                return (opType === operations.fill_order);
-            }).filter(a => {
-                let quoteID = quote.get("id");
-                let baseID = base.get("id");
-                let pays = a.getIn(["op", 1, "pays", "asset_id"]);
-                let receives = a.getIn(["op", 1, "receives", "asset_id"]);
-                let hasQuote = quoteID === pays || quoteID === receives;
-                let hasBase = baseID === pays || baseID === receives;
-                return hasQuote && hasBase;
-            }).sort((a, b) => {
-                return b.get("block_num") - a.get("block_num");
-            }).map(trx => {
-                let order = trx.toJS().op[1];
-                keyIndex++;
-                let paysAsset, receivesAsset, isAsk = false;
-                if(order.pays.asset_id === base.get("id")) {
-                    paysAsset = base;
-                    receivesAsset = quote;
-                    isAsk = true;
-                } else {
-                    paysAsset = quote;
-                    receivesAsset = base;
-                }
-                let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
-                const block_num = trx.get("block_num");
-                return (
-                    <tr key={"my_history_" + keyIndex}>
-                        <td className={parsed_order.className}>
-                            <PriceText preFormattedPrice={parsed_order} />
-                        </td>
-                        <td>{parsed_order.receives}</td>
-                        <td>{parsed_order.pays}</td>
-                        <BlockDate component="td" block_number={block_num} tooltip />
-                    </tr>
-                );
-            }).toArray();
-        } 
-        
-        if(historyMarket && historyMarket.size) {
-            let index = 0;
-            let keyIndex = -1;
-            let flipped = base.get("id").split(".")[2] > quote.get("id").split(".")[2];
-            containerRowsHistoryMarket = historyMarket.filter(() => {
-                index++;
-                return index % 2 === 0;
-            })
-            .take(100)
-            .map(order => {
-                keyIndex++;
-                let paysAsset, receivesAsset, isAsk = false;
-                if (order.pays.asset_id === base.get("id")) {
-                    paysAsset = base;
-                    receivesAsset = quote;
-                    isAsk = true;
-                } else {
-                    paysAsset = quote;
-                    receivesAsset = base;
-                }
-                let parsed_order = market_utils.parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped);
-                
-                if(activeTab == "market_history") {
-                    return (
-                        <tr key={"market_history_" + keyIndex}>
-                            <td className={parsed_order.className}>
-                                <PriceText preFormattedPrice={parsed_order} />
-                            </td>
-                            <td>{parsed_order.receives}</td>
-                            <td>{parsed_order.pays}</td>
-                            <td className="tooltip" data-tip={new Date(order.time)}>
-                                {counterpart.localize(new Date(order.time), {type: "date", format: getLocale().toLowerCase().indexOf("en-us") !== -1 ? "market_history_us": "market_history"})}
-                            </td>
-                        </tr>
-                    );
-                }
-            }).toArray();
         }
 
         let headerClass = "mymarkets-header clickable";
@@ -244,10 +147,10 @@ class MarketDataTabs extends React.Component {
                             <Translate content="exchange.my_history" />
                         </div>
                         <div className={cnames(myOrdersClass)} onClick={this._changeTab.bind(this, "my_orders")}>
-                            <Translate content="exchange.my_orders" />&nbsp;({recentOpenOrdersCount})
+                            <Translate content="exchange.my_orders" />&nbsp;({recentOpenOrdersCount ? recentOpenOrdersCount : "0"})
                         </div>
                         <div className={cnames(marketSettleClass)} onClick={this._changeTab.bind(this, "settle_orders")}>
-                            <Translate content="exchange.settle_orders" />&nbsp;({recentSettleCount})
+                            <Translate content="exchange.settle_orders" />&nbsp;({recentSettleCount ? recentSettleCount : "0"})
                         </div>
                     </div>
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
@@ -280,12 +183,17 @@ class MarketDataTabs extends React.Component {
                     </div>
                     <div className={cnames("table-container grid-block market-right-padding-only no-overflow",{disabled: this.props.notMyAccount && activeTab == "my_orders"})} ref="history" style={{maxHeight: 210, overflow: "hidden"}}>
                         <table className={cnames("table order-table text-right fixed-table market-right-padding")}>
-                            {activeTab == "my_history" || activeTab == "market_history" || activeTab == "my_orders" ?
-                                <TransitionWrapper component="tbody" transitionName="newrow">
-                                    {activeTab == "my_history" ? containerRowsHistoryUser : null}
-                                    {activeTab == "market_history" ? containerRowsHistoryMarket : null}
-                                </TransitionWrapper>
-                            : null}
+                            {activeTab == "my_history" || activeTab == "market_history" ?
+                            <MarketHistory 
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                history={historyMarket}
+                                myHistory={historyUser}
+                                activeTab={activeTab} />
+                                : null}
+
                             {activeTab == "my_orders" && userOrders && userOrders.size ? 
                                 <MyOpenOrders 
                                     base={base}
@@ -295,7 +203,6 @@ class MarketDataTabs extends React.Component {
                                     orders={userOrders}
                                     currentAccount={this.props.currentAccount}
                                     onCancel={this.props.onCancelOrder.bind(this)}
-                                    rawOnly
                                 /> 
                             : null}
                             {activeTab == "settle_orders" && (base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
@@ -306,7 +213,6 @@ class MarketDataTabs extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    rawOnly
                                 />) : null}
                         </table>
                     </div>
