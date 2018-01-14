@@ -505,6 +505,7 @@ class AccountOverview extends React.Component {
                 if (balanceObject && (!balanceObject.get("balance") && !orders[index])) {
                     return false;
                 } else {
+                    console.log(balanceObject);
                     return true;
                 }
             });
@@ -667,6 +668,7 @@ class AccountOverview extends React.Component {
                                                 <td>
                                                     {totalValueText}
                                                 </td>
+                                                <td></td>
                                                 <td>{debtValue}</td>
                                                 <td className="column-hide-medium">{collateralValue}</td>
                                                 <td></td>
