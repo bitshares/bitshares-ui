@@ -14,7 +14,7 @@ import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset} from "common/MarketClasses";
+import {Asset, Price} from "common/MarketClasses";
 import { debounce } from "lodash";
 
 class GdexWithdrawModal extends React.Component {
