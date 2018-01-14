@@ -26,7 +26,7 @@ export default class SendModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = SendModal.getInitialState();
+        this.state = this.getInitialState(props);
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
@@ -35,7 +35,7 @@ export default class SendModal extends React.Component {
         this._checkBalance = this._checkBalance.bind(this);
     };
 
-    static getInitialState() {
+    getInitialState() {
         return {
             from_name: "",
             to_name: "",
@@ -59,16 +59,14 @@ export default class SendModal extends React.Component {
 
     show() {
         this.setState({open: true}, () => {
-            ZfApi.publish("send_modal", "open");
+            ZfApi.publish(this.props.id, "open");
+            this._initForm();
         });
-        this._initForm();
     }
 
-    onClose() {
-        this.setState({open: false}, () => {
-            ZfApi.publish("send_modal", "close");
-        });
+    onClose(publishClose = true) {
         this.setState({
+            open: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -85,6 +83,8 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {}
+        }, () => {
+            if (publishClose) ZfApi.publish(this.props.id, "close");
         });
     }
 
@@ -126,6 +126,16 @@ export default class SendModal extends React.Component {
         if (!this.state.from_name) {
             this.setState({from_name: currentAccount});
         }
+
+        if (this.props.asset_id && this.state.asset_id !== this.props.asset_id) {
+            let asset = ChainStore.getAsset(this.props.asset_id);
+            if (asset) {
+                this.setState({
+                    asset_id: this.props.asset_id,
+                    asset
+                });
+            }
+        }
     }
 
     componentWillMount() {
@@ -153,6 +163,8 @@ export default class SendModal extends React.Component {
                 }
             }
         }
+
+        if (!ns.open && !this.state.open) return false;
         return true;
     }
 
@@ -412,8 +424,10 @@ export default class SendModal extends React.Component {
         const logo = require("assets/logo-ico-blue.png");
         let tabIndex = 1;
 
+        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
+
         return (
-            <BaseModal id="send_modal" overlay={true} ref="send_modal">
+            <BaseModal id={this.props.id} className="send_modal" overlay={true} onClose={this.onClose.bind(this, false)}>
                 <div className="grid-block vertical no-overflow">
                     <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
                         <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
@@ -430,7 +444,7 @@ export default class SendModal extends React.Component {
                             <Translate unsafe content="transfer.header_subheader" />
                         </div>
                     </div>
-                    <form noValidate>
+                    {this.state.open ? <form noValidate>
                         <div>
                             {/* T O */}
                             <div className="content-block">
@@ -441,6 +455,7 @@ export default class SendModal extends React.Component {
                                     onChange={this.toChanged.bind(this)}
                                     onAccountChanged={this.onToAccountChanged.bind(this)}
                                     size={60}
+                                    typeahead={greenAccounts}
                                     tabIndex={tabIndex++}
                                     hideImage
                                 />
@@ -485,6 +500,7 @@ export default class SendModal extends React.Component {
                                             display_balance={balance_fee}
                                             tabIndex={tabIndex++}
                                             error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
+                                            scroll_length={2}
                                         />
                                     </div>
                                     {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
@@ -531,7 +547,7 @@ export default class SendModal extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </form> : null}
                 </div>
             </BaseModal>
         );
