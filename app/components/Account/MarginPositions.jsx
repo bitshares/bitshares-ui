@@ -94,29 +94,13 @@ class MarginPosition extends React.Component {
         if (account_balances) {
             account_balances.forEach((a, asset_type) => {
                 if (asset_type == row_asset_id) {
-                    console.log("found the asset");
-                    console.log(a);
-                    console.log("asset_type");
-                    console.log(asset_type);
                     let balanceObject = ChainStore.getObject(a);
-                    console.log("balance object");
-                    console.log(balanceObject);
-                    
-                    console.log("balance");
-                    console.log(balanceObject.get("balance"));
 
                     // get the balance
                     balance = balanceObject.get("balance");
                 }
             });
         }
-
-        if (balance == 0) {
-            console.log("balance is 0");
-            return 0;
-        }
-
-        console.log("balance returned: " + balance);
 
         // it's possible that the account doesn't hold 
         // any of the asset here

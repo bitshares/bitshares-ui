@@ -505,7 +505,6 @@ class AccountOverview extends React.Component {
                 if (balanceObject && (!balanceObject.get("balance") && !orders[index])) {
                     return false;
                 } else {
-                    console.log(balanceObject);
                     return true;
                 }
             });
