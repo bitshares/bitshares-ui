@@ -42,6 +42,7 @@ class GdexWithdrawModal extends React.Component {
             withdraw_address_first: true,
             empty_withdraw_value: false,
             below_minumum_withdraw_value: false,
+            precision_error: false,
             memo_error: false,
             from_account: props.account,
             fee_asset_id: "1.3.0",
@@ -235,6 +236,22 @@ class GdexWithdrawModal extends React.Component {
                 });
             });
     }
+    _checkPrecision(){
+        let {withdraw_amount} = this.state;
+        let {output_coin_precision} = this.props;
+        if(output_coin_precision=== "undefined") return;
+        if(typeof withdraw_amount !== "string") withdraw_amount = withdraw_amount.toString();
+        withdraw_amount = withdraw_amount.trim();
+        if(withdraw_amount.indexOf(".")===-1){
+            this.setState({"precision_error": false});
+            return;
+        }
+        if(withdraw_amount.length - withdraw_amount.indexOf(".") -1 > output_coin_precision){
+            this.setState({"precision_error": true});
+        } else{
+            this.setState({"precision_error": false});
+        }
+    }
 
     _checkBalance() {
         let {feeAmount, withdraw_amount} = this.state;
@@ -249,13 +266,16 @@ class GdexWithdrawModal extends React.Component {
         // balance is zero
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
+
         if (typeof withdraw_amount === "string") withdraw_amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
         if (typeof minWithdrawAmount === "string") minWithdrawAmount = parseFloat(String.prototype.replace.call(minWithdrawAmount, /,/g, ""));
         if(withdraw_amount< minWithdrawAmount){
             this.setState({below_minumum_withdraw_value: true});
+            return;
         } else{
             this.setState({below_minumum_withdraw_value: false});
         }
+        this._checkPrecision();
         return hasBalance;
     }
 
@@ -546,8 +566,10 @@ class GdexWithdrawModal extends React.Component {
                     />
                     {this.state.empty_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.valid" /></p>:null}
                     {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
-                    {this.state.below_minumum_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.minimum_amount"
-                                                                                                                                      amount={this.props.minWithdrawAmount} symbol={this.props.asset.get("symbol")}/></p>:null}
+                    {this.state.below_minumum_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}>
+                        <Translate content="transfer.errors.minimum_amount" amount={this.props.minWithdrawAmount} symbol={this.props.asset.get("symbol")}/></p>:null}
+                    {this.state.precision_error ? <p className="has-error no-margin" style={{paddingTop: 10}}>
+                        <Translate content="transfer.errors.precision"  precision={this.props.output_coin_precision} /></p>:null}
                 </div>
 
                 {/* Fee selection */}
@@ -603,7 +625,7 @@ class GdexWithdrawModal extends React.Component {
                 <div className="button-group">
 
                     <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.below_minumum_withdraw_value ||
-                    this.state.memo_error || this.state.error || this.state.balanceError ? (" disabled") : "")}>
+                    this.state.memo_error || this.state.error || this.state.balanceError  || this.state.precision_error ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 
