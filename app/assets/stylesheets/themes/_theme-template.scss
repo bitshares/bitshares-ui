@@ -258,6 +258,12 @@ $account-tabs-background
         }
 
     }
+    
+    .show-for-large {
+        a {
+            color: $light-text-color !important;
+        }
+    }
 
     .transfer-top {
         background-color: $light-panel-bg-color;
