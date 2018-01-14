@@ -39,10 +39,9 @@ class SettleOrderRow extends React.Component {
 
     render() {
         let {base, quote, order, showSymbols} = this.props;
-        let price = order.getPrice()*(1 + (order.offset_percent / (10000)));
+        let price = base.get("id") == "1.3.0" ? order.getPrice()/(1 + (order.offset_percent / (10000))) : order.getPrice()*(1 + (order.offset_percent / (10000)));
 
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
-
 
         return (
             <tr>
