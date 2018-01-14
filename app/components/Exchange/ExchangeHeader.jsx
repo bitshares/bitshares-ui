@@ -110,7 +110,7 @@ export default class ExchangeHeader extends React.Component {
                                                                         <PriceStatWithLabel toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="column-hide-medium is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.squeeze"/> : null}
                                 </ul>
                                 <ul className="market-stats stats top-stats">
-                                    <li className="stat input clickable" style={{}} onClick={this.props.onToggleCharts}>
+                                    <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
                                         {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
                                     </li>
                                 </ul>
