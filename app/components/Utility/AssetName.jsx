@@ -64,6 +64,10 @@ class AssetName extends React.Component {
 				replacedName = 'BR1M';
 			}
 
+			if (name === 'BRIDGE.SUBIX') {
+				replacedName = 'SUB1X';
+			}
+
 			if (prefix === 'bridge.') {
 				return (
 					<div
