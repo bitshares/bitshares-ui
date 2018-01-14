@@ -32,7 +32,11 @@ $account-primarytext,
 $account-dimmed,
 $account-border,
 $account-background,
-$account-tabs-background
+$account-tabs-background,
+$pulsate-green-start,
+$pulsate-green-end,
+$pulsate-red-start,
+$pulsate-red-end
 ) {
 
   .fz_12{
@@ -1472,6 +1476,37 @@ $account-tabs-background
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
+    
+    .pulsate {
+        
+        &.red {
+            animation: pulsate-red .5s ease-out;
+        }
+        
+        &.green {
+            animation: pulsate-green .5s ease-out;
+        }
+        
+        animation-iteration-count: 1; 
+    }
+    
+    @-webkit-keyframes pulsate-green {
+        0% { 
+            color: $pulsate-green-start;
+        }
+        100% { 
+            color: $pulsate-green-end;
+        }
+    }
+    @-webkit-keyframes pulsate-red {
+        0% { 
+            color: $pulsate-red-start;
+        }
+        100% { 
+            color: $pulsate-red-end;
+        }
+    }
+    
 }
 
 .midnightTheme .gate_fee .amount-selector {

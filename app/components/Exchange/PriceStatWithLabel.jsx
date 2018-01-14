@@ -5,12 +5,14 @@ import utils from "common/utils";
 import cnames from "classnames";
 import ReactTooltip from "react-tooltip";
 
-export default class PriceStat extends React.Component {
+export default class PriceStatWithLabel extends React.Component {
     constructor() {
         super();
         this.state = {
-            change: null
-        };
+            change: null,
+            curMarket: null,
+            marketChange: false
+        };        
     }
 
     shouldComponentUpdate(nextProps) {
@@ -24,11 +26,25 @@ export default class PriceStat extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        
+        let state = {
+            change: 0
+        };
+        
+        let {market} = nextProps;
+        
+        let checkMarketChange = this.state.curMarket !== market;
+        let marketChange = (this.state.curMarket == null)?false:checkMarketChange;        
+        
+        state["marketChange"] = marketChange;
+        state["curMarket"] = market;
+        state["prevAsset"] = this.state.marketAsset;
+        
         if (nextProps.ready && this.props.ready) {
-            this.setState({ change: parseFloat(nextProps.price) - parseFloat(this.props.price) });
-        } else {
-            this.setState({ change: 0 });
+            state["change"] = parseFloat(nextProps.price) - parseFloat(this.props.price);
         }
+        
+        this.setState(state);
     }
 
     componentDidUpdate() {
@@ -36,35 +52,24 @@ export default class PriceStat extends React.Component {
     }
 
     render() {
-        let {base, quote, price, content, ready, volume, volume2, toolTip} = this.props;
-        let {change} = this.state;
-        let changeClass = null;
-        if (change && change !== null) {
-            changeClass = change > 0 ? "change-up" : "change-down";
-        }
+        let {base, quote, price, content, ready, volume, toolTip} = this.props;
+        let {change,marketChange} = this.state;
+        let changeClasses = null;
+        if (!marketChange && change && change !== null) {
+            changeClasses = change > 0 ? "pulsate green" : "pulsate red";
+        }        
 
         let value = !volume ? utils.price_text(price, quote, base) :
             utils.format_volume(price);
-
-
-        let value2 = volume2 ? utils.format_volume(volume2) :
-            null;
-
+    
         return (
-            <li className={cnames("stressed-stat", this.props.className)} onClick={this.props.onClick} data-place="bottom" data-tip={toolTip}>
+            <li className={cnames("stressed-stat", this.props.className,changeClasses)} onClick={this.props.onClick} data-place="bottom" data-tip={toolTip}>
                 <span>
                     <span className="value stat-primary">
                         {!ready ? 0 : value}&nbsp;
                     </span>
                     <span className="symbol-text"><AssetName name={base.get("symbol")} /></span>
                 </span>
-                {typeof volume2 === "number" ? <span>
-                    <span></span>
-                    <span className="value stat-primary">
-                        {!ready ? 0 : <span> / {value2}</span>}&nbsp;
-                    </span>
-                    <span className="symbol-text"><AssetName name={quote.get("symbol")} /></span>
-                 </span> : null}
                 {content ? <div className="stat-text"><Translate content={content} /></div> : null}
             </li>
         );
