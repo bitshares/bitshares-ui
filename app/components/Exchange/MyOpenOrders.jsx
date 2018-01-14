@@ -249,7 +249,11 @@ class MyOpenOrders extends React.Component {
             return a.props.price - b.props.price;
         });
 
-        return (
+        return this.props.rawOnly ? (
+            <TransitionWrapper component="tbody" transitionName="newrow">
+                {rows.length ? rows : emptyRow}
+            </TransitionWrapper>
+        ) : (
             <div
                 style={{marginBottom: "15px"}}
                 key="open_orders"
