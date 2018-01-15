@@ -9,7 +9,7 @@ import BaseModal from "../../Modal/BaseModal";
 import ChainTypes from "../../Utility/ChainTypes";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BalanceComponent from "../../Utility/BalanceComponent";
-import BlockTradesDepositAddressCache from "../../../lib/common/BlockTradesDepositAddressCache";
+import GdexCache from "../../../lib/common/GdexCache";
 import {requestDepositAddress} from "../../../lib/common/gdexMethods";
 import QRCode from "qrcode.react";
 import GdexWithdrawModal from "./GdexWithdrawModal";
@@ -36,7 +36,7 @@ class GdexGatewayInfo extends React.Component {
             receive_address: null,
             isAvailable:true
         };
-        this.deposit_address_cache = new BlockTradesDepositAddressCache();
+        this.deposit_address_cache = new GdexCache();
         this._copy = this._copy.bind(this);
         document.addEventListener("copy", this._copy);
     }
@@ -49,7 +49,7 @@ class GdexGatewayInfo extends React.Component {
         // The coin can only support withdraw sometime, no need to call get deposit address
         if(action != "deposit") return;
 
-        let cached_receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, user_name, coin.outerSymbol, coin.innerSymbol);
+        let cached_receive_address = this.deposit_address_cache.getCachedInputAddress(user_name, coin.outerSymbol, coin.innerSymbol);
         if(cached_receive_address && cached_receive_address!=this.state.receive_address) {
             this.setState({"receive_address":cached_receive_address});
             return;
@@ -64,7 +64,7 @@ class GdexGatewayInfo extends React.Component {
         }).then(data =>{
             if(data.address && data.address.address){
                 var receive_address = {"address":data.address.address,"memo":null};
-                _this.deposit_address_cache.cacheInputAddress(_this.props.gateway, user_name, coin.outerSymbol, coin.innerSymbol, receive_address.address, "");
+                _this.deposit_address_cache.cacheInputAddress(user_name, coin.outerSymbol, coin.innerSymbol, receive_address.address, "");
                 _this.setState({"receive_address":receive_address});
             } else{
             }
@@ -255,6 +255,7 @@ class GdexGatewayInfo extends React.Component {
                                 output_coin_symbol={coin.outerSymbol}
                                 output_supports_memos={coin.needMemo==1}
                                 minWithdrawAmount = {coin.minTransactionAmount}
+                                output_coin_precision = {coin.relationPrecision}
                                 memo_prefix={withdraw_memo_prefix}
                                 memo_rule={this.props.memo_rule}
                                 modal_id={withdraw_modal_id}
