@@ -97,7 +97,7 @@ class FeeGroup extends React.Component {
                             {title}
                             <td>{feeTypes[key]}</td>
                             <td style={{textAlign: "right"}}>{equivalentAmount}</td>
-                            <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                            <td style={{textAlign: "right"}}>{feeIdx !== 8 ? equivalentAmountLTM : null}</td>
                         </tr>
                     );
                 } else {
