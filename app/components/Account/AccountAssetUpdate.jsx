@@ -101,16 +101,44 @@ class AccountAssetUpdate extends React.Component {
             whitelist_authorities: props.asset.getIn(["options", "whitelist_authorities"]),
             blacklist_authorities: props.asset.getIn(["options", "blacklist_authorities"]),
             whitelist_markets: props.asset.getIn(["options", "whitelist_markets"]),
-            blacklist_markets: props.asset.getIn(["options", "blacklist_markets"])
+            blacklist_markets: props.asset.getIn(["options", "blacklist_markets"]),
+            feedProducers: props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+                return a.first();
+            }),
+            originalFeedProducers: props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+                return a.first();
+            }),
         };
     }
 
+    // Using JSON.stringify for (fast?) comparsion, could be improved, but seems enough here as the order is fixed
+    assetChanged() {
+        let s = this.state;
+        let p = this.resetState(this.props);
+        return JSON.stringify(s.update) !== JSON.stringify(p.update) ||
+               JSON.stringify(s.core_exchange_rate) !== JSON.stringify(p.core_exchange_rate) ||
+               (s.new_issuer_account_id !== null && s.new_issuer_account_id !== s.issuer) ||
+               JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
+               JSON.stringify(s.permissionBooleans) !== JSON.stringify(p.permissionBooleans) ||
+               JSON.stringify(s.whitelist_authorities) !== JSON.stringify(p.whitelist_authorities) ||
+               JSON.stringify(s.blacklist_authorities) !== JSON.stringify(p.blacklist_authorities) ||
+               JSON.stringify(s.whitelist_markets) !== JSON.stringify(p.whitelist_markets) ||
+               JSON.stringify(s.blacklist_markets) !== JSON.stringify(p.blacklist_markets);
+    }
 
+    pageChanged() {
+        let {bitasset_opts, original_bitasset_opts,
+            feedProducers, originalFeedProducers} = this.state;
+        return this.assetChanged() || 
+               JSON.stringify(bitasset_opts) !== JSON.stringify(original_bitasset_opts) ||
+               !utils.are_equal_shallow(feedProducers.toJS(), originalFeedProducers.toJS());
+    }
 
     _updateAsset(e) {
         e.preventDefault();
         let {update, issuer, new_issuer_account_id, core_exchange_rate, flagBooleans,
-            permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts} = this.state;
+            permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts,
+            feedProducers, originalFeedProducers} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
 
@@ -133,17 +161,14 @@ class AccountAssetUpdate extends React.Component {
         };
 
         AssetActions.updateAsset(issuer, new_issuer_account_id, update, core_exchange_rate, this.props.asset,
-            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths)
+            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths, 
+            feedProducers.toJS(), originalFeedProducers.toJS(), this.assetChanged())
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
                 ChainStore.getAsset(this.props.asset.get("id"));
             }, 3000);
         });
-    }
-
-    _hasChanged() {
-        return !utils.are_equal_shallow(this.state, this.resetState(this.props));
     }
 
     _reset(e) {
@@ -413,10 +438,20 @@ class AccountAssetUpdate extends React.Component {
         this.setState({[key]: current});
     }
 
+    onChangeFeedProducerList(action = "add", id) {
+        let current = this.state.feedProducers;
+        if (action === "add" && !current.includes(id)) {
+            current = current.push(id);
+        } else if (action === "remove" && current.includes(id)) {
+            current = current.remove(current.indexOf(id));
+        }
+        this.setState({feedProducers: current});
+    }
+
     render() {
         let {account, asset, core} = this.props;
-        let {errors, isValid, update, core_exchange_rate, flagBooleans,
-            permissionBooleans, fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
+        let {errors, isValid, update, core_exchange_rate, flagBooleans, permissionBooleans, 
+            fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset update fee
         let symbol = asset.get("symbol");
@@ -494,10 +529,10 @@ class AccountAssetUpdate extends React.Component {
 
         let confirmButtons = (
             <div>
-                <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
+                <button className={classnames("button", {disabled: !isValid || !this.pageChanged()})} onClick={this._updateAsset.bind(this)}>
                     <Translate content="header.update_asset" />
                 </button>
-                <button className="button" onClick={this._reset.bind(this)}>
+                <button className={classnames("button", {disabled: !this.pageChanged()})} onClick={this._reset.bind(this)}>
                     <Translate content="account.perm.reset" />
                 </button>
             </div>
@@ -910,6 +945,8 @@ class AccountAssetUpdate extends React.Component {
                                     account={this.props.account}
                                     witnessFed={flagBooleans["witness_fed_asset"]}
                                     committeeFed={flagBooleans["committee_fed_asset"]}
+                                    producers={this.state.feedProducers}
+                                    onChangeList={this.onChangeFeedProducerList.bind(this)}
                                 />
                             </Tab> : null}
                         </Tabs>
