@@ -1,25 +1,24 @@
 import React from "react";
 import {PropTypes} from "react";
-import {FormattedDate} from "react-intl";
+//import {FormattedDate} from "react-intl";
 import FormattedAsset from "../Utility/FormattedAsset";
-// import Ps from "perfect-scrollbar";
+//import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
-import AssetName from "../Utility/AssetName";
+//import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 
 class TableHeader extends React.Component {
 
     render() {
-        let {baseSymbol, quoteSymbol} = this.props;
 
         return (
             <thead>
                 <tr>
-                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /><br/>{baseSymbol ? <span className="header-sub-title">(<AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} />)</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /><br/>{quoteSymbol ? <span className="header-sub-title">(<AssetName name={quoteSymbol} />)</span> : null}</th>
-                    <th style={{textAlign: "right"}}><Translate content="transaction.settlement_date" /><br/><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
-            </tr>
+                    <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                    <th style={{textAlign: "right"}}><Translate content="transfer.amount" /></th>
+                    <th style={{textAlign: "right"}}><Translate content="transaction.settlement_date" /><span style={{visibility: "hidden"}} className="header-sub-title">d</span></th>
+				</tr>
             </thead>
         );
     }
@@ -48,9 +47,7 @@ class SettleOrderRow extends React.Component {
             <tr>
                 <td>{utils.format_number(order.getPrice(), quote.get("precision"))} {amountSymbol}</td>
                 <td><FormattedAsset amount={order[!order.isBid() ? "amountForSale" : "amountToReceive"]().getAmount()} asset={order[!order.isBid() ? "amountForSale" : "amountToReceive"]().asset_id} /></td>
-                <td>
-                    <TimeAgo time={order.settlement_date} />
-                </td>
+                <td><TimeAgo time={order.settlement_date} /><span style={{visibility: "hidden"}} className="">_</span></td>
             </tr>
         );
     }
@@ -95,27 +92,14 @@ class OpenSettleOrders extends React.Component {
             return null;
         }
 
-        return (
-            <div
-                key="open_orders"
-                className="grid-block no-overflow small-12 no-padding vertical medium-horizontal middle-content"
-            >
-                <div className="small-12 medium-6 large-6 xlarge-4 order-1" style={{paddingBottom: "1rem"}}>
-                    <div className="exchange-bordered">
-                        <div className="exchange-content-header">
-                            <Translate content="exchange.settle_orders" />
-                        </div>
-
-                        <div className="grid-block" style={{maxHeight: "400px", overflow: "hidden", }} ref="orders">
-                            <table className="table order-table text-right table-hover">
-                                <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                                <tbody ref="orders">
-                                    {activeOrders}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+		return (
+            <div key="open_orders" className="grid-block no-padding market-right-padding" ref="orders" style={{overflow: "hidden", maxHeight: 400}}>
+                    <table className="table order-table text-right table-hover">
+                        <TableHeader type="buy" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
+                        <tbody ref="orders">
+                            {activeOrders}
+                        </tbody>
+                    </table>
             </div>
         );
     }

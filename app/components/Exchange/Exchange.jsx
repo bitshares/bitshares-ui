@@ -868,6 +868,12 @@ class Exchange extends React.Component {
         return {isFrozen: false};
     }
 
+	_toggleSettle() {
+        SettingsActions.changeViewSetting({
+            miniSettle: !this.props.miniSettle
+        });
+    }
+
     _toggleMiniChart() {
         SettingsActions.changeViewSetting({
             miniDepthChart: !this.props.miniDepthChart
@@ -1285,22 +1291,6 @@ class Exchange extends React.Component {
                             </div>
 
 
-                            {/* Settle Orders */}
-
-                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
-                            <OpenSettleOrders
-                                key="settle_orders"
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
-                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
-                                )}
-                                orders={marketSettleOrders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />) : null}
-
-
                         </div>{ /* end CenterContent */}
 
 
@@ -1333,8 +1323,28 @@ class Exchange extends React.Component {
                                 current={`${quoteSymbol}_${baseSymbol}`}
                             />
                         </div>
-                        <div style={{padding: !this.props.miniDepthChart ? 0 : "0 0 40px 0"}} className="grid-block no-margin vertical shrink">
-                            <div onClick={this._toggleMiniChart.bind(this)} className="exchange-content-header clickable" style={{textAlign: "left", paddingRight: 10}}>{this.props.miniDepthChart ? <span>&#9660;</span> : <span>&#9650;</span>}</div>
+
+						<div style={{padding: !this.props.miniSettle ? 0 : "0 0 2px 0"}} className="grid-block no-margin vertical shrink">
+							<div onClick={this._toggleSettle.bind(this)} className="exchange-content-header clickable " style={{textAlign: "left", paddingRight: 10}}>{this.props.miniSettle ? <span>&#9660;</span> : <span>&#9650;</span>} <Translate content="exchange.settle_orders" /></div>
+
+							{/* Settle Orders */}
+							{((base.get("id") === "1.3.0" && this.props.miniSettle) || (quote.get("id") === "1.3.0" && this.props.miniSettle)) ?	(
+                            <OpenSettleOrders
+                                key="settle_orders"
+                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
+                                    "small-12 medium-6 no-padding align-spaced ps-container middle-content order-12"
+                                )}
+                                orders={marketSettleOrders}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                            />) : null}
+
+						</div>
+
+                        <div style={{padding: !this.props.miniDepthChart ? 0 : "0 0 6px 0"}} className="grid-block no-margin vertical shrink">
+                            <div onClick={this._toggleMiniChart.bind(this)} className="exchange-content-header clickable" style={{textAlign: "left", paddingRight: 10}}>{this.props.miniDepthChart ? <span>&#9660;</span> : <span>&#9650;</span>} <Translate content="exchange.order_depth" /></div>
                             {this.props.miniDepthChart ? <DepthHighChart
                                     marketReady={marketReady}
                                     orders={marketLimitOrders}
