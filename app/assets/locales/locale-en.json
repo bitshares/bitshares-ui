@@ -966,6 +966,7 @@
     "latency": "Latency"
   },
   "exchange": {
+    "trading_pair":"Trading pair",
     "chart_options": {
         "tools": "Tools",
         "title": "Indicators",

@@ -7,7 +7,6 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt-container";
 import Exchange from "./Exchange";
 import ChainTypes from "../Utility/ChainTypes";
-import LoadingIndicator from "../LoadingIndicator";
 import { EmitterInstance } from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
@@ -196,12 +195,12 @@ class ExchangeSubscriber extends React.Component {
             this.setState({ sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}` });
         }
     }
+                
 
     render() {
-        return <div className="grid-block vertical">
-            {!this.props.marketReady ? <LoadingIndicator /> : null}
+        return (
             <Exchange {...this.props} sub={this.state.sub} subToMarket={this._subToMarket} isMyAccount={AccountStore.isMyAccount(this.props.currentAccount)}/>
-        </div>;
+        );
     }
 }
 
