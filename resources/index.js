@@ -8,6 +8,11 @@
     var devHelper = require('./dev_helper');
     var windowStateKeeper = require('./window_state');
     var fs = require('fs');
+    require('./electron_context_menu')({
+        prepend: (params, browserWindow) => [{
+            label: 'Bitshares',
+        }]
+    });
     // var git = require("git-rev-sync");
 
     var mainWindow;
