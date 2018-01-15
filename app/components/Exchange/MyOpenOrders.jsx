@@ -269,32 +269,9 @@ class MyOpenOrders extends React.Component {
         });
 
         return (
-            <div
-                style={{marginBottom: "15px"}}
-                key="open_orders"
-                className={this.props.className}
-            >
-
-                <div className="exchange-bordered small-12" style={{height: 266}}>
-                    <div className="exchange-content-header">
-                        <Translate content="exchange.my_orders" />
-                    </div>
-                    <table className="table order-table table-hover">
-                        <TableHeader leftAlign type="sell" baseSymbol={baseSymbol} quoteSymbol={quoteSymbol}/>
-                    </table>
-
-                    <div className="grid-block no-padding market-right-padding" ref="asks" style={{overflow: "hidden", maxHeight: 200}}>
-                        <table style={{paddingBottom: 5}}  className="table order-table table-hover">
-                            <TransitionWrapper
-                                component="tbody"
-                                transitionName="newrow"
-                            >
-                                {rows.length ? rows : emptyRow}
-                            </TransitionWrapper>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <TransitionWrapper component="tbody" transitionName="newrow">
+                {rows.length ? rows : emptyRow}
+            </TransitionWrapper>
         );
     }
 }

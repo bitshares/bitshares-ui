@@ -1,9 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
-import { MyOpenOrders } from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
-import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
@@ -21,14 +19,13 @@ import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-// import IndicatorModal from "./IndicatorModal";
-import OpenSettleOrders from "./OpenSettleOrders";
 import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import { checkFeeStatusAsync } from "common/trxHelper";
+import MarketDataTabs from "./MarketDataTabs";
 
 Highcharts.setOptions({
     global: {
@@ -992,7 +989,7 @@ class Exchange extends React.Component {
         }
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
-        const minChartHeight = 300
+        const minChartHeight = 300;
         const height = Math.max(
             this.state.height > 1100 ? chartHeight : chartHeight - 125,
             minChartHeight
@@ -1010,7 +1007,7 @@ class Exchange extends React.Component {
                 className={cnames(
                     "small-12 no-padding middle-content",
                     {disabled: notMyAccount},
-                    leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
+                    leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-6",
                     this.state.flipBuySell ? `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form` : `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form`
                 )}
                 type="bid"
@@ -1055,7 +1052,7 @@ class Exchange extends React.Component {
                 className={cnames(
                     "small-12 no-padding middle-content",
                     {disabled: notMyAccount},
-                    leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-4",
+                    leftOrderBook || smallScreen ? "medium-6" : "medium-6 xlarge-6",
                     this.state.flipBuySell ? `order-${buySellTop ? 1 : 4 * orderMultiplier} buy-form` : `order-${buySellTop ? 2 : 5 * orderMultiplier} sell-form`
                 )}
                 type="ask"
@@ -1228,25 +1225,7 @@ class Exchange extends React.Component {
                                 {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
                                 {buyForm}
                                 {sellForm}
-
-                                <MarketHistory
-                                    className={cnames(
-                                        !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
-                                        "no-padding no-overflow middle-content small-12 medium-6 order-5 xlarge-order-3"
-                                    )}
-                                    headerStyle={{paddingTop: 0}}
-                                    history={activeMarketHistory}
-                                    currentAccount={currentAccount}
-                                    myHistory={currentAccount.get("history")}
-                                    base={base}
-                                    quote={quote}
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                    notMyAccount={notMyAccount}
-                                />
-
-                                {!leftOrderBook ? orderBook : null}
-
+                                
                                 <ConfirmOrderModal
                                     type="buy"
                                     ref="buy"
@@ -1263,46 +1242,31 @@ class Exchange extends React.Component {
                                     hasOrders={combinedBids.length > 0}
                                 />
 
-                                {marketLimitOrders.size > 0 && base && quote ? (
-                                <MyOpenOrders
-                                    smallScreen={this.props.smallScreen}
+                                {/* Combined My Open Orders, My Trading, Market Trading, Settle Orders */}
+                                <MarketDataTabs 
                                     className={cnames(
-                                        {disabled: notMyAccount},
-                                        !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
-                                        `small-12 medium-6 no-padding align-spaced ps-container middle-content order-${buySellTop ? 6 : 6}`
+                                        !smallScreen && !leftOrderBook ? "medium-12 xlarge-12" : "",
+                                        "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-5"
                                     )}
-                                    key="open_orders"
-                                    orders={marketLimitOrders}
-                                    currentAccount={currentAccount}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    onCancel={this._cancelLimitOrder.bind(this)}
+                                    notMyAccount={notMyAccount}
+                                    currentAccount={currentAccount}
+                                    headerStyle={{paddingTop: 0}}
+                                    settleOrders={marketSettleOrders}
+                                    historyMarket={activeMarketHistory}
+                                    historyUser={currentAccount.get("history")}
+                                    userOrders={marketLimitOrders}
+                                    onCancelOrder={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                     feedPrice={this.props.feedPrice}
-                                />) : null}
+                                />
+                                
+                                {!leftOrderBook ? orderBook : null}
                             </div>
-
-
-                            {/* Settle Orders */}
-
-                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
-                            <OpenSettleOrders
-                                key="settle_orders"
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
-                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
-                                )}
-                                orders={marketSettleOrders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />) : null}
-
-
                         </div>{ /* end CenterContent */}
-
 
                     </div>{/* End of Main Content Column */}
 
