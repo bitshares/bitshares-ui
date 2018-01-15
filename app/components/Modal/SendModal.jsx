@@ -175,7 +175,8 @@ export default class SendModal extends React.Component {
             }
         }
 
-        return ns.open;
+        if (!ns.open && !this.state.open) return false;
+        return true;
     }
 
     componentWillReceiveProps(np) {
@@ -437,7 +438,7 @@ export default class SendModal extends React.Component {
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
         return (
-            <div id="send_modal_wrapper" className={hidden ? "hide" : ""}>
+            <div id="send_modal_wrapper" className={hidden || !this.state.open ? "hide" : ""}>
                 <BaseModal id={this.props.id} className="send_modal" overlay={true} onClose={this.onClose.bind(this, false)}>
                     <div className="grid-block vertical no-overflow">
                         <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
