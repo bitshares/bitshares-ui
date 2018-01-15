@@ -357,7 +357,7 @@ class Header extends React.Component {
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
                                 {createAccountLink ? createAccountLink : [
-                                <div className="header-right-lock" onClick={this._toggleLock.bind(this)}>
+                                <div className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
                                     <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                 </div>,
                                 <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
