@@ -329,21 +329,21 @@ $account-tabs-background
             color: $account-green;
         }
 
+        div.header-right-lock {
+            padding: 1rem .25rem;
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
                     fill: $account-dimmed;
                 }
-
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
-                }
+            }
+            &:hover {
+                background-color: $bg-color;
             }
         }
 
