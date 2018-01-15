@@ -77,9 +77,9 @@ class FeeGroup extends React.Component {
                 let amount = fee[key]*scale/1e4;
                 let feeTypes = counterpart.translate("transaction.feeTypes");
                 let assetAmount = amount ? <FormattedAsset amount={amount} asset="1.3.0"/> : feeTypes["_none"];
-                let equivalentAmount = amount ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount} toAsset={preferredUnit}/> : feeTypes["_none"];
+                let equivalentAmount = amount ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount} toAsset={preferredUnit} fullDecimals={true}/> : feeTypes["_none"];
                 let assetAmountLTM = amount*0.2 ? <FormattedAsset amount={amount*0.2} asset="1.3.0"/> : feeTypes["_none"];
-                let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit}/> : feeTypes["_none"];
+                let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit} fullDecimals={true}/> : feeTypes["_none"];
                 let title = null;
 
                 if (!headIncluded) {
@@ -96,8 +96,8 @@ class FeeGroup extends React.Component {
                         <tr key={opId.toString() + key} className={feeTypes[key]==="Annual Membership" ? "linethrough" : ""}>
                             {title}
                             <td>{feeTypes[key]}</td>
-                            <td style={{textAlign: "right"}}>{equivalentAmount}</td>
-                            <td style={{textAlign: "right"}}>{feeIdx !== 8 ? equivalentAmountLTM : null}</td>
+                            <td style={{textAlign: "right"}}>{assetAmount}{amount !== 0 && preferredUnit !== "BTS" && [" / ", equivalentAmount]}</td>
+                            <td style={{textAlign: "right"}}>{feeIdx !== 8 ? assetAmountLTM : null}{feeIdx !== 8 && amount !== 0 && preferredUnit !== "BTS" && [" / ", equivalentAmountLTM]}</td>
                         </tr>
                     );
                 } else {
@@ -106,7 +106,7 @@ class FeeGroup extends React.Component {
                             {title}
                             <td>{feeTypes[key]}</td>
                             <td style={{textAlign: "right"}}>- <sup>*</sup></td>
-                            <td style={{textAlign: "right"}}>{equivalentAmountLTM}</td>
+                            <td style={{textAlign: "right"}}>{assetAmountLTM}{amount !== 0 && preferredUnit !== "BTS" && [" / ", equivalentAmountLTM]}</td>
                         </tr>
                     );
                 }
