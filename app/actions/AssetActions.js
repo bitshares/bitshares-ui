@@ -240,7 +240,7 @@ class AssetActions {
         }
 
         console.log("feedProducers:", feedProducers, "originalFeedProducers:", originalFeedProducers);
-        if (!utils.are_equal_shallow(feedProducers, originalFeedProducers)) {
+        if (isBitAsset && !utils.are_equal_shallow(feedProducers, originalFeedProducers)) {
             tr.add_type_operation("asset_update_feed_producers", {
                 "fee": {
                     amount: 0,

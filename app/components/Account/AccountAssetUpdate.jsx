@@ -127,11 +127,12 @@ class AccountAssetUpdate extends React.Component {
     }
 
     pageChanged() {
-        let {bitasset_opts, original_bitasset_opts,
+        let {isBitAsset, bitasset_opts, original_bitasset_opts,
             feedProducers, originalFeedProducers} = this.state;
         return this.assetChanged() || 
-               JSON.stringify(bitasset_opts) !== JSON.stringify(original_bitasset_opts) ||
-               !utils.are_equal_shallow(feedProducers.toJS(), originalFeedProducers.toJS());
+               (isBitAsset && 
+                   (JSON.stringify(bitasset_opts) !== JSON.stringify(original_bitasset_opts) ||
+                   !utils.are_equal_shallow(feedProducers.toJS(), originalFeedProducers.toJS())));
     }
 
     _updateAsset(e) {
@@ -160,9 +161,12 @@ class AccountAssetUpdate extends React.Component {
             blacklist_markets: this.state.blacklist_markets
         };
 
+        let feedProducersJS = isBitAsset ? feedProducers.toJS() : null;
+        let originalFeedProducersJS = isBitAsset ? originalFeedProducers.toJS() : null;
+
         AssetActions.updateAsset(issuer, new_issuer_account_id, update, core_exchange_rate, this.props.asset,
             flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths, 
-            feedProducers.toJS(), originalFeedProducers.toJS(), this.assetChanged())
+            feedProducersJS, originalFeedProducersJS, this.assetChanged())
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
