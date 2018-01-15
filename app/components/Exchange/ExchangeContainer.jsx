@@ -3,6 +3,7 @@ import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import GatewayStore from "stores/GatewayStore";
+import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt-container";
 import Exchange from "./Exchange";
 import ChainTypes from "../Utility/ChainTypes";
@@ -18,8 +19,11 @@ class ExchangeContainer extends React.Component {
 
         return (
                 <AltContainer
-                    stores={[MarketsStore, AccountStore, SettingsStore]}
+                    stores={[MarketsStore, AccountStore, SettingsStore,WalletUnlockStore]}
                     inject={{
+                        lockedWalletState: () => {
+                            return WalletUnlockStore.getState().locked;
+                        },
                         marketLimitOrders: () => {
                             return MarketsStore.getState().marketLimitOrders;
                         },
@@ -128,7 +132,7 @@ class ExchangeSubscriber extends React.Component {
             this._subToMarket(this.props);
             // this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
         }
-
+        
         emitter.on("cancel-order", limitListener = MarketsActions.cancelLimitOrderSuccess);
         emitter.on("close-call", callListener = MarketsActions.closeCallOrderSuccess);
 
