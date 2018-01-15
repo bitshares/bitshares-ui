@@ -69,17 +69,25 @@ class FeeGroup extends React.Component {
             let operation_name = ops[ opId ];
             let feename        = trxTypes[ operation_name ];
 
+            let feeRateForLTM = 0.2
+            if (opId === 10) {
+                // Asset creation fee for LTM is 60% of standart user
+                // See https://github.com/bitshares/bitshares-ui/issues/996
+                feeRateForLTM = 0.6
+            }
+
             let rows = []
             let headIncluded = false
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
                 let amount = fee[key]*scale/1e4;
+                let amountForLTM = amount * feeRateForLTM
                 let feeTypes = counterpart.translate("transaction.feeTypes");
                 let assetAmount = amount ? <FormattedAsset amount={amount} asset="1.3.0"/> : feeTypes["_none"];
                 let equivalentAmount = amount ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount} toAsset={preferredUnit} fullDecimals={true}/> : feeTypes["_none"];
-                let assetAmountLTM = amount*0.2 ? <FormattedAsset amount={amount*0.2} asset="1.3.0"/> : feeTypes["_none"];
-                let equivalentAmountLTM = amount*0.2 ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amount*0.2} toAsset={preferredUnit} fullDecimals={true}/> : feeTypes["_none"];
+                let assetAmountLTM = amountForLTM ? <FormattedAsset amount={amountForLTM} asset="1.3.0"/> : feeTypes["_none"];
+                let equivalentAmountLTM = amountForLTM ? <EquivalentValueComponent fromAsset="1.3.0" fullPrecision={true} amount={amountForLTM} toAsset={preferredUnit} fullDecimals={true}/> : feeTypes["_none"];
                 let title = null;
 
                 if (!headIncluded) {
