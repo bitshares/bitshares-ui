@@ -29,11 +29,13 @@ class AccountAssetUpdate extends React.Component {
 
     static propTypes = {
         asset: ChainTypes.ChainAsset.isRequired,
-        core: ChainTypes.ChainAsset.isRequired
+        core: ChainTypes.ChainAsset.isRequired,
+        globalObject: ChainTypes.ChainObject.isRequired,
     };
 
     static defaultProps = {
-        core: "1.3.0"
+        core: "1.3.0",
+        globalObject: "2.0.0"
     };
 
     constructor(props) {
@@ -102,6 +104,7 @@ class AccountAssetUpdate extends React.Component {
             blacklist_authorities: props.asset.getIn(["options", "blacklist_authorities"]),
             whitelist_markets: props.asset.getIn(["options", "whitelist_markets"]),
             blacklist_markets: props.asset.getIn(["options", "blacklist_markets"]),
+            maxFeedProducers: props.globalObject.getIn(["parameters", "maximum_asset_feed_publishers"]),
             feedProducers: props.asset.getIn(["bitasset", "feeds"], []).map(a => {
                 return a.first();
             }),
@@ -297,12 +300,14 @@ class AccountAssetUpdate extends React.Component {
 
     _validateEditFields( new_state ) {
         let cer = new_state.core_exchange_rate;
+        let feedProducers = new_state.feedProducers ? new_state.feedProducers : this.state.feedProducers;
         let {asset, core} = this.props;
 
         let errors = {
             max_supply: null,
             quote_asset: null,
-            base_asset: null
+            base_asset: null,
+            max_feed_producer: null,
         };
 
         const p = this.props.asset.get("precision");
@@ -324,7 +329,12 @@ class AccountAssetUpdate extends React.Component {
                 errors.base_asset = counterpart.translate("account.user_issued_assets.need_asset", {name: core.get("symbol")});
             }
         }
-        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset;
+        if (feedProducers) {
+            if (feedProducers.size > this.state.maxFeedProducers) {
+                errors.max_feed_producer = counterpart.translate("account.user_issued_assets.too_many_feed", {max: this.state.maxFeedProducers});
+            }
+        }
+        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset && !errors.max_feed_producer;
 
         this.setState({isValid: isValid, errors: errors});
     }
@@ -450,6 +460,7 @@ class AccountAssetUpdate extends React.Component {
             current = current.remove(current.indexOf(id));
         }
         this.setState({feedProducers: current});
+        this._validateEditFields({feedProducers: current})
     }
 
     render() {
@@ -952,6 +963,7 @@ class AccountAssetUpdate extends React.Component {
                                     producers={this.state.feedProducers}
                                     onChangeList={this.onChangeFeedProducerList.bind(this)}
                                 />
+                                { errors.max_feed_producer ? <p className="grid-content has-error large-8 large-offset-2" style={{marginTop: "20px"}}>{errors.max_feed_producer}</p> : null}
                             </Tab> : null}
                         </Tabs>
                     </div>
