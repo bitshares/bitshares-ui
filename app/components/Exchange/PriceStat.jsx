@@ -5,7 +5,7 @@ import utils from "common/utils";
 import cnames from "classnames";
 import ReactTooltip from "react-tooltip";
 
-export default class PriceStat extends React.Component {
+export default class PriceStatWithLabel extends React.Component {
     constructor() {
         super();
         this.state = {

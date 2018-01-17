@@ -267,9 +267,11 @@ class AccountOverview extends React.Component {
 
             const thisAssetName = asset.get("symbol").split(".");
             const canDeposit =
-                !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
-                !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1]) ||
-                asset.get("symbol") == "BTS";
+                (
+                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") && 
+                    !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
+                    !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
+                ) || asset.get("symbol") == "BTS";
 
             const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
@@ -667,6 +669,7 @@ class AccountOverview extends React.Component {
                                                 <td>
                                                     {totalValueText}
                                                 </td>
+                                                <td></td>
                                                 <td>{debtValue}</td>
                                                 <td className="column-hide-medium">{collateralValue}</td>
                                                 <td></td>
