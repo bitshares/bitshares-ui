@@ -259,7 +259,7 @@ ul.market-stats {
     > span {
         > span:first-of-type {
             padding-right: 5px;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 }
