@@ -1,7 +1,7 @@
 .footer {
+    @include RobotoRegular;
     text-transform: lowercase;
     font-variant: small-caps;
-    font-weight: bold;
     div.footer-status {
         position: absolute;
         right: 0;
