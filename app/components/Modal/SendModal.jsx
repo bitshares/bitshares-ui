@@ -11,7 +11,7 @@ import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, estimateFee } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -91,8 +91,13 @@ export default class SendModal extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         this.setState({error: null});
+
         const {asset, amount} = this.state;
+        if (this.state.feeAsset && this.state.fee_asset_id == this.state.asset_id) {
+            amount = _adjustBalanceForFee();
+        }
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
+
 
         AccountActions.transfer(
             this.state.from_account.get("id"),
@@ -111,6 +116,13 @@ export default class SendModal extends React.Component {
             console.log( "error: ", e, msg);
             this.setState({error: msg});
         } );
+    }
+
+    _adjustBalanceForFee() {
+        const {feeAmount, amount, from_account, asset} = this.state;
+        return amount if asset.get("id") != this.state.feeAsset.get("id");
+
+
     }
 
     _initForm() {
