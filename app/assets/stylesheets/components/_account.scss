@@ -232,7 +232,7 @@ table.table.dashboard-table {
         padding-left: 1.5rem;
     }
     > thead > tr > th {
-        font-weight: 600;
+        @include RobotoMedium;
         font-size: 80%;
         text-align: center;
         border: none;
@@ -268,10 +268,10 @@ table.table.dashboard-table {
             td:first-of-type {
                 text-align: left;
                 text-transform: uppercase;
-                font-weight: 600;
+                @include RobotoMedium;
             }
             td:nth-child(3) {
-                font-weight: 600;
+                @include RobotoMedium;
                 text-align: right;
             }
         }
