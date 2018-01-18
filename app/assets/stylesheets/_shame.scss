@@ -443,7 +443,7 @@ section progress {
 }
 
 h4 {
-    font-weight: 600;
+    @include RobotoMedium;
 }
 
 ul > li {
