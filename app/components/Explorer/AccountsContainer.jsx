@@ -2,11 +2,12 @@ import React from "react";
 import AccountStore from "stores/AccountStore";
 import AltContainer from "alt-container";
 import Accounts from "./Accounts";
+import Explorer from "./Explorer";
 
 class AccountsContainer extends React.Component {
-
+    
     render() {
-        return (
+        let content = 
               <AltContainer 
                   stores={[AccountStore]}
                   inject={{
@@ -19,8 +20,9 @@ class AccountsContainer extends React.Component {
                   }} 
                   >
                 <Accounts />
-              </AltContainer>
-        );
+              </AltContainer>;
+                      
+             return (<Explorer tab="accounts" content={content}/>);         
     }
 }
 

@@ -12,13 +12,14 @@ import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import Header from "components/Layout/Header";
-import MobileMenu from "components/Layout/MobileMenu";
+// import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
+import Deprecate from "./Deprecate";
 // import Incognito from "./components/Layout/Incognito";
 // import { isIncognito } from "feature_detect";
 
@@ -39,16 +40,19 @@ class App extends React.Component {
             theme: SettingsStore.getState().settings.get("themes"),
             isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
             incognito: false,
-            incognitoWarningDismissed: false
+            incognitoWarningDismissed: false,
+            height: window && window.innerHeight
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
         this._onSettingsChange = this._onSettingsChange.bind(this);
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
+        this._getWindowHeight = this._getWindowHeight.bind(this);
     }
 
     componentWillUnmount() {
+        window.removeEventListener("resize", this._getWindowHeight);
         NotificationStore.unlisten(this._onNotificationChange);
         SettingsStore.unlisten(this._onSettingsChange);
         ChainStore.unsubscribe(this._chainStoreSub);
@@ -76,6 +80,7 @@ class App extends React.Component {
 
     _setListeners() {
         try {
+            window.addEventListener("resize", this._getWindowHeight, {capture: false, passive: true});
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange);
             ChainStore.subscribe(this._chainStoreSub);
@@ -145,6 +150,10 @@ class App extends React.Component {
 
     }
 
+    _getWindowHeight() {
+        this.setState({height: window && window.innerHeight});
+    }
+
     // /** Non-static, used by passing notificationSystem via react Component refs */
     // _addNotification(params) {
     //     console.log("add notification:", this.refs, params);
@@ -153,6 +162,7 @@ class App extends React.Component {
 
     render() {
         let {isMobile, theme } = this.state;
+
         let content = null;
 
         let showFooter = 1;
@@ -171,11 +181,12 @@ class App extends React.Component {
             </div>;
         } else if (this.props.location.pathname === "/init-error") {
             content = <div className="grid-frame vertical">{this.props.children}</div>;
+        } else if (__DEPRECATED__) {
+            content = <Deprecate {...this.props} />;
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header/>
-                    <MobileMenu isUnlocked={this.state.isUnlocked} id="mobile-menu"/>
+                    <Header height={this.state.height}/>
                     <div className="grid-block">
                         <div className="grid-block vertical">
                             {this.props.children}
@@ -221,7 +232,7 @@ class RootIntl extends React.Component {
     render() {
         return (
             <IntlProvider
-                locale={this.props.locale.replace(/cn/, "zh")}
+                locale={this.props.locale}
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >

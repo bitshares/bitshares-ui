@@ -41,6 +41,12 @@ $account-primarytext: $primary-text-color;
 $account-dimmed: #5d5d5d;
 $account-border: rgba(50, 49, 49, 0.1);
 $account-background: #e5e6e4;
+$account-tabs-background: #d5d6d4;
+
+$pulsate-green-start:$account-green;
+$pulsate-green-end:#70c117;
+$pulsate-red-start:$negative-color;
+$pulsate-red-end:#e87f84;
 
 .lightTheme {
   @include theme(
@@ -74,7 +80,12 @@ $account-background: #e5e6e4;
     $account-primarytext,
     $account-dimmed,
     $account-border,
-    $account-background
+    $account-background,
+    $account-tabs-background,
+    $pulsate-green-start,
+    $pulsate-green-end,
+    $pulsate-red-start,
+    $pulsate-red-end
   );
 
   .change-up {

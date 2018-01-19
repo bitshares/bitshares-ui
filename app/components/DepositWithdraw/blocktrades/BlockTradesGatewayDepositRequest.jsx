@@ -10,9 +10,10 @@ import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress} from "common/blockTradesMethods";
+import { requestDepositAddress, getDepositAddress } from "common/blockTradesMethods";
 import { blockTradesAPIs } from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
+import counterpart from "counterpart";
 
 class BlockTradesGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -39,7 +40,6 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     constructor(props) {
         super(props);
-        this.deposit_address_cache = new BlockTradesDepositAddressCache();
 
         let urls = {
             blocktrades: blockTradesAPIs.BASE,
@@ -48,7 +48,9 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         this.state = {
             receive_address: null,
-            url: props.url || urls[props.gateway]
+            url: props.url || urls[props.gateway],
+            loading: false,
+            emptyAddressDeposit: false
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -58,7 +60,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     _copy(e) {
         try {
-            e.clipboardData.setData("text/plain", this.state.clipboardText);
+            if (this.state.clipboardText)
+                e.clipboardData.setData("text/plain", this.state.clipboardText);
+            else
+                e.clipboardData.setData("text/plain", counterpart.translate("gateway.use_copy_button").toUpperCase());
             e.preventDefault();
         } catch(err) {
             console.error(err);
@@ -76,30 +81,37 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     componentWillMount() {
-        let account_name = this.props.account.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        if (!receive_address || receive_address.address === "unknown") {
-            requestDepositAddress(this._getDepositObject());
-        } else {
-            this.setState({receive_address});
-        }
+        getDepositAddress({coin: this.props.receive_coin_type,  account: this.props.account.get("name"),  stateCallback: this.addDepositAddress});
     }
 
     componentWillUnmount() {
         document.removeEventListener("copy", this._copy);
     }
 
+    componentWillReceiveProps(np) {
+        if (np.account !== this.props.account) {
+            getDepositAddress({coin: np.receive_coin_type,  account: np.account.get("name"),  stateCallback: this.addDepositAddress});
+        }
+    }
+
     addDepositAddress( receive_address ) {
-        let account_name = this.props.account.get("name");
-        this.deposit_address_cache.cacheInputAddress(
-            this.props.gateway,
-            account_name,
-            this.props.deposit_coin_type,
-            this.props.receive_coin_type,
-            receive_address.address,
-            receive_address.memo
-        );
+        if(receive_address.error){
+            receive_address.error.message === "no_address" ? this.setState({emptyAddressDeposit: true}) : this.setState({emptyAddressDeposit: false})
+        }
+
         this.setState( {receive_address} );
+        this.setState({
+            loading: false
+        });
+        this.setState( {receive_address} );
+    }
+
+    requestDepositAddressLoad(){
+        this.setState({
+            loading: true,
+            emptyAddressDeposit: false
+        });
+        requestDepositAddress(this._getDepositObject());
     }
 
     getWithdrawModalId() {
@@ -124,7 +136,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     render() {
         const isDeposit = this.props.action === "deposit";
-        let emptyRow = <div style={{display:"none", minHeight: 150}}></div>;
+        let emptyRow = <LoadingIndicator />;
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return emptyRow;
 
@@ -162,13 +174,10 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         // }
 
         let receive_address = this.state.receive_address;
-        if( !receive_address )  {
-            let account_name = this.props.account.get("name");
-            receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        }
+        let { emptyAddressDeposit } = this.state;
+        let indicatorButtonAddr = this.state.loading;
 
         if( !receive_address) {
-            requestDepositAddress(this._getDepositObject());
             return <div style={{margin: "3rem"}}><LoadingIndicator type="three-bounce"/></div>;
         }
 
@@ -209,7 +218,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             var withdraw_memo_prefix = "";
         }
 
-        if (!this.props.isAvailable || (isDeposit && !this.props.deposit_account && !this.state.receive_address)) {
+        if (!this.props.isAvailable || (isDeposit && !this.props.deposit_account && !receive_address || (receive_address && receive_address.address === "unknown"))) {
             return <div><Translate className="txtlabel cancel" content="gateway.unavailable" component="h4" /></div>;
         }
 
@@ -254,11 +263,12 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                     <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.deposit_inst" />
                         <label className="left-label"><Translate content="gateway.deposit_to" asset={this.props.deposit_asset} />:</label>
+                        <label className="fz_12 left-label"><Translate content="gateway.deposit_notice_delay" /></label>
                         <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
                             <table className="table">
                                 <tbody>
                                     <tr>
-                                        <td>{deposit_address_fragment}</td>
+                                         <td>{emptyAddressDeposit ? <Translate content="gateway.please_generate_address" /> : deposit_address_fragment }</td>
                                     </tr>
                                     {deposit_memo ? (
                                     <tr>
@@ -267,9 +277,13 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 </tbody>
                             </table>
                             <div className="button-group" style={{paddingTop: 10}}>
-                                {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div> : null}
-                                {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
-                                <button className={"button"} onClick={requestDepositAddress.bind(null, this._getDepositObject())}><Translate content="gateway.generate_new" /></button>
+                                {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>
+                                    <Translate content="gateway.copy_address" />
+                                </div> : null}
+                                {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>
+                                    <Translate content="gateway.copy_memo" />
+                                </div> : null}
+                                <button className={"button spinner-button-circle"} onClick={this.requestDepositAddressLoad.bind(this)}>{indicatorButtonAddr ? <LoadingIndicator type="circle" /> : null}<Translate content="gateway.generate_new" /></button>
                             </div>
                         </div>
                     </div>

@@ -37,7 +37,7 @@ class AssetWhitelist extends React.Component {
 
         return (
             <div>
-                <table className="table dashboard-table">
+                <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
                             <th><Translate content="explorer.account.title" /></th>
@@ -91,7 +91,7 @@ class AssetWhitelist extends React.Component {
 
         return (
             <div>
-                <table className="table dashboard-table">
+                <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
                             <th><Translate content="explorer.asset.title" /></th>
@@ -143,7 +143,7 @@ class AssetWhitelist extends React.Component {
         const activeIndex = this.state.listTypes.indexOf(this.state.listType);
 
         return (
-            <div className="small-12 large-8 grid-content">
+            <div className="small-12 large-8 large-offset-2 grid-content">
                 <div>
                     <div className="hide-selector" style={{paddingBottom: "2rem"}}>
                         {this.state.listTypes.map((type, index) => {

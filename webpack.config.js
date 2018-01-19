@@ -60,7 +60,8 @@ module.exports = function(env) {
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
             __UI_API__: JSON.stringify(env.apiUrl || "https://ui.bitshares.eu/api"),
-            __TESTNET__: !!env.testnet
+            __TESTNET__: !!env.testnet,
+            __DEPRECATED__: !!env.deprecated
         })
     ];
 

@@ -12,7 +12,8 @@ class AssetSelector extends React.Component {
     static propTypes = {
         assets: ChainTypes.ChainAssetsList,
         value: React.PropTypes.string, // asset id
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        scroll_length: React.PropTypes.number
     };
 
     render() {
@@ -24,6 +25,7 @@ class AssetSelector extends React.Component {
             singleEntry={this.props.assets[0] ? <FormattedAsset asset={this.props.assets[0].get("id")} amount={0} hide_amount={true}/> : null}
             value={this.props.value}
             onChange={this.props.onChange}
+            scroll_length={this.props.scroll_length}
         />;
     }
 }
@@ -40,7 +42,8 @@ class AmountSelector extends React.Component {
         placeholder: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired,
         tabIndex: React.PropTypes.number,
-        error: React.PropTypes.string
+        error: React.PropTypes.string,
+        scroll_length: React.PropTypes.number
     };
 
     static defaultProps = {
@@ -70,6 +73,7 @@ class AmountSelector extends React.Component {
     }
 
     render() {
+        //console.log("Calling AmountSelector: " + this.props.label + this.props.asset + this.props.assets + this.props.amount + this.props.placeholder + this.props.error);
         let value = this.props.error ? counterpart.translate(this.props.error) : this.formatAmount(this.props.amount);
         return (
             <div className="amount-selector" style={this.props.style}>
@@ -90,11 +94,12 @@ class AmountSelector extends React.Component {
                             value={this.props.asset.get("symbol")}
                             assets={Immutable.List(this.props.assets)}
                             onChange={this.onAssetChange.bind(this)}
+                            scroll_length={this.props.scroll_length}
                         />
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }
 AmountSelector = BindToChainState(AmountSelector);

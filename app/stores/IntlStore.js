@@ -11,25 +11,10 @@ counterpart.setFallbackLocale("en");
 
 import {addLocaleData} from "react-intl";
 
-import en from "react-intl/locale-data/en";
-import es from "react-intl/locale-data/es";
-import fr from "react-intl/locale-data/fr";
-import ko from "react-intl/locale-data/ko";
-import it from "react-intl/locale-data/it";
-import zh from "react-intl/locale-data/zh";
-import de from "react-intl/locale-data/de";
-import tr from "react-intl/locale-data/tr";
-import ru from "react-intl/locale-data/ru";
-
-addLocaleData(en);
-addLocaleData(es);
-addLocaleData(fr);
-addLocaleData(ko);
-addLocaleData(it);
-addLocaleData(zh);
-addLocaleData(de);
-addLocaleData(tr);
-addLocaleData(ru);
+import localeCodes from "assets/locales";
+for (let localeCode of localeCodes) {
+    addLocaleData(require(`react-intl/locale-data/${localeCode}`));
+}
 
 class IntlStore {
     constructor() {

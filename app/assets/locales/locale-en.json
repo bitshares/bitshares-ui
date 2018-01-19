@@ -10,7 +10,7 @@
     },
   "languages": {
     "en": "English",
-    "cn": "简体中文",
+    "zh": "简体中文",
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
@@ -35,6 +35,8 @@
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
+    "payments_beta": "Send (Beta)",
+    "payments_legacy": "Send (legacy)",
     "logout": "Logout",
     "settings": "Settings",
     "current": "Current Account",
@@ -45,6 +47,7 @@
     "unlock": "Local Wallet Login",
     "unlock_password": "Cloud Wallet Login",
     "unlock_short": "Login",
+    "lock_short": "Log out",
     "help": "Help",
     "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",
     "unlocked_tip": "<br/>Click to log out.<br/><br/>Closing the browser window will also log you out.",
@@ -84,7 +87,13 @@
     "sync_yes": "The current node is in sync with the blockchain",
     "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
     "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
-    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order."
+    "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+    "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+    "over_limit": "The bridge does not have enough of the desired asset for this buy order",
+    "propose_tip": "Propose another user to initiate a transaction",
+    "follow_user": "You are following this user",
+    "follow_user_add": "Click to Follow this user",
+    "gateway": "Gateways back desposits by 100% real assets"
   },
   "propose": "Propose",
   "cancel": "Cancel",
@@ -109,6 +118,7 @@
     "asset": "Asset",
     "market_value": "Market Value",
     "hour_24": "24hr Change",
+    "hour_24_short": "24hr",
     "recent": "Recent activity",
     "name": "Account name",
     "id": "Account ID",
@@ -117,6 +127,9 @@
     "deposit_withdraw": "Deposit/Withdraw",
     "as_collateral": "Collateral",
     "open_orders": "Open Orders",
+    "filter_orders": "Filter",
+    "submit_orders": "Submit",
+    "reset_orders": "Reset",
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
@@ -125,6 +138,7 @@
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
     "accounts": "Accounts",
+    "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
     "polo_scam": "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
     "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
@@ -150,7 +164,7 @@
       "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
     },
     "member": {
-      "stats": "Membership",
+      "stats": "Membership stats",
       "join": "Joined on",
       "registrar": "Registrar",
       "referrer": "Affiliate Referrer",
@@ -238,7 +252,11 @@
       "precision_warning": "Warning: The number of decimals may not be changed after creation",
       "visible": "Hide asset from search and markets",
       "cer_warning_1": "Warning",
-      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset."
+      "cer_warning_2": "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset.",
+      "feed_producers": "Feed producers",
+      "add_feed": "Add new feed producer",
+      "feed_not_allowed_1": "Cannot set feed producers on a witness- or committee-fed asset",
+      "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers"
     },
     "connections": {
       "known": "Known by",
@@ -249,7 +267,7 @@
       "owner": "Owner Permissions",
       "memo_key": "Memo key",
       "publish": "Save",
-      "reset": "Cancel",
+      "reset": "Reset",
       "add": "Add Permission",
       "type": "Type",
       "key": "Key/Name",
@@ -283,6 +301,27 @@
       "use_text": "Use",
       "remove_text": "Remove",
       "valid_pub": "Valid Public Key"
+    },
+    "signedmessages": {
+      "menuitem": "Signed Messages",
+      "invalidkey": "Private key could not be obtained, is the public key valid?",
+      "title": "Signed Messages",
+      "signmessage": "Sign Message",
+      "verifymessage": "Verify Message",
+      "signing": "Signing, please wait ...",
+      "verifying": "Verifying, please wait ...",
+      "invalidformat": "Signed message format can't be recognized",
+      "invaliduser": "Account of the message sender is invalid",
+      "invalidsignature": "The content of the message could not be validated against the signature",
+      "errorverifying": "An error occured while verifying the message",
+      "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
+      "sign": "Sign",
+      "verify": "Verify",
+      "automaticcreation": "Signed message will be created automatically",
+      "entermessage": "Enter message here",
+      "copysuccessful": "Signed message copied to clipboard",
+      "copyunsuccessful": "Failed to copy message",
+      "verifyonchange": "Verify while typing"
     },
     "votes": {
       "proxy_current": "Your current proxy is",
@@ -355,8 +394,8 @@
       "memo_key": "Memo Key"
     },
     "upgrade": "Upgrade account",
-    "unfollow": "Unfollow",
-    "follow": "Follow",
+    "unfollow": "Remove contact",
+    "follow": "Add contact",
     "pay": "Send to",
     "deposit": "Deposit BTS",
     "deposit_address": "Your deposit address is your account name",
@@ -373,7 +412,8 @@
       "not_found": "The account %(name)s does not exist, are you sure you spelled it correctly?",
       "invalid": "Invalid account name",
       "unknown": "Unknown account",
-      "not_yours": "Not your account"
+      "not_yours": "Not your account",
+      "memo_missing": "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page."
     },
     "collaterals": "Margin Positions",
     "eq_value": "Estimated",
@@ -396,10 +436,11 @@
     "settle": "Settle",
     "no_orders": "No open orders",
     "asset_details": "Asset details",
-    "portfolio": "My Portfolio",
+    "portfolio": "Portfolio",
     "activity": "Activity",
     "eq_value_header": "Value ({asset})",
     "qty": "Qty",
+    "quote": "Quote",
     "total": "Total ({asset})"
   },
   "pagination": {
@@ -408,25 +449,30 @@
   },
   "transfer": {
     "header": "Transfer details",
+    "header_subheader": "Transfers are used for sending funds to<br /> other BitShares Account Holders",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Quantity",
     "to": "To",
     "memo": "Memo / Message",
-    "warn_name_unable_read_memo": "Warning: %(name)s will be unable to read this memo",
+    "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!",
     "fee": "Fee",
     "send": "Send",
     "final": "Final balance",
     "balances": "Balances",
     "available": "Available",
     "errors": {
+      "noFunds": "No funds",
       "req": "Required field",
       "pos": "Amount must be positive",
       "valid": "Please enter a valid, positive number",
       "balance": "The final balance must be larger than 0",
       "insufficient": "Insufficient funds",
       "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
+      "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+      "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
+      "memo_error":"The transfer memo parsing error, please try again later.",
+      "precision": "Minimum withdraw precision value: %(precision)s"
     },
     "back": "BACK",
     "confirm": "CONFIRM",
@@ -435,6 +481,9 @@
     "again": "MAKE ANOTHER TRANSFER",
     "see": "SEE MY TRANSFERS",
     "close": "Close",
+    "cancel": "Cancel",
+    "copy_address": "Copy Address",
+    "copy_memo": "Copy Memo",
     "memo_unlock": "Unlock your wallet/account in order to see this memo",
     "optional": "Optional"
   },
@@ -652,7 +701,8 @@
   "explorer": {
     "accounts": {
       "title": "Accounts",
-      "filter": "Filter accounts"
+      "filter": "Filter accounts",
+      "filter_contacts": "Filter contacts"
     },
     "blocks": {
       "title": "Blockchain",
@@ -784,7 +834,7 @@
       "missed": "Blocks missed"
     },
     "committee_members": {
-      "title": "Committee members",
+      "title": "Committee",
       "active": "Total number of active committee members"
     },
     "committee_member": {
@@ -842,8 +892,9 @@
     "no": "No",
     "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
     "themes": "Theme",
-    "darkTheme": "Dark theme",
-    "lightTheme": "Light theme",
+    "darkTheme": "Dark",
+    "lightTheme": "Light",
+    "midnightTheme": "Midnight",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
     "general": "General",
@@ -866,8 +917,15 @@
     "backup_key": "Import a private key",
     "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
     "backup_brainkey": "Restore using a local wallet brainkey",
+    "backup_favorites": "Restore favorites using a json file",
+    "backup_favorites_error": "Could not parse JSON.",
+    "backup_favorites_finish": "Import favorites",
+    "backup_favorites_success": "Successfully restored market favorites",
     "backupcreate_backup": "Create local wallet backup",
     "backupcreate_brainkey": "Create brainkey backup",
+    "backupcreate_favorites": "Create favorites backup",
+    "backup_favoritesbtn": "Backup favorites",
+    "backup_favoritestext": "Back up your favorites to restore them later after updates.",
     "lookup_text": "Click the button below to check for unclaimed balances from BTS 1.0",
     "delete_select": "Select local wallet to delete",
     "restore_brainkey_text": "In order to restore from a brainkey, you will need to create a new local wallet. Please provide a password and name for your new local wallet below, then enter your brainkey.",
@@ -894,7 +952,7 @@
   },
   "footer": {
     "title": "BitShares",
-    "block": "Head block",
+    "block": "Block",
     "loading": "Loading...",
     "backup": "A Backup is Required",
     "nosync": "Your active node is out of sync",
@@ -903,9 +961,12 @@
     "update_available": "UPDATE AVAILABLE",
     "synced": "Synced",
     "unsynced": "Out of sync",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "connected": "Connected",
+    "latency": "Latency"
   },
   "exchange": {
+    "trading_pair":"Trading pair",
     "chart_options": {
         "tools": "Tools",
         "title": "Indicators",
@@ -945,7 +1006,7 @@
     "volume": "Volume",
     "vol_short": "Vol",
     "spread": "Spread",
-    "quantity": "Amount",
+    "quantity": "Quantity",
     "buy": "Buy",
     "buy_min": "Buy at least",
     "sell": "Sell",
@@ -1000,7 +1061,10 @@
     "show_star_2": "only",
     "quote": "Quote currency:",
     "search": "Search for more markets here",
-    "order_value": "Order value"
+    "price_market": "Market Price",
+    "description": "Description",
+    "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+    "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
   },
   "fees": {
     "title": "Fee Schedule"
@@ -1054,6 +1118,7 @@
     "verify_prior_backup": "Verify Prior Backup",
     "brainkey_not_verified": "This Brainkey is not verified",
     "cancel": "Cancel",
+    "back": "Back",
     "reset": "Reset",
     "done": "Done",
     "verify": "I've written it down",
@@ -1177,7 +1242,8 @@
     "understand_2": "I have written down or otherwise stored my password",
     "understand_3": " I understand that I will lose access to my funds if I lose my password",
     "bts_rules": "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
-    "ok_done": "OK, take me to the dashboard"
+    "ok_done": "OK, take me to the dashboard",
+    "local_switch": "Local wallet detected matching the given password, switching to local wallet mode"
   },
   "borrow": {
     "title": "%(asset_symbol)s Margin",
@@ -1195,6 +1261,10 @@
     }
   },
   "modal": {
+    "send": {
+      "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+      "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+    },
     "issue": {
       "to": "Issue To",
       "amount": "Amount to Issue",
@@ -1206,8 +1276,21 @@
       "submit": "Withdraw"
     },
     "deposit": {
+      "header": "Deposit to %(account_name)s",
+      "header_short": "Deposit",
+      "asset": "Asset",
+      "gateway": "Gateway",
+      "disabled": "Gateway service disabled",
+      "wallet_error": "Gateway wallet disabled",
+      "no_gateway_available": "No gateway available",
+      "select_gateway": "Please select a gateway operator",
+      "address_generation_error": "Unable to generate address",
+      "bts_transfer_description": "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
+      "close": "Close",
+      "cancel": "Cancel",
       "amount": "Amount to Deposit",
-      "submit": "Deposit"
+      "submit": "Deposit",
+      "submit_beta": "Deposit (beta)"
     },
     "convert": {
       "amount": "Amount to Convert",
@@ -1267,6 +1350,12 @@
     "id": "Proposal object id"
   },
   "gateway": {
+    "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+    "copy_memo": "Copy memo",
+    "please_generate_address": "Please, get new address ",
+    "generate_new": "Get new address",
+    "copy_address": "Copy address",
+    "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
     "fee": "Gateway fee",
     "title": "Deposit & Withdraw",
     "assets": {
@@ -1284,8 +1373,10 @@
     "bridge": "Bridge",
     "gateway": "Gateway",
     "symbol": "Symbol",
+    "asset": "Asset",
     "website": "Visit the website",
     "deposit_to": "Please send your %(asset)s to the address below",
+    "deposit_address": "Deposit address",
     "add_funds": "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
     "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
     "balance_asset": "Current %(asset)s balance",
@@ -1293,11 +1384,12 @@
     "balance": "Current balance",
     "generate": "Generate",
     "generate_new": "Get new address",
+    "generate_new_memo": "Get new memo",
     "deposit": "Deposit",
     "withdraw": "Withdrawal",
-	"convert": "Internal conversion",
+	  "convert": "Internal conversion",
     "withdraw_now": "Withdraw now",
-	"convert_now": "Convert now",
+	  "convert_now": "Convert now",
     "inventory": "Inventory",
     "scan_qr": "Scan QR",
     "calc": "Calculating",
@@ -1315,34 +1407,102 @@
     "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
     "intermediate": "Intermediate account",
     "asset_to_withdraw": "Asset to withdraw:",
-    "support_block": "For support, please contact OpenLedger at:",
+    "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
     "valid_address": "Please enter a valid %(coin_type)s address",
     "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
 	  "convert_coin": "Convert to %(coin)s (%(symbol)s)",
     "limit": "Limit: %(amount)s %(symbol)s",
     "bridge_text": "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
     "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
-    "fiat_text": "Fiat deposits and withdrawal are provided by CCEDK. In order to get started you need to complete the registration process. The following conversions are available:",
+    "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
     "meta": {
       "open_website": "Open Website"
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+    "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+    "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
     "deposit_limit": "Deposit limit",
     "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
     "rudex": {
       "support_block": "For support, please contact RuDEX at:",
       "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
       "min_amount_error": "Please enter number >= minimum",
-      "coming_soon": "Coming soon"
+      "coming_soon": "Coming soon",
+      "under_construction": "Under Construction"
     },
     "unavailable": "The gateway service for this asset is currently down, please try again later",
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
     "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
-    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding"
-  },
-    "trx_error": {
-        "expire": "Your transaction has expired without being confirmed, please try again later."
+    "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+    "contact_TRADE": "Contact Blocktrades",
+    "over_limit": "Limit Reached",
+    "agreement":{
+      "hint":"I have read and agreed to",
+      "name":"《Service Agreement》",
+      "register":"Agree",
+      "notice": "Please check the agreement to continue"
+    },
+    "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+    "time": "Time",
+    "info": "Info",
+    "status": "Status",
+    "asset_unavailable": "The gateway for %(asset)s is not in service",
+    "user_unavailable": "User informaction is current unavailable, please try again later",
+    "frozen": "The user account %(account)s was frozen",
+    "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+    "support_gdex": "For support, please contact GDEX",
+    "withdraw_history_status":{
+      "confirming": "confirming",
+      "auditing": "withdraw auditing",
+      "audited": "auditting completed",
+      "refused": "auditting failed",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
+    },
+    "deposit_history_status":{
+      "confirming": "deposit confirming",
+      "waiting": "waiting for deposit",
+      "transfering":"transfering",
+      "success":"success",
+      "fail":"fail"
     }
+  },
+  "trx_error": {
+      "expire": "Your transaction has expired without being confirmed, please try again later."
+  },
+  "migration": {
+      "title": "Notice",
+      "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+      "text_1": "Local wallet detected",
+      "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+      "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+  },
+  "news": {
+      "news": "News",
+      "author": "Author",
+      "subject": "Subject",
+      "errors": {
+        "fetch": "Ops... Something went wrong fetching the news"
+      }
+  },
+  "winex":
+  {
+    "gateway": {
+      "support_block": "For support, please contact Winex at:",
+      "fee":"Gateway Fee",
+      "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered"
+    },
+    "withdraw": {
+      "winAmount": "Minimum amount: %(min_amount)s %(asset)s",
+      "finalNumber": "Actual amount ：%(final_number)s"
+    },
+    "transfer": {
+      "errors": {
+        "minWithdraw": "Minimum amount：%(min_amount)s"
+      }
+    }
+  }
 }

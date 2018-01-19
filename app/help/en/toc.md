@@ -1,4 +1,4 @@
-#### Table of Contents
+#### Help
 
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
@@ -6,6 +6,7 @@
  * [Blockchain](introduction/blockchain.md)
  * [Voting](voting.md)
  * [Accounts](accounts/general.md)
+ * [Proposed Transactions](accounts/proposed.md)
  * [Permissions](accounts/permissions.md)
  * [Memberships](accounts/membership.md)
  * [Market Pegged Assets](assets/mpa.md)

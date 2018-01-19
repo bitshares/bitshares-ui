@@ -10,6 +10,8 @@ import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
+import SettingsStore from "stores/SettingsStore";
+import { connect } from "alt-react";
 
 class Dashboard extends React.Component {
 
@@ -152,59 +154,35 @@ class Dashboard extends React.Component {
             return <LoginSelector />;
         }
 
-        const entries = ["accounts", "recent"];
+        const entries = ["accounts", "contacts", "recent"];
         const activeIndex = entries.indexOf(currentEntry);
 
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{padding: "25px 10px 0 10px"}}>
-                    <div className="block-content-header" style={{marginBottom: 15}}>
-                    <Translate content="exchange.featured"/>
-                    </div>
-                    <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
+                <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
+                    {this.props.onlyAccounts ? null : <div className="block-content-header" style={{marginBottom: 15, paddingTop: 0}}>
+                        <Translate content="exchange.featured"/>
+                    </div>}
+                    {this.props.onlyAccounts ? null : <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
-                    </div>
-
-                    {accountCount ? (
-                        <div style={{paddingBottom: "3rem"}}>
-                            <div className="hide-selector" style={{paddingBottom: "1rem"}}>
-                                {entries.map((type, index) => {
-                                    return (
-                                        <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                            <Translate content={`account.${type}`} />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {currentEntry === "accounts" ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
-                                <div className="box-content">
-                                    <DashboardList
-                                        accounts={Immutable.List(names)}
-                                        ignoredAccounts={Immutable.List(ignored)}
-                                        width={width}
-                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
-                                        showIgnored={showIgnored}
-                                    />
-                                    {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
-                                </div>
-                            </div> : null}
-
-                            {currentEntry === "recent" ? <RecentTransactions
-                                style={{marginBottom: 20, marginTop: 20}}
-                                accountsList={linkedAccounts}
-                                limit={10}
-                                compactView={false}
-                                fullHeight={true}
-                                showFilters={true}
-                                dashboard
-                            /> : null}
-                        </div>
-                    ) : null}
+                    </div>}
                 </div>
             </div>
         );
     }
 }
 
-export default Dashboard;
+let DashboardWrapper = (props) => {
+    return <Dashboard {...props} />;
+};
+
+export default DashboardWrapper = connect(DashboardWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
+    }
+});

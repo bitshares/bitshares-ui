@@ -178,8 +178,6 @@ class Transaction extends React.Component {
 
             case "limit_order_create":
                     color = "warning";
-                    // missingAssets = this.getAssets([op[1].amount_to_sell.asset_id, op[1].min_to_receive.asset_id]);
-                    // let price = (!missingAssets[0] && !missingAssets[1]) ? utils.format_price(op[1].amount_to_sell.amount, assets.get(op[1].amount_to_sell.asset_id), op[1].min_to_receive.amount, assets.get(op[1].min_to_receive.asset_id), false, inverted) : null;
                     rows.push(
                         <tr key={key++}>
                             <td><Translate component="span" content="exchange.price" /></td>
