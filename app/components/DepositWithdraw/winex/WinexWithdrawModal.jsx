@@ -9,46 +9,50 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import { validateAddress, WithdrawAddresses } from "common/gdexMethods";
+import { validateAddress, WithdrawAddresses } from "common/blockTradesMethods";
 import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset, Price} from "common/MarketClasses";
+import {Asset} from "common/MarketClasses";
 import { debounce } from "lodash";
 
-class GdexWithdrawModal extends React.Component {
+class WinexWithdrawModal extends React.Component {
 
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
-        memo_rule: React.PropTypes.string.isRequired,
-        balance: ChainTypes.ChainObject,
+        output_coin_name: React.PropTypes.string.isRequired,
+        output_coin_symbol: React.PropTypes.string.isRequired,
+        output_coin_type: React.PropTypes.string.isRequired,
+        url: React.PropTypes.string,
+        output_wallet_type: React.PropTypes.string,
         output_supports_memos: React.PropTypes.bool.isRequired,
-
+        amount_to_withdraw: React.PropTypes.string,
+        min_withdraw_amount: React.PropTypes.string,
+        max_withdraw_amount: React.PropTypes.any,
+        fee_type : React.PropTypes.string,
+        balance: ChainTypes.ChainObject
     };
 
     constructor(props) {
         super(props);
+
         this.state = {
             withdraw_amount: this.props.amount_to_withdraw,
-            withdraw_address: WithdrawAddresses.getLast(props.output_coin_name),
+            withdraw_address: WithdrawAddresses.getLast(props.output_wallet_type),
             withdraw_address_check_in_progress: true,
             withdraw_address_is_valid: null,
             options_is_valid: false,
-            withdraw_address_selected: WithdrawAddresses.getLast(props.output_coin_name),
+            confirmation_is_valid: false,
+            withdraw_address_selected: WithdrawAddresses.getLast(props.output_wallet_type),
             memo: "",
             withdraw_address_first: true,
             empty_withdraw_value: false,
-            below_minumum_withdraw_value: false,
-            precision_error: false,
-            memo_error: false,
             from_account: props.account,
             fee_asset_id: "1.3.0",
-            feeStatus: {},
-            withdraw_address_error_code:null,
-            withdraw_address_error_message: null
+            feeStatus: {}
         };
 
 
@@ -68,10 +72,6 @@ class GdexWithdrawModal extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if(np.output_coin_name != this.props.output_coin_name){
-            this.setState({"withdraw_address": WithdrawAddresses.getLast(np.output_coin_name),
-                "withdraw_address_selected":WithdrawAddresses.getLast(np.output_coin_name)});
-        }
         if (np.account !== this.state.from_account && np.account !== this.props.account) {
             this.setState({
                 from_account: np.account,
@@ -80,37 +80,6 @@ class GdexWithdrawModal extends React.Component {
                 feeAmount: new Asset({amount: 0})
             }, () => {this._updateFee(); this._checkFeeStatus();});
         }
-    }
-
-    _assembleMemo(){
-        let memo_rule =  this.props.memo_rule;
-        let memo_message = "";
-        try{
-            if(memo_rule) {
-                memo_rule.split(";").forEach(item =>{
-                    switch(item[0]){
-                        case "C":
-                            memo_message += item.slice(2);
-                            break;
-                        case "D":
-                            memo_message += this.state.withdraw_address;
-                            break;
-                        case "B":
-                            memo_message += item.slice(2);
-                            break;
-                        case "S":
-                            memo_message += this.state.memo;
-                            break;
-                    }
-                });
-                this.setState({"memo_error": false});
-                return memo_message;
-            }
-        }catch(err){
-            console.log(err);
-        }
-        this.setState({"memo_error": true});
-        return null;
     }
 
     _updateFee(state = this.state) {
@@ -127,7 +96,7 @@ class GdexWithdrawModal extends React.Component {
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: this._assembleMemo()
+                content: this.props.output_coin_type + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
@@ -157,7 +126,7 @@ class GdexWithdrawModal extends React.Component {
                 options: ["price_per_kbyte"],
                 data: {
                     type: "memo",
-                    content: this.props.output_coin_name + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
+                    content: this.props.output_coin_type + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
                 }
             }));
         });
@@ -184,12 +153,14 @@ class GdexWithdrawModal extends React.Component {
         this.setState({
             withdraw_amount: amount,
             empty_withdraw_value: amount !== undefined && !parseFloat(amount)
-        }, this._checkBalance);
+        },this._checkWithdrawAmount(amount), this._validMinAmount(amount),this._calFinalNumber(amount));
+
+
     }
 
     onSelectChanged(index) {
-        let new_withdraw_address = WithdrawAddresses.get(this.props.output_coin_symbol)[index];
-        WithdrawAddresses.setLast({wallet: this.props.output_coin_symbol, address: new_withdraw_address});
+        let new_withdraw_address = WithdrawAddresses.get(this.props.output_wallet_type)[index];
+        WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: new_withdraw_address});
 
         this.setState({
             withdraw_address_selected: new_withdraw_address,
@@ -214,105 +185,99 @@ class GdexWithdrawModal extends React.Component {
     }
 
     _validateAddress(new_withdraw_address, props = this.props) {
-
-        validateAddress({"assetId": props.output_coin_id, "assetName": props.output_coin_name,
-            "address": new_withdraw_address})
-            .then(data => {
-                this.setState({
-                    withdraw_address_check_in_progress: false,
-                    withdraw_address_is_valid: data.valid,
-                    withdraw_address_error_code: null,
-                    withdraw_address_error_message: null
-                });
-            }).catch(err =>{
-                let message = err.message;
-                let code = err.code;
-                if(code<0) message="System error: please try again later";
-                this.setState({
-                    withdraw_address_check_in_progress: false,
-                    withdraw_address_is_valid: null,
-                    withdraw_address_error_code: err.code,
-                    withdraw_address_error_message: message
-                });
+        validateAddress({url: props.url, walletType: props.output_wallet_type, newAddress: new_withdraw_address})
+            .then(isValid => {
+                if (this.state.withdraw_address === new_withdraw_address) {
+                    this.setState({
+                        withdraw_address_check_in_progress: false,
+                        withdraw_address_is_valid: isValid
+                    });
+                }
             });
-    }
-    _checkPrecision(){
-        let {withdraw_amount} = this.state;
-        let {output_coin_precision} = this.props;
-        if(output_coin_precision=== "undefined") return;
-        if(typeof withdraw_amount !== "string") withdraw_amount = withdraw_amount.toString();
-        withdraw_amount = withdraw_amount.trim();
-        if(withdraw_amount.indexOf(".")===-1){
-            this.setState({"precision_error": false});
-            return;
-        }
-        if(withdraw_amount.length - withdraw_amount.indexOf(".") -1 > output_coin_precision){
-            this.setState({"precision_error": true});
-        } else{
-            this.setState({"precision_error": false});
-        }
     }
 
     _checkBalance() {
-        let {feeAmount, withdraw_amount} = this.state;
-        let {asset, balance, minWithdrawAmount} = this.props;
-        if (!balance){
-            // does not own any asset
-            this.setState({balanceError: true});
-            return;
-        }
-        if(!feeAmount) return;
+        const {feeAmount, withdraw_amount} = this.state;
+        const {asset, balance} = this.props;
+        if (!balance || !feeAmount) return;
         const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
-        // balance is zero
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
-
-        if (typeof withdraw_amount === "string") withdraw_amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
-        if (typeof minWithdrawAmount === "string") minWithdrawAmount = parseFloat(String.prototype.replace.call(minWithdrawAmount, /,/g, ""));
-        if(withdraw_amount< minWithdrawAmount){
-            this.setState({below_minumum_withdraw_value: true});
-            return;
-        } else{
-            this.setState({below_minumum_withdraw_value: false});
-        }
-        this._checkPrecision();
         return hasBalance;
     }
 
+    _checkWithdrawAmount(withdraw_amount) {
+        const {feeAmount} = this.state;
+        const {asset, balance} = this.props;
+        if (!balance || !feeAmount) return;
+        const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
+        if (hasBalance === null) return;
+        this.setState({balanceError: !hasBalance});
+        return hasBalance;
+    }
+
+    _validMinAmount(withdraw_amount) {
+        const {min_withdraw_amount} = this.props;
+        var flag = false;
+        if(parseFloat(withdraw_amount) < (min_withdraw_amount) ){
+            flag = true;
+        }
+        this.setState({minWithdrawError: flag});
+        return flag;
+    }
+
+    _calFinalNumber(withdraw_amount){
+
+        if(!withdraw_amount){
+            withdraw_amount = "0";
+        }
+        let {fee_type,gateFee} = this.props;
+
+        let amount = parseFloat(withdraw_amount);
+        let drawGatefee = parseFloat(gateFee);
+        if(fee_type === "1"){
+            this.setState({finalNumber: (amount - amount * drawGatefee).toFixed(8)});
+        }else{
+            this.setState({finalNumber: (amount - drawGatefee).toFixed(8)});
+        }
+
+    }
+
     onSubmit() {
+
         if ((!this.state.withdraw_address_check_in_progress) && (this.state.withdraw_address && this.state.withdraw_address.length) && (this.state.withdraw_amount !== null)) {
             if (!this.state.withdraw_address_is_valid) {
                 ZfApi.publish(this.getWithdrawModalId(), "open");
             } else if (parseFloat(this.state.withdraw_amount) > 0){
-                if (!WithdrawAddresses.has(this.props.output_coin_symbol)) {
+                if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
                     let withdrawals = [];
                     withdrawals.push(this.state.withdraw_address);
-                    WithdrawAddresses.set({wallet: this.props.output_coin_symbol, addresses: withdrawals});
+                    WithdrawAddresses.set({wallet: this.props.output_wallet_type, addresses: withdrawals});
                 } else {
-                    let withdrawals = WithdrawAddresses.get(this.props.output_coin_symbol);
+                    let withdrawals = WithdrawAddresses.get(this.props.output_wallet_type);
                     if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
                         withdrawals.push(this.state.withdraw_address);
-                        WithdrawAddresses.set({wallet: this.props.output_coin_symbol, addresses: withdrawals});
+                        WithdrawAddresses.set({wallet: this.props.output_wallet_type, addresses: withdrawals});
                     }
                 }
-                WithdrawAddresses.setLast({wallet: this.props.output_coin_symbol, address: this.state.withdraw_address});
+                WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: this.state.withdraw_address});
                 let asset = this.props.asset;
 
                 const {feeAmount} = this.state;
 
                 let amount = parseFloat(String.prototype.replace.call(this.state.withdraw_amount, /,/g, ""));
-
                 let sendAmount = new Asset({
                     asset_id: asset.get("id"),
                     precision: asset.get("precision"),
                     real: amount
                 });
+
                 AccountActions.transfer(
                     this.props.account.get("id"),
                     this.props.issuer.get("id"),
                     sendAmount.getAmount(),
                     asset.get("id"),
-                    this._assembleMemo(),
+                    this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
                     null,
                     feeAmount ? feeAmount.asset_id : "1.3.0"
                 );
@@ -332,18 +297,18 @@ class GdexWithdrawModal extends React.Component {
 
         ZfApi.publish(this.getWithdrawModalId(), "close");
 
-        if (!WithdrawAddresses.has(this.props.output_coin_symbol)) {
+        if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
             let withdrawals = [];
             withdrawals.push(this.state.withdraw_address);
-            WithdrawAddresses.set({wallet: this.props.output_coin_symbol, addresses: withdrawals});
+            WithdrawAddresses.set({wallet: this.props.output_wallet_type, addresses: withdrawals});
         } else {
-            let withdrawals = WithdrawAddresses.get(this.props.output_coin_symbol);
+            let withdrawals = WithdrawAddresses.get(this.props.output_wallet_type);
             if (withdrawals.indexOf(this.state.withdraw_address) == -1) {
                 withdrawals.push(this.state.withdraw_address);
-                WithdrawAddresses.set({wallet: this.props.output_coin_symbol, addresses: withdrawals});
+                WithdrawAddresses.set({wallet: this.props.output_wallet_type, addresses: withdrawals});
             }
         }
-        WithdrawAddresses.setLast({wallet: this.props.output_coin_symbol, address: this.state.withdraw_address});
+        WithdrawAddresses.setLast({wallet: this.props.output_wallet_type, address: this.state.withdraw_address});
         let asset = this.props.asset;
         let precision = utils.get_asset_precision(asset.get("precision"));
         let amount = String.prototype.replace.call(this.state.withdraw_amount, /,/g, "");
@@ -355,7 +320,7 @@ class GdexWithdrawModal extends React.Component {
             this.props.issuer.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-            this._assembleMemo(),
+            this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
             null,
             feeAmount ? feeAmount.asset_id : "1.3.0"
         );
@@ -363,7 +328,7 @@ class GdexWithdrawModal extends React.Component {
 
     onDropDownList() {
 
-        if (WithdrawAddresses.has(this.props.output_coin_symbol)) {
+        if (WithdrawAddresses.has(this.props.output_wallet_type)) {
 
             if(this.state.options_is_valid === false) {
                 this.setState({options_is_valid: true});
@@ -439,7 +404,6 @@ class GdexWithdrawModal extends React.Component {
             }
 
             if (asset) {
-                // Remove any assets that do not have valid core exchange rates
                 let priceIsValid = false, p;
                 try {
                     p = new Price({
@@ -465,8 +429,9 @@ class GdexWithdrawModal extends React.Component {
     }
 
     render() {
+
         let {withdraw_address_selected, memo} = this.state;
-        let storedAddress = WithdrawAddresses.get(this.props.output_coin_symbol);
+        let storedAddress = WithdrawAddresses.get(this.props.output_wallet_type);
         let balance = null;
 
         let account_balances = this.props.account.get("balances").toJS();
@@ -489,12 +454,8 @@ class GdexWithdrawModal extends React.Component {
         if (!this.state.withdraw_address_check_in_progress && (this.state.withdraw_address && this.state.withdraw_address.length))
         {
             if (!this.state.withdraw_address_is_valid) {
-                if(this.state.withdraw_address_error_code){
-                    invalid_address_message = <div className="has-error" style={{paddingTop: 10}}>{this.state.withdraw_address_error_code}: {this.state.withdraw_address_error_message}</div>;
-                }else{
-                    invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_name} /></div>;
-                }
 
+                invalid_address_message = <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={this.props.output_coin_type} /></div>;
                 confirmation =
                 <Modal id={withdrawModalId} overlay={true}>
                     <Trigger close={withdrawModalId}>
@@ -513,6 +474,10 @@ class GdexWithdrawModal extends React.Component {
                     </div>
 		        </Modal>;
             }
+            // if (this.state.withdraw_address_is_valid)
+            //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;
+            // else
+            //   invalid_address_message = <Icon name="cross-circle" className="alert" />;
         }
 
         let tabIndex = 1;
@@ -523,7 +488,6 @@ class GdexWithdrawModal extends React.Component {
 				<div className="content-block">
 					<label><Translate component="span" content="transfer.memo"/></label>
 					<textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                    {this.state.memo_error ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.memo_error" /></p>:null}
 				</div>;
         }
 
@@ -551,7 +515,7 @@ class GdexWithdrawModal extends React.Component {
         return (<form className="grid-block vertical full-width-content">
             <div className="grid-container">
                 <div className="content-block">
-                    <h3><Translate content="gateway.withdraw_coin" coin={this.props.output_coin_symbol} symbol={this.props.output_coin_name} /></h3>
+                    <h3><Translate content="gateway.withdraw_coin" coin={this.props.output_coin_name} symbol={this.props.output_coin_symbol} /></h3>
                 </div>
 
                 {/* Withdraw amount */}
@@ -564,12 +528,11 @@ class GdexWithdrawModal extends React.Component {
                         onChange={this.onWithdrawAmountChange.bind(this)}
                         display_balance={balance}
                     />
+                    <label className="left-label"><Translate content="winex.withdraw.winAmount" min_amount={this.props.min_withdraw_amount} asset={this.props.asset.get("symbol")}/></label>
+
                     {this.state.empty_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.valid" /></p>:null}
                     {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
-                    {this.state.below_minumum_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}>
-                        <Translate content="transfer.errors.minimum_amount" amount={this.props.minWithdrawAmount} symbol={this.props.asset.get("symbol")}/></p>:null}
-                    {this.state.precision_error ? <p className="has-error no-margin" style={{paddingTop: 10}}>
-                        <Translate content="transfer.errors.precision"  precision={this.props.output_coin_precision} /></p>:null}
+                    {this.state.minWithdrawError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="winex.transfer.errors.minWithdraw" min_amount={this.props.min_withdraw_amount + this.props.asset.get("symbol")}/></p>:null}
                 </div>
 
                 {/* Fee selection */}
@@ -593,14 +556,17 @@ class GdexWithdrawModal extends React.Component {
                     (<div className="amount-selector right-selector" style={{paddingBottom: 20}}>
                         <label className="left-label"><Translate content="gateway.fee" /></label>
                         <div className="inline-label input-wrapper">
-                            <input type="text" disabled value={this.props.gateFee} />
+                            <input type="text" disabled value={this.props.gateFee * 100} />
 
                             <div className="form-label select floating-dropdown">
                                 <div className="dropdown-wrapper inactive">
-                                    <div>{this.props.output_coin_symbol}</div>
+                                    <div>
+                                        {this.props.fee_type === "1" ? "%" : this.props.output_coin_symbol}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <label className="left-label"><Translate content="winex.withdraw.finalNumber" final_number={this.state.finalNumber}/></label>
                     </div>):null}
                 <div className="content-block">
                     <label className="left-label">
@@ -619,13 +585,12 @@ class GdexWithdrawModal extends React.Component {
                 </div>
 
                 {/* Memo input */}
-                {withdraw_memo}
+                {/*{withdraw_memo}*/}
 
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.below_minumum_withdraw_value ||
-                    this.state.memo_error || this.state.error || this.state.balanceError  || this.state.precision_error ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError  || this.state.minWithdrawError ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 
@@ -640,4 +605,4 @@ class GdexWithdrawModal extends React.Component {
     }
 };
 
-export default BindToChainState(GdexWithdrawModal, {keep_updating:true});
+export default BindToChainState(WinexWithdrawModal, {keep_updating:true});

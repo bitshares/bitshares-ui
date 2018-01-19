@@ -16,6 +16,16 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
+export const widechainAPIs = {
+    BASE : "https://gateway.winex.pro/api/v0/ol/support",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    NEW_DEPOSIT_ADDRESS: "/new-deposit-address",
+    WITHDRAW_HISTORY:"/latelyWithdraw",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_HISTORY:"/latelyRecharge"
+};
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
@@ -38,7 +48,7 @@ export const settingsAPIs = {
         {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
         {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
-        {url: "wss://api.bts.blckchnd.com", location: "Germany"}
+        {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"}
     ],
     DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding",  // 2017-12-infrastructure worker proposal
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",

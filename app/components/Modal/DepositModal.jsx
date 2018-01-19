@@ -49,6 +49,8 @@ class DepositModalContent extends DecimalChecker {
             let assetName = backedAsset[1];
             let assetGateway = backedAsset[0];
             this._getDepositAddress(assetName, assetGateway);
+        } else {
+            this.setState({ selectedAsset: "BTS" });
         }
     }
 
@@ -150,7 +152,7 @@ class DepositModalContent extends DecimalChecker {
                 fetchingAddress: false
             });
         } else {
-            console.log("Withdraw Modal Error: Unknown Gateway " + selectedGateway + "(asset: " + selectedAsset + ")");
+            console.log("Withdraw Modal Error: Unknown Gateway " + selectedGateway + " for asset " + selectedAsset);
         }
 
         this.setState({
@@ -215,6 +217,8 @@ class DepositModalContent extends DecimalChecker {
 
         const logo = require("assets/logo-ico-blue.png");
 
+        //console.log(selectedAsset + " w/ " + selectedGateway + " ", backingAsset, depositAddress);
+
         return (
             <div className="DepositModal">
                 <div className="canvas grid-block vertical no-overflow">
@@ -243,7 +247,7 @@ class DepositModalContent extends DecimalChecker {
                                 <div className="no-margin no-padding">
                                     <section className="block-list">
                                         <label className="left-label"><Translate content="modal.deposit.gateway" />
-                                            {selectedGateway ? <span>&nbsp;<Icon name="question-circle" onClick={this._openGatewaySite.bind(this)}/></span> : null}
+                                            {selectedGateway ? <span style={{cursor: "pointer"}}>&nbsp;<Icon name="question-circle" onClick={this._openGatewaySite.bind(this)}/></span> : null}
                                             <span className="floatRight error-msg">
                                                 {selectedGateway && !gatewayStatus[selectedGateway].enabled ? <Translate content="modal.deposit.disabled" /> : null}
                                                 {depositAddress && depositAddress.error ? <Translate content="modal.deposit.wallet_error" /> : null}
@@ -303,7 +307,7 @@ class DepositModalContent extends DecimalChecker {
                         : null}
                         {!usingGateway ?
                             <div className="container-row deposit-directly">
-                                <p>{account}</p>
+                                <p><span className="send-name">{account}</span></p>
                                 <p>
                                     <Translate content="modal.deposit.bts_transfer_description" />
                                 </p>

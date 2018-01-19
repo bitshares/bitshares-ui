@@ -32,7 +32,11 @@ $account-primarytext,
 $account-dimmed,
 $account-border,
 $account-background,
-$account-tabs-background
+$account-tabs-background,
+$pulsate-green-start,
+$pulsate-green-end,
+$pulsate-red-start,
+$pulsate-red-end
 ) {
 
   .fz_12{
@@ -274,6 +278,12 @@ $account-tabs-background
         }
 
     }
+    
+    .show-for-large {
+        a {
+            color: $light-text-color !important;
+        }
+    }
 
     .transfer-top {
         background-color: $light-panel-bg-color;
@@ -329,21 +339,21 @@ $account-tabs-background
             color: $account-green;
         }
 
+        div.header-right-lock {
+            padding: 1rem .25rem;
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
                     fill: $account-dimmed;
                 }
-
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
-                }
+            }
+            &:hover {
+                background-color: $bg-color;
             }
         }
 
@@ -1146,21 +1156,28 @@ $account-tabs-background
     li.stat.input {
         &:hover {background-color: lighten($panel-bg-color, 4%);}
     }
-    .stats .stat {
-        > span {
-            > span:first-of-type {
-                color: $primary-text-color;
-            }
-
-            > span.symbol-text {
-                color: #468EDE;
-            }
-        }
+    .stats .stressed-stat {
+        
+        padding: 10px 0;
+        font-size:18px;
+     
         &.is-call {
-            >span > b {
-                color: $call-color;
+                color: $call-color!important;
+        }   
+        
+        &.daily_change {
+            &.positive {
+                color:$account-green!important;
+            }
+            &.negative {
+                color:$negative-color !important;
             }
         }
+    }
+    
+    .stat-text {
+            font-size:11px;
+            color:gray;
     }
 
     .buy-sell-box {
@@ -1554,6 +1571,37 @@ $account-tabs-background
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
+    
+    .pulsate {
+        
+        &.red {
+            animation: pulsate-red .5s ease-out;
+        }
+        
+        &.green {
+            animation: pulsate-green .5s ease-out;
+        }
+        
+        animation-iteration-count: 1; 
+    }
+    
+    @-webkit-keyframes pulsate-green {
+        0% { 
+            color: $pulsate-green-start;
+        }
+        100% { 
+            color: $pulsate-green-end;
+        }
+    }
+    @-webkit-keyframes pulsate-red {
+        0% { 
+            color: $pulsate-red-start;
+        }
+        100% { 
+            color: $pulsate-red-end;
+        }
+    }
+    
 }
 
 .midnightTheme .gate_fee .amount-selector {

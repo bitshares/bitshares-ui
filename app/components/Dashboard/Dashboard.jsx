@@ -40,6 +40,7 @@ class Dashboard extends React.Component {
                 ["CNY", "GDEX.ETH"],
                 ["CNY", "GDEX.EOS"],
                 ["CNY", "GDEX.BTO"],
+                ["CNY", "GDEX.BTM"],
                 ["OPEN.BTC", "BTS"],
                 ["OPEN.BTC", "OPEN.ETH"],
                 ["OPEN.BTC", "OPEN.DASH"],
@@ -206,44 +207,6 @@ class Dashboard extends React.Component {
                     {this.props.onlyAccounts ? null : <div className="grid-block small-up-1 medium-up-3 large-up-4 no-overflow fm-outer-container">
                         {markets}
                     </div>}
-
-                    {accountCount ? (
-                        <div style={{paddingBottom: "3rem"}}>
-                            <div className="hide-selector" style={{paddingBottom: "1rem"}}>
-                                {entries.map((type, index) => {
-                                    return (
-                                        <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                            <Translate content={`account.${type}`} />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
-                                <div className="box-content">
-                                    <DashboardList
-                                        accounts={Immutable.List(names)}
-                                        ignoredAccounts={Immutable.List(ignored)}
-                                        width={width}
-                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
-                                        showIgnored={showIgnored}
-                                        showMyAccounts={currentEntry === "accounts"}
-                                    />
-                                    {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
-                                </div>
-                            </div> : null}
-
-                            {currentEntry === "recent" ? <RecentTransactions
-                                style={{marginBottom: 20, marginTop: 20}}
-                                accountsList={linkedAccounts}
-                                limit={10}
-                                compactView={false}
-                                fullHeight={true}
-                                showFilters={true}
-                                dashboard
-                            /> : null}
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );
