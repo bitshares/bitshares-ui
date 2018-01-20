@@ -1,6 +1,7 @@
 import alt from "alt-instance";
 import {ChainConfig} from "bitsharesjs-ws";
 import counterpart from "counterpart";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 class TransactionConfirmActions {
 
@@ -63,6 +64,7 @@ class TransactionConfirmActions {
     }
 
     close() {
+        ZfApi.publish("transaction_confirm_actions", "close");
         return true;
     }
 
