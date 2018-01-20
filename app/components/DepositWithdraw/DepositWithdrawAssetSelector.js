@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "alt-react";
 import BindToChainState from "../Utility/BindToChainState";
 import { Apis } from "bitsharesjs-ws";
-import { rudexAPIs } from "api/apiConfig";
+import { rudexAPIs ,tdexAPIs} from "api/apiConfig";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
@@ -26,6 +26,9 @@ class DepositWithdrawAssetSelector  extends React.Component {
                 backedCoin = item.backingCoinType;
             } else if(item.gatewayWallet && (item.gatewayWallet == "rudex" || item.gatewayWallet == "rudex-gateway")) {
                 gateway = "RUDEX";
+                backedCoin = item.backingCoin;
+            } else if(item.gatewayWallet && (item.gatewayWallet == "tdex" || item.gatewayWallet == "tdex-gateway")) {
+                gateway = "TDEX";
                 backedCoin = item.backingCoin;
             } else {
                 console.log("Not Found");
@@ -54,6 +57,7 @@ class DepositStoreWrapper extends React.Component {
         if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
             GatewayActions.fetchCoins.defer(); // Openledger
             GatewayActions.fetchCoinsSimple.defer({backer: "RUDEX", url:rudexAPIs.BASE+rudexAPIs.COINS_LIST}); // RuDEX
+            GatewayActions.fetchCoinsToken.defer({backer: "TDEX", url:tdexAPIs.BASE+tdexAPIs.COINS_LIST}); // TDEX
             GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
         }
     }
@@ -71,6 +75,7 @@ export default connect(DepositStoreWrapper, {
         return {
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
             rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
+            tdexBackedCoins: GatewayStore.getState().backedCoins.get("TDEX", []),
             blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", [])
         };
     }

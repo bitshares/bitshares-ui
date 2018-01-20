@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import { fetchCoins, fetchBridgeCoins, fetchCoinsSimple, getBackedCoins, getActiveWallets } from "common/blockTradesMethods";
+import {fetchCoins, fetchBridgeCoins, fetchCoinsSimple, fetchCoinsToken, getBackedCoins, getActiveWallets } from "common/blockTradesMethods";
 import {blockTradesAPIs} from "api/apiConfig";
 
 let inProgress = {};
@@ -52,6 +52,28 @@ class GatewayActions {
                     .then(coins => {
                         clearTimeout(fetchCoinsTimeout);
                         delete inProgress["fetchCoinsSimple_" + backer];
+
+                        dispatch({
+                            coins: coins,
+                            backer
+                        });
+                    });
+            };
+        } else {
+            return {};
+        }
+    }
+
+    fetchCoinsToken({backer = "TDEX", url = undefined} = {}) {
+
+        if (!inProgress["fetchCoinsToken_" + backer]) {
+            inProgress["fetchCoinsToken_" + backer] = true;
+            return (dispatch) => {
+                let fetchCoinsTimeout = setTimeout(onGatewayTimeout.bind(null, dispatch, backer), GATEWAY_TIMEOUT);
+                fetchCoinsSimple(url)
+                    .then(coins => {
+                        clearTimeout(fetchCoinsTimeout);
+                        delete inProgress["fetchCoinsToken_" + backer];
 
                         dispatch({
                             coins: coins,

@@ -14,9 +14,10 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import { Apis } from "bitsharesjs-ws";
-import { settingsAPIs, rudexAPIs } from "api/apiConfig";
+import { settingsAPIs, rudexAPIs, tdexAPIs } from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
+import TDexGateway from "../DepositWithdraw/tdex/TDexGateway";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import AccountImage from "../Account/AccountImage";
@@ -39,6 +40,7 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
+            tdexService: props.viewSettings.get("tdexService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             metaService: props.viewSettings.get("metaService", "bridge"),
             activeService: props.viewSettings.get("activeService", 0)
@@ -53,6 +55,7 @@ class AccountDepositWithdraw extends React.Component {
             !utils.are_equal_shallow(nextProps.openLedgerBackedCoins, this.props.openLedgerBackedCoins) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
+            nextState.tdexService !== this.state.tdexService ||
             nextState.btService !== this.state.btService ||
             nextState.metaService !== this.state.metaService ||
             nextState.activeService !== this.state.activeService
@@ -80,6 +83,16 @@ class AccountDepositWithdraw extends React.Component {
 
         SettingsActions.changeViewSetting({
             rudexService: service
+        });
+    }
+
+    toggleTDEXService(service) {
+        this.setState({
+            tdexService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            tdexService: service
         });
     }
 
@@ -114,11 +127,11 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
-    renderServices(openLedgerGatewayCoins, rudexGatewayCoins) {
+    renderServices(openLedgerGatewayCoins, rudexGatewayCoins, tdexGatewayCoins) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let { account } = this.props;
-        let { olService, btService, rudexService } = this.state;
+        let { olService, btService, rudexService,tdexService } = this.state;
 
         serList.push({
             name: "Openledger (OPEN.X)",
@@ -177,6 +190,31 @@ class AccountDepositWithdraw extends React.Component {
                     {rudexService === "fiat" ?
                         <div>
                             <Translate content="gateway.rudex.coming_soon" />
+                        </div> : null}
+                </div>
+            )
+        });
+
+        serList.push({
+            name: "TDEX (TDEX.X)",
+            template: (
+                <div className="content-block">
+                    <div className="service-selector">
+                        <ul className="button-group segmented no-margin">
+                            <li onClick={this.toggleTDEXService.bind(this, "gateway")}
+                                className={tdexService === "gateway" ? "is-active" : ""}><a><Translate
+                                content="gateway.gateway"/></a></li>
+                            <li onClick={this.toggleTDEXService.bind(this, "fiat")}
+                                className={tdexService === "fiat" ? "is-active" : ""}><a>Fiat</a></li>
+                        </ul>
+                    </div>
+
+                    {tdexService === "gateway" && tdexGatewayCoins.length ?
+                        <TDexGateway account={account} coins={tdexGatewayCoins}/> : null}
+
+                    {tdexService === "fiat" ?
+                        <div>
+                            <Translate content="gateway.tdex.coming_soon" />
                         </div> : null}
                 </div>
             )
@@ -271,7 +309,20 @@ class AccountDepositWithdraw extends React.Component {
             return 0;
         });
 
-        let services = this.renderServices(openLedgerGatewayCoins, rudexGatewayCoins);
+
+        let tdexGatewayCoins = this.props.tdexBackedCoins.map(coin => {
+            return coin;
+        })
+        .sort((a, b) => {
+            if (a.symbol < b.symbol)
+                return -1;
+            if (a.symbol > b.symbol)
+                return 1;
+            return 0;
+        });
+
+
+        let services = this.renderServices(openLedgerGatewayCoins, rudexGatewayCoins,tdexGatewayCoins);
 
         let options = services.map((services_obj, index) => {
             return <option key={index} value={index}>{services_obj.name}</option>;
@@ -343,6 +394,7 @@ class DepositStoreWrapper extends React.Component {
         if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
             GatewayActions.fetchCoins.defer(); // Openledger
             GatewayActions.fetchCoinsSimple.defer({backer: "RUDEX", url:rudexAPIs.BASE+rudexAPIs.COINS_LIST}); // RuDEX
+            GatewayActions.fetchCoinsToken.defer({backer: "TDEX", url:tdexAPIs.BASE+tdexAPIs.COINS_LIST}); // TDEX
             GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
         }
     }
@@ -362,6 +414,7 @@ export default connect(DepositStoreWrapper, {
             viewSettings: SettingsStore.getState().viewSettings,
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
             rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
+            tdexBackedCoins: GatewayStore.getState().backedCoins.get("TDEX", []),
             blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", []),
             servicesDown: GatewayStore.getState().down || {}
         };
