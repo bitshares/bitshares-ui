@@ -10,6 +10,7 @@ require("file-loader?name=asset-symbols/[name].png!./btc.png");
 require("file-loader?name=asset-symbols/silver.png!./silver.png");
 
 // 3rd party assets
+require("file-loader?name=asset-symbols/debitcoin.png!./debitcoin.png");
 require("file-loader?name=asset-symbols/[name].png!./eth.png");
 require("file-loader?name=asset-symbols/[name].png!./steem.png");
 require("file-loader?name=asset-symbols/[name].png!./mkr.png");

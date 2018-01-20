@@ -1431,6 +1431,13 @@
       "coming_soon": "Coming soon",
       "under_construction": "Under Construction"
     },
+    "tdex": {
+      "support_block": "For support, please contact TDEX at:",
+      "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+      "min_amount_error": "Please enter number >= minimum",
+      "coming_soon": "Coming soon",
+      "under_construction": "Under Construction"
+    },
     "unavailable": "The gateway service for this asset is currently down, please try again later",
     "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
     "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
