@@ -92,9 +92,10 @@ export default class SendModal extends React.Component {
         e.preventDefault();
         this.setState({error: null});
 
-        const {asset, amount} = this.state;
+        const {asset} = this.state;
+        let {amount} = this.state;
         if (this.state.feeAsset && this.state.fee_asset_id == this.state.asset_id) {
-            amount = _adjustBalanceForFee();
+            amount = this._adjustBalanceForFee();
         }
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
 
@@ -119,10 +120,54 @@ export default class SendModal extends React.Component {
     }
 
     _adjustBalanceForFee() {
-        const {feeAmount, amount, from_account, asset} = this.state;
-        return amount if asset.get("id") != this.state.feeAsset.get("id");
+        const {feeAmount, amount, from_account, asset, memo} = this.state;
+        if (asset.get("id") != this.state.feeAsset.get("id")) {
+          return amount;
+        }
 
+        const balanceID = from_account.getIn(["balances", asset.get("id")]);
+        let balanceObject = ChainStore.getObject(balanceID);
+        if (!balanceObject) {
+          return amount;
+        }
 
+        if (balanceObject.get("balance") >= amount + feeAmount) {
+          return amount;
+        }
+
+        const globalObject = ChainStore.getObject("2.0.0")
+        const feeWithMemo = estimateFee(
+          "transfer",
+          ["price_per_kbyte"],
+          globalObject,
+          {
+              type: "memo",
+              content: memo
+          }
+        )
+
+        const feeWithoutMemo = estimateFee(
+          "transfer",
+          ["price_per_kbyte"],
+          globalObject,
+        )
+
+        console.log(
+          balanceObject,
+          amount,
+          feeWithMemo,
+          feeWithoutMemo
+        );
+
+        throw feeWithMemo.toString() + " -- Error -- " + feeWithoutMemo.toString();
+
+        // Adjust the fee in the case where we're trying to send the full amount but the
+        // modal fee was calculated before entering a memo
+        if (balanceObject.get("balance") === amount + feeWithoutMemo) {
+          return amount - (feeWithMemo - feeWithoutMemo);
+        }
+
+        return amount;
     }
 
     _initForm() {
