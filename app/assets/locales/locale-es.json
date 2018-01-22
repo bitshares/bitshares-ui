@@ -443,7 +443,7 @@
   },
   "transfer": {
     "header": "Detalles de transferencia",
-    "header_subheader": "Las transferencias se utilizan para enviar fondos a<br /> otros titulares de cuentas BitShares",
+    "header_subheader": "Las transferencias se utilizan para enviar fondos a otros titulares de cuentas BitShares",
     "from": "Desde",
     "pay_from": "Pagar Desde",
     "amount": "Monto",

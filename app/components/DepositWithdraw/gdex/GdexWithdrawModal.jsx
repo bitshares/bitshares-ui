@@ -522,7 +522,7 @@ class GdexWithdrawModal extends React.Component {
             withdraw_memo =
 				<div className="content-block">
 					<label><Translate component="span" content="transfer.memo"/></label>
-					<textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+					<textarea rows="3" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                     {this.state.memo_error ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.memo_error" /></p>:null}
 				</div>;
         }
