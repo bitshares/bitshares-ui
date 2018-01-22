@@ -52,7 +52,8 @@ export default class SendModal extends React.Component {
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
-            feeStatus: {}
+            feeStatus: {},
+            maxAmount: false
         };
 
     };
@@ -82,7 +83,8 @@ export default class SendModal extends React.Component {
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
-            feeStatus: {}
+            feeStatus: {},
+            maxAmount: false
         }, () => {
             if (publishClose) ZfApi.publish(this.props.id, "close");
         });
@@ -94,11 +96,7 @@ export default class SendModal extends React.Component {
 
         const {asset} = this.state;
         let {amount} = this.state;
-        if (this.state.feeAsset && this.state.fee_asset_id == this.state.asset_id) {
-            amount = this._adjustBalanceForFee();
-        }
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
-
 
         AccountActions.transfer(
             this.state.from_account.get("id"),
@@ -117,57 +115,6 @@ export default class SendModal extends React.Component {
             console.log( "error: ", e, msg);
             this.setState({error: msg});
         } );
-    }
-
-    _adjustBalanceForFee() {
-        const {feeAmount, amount, from_account, asset, memo} = this.state;
-        if (asset.get("id") != this.state.feeAsset.get("id")) {
-          return amount;
-        }
-
-        const balanceID = from_account.getIn(["balances", asset.get("id")]);
-        let balanceObject = ChainStore.getObject(balanceID);
-        if (!balanceObject) {
-          return amount;
-        }
-
-        if (balanceObject.get("balance") >= amount + feeAmount) {
-          return amount;
-        }
-
-        const globalObject = ChainStore.getObject("2.0.0")
-        const feeWithMemo = estimateFee(
-          "transfer",
-          ["price_per_kbyte"],
-          globalObject,
-          {
-              type: "memo",
-              content: memo
-          }
-        )
-
-        const feeWithoutMemo = estimateFee(
-          "transfer",
-          ["price_per_kbyte"],
-          globalObject,
-        )
-
-        console.log(
-          balanceObject,
-          amount,
-          feeWithMemo,
-          feeWithoutMemo
-        );
-
-        throw feeWithMemo.toString() + " -- Error -- " + feeWithoutMemo.toString();
-
-        // Adjust the fee in the case where we're trying to send the full amount but the
-        // modal fee was calculated before entering a memo
-        if (balanceObject.get("balance") === amount + feeWithoutMemo) {
-          return amount - (feeWithMemo - feeWithoutMemo);
-        }
-
-        return amount;
     }
 
     _initForm() {
@@ -302,7 +249,7 @@ export default class SendModal extends React.Component {
             if (feeAmount.asset_id === balance.asset_id) {
                 balance.minus(feeAmount);
             }
-            this.setState({amount: balance.getAmount({real: true})}, this._checkBalance);
+            this.setState({maxAmount: true, amount: balance.getAmount({real: true})}, this._checkBalance);
         }
     }
 
@@ -386,7 +333,7 @@ export default class SendModal extends React.Component {
         if (!asset) {
             return;
         }
-        this.setState({amount, asset, asset_id: asset.get("id"), error: null}, this._checkBalance);
+        this.setState({amount, asset, asset_id: asset.get("id"), error: null, maxAmount: false}, this._checkBalance);
     }
 
     onFeeChanged({asset}) {
@@ -394,6 +341,13 @@ export default class SendModal extends React.Component {
     }
 
     onMemoChanged(e) {
+        let { asset_types, fee_asset_types } = this._getAvailableAssets();
+        let {from_account, from_error, maxAmount} = this.state;
+        if (from_account && from_account.get("balances") && !from_error && maxAmount) {
+            let account_balances = from_account.get("balances").toJS();
+            let current_asset_id = asset_types[0];
+            this._setTotal(current_asset_id, account_balances[current_asset_id]);
+        }
         this.setState({memo: e.target.value}, this._updateFee);
     }
 
