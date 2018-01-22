@@ -59,7 +59,7 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
-            maxAmount: false
+            maxAmount: false,
             hidden: false
         };
 
@@ -92,7 +92,7 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
-            maxAmount: false
+            maxAmount: false,
             hidden: false
         }, () => {
             if (publishClose) ZfApi.publish(this.props.id, "close");
