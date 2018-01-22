@@ -15,11 +15,18 @@
         padding-bottom: 0 !important;
         border-top: none;
     }
+}
 
-    .main-content {
-        .top-bar {
-            border-bottom: 1px solid $border-color;
-        }
+.top-bar { 
+    
+    border-bottom: 1px solid grey;
+    
+    .shuffle {
+        margin: 0 10px;
+    }
+
+    ul {
+        line-height:1.2;
     }
 }
 
@@ -230,8 +237,9 @@ ul.market-stats {
 }
 
 .top-stats li {
-    border-right: 1px solid $border-color;
+    /*border-right: 1px solid $border-color;*/
     min-height: 42px;
+    margin-left:25px;
 }
 
 .bottom-stats li {

@@ -108,6 +108,10 @@ class SettingsStore {
             let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
             if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
         }
+        if (savedDefaults && savedDefaults.themes) {
+            let olIdx = savedDefaults.themes.findIndex(a => a === "olDarkTheme");
+            if (olIdx !== -1) savedDefaults.themes[olIdx] = "midnightTheme";
+        }
         if (savedDefaults.apiServer) {
             savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
                 return !defaults.apiServer.find(b => {
@@ -173,7 +177,9 @@ class SettingsStore {
                     "OPEN.USDT", "OPEN.EURT", "OPEN.BTC", "CADASTRAL", "BLOCKPAY", "BTWTY",
                     "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
                     "YOYOW", "HERO", "RUBLE", "SMOKE", "STEALTH", "BRIDGE.BCO",
-                    "BRIDGE.BTC", "KEXCOIN", "PPY", "OPEN.EOS", "OPEN.OMG"
+                    "BRIDGE.BTC", "KEXCOIN", "PPY", "OPEN.EOS", "OPEN.OMG", "CVCOIN",
+                    "BRIDGE.ZNY", "BRIDGE.MONA", "OPEN.LTC", "GDEX.BTC", "GDEX.EOS", "GDEX.ETH",
+                    "GDEX.BTO", "WIN.ETH", "WIN.ETC", "WIN.HSR"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"

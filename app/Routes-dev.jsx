@@ -45,6 +45,7 @@ import {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete} from "./
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
+import News from "./components/News";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import LoginSelector from "./components/LoginSelector";
@@ -136,6 +137,7 @@ const routes = (
         <Route path="deposit-withdraw" component={AccountDepositWithdraw} />
         <Route path="create-worker" component={CreateWorker} />
         <Route path="/init-error" component={InitError} />
+        <Route path="/news" component={News} />
         <Route path="/help" component={Help} >
             <Route path=":path1" component={Help} >
                 <Route path=":path2" component={Help} >

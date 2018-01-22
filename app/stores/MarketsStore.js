@@ -402,7 +402,7 @@ class MarketsStore {
     }
 
     onCallOrderUpdate(call_order) {
-        if (call_order && this.quoteAsset && this.baseAsset) {
+        if (call_order && this.quoteAsset && this.baseAsset && this.feedPrice) {
             if (call_order.call_price.quote.asset_id === this.quoteAsset.get("id") || call_order.call_price.quote.asset_id === this.baseAsset.get("id")) {
 
                 const assets = {
@@ -426,7 +426,7 @@ class MarketsStore {
                         this._depthChart();
                     }
                 } catch(err) {
-                    console.error("Unable to construct calls array, invalid feed price or prediction market?");
+                    console.error("Unable to construct calls array, invalid feed price or prediction market?", call_order, this.quoteAsset && this.quoteAsset.get("id"), this.baseAsset && this.baseAsset.get("id"));
                 }
 
             }
@@ -936,6 +936,7 @@ class MarketsStore {
     }
 
     _calcMarketStats(history, baseAsset, quoteAsset, recent, market) {
+        if (!history) return;
         let yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         yesterday = yesterday.getTime();
@@ -1074,7 +1075,7 @@ class MarketsStore {
             result.settles.forEach(settle => {
                 // let key = settle.owner + "_" + settle.balance.asset_id;
 
-                settle.settlement_date = new Date(settle.settlement_date);
+                settle.settlement_date = new Date(settle.settlement_date + "Z");
 
                 this.marketSettleOrders = this.marketSettleOrders.add(
                     new SettleOrder(settle, assets, this.quoteAsset.get("id"), this.feedPrice, this.bitasset_options)

@@ -7,6 +7,10 @@ let assetsRequest = {};
 let REQUEST_TIMEOUT = 10000;
 
 
+export function fetchWithdrawRule(reqBody, timeout=-1){
+    return requestSimple(reqBody, gdexAPIs.BASE + gdexAPIs.WITHDRAW_RULE, timeout);
+}
+
 export function userAgreement(reqBody, timeout=-1){
     return requestSimple(reqBody, gdexAPIs.BASE + gdexAPIs.USER_AGREEMENT, timeout);
 }
@@ -61,7 +65,7 @@ function requestWithTimeout(reqBody, reqUrl, timeout){
     if(!reqBody.requestChannel) reqBody.requestChannel = 0;
     if(!reqBody.version) reqBody.version = "1.0";
     if(!reqBody.timestamp) reqBody.timestamp = new Date().getTime();
-    if(!reqBody.outerChannel) reqBody.outerChannel = "bitshares";
+    if(!reqBody.outerChannel) reqBody.outerChannel = "Bitshares";
     let body_string = JSON.stringify(reqBody);
     if (assetsRequest[body_string]) return;
     assetsRequest[body_string] = true;
@@ -71,6 +75,7 @@ function requestWithTimeout(reqBody, reqUrl, timeout){
                 method: "post",
                 headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
                 body: body_string,
+                // mode: "no-cors"
             }).then(reply => {
                 reply.json().then(json => {
                     delete assetsRequest[body_string];
@@ -78,7 +83,6 @@ function requestWithTimeout(reqBody, reqUrl, timeout){
                         console.log(json);
                         reject({"code":json.code, "message":json.message});
                     }
-                    // console.log(json.data)
                     resolve(json.data);
 
                 }).catch(err => {
@@ -100,7 +104,7 @@ function requestWithoutTimeout(reqBody, reqUrl){
     if(!reqBody.requestChannel) reqBody.requestChannel = 0;
     if(!reqBody.version) reqBody.version = "1.0";
     if(!reqBody.timestamp) reqBody.timestamp = new Date().getTime();
-    if(!reqBody.outerChannel) reqBody.outerChannel = "bitshares";
+    if(!reqBody.outerChannel) reqBody.outerChannel = "Bitshares";
     let body_string = JSON.stringify(reqBody);
     if (assetsRequest[body_string]) return;
     assetsRequest[body_string] = true;
@@ -109,7 +113,6 @@ function requestWithoutTimeout(reqBody, reqUrl){
             method: "post",
             headers: new Headers({"Accept": "application/json", "Content-Type": "application/json"}),
             body: body_string,
-            // mode: "no-cors"
         }).then(reply => {
             reply.json().then(json => {
                 delete assetsRequest[body_string];

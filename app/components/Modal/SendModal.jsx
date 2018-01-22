@@ -26,16 +26,22 @@ export default class SendModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = SendModal.getInitialState();
+        this.state = this.getInitialState(props);
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
+
+        ZfApi.subscribe("transaction_confirm_actions", (name, msg) => {
+            if (msg == "close") {
+                this.setState({ hidden: false });
+            }
+        });
     };
 
-    static getInitialState() {
+    getInitialState() {
         return {
             from_name: "",
             to_name: "",
@@ -52,23 +58,23 @@ export default class SendModal extends React.Component {
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
-            feeStatus: {}
+            feeStatus: {},
+            hidden: false
         };
 
     };
 
     show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish("send_modal", "open");
+        this.setState({open: true, hidden: false}, () => {
+            ZfApi.publish(this.props.id, "open");
+            this._initForm();
         });
-        this._initForm();
     }
 
-    onClose() {
-        this.setState({open: false}, () => {
-            ZfApi.publish("send_modal", "close");
-        });
+    onClose(publishClose = true) {
+        ZfApi.unsubscribe("transaction_confirm_actions");
         this.setState({
+            open: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -84,7 +90,10 @@ export default class SendModal extends React.Component {
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
-            feeStatus: {}
+            feeStatus: {},
+            hidden: false
+        }, () => {
+            if (publishClose) ZfApi.publish(this.props.id, "close");
         });
     }
 
@@ -93,6 +102,8 @@ export default class SendModal extends React.Component {
         this.setState({error: null});
         const {asset, amount} = this.state;
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
+
+        this.setState({ hidden: true });
 
         AccountActions.transfer(
             this.state.from_account.get("id"),
@@ -126,6 +137,16 @@ export default class SendModal extends React.Component {
         if (!this.state.from_name) {
             this.setState({from_name: currentAccount});
         }
+
+        if (this.props.asset_id && this.state.asset_id !== this.props.asset_id) {
+            let asset = ChainStore.getAsset(this.props.asset_id);
+            if (asset) {
+                this.setState({
+                    asset_id: this.props.asset_id,
+                    asset
+                });
+            }
+        }
     }
 
     componentWillMount() {
@@ -153,6 +174,8 @@ export default class SendModal extends React.Component {
                 }
             }
         }
+
+        if (!ns.open && !this.state.open) return false;
         return true;
     }
 
@@ -372,7 +395,7 @@ export default class SendModal extends React.Component {
     }
 
     render() {
-        let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount, amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError} = this.state;
+        let {propose, from_account, to_account, asset, asset_id, propose_account, feeAmount, amount, error, to_name, from_name, memo, feeAsset, fee_asset_id, balanceError, hidden} = this.state;
         let from_my_account = AccountStore.isMyAccount(from_account) || from_name === this.props.passwordAccount;
         let from_error = from_account && ! from_my_account && ! propose ? true : false;
 
@@ -412,128 +435,133 @@ export default class SendModal extends React.Component {
         const logo = require("assets/logo-ico-blue.png");
         let tabIndex = 1;
 
+        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
+
         return (
-            <BaseModal id="send_modal" overlay={true} ref="send_modal">
-                <div className="grid-block vertical no-overflow">
-                    <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
-                        <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
-                        { !propose ?
-                            <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
-                                <Translate unsafe content="modal.send.header" with={{fromName: from_name}} />
-                            </div> :
-                            <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
-                                <Translate unsafe content="modal.send.header_propose" with={{fromName: from_name}} />
+            <div id="send_modal_wrapper" className={hidden || !this.state.open ? "hide" : ""}>
+                <BaseModal id={this.props.id} className="send_modal" overlay={true} onClose={this.onClose.bind(this, false)}>
+                    <div className="grid-block vertical no-overflow">
+                        <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
+                            <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
+                            { !propose ?
+                                <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
+                                    <Translate unsafe content="modal.send.header" with={{fromName: from_name}} />
+                                </div> :
+                                <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
+                                    <Translate unsafe content="modal.send.header_propose" with={{fromName: from_name}} />
+                                </div>
+                            }
+                            <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
+                                <Translate unsafe content="transfer.header_subheader" />
                             </div>
-                        }
-
-                        <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
-                            <Translate unsafe content="transfer.header_subheader" />
                         </div>
-                    </div>
-                    <form noValidate>
-                        <div>
-                            {/* T O */}
-                            <div className="content-block">
-                                <AccountSelector
-                                    label="transfer.to"
-                                    accountName={to_name}
-                                    account={to_name}
-                                    onChange={this.toChanged.bind(this)}
-                                    onAccountChanged={this.onToAccountChanged.bind(this)}
-                                    size={60}
-                                    tabIndex={tabIndex++}
-                                    hideImage
-                                />
-                            </div>
+                        {this.state.open ? <form noValidate>
+                            <div>
+                                {/* T O */}
+                                <div className="content-block">
+                                    <AccountSelector
+                                        label="transfer.to"
+                                        accountName={to_name}
+                                        account={to_name}
+                                        onChange={this.toChanged.bind(this)}
+                                        onAccountChanged={this.onToAccountChanged.bind(this)}
+                                        size={60}
+                                        typeahead={greenAccounts}
+                                        tabIndex={tabIndex++}
+                                        hideImage
+                                    />
+                                </div>
 
-                            <div className="content-block transfer-input">
-                                {/*  A M O U N T  */}
-                                <AmountSelector
-                                    label="transfer.amount"
-                                    amount={amount}
-                                    onChange={this.onAmountChanged.bind(this)}
-                                    asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
-                                    assets={asset_types}
-                                    display_balance={balance}
-                                    tabIndex={tabIndex++}
-                                />
-                            </div>
-                            {/*  M E M O  */}
-                            <div className="content-block transfer-input">
-                                {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
-                                <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
-                                <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-                                {/* warning */}
-                                { this.state.propose ?
-                                    <div className="error-area" style={{position: "absolute"}}>
-                                        <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
-                                    </div>
-                                :null}
-                            </div>
-
-                            <div className="content-block transfer-input">
-                                <div className="no-margin no-padding">
-                                    {/*  F E E  */}
-                                    <div id="txFeeSelector" className="small-12">
-                                        <AmountSelector
-                                            label="transfer.fee"
-                                            disabled={true}
-                                            amount={fee}
-                                            onChange={this.onFeeChanged.bind(this)}
-                                            asset={fee_asset_types.length && feeAmount ? feeAmount.asset_id : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
-                                            assets={fee_asset_types}
-                                            display_balance={balance_fee}
-                                            tabIndex={tabIndex++}
-                                            error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
-                                        />
-                                    </div>
-                                    {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
-                                        <span className="grid-block tooltip" data-place="top" data-tip={counterpart.translate("tooltip.propose_tip")} onClick={this.onProposeTooltip.bind(this)}>
-                                            <Translate className="left-label" component="label" content="propose"/>
-                                            <Icon style={{position: "relative", top: 0, marginLeft: "0.5rem"}} name="question-circle" />
-                                        </span>
-                                        <div className="switch" style={{marginBottom: "-6px"}} onClick={this.onPropose.bind(this)}>
-                                            <input type="checkbox" checked={this.state.propose} tabIndex={tabIndex++} />
-                                            <label />
+                                <div className="content-block transfer-input">
+                                    {/*  A M O U N T  */}
+                                    <AmountSelector
+                                        label="transfer.amount"
+                                        amount={amount}
+                                        onChange={this.onAmountChanged.bind(this)}
+                                        asset={asset_types.length > 0 && asset ? asset.get("id") : ( asset_id ? asset_id : asset_types[0])}
+                                        assets={asset_types}
+                                        display_balance={balance}
+                                        tabIndex={tabIndex++}
+                                    />
+                                </div>
+                                {/*  M E M O  */}
+                                <div className="content-block transfer-input">
+                                    {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
+                                    <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
+                                    <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                                    {/* warning */}
+                                    { this.state.propose ?
+                                        <div className="error-area" style={{position: "absolute"}}>
+                                            <Translate content="transfer.warn_name_unable_read_memo" name={this.state.from_name} />
                                         </div>
-                                    </div> */}
+                                    :null}
                                 </div>
-                            </div>
 
-                            {propose ?
-                            <div className="content-block transfer-input">
-                                <label className="left-label"><Translate content="account.propose_from" /></label>
-                                <AccountSelect
-                                    account_names={AccountStore.getMyAccounts()}
-                                    onChange={this.onProposeAccount.bind(this)}
-                                    tabIndex={tabIndex++}
-                                />
-                            </div>
-                            :null}
-
-                            <div className="content-block transfer-input" style={{textAlign: "center"}}>
-                                <div className="no-margin no-padding">
-                                    <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
-                                        <button className={classnames("red")} type="submit" value="Cancel" tabIndex={tabIndex++} onClick={this.onClose.bind(this)}>
-                                            <Translate component="span" content="transfer.cancel" />
-                                        </button>
+                                <div className="content-block transfer-input">
+                                    <div className="no-margin no-padding">
+                                        {/*  F E E  */}
+                                        <div id="txFeeSelector" className="small-12">
+                                            <AmountSelector
+                                                label="transfer.fee"
+                                                disabled={true}
+                                                amount={fee}
+                                                onChange={this.onFeeChanged.bind(this)}
+                                                asset={fee_asset_types.length && feeAmount ? feeAmount.asset_id : ( fee_asset_types.length === 1 ? fee_asset_types[0] : fee_asset_id ? fee_asset_id : fee_asset_types[0])}
+                                                assets={fee_asset_types}
+                                                display_balance={balance_fee}
+                                                tabIndex={tabIndex++}
+                                                error={this.state.hasPoolBalance === false ? "transfer.errors.insufficient" : null}
+                                                scroll_length={2}
+                                            />
+                                        </div>
+                                        {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
+                                            <span className="grid-block tooltip" data-place="top" data-tip={counterpart.translate("tooltip.propose_tip")} onClick={this.onProposeTooltip.bind(this)}>
+                                                <Translate className="left-label" component="label" content="propose"/>
+                                                <Icon style={{position: "relative", top: 0, marginLeft: "0.5rem"}} name="question-circle" />
+                                            </span>
+                                            <div className="switch" style={{marginBottom: "-6px"}} onClick={this.onPropose.bind(this)}>
+                                                <input type="checkbox" checked={this.state.propose} tabIndex={tabIndex++} />
+                                                <label />
+                                            </div>
+                                        </div> */}
                                     </div>
-                                    <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
-                                        {propose ?
-                                            <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
-                                                <Translate component="span" content="propose" />
-                                            </button> :
-                                            <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
-                                                <Translate component="span" content="transfer.send" />
+                                </div>
+
+                                {propose ?
+                                <div className="content-block transfer-input">
+                                    <label className="left-label"><Translate content="account.propose_from" /></label>
+                                    <AccountSelect
+                                        account_names={AccountStore.getMyAccounts()}
+                                        onChange={this.onProposeAccount.bind(this)}
+                                        tabIndex={tabIndex++}
+                                    />
+                                </div>
+                                :null}
+
+                                <div className="content-block transfer-input" style={{textAlign: "center"}}>
+                                    <div className="no-margin no-padding">
+                                        <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
+                                            <button className={classnames("red")} type="submit" value="Cancel" tabIndex={tabIndex++} onClick={this.onClose.bind(this)}>
+                                                <Translate component="span" content="transfer.cancel" />
                                             </button>
-                                        }
+                                        </div>
+                                        <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
+                                            {propose ?
+                                                <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
+                                                    <Translate component="span" content="propose" />
+                                                </button> :
+                                                <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
+                                                    <Translate component="span" content="transfer.send" />
+                                                </button>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </BaseModal>
+                        </form> : null}
+                    </div>
+                </BaseModal>
+            </div>
         );
     }
 };

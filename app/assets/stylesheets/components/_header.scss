@@ -118,10 +118,10 @@ div.header-right-menu {
 div.account-drop-down div.dropdown-wrapper {
     padding: 0;
 
-    span.caret {
+    div.hamburger {
         position: absolute;
         right: 12px;
-        top: 20px;
+        top: 22px;
     }
 
     > li {
@@ -151,6 +151,7 @@ div.account-drop-down div.dropdown-wrapper {
 ul.dropdown.header-menu {
     transition: padding 0s, height 3s linear;
     border: none;
+    z-index: 1004;
     > li {
         padding: 2px 5px 2px 10px;
         > div {

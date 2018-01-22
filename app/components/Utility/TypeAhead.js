@@ -1,14 +1,14 @@
-import Autocomplete from "react-autocomplete"
 import React from "react"
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component"
+import Autocomplete from "react-autocomplete";
 
 class TypeAhead extends React.Component {
     constructor (props) {
-        super(props)
+        super(props);
         this.state = {
-            value: "",
-        }
+            value: this.props.defaultValue
+        };
     }
 
     componentWillReceiveProps(nextProps){
@@ -37,7 +37,7 @@ class TypeAhead extends React.Component {
         const { value } = state;
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
-            <label className="left-label"><Translate content="gateway.symbol" /></label>
+            {!!this.props.label ? <label className="left-label"><Translate content={this.props.label} /></label> : null}
             <Autocomplete
                 ref="autocomplete"
                 items={props.items || [
@@ -55,12 +55,13 @@ class TypeAhead extends React.Component {
                     {item.label}
                     </div>
                 }
-                value={this.state.value}
+                value={value}
+                selectOnBlur={this.props.selectOnBlur}
                 onChange={this.onChange.bind(this)}
                 onSelect={this.onSelect.bind(this)}
             />
-            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "35px"}} onClick={this.focus.bind(this)} />
-        </div>
+        <Icon name="chevron-down" style={{position: "absolute", right: 10, top: !!this.props.label ? 35 : 7}} onClick={this.focus.bind(this)} />
+        </div>;
     }
 }
 

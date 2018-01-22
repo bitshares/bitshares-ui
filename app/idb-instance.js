@@ -1,13 +1,14 @@
 import {Apis} from "bitsharesjs-ws";
 import idb_helper from "idb-helper";
 import iDBRoot from "idb-root";
+import chainIds from "chain/chainIds";
 
 const DB_VERSION = 2; // Initial value was 1
 const DB_PREFIX = "graphene_v2";
 const WALLET_BACKUP_STORES = [
     "wallet", "private_keys", "linked_accounts"
 ];
-const MAIN_NET_CHAINID = "4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8";
+const MAIN_NET_CHAINID = chainIds.MAIN_NET;
 
 
 var current_wallet_name = "default";
