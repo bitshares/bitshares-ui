@@ -472,6 +472,7 @@ $pulsate-red-end
         }
         > tbody > tr > td {
             border-bottom-color: $dark-text-color;
+            font-size: 0.875rem;
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
