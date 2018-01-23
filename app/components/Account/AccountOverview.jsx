@@ -603,10 +603,10 @@ class AccountOverview extends React.Component {
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
                                     <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <Translate content="account.hide_hidden" />
+                                        <h4><Translate content="account.hide_hidden" /></h4>
                                     </div>
                                     {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <Translate content="account.show_hidden" />
+                                        <h4><Translate content="account.show_hidden" /></h4>
                                     </div> : null}
 
                                     {/* Send Modal */}
