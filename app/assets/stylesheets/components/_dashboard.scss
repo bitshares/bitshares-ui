@@ -32,14 +32,16 @@ div.fm-container {
    }
 
    .fm-name {
-    @include RobotoMedium;
-    padding-bottom: 10px;
+        @include RobotoMedium;
+        padding-bottom: 10px;
+        font-size: 1.125rem;
+
    }
 
    .fm-volume, .fm-change {
-    text-transform: lowercase;
-    font-variant: small-caps;
-    padding-top: 6px;
+        text-transform: lowercase;
+        font-variant: small-caps;
+        padding-top: 6px;
    }
 }
 
