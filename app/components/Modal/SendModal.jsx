@@ -22,7 +22,7 @@ import classnames from "classnames";
 export default class SendModal extends React.Component {
     static contextTypes = {
         router: React.PropTypes.object
-    };
+    }; 
 
     constructor(props) {
         super(props);

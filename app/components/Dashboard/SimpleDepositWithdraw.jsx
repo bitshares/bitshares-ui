@@ -447,7 +447,7 @@ class DepositWithdrawContent extends DecimalChecker {
                     <div className="SimpleTrade__withdraw-row">
                         <label className="left-label">{counterpart.translate("transfer.memo")}</label>
                             <div className="inline-label input-wrapper">
-                                <textarea rows="3" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
+                                <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
                             </div>
                         {!this.state.validAddress && this.state.toAddress ? <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={assetName} /></div> : null}
                     </div>
