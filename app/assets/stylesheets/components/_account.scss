@@ -233,13 +233,13 @@ table.table.dashboard-table {
     }
     > thead > tr > th {
         @include RobotoMedium;
-        font-size: 80%;
+        font-size: 0.875rem;
         text-align: center;
         border: none;
     }
     > tbody > tr {
         > td {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             text-align: center;
             border: none;
 
