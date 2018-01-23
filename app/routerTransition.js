@@ -72,6 +72,10 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
             ]);
         });
     };
+    
+    if (nextState.location.pathname === "/init-error") {
+        return callback();
+    }
 
     const apiLatencies = SettingsStore.getState().apiLatencies;
     latencyChecks = ss.get("latencyChecks", 1);
@@ -186,12 +190,6 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     };
 
     connectionManager = new Manager({url: connectionString, urls});
-    if (nextState.location.pathname === "/init-error") {
-        return Apis.reset(connectionString, true).then(instance => {
-            return instance.init_promise
-            .then(onConnect).catch(onResetError);
-        });
-    }
     let connectionCheckPromise = !apiLatenciesCount ?
         _connectionCheckPromise ? _connectionCheckPromise :
         connectionManager.checkConnections() : null;
