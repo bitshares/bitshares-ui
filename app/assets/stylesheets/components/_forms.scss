@@ -175,7 +175,7 @@ div.transfer-input {
 
     > div:first-of-type {
         font-size: 0.9rem;
-        font-weight: bold;
+        @include RobotoMedium;
 
         > span.hidden {
             visibility: hidden;
@@ -224,7 +224,7 @@ div.transfer-input {
 
             > span {
                 font-size: 0.9rem;
-                font-weight: bold;
+                @include RobotoMedium;
                 display: block;
                 text-decoration: none;
                 color: #333;
