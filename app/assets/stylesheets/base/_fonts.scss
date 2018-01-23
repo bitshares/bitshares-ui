@@ -79,8 +79,9 @@ label, label > span {
 }
 
 button, .button {
-  @include RobotoRegular;
+  @include RobotoCondensed;
   text-transform: uppercase;
+  font-size: 0.875rem;
 }
 
 // .content-block > h3 {

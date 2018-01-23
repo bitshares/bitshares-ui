@@ -322,8 +322,9 @@ form.full-width {
 button.red, button.green, button.blue {
     padding: 10px 0px 10px 0px;
     width: 8rem;
-    border-radius: 5px 5px 5px 5px;
     color: rgb(242, 242, 242);
+    font-size: 0.875rem;
+    font-weight: normal;
 }
 button.red { background-color: rgb(245, 27, 27); }
 button.green { background-color: rgb(48, 185, 14); }

@@ -81,7 +81,7 @@ div.account-creation {
         padding-top: 2.5rem;
         text-transform: uppercase;
         font-size:95%;
-        font-weight: 600;
+        @include RobotoMedium;
         margin: 0 -1rem;
     }
 
