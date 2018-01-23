@@ -279,10 +279,8 @@ $pulsate-red-end
 
     }
     
-    .show-for-large {
-        a {
-            color: $light-text-color !important;
-        }
+    .asset-prefix {
+        color: $light-text-color !important;
     }
 
     .transfer-top {
@@ -1162,7 +1160,7 @@ $pulsate-red-end
         font-size:18px;
      
         &.is-call {
-                color: $call-color!important;
+            color: $call-color!important;
         }   
         
         &.daily_change {
@@ -1176,8 +1174,9 @@ $pulsate-red-end
     }
     
     .stat-text {
-            font-size:11px;
-            color:gray;
+        margin-top: 3px;
+        font-size: 11px;
+        color: gray;
     }
 
     .buy-sell-box {
