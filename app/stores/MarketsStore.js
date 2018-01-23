@@ -322,17 +322,19 @@ class MarketsStore {
 
         if (result.ticker) {
 
+            let marketName = this.quoteAsset.get("symbol") + "_" + this.baseAsset.get("symbol");
             let stats = this._calcMarketStats(
                 this.baseAsset,
                 this.quoteAsset,
-                this.quoteAsset.get("symbol") + "_" + this.baseAsset.get("symbol"),
+                marketName,
                 result.ticker
             );
+
+            this.allMarketStats = this.allMarketStats.set(marketName, stats);
 
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
             this.marketStats = this.marketStats.set("volumeQuote", stats.volumeQuote);
-
             if (stats.volumeBase) {
                 this.lowVolumeMarkets = this.lowVolumeMarkets.delete(result.market);
             } else {
@@ -949,7 +951,7 @@ class MarketsStore {
             price = new Price({
                 base: volumeBaseAsset,
                 quote: volumeQuoteAsset,
-                real: ticker.latest
+                real: parseFloat(ticker.latest)
             });
         } catch(err) {
 
@@ -969,8 +971,6 @@ class MarketsStore {
             change: parseFloat(ticker.percent_change).toFixed(2),
             volumeBase: volumeBaseAsset.getAmount({real: true}),
             volumeQuote: volumeQuoteAsset.getAmount({real: true}),
-            volumeBaseAsset,
-            volumeQuoteAsset,
             price,
             close
         };
