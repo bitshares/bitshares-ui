@@ -68,11 +68,11 @@ export default class ExchangeHeader extends React.Component {
                         <div className="grid-block shrink">
                             <div style={{padding: "10px"}}>
                                 {!hasPrediction ? (
-                                    <span style={{padding: "0 5px"}}>
+                                    <div style={{padding: "0 5px", fontSize: "18px", marginTop: "1px"}}>
                                         <Link to={`/asset/${quoteSymbol}`} className="asset-prefix"><AssetName name={quoteSymbol} replace={true} /></Link>
                                         <span style={{padding:"0 5px"}}>/</span>
                                         <Link to={`/asset/${baseSymbol}`} className="asset-prefix"><AssetName name={baseSymbol} replace={true} /></Link>
-                                    </span>
+                                    </div>
                                 ) : (
                                     <a className="market-symbol">
                                         <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
