@@ -929,12 +929,8 @@ $pulsate-red-end
     }
 
     .help-content {
-        @include RobotoLight;
-        font-weight: 100;
         padding: 10px;
-        p {
-            font-weight: 600;
-        }
+
         ul {
             list-style: none;
         }
