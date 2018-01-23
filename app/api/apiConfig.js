@@ -49,9 +49,9 @@ export const settingsAPIs = {
         {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
-        {url: "wss://eu.nodes.bitshares.works", location: "(BitShares Infrastructure Program) Nuremberg, Germany"},
-        {url: "wss://us.nodes.bitshares.works", location: "(BitShares Infrastructure Program) Nuremberg, Germany"},
-        {url: "wss://sg.nodes.bitshares.works", location: "(BitShares Infrastructure Program) Nuremberg, Germany"},
+        {url: "wss://eu.nodes.bitshares.works", location: "Central Europe - BitShares Infrastructure Program"},
+        {url: "wss://us.nodes.bitshares.works", location: "U.S. West Coast - BitShares Infrastructure Program"},
+        {url: "wss://sg.nodes.bitshares.works", location: "Singapore - BitShares Infrastructure Program"},
     ],
     DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding",  // 2017-12-infrastructure worker proposal
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
