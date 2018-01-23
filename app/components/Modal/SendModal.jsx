@@ -452,7 +452,7 @@ export default class SendModal extends React.Component {
                                 </div>
                             }
                             <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
-                                <p><Translate unsafe content="transfer.header_subheader" /></p>
+                                <p style={{marginBottom:"0"}}><Translate unsafe content="transfer.header_subheader" /></p>
                             </div>
                         </div>
                         {this.state.open ? <form noValidate>
