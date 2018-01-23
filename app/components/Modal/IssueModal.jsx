@@ -95,7 +95,7 @@ class IssueModal extends React.Component {
                 {/*  M E M O  */}
                 <div className="content-block">
                     <label><Translate component="span" content="transfer.memo"/> (<Translate content="transfer.optional" />)</label>
-                    <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                    <textarea rows="3" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
 
                 </div>
 
