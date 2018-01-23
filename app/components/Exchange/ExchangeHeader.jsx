@@ -68,11 +68,11 @@ export default class ExchangeHeader extends React.Component {
                         <div className="grid-block shrink">
                             <div style={{padding: "10px"}}>
                                 {!hasPrediction ? (
-                                    <span style={{padding: "0 5px"}}>
+                                    <div style={{padding: "0 5px", fontSize: "18px", marginTop: "1px"}}>
                                         <Link to={`/asset/${quoteSymbol}`} className="asset-prefix"><AssetName name={quoteSymbol} replace={true} /></Link>
                                         <span style={{padding:"0 5px"}}>/</span>
                                         <Link to={`/asset/${baseSymbol}`} className="asset-prefix"><AssetName name={baseSymbol} replace={true} /></Link>
-                                    </span>
+                                    </div>
                                 ) : (
                                     <a className="market-symbol">
                                         <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
@@ -110,7 +110,7 @@ export default class ExchangeHeader extends React.Component {
                                     {(volumeBase >= 0) ? <PriceStatWithLabel ignoreColorChange={true} onClick={this.changeVolumeBase.bind(this)} ready={marketReady} decimals={0} volume={true} price={volume24h} className="hide-order-2 clickable" base={volume24hAsset} market={marketID} content="exchange.volume_24"/> : null}
                 
                                     {!hasPrediction && feedPrice ?
-                                        <PriceStatWithLabel toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="hide-order-3" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.settle"/> : null}
+                                        <PriceStatWithLabel ignoreColorChange={true} toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="hide-order-3" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.settle"/> : null}
                 
                                     {lowestCallPrice && showCallLimit ?
                                         <PriceStatWithLabel toolTip={counterpart.translate("tooltip.call_limit")} ready={marketReady} className="hide-order-4 is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} market={marketID} content="explorer.block.call_limit"/> : null}
