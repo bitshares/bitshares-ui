@@ -42,6 +42,11 @@ $account-border: #323131;
 $account-background: black;
 $account-tabs-background: inherit;
 
+$pulsate-green-start:$account-green;
+$pulsate-green-end:#b4f271;
+$pulsate-red-start:$negative-color;
+$pulsate-red-end:#ef7c82;
+
 .midnightTheme {
   @include theme(
     $primary-text-color,
@@ -75,6 +80,10 @@ $account-tabs-background: inherit;
     $account-dimmed,
     $account-border,
     $account-background,
-    $account-tabs-background
+    $account-tabs-background,
+    $pulsate-green-start,
+    $pulsate-green-end,
+    $pulsate-red-start,
+    $pulsate-red-end
   );
 }

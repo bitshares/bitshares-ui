@@ -74,6 +74,8 @@ class MarketsActions {
                 ])
                 .then(result => {
                     dispatch({ticker: result[0], market: marketName, base, quote});
+                }).catch(err => {
+                    console.log("getMarketStats error:", err);
                 });
             }
         };

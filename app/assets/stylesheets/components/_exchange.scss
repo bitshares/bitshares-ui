@@ -15,11 +15,18 @@
         padding-bottom: 0 !important;
         border-top: none;
     }
+}
 
-    .main-content {
-        .top-bar {
-            border-bottom: 1px solid $border-color;
-        }
+.top-bar { 
+    
+    border-bottom: 1px solid grey;
+    
+    .shuffle {
+        margin: 0 10px;
+    }
+
+    ul {
+        line-height:1.2;
     }
 }
 
@@ -223,6 +230,11 @@ ul.market-stats {
     letter-spacing: normal;
 }
 
+.label-actions .icon {
+    position: relative;
+    top: 4px;
+}
+
 .stats {
     list-style: none;
     margin: 0px;
@@ -230,8 +242,9 @@ ul.market-stats {
 }
 
 .top-stats li {
-    border-right: 1px solid $border-color;
+    /*border-right: 1px solid $border-color;*/
     min-height: 42px;
+    margin-left:25px;
 }
 
 .bottom-stats li {
@@ -441,13 +454,27 @@ table thead tr th.mymarkets-header {
     fill: #CC9F00 !important;
 }
 
-.grey-star > svg > path {
+.grey-star > svg > path, .shuffle > svg > path {
     fill: #878787 !important;
 }
 
-.shuffle > svg > path {
-    fill: #878787;
+.gold-star:hover > svg > path {
+    fill: lighten(#CC9F00, 10%) !important;
 }
+
+.shuffle:hover > svg > path {
+    fill: lighten(#878787, 20%) !important;
+}
+
+.grey-star:hover > svg > path {
+   fill: #CC9F00 !important;
+}
+
+@media (max-width: 570px) { .hide-order-1 { display: none !important; } }
+@media (max-width: 720px) { .hide-order-2 { display: none !important; } }
+@media (max-width: 880px) { .hide-order-3 { display: none !important; } }
+@media (max-width: 1020px) { .hide-order-4 { display: none !important; } }
+@media (max-width: 1180px) { .hide-order-5 { display: none !important; } }
 
 .no-data {
     position: relative;

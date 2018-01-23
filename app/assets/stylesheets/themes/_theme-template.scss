@@ -32,8 +32,26 @@ $account-primarytext,
 $account-dimmed,
 $account-border,
 $account-background,
-$account-tabs-background
+$account-tabs-background,
+$pulsate-green-start,
+$pulsate-green-end,
+$pulsate-red-start,
+$pulsate-red-end
 ) {
+
+  .fz_12{
+    font-size: 12px;
+  }
+
+  .spinner-button-circle .circle-wrapper{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 7px;
+    margin-top: -2px;
+    .circle:before{
+      background-color: #fff;
+    }
+  }
 
     .font-secondary {
         color: $secondary-text-color;
@@ -100,6 +118,22 @@ $account-tabs-background
     }
 
     .txtlabel.cancel, .label.alert {
+        color: $alert-color;
+    }
+
+    .txtann.success {
+        color: $success-color;
+    }
+
+    .txtann.info {
+        color: $info-color;
+    }
+
+    .txtann.warning {
+        color: $warning-color;
+    }
+
+    .txtann.error {
         color: $alert-color;
     }
 
@@ -244,6 +278,10 @@ $account-tabs-background
         }
 
     }
+    
+    .asset-prefix {
+        color: $light-text-color !important;
+    }
 
     .transfer-top {
         background-color: $light-panel-bg-color;
@@ -299,17 +337,21 @@ $account-tabs-background
             color: $account-green;
         }
 
+        div.header-right-lock {
+            padding: 1rem .25rem;
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
         div.dropdown-wrapper {
             > li {
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
+                div.hamburger > .icon > svg rect {
+                    fill: $account-dimmed;
                 }
+            }
+            &:hover {
+                background-color: $bg-color;
             }
         }
 
@@ -320,8 +362,10 @@ $account-tabs-background
                 background-color: $bg-color;
             }
 
-            span.caret {
-                color: $link-text-color;
+            > li {
+                div.hamburger > .icon > svg rect {
+                    fill: $link-text-color;
+                }
             }
         }
 
@@ -368,8 +412,8 @@ $account-tabs-background
     }
 
     .header-right-menu {
-        a:hover {background-color: lighten($panel-bg-color, 4%);}
-        a.active {background-color: lighten($panel-bg-color, 4%);}
+        // a:hover {background-color: lighten($panel-bg-color, 4%);}
+        // a.active {background-color: lighten($panel-bg-color, 4%);}
         li.current-account > a {
             color: $info-color;
             &:hover {
@@ -543,7 +587,7 @@ $account-tabs-background
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"] {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"], select[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -843,11 +887,82 @@ $account-tabs-background
         color: $secondary-text-color;
     }
 
+    .help-content-layout div {
+        background-color: $bg-color !important;
+        .help-toc {
+            ul {
+                margin: 0px;
+                li {
+                    padding-top: 3px;
+                    padding-left: 5px;
+                    background: none;
+                    color: $secondary-text-color;
+                    a {
+                        color: $secondary-text-color;
+                    }
+                    a:hover {
+                        color: $light-text-color;
+                    }
+                    ul {
+                        margin-left: 1.1rem;
+                    }
+                }
+                li:hover {
+                    background-color: $header-color;
+                    a {
+                        color: $light-text-color;
+                    }
+                    a:hover {
+                        background-color: $header-color;
+                        color: $light-text-color;
+                    }
+                }
+            }
+            h4 {
+                color: $secondary-text-color;
+            }
+            a {
+                display: block;
+            }
+        }
+    }
+
     .help-content {
+        @include RobotoLight;
+        font-weight: 100;
+        padding: 10px;
+        p {
+            font-weight: 600;
+        }
+        ul {
+            list-style: none;
+        }
+        li {
+            @include image($bg-color);
+            background-size: 7px 10px;
+            padding-left: 12px;
+        }
+        a {
+            color: $link-text-color;
+        }
+        a:hover {
+            background-color: $link-text-color;
+            color: $bg-color;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            width: 100%;
+            background-color: $panel-bg-color;
+        }
         code {
             color: $primary-text-color;
             background-color: transparent;
             border-color: $dark-text-color;
+        }
+        blockquote {
+            color: $secondary-text-color;
+            border-left: 3px solid $panel-bg-color;
         }
     }
 
@@ -1039,21 +1154,29 @@ $account-tabs-background
     li.stat.input {
         &:hover {background-color: lighten($panel-bg-color, 4%);}
     }
-    .stats .stat {
-        > span {
-            > span:first-of-type {
-                color: $primary-text-color;
-            }
-
-            > span.symbol-text {
-                color: #468EDE;
-            }
-        }
+    .stats .stressed-stat {
+        
+        padding: 10px 0;
+        font-size:18px;
+     
         &.is-call {
-            >span > b {
-                color: $call-color;
+            color: $call-color!important;
+        }   
+        
+        &.daily_change {
+            &.positive {
+                color:$account-green!important;
+            }
+            &.negative {
+                color:$negative-color !important;
             }
         }
+    }
+    
+    .stat-text {
+        margin-top: 3px;
+        font-size: 11px;
+        color: gray;
     }
 
     .buy-sell-box {
@@ -1072,6 +1195,7 @@ $account-tabs-background
 
             > option {
                 color: $primary-text-color;
+                background-color: $header-color;
             }
         }
     }
@@ -1270,16 +1394,6 @@ $account-tabs-background
         }
     }
 
-    div.Account_create {
-        button.submit-button, div.backup-submit .button {
-            background-color: $warning-color;
-        }
-
-        label > a {
-            color: $secondary-text-color;
-        }
-    }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
@@ -1422,6 +1536,7 @@ $account-tabs-background
     }
 
     div.account-creation {
+        width:450px;
         background-color: $account-cells;
 
         div.button > a {
@@ -1455,6 +1570,37 @@ $account-tabs-background
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
+    
+    .pulsate {
+        
+        &.red {
+            animation: pulsate-red .5s ease-out;
+        }
+        
+        &.green {
+            animation: pulsate-green .5s ease-out;
+        }
+        
+        animation-iteration-count: 1; 
+    }
+    
+    @-webkit-keyframes pulsate-green {
+        0% { 
+            color: $pulsate-green-start;
+        }
+        100% { 
+            color: $pulsate-green-end;
+        }
+    }
+    @-webkit-keyframes pulsate-red {
+        0% { 
+            color: $pulsate-red-start;
+        }
+        100% { 
+            color: $pulsate-red-end;
+        }
+    }
+    
 }
 
 .midnightTheme .gate_fee .amount-selector {

@@ -351,7 +351,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     <CopyButton text={addressValue} className={"SimpleTrade__copyIcon"} />
                                 </div>
                                 <div className="deposit-details">
-                                    <div><Translate unsafe content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
+                                    <div><Translate content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
                                     <div>{addressValue}</div>
                                 </div>
                             </div>

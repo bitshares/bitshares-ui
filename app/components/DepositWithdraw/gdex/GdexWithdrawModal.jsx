@@ -14,7 +14,7 @@ import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
-import {Asset} from "common/MarketClasses";
+import {Asset, Price} from "common/MarketClasses";
 import { debounce } from "lodash";
 
 class GdexWithdrawModal extends React.Component {
@@ -23,7 +23,7 @@ class GdexWithdrawModal extends React.Component {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
-        memo_prefix: React.PropTypes.string.isRequired,
+        memo_rule: React.PropTypes.string.isRequired,
         balance: ChainTypes.ChainObject,
         output_supports_memos: React.PropTypes.bool.isRequired,
 
@@ -42,6 +42,8 @@ class GdexWithdrawModal extends React.Component {
             withdraw_address_first: true,
             empty_withdraw_value: false,
             below_minumum_withdraw_value: false,
+            precision_error: false,
+            memo_error: false,
             from_account: props.account,
             fee_asset_id: "1.3.0",
             feeStatus: {},
@@ -66,6 +68,10 @@ class GdexWithdrawModal extends React.Component {
     }
 
     componentWillReceiveProps(np) {
+        if(np.output_coin_name != this.props.output_coin_name){
+            this.setState({"withdraw_address": WithdrawAddresses.getLast(np.output_coin_name),
+                "withdraw_address_selected":WithdrawAddresses.getLast(np.output_coin_name)});
+        }
         if (np.account !== this.state.from_account && np.account !== this.props.account) {
             this.setState({
                 from_account: np.account,
@@ -74,6 +80,37 @@ class GdexWithdrawModal extends React.Component {
                 feeAmount: new Asset({amount: 0})
             }, () => {this._updateFee(); this._checkFeeStatus();});
         }
+    }
+
+    _assembleMemo(){
+        let memo_rule =  this.props.memo_rule;
+        let memo_message = "";
+        try{
+            if(memo_rule) {
+                memo_rule.split(";").forEach(item =>{
+                    switch(item[0]){
+                        case "C":
+                            memo_message += item.slice(2);
+                            break;
+                        case "D":
+                            memo_message += this.state.withdraw_address;
+                            break;
+                        case "B":
+                            memo_message += item.slice(2);
+                            break;
+                        case "S":
+                            memo_message += this.state.memo;
+                            break;
+                    }
+                });
+                this.setState({"memo_error": false});
+                return memo_message;
+            }
+        }catch(err){
+            console.log(err);
+        }
+        this.setState({"memo_error": true});
+        return null;
     }
 
     _updateFee(state = this.state) {
@@ -90,7 +127,7 @@ class GdexWithdrawModal extends React.Component {
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: this.props.output_coin_name + ":" + state.withdraw_address + (state.memo ? ":" + state.memo : "")
+                content: this._assembleMemo()
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
@@ -199,21 +236,46 @@ class GdexWithdrawModal extends React.Component {
                 });
             });
     }
+    _checkPrecision(){
+        let {withdraw_amount} = this.state;
+        let {output_coin_precision} = this.props;
+        if(output_coin_precision=== "undefined") return;
+        if(typeof withdraw_amount !== "string") withdraw_amount = withdraw_amount.toString();
+        withdraw_amount = withdraw_amount.trim();
+        if(withdraw_amount.indexOf(".")===-1){
+            this.setState({"precision_error": false});
+            return;
+        }
+        if(withdraw_amount.length - withdraw_amount.indexOf(".") -1 > output_coin_precision){
+            this.setState({"precision_error": true});
+        } else{
+            this.setState({"precision_error": false});
+        }
+    }
 
     _checkBalance() {
         let {feeAmount, withdraw_amount} = this.state;
         let {asset, balance, minWithdrawAmount} = this.props;
-        if (!balance || !feeAmount) return;
+        if (!balance){
+            // does not own any asset
+            this.setState({balanceError: true});
+            return;
+        }
+        if(!feeAmount) return;
         const hasBalance = checkBalance(withdraw_amount, asset, feeAmount, balance);
+        // balance is zero
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
+
         if (typeof withdraw_amount === "string") withdraw_amount = parseFloat(String.prototype.replace.call(withdraw_amount, /,/g, ""));
         if (typeof minWithdrawAmount === "string") minWithdrawAmount = parseFloat(String.prototype.replace.call(minWithdrawAmount, /,/g, ""));
         if(withdraw_amount< minWithdrawAmount){
             this.setState({below_minumum_withdraw_value: true});
+            return;
         } else{
             this.setState({below_minumum_withdraw_value: false});
         }
+        this._checkPrecision();
         return hasBalance;
     }
 
@@ -250,7 +312,7 @@ class GdexWithdrawModal extends React.Component {
                     this.props.issuer.get("id"),
                     sendAmount.getAmount(),
                     asset.get("id"),
-                    (this.props.memo_prefix || "") + this.state.withdraw_address,
+                    this._assembleMemo(),
                     null,
                     feeAmount ? feeAmount.asset_id : "1.3.0"
                 );
@@ -293,7 +355,7 @@ class GdexWithdrawModal extends React.Component {
             this.props.issuer.get("id"),
             parseInt(amount * precision, 10),
             asset.get("id"),
-            this.props.output_coin_name + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
+            this._assembleMemo(),
             null,
             feeAmount ? feeAmount.asset_id : "1.3.0"
         );
@@ -441,14 +503,14 @@ class GdexWithdrawModal extends React.Component {
                     <br/>
 					<label><Translate content="modal.confirmation.title"/></label>
 		 		    <br/>
-                    {/*<div className="content-block">*/}
-                        {/*<input type="submit" className="button"*/}
-                        {/*onClick={this.onSubmitConfirmation.bind(this)}*/}
-                        {/*value={counterpart.translate("modal.confirmation.accept")} />*/}
-                        {/*<Trigger close={withdrawModalId}>*/}
-                            {/*<a href className="secondary button"><Translate content="modal.confirmation.cancel" /></a>*/}
-                        {/*</Trigger>*/}
-                    {/*</div>*/}
+				    <div className="content-block">
+                        <input type="submit" className="button"
+                        onClick={this.onSubmitConfirmation.bind(this)}
+                        value={counterpart.translate("modal.confirmation.accept")} />
+                        <Trigger close={withdrawModalId}>
+                            <a href className="secondary button"><Translate content="modal.confirmation.cancel" /></a>
+                        </Trigger>
+                    </div>
 		        </Modal>;
             }
         }
@@ -461,6 +523,7 @@ class GdexWithdrawModal extends React.Component {
 				<div className="content-block">
 					<label><Translate component="span" content="transfer.memo"/></label>
 					<textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                    {this.state.memo_error ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.memo_error" /></p>:null}
 				</div>;
         }
 
@@ -503,8 +566,10 @@ class GdexWithdrawModal extends React.Component {
                     />
                     {this.state.empty_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.valid" /></p>:null}
                     {this.state.balanceError ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.insufficient" /></p>:null}
-                    {this.state.below_minumum_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.minimum_amount"
-                                                                                                                                      amount={this.props.minWithdrawAmount} symbol={this.props.asset.get("symbol")}/></p>:null}
+                    {this.state.below_minumum_withdraw_value ? <p className="has-error no-margin" style={{paddingTop: 10}}>
+                        <Translate content="transfer.errors.minimum_amount" amount={this.props.minWithdrawAmount} symbol={this.props.asset.get("symbol")}/></p>:null}
+                    {this.state.precision_error ? <p className="has-error no-margin" style={{paddingTop: 10}}>
+                        <Translate content="transfer.errors.precision"  precision={this.props.output_coin_precision} /></p>:null}
                 </div>
 
                 {/* Fee selection */}
@@ -559,7 +624,8 @@ class GdexWithdrawModal extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.error || this.state.balanceError ? (" disabled") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (this.state.below_minumum_withdraw_value ||
+                    this.state.memo_error || this.state.error || this.state.balanceError  || this.state.precision_error ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 

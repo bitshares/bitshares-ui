@@ -270,12 +270,6 @@ class OrderBook extends React.Component {
         let bidRows = null, askRows = null;
         if(base && quote) {
             bidRows = combinedBids
-            .filter(a => {
-                if (this.state.showAllBids || combinedBids.length <= rowCount) {
-                    return true;
-                }
-                return a.getPrice() >= highestBid.getPrice() / 5;
-            })
             .map((order, index) => {
                 return (horizontal ?
                     <OrderBookRowHorizontal
@@ -301,13 +295,7 @@ class OrderBook extends React.Component {
                 );
             });
 
-            let tempAsks = combinedAsks
-            .filter(a => {
-                if (this.state.showAllAsks || combinedBids.length <= rowCount) {
-                    return true;
-                }
-                return a.getPrice() <= lowestAsk.getPrice() * 5;
-            });
+            let tempAsks = combinedAsks;
             if (!horizontal) {
                 tempAsks.sort((a,b) => {
                     return b.getPrice() - a.getPrice();
@@ -410,7 +398,7 @@ class OrderBook extends React.Component {
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover fixed-table text-right no-overflow">
                                         <TransitionWrapper
                                             ref="askTransition"
-                                            className="orderbook"
+                                            className="orderbook clickable"
                                             component="tbody"
                                             transitionName="newrow"
                                         >
@@ -453,7 +441,7 @@ class OrderBook extends React.Component {
                                     <table style={{paddingBottom: 5}} className="table order-table table-hover fixed-table text-right no-overflow">
                                         <TransitionWrapper
                                             ref="bidTransition"
-                                            className="orderbook"
+                                            className="orderbook clickable"
                                             component="tbody"
                                             transitionName="newrow"
                                         >
@@ -500,7 +488,7 @@ class OrderBook extends React.Component {
                                         <table style={{position: "relative", bottom: 0}} className="table order-table table-hover text-right">
                                             <TransitionWrapper
                                                 ref="askTransition"
-                                                className="ps-container"
+                                                className="ps-container clickable"
                                                 component="tbody"
                                                 transitionName="newrow"
                                             >
@@ -523,7 +511,7 @@ class OrderBook extends React.Component {
                                     <table className="table order-table table-hover text-right">
                                         <TransitionWrapper
                                             ref="bidTransition"
-                                            className="ps-container"
+                                            className="ps-container clickable"
                                             component="tbody"
                                             transitionName="newrow"
                                         >

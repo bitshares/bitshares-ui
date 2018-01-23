@@ -11,7 +11,7 @@
     "котируемый" : "базовый"
     
 
-and for instance with *base* being USD and *quote* being EUR, denote the EUR:USD pair.
+в частности, в представленной паре EUR:USD, *базовым* активом будет являться USD, а *котируемым* - EUR.
 
 ## Регистр Ордеров
 

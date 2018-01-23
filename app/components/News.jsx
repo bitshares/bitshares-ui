@@ -49,7 +49,7 @@ const NewsTable = ({ data, width }) => {
             <tbody>
                 {data.map((singleNews, iter) => {
                     const theAuthor = singleNews.parentAuthor ? singleNews.parentAuthor : singleNews.author
-                    const formattedDate = counterpart.localize(new Date(singleNews.active));
+                    const formattedDate = counterpart.localize(new Date(singleNews.created));
                     const smartTitle = (singleNews.title.length * 6) > (width-450)
                         ? `${singleNews.title.slice(0, Math.floor(width-450)/6)}...`
                         : singleNews.title
@@ -88,10 +88,17 @@ class News extends React.Component {
             width: 1200
         };
         this.updateDimensions = this.updateDimensions.bind(this);
+        this.orderDiscussions = this.orderDiscussions.bind(this);
     }
 
     updateDimensions() {
         this.setState({ width: window.innerWidth });
+    }
+
+    orderDiscussions(discussions) {
+        const orderedDiscussions = discussions
+            .sort((a, b) => (new Date(b.created) - new Date(a.created)))
+        this.setState({discussions: orderedDiscussions, isLoading: false})
     }
 
     componentDidMount() {
@@ -99,7 +106,7 @@ class News extends React.Component {
         window.addEventListener("resize", this.updateDimensions);
         steem.api.getDiscussionsByBlog(query, (err, discussions) => {
             if (err) this.setState({isLoading: false, isWrong: true})
-            this.setState({discussions, isLoading: false})
+            this.orderDiscussions(discussions)
         });
     }
 

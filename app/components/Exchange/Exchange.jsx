@@ -29,6 +29,7 @@ import Translate from "react-translate-component";
 import { Apis } from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import { checkFeeStatusAsync } from "common/trxHelper";
+import LoadingIndicator from "../LoadingIndicator";
 
 Highcharts.setOptions({
     global: {
@@ -517,10 +518,11 @@ class Exchange extends React.Component {
     _changeBucketSize(size, e) {
         if (e) e.preventDefault();
         if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize.defer(size);
+            MarketsActions.changeBucketSize(size);
             let currentSub = this.props.sub.split("_");
-            MarketsActions.unSubscribeMarket.defer(currentSub[0], currentSub[1]);
-            this.props.subToMarket(this.props, size);
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(() => {
+                this.props.subToMarket(this.props, size);
+            });
         }
     }
 
@@ -1113,7 +1115,21 @@ class Exchange extends React.Component {
             />
         );
 
-        return (
+        return (<div className="grid-block vertical">
+            {!this.props.marketReady ? <LoadingIndicator /> : null}
+                    <ExchangeHeader
+                        quoteAsset={quoteAsset} baseAsset={baseAsset}
+                        hasPrediction={hasPrediction} starredMarkets={starredMarkets}
+                        lowestAsk={lowestAsk} highestBid={highestBid}
+                        lowestCallPrice={lowestCallPrice}
+                        showCallLimit={showCallLimit} feedPrice={feedPrice}
+                        marketReady={marketReady} latestPrice={latestPrice}
+                        showDepthChart={showDepthChart}
+                        onSelectIndicators={this._onSelectIndicators.bind(this)}
+                        marketStats={marketStats}
+                        onToggleCharts={this._toggleCharts.bind(this)}
+                        showVolumeChart={showVolumeChart}
+                    />
             <div className="grid-block page-layout market-layout">
                     <AccountNotifications/>
                     {/* Main vertical block with content */}
@@ -1126,22 +1142,6 @@ class Exchange extends React.Component {
 
                     {/* Center Column */}
                     <div style={{paddingTop: 0}} className={cnames("grid-block main-content vertical no-overflow")} >
-
-                        {/* Top bar with info */}
-                        <ExchangeHeader
-                            quoteAsset={quoteAsset} baseAsset={baseAsset}
-                            hasPrediction={hasPrediction} starredMarkets={starredMarkets}
-                            lowestAsk={lowestAsk} highestBid={highestBid}
-                            lowestCallPrice={lowestCallPrice}
-                            showCallLimit={showCallLimit} feedPrice={feedPrice}
-                            marketReady={marketReady} latestPrice={latestPrice}
-                            showDepthChart={showDepthChart}
-                            onSelectIndicators={this._onSelectIndicators.bind(this)}
-                            marketStats={marketStats}
-                            onToggleCharts={this._toggleCharts.bind(this)}
-                            showVolumeChart={showVolumeChart}
-                        />
-
                         <div className="grid-block vertical no-padding ps-container" id="CenterContent" ref="center">
                         {!showDepthChart ? (
                             <div className="grid-block shrink no-overflow" id="market-charts" >
@@ -1377,6 +1377,7 @@ class Exchange extends React.Component {
                             account={currentAccount}
                         /> : null}
                 {/* End of Second Vertical Block */}
+                </div>
                 </div>
         );
     }
