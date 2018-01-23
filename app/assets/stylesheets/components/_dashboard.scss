@@ -32,7 +32,7 @@ div.fm-container {
    }
 
    .fm-name {
-    font-weight: bold;
+    @include RobotoMedium;
     padding-bottom: 10px;
    }
 
@@ -111,7 +111,7 @@ div.fm-container {
         font-size: 90%;
         width: 100%;
         color: #ff3633;
-        font-weight: bold;
+        @include RobotoMedium;
         > span {
             vertical-align: top;
             top: 0px;
@@ -214,7 +214,7 @@ div.button.create-account {
 div.input-wrapper {
     > div.input-right-symbol {
         font-size: 0.9rem;
-        font-weight: bold;
+        @include RobotoMedium;
         position: absolute;
         top: 12px;
         right: 8px;
@@ -226,7 +226,7 @@ div.input-wrapper {
         padding-bottom: 5px;
         > div.float-right {
             clear: both;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 }
@@ -257,7 +257,7 @@ div.input-wrapper {
                 }
                 > p {
                     font-size: 1.8rem;
-                    font-weight: bold;
+                    @include RobotoMedium;
                     margin-bottom: 0px;
                 }
             }
@@ -309,7 +309,7 @@ div.input-wrapper {
 
 
                 > .maxDeposit {
-                    font-weight: bold;
+                    @include RobotoMedium;
                     font-size: 0.9rem;
                 }
 
