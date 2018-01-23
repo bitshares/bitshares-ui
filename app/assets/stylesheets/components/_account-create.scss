@@ -45,7 +45,7 @@ div.account-creation {
         }
     }
     h4 {
-        font-weight: 600;
+        @include RobotoMedium;
         margin-top: 1rem;
         margin-bottom: 0;
     }
