@@ -173,8 +173,8 @@ class AccountAssetUpdate extends React.Component {
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
-                this.props.asset = ChainStore.getAsset(this.props.asset.get("id"));
-                this.state = this.resetState(this.props);
+                ChainStore.getAsset(this.props.asset.get("id"));
+                this.setState(this.resetState(this.props));
             }, 3000);
         });
     }
