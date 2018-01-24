@@ -152,8 +152,8 @@ class AccountSelector extends React.Component {
         }
 
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
-            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon className={""+(isGreenAccount? " green":"")} style={{position:"absolute",top:"-0.35em",right:".2em"}} name="user" /></span>
-            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="plus-circle" /></span>;
+            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon className={""+(isGreenAccount? " green":"")} style={{position:"absolute",top:"-0.15em",right:".2em"}} name="user" /></span>
+            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.05em",right:".2em"}} name="plus-circle" /></span>;
 
         return (
             <div className="account-selector" style={this.props.style}>
