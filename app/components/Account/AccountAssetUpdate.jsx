@@ -105,12 +105,12 @@ class AccountAssetUpdate extends React.Component {
             whitelist_markets: props.asset.getIn(["options", "whitelist_markets"]),
             blacklist_markets: props.asset.getIn(["options", "blacklist_markets"]),
             maxFeedProducers: props.globalObject.getIn(["parameters", "maximum_asset_feed_publishers"]),
-            feedProducers: props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+            feedProducers: isBitAsset ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
                 return a.first();
-            }),
-            originalFeedProducers: props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+            }) : null,
+            originalFeedProducers: isBitAsset ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
                 return a.first();
-            }),
+            }) : null,
         };
     }
 
@@ -173,7 +173,8 @@ class AccountAssetUpdate extends React.Component {
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
-                ChainStore.getAsset(this.props.asset.get("id"));
+                this.props.asset = ChainStore.getAsset(this.props.asset.get("id"));
+                this.state = this.resetState(this.props);
             }, 3000);
         });
     }
@@ -301,6 +302,7 @@ class AccountAssetUpdate extends React.Component {
     _validateEditFields( new_state ) {
         let cer = new_state.core_exchange_rate;
         let feedProducers = new_state.feedProducers ? new_state.feedProducers : this.state.feedProducers;
+        let flagBooleans = this.state.flagBooleans;
         let {asset, core} = this.props;
 
         let errors = {
@@ -308,6 +310,7 @@ class AccountAssetUpdate extends React.Component {
             quote_asset: null,
             base_asset: null,
             max_feed_producer: null,
+            conflict_producer: null,
         };
 
         const p = this.props.asset.get("precision");
@@ -334,7 +337,10 @@ class AccountAssetUpdate extends React.Component {
                 errors.max_feed_producer = counterpart.translate("account.user_issued_assets.too_many_feed", {max: this.state.maxFeedProducers});
             }
         }
-        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset && !errors.max_feed_producer;
+        if (flagBooleans.committee_fed_asset && flagBooleans.witness_fed_asset) {
+            errors.conflict_producer = counterpart.translate("account.user_issued_assets.conflict_feed");
+        }
+        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset && !errors.max_feed_producer && !errors.conflict_producer;
 
         this.setState({isValid: isValid, errors: errors});
     }
@@ -412,6 +418,7 @@ class AccountAssetUpdate extends React.Component {
         this.setState({
             flagBooleans: booleans
         });
+        this._validateEditFields({});
     }
 
     _onPermissionChange(key) {
@@ -872,6 +879,7 @@ class AccountAssetUpdate extends React.Component {
                                     <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                     {flags}
                                     {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
+                                    { errors.conflict_producer ? <p className="grid-content has-error">{errors.conflict_producer}</p> : null}
                                 </div>
                             </Tab>
 
