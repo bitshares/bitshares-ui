@@ -301,8 +301,24 @@ export default class SendModal extends React.Component {
         return {asset_types, fee_asset_types};
     }
 
+    _shouldPayFeeWithAsset = feeAmount => {
+        const {from_account} = this.state;
+        if (from_account && feeAmount && feeAmount.asset_id === "1.3.0") {
+            const balanceID = from_account.getIn([
+                "balances",
+                feeAmount.asset_id
+            ]);
+            const balanceObject = ChainStore.getObject(balanceID);
+            if (balanceObject) {
+                const balance = balanceObject.get("balance");
+                if (balance <= feeAmount.amount) return true;
+            }
+        }
+        return false;
+    };
+
     _updateFee(state = this.state) {
-        let { fee_asset_id, from_account } = state;
+        let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
         if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
             fee_asset_id = fee_asset_types[0];
@@ -316,15 +332,17 @@ export default class SendModal extends React.Component {
                 type: "memo",
                 content: state.memo
             }
-        })
-        .then(({fee, hasBalance, hasPoolBalance}) => {
-            this.setState({
-                feeAmount: fee,
-                fee_asset_id: fee.asset_id,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance)
-            });
+        }).then(({fee, hasBalance, hasPoolBalance}) => {
+            if (this._shouldPayFeeWithAsset(fee))
+                this.setState({fee_asset_id: asset_id}, this._updateFee);
+            else
+                this.setState({
+                    feeAmount: fee,
+                    fee_asset_id: fee.asset_id,
+                    hasBalance,
+                    hasPoolBalance,
+                    error: !hasBalance || !hasPoolBalance
+                });
         });
     }
 
