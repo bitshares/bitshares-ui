@@ -35,7 +35,14 @@ class DepositWithdrawAssetSelector  extends React.Component {
             // Return null if backedCoin is already stored
             if(!idMap[backedCoin]) {
                 idMap[backedCoin] = true;
-                return { id: backedCoin, label: backedCoin, gateway: gateway };
+
+                return { 
+                  id: backedCoin, 
+                  label: backedCoin, 
+                  gateway: gateway, 
+                  gateFee: item.gateFee, 
+                  issuer: item.issuerId ||  "1.2.96397" //Fall back to open ledger
+                };
             } else {
                 return null;
             }

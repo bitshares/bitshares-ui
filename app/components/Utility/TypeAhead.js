@@ -28,8 +28,13 @@ class TypeAhead extends React.Component {
     }
 
     onSelect(value){
+        let asset = null;
+        this.props.items.forEach((item)=>{
+            if(value == item.id) asset = item;
+        });
+
         this.setState({value});
-        if(this.props.onSelect) this.props.onSelect(value);
+        if(this.props.onSelect) this.props.onSelect(value, asset);
     }
 
     render(){

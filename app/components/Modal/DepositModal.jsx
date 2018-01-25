@@ -11,6 +11,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
+import { _getAvailableGateways, gatewaySelector, _getNumberAvailableGateways, _onAssetSelected } from "lib/common/assetGatewayMixin";
 
 class DepositModalContent extends DecimalChecker {
     
@@ -63,39 +64,9 @@ class DepositModalContent extends DecimalChecker {
         this._getDepositAddress(this.state.selectedAsset, e.target.value);
     }
 
-    onAssetSelected(selectedAsset) {
-        // Preselect gateway on single choise
-        let gatewayStatus = this._getAvailableGateways(selectedAsset);
-        let selectedGateway = null;
-        let nAvailable = 0;
-
-        for(let g in gatewayStatus) { if(gatewayStatus[g].enabled) { nAvailable++; } }
-        if(nAvailable == 1) { for(let g in gatewayStatus) { if(gatewayStatus[g].enabled) { selectedGateway = g; } } }
-
-        // Fetch address if we have a selected gateway
+    onAssetSelected(asset) {
+        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, asset);
         if(selectedGateway) { this._getDepositAddress(selectedAsset, selectedGateway); }
-        else {
-            this.setState({
-                selectedAsset,
-                selectedGateway,
-                backingAsset: null,
-                gatewayStatus
-            });
-        }
-    }
-
-    _getAvailableGateways(selectedAsset) {
-        let {gatewayStatus} = this.state;
-
-        for (let g in gatewayStatus) { gatewayStatus[g].enabled = false; }
-
-        for (let g in gatewayStatus) {
-            this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
-                if(g == "OPEN" && selectedAsset == c.backingCoinType && c.depositAllowed && c.isAvailable) { gatewayStatus.OPEN.enabled = true; }
-                if(g == "RUDEX" && selectedAsset == c.backingCoin && c.depositAllowed) { gatewayStatus.RUDEX.enabled = true; }
-            });
-        }
-        return gatewayStatus;
     }
 
     _getDepositAddress(selectedAsset, selectedGateway) {
@@ -104,7 +75,7 @@ class DepositModalContent extends DecimalChecker {
         this.setState({
             fetchingAddress: true,
             depositAddress: null,
-            gatewayStatus: this._getAvailableGateways(selectedAsset)
+            gatewayStatus: _getAvailableGateways.call(this, selectedAsset)
         });
 
         // Get Backing Asset for Gateway
@@ -180,12 +151,6 @@ class DepositModalContent extends DecimalChecker {
         });
     }
 
-    _openGatewaySite() {
-        let {selectedGateway, gatewayStatus} = this.state;
-        let win = window.open(gatewayStatus[selectedGateway].support_url, "_blank");
-        win.focus();
-    }
-
     render() {
         let {selectedAsset, selectedGateway, depositAddress, fetchingAddress, gatewayStatus, backingAsset} = this.state;
         let {account} = this.props;
@@ -198,13 +163,7 @@ class DepositModalContent extends DecimalChecker {
         }
 
         // Count available gateways
-        let nAvailableGateways = 0;
-        for (let g in gatewayStatus) {
-            this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
-                if(g == "OPEN" && selectedAsset == c.backingCoinType && c.depositAllowed && c.isAvailable) { nAvailableGateways++; }
-                if(g == "RUDEX" && selectedAsset == c.backingCoin && c.depositAllowed) { nAvailableGateways++; }
-            });
-        }
+        let nAvailableGateways = _getNumberAvailableGateways.call(this);
 
         const QR = depositAddress && depositAddress.address && !depositAddress.error ?
             <div className="QR"><QRCode size={140} value={depositAddress.address}/></div> :
@@ -216,8 +175,6 @@ class DepositModalContent extends DecimalChecker {
             </div>;
 
         const logo = require("assets/logo-ico-blue.png");
-
-        //console.log(selectedAsset + " w/ " + selectedGateway + " ", backingAsset, depositAddress);
 
         return (
             <div className="DepositModal">
@@ -242,30 +199,15 @@ class DepositModalContent extends DecimalChecker {
                                 </div>
                             </div>
                         </div>
-                        {usingGateway && selectedAsset ?
-                            <div className="container-row">
-                                <div className="no-margin no-padding">
-                                    <section className="block-list">
-                                        <label className="left-label"><Translate content="modal.deposit.gateway" />
-                                            {selectedGateway ? <span style={{cursor: "pointer"}}>&nbsp;<Icon name="question-circle" onClick={this._openGatewaySite.bind(this)}/></span> : null}
-                                            <span className="floatRight error-msg">
-                                                {selectedGateway && !gatewayStatus[selectedGateway].enabled ? <Translate content="modal.deposit.disabled" /> : null}
-                                                {depositAddress && depositAddress.error ? <Translate content="modal.deposit.wallet_error" /> : null}
-                                                {!selectedGateway && nAvailableGateways == 0 ? <Translate content="modal.deposit.no_gateway_available" /> : null}
-                                            </span>
-                                        </label>
 
-                                        <div className="inline-label input-wrapper">
-                                            <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={this.onGatewayChanged.bind(this)}>
-                                                {!selectedGateway && nAvailableGateways != 0 ? <Translate component="option" value="" content="modal.deposit.select_gateway" /> : null}
-                                                {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
-                                                {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}
-                                            </select>
-                                            <Icon name="chevron-down" style={{position: "absolute", right: "10px", top: "10px"}} />
-                                        </div>
-                                    </section>
-                                </div>
-                            </div> : null}
+                        {usingGateway && selectedAsset ? gatewaySelector.call(this, {
+                          selectedGateway, 
+                          gatewayStatus, 
+                          nAvailableGateways, 
+                          error: depositAddress && depositAddress.error, 
+                          onGatewayChanged: this.onGatewayChanged.bind(this)
+                        }) : null}
+
                         {!fetchingAddress ? 
                             (!usingGateway || (usingGateway && selectedGateway && gatewayStatus[selectedGateway].enabled)) && depositAddress && !depositAddress.memo ?
                                 <div className="container-row" style={{textAlign: "center"}}>{QR}</div> : 

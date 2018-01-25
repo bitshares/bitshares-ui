@@ -145,9 +145,6 @@ const routes = (
                 </Route>
             </Route>
         </Route>
-
-        <Route path="/deposit-withdraw-typeahead" component={DepositWithdrawAssetSelector} />
-        <Route path="/withdraw-modal" component={WithdrawModal} />
     </Route>
 );
 

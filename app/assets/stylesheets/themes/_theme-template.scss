@@ -309,6 +309,11 @@ $pulsate-red-end
         }
     }
 
+    .button:disabled {
+      opacity: 0.2 !important;
+      cursor: not-allowed !important;
+    }
+
     .button.secondary {
         @include color($dark-text-color, $secondary-button-bg-color);
         &:hover, &:focus, &:active {
@@ -325,6 +330,22 @@ $pulsate-red-end
 
     .header .button,  .header .button:active {
         background-color: transparent !important;
+    }
+
+    .header .modal .button {
+        background-color: $button-bg-color !important;
+
+        &:hover, &:focus, &:active {
+            background-color: lighten($button-bg-color, 4%) !important;
+        }
+    }
+
+    .header .modal .button.danger {
+        background-color: $alert-color !important;
+
+        &:hover, &:focus, &:active {
+            background-color: lighten($alert-color, 4%) !important;
+        }
     }
 
     .header a.button.create-account {
@@ -580,8 +601,12 @@ $pulsate-red-end
             }
         }
     }
-    .has-error, div.has-error > label, div.has-error > label > span {
-        color: $error-text-color;
+    .has-error, div.has-error > label, div.has-error > label > span, .error-msg {
+        color: $error-text-color !important;
+    }
+
+    .floatRight {
+      float: right;
     }
 
     .has-warning, div.has-warning > label, div.has-warning > label > span {

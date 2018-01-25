@@ -9,6 +9,7 @@ import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import DepositModal from "../Modal/DepositModal";
+import WithdrawModal from "../DepositWithdraw/WithdrawModalNew";
 import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -105,6 +106,12 @@ class Header extends React.Component {
         e.preventDefault();
         this.refs.deposit_modal_new.show();
         this._closeDropdown();
+    }
+
+    _showWithdraw(e) {
+      e.preventDefault();
+      this.refs.withdraw_modal_new.show();
+      this._closeDropdown();
     }
 
 
@@ -407,9 +414,14 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="modal.deposit.submit_beta" /></div>
                                         </li>
 
-                                        <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                             <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
                                             <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
+                                        </li>
+
+                                        <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._showWithdraw.bind(this)}>
+                                            <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
+                                            <div className="table-cell"><Translate content="modal.withdraw.submit_beta" /></div>
                                         </li>
 
 
@@ -482,6 +494,11 @@ class Header extends React.Component {
                     modalId="deposit_modal_new"
                     account={currentAccount}
                     backedCoins={this.props.backedCoins}
+                />
+                {/*Withdraw modal */}
+                <WithdrawModal
+                  ref="withdraw_modal_new"
+                  modalId="withdraw_modal_new"
                 />
             </div>
 
