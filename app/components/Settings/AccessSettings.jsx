@@ -58,11 +58,7 @@ class ApiNode extends React.Component {
         }
 
         if (ping >= 1000) {
-            let pong = ping;
-            let ms = ping % 1000;
-            pong = (ping - ms) / 1000;
-            let secs = pong % 60;
-            friendlyPing = Math.round(parseFloat(secs + "." + ms) * 10) / 10 + "s";
+            friendlyPing = +(ping / 1000).toFixed(2) + "s";
         } else {
             friendlyPing = ping + "ms";
         }
