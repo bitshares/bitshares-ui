@@ -254,7 +254,7 @@ class WithdrawModalBlocktrades extends React.Component {
                     sendAmount = balanceAmount;
                 }
 
-                let args = [
+                AccountActions.transfer(
                     this.props.account.get("id"),
                     this.props.issuer.get("id"),
                     sendAmount.getAmount(),
@@ -262,9 +262,7 @@ class WithdrawModalBlocktrades extends React.Component {
                     this.props.output_coin_type + ":" + this.state.withdraw_address + (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : ""),
                     null,
                     feeAmount ? feeAmount.asset_id : "1.3.0"
-                ]
-                console.log('args', args);
-                AccountActions.transfer(...args);
+                );
 
                 this.setState({
                     empty_withdraw_value: false
@@ -574,7 +572,7 @@ class WithdrawModalBlocktrades extends React.Component {
                 {/* Withdraw/Cancel buttons */}
                 <div className="button-group">
 
-                    <div onClick={this.onSubmit.bind(this)} className={"button" + (disableSubmit ? (" ") : "")}>
+                    <div onClick={this.onSubmit.bind(this)} className={"button" + (disableSubmit ? (" disabled") : "")}>
                         <Translate content="modal.withdraw.submit" />
                     </div>
 
