@@ -372,7 +372,7 @@ class WithdrawModalNew extends React.Component {
     onAssetSelected(value, asset){
         let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, value);
         let address = WithdrawAddresses.getLast(value.toLowerCase());
-        this.setState({selectedAsset, selectedGateway, gateFee: asset.gateFee, issuer: asset.issuer, address});
+        this.setState({selectedAsset, selectedGateway, gateFee: asset.gateFee, issuer: asset.issuer, address, isBTS: false});
     }
 
     onAssetChanged(value){
@@ -383,7 +383,7 @@ class WithdrawModalNew extends React.Component {
         }
 
         if(!value){
-            this.setState({selectedGateway: "", addressError: false, fee: 0});
+            this.setState({selectedGateway: "", addressError: false, fee: 0, isBTS: false});
         }
     }
 
@@ -580,7 +580,7 @@ class WithdrawModalNew extends React.Component {
 
           {/*GATEWAY SELECTION*/}
           <div style={{marginBottom: "1em"}}>
-            {(!selectedAsset || isBTS) ? null : gatewaySelector.call(this, {
+            {((!selectedAsset || !withdrawalCurrencyBalance) || isBTS) ? null : gatewaySelector.call(this, {
                 selectedGateway, 
                 gatewayStatus, 
                 nAvailableGateways, 
