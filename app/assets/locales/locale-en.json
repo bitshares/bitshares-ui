@@ -1283,7 +1283,8 @@
       "withdraw": "Withdraw",
       "cancel": "Cancel",
       "available": "Available: ",
-      "submit_beta": "Withdraw (beta)"
+      "submit_beta": "Withdraw (beta)",
+      "no_estimate": "No estimate available for this object"
     },
     "deposit": {
       "header": "Deposit to %(account_name)s",

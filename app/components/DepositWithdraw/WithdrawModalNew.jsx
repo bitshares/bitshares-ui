@@ -172,6 +172,10 @@ class WithdrawModalNew extends React.Component {
             });
         }
 
+        if(!withdrawalCurrencyBalance){ //In case does not exist in balances
+            withdrawalCurrencyBalance = 0;
+        }
+
         if(preferredCurrency && selectedAsset){
             let toAsset = null;
             let fromAsset = null;      
@@ -570,8 +574,6 @@ class WithdrawModalNew extends React.Component {
         const shouldDisable = isBTS ? !quantity || !btsAccount : !assetAndGateway || !quantity || !address || !canCoverWithdrawal;
         let storedAddresses = WithdrawAddresses.get(selectedAsset.toLowerCase());
 
-        let tabIndex = 1;
-
         return <div>
           {/*ASSET SELECTION*/}
           <div style={{marginBottom: "1em"}}>
@@ -580,13 +582,13 @@ class WithdrawModalNew extends React.Component {
 
           {/*GATEWAY SELECTION*/}
           <div style={{marginBottom: "1em"}}>
-            {((!selectedAsset || !withdrawalCurrencyBalance) || isBTS) ? null : gatewaySelector.call(this, {
+            { selectedGateway ? gatewaySelector.call(this, {
                 selectedGateway, 
                 gatewayStatus, 
                 nAvailableGateways, 
                 error: false,
                 onGatewayChanged: this.onGatewayChanged.bind(this)
-            })}
+            }) : null}
           </div>
 
           {/*QUANTITY*/}
@@ -596,7 +598,8 @@ class WithdrawModalNew extends React.Component {
               {(loadedToAsset && preferredCurrency) ? <div style={{fontSize: "0.8em", position: "absolute", right: "1.25em"}}>
                 <Translate content="modal.withdraw.available" />
                 <span style={{color: canCoverWithdrawal ? null : "red", cursor: "pointer", textDecoration: "underline"}} onClick={this.onClickAvailableBalance.bind(this, convertedBalance)}>
-                    <BalanceComponent balance={withdrawalCurrencyBalanceId} />
+                    {/*Some currencies do not appear in balances, display zero balance if not found*/}
+                    {withdrawalCurrencyBalanceId ? <BalanceComponent balance={withdrawalCurrencyBalanceId} /> : '0.00'}
                 </span>
               </div> : null}
               <label className="left-label">
@@ -626,7 +629,7 @@ class WithdrawModalNew extends React.Component {
               </label>
               <div className="blocktrades-select-dropdown">
                   <div className="inline-label">
-                      <input type="text" value={address} tabIndex="4" onChange = {this.onAddressChanged.bind(this)} autoComplete="off" />
+                      <input type="text" value={address} onChange = {this.onAddressChanged.bind(this)} autoComplete="off" />
                       {storedAddresses.length > 1 ? <span onClick={this.onDropDownList.bind(this)} >&#9660;</span> : null}
                   </div>
               </div>
@@ -650,7 +653,7 @@ class WithdrawModalNew extends React.Component {
                     account={state.btsAccountName}
                     size={60}
                     error={state.btsAccountError}
-                    tabIndex={tabIndex++}
+
                 />
             </div>
             : null
