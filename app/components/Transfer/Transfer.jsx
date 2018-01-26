@@ -13,7 +13,7 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAsset } from "common/trxHelper";
 import { debounce, isNaN } from "lodash";
 import classnames from "classnames";
 import { Asset } from "common/MarketClasses";
@@ -160,7 +160,7 @@ class Transfer extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        let { fee_asset_id, from_account } = state;
+        let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
         if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
             fee_asset_id = fee_asset_types[0];
@@ -176,13 +176,16 @@ class Transfer extends React.Component {
             }
         })
         .then(({fee, hasBalance, hasPoolBalance}) => {
-            this.setState({
-                feeAmount: fee,
-                fee_asset_id: fee.asset_id,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance)
-            });
+            if (shouldPayFeeWithAsset(from_account, fee))
+                this.setState({fee_asset_id: asset_id}, this._updateFee);
+            else
+                this.setState({
+                    feeAmount: fee,
+                    fee_asset_id: fee.asset_id,
+                    hasBalance,
+                    hasPoolBalance,
+                    error: (!hasBalance || !hasPoolBalance)
+                });
         });
     }
 

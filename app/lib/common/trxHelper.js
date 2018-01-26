@@ -1,4 +1,4 @@
-import { FetchChain, PrivateKey, Aes, TransactionHelper, ChainTypes, ops } from "bitsharesjs/es";
+import { FetchChain, PrivateKey, Aes, TransactionHelper, ChainTypes, ChainStore, ops } from "bitsharesjs/es";
 import { Price, Asset } from "common/MarketClasses";
 const { operations } = ChainTypes;
 
@@ -186,10 +186,26 @@ function checkBalance(amount, sendAsset, feeAmount, balance) {
     return true;
 }
 
+function shouldPayFeeWithAsset(fromAccount, feeAmount) {
+    if (fromAccount && feeAmount && feeAmount.asset_id === "1.3.0") {
+        const balanceID = fromAccount.getIn([
+            "balances",
+            feeAmount.asset_id
+        ]);
+        const balanceObject = ChainStore.getObject(balanceID);
+        if (balanceObject) {
+            const balance = balanceObject.get("balance");
+            if (balance <= feeAmount.amount) return true;
+        }
+    }
+    return false;
+};
+
 export {
     estimateFee,
     estimateFeeAsync,
     checkFeePoolAsync,
     checkFeeStatusAsync,
-    checkBalance
+    checkBalance,
+    shouldPayFeeWithAsset
 };

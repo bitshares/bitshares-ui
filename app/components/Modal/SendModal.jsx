@@ -11,7 +11,7 @@ import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAsset } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -301,22 +301,6 @@ export default class SendModal extends React.Component {
         return {asset_types, fee_asset_types};
     }
 
-    _shouldPayFeeWithAsset = feeAmount => {
-        const {from_account} = this.state;
-        if (from_account && feeAmount && feeAmount.asset_id === "1.3.0") {
-            const balanceID = from_account.getIn([
-                "balances",
-                feeAmount.asset_id
-            ]);
-            const balanceObject = ChainStore.getObject(balanceID);
-            if (balanceObject) {
-                const balance = balanceObject.get("balance");
-                if (balance <= feeAmount.amount) return true;
-            }
-        }
-        return false;
-    };
-
     _updateFee(state = this.state) {
         let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
@@ -333,7 +317,7 @@ export default class SendModal extends React.Component {
                 content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
-            if (this._shouldPayFeeWithAsset(fee))
+            if (shouldPayFeeWithAsset(from_account, fee))
                 this.setState({fee_asset_id: asset_id}, this._updateFee);
             else
                 this.setState({
