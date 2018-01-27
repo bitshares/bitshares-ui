@@ -133,6 +133,10 @@ button, .button {
   @include RobotoRegular;
 }
 
+.vertical-order-table-cell {
+  @include RobotoRegular;
+}
+
 .table.dashboard-table {
     > thead > tr > th {
         @include RobotoRegular;

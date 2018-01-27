@@ -258,7 +258,6 @@ $pulsate-red-end
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
             background-color: $panel-bg-color; //lighten($bg-color, 4%);
-
         }
 
         .left-column-2 {
@@ -1061,7 +1060,7 @@ $pulsate-red-end
     //   @include RobotoLight;
     // }
 
-    td.orderHistoryBid {
+    .orderHistoryBid {
 
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
@@ -1076,7 +1075,7 @@ $pulsate-red-end
 
     }
 
-    td.orderHistoryAsk  {
+    .orderHistoryAsk  {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $ask-color;
@@ -1088,7 +1087,7 @@ $pulsate-red-end
         }
     }
 
-    td.orderHistoryCall {
+    .orderHistoryCall {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
             font-weight: bold;
             color: $call-color;
@@ -1100,14 +1099,15 @@ $pulsate-red-end
         }
     }
 
-    table.order-table > tbody, tbody.orderbook {
-        > tr.my-order > td {
-            font-weight: bold;
-            color: $info-color;
-            > span.price-integer, > span > span.price-integer, > span >span.price-decimal {
-                color: $info-color;
-                opacity: 1;
-            }
+    .order-table .my-order {
+        > .vertical-order-table-cell, > td {
+          font-weight: bold;
+          color: $info-color;
+        }
+
+        span.price-integer, span.price-decimal {
+            color: $info-color !important;
+            opacity: 1;
         }
     }
 
@@ -1121,6 +1121,9 @@ $pulsate-red-end
 
     .orderbook-latest-price {
         > div {
+            $orderbook-center-horizontal-margin: 5px;
+            margin-top: $orderbook-center-horizontal-margin;
+            margin-bottom: $orderbook-center-horizontal-margin;
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
@@ -1130,9 +1133,43 @@ $pulsate-red-end
         }
     }
 
+    .sticky-table .sticky-table-column, .sticky-table .sticky-table-header, .sticky-table .sticky-table-corner {
+        @include color($primary-text-color, $bg-color);
+    }
+
+    .left-order-book {
+      background-color: $bg-color;
+
+      .spread .spread-value {
+        color: $primary-text-color;
+      }
+    }
+
+    .sticky-table-header {
+        width: 100%;
+        height: 32px;
+        border-bottom: 1px solid grey;
+
+        .sticky-table-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #sticky-header-row {
+            background-color: $panel-bg-color;
+        }
+
+        .sticky-table-row  {
+            width: 100%;
+            background-color: $bg-color;
+
+            &.order-row:hover {
+              background-color: $panel-bg-color;
+            }
+        }
+    }
 
     .order-table {
-
         > tbody > tr:nth-of-type(even) {
             background-color: $row-accent-color;
         }
@@ -1209,7 +1246,7 @@ $pulsate-red-end
     }
 
     .header-sub-title {
-        font-size: 80%;
+        font-size: 11px;
         color: $light-text-color;
     }
 
