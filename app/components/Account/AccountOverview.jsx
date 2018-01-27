@@ -268,7 +268,7 @@ class AccountOverview extends React.Component {
             const thisAssetName = asset.get("symbol").split(".");
             const canDeposit =
                 (
-                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") && 
+                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
                     !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
                     !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
                 ) || asset.get("symbol") == "BTS";
@@ -449,6 +449,12 @@ class AccountOverview extends React.Component {
         });
     }
 
+    _changeShownAssets(shownAssets = "active") {
+        this.setState({
+            shownAssets: shownAssets
+        });
+    }
+
     _toggleSortOrder(key) {
         if (this.state.sortKey === key) {
             SettingsActions.changeViewSetting({
@@ -608,6 +614,9 @@ class AccountOverview extends React.Component {
                                     {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <Translate content="account.show_hidden" />
                                     </div> : null}
+                                    <div className="inline-block" onClick={shownAssets != "visual" ? this._changeShownAssets.bind(this, "visual"): () => {}}>
+                                        <Translate content="account.show_visual" />
+                                    </div>
 
                                     {/* Send Modal */}
                                     <SendModal id="send_modal_portfolio" ref="send_modal" from_name={this.props.account.get("name")} asset_id={this.state.send_asset || "1.3.0"}/>

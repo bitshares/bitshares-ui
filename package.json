@@ -152,6 +152,7 @@
     "react": "^15.6.1",
     "react-autocomplete": "^1.7.2",
     "react-clipboard.js": "^1.0.1",
+    "react-d3-treemap": "^1.0.13",
     "react-dom": "^15.6.1",
     "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
     "react-highcharts": "^12.0.0",
