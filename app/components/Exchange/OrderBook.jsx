@@ -140,6 +140,10 @@ class OrderBook extends React.Component {
             }
 
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+
+            if (!this.props.horizontal) {
+                this.setState({autoScroll: true});
+            }
         }
 
         if (
