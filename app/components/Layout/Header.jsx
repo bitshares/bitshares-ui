@@ -392,7 +392,7 @@ class Header extends React.Component {
                                             </div>
                                         </div>
                                     </li>
-                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                    <ul className="dropdown header-menu" style={{left: -200, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
                                         <li className="divider" onClick={this._toggleLock.bind(this)}>
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
                                             <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
