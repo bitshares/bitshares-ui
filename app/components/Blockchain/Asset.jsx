@@ -465,13 +465,46 @@ class Asset extends React.Component {
         );
     }
 
+    // return a sorted list of call orders in the format
+    getMarginPositions() {
+        const {sortDirection} = this.state;
+
+        let sortFunctions = {
+            name: function(a, b) {
+                let nameA = ChainStore.getAccount(a.borrower, false);
+                if (nameA) nameA = nameA.get("name");
+                let nameB = ChainStore.getAccount(b.borrower, false);
+                if (nameB) nameB = nameB.get("name");
+                if (nameA > nameB) return sortDirection ? 1 : -1;
+                if (nameA < nameB) return sortDirection ? -1 : 1;
+                return 0;
+            },
+            price: function(a, b) {
+                return (sortDirection ? 1 : -1) * (a.call_price.toReal() - b.call_price.toReal());
+            },
+            collateral: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.getCollateral().getAmount() - a.getCollateral().getAmount());
+            },
+            debt: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.amountToReceive().getAmount() - a.amountToReceive().getAmount());
+            },
+            ratio: function(a, b) {
+                return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
+            }
+        };
+
+        return this.state.callOrders
+           .sort(sortFunctions[this.state.marginTableSort]);
+    }
+
+    // 
 
     // return two tabs
     // one tab is for the price feed data from the 
     // witness for the given asset 
     // the other tab is a list of the margin positions 
     // for this asset (if it's a bitasset)
-    renderPriceFeedData(asset) {
+    renderPriceFeedData(asset, sortedCallOrders) {
 
         // first we compute the price feed tab
         var bitAsset = asset.bitasset;
@@ -539,41 +572,7 @@ class Asset extends React.Component {
             );
         }
 
-        let tab = 
-            <Tab title="explorer.asset.price_feed_data.title">
-                <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                    {header}
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </table>
-            </Tab>
-
-        const {sortDirection} = this.state;
-
-        let sortFunctions = {
-            name: function(a, b) {
-                let nameA = ChainStore.getAccount(a.borrower, false);
-                if (nameA) nameA = nameA.get("name");
-                let nameB = ChainStore.getAccount(b.borrower, false);
-                if (nameB) nameB = nameB.get("name");
-                if (nameA > nameB) return sortDirection ? 1 : -1;
-                if (nameA < nameB) return sortDirection ? -1 : 1;
-                return 0;
-            },
-            price: function(a, b) {
-                return (sortDirection ? 1 : -1) * (a.call_price.toReal() - b.call_price.toReal());
-            },
-            collateral: function(a, b) {
-                return (sortDirection ? 1 : -1) * (b.getCollateral().getAmount() - a.getCollateral().getAmount());
-            },
-            debt: function(a, b) {
-                return (sortDirection ? 1 : -1) * (b.amountToReceive().getAmount() - a.amountToReceive().getAmount());
-            },
-            ratio: function(a, b) {
-                return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
-            }
-        };
+        
 
         // now we compute the margin position tab
         let header2 = (
@@ -619,8 +618,7 @@ class Asset extends React.Component {
         );
 
         let rows2 = (
-                this.state.callOrders
-                .sort(sortFunctions[this.state.marginTableSort])
+                sortedCallOrders 
                 .map(c => {
                     return (
                         <tr className="margin-row" key={c.id}>
@@ -688,8 +686,9 @@ class Asset extends React.Component {
 
     render() {
         var asset = this.props.asset.toJS();
+        var sortedCallOrders = this.getMarginPositions();
         var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset) : null;
-        var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset) : null;
+        var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset, sortedCallOrders) : null;
 
         return (
             <div className="grid-block page-layout">
