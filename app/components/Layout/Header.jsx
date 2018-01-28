@@ -362,7 +362,7 @@ class Header extends React.Component {
                                 <div key="padlock" style={{paddingBottom: 15}} className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
                                     <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                 </div>,
-                                <div key="account-dropdown" className={cnames("dropdown-wrapper", {active: this.state.accountsListDropdownActive})}>
+                                <div key="account-dropdown" className={cnames("account-dropdown-wrapper dropdown-wrapper", {active: this.state.accountsListDropdownActive})}>
                                     <li style={{display: "flex"}}>
                                         <div onClick={() => {this.setState({accountsListDropdownActive: !this.state.accountsListDropdownActive});}} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
@@ -384,10 +384,10 @@ class Header extends React.Component {
                                     </ul>
 
                                 </div>,
-                                <div key="dropdown" className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
+                                <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})}>
                                     <li style={{display: "flex"}}>
                                         <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
-                                            <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
+                                            <div>
                                                 <div className="hamburger">{hamburger}</div>
                                             </div>
                                         </div>
