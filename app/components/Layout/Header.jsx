@@ -200,17 +200,24 @@ class Header extends React.Component {
 
     onBodyClick(e) {
         let el = e.target;
-        let insideDropdown = false;
+        let insideMenuDropdown = false;
+        let insideAccountDropdown = false;
 
         do {
-            if(el.classList && el.classList.contains("dropdown-wrapper")) {
-                insideDropdown = true;
+            if(el.classList && el.classList.contains("account-dropdown-wrapper")) {
+                insideAccountDropdown = true;
+                break;
+            }
+
+            if(el.classList && el.classList.contains("menu-dropdown-wrapper")) {
+                insideMenuDropdown = true;
                 break;
             }
 
         } while ((el = el.parentNode));
 
-        if(!insideDropdown) this._closeDropdown();
+        if(!insideAccountDropdown) this._closeAccountsListDropdown();
+        if(!insideMenuDropdown) this._closeMenuDropdown();
     }
 
     _onLinkAccount() {
