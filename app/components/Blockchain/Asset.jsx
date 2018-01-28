@@ -335,7 +335,7 @@ class Asset extends React.Component {
     }
 
 
-    renderPriceFeed(asset) {
+    renderPriceFeed(asset, sortedCallOrders) {
         var title = (<Translate content="explorer.asset.price_feed.title"/>);
         var bitAsset = asset.bitasset;
         if (!('current_feed' in bitAsset))
@@ -343,6 +343,9 @@ class Asset extends React.Component {
         var currentFeed = bitAsset.current_feed;
         
         var globalSettlementPrice = this.getGlobalSettlementPrice();
+        // this would be faster, but a bug prevents us from doing this
+        // since sometimes the call price is incorrect
+        //var globalSettlementPrice = this.getGlobalSettlementPriceFromSorted(sortedCallOrders);
 
         return (
             <div className="asset-card">
@@ -515,7 +518,14 @@ class Asset extends React.Component {
     // is indexed, then it screws up the type system and 
     // sets the array to empty
     getGlobalSettlementPriceFromSorted(sortedCallOrders) {
+        console.log("global settlement sorted called");
         // first get the least collateralized short position
+        if (!sortedCallOrders || sortedCallOrders.length <= 0) {
+            console.log("length array 0 passed in");
+            return null;
+        }
+        console.log("sortedCallOrders exists according to sorted get globa");
+
         let leastColShort = sortedCallOrders[0];
         
         // this price will happen when the CR is 1.
@@ -525,8 +535,6 @@ class Asset extends React.Component {
         let debt = leastColShort.amountToReceive().getAmount();
         let collateral = leastColShort.getCollateral().getAmount(); 
 
-        return globalSettlementPrice;
-        
         return (<FormattedPrice
                 base_amount={collateral}
                 base_asset={leastColShort.call_price.base.asset_id}
@@ -542,8 +550,7 @@ class Asset extends React.Component {
     // he/she owes. If the feed price goes above this, 
     // then 
     getGlobalSettlementPrice() {
-        console.log("global settlement price called");
-
+        
         var call_orders;
         if (!this.state.callOrders) {
             return null;
@@ -787,7 +794,7 @@ class Asset extends React.Component {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
         console.log(sortedCallOrders);
-        var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset) : null;
+        var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset, sortedCallOrders) : null;
         var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset, sortedCallOrders) : null;
 
         return (
