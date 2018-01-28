@@ -341,6 +341,8 @@ class Asset extends React.Component {
         if (!('current_feed' in bitAsset))
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
+        
+        var globalSettlementPrice = this.getGlobalSettlementPrice();
 
         return (
             <div className="asset-card">
@@ -363,6 +365,12 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio"/> </td>
                             <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
                         </tr>
+
+                        <tr>
+                            <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
+                            <td> {globalSettlementPrice} </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -465,7 +473,7 @@ class Asset extends React.Component {
         );
     }
 
-    // return a sorted list of call orders in the format
+    // return a sorted list of call orders 
     getMarginPositions() {
         const {sortDirection} = this.state;
 
@@ -495,9 +503,102 @@ class Asset extends React.Component {
 
         return this.state.callOrders
            .sort(sortFunctions[this.state.marginTableSort]);
+    };
+
+    // the global settlement price is defined as the 
+    // the price at which the least collateralized short 
+    // 's collateral no longer enough to back the debt
+    // he/she owes. If the feed price goes above this, 
+    // then 
+
+    // DOESN'T WORK - for reason if js sees that sortedcallorders
+    // is indexed, then it screws up the type system and 
+    // sets the array to empty
+    getGlobalSettlementPriceFromSorted(sortedCallOrders) {
+        // first get the least collateralized short position
+        let leastColShort = sortedCallOrders[0];
+        
+        // this price will happen when the CR is 1.
+        // The CR is 1 iff collateral / (debt x feed_ price) == 1
+        // Rearranging, this means that the CR is 1 iff 
+        // feed_price == collateral / debt
+        let debt = leastColShort.amountToReceive().getAmount();
+        let collateral = leastColShort.getCollateral().getAmount(); 
+
+        return globalSettlementPrice;
+        
+        return (<FormattedPrice
+                base_amount={collateral}
+                base_asset={leastColShort.call_price.base.asset_id}
+                quote_amount={debt}
+                quote_asset={leastColShort.call_price.quote.asset_id}
+                />);
+
+    }
+    
+    // the global settlement price is defined as the 
+    // the price at which the least collateralized short 
+    // 's collateral no longer enough to back the debt
+    // he/she owes. If the feed price goes above this, 
+    // then 
+    getGlobalSettlementPrice() {
+        console.log("global settlement price called");
+
+        var call_orders;
+        if (!this.state.callOrders) {
+            return null;
+        } else {
+            // put the call order on the stack
+            call_orders = this.state.callOrders;
+        }
+
+        console.log("call orders");
+        console.log(call_orders);
+
+        // first get the least collateralized short position
+        var leastColShort = null;
+        var leastColShortRatio = null;
+        var len = this.state.callOrders.length;
+        for (var i = 0; i < len; i++) {
+            let call_order = this.state.callOrders[i];
+
+            if (leastColShort == null) {
+                leastColShort = call_order;
+                leastColShortRatio = call_order.getRatio();
+            } else if (call_order.getRatio() < leastColShortRatio) {
+                leastColShortRatio = call_order.getRatio();
+                leastColShort = call_order;
+            }
+        }
+
+        if (leastColShort == null) {
+            // couldn't find the least colshort?
+            console.log("couldn't find the least col short");
+            return null;
+        }
+        
+        // this price will happen when the CR is 1.
+        // The CR is 1 iff collateral / (debt x feed_ price) == 1
+        // Rearranging, this means that the CR is 1 iff 
+        // feed_price == collateral / debt
+        let debt = leastColShort.amountToReceive().getAmount();
+        console.log("debt " + debt);
+        let collateral = leastColShort.getCollateral().getAmount(); 
+        console.log("collateral: " + collateral);
+        let globalSettlementPrice = collateral / debt;
+        console.log("doom price unformat: " + globalSettlementPrice);
+
+        return (<FormattedPrice
+                base_amount={collateral}
+                base_asset={leastColShort.call_price.base.asset_id}
+                quote_amount={debt}
+                quote_asset={leastColShort.call_price.quote.asset_id}
+                />);
+
     }
 
-    // 
+
+
 
     // return two tabs
     // one tab is for the price feed data from the 
@@ -571,8 +672,6 @@ class Asset extends React.Component {
                 </tr>
             );
         }
-
-        
 
         // now we compute the margin position tab
         let header2 = (
@@ -687,6 +786,7 @@ class Asset extends React.Component {
     render() {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
+        console.log(sortedCallOrders);
         var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset) : null;
         var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset, sortedCallOrders) : null;
 
@@ -714,8 +814,7 @@ class Asset extends React.Component {
                                     {priceFeed ? this.renderPermissions(asset) : null}
                                 </div>
                             </div>
-
-                            {priceFeedData}
+                            {priceFeedData ? priceFeedData : null}
                         </div>
                     </div>
                 </div>
