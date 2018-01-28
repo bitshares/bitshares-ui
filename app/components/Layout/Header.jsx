@@ -466,8 +466,6 @@ class Header extends React.Component {
                                             <div className="table-cell"><Icon size="2x" name="folder" /></div>
                                             <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
                                         </li>
-
-                                        {accountsList}
                                     </ul>
                                 </div>]
                             }
