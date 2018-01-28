@@ -42,7 +42,8 @@ class Header extends React.Component {
     constructor(props, context) {
         super();
         this.state = {
-            active: context.location.pathname
+            active: context.location.pathname,
+            accountsListDropdownActive: false
         };
 
         this.unlisten = null;
@@ -91,6 +92,7 @@ class Header extends React.Component {
             nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active ||
             nextState.dropdownActive !== this.state.dropdownActive ||
+            nextState.accountsListDropdownActive !== this.state.accountsListDropdownActive ||
             nextProps.height !== this.props.height
         );
     }
@@ -360,15 +362,34 @@ class Header extends React.Component {
                                 <div key="padlock" style={{paddingBottom: 15}} className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
                                     <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                 </div>,
+                                <div key="account-dropdown" className={cnames("dropdown-wrapper", {active: this.state.accountsListDropdownActive})}>
+                                    <li style={{display: "flex"}}>
+                                        <div onClick={() => {this.setState({accountsListDropdownActive: !this.state.accountsListDropdownActive});}} className="table-cell" style={{flex: 1}}>
+                                            <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
+                                                <span>{currentAccount}</span>
+                                                {walletBalance}
+                                            </div>
+
+                                        </div>
+                                    </li>
+
+                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+
+                                        <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                        </li>
+
+                                        {accountsList}
+                                    </ul>
+
+                                </div>,
                                 <div key="dropdown" className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
                                     <li style={{display: "flex"}}>
                                         <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
-                                                <span>{currentAccount}</span>
-                                                {walletBalance}
                                                 <div className="hamburger">{hamburger}</div>
                                             </div>
-
                                         </div>
                                     </li>
                                     <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
