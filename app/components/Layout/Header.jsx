@@ -48,6 +48,8 @@ class Header extends React.Component {
 
         this.unlisten = null;
         this._closeDropdown = this._closeDropdown.bind(this);
+        this._closeMenuDropdown = this._closeMenuDropdown.bind(this);
+        this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(this);
         this.onBodyClick = this.onBodyClick.bind(this);
     }
 
@@ -141,8 +143,21 @@ class Header extends React.Component {
         this._closeDropdown();
     }
 
+    _closeAccountsListDropdown() {
+        this.setState({
+            accountsListDropdownActive: false
+        });
+    }
+
+    _closeMenuDropdown() {
+        this.setState({
+            dropdownActive: false,
+        });
+    }
+
     _closeDropdown() {
-        this.setState({dropdownActive: false});
+        this._closeMenuDropdown();
+        this._closeAccountsListDropdown();
     }
 
     _onGoBack(e) {
