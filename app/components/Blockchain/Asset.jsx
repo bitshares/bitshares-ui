@@ -466,8 +466,14 @@ class Asset extends React.Component {
     }
 
 
+    // return two tabs
+    // one tab is for the price feed data from the 
+    // witness for the given asset 
+    // the other tab is a list of the margin positions 
+    // for this asset (if it's a bitasset)
     renderPriceFeedData(asset) {
 
+        // first we compute the price feed tab
         var bitAsset = asset.bitasset;
         if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0 || bitAsset.is_prediction_market) {
             return null;
@@ -533,6 +539,16 @@ class Asset extends React.Component {
             );
         }
 
+        let tab = 
+            <Tab title="explorer.asset.price_feed_data.title">
+                <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
+                    {header}
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>
+            </Tab>
+
         const {sortDirection} = this.state;
 
         let sortFunctions = {
@@ -559,6 +575,87 @@ class Asset extends React.Component {
             }
         };
 
+        // now we compute the margin position tab
+        let header2 = (
+                <thead>
+                    <tr>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "name")}style={{textAlign: "left"}}>
+                            <Translate content="transaction.borrower" />
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "collateral")}>
+                            <Translate content="transaction.collateral" />
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
+                                amount={this.state.callOrders[0].getCollateral().getAmount()}
+                                asset={this.state.callOrders[0].getCollateral().asset_id}
+                                hide_amount
+                            /> )</span> : null}
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "debt")}>
+                            <Translate content="transaction.borrow_amount" />
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
+                                amount={this.state.callOrders[0].amountToReceive().getAmount()}
+                                asset={this.state.callOrders[0].amountToReceive().asset_id}
+                                hide_amount
+                            /> )</span> : null}
+                        </th>
+                        <th style={{paddingRight: 10}} className="clickable">
+                            <span onClick={this._toggleSortOrder.bind(this, "price")}>
+                                <Translate content="exchange.call" />
+                            </span>
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedPrice
+                                base_amount={this.state.callOrders[0].call_price.base.amount}
+                                base_asset={this.state.callOrders[0].call_price.base.asset_id}
+                                quote_amount={this.state.callOrders[0].call_price.quote.amount}
+                                quote_asset={this.state.callOrders[0].call_price.quote.asset_id}
+                                hide_value
+                                noPopOver
+                            />)</span> : null}
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "ratio")}>
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+                    </tr>
+                </thead>
+        );
+
+        let rows2 = (
+                this.state.callOrders
+                .sort(sortFunctions[this.state.marginTableSort])
+                .map(c => {
+                    return (
+                        <tr className="margin-row" key={c.id}>
+                            <td><LinkToAccountById account={c.borrower} /></td>
+                            <td style={{textAlign: "right"}}>
+                                <FormattedAsset
+                                    amount={c.getCollateral().getAmount()}
+                                    asset={c.getCollateral().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                            <td style={{textAlign: "right"}}>
+                                <FormattedAsset
+                                    amount={c.amountToReceive().getAmount()}
+                                    asset={c.amountToReceive().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                            <td style={{textAlign: "right", paddingRight: 10}}>
+                                <FormattedPrice
+                                    base_amount={c.call_price.base.amount}
+                                    base_asset={c.call_price.base.asset_id}
+                                    quote_amount={c.call_price.quote.amount}
+                                    quote_asset={c.call_price.quote.asset_id}
+                                    hide_symbols
+                                />
+                            </td>
+                            <td className={c.getStatus()} style={{textAlign: "right"}}>
+                                {c.getRatio().toFixed(3)}
+                            </td>
+                        </tr>
+                    );
+                })
+        );
+
         return (
             <div className="grid block small-12 " style={{ overflow:"visible"}}>
                 <div className="grid-content no-padding">
@@ -575,81 +672,9 @@ class Asset extends React.Component {
 
                             <Tab title="explorer.asset.margin_positions.title">
                                 <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                                    <thead>
-                                        <tr>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "name")}style={{textAlign: "left"}}>
-                                                <Translate content="transaction.borrower" />
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "collateral")}>
-                                                <Translate content="transaction.collateral" />
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
-                                                    amount={this.state.callOrders[0].getCollateral().getAmount()}
-                                                    asset={this.state.callOrders[0].getCollateral().asset_id}
-                                                    hide_amount
-                                                /> )</span> : null}
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "debt")}>
-                                                <Translate content="transaction.borrow_amount" />
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
-                                                    amount={this.state.callOrders[0].amountToReceive().getAmount()}
-                                                    asset={this.state.callOrders[0].amountToReceive().asset_id}
-                                                    hide_amount
-                                                /> )</span> : null}
-                                            </th>
-                                            <th style={{paddingRight: 10}} className="clickable">
-                                                <span onClick={this._toggleSortOrder.bind(this, "price")}>
-                                                    <Translate content="exchange.call" />
-                                                </span>
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedPrice
-                                                    base_amount={this.state.callOrders[0].call_price.base.amount}
-                                                    base_asset={this.state.callOrders[0].call_price.base.asset_id}
-                                                    quote_amount={this.state.callOrders[0].call_price.quote.amount}
-                                                    quote_asset={this.state.callOrders[0].call_price.quote.asset_id}
-                                                    hide_value
-                                                    noPopOver
-                                                />)</span> : null}
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "ratio")}>
-                                                <Translate content="borrow.coll_ratio" />
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                    {header2} 
                                     <tbody>
-                                        {this.state.callOrders
-                                            .sort(sortFunctions[this.state.marginTableSort])
-                                            .map(c => {
-                                                return (
-                                                    <tr className="margin-row" key={c.id}>
-                                                        <td><LinkToAccountById account={c.borrower} /></td>
-                                                        <td style={{textAlign: "right"}}>
-                                                            <FormattedAsset
-                                                                amount={c.getCollateral().getAmount()}
-                                                                asset={c.getCollateral().asset_id}
-                                                                hide_asset
-                                                            />
-                                                        </td>
-                                                        <td style={{textAlign: "right"}}>
-                                                            <FormattedAsset
-                                                                amount={c.amountToReceive().getAmount()}
-                                                                asset={c.amountToReceive().asset_id}
-                                                                hide_asset
-                                                            />
-                                                        </td>
-                                                        <td style={{textAlign: "right", paddingRight: 10}}>
-                                                            <FormattedPrice
-                                                                base_amount={c.call_price.base.amount}
-                                                                base_asset={c.call_price.base.asset_id}
-                                                                quote_amount={c.call_price.quote.amount}
-                                                                quote_asset={c.call_price.quote.asset_id}
-                                                                hide_symbols
-                                                            />
-                                                        </td>
-                                                        <td className={c.getStatus()} style={{textAlign: "right"}}>
-                                                            {c.getRatio().toFixed(3)}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
+                                        {rows2}
                                     </tbody>
                                 </table>
                             </Tab>
