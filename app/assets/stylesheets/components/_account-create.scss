@@ -32,6 +32,17 @@ div.account-creation {
     div.confirm-checks {
         max-width: 95vw;
         text-align: left;
+
+        [type=checkbox] {
+            position: relative;
+            top: 3px;
+        }
+
+        label span {
+            text-transform: none;
+            @include RobotoRegular;
+            line-height: 1.2;
+        }
     }
 
     div.sub-content {

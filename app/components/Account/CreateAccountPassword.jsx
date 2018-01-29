@@ -228,25 +228,26 @@ class CreateAccountPassword extends React.Component {
                 </section>
 
             <br />
+
             <div className="confirm-checks" onClick={this._onInput.bind(this, "understand_3")}>
-                <label>
-                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_3}/>
-                    <Translate content="wallet.understand_3" />
+                <label htmlFor="checkbox-1" style={{position: "relative"}}>
+                    <input type="checkbox" id="checkbox-1" onChange={() => {}} checked={this.state.understand_3} style={{position: "absolute", top: "-5px", left: "0"}}/>
+                    <div style={{paddingLeft: "30px"}}><Translate content="wallet.understand_3" /></div>
                 </label>
             </div>
             <br />
             <div className="confirm-checks" onClick={this._onInput.bind(this, "understand_1")}>
-                <label>
-                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_1}/>
-                    <Translate content="wallet.understand_1" />
+                <label htmlFor="checkbox-2" style={{position: "relative"}}>
+                    <input type="checkbox" id="checkbox-2" onChange={() => {}} checked={this.state.understand_1} style={{position: "absolute", top: "-5px", left: "0"}}/>
+                    <div style={{paddingLeft: "30px"}}><Translate content="wallet.understand_1" /></div>
                 </label>
             </div>
             <br />
 
             <div className="confirm-checks" style={{paddingBottom: "1.5rem"}} onClick={this._onInput.bind(this, "understand_2")}>
-                <label>
-                    <input type="checkbox" onChange={() => {}} checked={this.state.understand_2}/>
-                    <Translate content="wallet.understand_2" />
+                <label htmlFor="checkbox-3" style={{position: "relative"}}>
+                    <input type="checkbox" id="checkbox-3" onChange={() => {}} checked={this.state.understand_2} style={{position: "absolute", top: "-5px", left: "0"}}/>
+                    <div style={{paddingLeft: "30px"}}><Translate content="wallet.understand_2" /></div>
                 </label>
             </div>
                 {/* If this is not the first account, show dropdown for fee payment account */}
@@ -301,7 +302,7 @@ class CreateAccountPassword extends React.Component {
 
         return (
             <div>
-                <h4 style={{fontWeight: "bold", paddingBottom: 15}}><Translate content="wallet.wallet_password" /></h4>
+                <h4 style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal", paddingBottom: 15}}><Translate content="wallet.wallet_password" /></h4>
 
                 <Translate style={{textAlign: "left"}} unsafe component="p" content="wallet.create_account_password_text" />
 
@@ -325,7 +326,7 @@ class CreateAccountPassword extends React.Component {
                         <div onClick={() => {this.setState({showPass: true});}} className="button"><Translate content="wallet.password_show" /></div> :
                         <div>
                             <h5><Translate content="settings.password" />:</h5>
-                            <p style={{fontWeight: "bold", textAlign: "center"}}>{this.state.generatedPassword}</p>
+                            <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal", textAlign: "center"}}>{this.state.generatedPassword}</p>
                         </div>
                     }
                 </div>

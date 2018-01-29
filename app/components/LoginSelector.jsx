@@ -65,16 +65,26 @@ export default class LoginSelector extends React.Component {
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
                         <div><img src={logo}/></div>
-                        <Translate content="account.intro_text_title" component="h4"/>
-                        <Translate unsafe content="account.intro_text_1" component="p" />
-                       
-                        <div className="shrink text-center">
-                            <div className="grp-menu-item overflow-visible account-drop-down">
-                                <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
-                                {flagDropdown}
+                        {childCount == 0 ? null :
+                            <div>
+                                <Translate content="header.create_account" component="h4"/>
+                            </div>
+                        }
+
+                        {childCount == 1 ? null :
+                            <div>
+                                <Translate content="account.intro_text_title" component="h4"/>
+                                <Translate unsafe content="account.intro_text_1" component="p" />
+                               
+                                <div className="shrink text-center">
+                                    <div className="grp-menu-item overflow-visible account-drop-down">
+                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
+                                        {flagDropdown}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                         
                         {!!childCount ? null :
                         <div className="grid-block account-login-options">
