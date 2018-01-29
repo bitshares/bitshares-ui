@@ -1533,7 +1533,7 @@ $pulsate-red-end
     }
 
     div.account-creation {
-        background-color: $account-cells;
+        border: 1px solid $account-cells;
         border-radius: 6px;
 
         div.button > a {

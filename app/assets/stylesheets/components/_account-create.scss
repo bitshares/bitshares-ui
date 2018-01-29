@@ -132,10 +132,11 @@ div.account-creation {
 }
 
 @include breakpoint(medium) {
+
+
     div.account-creation {
         width: 450px;
         margin-top: 2rem;
-        // padding: 2rem 4rem 1rem 4rem;
 
         p {
             max-width: 35rem;
