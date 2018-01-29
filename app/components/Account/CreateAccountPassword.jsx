@@ -381,7 +381,7 @@ class CreateAccountPassword extends React.Component {
 
         return (
             <div>
-                <p style={{fontWeight: "bold"}}><Translate content="wallet.congrat" /></p>
+                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}><Translate content="wallet.congrat" /></p>
 
                 <p><Translate content="wallet.tips_explore_pass" /></p>
 
@@ -399,7 +399,7 @@ class CreateAccountPassword extends React.Component {
         return (
             <div className="sub-content">
                 <div>
-                        {step === 2 ? <p style={{fontWeight: "bold"}}>
+                        {step === 2 ? <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}>
                             <Translate content={"wallet.step_" + step} />
                         </p> : null}
 
