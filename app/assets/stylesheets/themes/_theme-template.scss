@@ -419,7 +419,7 @@ $pulsate-red-end
             &:hover {
                 color: $info-color;
             }
-            > span { font-weight: bold; }
+            > span { @include RobotoMedium; }
         }
         svg > path { fill: $secondary-text-color; }
         // svg:hover > path { fill: $primary-text-color; }
@@ -472,6 +472,7 @@ $pulsate-red-end
         }
         > tbody > tr > td {
             border-bottom-color: $dark-text-color;
+            font-size: 0.875rem;
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
@@ -670,12 +671,12 @@ $pulsate-red-end
 
     .value.negative {
         color: $ask-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .value.positive {
         color: $bid-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .active-bucket {
@@ -705,7 +706,7 @@ $pulsate-red-end
             color: $primary-text-color;
         }
         h6 {
-            font-weight: bold;
+            @include RobotoMedium;
         }
         .bottom {
             border-top-color: $bg-color;
@@ -729,7 +730,7 @@ $pulsate-red-end
             border: 2px solid $button-bg-color;
 
             > a {
-                font-weight: bold;
+                @include RobotoMedium;
                 color: $primary-text-color;
             }
         }
@@ -759,7 +760,7 @@ $pulsate-red-end
     }
 
     .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 
@@ -928,12 +929,8 @@ $pulsate-red-end
     }
 
     .help-content {
-        @include RobotoLight;
-        font-weight: 100;
         padding: 10px;
-        p {
-            font-weight: 600;
-        }
+
         ul {
             list-style: none;
         }
@@ -1064,7 +1061,7 @@ $pulsate-red-end
     td.orderHistoryBid {
 
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $bid-color;
         }
 
@@ -1078,7 +1075,7 @@ $pulsate-red-end
 
     td.orderHistoryAsk  {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $ask-color;
         }
 
@@ -1090,7 +1087,7 @@ $pulsate-red-end
 
     td.orderHistoryCall {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $call-color;
         }
 
@@ -1102,7 +1099,7 @@ $pulsate-red-end
 
     table.order-table > tbody, tbody.orderbook {
         > tr.my-order > td {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $info-color;
             > span.price-integer, > span > span.price-integer, > span >span.price-decimal {
                 color: $info-color;
@@ -1125,7 +1122,7 @@ $pulsate-red-end
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            font-weight: bold;
+            @include RobotoMedium;
             font-size: 13px;
         }
     }
@@ -1221,7 +1218,7 @@ $pulsate-red-end
         background-color: $header-color;
         padding: 8px 35px;
         border-bottom: 1px solid grey;
-        font-weight: bold;
+        @include RobotoMedium;
         text-transform: uppercase;
         cursor: pointer;
     }
@@ -1322,13 +1319,13 @@ $pulsate-red-end
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
 
         > td.warning {
             background-color: darken($warning-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 
@@ -1415,7 +1412,7 @@ $pulsate-red-end
 
     table.table > tbody > tr.in-use {
         > td:nth-child(2) {
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 
@@ -1430,7 +1427,7 @@ $pulsate-red-end
     }
 
     input.my-key, td.my-key a {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 

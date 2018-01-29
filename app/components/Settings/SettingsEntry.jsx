@@ -115,10 +115,10 @@ export default class SettingsEntry extends React.Component {
         if (value && value.translate) {
             value = value.translate;
         }
-
+  
         return (
             <section className="block-list">
-                {noHeader ? null : <header><Translate component="span" content={`settings.${setting}`} /></header>}
+                {noHeader ? null : <header><Translate component="span" style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}} content={`settings.${setting}`} /></header>}
                 {options ? <ul>
                     <li className="with-dropdown">
                         {optional}

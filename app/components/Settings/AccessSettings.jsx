@@ -219,7 +219,7 @@ class AccessSettings extends React.Component {
 
             <div className="available-nodes" style={{position: "relative", marginBottom: "2em"}}>
                 <Translate component="p" content="settings.available_nodes" />
-                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#4A90E2"}} >
+                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#049cce"}} >
                     <Translate id="add" component="span" content="settings.add_api" />
                 </span>
                 {
