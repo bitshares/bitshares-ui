@@ -73,16 +73,11 @@ div.account-creation {
         font-size: 1.1rem;
     }
 
-    div.creation-options, div.button-group {
-        display: flex;
-        justify-content: space-between;
-    }
     div.creation-options {
         padding-top: 2.5rem;
         text-transform: uppercase;
         font-size:95%;
         font-weight: 600;
-        margin: 0 -1rem;
     }
 
     p {
@@ -102,8 +97,5 @@ div.account-creation {
             // margin-left: inherit;
             // margin-right: inherit;
         }
-    }
-    div.creation-options {
-        margin: 0 -3rem;
     }
 }
