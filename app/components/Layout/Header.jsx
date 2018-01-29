@@ -531,10 +531,12 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="account.permissions" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                        </li>
+                                        { !hasLocalWallet && (
+                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                            </li>
+                                        )}
                                     </ul>
                                 </div>]
                             }
