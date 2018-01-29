@@ -355,6 +355,16 @@ $pulsate-red-end
             }
         }
 
+        div.dropdown-wrapper.hover-transparent {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        div.dropdown-wrapper.cursor-default {
+          cursor: default;
+        }
+
         div.dropdown-wrapper.active {
             transition: background-color 0s;
             background-color: $bg-color;

@@ -47,6 +47,8 @@ class Header extends React.Component {
         };
 
         this.unlisten = null;
+        this._toggleAccountDropdownMenu = this._toggleAccountDropdownMenu.bind(this);
+        this._toggleDropdownMenu = this._toggleDropdownMenu.bind(this);
         this._closeDropdown = this._closeDropdown.bind(this);
         this._closeMenuDropdown = this._closeMenuDropdown.bind(this);
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(this);
@@ -198,6 +200,26 @@ class Header extends React.Component {
     //     this.context.router.push(`/account/${account}/overview`);
     // }
 
+    _toggleAccountDropdownMenu() {
+
+        // prevent state toggling if user cannot have multiple accounts
+
+        const hasLocalWallet = !!WalletDb.getWallet();
+
+        if (!hasLocalWallet)
+            return false;
+
+        this.setState({
+            accountsListDropdownActive: !this.state.accountsListDropdownActive
+        });
+    }
+
+    _toggleDropdownMenu() {
+        this.setState({
+            dropdownActive: !this.state.dropdownActive
+        });
+    }
+
     onBodyClick(e) {
         let el = e.target;
         let insideMenuDropdown = false;
@@ -321,6 +343,7 @@ class Header extends React.Component {
 
         let hamburger = this.state.dropdownActive ? <Icon className="icon-14px" name="hamburger-x" /> : <Icon className="icon-14px" name="hamburger" />;
 
+        const hasLocalWallet = !!WalletDb.getWallet();
         return (
             <div className="header menu-group primary">
                 {/*<div className="show-for-small-only">
@@ -384,9 +407,9 @@ class Header extends React.Component {
                                 <div key="padlock" style={{paddingBottom: 15}} className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
                                     <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                 </div>,
-                                <div key="account-dropdown" className={cnames("account-dropdown-wrapper dropdown-wrapper", {active: this.state.accountsListDropdownActive})}>
+                                <div key="account-dropdown" className={cnames("account-dropdown-wrapper dropdown-wrapper", {active: this.state.accountsListDropdownActive, "hover-transparent": !hasLocalWallet, "cursor-default": !hasLocalWallet})}>
                                     <li style={{display: "flex"}}>
-                                        <div onClick={() => {this.setState({accountsListDropdownActive: !this.state.accountsListDropdownActive});}} className="table-cell" style={{flex: 1}}>
+                                        <div onClick={this._toggleAccountDropdownMenu} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
                                                 {walletBalance}
@@ -395,20 +418,23 @@ class Header extends React.Component {
                                         </div>
                                     </li>
 
-                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                    { hasLocalWallet && (
 
-                                        <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                        </li>
+                                        <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
 
-                                        {accountsList}
-                                    </ul>
+                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                            </li>
 
+                                            {accountsList}
+                                        </ul>
+
+                                    )}
                                 </div>,
                                 <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})}>
                                     <li style={{display: "flex"}}>
-                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
+                                        <div onClick={this._toggleDropdownMenu} className="table-cell" style={{flex: 1}}>
                                             <div>
                                                 <div className="hamburger">{hamburger}</div>
                                             </div>
