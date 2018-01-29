@@ -45,7 +45,7 @@ div.account-creation {
         }
     }
     h4 {
-        font-weight: 600;
+        @include RobotoMedium;
         margin-top: 1rem;
         margin-bottom: 0;
     }
@@ -77,7 +77,7 @@ div.account-creation {
         padding-top: 2.5rem;
         text-transform: uppercase;
         font-size:95%;
-        font-weight: 600;
+        @include RobotoMedium;
     }
 
     p {
@@ -94,8 +94,6 @@ div.account-creation {
 
         p {
             max-width: 35rem;
-            // margin-left: inherit;
-            // margin-right: inherit;
         }
     }
 }
