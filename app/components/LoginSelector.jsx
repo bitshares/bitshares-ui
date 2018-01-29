@@ -40,7 +40,7 @@ export default class LoginSelector extends React.Component {
         
         const flagDropdown = <ActionSheet>
             <ActionSheet.Button title="" style={{width:"64px"}}>
-                <a style={{padding: "1rem", border: "none"}} className="button">
+                <a style={{padding: "1rem", border: "none"}} className="button arrow-down">
                     <FlagImage flag={this.state.currentLocale} />
                 </a>
             </ActionSheet.Button>
@@ -77,29 +77,22 @@ export default class LoginSelector extends React.Component {
                         </div>
                         
                         {!!childCount ? null :
-                        <div className="button-group">
-                            <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>
-                                <Link to="/create-account/password">
-                                    <div className="button">
-                                        <Translate content="header.create_account" />
-                                    </div>
-                                </Link>
-                            </label>
+                        <div className="grid-block account-login-options">
+                            <Link to="/create-account/password" className="button primary">
+                                <Translate content="header.create_account" />
+                            </Link>
 
-                            <label style={{textAlign: "left"}}><Translate content="account.existing_user" /><br/>
-                                <div className="button success" onClick={() => {
-                                    SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-                                    WalletUnlockActions.unlock.defer();
-                                }}>
-                                    <Translate content="header.unlock_short" />
-                                </div>
-                            </label>
+                            <span className="button hollow primary" onClick={() => {
+                                SettingsActions.changeSetting({setting: "passwordLogin", value: true});
+                                WalletUnlockActions.unlock.defer();
+                            }}>
+                                <Translate content="header.unlock_short" />
+                            </span>
                         </div>}
 
                         {!!childCount ? null :
-                        <div className="grid-block">
-                            <div className="small-12 medium-6 creation-options"><Link to="/wallet/backup/restore"><Translate content="account.restore" /></Link></div>
-                            <div className="small-12 medium-6 creation-options"><Link to="/create-account/wallet"><Translate content="account.advanced" /></Link></div>
+                        <div className="additional-account-options">
+                            <p>Optionally, <Link to="/wallet/backup/restore">restore your account</Link> or create an account using the <Link to="/create-account/wallet">advanced form</Link>.</p>
                         </div>}
 
                         {this.props.children}
