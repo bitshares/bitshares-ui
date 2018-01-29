@@ -330,3 +330,22 @@ button.red { background-color: rgb(245, 27, 27); }
 button.green { background-color: rgb(48, 185, 14); }
 button.blue { background-color: rgb(65, 116, 184); }
 button.disabled { background-color: rgb(77, 94, 116); }
+
+.button.hollow {
+  background-color: transparent;
+  @include RobotoCondensed;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.button.hollow.primary {
+  border-color: $bs-blue;
+  color: $bs-blue!important;
+  background: transparent;
+
+    &:hover {
+        color: #fff!important;
+    }  
+}

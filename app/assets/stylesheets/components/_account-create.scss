@@ -74,14 +74,6 @@ div.account-creation {
         justify-content: center;
         flex-direction: column;
         text-align: center;
-
-        &.hollow {
-            color: $bs-blue;
-
-            &:hover {
-                color: #fff;
-            }
-        }
     }
 
     .arrow-down:after {
@@ -120,6 +112,14 @@ div.account-creation {
     }
 }
 
+.modal-logo {
+    display: inline;
+}
+
+.modal-title {
+    display: block;
+}
+
 @include breakpoint(medium) {
     div.account-creation {
         width: 450px;
@@ -129,5 +129,9 @@ div.account-creation {
         p {
             max-width: 35rem;
         }
+    }
+
+    .modal-logo, .modal-title {
+        display: none;
     }
 }
