@@ -420,7 +420,7 @@ class Header extends React.Component {
 
                                     { hasLocalWallet && (
 
-                                        <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                                        <ul className="dropdown header-menu" style={{left: 0, top: 64, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
 
                                             <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
                                                 <div className="table-cell"><Icon size="2x" name="folder" /></div>
