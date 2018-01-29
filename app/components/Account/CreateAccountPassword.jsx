@@ -398,7 +398,7 @@ class CreateAccountPassword extends React.Component {
         // let firstAccount = my_accounts.length === 0;
         return (
             <div className="sub-content">
-                <div className="grid-block wrap vertical">
+                <div>
                         {step === 2 ? <p style={{fontWeight: "bold"}}>
                             <Translate content={"wallet.step_" + step} />
                         </p> : null}
