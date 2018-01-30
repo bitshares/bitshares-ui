@@ -286,7 +286,7 @@ class Header extends React.Component {
                 .sort()
                 .map((name) => {
                     return (
-                        <li className={cnames({active: active.indexOf(name) !== -1})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
+                        <li className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
                             <div style={{paddingTop: 0}} className="table-cell"><AccountImage style={{position: "relative", top: 4}} size={{height: 20, width: 20}} account={name}/></div>
                             <div className="table-cell" style={{paddingLeft: 10}}><a className={"lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</a></div>
                         </li>
@@ -346,7 +346,7 @@ class Header extends React.Component {
                         {!!createAccountLink ? <li>
                             <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
                                 <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
-                                <span><Translate content="header.settings" /></span>
+                                <span className="column-hide-tiny"><Translate content="header.settings" /></span>
                             </a>
                         </li> : null}
                         {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
@@ -356,12 +356,12 @@ class Header extends React.Component {
                     <div className="grp-menu-items-group header-right-menu">
 
                         <div className="grp-menu-item overflow-visible account-drop-down">
-                                {createAccountLink ? createAccountLink :
-                                <div className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
+                                {createAccountLink ? createAccountLink : [
+                                <div key="padlock" style={{paddingBottom: 15}} className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
+                                    <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
+                                </div>,
+                                <div key="dropdown" className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
                                     <li style={{display: "flex"}}>
-                                        <div className="table-cell" onClick={this._toggleLock.bind(this)}>
-                                            <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
-                                        </div>
                                         <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
@@ -469,7 +469,7 @@ class Header extends React.Component {
 
                                         {accountsList}
                                     </ul>
-                                </div>
+                                </div>]
                             }
                         </div>
                     </div>
