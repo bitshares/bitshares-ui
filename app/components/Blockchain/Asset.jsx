@@ -257,9 +257,10 @@ class Asset extends React.Component {
                     symbol={(prefix || "") + name}
                     description={desc}
                     issuer= {issuerName}
+                    hide_issuer = "true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
-                <a style={{textTransform: "uppercase"}} href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
+                <a style={{textTransform: "uppercase"}} className="button market-button" href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
             </div>
         );
     }

@@ -79,34 +79,43 @@ class HelpContent extends React.Component {
         return false;
     }
 
-    setVars(str) {
+    setVars(str, hideIssuer) {
+        if(hideIssuer == "true") {
+            var str = str.replace(/^.*{issuer}.*$/mg, "");
+        }
+
         return str.replace(/(\{.+?\})/gi, (match, text) => {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
             if (value.amount && value.asset) value = utils.format_asset(value.amount, value.asset, false, false);
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
-            //console.log("-- var -->", key, value);
+            // console.log("-- var -->", key, value);
             return value;
         });
     }
+
     render() {
+
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         if (!HelpData[locale]) {
             console.error(`missing locale '${locale}' help files, rolling back to 'en'`);
             locale = "en";
         }
+
         let value = HelpData[locale][this.props.path];
 
         if (!value && locale !== "en") {
             console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`);
             value = HelpData['en'][this.props.path];
         }
+
         if (!value && this.props.alt_path) {
             console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to alt_path '${this.props.alt_path}'`);
             value = HelpData[locale][this.props.alt_path];
         }
+
         if (!value && this.props.alt_path && locale != 'en') {
             console.warn(`missing alt_path '${this.props.alt_path}' for locale '${locale}' help files, rolling back to 'en'`);
             value = HelpData['en'][this.props.alt_path];
@@ -116,12 +125,15 @@ class HelpContent extends React.Component {
             console.error(`help file not found '${this.props.path}' for locale '${locale}'`);
             return !null;
         }
+
         if (this.props.section) value = value[this.props.section];
+
         if (!value) {
             console.error(`help section not found ${this.props.path}#${this.props.section}`);
             return null;
         }
-        return <div style={this.props.style} className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
+
+        return <div style={this.props.style} className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value, this.props.hide_issuer)}}/>;
     }
 }
 

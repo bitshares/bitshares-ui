@@ -340,6 +340,10 @@ button.disabled { background-color: rgb(77, 94, 116); }
   }
 }
 
+a.button span {
+  color: #fff;
+}
+
 .button.hollow.primary {
   border-color: $bs-blue;
   color: $bs-blue!important;
@@ -348,4 +352,8 @@ button.disabled { background-color: rgb(77, 94, 116); }
     &:hover {
         color: #fff!important;
     }  
+}
+
+.market-button {
+  margin: 1rem 0;
 }
