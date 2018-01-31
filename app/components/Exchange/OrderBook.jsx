@@ -462,16 +462,26 @@ class OrderBook extends React.Component {
                                 component="div"
                                 transitionName="newrow"
                             >
-                              {askRows}
+                                {askRows.length > 0
+                                    ? askRows
+                                    : (noOrders || <div className="sticky-table-row">
+                                          <td className="cell no-orders padtop" colSpan="3">
+                                              No asks
+                                          </td>
+                                      </div>)}
                             </TransitionWrapper>
                             <div className="sticky-table-row" ref="center_text">
-                              {noOrders ? <td colSpan={3} className="no-orders">No orders</td> :
+                              {noOrders ? <td colSpan={3} className="no-orders padtop">No orders</td> :
                                 <td className="cell center-cell" colSpan="3">
                                     <div className="orderbook-latest-price">
                                         <div className="text-center spread">
-                                            {(!!spread) && <span className="clickable left" onClick={this.toggleSpreadValue}>Spread <span className="spread-value">{spread}</span></span>}
+                                            {(!!spread) && <span className="clickable left" onClick={this.toggleSpreadValue}>
+                                                Spread <span className="spread-value">{spread}</span>
+                                            </span>}
                                             <Icon className="lock-unlock clickable" onClick={this.toggleAutoScroll} name={this.state.autoScroll ? "locked" : "unlocked"} />
-                                            {(!!this.props.latest) && <span className="right">Latest <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /></span></span>}
+                                            {(!!this.props.latest) && <span className="right">
+                                                Latest <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /></span>
+                                            </span>}
                                         </div>
                                     </div>
                                 </td>
@@ -483,7 +493,13 @@ class OrderBook extends React.Component {
                                 component="div"
                                 transitionName="newrow"
                             >
-                                {bidRows}
+                                {bidRows.length > 0
+                                    ? bidRows
+                                    : (noOrders || <div className="sticky-table-row">
+                                          <td className="cell no-orders" colSpan="3">
+                                              No bids
+                                          </td>
+                                      </div>)}
                             </TransitionWrapper>
                         </StickyTable>
                     </div>
