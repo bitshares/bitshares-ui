@@ -466,7 +466,7 @@ class OrderBook extends React.Component {
                             </TransitionWrapper>
                             <div className="sticky-table-row" ref="center_text">
                               {noOrders ? <td colSpan={3} className="no-orders">No orders</td> :
-                                <td className="cell vertical-order-table-center-cell center-cell" colSpan="3">
+                                <td className="cell center-cell" colSpan="3">
                                     <div className="orderbook-latest-price">
                                         <div className="text-center spread">
                                             {(!!spread) && <span className="clickable left" onClick={this.toggleSpreadValue}>Spread <span className="spread-value">{spread}</span></span>}
