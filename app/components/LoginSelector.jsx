@@ -30,8 +30,12 @@ class LoginSelector extends React.Component {
     componentDidUpdate() {
         const myAccounts = AccountStore.getMyAccounts();
 
+        // use ChildCount to make sure user is on /create-account page except /create-account/*
+        // to prevent redirect when user just registered and need to make backup of wallet or password
+        const childCount = React.Children.count(this.props.children);
+
         // do redirect to portfolio if user already logged in
-        if(Array.isArray(myAccounts) && myAccounts.length !== 0)
+        if(Array.isArray(myAccounts) && myAccounts.length !== 0 && childCount === 0)
             this.props.router.push("/account/"+this.props.currentAccount);
     }
 
