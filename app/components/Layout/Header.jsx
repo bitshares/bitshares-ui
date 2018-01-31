@@ -330,6 +330,7 @@ class Header extends React.Component {
             if (tradingAccounts.length >= 1) {
                 accountsList = tradingAccounts
                 .sort()
+                .filter((name) => name !== currentAccount)
                 .map((name) => {
                     return (
                         <li className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
