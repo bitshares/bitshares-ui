@@ -156,10 +156,13 @@ class OrderBook extends React.Component {
         }
     }
 
+    queryStickyTable = (query) => this.refs.vertical_sticky_table.table.querySelector(query)
+
+    verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
+
     componentDidMount() {
         if (!this.props.horizontal) {
-            const scrollbar = document.getElementById("y-scrollbar");
-            Ps.initialize(scrollbar);
+            Ps.initialize(this.verticalScrollBar());
             this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
@@ -172,7 +175,7 @@ class OrderBook extends React.Component {
 
     centerVerticalScrollBar() {
         if (!this.props.horizontal && this.state.autoScroll) {
-            const scrollableContainer = document.getElementById("sticky-table-y-wrapper");
+            const scrollableContainer = this.queryStickyTable("#sticky-table-y-wrapper");
             const centerTextContainer = this.refs.center_text;
             const centeringOffset = 21;
             const scrollTo = centerTextContainer.offsetTop - (elemHeight(scrollableContainer) / 2) + centeringOffset;
@@ -183,8 +186,7 @@ class OrderBook extends React.Component {
 
     psUpdate() {
         if (!this.props.horizontal) {
-            const scrollbar = document.getElementById("y-scrollbar");
-            Ps.update(scrollbar);
+            Ps.update(this.verticalScrollBar());
             this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
@@ -441,8 +443,8 @@ class OrderBook extends React.Component {
             // Vertical orderbook
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="order-table-container" ref="vertical_sticky_table">
-                        <StickyTable stickyColumnCount={0} className="order-table table">
+                    <div className="order-table-container">
+                        <StickyTable stickyColumnCount={0} className="order-table table"  ref="vertical_sticky_table">
                             <div className="sticky-table-row top-header">
                                 <div className="cell header-cell left">
                                     <span className="header-sub-title"><AssetName name={baseSymbol} /></span>
