@@ -13,7 +13,7 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
-import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAsset } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAssetAsync } from "common/trxHelper";
 import { debounce, isNaN } from "lodash";
 import classnames from "classnames";
 import { Asset } from "common/MarketClasses";
@@ -175,18 +175,19 @@ class Transfer extends React.Component {
                 content: state.memo
             }
         })
-        .then(({fee, hasBalance, hasPoolBalance}) => {
-            if (shouldPayFeeWithAsset(from_account, fee))
-                this.setState({fee_asset_id: asset_id}, this._updateFee);
-            else
-                this.setState({
-                    feeAmount: fee,
-                    fee_asset_id: fee.asset_id,
-                    hasBalance,
-                    hasPoolBalance,
-                    error: (!hasBalance || !hasPoolBalance)
-                });
-        });
+        .then(({fee, hasBalance, hasPoolBalance}) =>
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should => should ?
+                  this.setState({fee_asset_id: asset_id}, this._updateFee)
+              :
+                  this.setState({
+                      feeAmount: fee,
+                      fee_asset_id: fee.asset_id,
+                      hasBalance,
+                      hasPoolBalance,
+                      error: (!hasBalance || !hasPoolBalance)
+                  })
+            )
+        );
     }
 
     fromChanged(from_name) {
