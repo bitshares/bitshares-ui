@@ -338,6 +338,7 @@ $pulsate-red-end
         }
 
         div.header-right-lock {
+            cursor: pointer;
             padding: 1rem .25rem;
             &:hover {
                 background-color: $bg-color;
@@ -353,6 +354,16 @@ $pulsate-red-end
             &:hover {
                 background-color: $bg-color;
             }
+        }
+
+        div.dropdown-wrapper.hover-transparent {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        div.dropdown-wrapper.cursor-default {
+          cursor: default;
         }
 
         div.dropdown-wrapper.active {
