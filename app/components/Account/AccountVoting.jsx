@@ -715,6 +715,7 @@ class AccountVoting extends React.Component {
                                         <thead>
                                             <tr>
                                                 {workerTableIndex === 2 ? null : <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>}
+                                                <th style={{textAlign: "center"}}><Translate content="account.user_issued_assets.id" /></th>
                                                 <th style={{textAlign: "left"}}><Translate content="account.user_issued_assets.description" /></th>
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.total_votes" />
