@@ -258,7 +258,9 @@
       "feed_producers": "Feed producers",
       "add_feed": "Add new feed producer",
       "feed_not_allowed_1": "Cannot set feed producers on a witness- or committee-fed asset",
-      "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers"
+      "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
+      "too_many_feed": "Number of feed producers exceeded the max allowed (%(max)s).",
+      "conflict_feed": "Cannot allow witnesses and committee members to provide feeds simultaneously"
     },
     "connections": {
       "known": "Known by",
