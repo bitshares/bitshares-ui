@@ -346,7 +346,7 @@ class Header extends React.Component {
                         {!!createAccountLink ? <li>
                             <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
                                 <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
-                                <span><Translate content="header.settings" /></span>
+                                <span className="column-hide-tiny"><Translate content="header.settings" /></span>
                             </a>
                         </li> : null}
                         {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
