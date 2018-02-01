@@ -131,17 +131,79 @@ form.order-form {
             padding-bottom: 8px !important;
         }
     }
+    .transition-container {
+      display: table-row-group;
+    }
     > .table-container {
         flex-grow: 1;
         width: 100%;
         position: relative;
     }
-    > .spread {
-        flex-shrink: 1;
-        width: 100%;
-        padding: 0.25rem 0 0.25rem 0;
-        border-top: 1px solid #777;
-        border-bottom: 1px solid #777;
+    .my-order {
+        font-weight: bold;
+    }
+    .no-orders {
+        text-align: center !important;
+        margin-left: auto;
+        margin-right: auto;
+        &.padtop {
+            padding-top: 1em;
+        }
+    }
+    .ps-scrollbar-y-rail {
+        width: 10px !important;
+        .ps-scrollbar-y {
+          width: 6px !important;
+        }
+    }
+    .cell {
+        display: table-cell;
+        font-size: 12px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        vertical-align: middle;
+        text-align: right;
+        &.header-cell {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+        $scrollBarSpacePadding: 15px;
+        &.left, &.right {
+          padding-left: $scrollBarSpacePadding;
+          padding-right: $scrollBarSpacePadding;
+        }
+        .text-center.spread {
+            color: grey;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            .lock-unlock {
+              margin-left: auto;
+              margin-right: auto;
+            }
+            .left {
+                padding-left: $scrollBarSpacePadding;
+            }
+            .right {
+                padding-right: $scrollBarSpacePadding;
+            }
+        }
+    }
+    .bottom-header {
+      width: 100%;
+      height: 2rem;
+      .button.outline {
+        border-left: none
+      }
+    }
+    .order-table-container {
+       width: 100%;
+       height: calc(100% - 32px);
+    }
+    .top-header {
+      text-align: right;
+      height: 31px;
     }
 }
 
