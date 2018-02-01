@@ -80,6 +80,10 @@ class WorkerApproval extends React.Component{
 
             <tr className={approvalState ? "" : "unsupported"}>
                 {isExpired ? null : <td style={{textAlign: "right", paddingRight: 10, paddingLeft: 0}}>{rank}</td>}
+                
+                <td className="worker-id" style={{textAlign: "left"}}>
+                    {worker.id}
+                </td>
 
                 <td className="worker-name" style={{textAlign: "left"}}>
                     <div className="inline-block" style={{paddingRight: 5, position: "relative", top: -1}}>

@@ -197,6 +197,7 @@
     },
     "user_issued_assets": {
       "symbol": "Symbol",
+      "id": "ID",
       "name": "Asset Name",
       "description": "Description",
       "max_supply": "Maximum supply",

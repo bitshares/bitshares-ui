@@ -256,6 +256,11 @@ table.table.dashboard-table {
                     font-size: 90%;
                 }
             }
+
+            &.worker-id {
+                width: 3rem;
+                max-width: 5rem;
+            }
         }
         &.total-value {
             td {
