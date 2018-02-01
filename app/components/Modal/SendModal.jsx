@@ -11,7 +11,7 @@ import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAssetAsync } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -302,7 +302,7 @@ export default class SendModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        let { fee_asset_id, from_account } = state;
+        let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
         if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
             fee_asset_id = fee_asset_types[0];
@@ -316,16 +316,18 @@ export default class SendModal extends React.Component {
                 type: "memo",
                 content: state.memo
             }
-        })
-        .then(({fee, hasBalance, hasPoolBalance}) => {
-            this.setState({
-                feeAmount: fee,
-                fee_asset_id: fee.asset_id,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance)
-            });
-        });
+        }).then(({fee, hasBalance, hasPoolBalance}) =>
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should => should ?
+                    this.setState({fee_asset_id: asset_id}, this._updateFee)
+                :
+                    this.setState({
+                        feeAmount: fee,
+                        fee_asset_id: fee.asset_id,
+                        hasBalance,
+                        hasPoolBalance,
+                        error: !hasBalance || !hasPoolBalance
+                    }))
+        );
     }
 
     setNestedRef(ref) {
