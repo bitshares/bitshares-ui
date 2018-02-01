@@ -1118,6 +1118,7 @@ class Exchange extends React.Component {
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
                     <ExchangeHeader
+                        account={this.props.currentAccount}
                         quoteAsset={quoteAsset} baseAsset={baseAsset}
                         hasPrediction={hasPrediction} starredMarkets={starredMarkets}
                         lowestAsk={lowestAsk} highestBid={highestBid}
