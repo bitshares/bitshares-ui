@@ -335,12 +335,17 @@ class Asset extends React.Component {
     }
 
 
-    renderPriceFeed(asset) {
+    renderPriceFeed(asset, sortedCallOrders) {
         var title = (<Translate content="explorer.asset.price_feed.title"/>);
         var bitAsset = asset.bitasset;
         if (!('current_feed' in bitAsset))
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
+        
+        var globalSettlementPrice = this.getGlobalSettlementPrice();
+        // this would be faster, but a bug prevents us from doing this
+        // since sometimes the call price is incorrect
+        //var globalSettlementPrice = this.getGlobalSettlementPriceFromSorted(sortedCallOrders);
 
         return (
             <div className="asset-card">
@@ -363,6 +368,12 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio"/> </td>
                             <td> {currentFeed.maximum_short_squeeze_ratio/10}% </td>
                         </tr>
+
+                        <tr>
+                            <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
+                            <td> {globalSettlementPrice} </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -465,9 +476,145 @@ class Asset extends React.Component {
         );
     }
 
+    // return a sorted list of call orders 
+    getMarginPositions() {
+        const {sortDirection} = this.state;
 
-    renderPriceFeedData(asset) {
+        let sortFunctions = {
+            name: function(a, b) {
+                let nameA = ChainStore.getAccount(a.borrower, false);
+                if (nameA) nameA = nameA.get("name");
+                let nameB = ChainStore.getAccount(b.borrower, false);
+                if (nameB) nameB = nameB.get("name");
+                if (nameA > nameB) return sortDirection ? 1 : -1;
+                if (nameA < nameB) return sortDirection ? -1 : 1;
+                return 0;
+            },
+            price: function(a, b) {
+                return (sortDirection ? 1 : -1) * (a.call_price.toReal() - b.call_price.toReal());
+            },
+            collateral: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.getCollateral().getAmount() - a.getCollateral().getAmount());
+            },
+            debt: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.amountToReceive().getAmount() - a.amountToReceive().getAmount());
+            },
+            ratio: function(a, b) {
+                return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
+            }
+        };
 
+        return this.state.callOrders
+           .sort(sortFunctions[this.state.marginTableSort]);
+    };
+
+    // the global settlement price is defined as the 
+    // the price at which the least collateralized short 
+    // 's collateral no longer enough to back the debt
+    // he/she owes. If the feed price goes above this, 
+    // then 
+
+    // DOESN'T WORK - for reason if js sees that sortedcallorders
+    // is indexed, then it screws up the type system and 
+    // sets the array to empty
+    getGlobalSettlementPriceFromSorted(sortedCallOrders) {
+        console.log("global settlement sorted called");
+        // first get the least collateralized short position
+        if (!sortedCallOrders || sortedCallOrders.length <= 0) {
+            console.log("length array 0 passed in");
+            return null;
+        }
+        console.log("sortedCallOrders exists according to sorted get globa");
+
+        let leastColShort = sortedCallOrders[0];
+        
+        // this price will happen when the CR is 1.
+        // The CR is 1 iff collateral / (debt x feed_ price) == 1
+        // Rearranging, this means that the CR is 1 iff 
+        // feed_price == collateral / debt
+        let debt = leastColShort.amountToReceive().getAmount();
+        let collateral = leastColShort.getCollateral().getAmount(); 
+
+        return (<FormattedPrice
+                base_amount={collateral}
+                base_asset={leastColShort.call_price.base.asset_id}
+                quote_amount={debt}
+                quote_asset={leastColShort.call_price.quote.asset_id}
+                />);
+
+    }
+    
+    // the global settlement price is defined as the 
+    // the price at which the least collateralized short 
+    // 's collateral no longer enough to back the debt
+    // he/she owes. If the feed price goes above this, 
+    // then 
+    getGlobalSettlementPrice() {
+        
+        var call_orders;
+        if (!this.state.callOrders) {
+            return null;
+        } else {
+            // put the call order on the stack
+            call_orders = this.state.callOrders;
+        }
+
+        console.log("call orders");
+        console.log(call_orders);
+
+        // first get the least collateralized short position
+        var leastColShort = null;
+        var leastColShortRatio = null;
+        var len = this.state.callOrders.length;
+        for (var i = 0; i < len; i++) {
+            let call_order = this.state.callOrders[i];
+
+            if (leastColShort == null) {
+                leastColShort = call_order;
+                leastColShortRatio = call_order.getRatio();
+            } else if (call_order.getRatio() < leastColShortRatio) {
+                leastColShortRatio = call_order.getRatio();
+                leastColShort = call_order;
+            }
+        }
+
+        if (leastColShort == null) {
+            // couldn't find the least colshort?
+            console.log("couldn't find the least col short");
+            return null;
+        }
+        
+        // this price will happen when the CR is 1.
+        // The CR is 1 iff collateral / (debt x feed_ price) == 1
+        // Rearranging, this means that the CR is 1 iff 
+        // feed_price == collateral / debt
+        let debt = leastColShort.amountToReceive().getAmount();
+        console.log("debt " + debt);
+        let collateral = leastColShort.getCollateral().getAmount(); 
+        console.log("collateral: " + collateral);
+        let globalSettlementPrice = collateral / debt;
+        console.log("doom price unformat: " + globalSettlementPrice);
+
+        return (<FormattedPrice
+                base_amount={collateral}
+                base_asset={leastColShort.call_price.base.asset_id}
+                quote_amount={debt}
+                quote_asset={leastColShort.call_price.quote.asset_id}
+                />);
+
+    }
+
+
+
+
+    // return two tabs
+    // one tab is for the price feed data from the 
+    // witness for the given asset 
+    // the other tab is a list of the margin positions 
+    // for this asset (if it's a bitasset)
+    renderPriceFeedData(asset, sortedCallOrders) {
+
+        // first we compute the price feed tab
         var bitAsset = asset.bitasset;
         if (!('feeds' in bitAsset) || bitAsset.feeds.length == 0 || bitAsset.is_prediction_market) {
             return null;
@@ -533,31 +680,85 @@ class Asset extends React.Component {
             );
         }
 
-        const {sortDirection} = this.state;
+        // now we compute the margin position tab
+        let header2 = (
+                <thead>
+                    <tr>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "name")}style={{textAlign: "left"}}>
+                            <Translate content="transaction.borrower" />
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "collateral")}>
+                            <Translate content="transaction.collateral" />
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
+                                amount={this.state.callOrders[0].getCollateral().getAmount()}
+                                asset={this.state.callOrders[0].getCollateral().asset_id}
+                                hide_amount
+                            /> )</span> : null}
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "debt")}>
+                            <Translate content="transaction.borrow_amount" />
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
+                                amount={this.state.callOrders[0].amountToReceive().getAmount()}
+                                asset={this.state.callOrders[0].amountToReceive().asset_id}
+                                hide_amount
+                            /> )</span> : null}
+                        </th>
+                        <th style={{paddingRight: 10}} className="clickable">
+                            <span onClick={this._toggleSortOrder.bind(this, "price")}>
+                                <Translate content="exchange.call" />
+                            </span>
+                            {this.state.callOrders.length ? <span>&nbsp;(<FormattedPrice
+                                base_amount={this.state.callOrders[0].call_price.base.amount}
+                                base_asset={this.state.callOrders[0].call_price.base.asset_id}
+                                quote_amount={this.state.callOrders[0].call_price.quote.amount}
+                                quote_asset={this.state.callOrders[0].call_price.quote.asset_id}
+                                hide_value
+                                noPopOver
+                            />)</span> : null}
+                        </th>
+                        <th className="clickable" onClick={this._toggleSortOrder.bind(this, "ratio")}>
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+                    </tr>
+                </thead>
+        );
 
-        let sortFunctions = {
-            name: function(a, b) {
-                let nameA = ChainStore.getAccount(a.borrower, false);
-                if (nameA) nameA = nameA.get("name");
-                let nameB = ChainStore.getAccount(b.borrower, false);
-                if (nameB) nameB = nameB.get("name");
-                if (nameA > nameB) return sortDirection ? 1 : -1;
-                if (nameA < nameB) return sortDirection ? -1 : 1;
-                return 0;
-            },
-            price: function(a, b) {
-                return (sortDirection ? 1 : -1) * (a.call_price.toReal() - b.call_price.toReal());
-            },
-            collateral: function(a, b) {
-                return (sortDirection ? 1 : -1) * (b.getCollateral().getAmount() - a.getCollateral().getAmount());
-            },
-            debt: function(a, b) {
-                return (sortDirection ? 1 : -1) * (b.amountToReceive().getAmount() - a.amountToReceive().getAmount());
-            },
-            ratio: function(a, b) {
-                return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
-            }
-        };
+        let rows2 = (
+                sortedCallOrders 
+                .map(c => {
+                    return (
+                        <tr className="margin-row" key={c.id}>
+                            <td><LinkToAccountById account={c.borrower} /></td>
+                            <td style={{textAlign: "right"}}>
+                                <FormattedAsset
+                                    amount={c.getCollateral().getAmount()}
+                                    asset={c.getCollateral().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                            <td style={{textAlign: "right"}}>
+                                <FormattedAsset
+                                    amount={c.amountToReceive().getAmount()}
+                                    asset={c.amountToReceive().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                            <td style={{textAlign: "right", paddingRight: 10}}>
+                                <FormattedPrice
+                                    base_amount={c.call_price.base.amount}
+                                    base_asset={c.call_price.base.asset_id}
+                                    quote_amount={c.call_price.quote.amount}
+                                    quote_asset={c.call_price.quote.asset_id}
+                                    hide_symbols
+                                />
+                            </td>
+                            <td className={c.getStatus()} style={{textAlign: "right"}}>
+                                {c.getRatio().toFixed(3)}
+                            </td>
+                        </tr>
+                    );
+                })
+        );
 
         return (
             <div className="grid block small-12 " style={{ overflow:"visible"}}>
@@ -575,81 +776,9 @@ class Asset extends React.Component {
 
                             <Tab title="explorer.asset.margin_positions.title">
                                 <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                                    <thead>
-                                        <tr>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "name")}style={{textAlign: "left"}}>
-                                                <Translate content="transaction.borrower" />
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "collateral")}>
-                                                <Translate content="transaction.collateral" />
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
-                                                    amount={this.state.callOrders[0].getCollateral().getAmount()}
-                                                    asset={this.state.callOrders[0].getCollateral().asset_id}
-                                                    hide_amount
-                                                /> )</span> : null}
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "debt")}>
-                                                <Translate content="transaction.borrow_amount" />
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedAsset
-                                                    amount={this.state.callOrders[0].amountToReceive().getAmount()}
-                                                    asset={this.state.callOrders[0].amountToReceive().asset_id}
-                                                    hide_amount
-                                                /> )</span> : null}
-                                            </th>
-                                            <th style={{paddingRight: 10}} className="clickable">
-                                                <span onClick={this._toggleSortOrder.bind(this, "price")}>
-                                                    <Translate content="exchange.call" />
-                                                </span>
-                                                {this.state.callOrders.length ? <span>&nbsp;(<FormattedPrice
-                                                    base_amount={this.state.callOrders[0].call_price.base.amount}
-                                                    base_asset={this.state.callOrders[0].call_price.base.asset_id}
-                                                    quote_amount={this.state.callOrders[0].call_price.quote.amount}
-                                                    quote_asset={this.state.callOrders[0].call_price.quote.asset_id}
-                                                    hide_value
-                                                    noPopOver
-                                                />)</span> : null}
-                                            </th>
-                                            <th className="clickable" onClick={this._toggleSortOrder.bind(this, "ratio")}>
-                                                <Translate content="borrow.coll_ratio" />
-                                            </th>
-                                        </tr>
-                                    </thead>
+                                    {header2} 
                                     <tbody>
-                                        {this.state.callOrders
-                                            .sort(sortFunctions[this.state.marginTableSort])
-                                            .map(c => {
-                                                return (
-                                                    <tr className="margin-row" key={c.id}>
-                                                        <td><LinkToAccountById account={c.borrower} /></td>
-                                                        <td style={{textAlign: "right"}}>
-                                                            <FormattedAsset
-                                                                amount={c.getCollateral().getAmount()}
-                                                                asset={c.getCollateral().asset_id}
-                                                                hide_asset
-                                                            />
-                                                        </td>
-                                                        <td style={{textAlign: "right"}}>
-                                                            <FormattedAsset
-                                                                amount={c.amountToReceive().getAmount()}
-                                                                asset={c.amountToReceive().asset_id}
-                                                                hide_asset
-                                                            />
-                                                        </td>
-                                                        <td style={{textAlign: "right", paddingRight: 10}}>
-                                                            <FormattedPrice
-                                                                base_amount={c.call_price.base.amount}
-                                                                base_asset={c.call_price.base.asset_id}
-                                                                quote_amount={c.call_price.quote.amount}
-                                                                quote_asset={c.call_price.quote.asset_id}
-                                                                hide_symbols
-                                                            />
-                                                        </td>
-                                                        <td className={c.getStatus()} style={{textAlign: "right"}}>
-                                                            {c.getRatio().toFixed(3)}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
+                                        {rows2}
                                     </tbody>
                                 </table>
                             </Tab>
@@ -663,8 +792,10 @@ class Asset extends React.Component {
 
     render() {
         var asset = this.props.asset.toJS();
-        var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset) : null;
-        var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset) : null;
+        var sortedCallOrders = this.getMarginPositions();
+        console.log(sortedCallOrders);
+        var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset, sortedCallOrders) : null;
+        var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset, sortedCallOrders) : null;
 
         return (
             <div className="grid-block page-layout">
@@ -690,8 +821,7 @@ class Asset extends React.Component {
                                     {priceFeed ? this.renderPermissions(asset) : null}
                                 </div>
                             </div>
-
-                            {priceFeedData}
+                            {priceFeedData ? priceFeedData : null}
                         </div>
                     </div>
                 </div>
