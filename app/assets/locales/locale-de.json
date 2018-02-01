@@ -264,7 +264,7 @@
     "bts_market": "Markt",
     "history": "Historie",
     "payees": "Empfänger",
-    "permissions": "Berechitigungen",
+    "permissions": "Berechtigungen",
     "voting": "Abstimmung",
     "orders": "Anweisungen",
     "select_placeholder": "Konto auswählen...",
@@ -503,7 +503,7 @@
   "explorer": {
     "accounts": {
       "title": "Konten", 
-      "filter": "Accounts filteren",
+      "filter": "Konten filtern",
       "filter_contacts": "Kontakte filtern"
     },
     "blocks": {
