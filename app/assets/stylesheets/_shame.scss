@@ -369,6 +369,11 @@ select.bts-select {
     appearance: menulist;
 }
 
+select.bts-select.full-width {
+  width: 100%;
+  max-width: 100%;
+}
+
 .windows select.bts-select {
     height: 2.35em;
 }
