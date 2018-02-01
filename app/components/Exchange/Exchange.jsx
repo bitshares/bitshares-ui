@@ -21,8 +21,6 @@ import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-// import IndicatorModal from "./IndicatorModal";
-import OpenSettleOrders from "./OpenSettleOrders";
 import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
@@ -993,7 +991,7 @@ class Exchange extends React.Component {
         }
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
-        const minChartHeight = 300
+        const minChartHeight = 300;
         const height = Math.max(
             this.state.height > 1100 ? chartHeight : chartHeight - 125,
             minChartHeight
@@ -1228,7 +1226,7 @@ class Exchange extends React.Component {
                                 {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
                                 {buyForm}
                                 {sellForm}
-
+                                
                                 <MarketHistory
                                     className={cnames(
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
@@ -1273,36 +1271,19 @@ class Exchange extends React.Component {
                                     )}
                                     key="open_orders"
                                     orders={marketLimitOrders}
+                                    settleOrders={marketSettleOrders}
                                     currentAccount={currentAccount}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    activeTab={this.props.viewSettings.get("ordersTab")}
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                     feedPrice={this.props.feedPrice}
                                 />) : null}
                             </div>
-
-
-                            {/* Settle Orders */}
-
-                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
-                            <OpenSettleOrders
-                                key="settle_orders"
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
-                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
-                                )}
-                                orders={marketSettleOrders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />) : null}
-
-
                         </div>{ /* end CenterContent */}
-
 
                     </div>{/* End of Main Content Column */}
 
