@@ -11,8 +11,6 @@ import AccountBalance from "../../Account/AccountBalance";
 import RuDexDepositAddressCache from "common/RuDexDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress} from "common/RuDexMethods";
-import { rudexAPIs } from "api/apiConfig";
 import utils from "common/utils";
 import counterpart from "counterpart";
 
@@ -70,13 +68,10 @@ class RuDexGatewayDepositRequest extends React.Component {
         };
     }
 
-    componentWillMount() {
-        let account_name = this.props.account.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        // if (!receive_address) {
-        //     requestDepositAddress(this._getDepositObject());
-        // }
-    }
+    // componentWillMount() {
+    //     let account_name = this.props.account.get("name");
+    //     let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+    // }
 
     componentWillUnmount() {
         document.removeEventListener("copy", this._copy);
@@ -116,7 +111,7 @@ class RuDexGatewayDepositRequest extends React.Component {
 
         let account_balances_object = this.props.account.get("balances");
 
-        let balance = "0 " + this.props.receive_asset.get("symbol");
+        // let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of)
         {
             let has_nonzero_balance = false;
@@ -253,7 +248,6 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <div className="button-group" style={{paddingTop: 10}}>
                                 {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div> : null}
                                 {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
-                                {/*<button className={"button"} onClick={requestDepositAddress.bind(null, this._getDepositObject())}><Translate content="gateway.generate_new" /></button>*/}
                             </div>
                         </div>
                     </div>

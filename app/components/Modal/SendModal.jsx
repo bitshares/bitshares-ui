@@ -59,6 +59,7 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
+            maxAmount: false,
             hidden: false
         };
 
@@ -91,6 +92,7 @@ export default class SendModal extends React.Component {
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
+            maxAmount: false,
             hidden: false
         }, () => {
             if (publishClose) ZfApi.publish(this.props.id, "close");
@@ -100,7 +102,9 @@ export default class SendModal extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         this.setState({error: null});
-        const {asset, amount} = this.state;
+
+        const {asset} = this.state;
+        let {amount} = this.state;
         const sendAmount = new Asset({real: amount, asset_id: asset.get("id"), precision: asset.get("precision")});
 
         this.setState({ hidden: true });
@@ -256,7 +260,7 @@ export default class SendModal extends React.Component {
             if (feeAmount.asset_id === balance.asset_id) {
                 balance.minus(feeAmount);
             }
-            this.setState({amount: balance.getAmount({real: true})}, this._checkBalance);
+            this.setState({maxAmount: true, amount: balance.getAmount({real: true})}, this._checkBalance);
         }
     }
 
@@ -340,7 +344,7 @@ export default class SendModal extends React.Component {
         if (!asset) {
             return;
         }
-        this.setState({amount, asset, asset_id: asset.get("id"), error: null}, this._checkBalance);
+        this.setState({amount, asset, asset_id: asset.get("id"), error: null, maxAmount: false}, this._checkBalance);
     }
 
     onFeeChanged({asset}) {
@@ -348,6 +352,13 @@ export default class SendModal extends React.Component {
     }
 
     onMemoChanged(e) {
+        let { asset_types, fee_asset_types } = this._getAvailableAssets();
+        let {from_account, from_error, maxAmount} = this.state;
+        if (from_account && from_account.get("balances") && !from_error && maxAmount) {
+            let account_balances = from_account.get("balances").toJS();
+            let current_asset_id = asset_types[0];
+            this._setTotal(current_asset_id, account_balances[current_asset_id]);
+        }
         this.setState({memo: e.target.value}, this._updateFee);
     }
 
@@ -433,7 +444,7 @@ export default class SendModal extends React.Component {
         accountsList = accountsList.add(from_account);
 
         const logo = require("assets/logo-ico-blue.png");
-        let tabIndex = 1;
+        let tabIndex = 200;  // tabindex is applied globally irrespective of overlays, etc.  Make sure we're at the top
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
@@ -452,7 +463,7 @@ export default class SendModal extends React.Component {
                                 </div>
                             }
                             <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
-                                <Translate unsafe content="transfer.header_subheader" />
+                                <p><Translate content="transfer.header_subheader" /></p>
                             </div>
                         </div>
                         {this.state.open ? <form noValidate>
@@ -488,7 +499,7 @@ export default class SendModal extends React.Component {
                                 <div className="content-block transfer-input">
                                     {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
                                     <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
-                                    <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                                    <textarea style={{marginBottom: 0}} rows="3" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                                     {/* warning */}
                                     { this.state.propose ?
                                         <div className="error-area" style={{position: "absolute"}}>

@@ -62,11 +62,11 @@ class AccountMembership extends React.Component {
         let account = this.props.account.toJS();
 
         let ltr = ChainStore.getAccount( account.lifetime_referrer, false );
-        if( ltr ) account.lifetime_referrer_name = ltr.get('name');
+        if( ltr ) account.lifetime_referrer_name = ltr.get("name");
         let ref = ChainStore.getAccount( account.referrer, false );
-        if( ref ) account.referrer_name = ref.get('name');
+        if( ref ) account.referrer_name = ref.get("name");
         let reg = ChainStore.getAccount( account.registrar, false );
-        if( reg ) account.registrar_name = reg.get('name');
+        if( reg ) account.registrar_name = reg.get("name");
 
         let account_name = account.name;
 
@@ -77,18 +77,17 @@ class AccountMembership extends React.Component {
         let registrar_fee = 100 - referrer_fee - lifetime_fee - network_fee;
 
         let lifetime_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_lifetime_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
-        let annual_cost = gprops.getIn(["parameters", "current_fees", "parameters", 8, 1, "membership_annual_fee"]) * gprops.getIn(["parameters", "current_fees", "scale"]) / 10000;
 
         let member_status = ChainStore.getAccountMemberStatus(this.props.account);
         let membership = "account.member." + member_status;
-        let expiration = null
+        let expiration = null;
         if( member_status === "annual" )
-           expiration = (<span>(<Translate content="account.member.expires"/> <TimeAgo time={account.membership_expiration_date} />)</span>)
+            expiration = (<span>(<Translate content="account.member.expires"/> <TimeAgo time={account.membership_expiration_date} />)</span>);
         let expiration_date = account.membership_expiration_date;
         if( expiration_date === "1969-12-31T23:59:59" )
-           expiration_date = "Never"
+            expiration_date = "Never";
         else if( expiration_date === "1970-01-01T00:00:00" )
-           expiration_date = "N/A"
+            expiration_date = "N/A";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -178,7 +177,7 @@ class AccountMembership extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                </div>    
+                                </div>
                             </Tab>
                         </Tabs>
                     </div>
