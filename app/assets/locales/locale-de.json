@@ -59,7 +59,7 @@
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
-    "contacts": "Contacten",
+    "contacts": "Kontakte",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -85,11 +85,11 @@
       "add": "Zur Weißliste hinzufügen",
       "add_black": "Zur Schwarzliste hinzufügen",
       "empty": "%(account)s hat keine Konten in seiner Weißliste.",
-      "empty_black": "%(account)s hat keine Konten in seiner Schwarzliste-",
-      "white_by": "Weißgelisted durch",
-      "black_by": "Schwarzgelisted durch",
-      "empty_white_by": "Keine accounts haben %(account)s weißgelisted.",
-      "empty_black_by": "Keine accounts haben %(account)s schwarzgelisted."
+      "empty_black": "%(account)s hat keine Konten in seiner Schwarzliste.",
+      "white_by": "Weißgelistet durch",
+      "black_by": "Schwarzgelistet durch",
+      "empty_white_by": "Keine accounts haben %(account)s weißgelistet.",
+      "empty_black_by": "Keine accounts haben %(account)s schwarzgelistet."
     },
     "vesting": {
       "title": "Zusicherungen",
@@ -169,7 +169,7 @@
       "black": "Schwarzgelistet von"
     },
     "perm": {
-      "active": "Aktive Berechitigungen",
+      "active": "Aktive Berechtigungen",
       "owner": "Eigentümer Berechtigungen",
       "memo_key": "Memo key",
       "publish": "Änderungen veröffentlichen",
