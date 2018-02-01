@@ -161,7 +161,7 @@ class AccountSelector extends React.Component {
                     {this.props.label ? (
                     <div className={"header-area" + (this.props.hideImage ? " no-margin" : "")}>
                         {error && !lookup_display ?
-                            <label className="right-label"><span style={{color: "#E3745B"}}>Unknown Account</span></label> :
+                            <label className="right-label"><span style={{color: "#ff3950"}}>Unknown Account</span></label> :
                             <label className={"right-label"+(isGreenAccount? " green":"")}><span>{member_status}</span>&nbsp;<span style={{marginRight:"1.5em"}}> {lookup_display}</span> &nbsp; {linked_status}</label>
                         }
                         <Translate className="left-label" component="label" content={this.props.label}/>

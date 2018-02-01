@@ -40,7 +40,7 @@ export default class LoginSelector extends React.Component {
         
         const flagDropdown = <ActionSheet>
             <ActionSheet.Button title="" style={{width:"64px"}}>
-                <a style={{padding: "1rem", border: "none"}} className="button">
+                <a style={{padding: "1rem", border: "none"}} className="button arrow-down">
                     <FlagImage flag={this.state.currentLocale} />
                 </a>
             </ActionSheet.Button>
@@ -65,41 +65,44 @@ export default class LoginSelector extends React.Component {
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
                         <div><img src={logo}/></div>
-                        <Translate content="account.intro_text_title" component="h4"/>
-                        <Translate unsafe content="account.intro_text_1" component="p" />
-                       
-                        <div className="shrink text-center">
-                            <div className="grp-menu-item overflow-visible account-drop-down">
-                                <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
-                                {flagDropdown}
+                        {childCount == 0 ? null :
+                            <div>
+                                <Translate content="header.create_account" component="h4"/>
+                            </div>
+                        }
+
+                        {childCount == 1 ? null :
+                            <div>
+                                <Translate content="account.intro_text_title" component="h4"/>
+                                <Translate unsafe content="account.intro_text_1" component="p" />
+                               
+                                <div className="shrink text-center">
+                                    <div className="grp-menu-item overflow-visible account-drop-down">
+                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
+                                        {flagDropdown}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                         
                         {!!childCount ? null :
-                        <div className="button-group">
-                            <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>
-                                <Link to="/create-account/password">
-                                    <div className="button">
-                                        <Translate content="header.create_account" />
-                                    </div>
-                                </Link>
-                            </label>
+                        <div className="grid-block account-login-options">
+                            <Link to="/create-account/password" className="button primary">
+                                <Translate content="header.create_account" />
+                            </Link>
 
-                            <label style={{textAlign: "left"}}><Translate content="account.existing_user" /><br/>
-                                <div className="button success" onClick={() => {
-                                    SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-                                    WalletUnlockActions.unlock.defer();
-                                }}>
-                                    <Translate content="header.unlock_short" />
-                                </div>
-                            </label>
+                            <span className="button hollow primary" onClick={() => {
+                                SettingsActions.changeSetting({setting: "passwordLogin", value: true});
+                                WalletUnlockActions.unlock.defer();
+                            }}>
+                                <Translate content="header.unlock_short" />
+                            </span>
                         </div>}
 
                         {!!childCount ? null :
-                        <div className="creation-options">
-                            <div><Link to="/wallet/backup/restore"><Translate content="account.restore" /></Link></div>
-                            <div><Link to="/create-account/wallet"><Translate content="account.advanced" /></Link></div>
+                        <div className="additional-account-options">
+                            <p>Optionally, <Link to="/wallet/backup/restore">restore your account</Link> or create an account using the <Link to="/create-account/wallet">advanced form</Link>.</p>
                         </div>}
 
                         {this.props.children}

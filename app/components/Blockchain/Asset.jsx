@@ -257,9 +257,10 @@ class Asset extends React.Component {
                     symbol={(prefix || "") + name}
                     description={desc}
                     issuer= {issuerName}
+                    hide_issuer = "true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
-                <a style={{textTransform: "uppercase"}} href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
+                <a style={{textTransform: "uppercase"}} className="button market-button" href={`${__HASH_HISTORY__ ? "#" : ""}/market/${asset.symbol}_${preferredMarket}`}><Translate content="exchange.market"/></a>
             </div>
         );
     }
@@ -305,29 +306,28 @@ class Asset extends React.Component {
         ) : null;
 
         return (
-            <div className="asset-card">
+            <div className="asset-card no-padding">
                 <div className="card-divider"><AssetName name={asset.symbol} /></div>
-                <table className="table key-value-table table-hover">
-                    <tbody>
-                        <tr>
-                            <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
-                            <td> {this._assetType(asset)} </td>
-                        </tr>
-                        <tr>
-                            <td> <Translate content="explorer.asset.summary.issuer"/> </td>
-                            <td> <LinkToAccountById account={asset.issuer}/> </td>
-                        </tr>
-                        <tr>
-                            <td> <Translate content="explorer.assets.precision"/> </td>
-                            <td> {asset.precision} </td>
-                        </tr>
-                        {currentSupply}
-                        {stealthSupply}
-                        {marketFee}
-                        {maxMarketFee}
-                    </tbody>
-                </table>
-
+                    <table className="table key-value-table table-hover">
+                        <tbody>
+                            <tr>
+                                <td> <Translate content="explorer.asset.summary.asset_type"/> </td>
+                                <td> {this._assetType(asset)} </td>
+                            </tr>
+                            <tr>
+                                <td> <Translate content="explorer.asset.summary.issuer"/> </td>
+                                <td> <LinkToAccountById account={asset.issuer}/> </td>
+                            </tr>
+                            <tr>
+                                <td> <Translate content="explorer.assets.precision"/> </td>
+                                <td> {asset.precision} </td>
+                            </tr>
+                            {currentSupply}
+                            {stealthSupply}
+                            {marketFee}
+                            {maxMarketFee}
+                        </tbody>
+                    </table>
                 <br/>
                 {this.renderFlagIndicators(flagBooleans, bitNames)}
             </div>
@@ -341,14 +341,14 @@ class Asset extends React.Component {
         if (!('current_feed' in bitAsset))
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
-        
+
         var globalSettlementPrice = this.getGlobalSettlementPrice();
         // this would be faster, but a bug prevents us from doing this
         // since sometimes the call price is incorrect
         //var globalSettlementPrice = this.getGlobalSettlementPriceFromSorted(sortedCallOrders);
 
         return (
-            <div className="asset-card">
+            <div className="asset-card no-padding">
                 <div className="card-divider">{title}</div>
 
                 <table className="table key-value-table table-hover"  style={{ padding:"1.2rem"}}>
@@ -385,24 +385,24 @@ class Asset extends React.Component {
         var dynamic = asset.dynamic;
         var options = asset.options;
         return (
-            <div className="asset-card">
+            <div className="asset-card no-padding">
                 <div className="card-divider">{(<Translate content="explorer.asset.fee_pool.title"/>)}</div>
-                <table className="table key-value-table" style={{ padding:"1.2rem"}}>
-                    <tbody>
-                        <tr>
-                            <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
-                            <td> {this.formattedPrice(options.core_exchange_rate)} </td>
-                        </tr>
-                        <tr>
-                            <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : null} </td>
-                        </tr>
-                        <tr>
-                            <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
-                            <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : null} </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table className="table key-value-table" style={{ padding:"1.2rem"}}>
+                        <tbody>
+                            <tr>
+                                <td> <Translate content="explorer.asset.fee_pool.core_exchange_rate"/> </td>
+                                <td> {this.formattedPrice(options.core_exchange_rate)} </td>
+                            </tr>
+                            <tr>
+                                <td> <Translate content="explorer.asset.fee_pool.pool_balance"/> </td>
+                                <td> {dynamic ? <FormattedAsset asset="1.3.0" amount={dynamic.fee_pool} /> : null} </td>
+                            </tr>
+                            <tr>
+                                <td> <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income"/> </td>
+                                <td> {dynamic ? <FormattedAsset asset={asset.id} amount={dynamic.accumulated_fees} /> : null} </td>
+                            </tr>
+                        </tbody>
+                    </table>
             </div>
         );
     }
@@ -458,7 +458,7 @@ class Asset extends React.Component {
         ) : null;
 
         return (
-            <div className="asset-card">
+            <div className="asset-card no-padding">
                 <div className="card-divider">{(<Translate content="explorer.asset.permissions.title"/>)} </div>
                 <table className="table key-value-table table-hover" style={{ padding:"1.2rem"}}>
                     <tbody>
@@ -476,7 +476,7 @@ class Asset extends React.Component {
         );
     }
 
-    // return a sorted list of call orders 
+    // return a sorted list of call orders
     getMarginPositions() {
         const {sortDirection} = this.state;
 
@@ -508,14 +508,14 @@ class Asset extends React.Component {
            .sort(sortFunctions[this.state.marginTableSort]);
     };
 
-    // the global settlement price is defined as the 
-    // the price at which the least collateralized short 
+    // the global settlement price is defined as the
+    // the price at which the least collateralized short
     // 's collateral no longer enough to back the debt
-    // he/she owes. If the feed price goes above this, 
-    // then 
+    // he/she owes. If the feed price goes above this,
+    // then
 
     // DOESN'T WORK - for reason if js sees that sortedcallorders
-    // is indexed, then it screws up the type system and 
+    // is indexed, then it screws up the type system and
     // sets the array to empty
     getGlobalSettlementPriceFromSorted(sortedCallOrders) {
         console.log("global settlement sorted called");
@@ -527,13 +527,13 @@ class Asset extends React.Component {
         console.log("sortedCallOrders exists according to sorted get globa");
 
         let leastColShort = sortedCallOrders[0];
-        
+
         // this price will happen when the CR is 1.
         // The CR is 1 iff collateral / (debt x feed_ price) == 1
-        // Rearranging, this means that the CR is 1 iff 
+        // Rearranging, this means that the CR is 1 iff
         // feed_price == collateral / debt
         let debt = leastColShort.amountToReceive().getAmount();
-        let collateral = leastColShort.getCollateral().getAmount(); 
+        let collateral = leastColShort.getCollateral().getAmount();
 
         return (<FormattedPrice
                 base_amount={collateral}
@@ -543,14 +543,14 @@ class Asset extends React.Component {
                 />);
 
     }
-    
-    // the global settlement price is defined as the 
-    // the price at which the least collateralized short 
+
+    // the global settlement price is defined as the
+    // the price at which the least collateralized short
     // 's collateral no longer enough to back the debt
-    // he/she owes. If the feed price goes above this, 
-    // then 
+    // he/she owes. If the feed price goes above this,
+    // then
     getGlobalSettlementPrice() {
-        
+
         var call_orders;
         if (!this.state.callOrders) {
             return null;
@@ -583,14 +583,14 @@ class Asset extends React.Component {
             console.log("couldn't find the least col short");
             return null;
         }
-        
+
         // this price will happen when the CR is 1.
         // The CR is 1 iff collateral / (debt x feed_ price) == 1
-        // Rearranging, this means that the CR is 1 iff 
+        // Rearranging, this means that the CR is 1 iff
         // feed_price == collateral / debt
         let debt = leastColShort.amountToReceive().getAmount();
         console.log("debt " + debt);
-        let collateral = leastColShort.getCollateral().getAmount(); 
+        let collateral = leastColShort.getCollateral().getAmount();
         console.log("collateral: " + collateral);
         let globalSettlementPrice = collateral / debt;
         console.log("doom price unformat: " + globalSettlementPrice);
@@ -608,9 +608,9 @@ class Asset extends React.Component {
 
 
     // return two tabs
-    // one tab is for the price feed data from the 
-    // witness for the given asset 
-    // the other tab is a list of the margin positions 
+    // one tab is for the price feed data from the
+    // witness for the given asset
+    // the other tab is a list of the margin positions
     // for this asset (if it's a bitasset)
     renderPriceFeedData(asset, sortedCallOrders) {
 
@@ -724,7 +724,7 @@ class Asset extends React.Component {
         );
 
         let rows2 = (
-                sortedCallOrders 
+                sortedCallOrders
                 .map(c => {
                     return (
                         <tr className="margin-row" key={c.id}>
@@ -761,26 +761,28 @@ class Asset extends React.Component {
         );
 
         return (
-            <div className="grid block small-12 " style={{ overflow:"visible"}}>
+            <div className="grid-block">
                 <div className="grid-content no-padding">
-                    <div className="asset-card">
+                    <div className="">
                         <Tabs defaultActiveTab={0} segmented={false} setting="bitassetDataTabs">
                             <Tab title="explorer.asset.price_feed_data.title">
-                                <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                                    {header}
-                                    <tbody>
-                                        {rows}
-                                    </tbody>
-                                </table>
+                                <div className="responsive-table" style={{marginTop:"-10px"}}>
+                                    <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
+                                        {header}
+                                        <tbody>
+                                            {rows}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </Tab>
 
                             <Tab title="explorer.asset.margin_positions.title">
                                 <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
-                                    {header2} 
+                                    {header2}
                                     <tbody>
                                         {rows2}
                                     </tbody>
-                                </table>
+                                    </table>
                             </Tab>
                         </Tabs>
                     </div>
@@ -793,36 +795,33 @@ class Asset extends React.Component {
     render() {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
-        console.log(sortedCallOrders);
         var priceFeed = ("bitasset" in asset) ? this.renderPriceFeed(asset, sortedCallOrders) : null;
         var priceFeedData = ("bitasset" in asset) ? this.renderPriceFeedData(asset, sortedCallOrders) : null;
 
         return (
-            <div className="grid-block page-layout">
-                <div className="grid-block main-content vertical" style={{overflow:"visible"}}>
-                    <div className="grid-container">
-                        <div className="grid-content">
-                            <div className="grid-block no-margin small-12 shrink" style={{ overflow:"visible"}}>
-                                {this.renderAboutBox(asset)}
-                            </div>
-                            <div className="grid-block no-margin small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
-                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                                    {this.renderSummary(asset)}
-                                </div>
-                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                                    {priceFeed ? priceFeed : this.renderPermissions(asset)}
-                                </div>
-                            </div>
-                            <div className="grid-block no-margin small-12 shrink vertical medium-horizontal" style={{ overflow:"visible"}}>
-                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                                    {this.renderFeePool(asset)}
-                                </div>
-                                <div className="small-12 medium-6" style={{overflow:"visible"}}>
-                                    {priceFeed ? this.renderPermissions(asset) : null}
-                                </div>
-                            </div>
-                            {priceFeedData ? priceFeedData : null}
+            <div className="grid-container">
+                <div className="grid-block page-layout">
+                    <div className="grid-block main-content wrap regular-padding">
+                        <div className="grid-block small-up-1">
+                            {this.renderAboutBox(asset)}
                         </div>
+                        <div className="grid-block small-up-1 medium-up-2">
+                            <div className="grid-content">
+                                {this.renderSummary(asset)}
+                            </div>
+                            <div className="grid-content">
+                                {priceFeed ? priceFeed : this.renderPermissions(asset)}
+                            </div>
+                        </div>
+                        <div className="grid-block small-up-1 medium-up-2">
+                            <div className="grid-content">
+                                {this.renderFeePool(asset)}
+                            </div>
+                            <div className="grid-content">
+                                {priceFeed ? this.renderPermissions(asset) : null}
+                            </div>
+                        </div>
+                        {priceFeedData ? priceFeedData : null}
                     </div>
                 </div>
             </div>
