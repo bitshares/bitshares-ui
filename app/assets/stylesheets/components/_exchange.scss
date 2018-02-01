@@ -150,6 +150,12 @@ form.order-form {
             padding-top: 1em;
         }
     }
+    .ps-scrollbar-y-rail {
+        width: 10px !important;
+        .ps-scrollbar-y {
+          width: 6px !important;
+        }
+    }
     .cell {
         display: table-cell;
         font-size: 12px;

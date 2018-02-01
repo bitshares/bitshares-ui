@@ -67,7 +67,7 @@
     transition: background-color .2s linear, opacity .2s linear;
     right: 0;
     /* there must be 'right' for ps-scrollbar-y-rail */
-    width: 10px !important; }
+    width: 15px; }
     .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
       position: absolute;
       /* please don't change 'position' */
@@ -83,7 +83,7 @@
       transition: background-color .2s linear, height .2s linear, width .2s ease-in-out, border-radius .2s ease-in-out, -webkit-border-radius .2s ease-in-out, -moz-border-radius .2s ease-in-out;
       right: 2px;
       /* there must be 'right' for ps-scrollbar-y */
-      width: 6px !important; }
+      width: 6px; }
     .ps-container > .ps-scrollbar-y-rail:hover > .ps-scrollbar-y, .ps-container > .ps-scrollbar-y-rail:active > .ps-scrollbar-y {
       width: 11px; }
   .ps-container:hover.ps-in-scrolling.ps-x > .ps-scrollbar-x-rail {
