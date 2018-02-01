@@ -42,6 +42,7 @@
     "current": "Current Account",
     "create_account": "Create Account",
     "create_asset": "Create Asset",
+    "collateral_ratio": "Collateral ratio",
     "update_asset": "Update Asset",
     "lock": "Log out (lock the local wallet)",
     "unlock": "Local Wallet Login",
