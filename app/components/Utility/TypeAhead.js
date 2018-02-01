@@ -35,7 +35,7 @@ class TypeAhead extends React.Component {
     render(){
         const { props, state } = this;
         const { value } = state;
-        const inputProps = props.tabIndex ? { tabIndex: props.tabIndex } : null;
+        const inputProps = props.tabIndex ? { tabIndex: props.tabIndex } : {};
 
         return <div style={{position: "relative", display: "inline-block", width: "100%"}} className="typeahead">
             {!!this.props.label ? <label className="left-label"><Translate content={this.props.label} /></label> : null}
