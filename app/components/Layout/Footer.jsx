@@ -35,7 +35,7 @@ class Footer extends React.Component {
     componentDidMount() {
         this.checkNewVersionAvailable.call(this);
 
-        this.downloadLink = "https://crypto-bridge.org/download";
+        this.downloadLink = "https://crypto-bridge.org/#download";
     }
 
     shouldComponentUpdate(nextProps) {
