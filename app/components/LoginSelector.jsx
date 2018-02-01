@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "alt-react";
+import AccountStore from "stores/AccountStore";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import { isIncognito } from "feature_detect";
@@ -13,7 +15,7 @@ const FlagImage = ({flag, width = 50, height = 50}) => {
      return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
-export default class LoginSelector extends React.Component {
+class LoginSelector extends React.Component {
 
     constructor(props){
         super(props);
@@ -23,6 +25,18 @@ export default class LoginSelector extends React.Component {
             locales: SettingsStore.getState().defaults.locale,
             currentLocale: SettingsStore.getState().settings.get("locale")
         };
+    }
+
+    componentDidUpdate() {
+        const myAccounts = AccountStore.getMyAccounts();
+
+        // use ChildCount to make sure user is on /create-account page except /create-account/*
+        // to prevent redirect when user just registered and need to make backup of wallet or password
+        const childCount = React.Children.count(this.props.children);
+
+        // do redirect to portfolio if user already logged in
+        if(Array.isArray(myAccounts) && myAccounts.length !== 0 && childCount === 0)
+            this.props.router.push("/account/"+this.props.currentAccount);
     }
 
     componentWillMount(){
@@ -141,3 +155,14 @@ export default class LoginSelector extends React.Component {
         );
     }
 }
+
+export default connect(LoginSelector, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+        };
+    }
+});
