@@ -472,6 +472,14 @@ class MyMarkets extends React.Component {
         }
     }
 
+    clearInput = (e) => {
+        this.setState({ myMarketFilter: "" });
+    }
+
+    handleSearchUpdate = (e) => {
+        this.setState({ myMarketFilter: e.target.value && e.target.value.toUpperCase() });
+    };
+
     render() {
         let {starredMarkets, defaultMarkets, marketStats, columns, searchAssets, assetsLoading,
             preferredBases, core, current, viewSettings, listHeight, onlyStars, userMarkets} = this.props;
@@ -675,20 +683,15 @@ class MyMarkets extends React.Component {
 
                 {myMarketTab ?
                     <div className="grid-block shrink" style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
-                        <label className="no-margin">
+                        <label style={{margin: "3px 0 0"}}>
                             <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onChange={() => {MarketsActions.toggleStars();}}/>
                             <span>&nbsp;<Translate content="exchange.show_star_1" /><Icon className="gold-star" name="fi-star"/> <Translate content="exchange.show_star_2" /></span>
                         </label>
-                        <div className="float-right" style={{paddingLeft: 20}}>
-                        <input
-                            style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}}
-                            className="no-margin"
-                            type="text"
-                            placeholder="Filter"
-                            maxLength="16"
-                            value={this.state.myMarketFilter}
-                            onChange={(e) => {this.setState({myMarketFilter: e.target.value && e.target.value.toUpperCase()});}}
-                        />
+                        <div className="float-right search-wrapper" style={{paddingLeft: 20}}>
+                             <form>
+                                <input autocomplete="off" style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}} type="text" className="no-margin market-filter-input" placeholder="Filter" maxLength="16" name="focus" required="required" value={this.state.myMarketFilter} onChange={this.handleSearchUpdate} />
+                                <button className="clear-text" type="reset" onClick={this.clearInput}></button>
+                            </form>
                         </div>
 
                     </div> :

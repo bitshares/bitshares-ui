@@ -1624,3 +1624,45 @@ $pulsate-red-end
     text-align: right;
     width: 100%;
 }
+
+.clear-text, .search-wrapper {
+    position: relative;
+}
+
+.market-filter-input, .clear-text, .search-wrapper {
+    position: relative;
+}
+
+.clear-text {
+    top: 10px;
+    right: -30px;
+    position: absolute;
+    border: 0;
+    background-color: transparent;
+    display: block;
+    outline: 0;
+    cursor: pointer;
+}
+.clear-text:after {
+    content: "X";
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-color: transparent;
+    z-index: 1;
+    right: 35px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 2px;
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    cursor: pointer;
+}
+.market-filter-input:not(:valid) ~ .clear-text {
+    display: none;
+}
