@@ -127,7 +127,7 @@ class AccountDepositWithdraw extends React.Component {
                         {/* <div className="float-right">
                             <a href="https://www.ccedk.com/" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a>
                         </div> */}
-                        <div className="service-selector">
+                        <div className="service-selector" style={{marginBottom:"2rem"}}>
                             <ul className="button-group segmented no-margin">
                                 <li onClick={this.toggleOLService.bind(this, "gateway")} className={olService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
                                 <li onClick={this.toggleOLService.bind(this, "fiat")} className={olService === "fiat" ? "is-active" : ""}><a>Fiat</a></li>
@@ -161,7 +161,7 @@ class AccountDepositWithdraw extends React.Component {
             name: "RuDEX (RUDEX.X)",
             template: (
                 <div className="content-block">
-                    <div className="service-selector">
+                    <div className="service-selector" style={{marginBottom:"2rem"}}>
                         <ul className="button-group segmented no-margin">
                             <li onClick={this.toggleRuDEXService.bind(this, "gateway")}
                                 className={rudexService === "gateway" ? "is-active" : ""}><a><Translate
@@ -189,7 +189,7 @@ class AccountDepositWithdraw extends React.Component {
                         <div className="content-block">
                             {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
 
-                            <div className="service-selector">
+                            <div className="service-selector" style={{marginBottom:"2rem"}}>
                                 <ul className="button-group segmented no-margin">
                                     <li onClick={this.toggleBTService.bind(this, "bridge")} className={btService === "bridge" ? "is-active" : ""}><a><Translate content="gateway.bridge" /></a></li>
                                 </ul>
