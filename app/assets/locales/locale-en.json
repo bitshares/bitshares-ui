@@ -449,7 +449,7 @@
   },
   "transfer": {
     "header": "Transfer details",
-    "header_subheader": "Transfers are used for sending funds to<br /> other BitShares Account Holders",
+    "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
     "from": "From",
     "pay_from": "Pay From",
     "amount": "Quantity",
