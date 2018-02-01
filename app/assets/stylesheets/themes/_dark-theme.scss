@@ -1,0 +1,89 @@
+@import "theme-template";
+
+// variables
+
+$light-text-color: #fff;
+$dark-text-color: #444;
+$primary-text-color: #ffffff;
+$secondary-text-color: darken($primary-text-color, 20%);
+$link-text-color: #049cce;
+$error-text-color: #ff3950;
+
+$bg-color: #2a2a2a;
+$panel-bg-color: #3f3f3f;
+$light-panel-bg-color: #6a6a6a;
+$super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$button-bg-color: #049cce;
+$secondary-button-bg-color: #999999;
+$input-background: lighten($bg-color, 8%);
+
+$alert-color: $error-text-color;
+$info-color: #A0D3E8;
+$success-color: #7bd500;
+$warning-color: #FCAB53;
+$fee-color: $secondary-text-color;
+
+// Exchange colors
+$bid-color: #6BA583;
+$ask-color: #E3745B;
+$call-color: #BBBF2B;
+$positive-color: #258A14;
+$negative-color: #DB0000;
+$row-accent-color: #3C3C3C;
+$header-color: #484848;
+
+// Account table view colors
+$account-header: #656565;
+$account-cells: #4b5158;
+$account-green: #7ED321;
+$account-primarytext: white;
+$account-dimmed: #afafaf;
+$account-border: #323131;
+$account-background: #3f3f3f;
+$account-tabs-background: #2f2f2f;
+
+$pulsate-green-start:$account-green;
+$pulsate-green-end:#aaf25c;
+$pulsate-red-start:$negative-color;
+$pulsate-red-end:#ef4040;
+
+.darkTheme {
+  @include theme(
+    $primary-text-color,
+    $bg-color,
+    $dark-text-color,
+    $link-text-color,
+    $light-text-color,
+    $secondary-text-color,
+    $success-color,
+    $info-color,
+    $warning-color,
+    $alert-color,
+    $super-light-panel-bg-color,
+    $panel-bg-color,
+    $button-bg-color,
+    $secondary-button-bg-color,
+    $fee-color,
+    $bid-color,
+    $ask-color,
+    $call-color,
+    $light-panel-bg-color,
+    $positive-color,
+    $negative-color,
+    $row-accent-color,
+    $header-color,
+    $input-background,
+    $account-header,
+    $account-cells,
+    $account-green,
+    $account-primarytext,
+    $account-dimmed,
+    $account-border,
+    $account-background,
+    $account-tabs-background,
+    $pulsate-green-start,
+    $pulsate-green-end,
+    $pulsate-red-start,
+    $pulsate-red-end
+  );
+}

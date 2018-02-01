@@ -1,4 +1,272 @@
 ---------------------------------------------------------------------
+Release 2.0.180115
+---------------------------------------------------------------------
+New features
+--------
+- Change exchange header #888
+- Show Balance on Margin Positions Tab #994
+- #985 - Move account table out from market dashboard
+- update gdex api service (#1017)
+
+Bug fixes
+--------
+- Electron build - Add context menu for copy/paste support
+- Fix similar names appearing as active in the header dropdown
+- Fix Issue #1001
+- Hide the header unlock icon on small screens
+- Unlock wallet doesn't unlock operations until refresh
+- Updated blckchnd api node info
+- Fix flash of modal and input not being cleared
+- Fix #996: change LTM fee rate for asset creation
+- Fix #991: move the lock button out of the menu area
+
+---------------------------------------------------------------------
+Release 2.0.180108
+---------------------------------------------------------------------
+New features
+--------
+- Add Winex gateway service (ETH, ETC, HSR)
+
+Bug fixes
+--------
+- #982: Clear send modal form inputs on closing
+- Increase precision of Collateral Slider in BorrowModal
+- Update Russian locale
+- #976 - Indicate clickable orderbook rows
+- #557 - Deposit Modal Fixes
+
+---------------------------------------------------------------------
+Release 2.0.180105
+---------------------------------------------------------------------
+New features
+--------
+- #901: Add "Maximize Collateral" button to Borrow Modal.
+- Add new GDEX assets
+- #557 New Deposit Modal (beta)
+- #828: Clearly identify known accounts when sending
+- Update Help Page's Styleguide
+- Blocktrades Announcements
+- Change Caret To Burger (#931)
+- Moved language selection to account register page #883
+- Add South Africa API node
+- Add Kansas City, USA API Node
+
+Bug fixes
+--------
+- Fix for Issue #956
+- Fix #949: Change icon color to fit the theme
+- Show call price instead of market price in margin positions, fixes #921
+- Update russian translations
+- Fix #938: Add white background to qrcode
+- Fixed floating width of login/register modal #883
+- "undefined" when copy deposit address with CTRL+C
+- Fix #932: Remove filtering of orders with extreme prices
+- Fix #927: Inverting market assets
+- Remove Transwiser from CSP
+- Revise and update Chinese translation
+- Fix Issue #919
+- #823: Fixed exchange input filter events prevent from pasting data
+- Fix incorrect news publish date, part of #887
+- Bugfix: cleanup when fetch address error in gdex api (#886)
+- #733 - Open Order Assets
+
+---------------------------------------------------------------------
+Release 2.0.171219
+---------------------------------------------------------------------
+New features
+--------
+- #874: Check cloud wallet password against local wallet
+- New faucet according to infrastructure worker proposal (#867)
+- Add some new markets to the default lists #843
+- Create a typeahead component for selecting asset symbols (#847)
+- Added gold and silver to margin positions #833
+- Improved navigation in of explorer components #647
+- Rename Openledger Dark theme to Midnight
+- #452 private feed producers
+- #699: Add News section with content from Steemit
+- Add RPC Node wss://us-ny.bitshares.apasia.tech/ws (#817)
+- Add API node: wss://dex.rnglab.org (#810)
+- Show pricechart grid
+
+Bug fixes
+--------
+- Fix #875: overflow hidden hiding password characters
+- Add button to create new account #800
+- Fixed login mode change on registration page visit #831
+- Fix invalid signed message signature notice in English (#859)
+- Correctly parse signed message (#864)
+- Remove duplicated asset in topMarkets (#860)
+- Fix some potential Exchange issues with switching markets and bucketsizes
+- fix address and balance issue for gdex api (#879)
+- Fix Fees layout scrolling issues #647
+- Fix some Header active and hover states
+- Fine Tune UI #819
+- Fix Issue #807 - Accounts Tab Settings
+- fixed wrong positioning of elements in account selector #796
+- Fixed: Unable to specify bitCNY as Fee ... #803
+- Fixed: Cancel button doesn't work when creating assets #799
+- Update locale-es.json (#806)
+- Remove border from tables and add a row hover state #813
+- Fix #777: Missing error message when memo key is missing
+- Fix some minor header and dropdown css issues
+- Catch a price comparison error
+- Prevent cross-pollination of market data fix #811
+
+---------------------------------------------------------------------
+Release 2.0.171205
+---------------------------------------------------------------------
+New features
+--------
+- #558 Add UI for cancelling orders in bulk
+- #167 Contact list support (to be expanded upon)
+- #630 Header and right menu Dropdown
+- #781 - Add/Remove Contacts
+- #556 Add new Send modal (beta)
+- Add GDEX API server
+
+Bug fixes
+--------
+- #765 fixed usage of some undefined properties on withdrawal
+- #771 match styles to new account dashboard look
+- Fix #715 and #772: Dropdown menu can't scroll
+- Fix #723: Missing asset name in translation
+- Set more theme specific API Status colors. (#788)
+---------------------------------------------------------------------
+Release 2.0.171102
+---------------------------------------------------------------------
+Bug fixes
+--------
+- Fix exchange page not loading for bit assets with force called margin positions
+- Fix 'Invalid date' issue
+- Restore ask/bid price colors in exchange orderbook
+
+---------------------------------------------------------------------
+Release 2.0.171101
+---------------------------------------------------------------------
+New features
+--------
+- #634 The hosted wallet is now available at wallet.bitshares.org
+- #530 Withdraw amounts now factor in the gate fee
+- #538 The voting page has been completely revamped
+- #579 The margin position tab now includes a set of default assets
+- #632 The connection status is now visible throughout the app
+- #302 Your own orders are highlighted in the order book
+- #623 The Chinese translation has been updated
+- #670 My Trades now show dates instead of block numbers
+- #581 Market fees are now shown in the exchange page
+- #633 Clicking on connection status now takes you to Settings --> Access
+- #430 The asset page for bit assets now includes a sortable list of open margin position
+- #583 The portfolio is now sortable
+
+Bug fixes
+--------
+- #658 BTS trade button missing from portfolio view
+- #627 Display Feed Published value as an actual date/time in localized time zone
+- #52 Show a warning about core_exchange_rate at asset create/update page
+- #455 Trollbox has been removed completely
+- #645 Kexcoin has been removed from the dashboard
+- #622 Login screens have been harmonized
+- #580 Annual membership fee now is now shown as disabled
+- #607 Long line wrapping issue has been fixed
+- #590 'Reserve asset' changed to 'Burn asset'
+- #586 Input fields clear properly when switching between markets
+- #594 Leading decimals can now be input correctly in the exchange
+- #498 Orderbook scrollbars always visible
+- #673 Account tab headers are now highlighted
+
+---------------------------------------------------------------------
+Release 2.0.171015
+---------------------------------------------------------------------
+New features
+--------
+- Tables Rewrite - Account Dashboard #378
+- Add an optional encrypted qr code for the private key (#542)
+- #545: Show gateway status as down for unavailable coins
+- #471: Add label to Find Markets add header
+- #560 Show unavailable messages for openledger and rudex if they time out
+- Add whitelisting to asset update page fix #70 and fix #462
+- Clear transfer form once completed (#564)
+- Use new tables styling in dashboard, add accounts/recent switching
+- #500: Set testnet/mainnet faucets depending on current API node
+- #488: Hover state + click toggle for account name QR code
+- Filter out insecure websocket urls when using https
+- #572: Make sure exchange input only allows numbers, no negative input
+- #543: Add sync status check interval, 'Synced/Out of sync/Disconnnected' warning
+
+Bug fixes
+--------
+- #496: Ensure tables retain correct height
+- Remove forced create account step position #576
+- Fix #578: Open orders not displaying all orders
+- Fix ChainStore failing to notify after reset and latency check counter
+- Fix #563: Settlement box width
+- Fix App.jsx synced state to mean blockchain sync status #543
+- Fix #571
+- Fix #479: Max supply bug in asset creation and update
+- #574: Remove nodes that are no longer available
+- Fix issue #294 (#575)
+- Reset backup store when wallet is changed (#570)
+- Fix Backup dashboard link
+- Set cloud wallet login to default, improve settings switching logic
+- #Fix 501: Asset explorer table alignment
+- Fix #567: Explorer My Markets page does not load
+- Round up `for_sale` and down `to_receive`, #562 (#565)
+- Simplify and improve app init chain #531
+- Fix #529: Withrawal modal inputs
+- Fix #483: Remove TRADE.X from dropdown and remove blocktrades gateway
+- #531: Catch some app init errors and redirect, update indexeddbshim
+- Add an image for QR code, fix some styling and translations #444
+- Harmonize login forms between modes
+- Use account.assets from new API to display list of issued assets
+- Set password and username type/name/ids for password managers #527
+- Fix #535: remove ellipsis and cap password length at 45 chars
+- Fix typo (oherwise -> otherwise) (#534)
+- fix: parseInt for minimum_feeds when create asset (#539)
+- #532 change noone to no one
+
+---------------------------------------------------------------------
+Release 2.0.170914
+---------------------------------------------------------------------
+New features
+--------
+- Issue #315 - Add Chart Clamp To Settings Dropdown (#373)
+- Issue #364 - Present an error message that disallows the use of Incognito with the BTS wallet (#394)
+- Issue #311 - Allow for hiding user issued assets (#397)
+- Iss #43 - Notification for new version availability (#382)
+- Display all committee members and witnesses, fix #53
+- #224 build automation (#371)
+- Iss #279 - When selecting a new Node under Settings -> Access, don't hard reload the browser (#380)
+
+Bug fixes
+--------
+- fixed #392 (#401)
+- Fix password manager issue and ChainStore account fetching for logins close #403
+- Fix edge and tooltip formats when switching between markets
+- fix issue #385 make height is same with open orders (#396)
+- Make sure period will be placed when selected text has period keyed (#395)
+- Iss 351 - Failed to Sync with API Server UI (#381)
+- Update display price when changing amounts to stay consistent with confirmation screen fix #314
+- Fix #374 (#375)
+- Use only the first part of the remote API errors when broadcasting trx fails #342
+- Fix worker creation submit error close #366
+- Improve order matching when clicking orderbook orders #200
+- Fix #358 (#363)
+- Fix values displayed in MyOpenOrders
+- Remove special treatment of call pricing making it non-invertable #204
+- Fix find market invalid asset warnings close #292
+- Enforce at least 2 decimals for price text #186
+- fix collateral ratios is NAN issue (#362)
+- Fix #345 (#357)
+- Fix Issue #341 (#355)
+- Fix some setState on unmounted component errors
+- Fix MyMarkets console errors
+- Fix 'span cannot appear as child of tbody' error
+- Fix warning in header (td in a) (#338)
+- Update bitsharesjs, #346, fix #304
+- Update apiLatencies after connection
+- Fix API nodes sorting #346
+
+---------------------------------------------------------------------
 Release 2.0.170829
 ---------------------------------------------------------------------
 New features

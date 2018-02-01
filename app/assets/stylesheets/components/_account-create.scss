@@ -1,0 +1,149 @@
+div.divider {
+    margin: 20px 0;
+    border-bottom: 1px solid $border-color;
+}
+
+.login-selector {
+    justify-content: space-around;
+    > div.box {
+        cursor: pointer;
+        position: relative;
+        padding: 1rem;
+        padding-bottom: 4.5rem;
+        border: 1px solid $border-color;
+        margin-top: 2rem;
+
+        .button {
+            font-size: 0.875rem;
+            position: absolute;
+            bottom: 1rem;
+        }
+    }
+}
+div.account-creation {
+    width: 300px;
+    margin-top: 2rem;
+    padding: 2rem 2rem 1rem 2rem;
+
+    p {
+        max-width: 95vw;
+    }
+
+    div.confirm-checks {
+        max-width: 95vw;
+        text-align: left;
+
+        [type=checkbox] {
+            position: relative;
+            top: 3px;
+        }
+
+        label span {
+            text-transform: none;
+            @include RobotoRegular;
+            line-height: 1.2;
+        }
+    }
+
+    div.sub-content {
+        padding-top: 2rem;
+        table {
+            text-align: left;
+        }
+        p {
+            word-wrap: break-word;
+            // max-width: 30rem;
+            text-align: left;
+        }
+    }
+    h4 {
+        @include RobotoMedium;
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+
+    label {
+        text-align: left;
+    }
+    .account-login-options .button-group {
+        label {
+            margin: 0 1rem;
+            > span {
+                text-transform: none;
+                font-size: 90%;
+            }
+        }
+    }
+    .account-login-options .button {
+        margin: 0 auto 15px;
+        margin-top: 3px;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        width: 40%;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .arrow-down:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 4px solid $bs-blue;
+        position: absolute;
+        top: 40px;
+        right: -2px;
+    }
+
+    .arrow-down:hover:after {
+        border-top-color: #fff;
+    }
+
+    div.creation-options {
+        padding-top: 1.5rem;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        @include RobotoMedium;
+    }
+
+    p {
+        max-width: 80vw;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .additional-account-options {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid #3e3e3e;
+    }
+}
+
+.modal-logo {
+    display: inline;
+}
+
+.modal-title {
+    display: block;
+}
+
+@include breakpoint(medium) {
+
+
+    div.account-creation {
+        width: 450px;
+        margin-top: 2rem;
+
+        p {
+            max-width: 35rem;
+        }
+    }
+
+    .modal-logo, .modal-title {
+        display: none;
+    }
+}
