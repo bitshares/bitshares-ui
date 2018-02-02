@@ -217,8 +217,6 @@ class CandleStickChartWithZoomPan extends React.Component {
         </Chart>;
     }
 
-    _renderCandleStickChart(chartMultiplier, maCalcs) {
-        const { height, width, showVolumeChart, indicators, enableChartClamp } = this.props;
     _renderCandleStickChart(chartMultiplier, maCalcs, last) {
         const { height, width, showVolumeChart, indicators } = this.props;
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
