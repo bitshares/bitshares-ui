@@ -469,6 +469,7 @@
             "noFeeBalance": "当前所选资产余额不足以支付手续费，请换一种用来支付手续费的资产。",
             "noPoolBalance": "这个资产的手续费池中没有足够的余额用来支付手续费了，请联系资产所有者或换一种资产。",
             "minimum_amount": "最小提现金额：%(amount)s %(symbol)s",
+            "precision": "最小提现精度：%(precision)s",
             "memo_error":"转账备注解析错误，请稍候再试。"
         },
         "back": "返回",

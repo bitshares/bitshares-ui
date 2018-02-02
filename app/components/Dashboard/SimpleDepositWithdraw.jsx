@@ -10,7 +10,6 @@ import AccountActions from "actions/AccountActions";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
 import {requestDepositAddress, validateAddress, WithdrawAddresses, getDepositAddress} from "common/blockTradesMethods";
-import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
@@ -40,7 +39,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
     constructor(props) {
         super();
-        console.log("constructor");
         this.state = {
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue:"",
@@ -449,7 +447,7 @@ class DepositWithdrawContent extends DecimalChecker {
                     <div className="SimpleTrade__withdraw-row">
                         <label className="left-label">{counterpart.translate("transfer.memo")}</label>
                             <div className="inline-label input-wrapper">
-                                <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
+                                <textarea rows="3" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
                             </div>
                         {!this.state.validAddress && this.state.toAddress ? <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={assetName} /></div> : null}
                     </div>

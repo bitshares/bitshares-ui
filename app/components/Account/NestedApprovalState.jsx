@@ -78,7 +78,7 @@ class AccountPermissionTree extends React.Component {
                         threshold={permission.threshold}
                     />
                 );
-            })
+            });
 
             if (permission.keys.length) {
                 permission.keys.forEach(key => {
@@ -90,7 +90,7 @@ class AccountPermissionTree extends React.Component {
                             indent={this.props.indent + 1}
                         />
                     );
-                })
+                });
             }
         }
 
@@ -141,7 +141,7 @@ class KeyPermissionBranch extends React.Component {
 class SecondLevel extends React.Component {
 
     render() {
-        let {requiredPermissions, available, availableKeys, type} = this.props;
+        let {requiredPermissions, available, availableKeys} = this.props;
 
         let status = [];
 
@@ -211,7 +211,7 @@ class FirstLevel extends React.Component {
     }
 
     render() {
-        let {type, proposal, added, removed, availableKeys} = this.props;
+        let {type, added, removed, availableKeys} = this.props;
         let {requiredPermissions, required, available} = this.state;
 
         available = cloneDeep(available);

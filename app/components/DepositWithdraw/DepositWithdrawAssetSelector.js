@@ -41,7 +41,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
             }
         };
 
-        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; });
+        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).sort(function(a, b) { return a.id.localeCompare(b.id); });
 
         return <TypeAhead items={coinItems} {...this.props} label="gateway.asset" />;
     }

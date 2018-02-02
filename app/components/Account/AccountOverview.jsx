@@ -267,9 +267,11 @@ class AccountOverview extends React.Component {
 
             const thisAssetName = asset.get("symbol").split(".");
             const canDeposit =
-                !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
-                !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1]) ||
-                asset.get("symbol") == "BTS";
+                (
+                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") && 
+                    !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
+                    !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
+                ) || asset.get("symbol") == "BTS";
 
             const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
@@ -377,7 +379,12 @@ class AccountOverview extends React.Component {
                 if (asset && this.props.isMyAccount) {
                     const includeAsset = !hiddenAssets.includes(asset.get("id"));
 
-                    const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
+                    const thisAssetName = asset.get("symbol").split(".");
+                    const canDeposit =
+                        !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
+                        !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1]) ||
+                        asset.get("symbol") == "BTS";
+
                     const canBuy = !!this.props.bridgeCoins.get(asset.get("symbol"));
 
                     const notCore = asset.get("id") !== "1.3.0";
@@ -571,9 +578,9 @@ class AccountOverview extends React.Component {
         let showAssetPercent = settings.get("showAssetPercent", false);
 
         // Find the current Openledger coins
-        const currentDepositAsset = this.props.backedCoins.get("OPEN", []).find(c => {
-            return c.symbol === this.state.depositAsset;
-        }) || {};
+        // const currentDepositAsset = this.props.backedCoins.get("OPEN", []).find(c => {
+        //     return c.symbol === this.state.depositAsset;
+        // }) || {};
         const currentWithdrawAsset = this.props.backedCoins.get("OPEN", []).find(c => {
             return c.symbol === this.state.withdrawAsset;
         }) || {};
@@ -596,10 +603,10 @@ class AccountOverview extends React.Component {
                             <Tab title="account.portfolio" subText={portFolioValue}>
                                 <div className="hide-selector">
                                     <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <Translate content="account.hide_hidden" />
+                                        <h4><Translate content="account.hide_hidden" /></h4>
                                     </div>
                                     {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <Translate content="account.show_hidden" />
+                                        <h4><Translate content="account.show_hidden" /></h4>
                                     </div> : null}
 
                                     {/* Send Modal */}
@@ -662,6 +669,7 @@ class AccountOverview extends React.Component {
                                                 <td>
                                                     {totalValueText}
                                                 </td>
+                                                <td></td>
                                                 <td>{debtValue}</td>
                                                 <td className="column-hide-medium">{collateralValue}</td>
                                                 <td></td>
@@ -701,7 +709,7 @@ class AccountOverview extends React.Component {
                 </div>
 
                 {/* Deposit Modal */}
-                <SimpleDepositWithdraw
+                {/* <SimpleDepositWithdraw
                     ref="deposit_modal"
                     action="deposit"
                     fiatModal={this.state.fiatModal}
@@ -712,9 +720,9 @@ class AccountOverview extends React.Component {
                     balances={this.props.balances}
                     {...currentDepositAsset}
                     isDown={this.props.gatewayDown.get("OPEN")}
-                />
+                /> */}
 
-                {/* Withdraw Modal OLD
+                {/* Withdraw Modal*/}
                 <SimpleDepositWithdraw
                     ref="withdraw_modal"
                     action="withdraw"
@@ -726,9 +734,9 @@ class AccountOverview extends React.Component {
                     balances={this.props.balances}
                     {...currentWithdrawAsset}
                     isDown={this.props.gatewayDown.get("OPEN")}
-                />*/}
+                />
 
-                {/* Withdraw Modal */}
+                {/* Deposit Modal */}
                 <DepositModal
                     ref="deposit_modal_new"
                     modalId="deposit_modal_new"

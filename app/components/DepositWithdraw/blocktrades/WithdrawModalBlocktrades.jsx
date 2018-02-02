@@ -470,7 +470,7 @@ class WithdrawModalBlocktrades extends React.Component {
             withdraw_memo =
 				<div className="content-block">
 					<label><Translate component="span" content="transfer.memo"/></label>
-					<textarea rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+					<textarea rows="3" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
 				</div>;
         }
 

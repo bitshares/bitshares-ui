@@ -438,7 +438,7 @@ class BorrowModalContent extends React.Component {
                             <div>
                                 <div className={collateralRatioClass}>
                                     <Translate component="label" content="borrow.coll_ratio" />
-                                    <input min="0" max="6" step="0.05" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
+                                    <input min="0" max="6" step="0.01" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
                                     <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
                                     {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
                                 </div>

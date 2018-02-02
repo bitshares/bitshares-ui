@@ -1,4 +1,41 @@
 ---------------------------------------------------------------------
+Release 2.0.180115
+---------------------------------------------------------------------
+New features
+--------
+- Change exchange header #888
+- Show Balance on Margin Positions Tab #994
+- #985 - Move account table out from market dashboard
+- update gdex api service (#1017)
+
+Bug fixes
+--------
+- Electron build - Add context menu for copy/paste support
+- Fix similar names appearing as active in the header dropdown
+- Fix Issue #1001
+- Hide the header unlock icon on small screens
+- Unlock wallet doesn't unlock operations until refresh
+- Updated blckchnd api node info
+- Fix flash of modal and input not being cleared
+- Fix #996: change LTM fee rate for asset creation
+- Fix #991: move the lock button out of the menu area
+
+---------------------------------------------------------------------
+Release 2.0.180108
+---------------------------------------------------------------------
+New features
+--------
+- Add Winex gateway service (ETH, ETC, HSR)
+
+Bug fixes
+--------
+- #982: Clear send modal form inputs on closing
+- Increase precision of Collateral Slider in BorrowModal
+- Update Russian locale
+- #976 - Indicate clickable orderbook rows
+- #557 - Deposit Modal Fixes
+
+---------------------------------------------------------------------
 Release 2.0.180105
 ---------------------------------------------------------------------
 New features

@@ -152,8 +152,8 @@ class AccountSelector extends React.Component {
         }
 
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
-            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon className={""+(isGreenAccount? " green":"")} style={{position:"absolute",top:"-0.35em",right:".2em"}} name="user" /></span>
-            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.2em",right:".2em"}} name="plus-circle" /></span>;
+            <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user")} onClick={this.onUnLinkAccount.bind(this)}><Icon className={""+(isGreenAccount? " green":"")} style={{position:"absolute",top:"-0.15em",right:".2em"}} name="user" /></span>
+            : <span className="tooltip" data-place="top" data-tip={counterpart.translate("tooltip.follow_user_add")} onClick={this.onLinkAccount.bind(this)}><Icon style={{position:"absolute",top:"-0.05em",right:".2em"}} name="plus-circle" /></span>;
 
         return (
             <div className="account-selector" style={this.props.style}>
@@ -161,7 +161,7 @@ class AccountSelector extends React.Component {
                     {this.props.label ? (
                     <div className={"header-area" + (this.props.hideImage ? " no-margin" : "")}>
                         {error && !lookup_display ?
-                            <label className="right-label"><span style={{color: "#E3745B"}}>Unknown Account</span></label> :
+                            <label className="right-label"><span style={{color: "#ff3950"}}>Unknown Account</span></label> :
                             <label className={"right-label"+(isGreenAccount? " green":"")}><span>{member_status}</span>&nbsp;<span style={{marginRight:"1.5em"}}> {lookup_display}</span> &nbsp; {linked_status}</label>
                         }
                         <Translate className="left-label" component="label" content={this.props.label}/>

@@ -32,7 +32,11 @@ $account-primarytext,
 $account-dimmed,
 $account-border,
 $account-background,
-$account-tabs-background
+$account-tabs-background,
+$pulsate-green-start,
+$pulsate-green-end,
+$pulsate-red-start,
+$pulsate-red-end
 ) {
 
   .fz_12{
@@ -254,7 +258,6 @@ $account-tabs-background
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
             background-color: $panel-bg-color; //lighten($bg-color, 4%);
-
         }
 
         .left-column-2 {
@@ -273,6 +276,10 @@ $account-tabs-background
             background-color: darken($bg-color, 4%);
         }
 
+    }
+
+    .asset-prefix {
+        color: $light-text-color !important;
     }
 
     .transfer-top {
@@ -329,22 +336,33 @@ $account-tabs-background
             color: $account-green;
         }
 
+        div.header-right-lock {
+            cursor: pointer;
+            padding: 1rem .25rem;
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
                     fill: $account-dimmed;
                 }
-
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
-                }
             }
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
+        div.dropdown-wrapper.hover-transparent {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        div.dropdown-wrapper.cursor-default {
+          cursor: default;
         }
 
         div.dropdown-wrapper.active {
@@ -411,7 +429,7 @@ $account-tabs-background
             &:hover {
                 color: $info-color;
             }
-            > span { font-weight: bold; }
+            > span { @include RobotoMedium; }
         }
         svg > path { fill: $secondary-text-color; }
         // svg:hover > path { fill: $primary-text-color; }
@@ -464,6 +482,7 @@ $account-tabs-background
         }
         > tbody > tr > td {
             border-bottom-color: $dark-text-color;
+            font-size: 0.875rem;
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
@@ -591,6 +610,10 @@ $account-tabs-background
         }
     }
 
+    textarea {
+        line-height: 22px;
+    }
+
     // Typeahead
     .typeahead > div {
         > div {
@@ -662,12 +685,12 @@ $account-tabs-background
 
     .value.negative {
         color: $ask-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .value.positive {
         color: $bid-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .active-bucket {
@@ -697,7 +720,7 @@ $account-tabs-background
             color: $primary-text-color;
         }
         h6 {
-            font-weight: bold;
+            @include RobotoMedium;
         }
         .bottom {
             border-top-color: $bg-color;
@@ -721,7 +744,7 @@ $account-tabs-background
             border: 2px solid $button-bg-color;
 
             > a {
-                font-weight: bold;
+                @include RobotoMedium;
                 color: $primary-text-color;
             }
         }
@@ -751,7 +774,7 @@ $account-tabs-background
     }
 
     .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 
@@ -920,12 +943,8 @@ $account-tabs-background
     }
 
     .help-content {
-        @include RobotoLight;
-        font-weight: 100;
         padding: 10px;
-        p {
-            font-weight: 600;
-        }
+
         ul {
             list-style: none;
         }
@@ -1053,10 +1072,10 @@ $account-tabs-background
     //   @include RobotoLight;
     // }
 
-    td.orderHistoryBid {
+    .orderHistoryBid {
 
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $bid-color;
         }
 
@@ -1068,9 +1087,9 @@ $account-tabs-background
 
     }
 
-    td.orderHistoryAsk  {
+    .orderHistoryAsk  {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $ask-color;
         }
 
@@ -1080,9 +1099,9 @@ $account-tabs-background
         }
     }
 
-    td.orderHistoryCall {
+    .orderHistoryCall {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $call-color;
         }
 
@@ -1092,14 +1111,15 @@ $account-tabs-background
         }
     }
 
-    table.order-table > tbody, tbody.orderbook {
-        > tr.my-order > td {
-            font-weight: bold;
-            color: $info-color;
-            > span.price-integer, > span > span.price-integer, > span >span.price-decimal {
-                color: $info-color;
-                opacity: 1;
-            }
+    .order-table .my-order {
+        > .vertical-order-table-cell, > td {
+          font-weight: bold;
+          color: $info-color;
+        }
+
+        span.price-integer, span.price-decimal {
+            color: $info-color !important;
+            opacity: 1;
         }
     }
 
@@ -1113,18 +1133,55 @@ $account-tabs-background
 
     .orderbook-latest-price {
         > div {
+            $orderbook-center-horizontal-margin: 5px;
+            margin-top: $orderbook-center-horizontal-margin;
+            margin-bottom: $orderbook-center-horizontal-margin;
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            font-weight: bold;
+            @include RobotoMedium;
             font-size: 13px;
         }
     }
 
+    .sticky-table .sticky-table-column, .sticky-table .sticky-table-header, .sticky-table .sticky-table-corner {
+        @include color($primary-text-color, $bg-color);
+    }
+
+    .left-order-book {
+      background-color: $bg-color;
+
+      .spread .spread-value {
+        color: $primary-text-color;
+      }
+    }
+
+    .sticky-table-header {
+        width: 100%;
+        height: 32px;
+        border-bottom: 1px solid grey;
+
+        .sticky-table-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #sticky-header-row {
+            background-color: $panel-bg-color;
+        }
+
+        .sticky-table-row  {
+            width: 100%;
+            background-color: $bg-color;
+
+            &.order-row:hover {
+              background-color: $panel-bg-color;
+            }
+        }
+    }
 
     .order-table {
-
         > tbody > tr:nth-of-type(even) {
             background-color: $row-accent-color;
         }
@@ -1146,21 +1203,29 @@ $account-tabs-background
     li.stat.input {
         &:hover {background-color: lighten($panel-bg-color, 4%);}
     }
-    .stats .stat {
-        > span {
-            > span:first-of-type {
-                color: $primary-text-color;
-            }
+    .stats .stressed-stat {
 
-            > span.symbol-text {
-                color: #468EDE;
-            }
-        }
+        padding: 10px 0;
+        font-size:18px;
+
         &.is-call {
-            >span > b {
-                color: $call-color;
+            color: $call-color!important;
+        }
+
+        &.daily_change {
+            &.positive {
+                color:$account-green!important;
+            }
+            &.negative {
+                color:$negative-color !important;
             }
         }
+    }
+
+    .stat-text {
+        margin-top: 3px;
+        font-size: 11px;
+        color: gray;
     }
 
     .buy-sell-box {
@@ -1193,7 +1258,7 @@ $account-tabs-background
     }
 
     .header-sub-title {
-        font-size: 80%;
+        font-size: 11px;
         color: $light-text-color;
     }
 
@@ -1205,7 +1270,7 @@ $account-tabs-background
         background-color: $header-color;
         padding: 8px 35px;
         border-bottom: 1px solid grey;
-        font-weight: bold;
+        @include RobotoMedium;
         text-transform: uppercase;
         cursor: pointer;
     }
@@ -1306,13 +1371,13 @@ $account-tabs-background
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
 
         > td.warning {
             background-color: darken($warning-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 
@@ -1399,7 +1464,7 @@ $account-tabs-background
 
     table.table > tbody > tr.in-use {
         > td:nth-child(2) {
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 
@@ -1414,7 +1479,7 @@ $account-tabs-background
     }
 
     input.my-key, td.my-key a {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 
@@ -1520,8 +1585,8 @@ $account-tabs-background
     }
 
     div.account-creation {
-        width:450px;
-        background-color: $account-cells;
+        border: 1px solid $account-cells;
+        border-radius: 6px;
 
         div.button > a {
             color: $primary-text-color;
@@ -1554,6 +1619,37 @@ $account-tabs-background
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
+
+    .pulsate {
+
+        &.red {
+            animation: pulsate-red .5s ease-out;
+        }
+
+        &.green {
+            animation: pulsate-green .5s ease-out;
+        }
+
+        animation-iteration-count: 1;
+    }
+
+    @-webkit-keyframes pulsate-green {
+        0% {
+            color: $pulsate-green-start;
+        }
+        100% {
+            color: $pulsate-green-end;
+        }
+    }
+    @-webkit-keyframes pulsate-red {
+        0% {
+            color: $pulsate-red-start;
+        }
+        100% {
+            color: $pulsate-red-end;
+        }
+    }
+
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1572,4 +1668,46 @@ $account-tabs-background
 .midnightTheme .gate_fee .right-selector .right-selector-input {
     text-align: right;
     width: 100%;
+}
+
+.clear-text, .search-wrapper {
+    position: relative;
+}
+
+.market-filter-input, .clear-text, .search-wrapper {
+    position: relative;
+}
+
+.clear-text {
+    top: 10px;
+    right: -30px;
+    position: absolute;
+    border: 0;
+    background-color: transparent;
+    display: block;
+    outline: 0;
+    cursor: pointer;
+}
+.clear-text:after {
+    content: "X";
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-color: transparent;
+    z-index: 1;
+    right: 35px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 2px;
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    cursor: pointer;
+}
+.market-filter-input:not(:valid) ~ .clear-text {
+    display: none;
 }
