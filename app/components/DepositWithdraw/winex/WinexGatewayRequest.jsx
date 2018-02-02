@@ -50,7 +50,7 @@ class WinexGatewayRequest extends React.Component {
         };
 
         this.state = {
-            receive_address: null,
+            receive_address: {},
             url: props.url || urls[props.gateway]
         };
 
@@ -79,13 +79,13 @@ class WinexGatewayRequest extends React.Component {
     }
 
     componentWillMount() {
-        let account_name = this.props.account.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        if (!receive_address || receive_address.address === "unknown") {
-            requestDepositAddress(this._getDepositObject());
-        } else {
-            this.setState({receive_address});
-        }
+        // let account_name = this.props.account.get("name");
+        // let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+        // if(!receive_address){
+        //     receive_address.address = "unknown";
+        // }
+        // let receive_address = {address:"",memo:""}
+        // this.setState({receive_address});
     }
 
     componentWillUnmount() {
@@ -225,8 +225,6 @@ class WinexGatewayRequest extends React.Component {
                 <br /><br /><span>QQ群：</span><a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=5346c21c6da5f4990daf9b178e2c71a160e0d4cfd2bbb7bbae21eea80f44a11f">623556771</a>
             </div>
         </div>
-
-
         if (isDeposit) {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
@@ -274,10 +272,10 @@ class WinexGatewayRequest extends React.Component {
                             <table className="table">
                                 <tbody>
                                 <tr>
-                                    <td>{deposit_address_fragment ? <QRCode size={120} value={receive_address.address} />: null}</td>
+                                    <td>{!receive_address.address || receive_address.address === "unknown" ? null : <QRCode size={120} value={receive_address.address} />}</td>
                                 </tr>
                                 <tr>
-                                    <td>{deposit_address_fragment }</td>
+                                    <td>{!receive_address.address || receive_address.address === "unknown" ?  <Translate content="winex.gateway.click_getaddress" />: receive_address.address }</td>
                                 </tr>
                                 {deposit_memo ? (
                                     <tr>
@@ -288,7 +286,7 @@ class WinexGatewayRequest extends React.Component {
                             <div className="button-group" style={{paddingTop: 10}}>
                                 {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div> : null}
                                 {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
-                                <button className={"button"} onClick={requestDepositAddress.bind(null, this._getDepositObject())}><Translate content="gateway.generate_new" /></button>
+                                <button className={"button"} onClick={requestDepositAddress.bind(null, this._getDepositObject())}><Translate content="winex.gateway.get_deposit_address" /></button>
                             </div>
                         </div>
                     </div>
