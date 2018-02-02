@@ -217,13 +217,10 @@ class CandleStickChartWithZoomPan extends React.Component {
         </Chart>;
     }
 
-<<<<<<< HEAD:web/app/components/Exchange/PriceChartD3.jsx
     _renderCandleStickChart(chartMultiplier, maCalcs) {
         const { height, width, showVolumeChart, indicators, enableChartClamp } = this.props;
-=======
     _renderCandleStickChart(chartMultiplier, maCalcs, last) {
         const { height, width, showVolumeChart, indicators } = this.props;
->>>>>>> upstream/staging:app/components/Exchange/PriceChartD3.jsx
         const { timeFormatter, volumeFormat, priceFormat, margin, enableTrendLine,
             enableFib, calculators } = this.state;
         const { positiveColor, negativeColor, strokeColor, axisLineColor, indicatorLineColor } = this._getThemeColors();
