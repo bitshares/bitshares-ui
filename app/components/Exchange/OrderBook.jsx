@@ -8,6 +8,9 @@ import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
+import { StickyTable } from "react-sticky-table";
+import Icon from "../Icon/Icon";
+import "react-sticky-table/dist/react-sticky-table.css";
 
 class OrderBookRowVertical extends React.Component {
 
@@ -28,16 +31,23 @@ class OrderBookRowVertical extends React.Component {
 
         let price = <PriceText price={order.getPrice()} quote={quote} base={base} />;
         return (
-            <tr onClick={this.props.onClick} className={classnames({"final-row": final}, {"my-order": order.isMine(this.props.currentAccount)})}>
-                <td>{utils.format_number(order[isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), base.get("precision"))}</td>
-                <td>{utils.format_number(order[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), quote.get("precision"))}</td>
-                <td className={integerClass}>
+            <div onClick={this.props.onClick} className={classnames("sticky-table-row order-row", {"final-row": final}, {"my-order": order.isMine(this.props.currentAccount)})}>
+                <div className="cell left">
+                    {utils.format_number(order[isBid ? "amountForSale" : "amountToReceive"]().getAmount({real: true}), base.get("precision"))}
+                </div>
+                <div className="cell">
+                    {utils.format_number(order[isBid ? "amountToReceive" : "amountForSale"]().getAmount({real: true}), quote.get("precision"))}
+                </div>
+                <div className={`cell ${integerClass} right`}>
                     {price}
-                </td>
-            </tr>
+                </div>
+            </div>
         );
     }
 }
+
+const elemHeight = (elem) => elem.getBoundingClientRect().height;
+
 
 class OrderBookRowHorizontal extends React.Component {
     shouldComponentUpdate(np) {
@@ -91,14 +101,12 @@ class OrderBook extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            scrollToBottom: true,
             flip: props.flipOrderBook,
             showAllBids: false,
             showAllAsks: false,
-            rowCount: 20
+            rowCount: 20,
+            autoScroll: true
         };
-
-        this._updateHeight = this._updateHeight.bind(this);
     }
 
     // shouldComponentUpdate(nextProps, nextState) {
@@ -118,17 +126,8 @@ class OrderBook extends React.Component {
     // }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.marketReady) {
-            this.setState({
-                scrollToBottom: true
-            });
-        }
-
         // Change of market or direction
         if (nextProps.base.get("id") !== this.props.base.get("id") || nextProps.quote.get("id") !== this.props.quote.get("id")) {
-            this.setState({
-                scrollToBottom: true
-            });
 
             if (this.refs.askTransition) {
                 this.refs.askTransition.resetAnimation();
@@ -141,6 +140,10 @@ class OrderBook extends React.Component {
             }
 
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+
+            if (!this.props.horizontal) {
+                this.setState({autoScroll: true});
+            }
         }
 
         if (
@@ -153,41 +156,14 @@ class OrderBook extends React.Component {
         }
     }
 
-    _updateHeight() {
-        if (!this.props.horizontal) {
-            let containerHeight = this.refs.orderbook_container.offsetHeight;
-            let priceHeight = this.refs.center_text.offsetHeight;
-            let asksHeight = this.refs.asksWrapper.offsetHeight;
+    queryStickyTable = (query) => this.refs.vertical_sticky_table.table.querySelector(query)
 
-            let newAsksHeight = Math.floor((containerHeight - priceHeight) / 2);
-            let newBidsHeight = containerHeight - priceHeight - asksHeight - 2;
-            if (newAsksHeight !== this.state.vertAsksHeight || newBidsHeight !== this.state.vertBidsHeight) {
-                this.setState({
-                    vertAsksHeight: newAsksHeight,
-                    vertBidsHeight: newBidsHeight
-                }, this.psUpdate);
-            }
-
-        }
-    }
-
-    componentWillMount() {
-        window.addEventListener("resize", this._updateHeight, {capture: false, passive: true});
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this._updateHeight);
-    }
+    verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
 
     componentDidMount() {
-
         if (!this.props.horizontal) {
-            this._updateHeight();
-
-            let asksContainer = this.refs.vert_asks;
-            Ps.initialize(asksContainer);
-            let bidsContainer = this.refs.vert_bids;
-            Ps.initialize(bidsContainer);
+            Ps.initialize(this.verticalScrollBar());
+            this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
             Ps.initialize(bidsContainer);
@@ -195,41 +171,28 @@ class OrderBook extends React.Component {
             Ps.initialize(asksContainer);
         }
 
+    }
+
+    centerVerticalScrollBar() {
+        if (!this.props.horizontal && this.state.autoScroll) {
+            const scrollableContainer = this.queryStickyTable("#sticky-table-y-wrapper");
+            const centerTextContainer = this.refs.center_text;
+            const centeringOffset = 21;
+            const scrollTo = centerTextContainer.offsetTop - (elemHeight(scrollableContainer) / 2) + centeringOffset;
+
+            this.setState({ownScroll: true}, () => scrollableContainer.scrollTop = scrollTo);
+        }
     }
 
     psUpdate() {
         if (!this.props.horizontal) {
-            let asksContainer = this.refs.vert_asks;
-            Ps.update(asksContainer);
-            if (this.state.scrollToBottom) {
-                asksContainer.scrollTop = asksContainer.scrollHeight;
-            };
-            let bidsContainer = this.refs.vert_bids;
-            Ps.update(bidsContainer);
+            Ps.update(this.verticalScrollBar());
+            this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
             Ps.update(bidsContainer);
             let asksContainer = this.refs.hor_asks;
             Ps.update(asksContainer);
-        }
-    }
-
-    componentDidUpdate() {
-        this._updateHeight();
-    }
-
-    _onBidScroll(e) {
-
-        if (e.target.scrollTop < (e.target.scrollHeight - this.state.vertAsksHeight)) {
-            if (this.state.scrollToBottom) {
-                this.setState({
-                    scrollToBottom: false
-                });
-            }
-        } else {
-            this.setState({
-                scrollToBottom: false
-            });
         }
     }
 
@@ -262,11 +225,27 @@ class OrderBook extends React.Component {
         }
     }
 
+    toggleSpreadValue = () => {
+        this.setState({displaySpreadAsPercentage: !this.state.displaySpreadAsPercentage});
+    }
+
+    toggleAutoScroll = () => {
+        const newState = {autoScroll: !this.state.autoScroll};
+        if (newState.autoScroll)
+            this.setState(newState, this.centerVerticalScrollBar);
+        else
+            this.setState(newState);
+    }
+
     render() {
         let {combinedBids, combinedAsks, highestBid, lowestAsk, quote, base,
             totalAsks, totalBids, quoteSymbol, baseSymbol, horizontal} = this.props;
-        let {showAllAsks, showAllBids, rowCount} = this.state;
-
+        let {showAllAsks, showAllBids, rowCount, displaySpreadAsPercentage} = this.state;
+        const noOrders = (!lowestAsk.sell_price) && (!highestBid.sell_price);
+        const hasAskAndBids = !!(lowestAsk.sell_price && highestBid.sell_price)
+        const spread = hasAskAndBids && (displaySpreadAsPercentage ?
+          `${(100 * (lowestAsk._real_price / highestBid._real_price - 1)).toFixed(2)}%`
+          : <PriceText price={lowestAsk._real_price - highestBid._real_price} base={base} quote={quote}/>);
         let bidRows = null, askRows = null;
         if(base && quote) {
             bidRows = combinedBids
@@ -464,65 +443,67 @@ class OrderBook extends React.Component {
             // Vertical orderbook
             return (
                 <div className="left-order-book no-padding no-overflow">
-                    <div className="grid-block shrink left-orderbook-header" style={{paddingRight: 15, zIndex: 10}}>
-                        <table className="table expand order-table table-hover text-right">
-                            <thead>
-                                <tr>
-                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
-                                        <span className="header-sub-title"><AssetName name={baseSymbol} /></span>
-                                    </th>
-                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
-                                        <span className="header-sub-title"><AssetName name={quoteSymbol} /></span>
-                                    </th>
-                                    <th style={{paddingBottom: 8, textAlign: "right", "borderBottomColor": "#777"}}>
-                                        <Translate className="header-sub-title" content="exchange.price" />
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div className="grid-block vertical no-padding" ref="orderbook_container" style={{width: "100%"}}>
-                            <div id="asksWrapper" style={{overflow:"hidden"}} ref="asksWrapper">
-                                <div onScroll={this._onBidScroll.bind(this)} className="grid-block" ref="vert_asks" style={{overflow: "hidden", maxHeight: this.state.vertAsksHeight || 300}}>
-                                    <div style={{paddingRight: 10, width: "100%", height: "100%", display: "table-cell", verticalAlign: "bottom"}}>
-                                        <table style={{position: "relative", bottom: 0}} className="table order-table table-hover text-right">
-                                            <TransitionWrapper
-                                                ref="askTransition"
-                                                className="ps-container clickable"
-                                                component="tbody"
-                                                transitionName="newrow"
-                                            >
-                                                {askRows}
-                                            </TransitionWrapper>
-                                        </table>
-                                    </div>
+                    <div className="order-table-container">
+                        <StickyTable stickyColumnCount={0} className="order-table table"  ref="vertical_sticky_table">
+                            <div className="sticky-table-row top-header">
+                                <div className="cell header-cell left">
+                                    <span className="header-sub-title"><AssetName name={baseSymbol} /></span>
+                                </div>
+                                <div className="cell header-cell">
+                                    <span className="header-sub-title"><AssetName name={quoteSymbol} /></span>
+                                </div>
+                                <div className="cell header-cell right">
+                                    <Translate className="header-sub-title" content="exchange.price" />
                                 </div>
                             </div>
-                            <div ref="center_text" style={{minHeight: 35}}>
-                                    <div key="spread" className="orderbook-latest-price" ref="centerRow">
+                            <TransitionWrapper
+                                ref="askTransition"
+                                className="transition-container clickable"
+                                component="div"
+                                transitionName="newrow"
+                            >
+                                {askRows.length > 0
+                                    ? askRows
+                                    : (noOrders || <div className="sticky-table-row">
+                                          <td className="cell no-orders padtop" colSpan="3">
+                                              No asks
+                                          </td>
+                                      </div>)}
+                            </TransitionWrapper>
+                            <div className="sticky-table-row" ref="center_text">
+                              {noOrders ? <td colSpan={3} className="no-orders padtop">No orders</td> :
+                                <td className="cell center-cell" colSpan="3">
+                                    <div className="orderbook-latest-price">
                                         <div className="text-center spread">
-                                            {this.props.latest ? <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /> <AssetName name={baseSymbol} />/<AssetName name={quoteSymbol} /></span> : null}
+                                            {(!!spread) && <span className="clickable left" onClick={this.toggleSpreadValue}>
+                                                Spread <span className="spread-value">{spread}</span>
+                                            </span>}
+                                            <Icon className="lock-unlock clickable" onClick={this.toggleAutoScroll} name={this.state.autoScroll ? "locked" : "unlocked"} />
+                                            {(!!this.props.latest) && <span className="right">
+                                                Latest <span className={this.props.changeClass}><PriceText preFormattedPrice={this.props.latest} /></span>
+                                            </span>}
                                         </div>
                                     </div>
+                                </td>
+                              }
                             </div>
-                            <div id="bidsWrapper" style={{overflow:"hidden"}}>
-                                <div className="grid-block" ref="vert_bids" style={{overflow: "hidden", height: this.state.vertBidsHeight || 300}}>
-                                <div style={{paddingRight: 10, width: "100%", height: "100%", display: "table-cell", verticalAlign: "top"}}>
-                                    <table className="table order-table table-hover text-right">
-                                        <TransitionWrapper
-                                            ref="bidTransition"
-                                            className="ps-container clickable"
-                                            component="tbody"
-                                            transitionName="newrow"
-                                        >
-                                            {bidRows}
-                                        </TransitionWrapper>
-                                    </table>
-                                </div>
-                                </div>
-                            </div>
+                            <TransitionWrapper
+                                ref="bidTransition"
+                                className="transition-container clickable"
+                                component="div"
+                                transitionName="newrow"
+                            >
+                                {bidRows.length > 0
+                                    ? bidRows
+                                    : (noOrders || <div className="sticky-table-row">
+                                          <td className="cell no-orders" colSpan="3">
+                                              No bids
+                                          </td>
+                                      </div>)}
+                            </TransitionWrapper>
+                        </StickyTable>
                     </div>
-                    <div style={{width: "100%"}} className="v-align no-padding align-center grid-block footer shrink bottom-header">
+                    <div className="v-align no-padding align-center grid-block footer shrink bottom-header">
                         <div onClick={this.props.moveOrderBook} className="button small outline horizontal-button">
                             <Translate content="exchange.horizontal" />
                         </div>

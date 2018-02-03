@@ -320,19 +320,26 @@ class MarketsStore {
             });
         }
 
-        if (result.recent && result.recent.length) {
+        if (result.ticker) {
 
-            let stats = this._calcMarketStats(result.recent, this.baseAsset, this.quoteAsset, result.history, this.quoteAsset.get("symbol") + "_" + this.baseAsset.get("symbol"));
+            let marketName = this.quoteAsset.get("symbol") + "_" + this.baseAsset.get("symbol");
+            let stats = this._calcMarketStats(
+                this.baseAsset,
+                this.quoteAsset,
+                marketName,
+                result.ticker
+            );
+
+            this.allMarketStats = this.allMarketStats.set(marketName, stats);
 
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
             this.marketStats = this.marketStats.set("volumeQuote", stats.volumeQuote);
-
             if (stats.volumeBase) {
                 this.lowVolumeMarkets = this.lowVolumeMarkets.delete(result.market);
+            } else {
+                this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
             }
-        } else if (result.recent && !result.recent.length) {
-            this.lowVolumeMarkets = this.lowVolumeMarkets.set(result.market, true);
         }
 
         if (callsChanged || limitsChanged) {
@@ -935,127 +942,43 @@ class MarketsStore {
         };
     }
 
-    _calcMarketStats(history, baseAsset, quoteAsset, recent, market) {
-        if (!history) return;
-        let yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        yesterday = yesterday.getTime();
-        let volumeBase = 0,
-            volumeQuote = 0,
-            change = 0,
-            last = {close_quote: null, close_base: null},
-            invert,
-            noTrades = true;
-
-        if (history.length) {
-            let first;
-            history.forEach((bucket, i) => {
-                if (!/Z$/.test(bucket.key.open)) {
-                    bucket.key.open += "Z";
-                }
-                let date = new Date(bucket.key.open).getTime();
-                if (date > yesterday) {
-                    noTrades = false;
-                    if (!first) {
-                        first = history[i > 0 ? i - 1 : i];
-                        invert = first.key.base === baseAsset.get("id");
-                    }
-                    if (invert) {
-                        volumeBase += parseInt(bucket.base_volume, 10);
-                        volumeQuote += parseInt(bucket.quote_volume, 10);
-                    } else {
-                        volumeQuote += parseInt(bucket.base_volume, 10);
-                        volumeBase += parseInt(bucket.quote_volume, 10);
-                    }
-                }
-            });
-            if (!first) {
-                first = history[0];
-            }
-            last = history[history.length -1];
-            /* Some market histories have 0 value for price values, set to 1 in that case */
-            function removeZeros(entry) {
-                for (let key in entry) {
-                    if (key.indexOf("volume") === -1 && entry[key] === 0) {
-                        entry[key] = 1;
-                    }
-                }
-            }
-            removeZeros(last);
-            removeZeros(first);
-
-            let open, close;
-            if (invert) {
-                open = utils.get_asset_price(first.open_quote, quoteAsset, first.open_base, baseAsset, invert);
-                close = utils.get_asset_price(last.close_quote, quoteAsset, last.close_base, baseAsset, invert);
-            } else {
-                open = utils.get_asset_price(first.open_quote, baseAsset, first.open_base, quoteAsset, invert);
-                close = utils.get_asset_price(last.close_quote, baseAsset, last.close_base, quoteAsset, invert);
-            }
-
-            change = noTrades ? 0 : Math.round(10000 * (close - open) / open) / 100;
-            if (!isFinite(change) || isNaN(change)) {
-                change = 0;
-            }
-        }
+    _calcMarketStats(base, quote, market, ticker) {
+        let volumeBaseAsset = new Asset({real: parseFloat(ticker.base_volume), asset_id: base.get("id"), precision: base.get("precision")});
+        let volumeQuoteAsset = new Asset({real: parseFloat(ticker.quote_volume), asset_id: quote.get("id"), precision: quote.get("precision")});
 
         let price;
+        try {
+            price = new Price({
+                base: volumeBaseAsset,
+                quote: volumeQuoteAsset,
+                real: parseFloat(ticker.latest)
+            });
+        } catch(err) {
 
-        if (last.close_base && last.close_quote) {
-            let invert = last.key.base !== baseAsset.get("id");
-            let base = new Asset({amount: last[invert ? "close_quote" : "close_base"], asset_id: last.key[invert ? "quote" : "base"], precision: baseAsset.get("precision")});
-            let quote = new Asset({amount: last[!invert ? "close_quote" : "close_base"], asset_id: last.key[!invert ? "quote" : "base"], precision: quoteAsset.get("precision")});
-            price = new Price({base, quote});
         }
-
-        let close = last.close_base && last.close_quote ? {
-            quote: {
-                amount: invert ? last.close_quote : last.close_base,
-                asset_id: invert ? last.key.quote : last.key.base
-            },
-            base: {
-                amount: invert ? last.close_base : last.close_quote,
-                asset_id: invert ? last.key.base : last.key.quote
-            }
+        let close = !!price ? {
+            base: price.base.toObject(),
+            quote: price.quote.toObject()
         } : null;
-        let volumeBaseAsset = new Asset({amount: volumeBase, asset_id: baseAsset.get("id"), precision: baseAsset.get("precision")});
-        let volumeQuoteAsset = new Asset({amount: volumeQuote, asset_id: quoteAsset.get("id"), precision: quoteAsset.get("precision")});
-        volumeBase = utils.get_asset_amount(volumeBase, baseAsset);
-        volumeQuote = utils.get_asset_amount(volumeQuote, quoteAsset);
 
-        let coreVolume = volumeBaseAsset.asset_id === "1.3.0" ? volumeBaseAsset.getAmount({real: true}) :
-            volumeQuoteAsset.asset_id === "1.3.0" ? volumeQuoteAsset.getAmount({real: true}) : null;
-        let usdVolume = !!coreVolume ? null : volumeBaseAsset.asset_id === "1.3.121" ? volumeBaseAsset.getAmount({real: true}) :
-            volumeQuoteAsset.asset_id === "1.3.121" ? volumeQuoteAsset.getAmount({real: true}) : null;
-        let btcVolume = (!!coreVolume || !!usdVolume) ? null : (volumeBaseAsset.asset_id === "1.3.861" || volumeBaseAsset.asset_id === "1.3.103") ? volumeBaseAsset.getAmount({real: true}) :
-                (volumeQuoteAsset.asset_id === "1.3.861" || volumeQuoteAsset.asset_id === "1.3.103") ? volumeQuoteAsset.getAmount({real: true}) : null;
-
-        if (market) {
-            if ((coreVolume && coreVolume <= 1000) || (usdVolume && usdVolume < 10) || (btcVolume && btcVolume < 0.01) || !Math.floor(volumeBase * 100)) {
-                this.lowVolumeMarkets = this.lowVolumeMarkets.set(market, true);
-                // console.log("lowVolume:", market, coreVolume, usdVolume, btcVolume, volumeBase);
-            } else {
-                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(market);
-                /* Clear both market directions from the list */
-                let invertedMarket = market.split("_");
-                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(invertedMarket[1] + "_" + invertedMarket[0]);
-            }
-            marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
-        }
-        return {
-            change: change.toFixed(2),
-            volumeBase,
-            volumeQuote,
-            close: close,
-            price,
-            volumeBaseAsset,
-            volumeQuoteAsset
+        if (!!price && isNaN(price.toReal())) {
+            price = undefined;
+            close = null;
         };
+
+        return {
+            change: parseFloat(ticker.percent_change).toFixed(2),
+            volumeBase: volumeBaseAsset.getAmount({real: true}),
+            volumeQuote: volumeQuoteAsset.getAmount({real: true}),
+            price,
+            close
+        };
+
     }
 
     onGetMarketStats(payload) {
-        if (payload) {
-            let stats = this._calcMarketStats(payload.history, payload.base, payload.quote, payload.last, payload.market);
+        if (payload && payload.ticker) {
+            let stats = this._calcMarketStats(payload.base, payload.quote, payload.market, payload.ticker);
             this.allMarketStats = this.allMarketStats.set(payload.market, stats);
         }
     }

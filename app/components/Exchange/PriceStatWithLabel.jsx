@@ -52,12 +52,12 @@ export default class PriceStatWithLabel extends React.Component {
     }
 
     render() {
-        let {base, quote, price, content, ready, volume, toolTip} = this.props;
+        let {base, quote, price, content, ready, volume, toolTip, ignoreColorChange} = this.props;
         let {change,marketChange} = this.state;
         let changeClasses = null;
-        if (!marketChange && change && change !== null) {
+        if (!marketChange && change && change !== null && ignoreColorChange !== true) {
             changeClasses = change > 0 ? "pulsate green" : "pulsate red";
-        }        
+        }
 
         let value = !volume ? utils.price_text(price, quote, base) :
             utils.format_volume(price);

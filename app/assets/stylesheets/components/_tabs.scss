@@ -40,3 +40,11 @@ div.tab-content {
         }
     }
 }
+
+.service-selector li {
+    border-bottom: 1px solid $border-color;
+}
+
+.service-selector li.is-active {
+    border-bottom: 1px solid $bs-blue;
+}

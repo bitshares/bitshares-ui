@@ -16,7 +16,6 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import {List} from "immutable";
 import {Link} from "react-router/es";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import EquivalentPrice from "../Utility/EquivalentPrice";
 import Immutable from "immutable";
 
 const alignRight = {textAlign: "right"};
@@ -352,7 +351,32 @@ class MarginPositionPlaceHolder extends React.Component {
     }
 
     render() {
-        let {debtAsset, collateralAsset} = this.props;
+        let {debtAsset, collateralAsset, account} = this.props;
+
+        // get the balance
+
+        // the debt asset id which we want to display
+        let row_asset_id = debtAsset.get("id");
+
+        let account_balances = account.get("balances");
+
+        let balance = 0;
+
+        // really this iteration should be called once, and 
+        // each asset_id matched once with its balance
+
+        // for every debt the account has, we iterate 
+        // through every balance the user has 
+        if (account_balances) {
+            account_balances.forEach((a, asset_type) => {
+                if (asset_type == row_asset_id) {
+                    let balanceObject = ChainStore.getObject(a);
+
+                    // get the balance
+                    balance = balanceObject.get("balance");
+                }
+            });
+        }
 
         const assetDetailURL = `/asset/${debtAsset.get("symbol")}`;
         const marketURL = `/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`;
@@ -379,11 +403,11 @@ class MarginPositionPlaceHolder extends React.Component {
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
-                        amount={0}
-                        asset={debtAsset.get("id")}
-                        assetInfo={assetInfoLinks}
-                        hide_asset
-                    />
+                       amount={balance}
+                       asset={debtAsset.get("id")}
+                       assetInfo={assetInfoLinks}
+                       hide_asset
+                    />                  
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
@@ -455,7 +479,7 @@ class PlaceHolderWrapper extends React.Component {
     }
 
     render() {
-        let {objects, optionals} = this.props;
+        let {account, objects, optionals} = this.props;
         objects = objects.filter(o => !!o);
         optionals = optionals.filter(o => !!o);
         if (!optionals.length) return null;
@@ -476,6 +500,7 @@ class PlaceHolderWrapper extends React.Component {
                         key={a.get("id")} 
                         debtAsset={a.get("id")} 
                         collateralAsset={a.getIn(["bitasset", "options", "short_backing_asset"])} 
+                        account = {account}
                         {...this.props} />;
         });
 

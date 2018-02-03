@@ -8,7 +8,7 @@
   //padding-right: 8px;
   text-transform: uppercase;
   font-weight: normal;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #777;
   text-align: left;
 }
@@ -39,4 +39,14 @@
   td, th {
     font-size: 94%;
   }
+}
+
+
+/* Wrap table in div with this class to make horizontal scroll */
+.responsive-table {
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+  width: 100vw;
 }

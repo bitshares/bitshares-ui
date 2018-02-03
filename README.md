@@ -82,6 +82,10 @@ __Mac__
 This will compile the UI with some special modifications for use with Electron, generate installable binaries with Electron and copy the result to the root `build/binaries` folder.
 
 
+### Docker
+
+Clone this repository, run `docker-compose up` and visit localhost:8080 
+
 
 ## Contributing
 Please work off the staging branch and make pull requests to that branch. The master branch will only be updated for new releases.
@@ -115,4 +119,3 @@ Our style guideline is based on 'Airbnb JavaScript Style Guide' (https://github.
 - Spaces inside curly braces are optional
 
 We strongly encourage to use _eslint_ to make sure the code adhere to our style guidelines.
-

@@ -232,23 +232,23 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 <tbody>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_deposit" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>{this.props.deposit_asset}</td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_receive" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.intermediate" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.your_account" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
                                     </tr>
                                     <tr>
                                         <td><Translate content="gateway.balance" />:</td>
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>
                                             <AccountBalance
                                                 account={this.props.account.get("name")}
                                                 asset={this.props.receive_asset.get("symbol")}
@@ -299,19 +299,19 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 <tbody>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_withdraw" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_receive" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>{this.props.deposit_asset}</td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.intermediate" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
                                     </tr>
                                     <tr>
                                         <td><Translate content="gateway.balance" />:</td>
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                        <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>
                                             <AccountBalance
                                                 account={this.props.account.get("name")}
                                                 asset={this.props.receive_asset.get("symbol")}
