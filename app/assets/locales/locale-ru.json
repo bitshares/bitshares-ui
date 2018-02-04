@@ -16,7 +16,7 @@
     "de":"Deutsch",
     "es":"Español",
     "it":"Italiano",
-    "tr":"Turkish",
+    "tr":"Türkçe",
     "ru":"Русский"
   },
   "incognito":{
@@ -449,7 +449,7 @@
   },
   "transfer":{
     "header":"Детали транзакции",
-    "header_subheader":"Переводы используются для отправки средств<br /> другим владельцам аккаунтов BitShares",
+    "header_subheader":"Переводы используются для отправки средств другим владельцам аккаунтов BitShares",
     "from":"От",
     "pay_from":"Оплатить с",
     "amount":"Количество",

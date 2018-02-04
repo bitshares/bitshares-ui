@@ -156,62 +156,65 @@ class AssetActions {
     }
 
     updateAsset(issuer, new_issuer, update, core_exchange_rate, asset, flags, permissions,
-            isBitAsset, bitasset_opts, original_bitasset_opts, description, auths) {
+            isBitAsset, bitasset_opts, original_bitasset_opts, description, auths, 
+            feedProducers, originalFeedProducers, assetChanged) {
 
         // Create asset action here...
         let tr = WalletApi.new_transaction();
-        let quotePrecision = utils.get_asset_precision(asset.get("precision"));
+        if (assetChanged) {
+            let quotePrecision = utils.get_asset_precision(asset.get("precision"));
 
-        big.config({DECIMAL_PLACES: asset.get("precision")});
-        let max_supply = (new big(update.max_supply)).times(quotePrecision).toString();
-        let max_market_fee = (new big(update.max_market_fee || 0)).times(quotePrecision).toString();
+            big.config({DECIMAL_PLACES: asset.get("precision")});
+            let max_supply = (new big(update.max_supply)).times(quotePrecision).toString();
+            let max_market_fee = (new big(update.max_market_fee || 0)).times(quotePrecision).toString();
 
-        let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
-        let cr_quote_precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
-        let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
-        let cr_base_precision = utils.get_asset_precision(cr_base_asset.get("precision"));
+            let cr_quote_asset = ChainStore.getAsset(core_exchange_rate.quote.asset_id);
+            let cr_quote_precision = utils.get_asset_precision(cr_quote_asset.get("precision"));
+            let cr_base_asset = ChainStore.getAsset(core_exchange_rate.base.asset_id);
+            let cr_base_precision = utils.get_asset_precision(cr_base_asset.get("precision"));
 
-        let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(cr_quote_precision).toString();
-        let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(cr_base_precision).toString();
-        console.log("auths:", auths);
-        let updateObject = {
-            fee: {
-                amount: 0,
-                asset_id: 0
-            },
-            asset_to_update: asset.get("id"),
-            extensions: asset.get("extensions"),
-            issuer: issuer,
-            new_issuer: new_issuer,
-            new_options: {
-                max_supply: max_supply,
-                max_market_fee: max_market_fee,
-                market_fee_percent: update.market_fee_percent * 100,
-                description: description,
-                issuer_permissions: permissions,
-                flags: flags,
-                whitelist_authorities: auths.whitelist_authorities.toJS(),
-                blacklist_authorities: auths.blacklist_authorities.toJS(),
-                whitelist_markets: auths.whitelist_markets.toJS(),
-                blacklist_markets: auths.blacklist_markets.toJS(),
-                extensions: asset.getIn(["options", "extensions"]),
-                core_exchange_rate: {
-                    quote: {
-                        amount: cr_quote_amount,
-                        asset_id: core_exchange_rate.quote.asset_id
-                    },
-                    base: {
-                        amount: cr_base_amount,
-                        asset_id: core_exchange_rate.base.asset_id
+            let cr_quote_amount = (new big(core_exchange_rate.quote.amount)).times(cr_quote_precision).toString();
+            let cr_base_amount = (new big(core_exchange_rate.base.amount)).times(cr_base_precision).toString();
+            console.log("auths:", auths);
+            let updateObject = {
+                fee: {
+                    amount: 0,
+                    asset_id: 0
+                },
+                asset_to_update: asset.get("id"),
+                extensions: asset.get("extensions"),
+                issuer: issuer,
+                new_issuer: new_issuer,
+                new_options: {
+                    max_supply: max_supply,
+                    max_market_fee: max_market_fee,
+                    market_fee_percent: update.market_fee_percent * 100,
+                    description: description,
+                    issuer_permissions: permissions,
+                    flags: flags,
+                    whitelist_authorities: auths.whitelist_authorities.toJS(),
+                    blacklist_authorities: auths.blacklist_authorities.toJS(),
+                    whitelist_markets: auths.whitelist_markets.toJS(),
+                    blacklist_markets: auths.blacklist_markets.toJS(),
+                    extensions: asset.getIn(["options", "extensions"]),
+                    core_exchange_rate: {
+                        quote: {
+                            amount: cr_quote_amount,
+                            asset_id: core_exchange_rate.quote.asset_id
+                        },
+                        base: {
+                            amount: cr_base_amount,
+                            asset_id: core_exchange_rate.base.asset_id
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        if (issuer === new_issuer || !new_issuer) {
-            delete updateObject.new_issuer;
+            if (issuer === new_issuer || !new_issuer) {
+                delete updateObject.new_issuer;
+            }
+            tr.add_type_operation("asset_update", updateObject);
         }
-        tr.add_type_operation("asset_update", updateObject);
 
         console.log("bitasset_opts:", bitasset_opts, "original_bitasset_opts:", original_bitasset_opts);
         if (isBitAsset &&
@@ -236,12 +239,25 @@ class AssetActions {
 
         }
 
+        console.log("feedProducers:", feedProducers, "originalFeedProducers:", originalFeedProducers);
+        if (isBitAsset && !utils.are_equal_shallow(feedProducers, originalFeedProducers)) {
+            tr.add_type_operation("asset_update_feed_producers", {
+                "fee": {
+                    amount: 0,
+                    asset_id: "1.3.0"
+                },
+                "issuer": issuer,
+                "asset_to_update": asset.get("id"),
+                "new_feed_producers": feedProducers
+            });
+        }
+
         return WalletDb.process_transaction(tr, null, true).then(result => {
             // console.log("asset create result:", result);
             // this.dispatch(account_id);
             return true;
         }).catch(error => {
-            console.log("[AssetActions.js:150] ----- createAsset error ----->", error);
+            console.log("[AssetActions.js:150] ----- updateAsset error ----->", error);
             return false;
         });
     }

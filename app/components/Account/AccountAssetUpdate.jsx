@@ -29,11 +29,13 @@ class AccountAssetUpdate extends React.Component {
 
     static propTypes = {
         asset: ChainTypes.ChainAsset.isRequired,
-        core: ChainTypes.ChainAsset.isRequired
+        core: ChainTypes.ChainAsset.isRequired,
+        globalObject: ChainTypes.ChainObject.isRequired,
     };
 
     static defaultProps = {
-        core: "1.3.0"
+        core: "1.3.0",
+        globalObject: "2.0.0"
     };
 
     constructor(props) {
@@ -101,16 +103,46 @@ class AccountAssetUpdate extends React.Component {
             whitelist_authorities: props.asset.getIn(["options", "whitelist_authorities"]),
             blacklist_authorities: props.asset.getIn(["options", "blacklist_authorities"]),
             whitelist_markets: props.asset.getIn(["options", "whitelist_markets"]),
-            blacklist_markets: props.asset.getIn(["options", "blacklist_markets"])
+            blacklist_markets: props.asset.getIn(["options", "blacklist_markets"]),
+            maxFeedProducers: props.globalObject.getIn(["parameters", "maximum_asset_feed_publishers"]),
+            feedProducers: isBitAsset ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+                return a.first();
+            }) : null,
+            originalFeedProducers: isBitAsset ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
+                return a.first();
+            }) : null,
         };
     }
 
+    // Using JSON.stringify for (fast?) comparsion, could be improved, but seems enough here as the order is fixed
+    assetChanged() {
+        let s = this.state;
+        let p = this.resetState(this.props);
+        return JSON.stringify(s.update) !== JSON.stringify(p.update) ||
+               JSON.stringify(s.core_exchange_rate) !== JSON.stringify(p.core_exchange_rate) ||
+               (s.new_issuer_account_id !== null && s.new_issuer_account_id !== s.issuer) ||
+               JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
+               JSON.stringify(s.permissionBooleans) !== JSON.stringify(p.permissionBooleans) ||
+               JSON.stringify(s.whitelist_authorities) !== JSON.stringify(p.whitelist_authorities) ||
+               JSON.stringify(s.blacklist_authorities) !== JSON.stringify(p.blacklist_authorities) ||
+               JSON.stringify(s.whitelist_markets) !== JSON.stringify(p.whitelist_markets) ||
+               JSON.stringify(s.blacklist_markets) !== JSON.stringify(p.blacklist_markets);
+    }
 
+    pageChanged() {
+        let {isBitAsset, bitasset_opts, original_bitasset_opts,
+            feedProducers, originalFeedProducers} = this.state;
+        return this.assetChanged() || 
+               (isBitAsset && 
+                   (JSON.stringify(bitasset_opts) !== JSON.stringify(original_bitasset_opts) ||
+                   !utils.are_equal_shallow(feedProducers.toJS(), originalFeedProducers.toJS())));
+    }
 
     _updateAsset(e) {
         e.preventDefault();
         let {update, issuer, new_issuer_account_id, core_exchange_rate, flagBooleans,
-            permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts} = this.state;
+            permissionBooleans, isBitAsset, bitasset_opts, original_bitasset_opts,
+            feedProducers, originalFeedProducers} = this.state;
 
         let flags = assetUtils.getFlags(flagBooleans);
 
@@ -132,18 +164,19 @@ class AccountAssetUpdate extends React.Component {
             blacklist_markets: this.state.blacklist_markets
         };
 
+        let feedProducersJS = isBitAsset ? feedProducers.toJS() : null;
+        let originalFeedProducersJS = isBitAsset ? originalFeedProducers.toJS() : null;
+
         AssetActions.updateAsset(issuer, new_issuer_account_id, update, core_exchange_rate, this.props.asset,
-            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths)
+            flags, permissions, isBitAsset, bitasset_opts, original_bitasset_opts, description, auths, 
+            feedProducersJS, originalFeedProducersJS, this.assetChanged())
         .then(() => {
             console.log("... AssetActions.updateAsset(account_id, update)", issuer, new_issuer_account_id, this.props.asset.get("id"), update);
             setTimeout(() => {
                 ChainStore.getAsset(this.props.asset.get("id"));
+                this.setState(this.resetState(this.props));
             }, 3000);
         });
-    }
-
-    _hasChanged() {
-        return !utils.are_equal_shallow(this.state, this.resetState(this.props));
     }
 
     _reset(e) {
@@ -268,12 +301,16 @@ class AccountAssetUpdate extends React.Component {
 
     _validateEditFields( new_state ) {
         let cer = new_state.core_exchange_rate;
+        let feedProducers = new_state.feedProducers ? new_state.feedProducers : this.state.feedProducers;
+        let flagBooleans = this.state.flagBooleans;
         let {asset, core} = this.props;
 
         let errors = {
             max_supply: null,
             quote_asset: null,
-            base_asset: null
+            base_asset: null,
+            max_feed_producer: null,
+            conflict_producer: null,
         };
 
         const p = this.props.asset.get("precision");
@@ -295,7 +332,15 @@ class AccountAssetUpdate extends React.Component {
                 errors.base_asset = counterpart.translate("account.user_issued_assets.need_asset", {name: core.get("symbol")});
             }
         }
-        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset;
+        if (feedProducers) {
+            if (feedProducers.size > this.state.maxFeedProducers) {
+                errors.max_feed_producer = counterpart.translate("account.user_issued_assets.too_many_feed", {max: this.state.maxFeedProducers});
+            }
+        }
+        if (flagBooleans.committee_fed_asset && flagBooleans.witness_fed_asset) {
+            errors.conflict_producer = counterpart.translate("account.user_issued_assets.conflict_feed");
+        }
+        let isValid = !errors.max_supply && !errors.base_asset && !errors.quote_asset && !errors.max_feed_producer && !errors.conflict_producer;
 
         this.setState({isValid: isValid, errors: errors});
     }
@@ -373,6 +418,7 @@ class AccountAssetUpdate extends React.Component {
         this.setState({
             flagBooleans: booleans
         });
+        this._validateEditFields({});
     }
 
     _onPermissionChange(key) {
@@ -413,10 +459,21 @@ class AccountAssetUpdate extends React.Component {
         this.setState({[key]: current});
     }
 
+    onChangeFeedProducerList(action = "add", id) {
+        let current = this.state.feedProducers;
+        if (action === "add" && !current.includes(id)) {
+            current = current.push(id);
+        } else if (action === "remove" && current.includes(id)) {
+            current = current.remove(current.indexOf(id));
+        }
+        this.setState({feedProducers: current});
+        this._validateEditFields({feedProducers: current})
+    }
+
     render() {
         let {account, asset, core} = this.props;
-        let {errors, isValid, update, core_exchange_rate, flagBooleans,
-            permissionBooleans, fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
+        let {errors, isValid, update, core_exchange_rate, flagBooleans, permissionBooleans, 
+            fundPoolAmount, claimFeesAmount, isBitAsset, bitasset_opts} = this.state;
 
         // Estimate the asset update fee
         let symbol = asset.get("symbol");
@@ -494,10 +551,10 @@ class AccountAssetUpdate extends React.Component {
 
         let confirmButtons = (
             <div>
-                <button className={classnames("button", {disabled: !isValid})} onClick={this._updateAsset.bind(this)}>
+                <button className={classnames("button", {disabled: !isValid || !this.pageChanged()})} onClick={this._updateAsset.bind(this)}>
                     <Translate content="header.update_asset" />
                 </button>
-                <button className="button" onClick={this._reset.bind(this)}>
+                <button className={classnames("button", {disabled: !this.pageChanged()})} onClick={this._reset.bind(this)}>
                     <Translate content="account.perm.reset" />
                 </button>
             </div>
@@ -822,6 +879,7 @@ class AccountAssetUpdate extends React.Component {
                                     <h3><Translate content="account.user_issued_assets.flags" /></h3>
                                     {flags}
                                     {<p><Translate content="account.user_issued_assets.approx_fee" />: {updateFee}</p>}
+                                    { errors.conflict_producer ? <p className="grid-content has-error">{errors.conflict_producer}</p> : null}
                                 </div>
                             </Tab>
 
@@ -910,7 +968,10 @@ class AccountAssetUpdate extends React.Component {
                                     account={this.props.account}
                                     witnessFed={flagBooleans["witness_fed_asset"]}
                                     committeeFed={flagBooleans["committee_fed_asset"]}
+                                    producers={this.state.feedProducers}
+                                    onChangeList={this.onChangeFeedProducerList.bind(this)}
                                 />
+                                { errors.max_feed_producer ? <p className="grid-content has-error large-8 large-offset-2" style={{marginTop: "20px"}}>{errors.max_feed_producer}</p> : null}
                             </Tab> : null}
                         </Tabs>
                     </div>

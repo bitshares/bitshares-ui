@@ -14,13 +14,14 @@ div.divider {
         margin-top: 2rem;
 
         .button {
-            font-size: 1.2rem;
+            font-size: 0.875rem;
             position: absolute;
             bottom: 1rem;
         }
     }
 }
 div.account-creation {
+    width: 300px;
     margin-top: 2rem;
     padding: 2rem 2rem 1rem 2rem;
 
@@ -31,6 +32,17 @@ div.account-creation {
     div.confirm-checks {
         max-width: 95vw;
         text-align: left;
+
+        [type=checkbox] {
+            position: relative;
+            top: 3px;
+        }
+
+        label span {
+            text-transform: none;
+            @include RobotoRegular;
+            line-height: 1.2;
+        }
     }
 
     div.sub-content {
@@ -45,7 +57,7 @@ div.account-creation {
         }
     }
     h4 {
-        font-weight: 600;
+        @include RobotoMedium;
         margin-top: 1rem;
         margin-bottom: 0;
     }
@@ -53,36 +65,49 @@ div.account-creation {
     label {
         text-align: left;
     }
-    div.button-group {
-        padding-top: 2rem;
+    .account-login-options .button-group {
         label {
+            margin: 0 1rem;
             > span {
                 text-transform: none;
                 font-size: 90%;
             }
-            &:first-of-type {
-                margin-right: 3rem;
-            }
         }
     }
-    div.button {
-        margin-right: 0;
+    .account-login-options .button {
+        margin: 0 auto 15px;
         margin-top: 3px;
-        min-width: 8rem;
-        text-transform: none;
-        font-size: 1.1rem;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        width: 40%;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
     }
 
-    div.creation-options, div.button-group {
-        display: flex;
-        justify-content: space-between;
+    .arrow-down:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 4px solid $bs-blue;
+        position: absolute;
+        top: 40px;
+        right: -2px;
     }
+
+    .arrow-down:hover:after {
+        border-top-color: #fff;
+    }
+
     div.creation-options {
-        padding-top: 2.5rem;
+        padding-top: 1.5rem;
         text-transform: uppercase;
-        font-size:95%;
-        font-weight: 600;
-        margin: 0 -1rem;
+        font-size: 0.875rem;
+        @include RobotoMedium;
     }
 
     p {
@@ -90,20 +115,35 @@ div.account-creation {
         margin-left: auto;
         margin-right: auto;
     }
+
+    .additional-account-options {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid #3e3e3e;
+    }
+}
+
+.modal-logo {
+    display: inline;
+}
+
+.modal-title {
+    display: block;
 }
 
 @include breakpoint(medium) {
+
+
     div.account-creation {
+        width: 450px;
         margin-top: 2rem;
-        padding: 2rem 4rem 1rem 4rem;
 
         p {
             max-width: 35rem;
-            // margin-left: inherit;
-            // margin-right: inherit;
         }
     }
-    div.creation-options {
-        margin: 0 -3rem;
+
+    .modal-logo, .modal-title {
+        display: none;
     }
 }

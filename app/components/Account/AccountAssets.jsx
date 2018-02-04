@@ -134,7 +134,7 @@ class AccountAssets extends React.Component {
                 ChainStore.getAsset(issue.asset_id);
             } else {
                 notify.addNotification({
-                    message: `Failed to issue asset`,//: ${this.state.wallet_public_name}
+                    message: "Failed to issue asset",//: ${this.state.wallet_public_name}
                     level: "error",
                     autoDismiss: 10
                 });
@@ -154,9 +154,7 @@ class AccountAssets extends React.Component {
         let {issue} = this.state;
         let asset = this.props.assets.get(issue.asset_id);
         issue.amount *= utils.get_asset_precision(asset.precision);
-        AssetActions.issueAsset(account_id, issue).then(result => {
-
-        });
+        AssetActions.issueAsset(account_id, issue);
     }
 
     _issueButtonClick(asset_id, symbol, e) {
@@ -181,8 +179,7 @@ class AccountAssets extends React.Component {
     }
 
     render() {
-        let {account, account_name, searchAccounts, assets, assetsList} = this.props;
-        let {issue, errors, isValid, create} = this.state;
+        let {account, account_name, assets, assetsList} = this.props;
 
         let accountExists = true;
         if (!account) {
@@ -280,7 +277,7 @@ class AccountAssets extends React.Component {
                         <div className="grid-block vertical">
                             <IssueModal
                                 asset_to_issue={this.state.issue.asset_id}
-                                onClose={() => {ZfApi.publish("issue_asset", "close")}}
+                                onClose={() => {ZfApi.publish("issue_asset", "close");}}
                             />
                         </div>
                     </BaseModal>
@@ -291,7 +288,7 @@ class AccountAssets extends React.Component {
                             <ReserveAssetModal
                                 assetId={this.state.reserve}
                                 account={account}
-                                onClose={() => {ZfApi.publish("reserve_asset", "close")}}
+                                onClose={() => {ZfApi.publish("reserve_asset", "close");}}
                             />
                         </div>
                     </BaseModal>

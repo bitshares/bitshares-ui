@@ -44,18 +44,25 @@ class ApiNode extends React.Component {
 
         let color;
         let latencyKey;
+        let friendlyPing;
 
-        if(ping < 400) {
+        if (ping < 400) {
             color = "low";
             latencyKey = "low_latency";
-        }
-        else if(ping >= 400 && ping < 800) {
+        } else if (ping >= 400 && ping < 800) {
             color = "medium";
             latencyKey = "medium_latency";
         } else {
             color = "high";
             latencyKey = "high_latency";
         }
+
+        if (ping >= 1000) {
+            friendlyPing = +(ping / 1000).toFixed(2) + "s";
+        } else {
+            friendlyPing = ping + "ms";
+        }
+
         /*
         * The testnet latency is not checked in the connection manager,
         * so we force enable activation of it even though it shows as 'down'
@@ -64,7 +71,7 @@ class ApiNode extends React.Component {
 
         var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
          <Translate className={up ? "low" : "high"} style={{marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
-          {up && <span className={color}><Translate content={`settings.${latencyKey}`} /></span>}
+          {up && <span className={color}><Translate content={`settings.${latencyKey}`} /> ({friendlyPing})</span>}
           {!up && <span className="high">__</span>}
         </div>;
 
@@ -219,7 +226,7 @@ class AccessSettings extends React.Component {
 
             <div className="available-nodes" style={{position: "relative", marginBottom: "2em"}}>
                 <Translate component="p" content="settings.available_nodes" />
-                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#4A90E2"}} >
+                <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#049cce"}} >
                     <Translate id="add" component="span" content="settings.add_api" />
                 </span>
                 {

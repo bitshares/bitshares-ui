@@ -11,7 +11,7 @@ import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import { Asset } from "common/MarketClasses";
 import { debounce, isNaN } from "lodash";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAssetAsync } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -302,7 +302,7 @@ export default class SendModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        let { fee_asset_id, from_account } = state;
+        let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
         if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
             fee_asset_id = fee_asset_types[0];
@@ -316,16 +316,18 @@ export default class SendModal extends React.Component {
                 type: "memo",
                 content: state.memo
             }
-        })
-        .then(({fee, hasBalance, hasPoolBalance}) => {
-            this.setState({
-                feeAmount: fee,
-                fee_asset_id: fee.asset_id,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance)
-            });
-        });
+        }).then(({fee, hasBalance, hasPoolBalance}) =>
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should => should ?
+                    this.setState({fee_asset_id: asset_id}, this._updateFee)
+                :
+                    this.setState({
+                        feeAmount: fee,
+                        fee_asset_id: fee.asset_id,
+                        hasBalance,
+                        hasPoolBalance,
+                        error: !hasBalance || !hasPoolBalance
+                    }))
+        );
     }
 
     setNestedRef(ref) {
@@ -455,15 +457,15 @@ export default class SendModal extends React.Component {
                         <div className="content-block" style={{textAlign: "center", textTransform: "none"}}>
                             <img style={{margin: 0, height: 70, marginBottom: 10}} src={logo} /><br />
                             { !propose ?
-                                <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
+                                <div style={{fontSize: "1.8rem", fontFamily: "Roboto-Medium, arial, sans-serif"}}>
                                     <Translate unsafe content="modal.send.header" with={{fromName: from_name}} />
                                 </div> :
-                                <div style={{fontSize: "1.8rem", fontWeight: "bold"}}>
+                                <div style={{fontSize: "1.8rem", fontFamily: "Roboto-Medium, arial, sans-serif"}}>
                                     <Translate unsafe content="modal.send.header_propose" with={{fromName: from_name}} />
                                 </div>
                             }
                             <div style={{marginTop: 10, fontSize: "0.9rem", marginLeft: "auto", marginRight: "auto"}}>
-                                <Translate unsafe content="transfer.header_subheader" />
+                                <p><Translate content="transfer.header_subheader" /></p>
                             </div>
                         </div>
                         {this.state.open ? <form noValidate>
@@ -499,7 +501,7 @@ export default class SendModal extends React.Component {
                                 <div className="content-block transfer-input">
                                     {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
                                     <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
-                                    <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                                    <textarea style={{marginBottom: 0}} rows="3" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                                     {/* warning */}
                                     { this.state.propose ?
                                         <div className="error-area" style={{position: "absolute"}}>

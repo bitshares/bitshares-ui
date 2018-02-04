@@ -13,7 +13,7 @@ import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 
 class DepositModalContent extends DecimalChecker {
-    
+
     constructor() {
         super();
 
@@ -189,7 +189,6 @@ class DepositModalContent extends DecimalChecker {
     render() {
         let {selectedAsset, selectedGateway, depositAddress, fetchingAddress, gatewayStatus, backingAsset} = this.state;
         let {account} = this.props;
-
         let usingGateway = true;
 
         if(selectedGateway == null && selectedAsset == "BTS") {
@@ -237,7 +236,7 @@ class DepositModalContent extends DecimalChecker {
                                 <div className="inline-label input-wrapper">
                                     <DepositWithdrawAssetSelector
                                         defaultValue={selectedAsset}
-                                        onSelect={this.onAssetSelected.bind(this)} 
+                                        onSelect={this.onAssetSelected.bind(this)}
                                         selectOnBlur />
                                 </div>
                             </div>
@@ -266,10 +265,10 @@ class DepositModalContent extends DecimalChecker {
                                     </section>
                                 </div>
                             </div> : null}
-                        {!fetchingAddress ? 
+                        {!fetchingAddress ?
                             (!usingGateway || (usingGateway && selectedGateway && gatewayStatus[selectedGateway].enabled)) && depositAddress && !depositAddress.memo ?
-                                <div className="container-row" style={{textAlign: "center"}}>{QR}</div> : 
-                                null : 
+                                <div className="container-row" style={{textAlign: "center"}}>{QR}</div> :
+                                null :
                             <div className="container-row" style={{textAlign: "center"}}><LoadingIndicator type="three-bounce" /></div>
                         }
                         {selectedGateway && gatewayStatus[selectedGateway].enabled && depositAddress && !depositAddress.error ?
