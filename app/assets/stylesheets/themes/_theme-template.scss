@@ -1799,3 +1799,24 @@ $pulsate-red-end
 #unlock_wallet_modal2 .close-button {
     color: $bs-blue;
 }
+
+@media screen and (max-width: 640px) {
+    .responsive-list > .help-content > ul {
+        background: steelblue;
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 6px;
+        background: #2a2a2a;
+        border: 1px solid #4b5158;
+        margin-bottom: 2rem!important;
+
+        li {
+            border-bottom: 1px solid #393939;
+            padding: 4px;
+
+            ul li {
+                border: 0;
+            }
+        }
+    }
+}
