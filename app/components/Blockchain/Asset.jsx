@@ -802,7 +802,7 @@ class Asset extends React.Component {
             <div className="grid-container">
                 <div className="grid-block page-layout">
                     <div className="grid-block main-content wrap regular-padding">
-                        <div className="grid-block small-up-1">
+                        <div className="grid-block small-up-1" style={{width:"100%"}}>
                             {this.renderAboutBox(asset)}
                         </div>
                         <div className="grid-block small-up-1 medium-up-2">
