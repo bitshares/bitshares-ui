@@ -351,8 +351,6 @@ class Asset extends React.Component {
 
         var globalSettlementPrice = this.getGlobalSettlementPrice();
      
-        
-
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">{title}</div>
@@ -377,7 +375,7 @@ class Asset extends React.Component {
 
                         <tr>
                             <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
-                            <td> {globalSettlementPrice} </td>
+                            <td> {globalSettlementPrice ? globalSettlementPrice : "-"} </td>
                         </tr>
 
                         <br /><br />
