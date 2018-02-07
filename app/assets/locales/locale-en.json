@@ -59,6 +59,7 @@
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
     "settle_price": "This is the price at which settle orders will execute.",
+    "feed_price": "This is the current external feed price",
     "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
     "latest_price": "This is the latest price seen in this market.",
     "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
@@ -754,6 +755,7 @@
       "max_margin_period_sec": "Max margin period (s)",
       "call_limit": "Call limit",
       "short_limit": "Short limit",
+      "feed_price": "Feed price",
       "settlement_price": "Settlement price",
       "go_to": "Go to block"
     },
@@ -991,6 +993,7 @@
         "volume_title": "Volume indicators"
     },
     "market": "Market",
+    "feed_price": "Feed Price",
     "price_history": "Price Chart",
     "order_depth": "Market Depth",
     "history": "Market trades",

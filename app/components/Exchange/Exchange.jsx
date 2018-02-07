@@ -1116,6 +1116,8 @@ class Exchange extends React.Component {
             />
         );
 
+        
+
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
                     <ExchangeHeader
@@ -1211,7 +1213,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
+                                    feedPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
