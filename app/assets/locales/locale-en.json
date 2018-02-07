@@ -787,7 +787,9 @@
         "settlement_price": "Settlement price",
         "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
         "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-        "global_settlement_price" : "Global settlement price"
+        "global_settlement_price" : "Global settlement price",
+        "settlement_delay" : "Settlement delay",
+        "force_settlement_offset" : "Force settlement offset"
       },
       "fee_pool": {
         "title": "Fee Pool",

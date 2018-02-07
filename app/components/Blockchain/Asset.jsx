@@ -12,6 +12,7 @@ import HelpContent from "../Utility/HelpContent";
 import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
 import utils from "common/utils";
+import FormattedTime from "../Utility/FormattedTime";
 import {ChainStore} from "bitsharesjs/es";
 import {Apis} from "bitsharesjs-ws";
 import { Tabs, Tab } from "../Utility/Tabs";
@@ -342,11 +343,14 @@ class Asset extends React.Component {
             return ( <div header= {title} /> );
         var currentFeed = bitAsset.current_feed;
 
-        var globalSettlementPrice = this.getGlobalSettlementPrice();
-        // this would be faster, but a bug prevents us from doing this
-        // since sometimes the call price is incorrect
-        //var globalSettlementPrice = this.getGlobalSettlementPriceFromSorted(sortedCallOrders);
+        console.log("force settlement delay: " + bitAsset.options.force_settlement_delay_sec);
+        console.log("force settlement offset: " + bitAsset.options.force_settlement_offset_percent);
 
+        let settlementDelay = bitAsset.options.force_settlement_delay_sec;
+        let settlementOffset = bitAsset.options.force_settlement_offset_percent;
+
+        var globalSettlementPrice = this.getGlobalSettlementPrice();
+     
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">{title}</div>
@@ -371,7 +375,19 @@ class Asset extends React.Component {
 
                         <tr>
                             <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
-                            <td> {globalSettlementPrice} </td>
+                            <td> {globalSettlementPrice ? globalSettlementPrice : "-"} </td>
+                        </tr>
+
+                        <br /><br />
+
+                        <tr>
+                             <td> <Translate content="explorer.asset.price_feed.settlement_delay"/> </td>
+                             <td> <FormattedTime time={settlementDelay} /> </td>
+                       </tr>
+
+                        <tr>
+                              <td> <Translate content="explorer.asset.price_feed.force_settlement_offset"/> </td>
+                              <td> {settlementOffset/100}% </td>
                         </tr>
 
                     </tbody>
@@ -513,10 +529,6 @@ class Asset extends React.Component {
     // 's collateral no longer enough to back the debt
     // he/she owes. If the feed price goes above this,
     // then
-
-    // DOESN'T WORK - for reason if js sees that sortedcallorders
-    // is indexed, then it screws up the type system and
-    // sets the array to empty
     getGlobalSettlementPriceFromSorted(sortedCallOrders) {
         console.log("global settlement sorted called");
         // first get the least collateralized short position
@@ -559,9 +571,6 @@ class Asset extends React.Component {
             call_orders = this.state.callOrders;
         }
 
-        console.log("call orders");
-        console.log(call_orders);
-
         // first get the least collateralized short position
         var leastColShort = null;
         var leastColShortRatio = null;
@@ -589,11 +598,8 @@ class Asset extends React.Component {
         // Rearranging, this means that the CR is 1 iff
         // feed_price == collateral / debt
         let debt = leastColShort.amountToReceive().getAmount();
-        console.log("debt " + debt);
         let collateral = leastColShort.getCollateral().getAmount();
-        console.log("collateral: " + collateral);
         let globalSettlementPrice = collateral / debt;
-        console.log("doom price unformat: " + globalSettlementPrice);
 
         return (<FormattedPrice
                 base_amount={collateral}
