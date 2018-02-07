@@ -526,12 +526,17 @@ class AccountOverview extends React.Component {
             hiddenBalances = hidden;
         }
 
-        let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-
-        let portFolioValue =
+        let portfolioHiddenAssetsBalance =
             <TotalBalanceValue
                 noTip
-                balances={totalBalanceList}
+                balances={hiddenBalancesList}
+                hide_asset
+            />;
+
+        let portfolioActiveAssetsBalance =
+            <TotalBalanceValue
+                noTip
+                balances={includedBalancesList}
                 hide_asset
             />;
         let ordersValue =
@@ -573,7 +578,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioActiveAssetsBalance}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -600,7 +605,7 @@ class AccountOverview extends React.Component {
                     <div className="tabs-container generic-bordered-box">
                         <Tabs defaultActiveTab={0} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
-                            <Tab title="account.portfolio" subText={portFolioValue}>
+                            <Tab title="account.portfolio" subText={portfolioActiveAssetsBalance}>
                                 <div className="hide-selector">
                                     <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
                                         <h4><Translate content="account.hide_hidden" /></h4>
