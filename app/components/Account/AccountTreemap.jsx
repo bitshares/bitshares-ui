@@ -19,13 +19,12 @@ class AccountTreemap extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            !Immutable.is(nextProps.assets, this.props.assets) ||
-            !nextProps.balances.equals(this.props.balances)
+            !utils.are_equal_shallow(nextProps.balanceAssets, this.props.balanceAssets)
         );
     }
 
-    _calculateVisualAssetData(balanceList) {
-        const {core_asset} = this.props;
+    _calculateVisualAssetData() {
+        const {core_asset, balanceAssets} = this.props;
         let {settings, hiddenAssets, orders} = this.props;
         let preferredUnit = settings.get("unit") || core_asset.get("symbol");
         let showAssetPercent = settings.get("showAssetPercent", false);
