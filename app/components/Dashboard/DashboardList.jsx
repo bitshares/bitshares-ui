@@ -229,6 +229,9 @@ class DashboardList extends React.Component {
 								<Icon name="minus-circle"/>
 							</td>
 						: null}
+						<td style={{textAlign: "left"}}>
+							{ account.get("id") }
+						</td>
 						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, accountName, 0)} className={"clickable" + (isMyAccount ? " my-account" : "")}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
@@ -282,6 +285,7 @@ class DashboardList extends React.Component {
 						<tr>
 							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
 							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
+							<th style={{textAlign: "left"}}>ID</th>
 							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
