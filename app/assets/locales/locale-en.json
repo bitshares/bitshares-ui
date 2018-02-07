@@ -1498,7 +1498,9 @@
     "gateway": {
       "support_block": "For support, please contact Winex at:",
       "fee":"Gateway Fee",
-      "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered"
+      "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+      "click_getaddress":"Please get deposit address",
+      "get_deposit_address": "get deposit address"
     },
     "withdraw": {
       "winAmount": "Minimum amount: %(min_amount)s %(asset)s",
