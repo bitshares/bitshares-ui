@@ -77,6 +77,7 @@ class DashboardList extends React.Component {
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
 			nextProps.linkedAccounts !== this.props.linkedAccounts ||
+			nextProps.passwordAccount !== this.props.passwordAccount ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state )
 		);
@@ -131,7 +132,7 @@ class DashboardList extends React.Component {
 
 	_renderList(accounts) {
 
-		const {width, starredAccounts, showMyAccounts} = this.props;
+		const {width, starredAccounts, showMyAccounts, passwordAccount} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
 
@@ -209,7 +210,7 @@ class DashboardList extends React.Component {
 					});
 				}
 
-				let isMyAccount = AccountStore.isMyAccount(account);
+				let isMyAccount = AccountStore.isMyAccount(account) || accountName === passwordAccount;
 
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
