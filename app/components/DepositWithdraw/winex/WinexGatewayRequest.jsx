@@ -68,11 +68,11 @@ class WinexGatewayRequest extends React.Component {
         }
     }
 
-    _getDepositObject() {
+    _getDepositObject(props = this.props) {
         return {
-            inputCoinType: this.props.deposit_coin_type,
-            outputCoinType: this.props.receive_coin_type,
-            outputAddress: this.props.account.get("name"),
+            inputCoinType: props.deposit_coin_type,
+            outputCoinType: props.receive_coin_type,
+            outputAddress: props.account.get("name"),
             url: this.state.url,
             stateCallback: this.addDepositAddress
         };
@@ -86,6 +86,14 @@ class WinexGatewayRequest extends React.Component {
         // }
         // let receive_address = {address:"",memo:""}
         // this.setState({receive_address});
+    }
+
+    componentWillReceiveProps(np) {
+        /* When switching accounts, reset the receive_address so a new one
+        gets fetched/generated for the new account */
+        if (np.account !== this.props.account) {
+            this.setState({receive_address: {}});
+        }
     }
 
     componentWillUnmount() {
@@ -165,7 +173,7 @@ class WinexGatewayRequest extends React.Component {
         // }
 
         let receive_address = this.state.receive_address;
-        if( !receive_address )  {
+        if( !Object.keys(receive_address).length )  {
             let account_name = this.props.account.get("name");
             receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
         }
