@@ -1351,6 +1351,8 @@
   },
   "gateway":{
     "deposit_notice_delay":"(новый адрес может быть создан раз в 5 минут)",
+    "min_deposit_warning_amount": "Минимальное значение депозита %(minDeposit)s %(coin)s.",
+    "min_deposit_warning_asset": "ВАЖНО: Отправляйте только %(coin)s на этот адрес депозита. Отправка меньше %(minDeposit)s %(coin)s или любой другой валюты может привезти к потере Вашего депозита.",
     "copy_memo":"Скопировать мемо",
     "please_generate_address":"Пожалуйста, получите новый адрес ",
     "generate_new":"Получить новый адрес",
