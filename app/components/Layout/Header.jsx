@@ -42,11 +42,16 @@ class Header extends React.Component {
     constructor(props, context) {
         super();
         this.state = {
-            active: context.location.pathname
+            active: context.location.pathname,
+            accountsListDropdownActive: false
         };
 
         this.unlisten = null;
+        this._toggleAccountDropdownMenu = this._toggleAccountDropdownMenu.bind(this);
+        this._toggleDropdownMenu = this._toggleDropdownMenu.bind(this);
         this._closeDropdown = this._closeDropdown.bind(this);
+        this._closeMenuDropdown = this._closeMenuDropdown.bind(this);
+        this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(this);
         this.onBodyClick = this.onBodyClick.bind(this);
     }
 
@@ -91,6 +96,7 @@ class Header extends React.Component {
             nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active ||
             nextState.dropdownActive !== this.state.dropdownActive ||
+            nextState.accountsListDropdownActive !== this.state.accountsListDropdownActive ||
             nextProps.height !== this.props.height
         );
     }
@@ -139,8 +145,21 @@ class Header extends React.Component {
         this._closeDropdown();
     }
 
+    _closeAccountsListDropdown() {
+        this.setState({
+            accountsListDropdownActive: false
+        });
+    }
+
+    _closeMenuDropdown() {
+        this.setState({
+            dropdownActive: false,
+        });
+    }
+
     _closeDropdown() {
-        this.setState({dropdownActive: false});
+        this._closeMenuDropdown();
+        this._closeAccountsListDropdown();
     }
 
     _onGoBack(e) {
@@ -181,19 +200,46 @@ class Header extends React.Component {
     //     this.context.router.push(`/account/${account}/overview`);
     // }
 
+    _toggleAccountDropdownMenu() {
+
+        // prevent state toggling if user cannot have multiple accounts
+
+        const hasLocalWallet = !!WalletDb.getWallet();
+
+        if (!hasLocalWallet)
+            return false;
+
+        this.setState({
+            accountsListDropdownActive: !this.state.accountsListDropdownActive
+        });
+    }
+
+    _toggleDropdownMenu() {
+        this.setState({
+            dropdownActive: !this.state.dropdownActive
+        });
+    }
+
     onBodyClick(e) {
         let el = e.target;
-        let insideDropdown = false;
+        let insideMenuDropdown = false;
+        let insideAccountDropdown = false;
 
         do {
-            if(el.classList && el.classList.contains("dropdown-wrapper")) {
-                insideDropdown = true;
+            if(el.classList && el.classList.contains("account-dropdown-wrapper")) {
+                insideAccountDropdown = true;
+                break;
+            }
+
+            if(el.classList && el.classList.contains("menu-dropdown-wrapper")) {
+                insideMenuDropdown = true;
                 break;
             }
 
         } while ((el = el.parentNode));
 
-        if(!insideDropdown) this._closeDropdown();
+        if(!insideAccountDropdown) this._closeAccountsListDropdown();
+        if(!insideMenuDropdown) this._closeMenuDropdown();
     }
 
     _onLinkAccount() {
@@ -206,13 +252,13 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, passwordAccount, height} = this.props;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
 
         const a = ChainStore.getAccount(currentAccount);
-        const isMyAccount = !a ? false : AccountStore.isMyAccount(a);
+        const isMyAccount = !a ? false : (AccountStore.isMyAccount(a) || (passwordLogin && currentAccount === passwordAccount));
         const isContact = this.props.linkedAccounts.has(currentAccount);
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
 
@@ -284,6 +330,7 @@ class Header extends React.Component {
             if (tradingAccounts.length >= 1) {
                 accountsList = tradingAccounts
                 .sort()
+                .filter((name) => name !== currentAccount)
                 .map((name) => {
                     return (
                         <li className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
@@ -297,6 +344,7 @@ class Header extends React.Component {
 
         let hamburger = this.state.dropdownActive ? <Icon className="icon-14px" name="hamburger-x" /> : <Icon className="icon-14px" name="hamburger" />;
 
+        const hasLocalWallet = !!WalletDb.getWallet();
         return (
             <div className="header menu-group primary">
                 {/*<div className="show-for-small-only">
@@ -360,18 +408,40 @@ class Header extends React.Component {
                                 <div key="padlock" style={{paddingBottom: 15}} className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
                                     <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
                                 </div>,
-                                <div key="dropdown" className={cnames("dropdown-wrapper", {active: this.state.dropdownActive})}>
+                                <div key="account-dropdown" className={cnames("account-dropdown-wrapper dropdown-wrapper", {active: this.state.accountsListDropdownActive, "hover-transparent": !hasLocalWallet, "cursor-default": !hasLocalWallet})}>
                                     <li style={{display: "flex"}}>
-                                        <div onClick={() => {this.setState({dropdownActive: !this.state.dropdownActive});}} className="table-cell" style={{flex: 1}}>
+                                        <div onClick={this._toggleAccountDropdownMenu} className="table-cell" style={{flex: 1}}>
                                             <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
                                                 <span>{currentAccount}</span>
                                                 {walletBalance}
-                                                <div className="hamburger">{hamburger}</div>
                                             </div>
 
                                         </div>
                                     </li>
-                                    <ul className="dropdown header-menu" style={{left: 0, top: 63, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+
+                                    { hasLocalWallet && (
+
+                                        <ul className="dropdown header-menu" style={{left: 0, top: 64, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+
+                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                            </li>
+
+                                            {accountsList}
+                                        </ul>
+
+                                    )}
+                                </div>,
+                                <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})}>
+                                    <li style={{display: "flex"}}>
+                                        <div onClick={this._toggleDropdownMenu} className="table-cell" style={{flex: 1}}>
+                                            <div>
+                                                <div className="hamburger">{hamburger}</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <ul className="dropdown header-menu" style={{left: -200, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
                                         <li className="divider" onClick={this._toggleLock.bind(this)}>
                                             <div className="table-cell"><Icon size="2x" name="power" /></div>
                                             <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
@@ -462,12 +532,12 @@ class Header extends React.Component {
                                             <div className="table-cell"><Translate content="account.permissions" /></div>
                                         </li>
 
-                                        <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                            <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                            <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                        </li>
-
-                                        {accountsList}
+                                        { !hasLocalWallet && (
+                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                            </li>
+                                        )}
                                     </ul>
                                 </div>]
                             }
@@ -500,6 +570,7 @@ export default connect(Header, {
             backedCoins: GatewayStore.getState().backedCoins,
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),

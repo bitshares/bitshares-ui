@@ -118,15 +118,8 @@ div.header-right-menu {
 div.account-drop-down div.dropdown-wrapper {
     padding: 0;
 
-    div.hamburger {
-        position: absolute;
-        right: 12px;
-        top: 22px;
-    }
-
     > li {
         list-style: none;
-        min-width: 200px;
         > div.table-cell {
             padding: 15px 5px 14px 5px;
             text-align: center;
@@ -148,6 +141,28 @@ div.account-drop-down div.dropdown-wrapper {
         }
     }
 }
+
+div.account-drop-down div.account-dropdown-wrapper {
+  > li {
+    > div.table-cell {
+      height: 64px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}
+
+div.account-drop-down div.menu-dropdown-wrapper {
+  > li {
+    width: 64.55px;
+
+    > div.table-cell {
+      height: 64px;
+      padding: 23px 5px 24px 5px;
+    }
+  }
+}
+
 ul.dropdown.header-menu {
     transition: padding 0s, height 3s linear;
     border: none;

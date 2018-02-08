@@ -16,7 +16,7 @@
         "de": "Deutsch",
         "es": "Español",
         "it": "Italiano",
-        "tr": "Turkish",
+        "tr": "Türkçe",
         "ru": "Русский"
     },
     "incognito": {
@@ -1466,8 +1466,9 @@
 		"gateway": {
 			"support_block": "获得客户支持，请联络 Winex:",
 			"fee":"网关手续费",
-			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回"
-
+			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
+            "click_getaddress":"请先获取充值地址",
+            "get_deposit_address": "获取充值地址"
 		},
 		"withdraw": {
 			"winAmount": "最低提现数量:%(min_amount)s %(asset)s",

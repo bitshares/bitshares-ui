@@ -184,9 +184,10 @@ class TransactionConfirm extends React.Component {
 
                     {/* P R O P O S E   F R O M */}
                     {this.props.propose ?
-                    <div className="full-width-content form-group">
+                    <div className="grid-content full-width-content form-group">
                         <label><Translate content="account.propose_from" /></label>
                         <AccountSelect
+                            className="full-width"
                             account_names={AccountStore.getMyAccounts()}
                             onChange={this.onProposeAccount.bind(this)}
                         />

@@ -190,7 +190,7 @@ class CreateAccount extends React.Component {
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
             >
-                <p style={{fontWeight: "bold"}}>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</p>
+                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</p>
                 <AccountNameInput
                     ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
                     cheapNameOnly={!!firstAccount}
@@ -263,7 +263,7 @@ class CreateAccount extends React.Component {
 
         return (
             <div className="confirm-checks" >
-                <h4 style={{fontWeight: "bold", paddingBottom: 15, marginTop: 0}}><Translate content="wallet.wallet_browser" /></h4>
+                <h4 style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal", paddingBottom: 15, marginTop: 0}}><Translate content="wallet.wallet_browser" /></h4>
 
                 <p>{!hasWallet ? <Translate content="wallet.has_wallet" /> : null}</p>
 
@@ -302,7 +302,7 @@ class CreateAccount extends React.Component {
     _renderBackupText() {
         return (
             <div>
-                <p style={{fontWeight: "bold"}}><Translate content="footer.backup" /></p>
+                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}><Translate content="footer.backup" /></p>
                 <p><Translate content="wallet.wallet_move" unsafe /></p>
                 <p className="txtlabel warning"><Translate unsafe content="wallet.wallet_lose_warning" /></p>
             </div>
@@ -353,7 +353,7 @@ class CreateAccount extends React.Component {
 
         return (
             <div>
-                <p style={{fontWeight: "bold"}}><Translate content="wallet.congrat" /></p>
+                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}><Translate content="wallet.congrat" /></p>
 
                 <p><Translate content="wallet.tips_explore" /></p>
 
@@ -370,8 +370,8 @@ class CreateAccount extends React.Component {
         return (
             <div className="sub-content">
 
-                    <div className="grid-content small-12" style={{maxWidth: "95vw"}}>
-                        {step !== 1 ? <p style={{fontWeight: "bold"}}>
+                    <div style={{maxWidth: "95vw"}}>
+                        {step !== 1 ? <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}>
                             <Translate content={"wallet.step_" + step} />
                         </p> : null}
 
@@ -380,12 +380,12 @@ class CreateAccount extends React.Component {
                         }
                     </div>
 
-                    <div style={{maxWidth: "95vw", paddingTop: "2rem"}} className="grid-content small-12">
+                    <div style={{maxWidth: "95vw", paddingTop: "2rem"}}>
                         {step === 1 ? this._renderAccountCreateText() : step === 2 ? this._renderBackupText() :
                             this._renderGetStartedText()
                         }
                     </div>
-                    <Link to="/"><button className="blue"><Translate content="wallet.back" /></button></Link>
+                    <Link to="/"><button className="button primary hollow"><Translate content="wallet.back" /></button></Link>
             </div>
         );
     }

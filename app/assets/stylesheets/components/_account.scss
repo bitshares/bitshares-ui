@@ -91,7 +91,7 @@
     > li {
         &.menu-subheader {
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             padding: 1.5rem 0.5rem 0.25rem 0.5rem;
             text-align: center;
             border-bottom: none !important;
@@ -142,12 +142,18 @@ a.action-button > span {
 div.hide-selector {
     padding-bottom: 10px;
     > div {
+        h4 {
+            font-weight: bold;
+        }
         font-size: 1.15rem;
         cursor: pointer;
         &:nth-of-type(n + 2) {
             padding-left: 10px;
         }
         &.inactive {
+            h4 {
+                font-weight: normal;
+            }
             color: grey;
         }
         &:hover.inactive {
@@ -232,14 +238,14 @@ table.table.dashboard-table {
         padding-left: 1.5rem;
     }
     > thead > tr > th {
-        font-weight: 600;
-        font-size: 80%;
+        @include RobotoMedium;
+        font-size: 0.875rem;
         text-align: center;
         border: none;
     }
     > tbody > tr {
         > td {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             text-align: center;
             border: none;
 
@@ -273,10 +279,10 @@ table.table.dashboard-table {
             td:first-of-type {
                 text-align: left;
                 text-transform: uppercase;
-                font-weight: 600;
+                @include RobotoMedium;
             }
             td:nth-child(3) {
-                font-weight: 600;
+                @include RobotoMedium;
                 text-align: right;
             }
         }
@@ -296,7 +302,7 @@ div.hide-selector > div.new-worker-button {
     }
 }
 
-.shuffle-rev { 
+.shuffle-rev {
     > a span.icon > svg {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
