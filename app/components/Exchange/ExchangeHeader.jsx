@@ -121,74 +121,55 @@ export default class ExchangeHeader extends React.Component {
                                         <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
                                     </a>
                                 )}
-
                                 <div className="label-actions">
                                     <Translate component="span" style={{padding: "5px 0 0 5px"}} className="stat-text" content="exchange.trading_pair" />
                                     <Link onClick={() => {
-                                                        MarketsActions.switchMarket();
-                                                                    }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
-                                    <Icon className="shuffle" name="shuffle"/>
+                                        MarketsActions.switchMarket();
+                                    }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
+                                        <Icon className="shuffle" name="shuffle"/>
                                     </Link>
-
-
-                                    <Link onClick={() => {
-                                                            this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
-                                 }}>
-                                    <Icon className={starClass} name="fi-star"/>
+                                    
+                                    
+                                    <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }}>
+                                        <Icon className={starClass} name="fi-star"/>
                                     </Link>
                                 </div>
-                            ) : (
-                                <a className="market-symbol">
-                                    <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
-                                </a>
-                            )}
-                            <div className="label-actions">
-                                <Translate component="span" style={{padding: "5px 0 0 5px"}} className="stat-text" content="exchange.trading_pair" />
-                                <Link onClick={() => {
-                                    MarketsActions.switchMarket();
-                                }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
-                                <Icon className="shuffle" name="shuffle"/>
-                                </Link>
+                            </div>
+                        </div>
+                
+                        <div className="grid-block vertical" style={{overflow: "visible"}}>
+                            <div className="grid-block wrap market-stats-container">
+                                <ul className="market-stats stats top-stats">
+                                    {latestPrice ? <PriceStatWithLabel ignoreColorChange={true} ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.latest"/> : null}
 
-
-                                <Link onClick={() => {
-                                    this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
-                                }}>
-                                <Icon className={starClass} name="fi-star"/>
-                                </Link>
+                                    <li className={"hide-order-1 stressed-stat daily_change " + dayChangeClass}>
+                                        <span>
+                                            <b className="value">{marketReady ? dayChangeWithSign : 0}</b>
+                                            <span> %</span>
+                                        </span>
+                                        <Translate component="div" className="stat-text" content="account.hour_24" />
+                                    </li>
+                
+                                    {(volumeBase >= 0) ? <PriceStatWithLabel ignoreColorChange={true} onClick={this.changeVolumeBase.bind(this)} ready={marketReady} decimals={0} volume={true} price={volume24h} className="hide-order-2 clickable" base={volume24hAsset} market={marketID} content="exchange.volume_24"/> : null}
+                
+                                    {!hasPrediction && feedPrice ?
+                                        <PriceStatWithLabel ignoreColorChange={true} toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="hide-order-3" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.settle"/> : null}
+                
+                                    {lowestCallPrice && showCallLimit ?
+                                        <PriceStatWithLabel toolTip={counterpart.translate("tooltip.call_limit")} ready={marketReady} className="hide-order-4 is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} market={marketID} content="explorer.block.call_limit"/> : null}
+                
+                                    {feedPrice && showCallLimit ?
+                                        <PriceStatWithLabel toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="hide-order-5 is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.squeeze"/> : null}
+                                </ul>
+                                <ul className="market-stats stats top-stats">
+                                    <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
+                                        {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-
-                    <div className="grid-block vertical" style={{overflow: "visible"}}>
-                        <div className="grid-block wrap market-stats-container">
-                            <ul className="market-stats stats top-stats">
-                                {latestPrice ? <PriceStatWithLabel ignoreColorChange={true} ready={marketReady} price={latestPrice.full} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.latest"/> : null}
-
-                                <li className={"hide-order-1 stressed-stat daily_change " + dayChangeClass}>
-                                    <span>
-                                        <b className="value">{marketReady ? dayChangeWithSign : 0}</b>
-                                        <span> %</span>
-                                    </span>
-                                <Translate component="div" className="stat-text" content="account.hour_24" />
-                                </li>
-
-                                {(volumeBase >= 0) ? <PriceStatWithLabel ignoreColorChange={true} onClick={this.changeVolumeBase.bind(this)} ready={marketReady} decimals={0} volume={true} price={volume24h} className="hide-order-2 clickable" base={volume24hAsset} market={marketID} content="exchange.volume_24"/> : null}
-                                {!hasPrediction && feedPrice ?<PriceStatWithLabel ignoreColorChange={true} toolTip={counterpart.translate("tooltip.feed_price")} ready={marketReady} className="hide-order-3" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.feed_price"/> : null}
-                                {!hasPrediction && feedPrice ?<PriceStatWithLabel ignoreColorChange={true} toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="hide-order-4" price={settlePrice} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.settle"/> : null}
-                                {showCollateralRatio ?<ExchangeHeaderCollateral object={collOrderObject} account={account}/>:null}
-                                {lowestCallPrice && showCallLimit ?<PriceStatWithLabel toolTip={counterpart.translate("tooltip.call_limit")} ready={marketReady} className="hide-order-5 is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} market={marketID} content="explorer.block.call_limit"/> : null}
-                                {feedPrice && showCallLimit ?<PriceStatWithLabel toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="hide-order-6 is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.squeeze"/> : null}
-                            </ul>
-                            <ul className="market-stats stats top-stats">
-                                <li className="stressed-stat input clickable" style={{padding: "16px"}} onClick={this.props.onToggleCharts}>
-                                    {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
+                </div> 
+                );
+            }
+        }
