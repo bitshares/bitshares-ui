@@ -1,4 +1,4 @@
-import DashboardContainer from "./components/Dashboard/DashboardContainer";
+import DashboardPage from "./components/Dashboard/DashboardPage";
 import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";

@@ -3,7 +3,6 @@ import Immutable from "immutable";
 import DashboardList from "./DashboardList";
 import { RecentTransactions } from "../Account/RecentTransactions";
 import Translate from "react-translate-component";
-import MarketCard from "./MarketCard";
 import utils from "common/utils";
 import { Apis } from "bitsharesjs-ws";
 import LoadingIndicator from "../LoadingIndicator";

@@ -126,7 +126,7 @@ export default class ExchangeHeader extends React.Component {
                                 <Link onClick={() => {
                                     MarketsActions.switchMarket();
                                 }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
-                                <Icon className="shuffle" name="shuffle"/>
+                                <Icon className="grey-shuffle" name="shuffle"/>
                                 </Link>
 
 

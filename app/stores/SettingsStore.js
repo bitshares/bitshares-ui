@@ -31,6 +31,7 @@ class SettingsStore {
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
             onHideAsset: SettingsActions.hideAsset,
+            onHideMarket: SettingsActions.hideMarket,
             onClearSettings: SettingsActions.clearSettings,
             onSwitchLocale: IntlActions.switchLocale,
             onSetUserMarket: SettingsActions.setUserMarket,
@@ -156,6 +157,7 @@ class SettingsStore {
         this.marketDirections = Immutable.Map(ss.get("marketDirections"));
 
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
+        this.hiddenMarkets = Immutable.List(ss.get("hiddenMarkets", []));
 
         this.apiLatencies = ss.get("apiLatencies", {});
 
@@ -291,6 +293,18 @@ class SettingsStore {
         }
 
         ss.set("hiddenAssets", this.hiddenAssets.toJS());
+    }
+
+    onHideMarket(payload) {
+        if (payload.id) {
+            if (!payload.status) {
+                this.hiddenMarkets = this.hiddenMarkets.delete(this.hiddenMarkets.indexOf(payload.id));
+            } else {
+                this.hiddenMarkets = this.hiddenMarkets.push(payload.id);
+            }
+        }
+
+        ss.set("hiddenMarkets", this.hiddenMarkets.toJS());
     }
 
     onAddStarMarket(market) {

@@ -174,7 +174,7 @@ div.account-tabs {
         padding-bottom: 17px;
     }
 
-    > div.tab-content {
+    div.tab-content {
 
          @include breakpoint(large) {
              max-width: rem-calc(1200);

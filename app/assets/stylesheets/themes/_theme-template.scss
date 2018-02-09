@@ -487,6 +487,14 @@ $pulsate-red-end
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
         }
+        > tbody > tr.table-empty > td {
+            padding: 5rem 0;
+            font-size: 1.5rem;
+
+            text-align: center;
+            color: $account-dimmed !important;
+            background-color: $bg-color !important;            
+        }
     }
 
     // block-list
@@ -1580,6 +1588,35 @@ $pulsate-red-end
                         fill: grey;
                     }
                 }
+            }
+        }
+    }
+
+    div.dashboard-filter {
+        display: flex;
+        padding: 10px 2.5rem;
+        background-color: lighten($account-header, 4%);
+
+        > input {
+            background-color: $bg-color;
+            border: 0;
+            margin-right: 15px;
+            line-height: 28px;
+            padding: 0 10px;
+        }
+
+        > div > a {
+            line-height: 28px;
+            padding: 0 10px;       
+            font-size: 0.875rem;     
+            color: $account-dimmed;
+
+            &:first-child {
+                border-right: 1px solid $account-dimmed;
+            }
+
+            &.is-active {
+                color: $account-primarytext;
             }
         }
     }
