@@ -601,18 +601,19 @@ class AccountOverview extends React.Component {
                         <Tabs defaultActiveTab={0} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
 
                             <Tab title="account.portfolio" subText={portFolioValue}>
-                                <div className="hide-selector">
-                                    <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <h4><Translate content="account.hide_hidden" /></h4>
+                                <div className="header-selector">
+                                    <div className="selector">
+                                        <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                            <Translate content="account.hide_hidden" />
+                                        </div>
+                                        {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                            <Translate content="account.show_hidden" />
+                                        </div> : null}
                                     </div>
-                                    {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <h4><Translate content="account.show_hidden" /></h4>
-                                    </div> : null}
-
-                                    {/* Send Modal */}
-                                    <SendModal id="send_modal_portfolio" ref="send_modal" from_name={this.props.account.get("name")} asset_id={this.state.send_asset || "1.3.0"}/>
-
                                 </div>
+
+                                {/* Send Modal */}
+                                <SendModal id="send_modal_portfolio" ref="send_modal" from_name={this.props.account.get("name")} asset_id={this.state.send_asset || "1.3.0"}/>
 
                                 <table className="table dashboard-table table-hover">
                                     <thead>

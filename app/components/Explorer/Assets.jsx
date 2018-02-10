@@ -24,7 +24,7 @@ class Assets extends React.Component {
             filterUIA: props.filterUIA || "",
             filterMPA: props.filterMPA || "",
             filterPM: props.filterPM || ""
-        }
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -71,7 +71,7 @@ class Assets extends React.Component {
             return <span>-</span>;
         }
 
-        return <LinkToAccountById account={name_or_id}/>
+        return <LinkToAccountById account={name_or_id}/>;
     }
 
     _onFilter(type, e) {
@@ -193,7 +193,7 @@ class Assets extends React.Component {
                                 tabsClass="no-padding bordered-header"
                                 setting="assetsTab"
                                 className="grid-block vertical no-overflow no-padding"
-                                contentClass="grid-block vertical"
+                                contentClass="grid-block vertical padding"
                             >
                                 <Tab title="explorer.assets.market">
                                     <div className="grid-block shrink">
@@ -205,15 +205,15 @@ class Assets extends React.Component {
                                         <div className="grid-content">
                                             <table className="table">
                                                 <thead>
-                                                <tr>
-                                                    <th><Translate component="span" content="explorer.assets.symbol" /></th>
-                                                    <th><Translate component="span" content="explorer.assets.issuer" /></th>
-                                                    <th><Translate component="span" content="markets.supply" /></th>
-                                                    <th></th>
-                                                </tr>
+                                                    <tr>
+                                                        <th><Translate component="span" content="explorer.assets.symbol" /></th>
+                                                        <th><Translate component="span" content="explorer.assets.issuer" /></th>
+                                                        <th><Translate component="span" content="markets.supply" /></th>
+                                                        <th></th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                {mia}
+                                                    {mia}
                                                 </tbody>
                                             </table>
                                         </div>

@@ -338,7 +338,7 @@ $pulsate-red-end
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 1rem .25rem;
+            padding: 0.9rem .25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -652,6 +652,18 @@ $pulsate-red-end
             }
         }
     }
+
+    .tab-content {
+        background-color: lighten($account-header, 4%);
+        > div.header-selector {
+            .selector {
+                .inactive {
+                    color: $dark-text-color;
+                }
+            }
+        }
+    }
+
 
 
 

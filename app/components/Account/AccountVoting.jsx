@@ -592,7 +592,7 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.witnesses.title">
                                     <div className={cnames("content-block")}>
-                                        <div className="hide-selector">
+                                        <div className="header-selector">
                                             {/* <Link to="/help/voting/witness"><Icon name="question-circle" /></Link> */}
                                             <div className="new-worker-button">
                                                 {saveText}
@@ -616,7 +616,7 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="explorer.committee_members.title">
                                     <div className={cnames("content-block")}>
-                                        <div className="hide-selector">
+                                        <div className="header-selector">
                                             {/* <Link to="/help/voting/committee"><Icon name="question-circle" /></Link> */}
                                             <div className="new-worker-button">
                                                 {saveText}
@@ -640,19 +640,21 @@ class AccountVoting extends React.Component {
 
                                 <Tab title="account.votes.workers_short">
 
-                                    <div className="hide-selector">
-                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" /></Link> */}
-                                        <div style={{paddingLeft: 10}} className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
-                                            {counterpart.translate("account.votes.new", {count: newWorkers.length})}
-                                        </div>
-                                        <div className={cnames("inline-block", {inactive: workerTableIndex !== 1})} onClick={this._setWorkerTableIndex.bind(this, 1)}>
-                                            {counterpart.translate("account.votes.active", {count: workers.length})}
-                                        </div>
+                                    <div className="header-selector">
+                                        <div className="selector">
+                                            {/* <Link to="/help/voting/worker"><Icon name="question-circle" /></Link> */}
+                                            <div style={{paddingLeft: 10}} className={cnames("inline-block", {inactive: workerTableIndex !== 0})} onClick={this._setWorkerTableIndex.bind(this, 0)}>
+                                                {counterpart.translate("account.votes.new", {count: newWorkers.length})}
+                                            </div>
+                                            <div className={cnames("inline-block", {inactive: workerTableIndex !== 1})} onClick={this._setWorkerTableIndex.bind(this, 1)}>
+                                                {counterpart.translate("account.votes.active", {count: workers.length})}
+                                            </div>
 
-                                        {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._setWorkerTableIndex.bind(this, 2) : () => {}}>
-                                            <Translate content="account.votes.expired" />
-                                        </div> : null}
-
+                                            {expiredWorkers.length ? <div className={cnames("inline-block", {inactive: !showExpired})} onClick={!showExpired ? this._setWorkerTableIndex.bind(this, 2) : () => {}}>
+                                                <Translate content="account.votes.expired" />
+                                            </div> : null}
+                                        </div>
+                                        
                                         <div className="new-worker-button">
                                             {saveText}
                                             <Link to="/create-worker">
@@ -701,8 +703,8 @@ class AccountVoting extends React.Component {
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
-                                                <th colSpan="4" className="hide-column-small"></th>
+                                                <th colSpan="4" style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
+                                                <th colSpan="2" className="hide-column-small"></th>
                                                 <th style={{textAlign: "right"}}>
                                                     {globalObject ? <EquivalentValueComponent hide_asset fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null}
                                                 </th>

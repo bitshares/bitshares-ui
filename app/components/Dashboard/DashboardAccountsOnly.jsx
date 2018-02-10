@@ -133,15 +133,17 @@ class Accounts extends React.Component {
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
                     {accountCount ? (
-                        <div style={{paddingBottom: "3rem"}}>
-                            <div className="hide-selector" style={{paddingBottom: "1rem"}}>
-                                {entries.map((type, index) => {
-                                    return (
-                                        <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                            <Translate content={`account.${type}`} />
-                                        </div>
-                                    );
-                                })}
+                        <div className="tab-content" style={{background: "transparent", paddingBottom: "3rem"}}>
+                            <div className="header-selector" style={{paddingBottom: "1rem"}}>
+                                <div className="selector">
+                                    {entries.map((type, index) => {
+                                        return (
+                                            <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
+                                                <Translate content={`account.${type}`} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
