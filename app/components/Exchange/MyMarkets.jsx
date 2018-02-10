@@ -689,7 +689,7 @@ class MyMarkets extends React.Component {
                         </label>
                         <div className="float-right search-wrapper" style={{paddingLeft: 20}}>
                              <form>
-                                <input autocomplete="off" style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}} type="text" className="no-margin market-filter-input" placeholder="Filter" maxLength="16" name="focus" required="required" value={this.state.myMarketFilter} onChange={this.handleSearchUpdate} />
+                                <input autoComplete="off" style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}} type="text" className="no-margin market-filter-input" placeholder="Filter" maxLength="16" name="focus" required="required" value={this.state.myMarketFilter} onChange={this.handleSearchUpdate} />
                                 <button className="clear-text" type="reset" onClick={this.clearInput}></button>
                             </form>
                         </div>

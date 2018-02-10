@@ -163,6 +163,9 @@ class Exchange extends React.Component {
     };
 
     _checkFeeStatus(assets = [this.props.coreAsset, this.props.baseAsset, this.props.quoteAsset], account = this.props.currentAccount) {
+        if (assets[0] === assets[2] || assets[1] === assets[2]) {
+            assets.splice(2, 1);
+        }
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -1113,6 +1116,8 @@ class Exchange extends React.Component {
             />
         );
 
+        
+
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
                     <ExchangeHeader
@@ -1208,7 +1213,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
+                                    feedPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
@@ -1226,7 +1231,7 @@ class Exchange extends React.Component {
                                 {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
                                 {buyForm}
                                 {sellForm}
-                                
+
                                 <MarketHistory
                                     className={cnames(
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",
