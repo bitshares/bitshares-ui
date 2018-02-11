@@ -231,9 +231,9 @@ class Settings extends React.Component {
 
         return (
             <div className={this.props.deprecated ? "" : "grid-block page-layout"}>
-                <div className="grid-block main-content margin-block wrap regular-padding">
-                    <div className="grid-content large-offset-2 shrink" style={{paddingRight: "4rem"}}>
-                        <Translate style={{paddingBottom: 20}} className="bottom-border" component="h4" content="header.settings" />
+                <div className="grid-block main-content margin-block wrap">
+                    <div className="grid-content shrink" style={{paddingRight: "4rem"}}>
+                        <Translate style={{paddingBottom: 20}} component="h4" content="header.settings" />
 
                         <ul className="settings-menu">
                             {menuEntries.map((entry, index) => {
@@ -245,7 +245,7 @@ class Settings extends React.Component {
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
                         <div className="grid-block small-12 medium-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
-                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />}
+                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} content={`settings.${menuEntries[activeSetting]}_text`} />}
                             {entries}
                         </div>
                     </div>
