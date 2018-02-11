@@ -252,7 +252,7 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin, passwordAccount, height} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
@@ -280,19 +280,19 @@ class Header extends React.Component {
         let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
-                            <div className="total-value" >
-                                <TotalBalanceValue.AccountWrapper
-                                    accounts={[this.props.currentAccount]}
-                                    noTip
-                                    style={{minHeight: 15}}
-                                />
-                            </div>) : null;
+            <div className="total-value" >
+                <TotalBalanceValue.AccountWrapper
+                    accounts={[this.props.currentAccount]}
+                    noTip
+                    style={{minHeight: 15}}
+                />
+            </div>) : null;
 
         let dashboard = (
             <a
-                style={{padding: "12px 1.75rem"}}
-                className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
+            style={{padding: "12px 1.75rem"}}
+            className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
+            onClick={this._onNavigate.bind(this, "/dashboard")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>
@@ -427,40 +427,36 @@ class Header extends React.Component {
                     <Translate className="column-hide-small" component="span" content="account.permissions" />
                 </a>;
         }
-        
+
 
         return (
-            <div className="header menu-group primary">
-                {/*<div className="show-for-small-only">
-                    <ul className="primary menu-bar title">
-                        <li><a href onClick={this._triggerMenu}><Icon className="icon-32px" name="menu"/></a></li>
-                    </ul>
-                </div>*/}
-                {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
-                    <ul className="menu-bar">
-                        <li>
-                            <div style={{marginLeft: "1rem", height: "3rem"}}>
-                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
-                            </div>
-                    </li>
-                        <li>
-                            <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
-                                <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
-                            </div>
-                        </li>
-                    </ul>
-                </div> : null}
-                <div className="grid-block">
-                    <ul className="menu-bar">
-                        <li>{dashboard}</li>
-                        {!currentAccount || !!createAccountLink ? null :
-                        <li>
-                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1 && active.indexOf("/assets") === -1 && active.indexOf("/voting") === -1 && active.indexOf("/signedmessages") === -1 && active.indexOf("/member-stats") === -1 && active.indexOf("/vesting") === -1 && active.indexOf("/whitelist") === -1 && active.indexOf("/permissions") === -1})}>
-                                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
-                                <Translate className="column-hide-small" content="header.dashboard" />
-                            </Link>
-                        </li>}
-                        <li>
+            <div className="header-container" style={{minHeight:"64px"}}>
+                <div>
+                    <div className="header menu-group primary" style={{flexWrap:"nowrap", justifyContent:"none"}}>
+                        {__ELECTRON__ ? <div className="grid-block show-for-medium shrink electron-navigation">
+                            <ul className="menu-bar">
+                                <li>
+                                    <div style={{marginLeft: "1rem", height: "3rem"}}>
+                                        <div style={{marginTop: "0.5rem"}} onClick={this._onGoBack.bind(this)} className="button outline small">{"<"}</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div style={{height: "3rem", marginLeft: "0.5rem", marginRight: "0.75rem"}}>
+                                        <div style={{marginTop: "0.5rem"}} onClick={this._onGoForward.bind(this)} className="button outline small">></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div> : null}
+                        <ul className="menu-bar">
+                            <li>{dashboard}</li>
+                            {!currentAccount || !!createAccountLink ? null :
+                            <li>
+                                <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1 && active.indexOf("/assets") === -1 && active.indexOf("/voting") === -1 && active.indexOf("/signedmessages") === -1 && active.indexOf("/member-stats") === -1 && active.indexOf("/vesting") === -1 && active.indexOf("/whitelist") === -1 && active.indexOf("/permissions") === -1})}>
+                                    <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
+                                    <Translate className="column-hide-small" content="header.dashboard" />
+                                </Link>
+                            </li>}
+                            <li>
                             <a style={{flexFlow: "row"}} className={cnames(active.indexOf("market/") !== -1 ? null : "column-hide-xxs", {active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
                                 <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
                                 <Translate className="column-hide-small" component="span" content="header.exchange" />
@@ -474,165 +470,160 @@ class Header extends React.Component {
                             </a>
                         </li>
 
-                        {/* Dynamic Menu Item */}
-                        <li>{dynamicMenuItem}</li>
-                                
-                        {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
-                    </ul>
-                </div>
-                <div className="grid-block shrink">
-                    <div className="grp-menu-items-group header-right-menu">
-
-                        <div className="grp-menu-item overflow-visible account-drop-down">
-                            {createAccountLink ? createAccountLink : [
-                                <div key="padlock" className="header-right-lock show-for-medium" onClick={this._toggleLock.bind(this)}>
-                                    <Icon className="lock-unlock" style={{margin: "0 0.5rem"}} size="2x" name={this.props.locked ? "locked" : "unlocked"} />
-                                </div>,
-                                <div key="account-dropdown" className={cnames("account-dropdown-wrapper dropdown-wrapper", {active: this.state.accountsListDropdownActive, "hover-transparent": !hasLocalWallet, "cursor-default": !hasLocalWallet})}>
-                                    <li style={{display: "flex"}}>
-                                        <div onClick={this._toggleAccountDropdownMenu} className="table-cell" style={{flex: 1}}>
-                                            <div style={{lineHeight: "initial", display: "inline-block", paddingRight: 20}}>
-                                                <span>{currentAccount}</span>
-                                                {walletBalance}
-                                            </div>
-
-                                        </div>
-                                    </li>
-
-                                    { hasLocalWallet && (
-
-                                        <ul className="dropdown header-menu" style={{left: 0, top: 64, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-
-                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                            </li>
-
-                                            {accountsList}
-                                        </ul>
-
-                                    )}
-                                </div>,
-                                <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})}>
-                                    <li style={{display: "flex"}}>
-                                        <div onClick={this._toggleDropdownMenu} className="table-cell" style={{flex: 1}}>
-                                            <div>
-                                                <div className="hamburger">{hamburger}</div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <ul className="dropdown header-menu" style={{left: -200, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
-                                        <li className="divider" onClick={this._toggleLock.bind(this)}>
-                                            <div className="table-cell"><Icon size="2x" name="power" /></div>
-                                            <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
-                                        </li>
-
-                                        {!isMyAccount ? <li className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
-                                            <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
-                                            <div className="table-cell"><Translate content={`account.${isContact ? "unfollow" : "follow"}`} /></div>
-                                        </li> : null}
-
-                                        <li className={cnames({active: active.indexOf("/market/") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                                            <div className="table-cell"><Icon size="2x" name="trade" /></div>
-                                            <div className="table-cell"><Translate content="header.exchange" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
-                                            <div className="table-cell"><Icon size="2x" name="server" /></div>
-                                            <div className="table-cell"><Translate content="header.explorer" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
-                                            <div className="table-cell"><Icon size="2x" name="transfer" /></div>
-                                            <div className="table-cell"><Translate content="header.payments_legacy" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell"><Translate content="gateway.deposit" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._showDeposit.bind(this)}>
-                                            <div className="table-cell"><Icon size="2x" name="deposit" /></div>
-                                            <div className="table-cell"><Translate content="modal.deposit.submit_beta" /></div>
-                                        </li>
-
-                                        <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
-                                            <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
-                                            <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
-                                        </li>
-
-
-                                        <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
-                                            <div className="table-cell"><Icon size="2x" name="cogs" /></div>
-                                            <div className="table-cell"><Translate content="header.settings" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/news") !== -1})} onClick={this._onNavigate.bind(this, "/news")}>
-                                            <div className="table-cell"><Icon size="2x" name="news" /></div>
-                                            <div className="table-cell"><Translate content="news.news" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/help/introduction/bitshares") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
-                                            <div className="table-cell"><Icon size="2x" name="question-circle" /></div>
-                                            <div className="table-cell"><Translate content="header.help" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/voting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
-                                            <div className="table-cell"><Icon size="2x" name="thumbs-up" /></div>
-                                            <div className="table-cell"><Translate content="account.voting" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
-                                            <div className="table-cell"><Icon size="2x" name="assets" /></div>
-                                            <div className="table-cell"><Translate content="explorer.assets.title" /></div>
-                                        </li>
-                                        <li className={cnames({active: active.indexOf("/signedmessages") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
-                                            <div className="table-cell"><Icon size="2x" name="text" /></div>
-                                            <div className="table-cell"><Translate content="account.signedmessages.menuitem" /></div>
-                                        </li>
-
-                                        <li className={cnames({active: active.indexOf("/member-stats") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)}>
-                                            <div className="table-cell"><Icon size="2x" name="text" /></div>
-                                            <div className="table-cell"><Translate content="account.member.stats" /></div>
-                                        </li>
-
-                                        {isMyAccount ? <li className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
-                                            <div className="table-cell"><Icon size="2x" name="hourglass" /></div>
-                                            <div className="table-cell"><Translate content="account.vesting.title" /></div>
-                                        </li> : null}
-
-                                        <li className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
-                                            <div className="table-cell"><Icon size="2x" name="list" /></div>
-                                            <div className="table-cell"><Translate content="account.whitelist.title" /></div>
-                                        </li>
-
-                                        <li className={cnames("divider", {active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
-                                            <div className="table-cell"><Icon size="2x" name="warning" /></div>
-                                            <div className="table-cell"><Translate content="account.permissions" /></div>
-                                        </li>
-
-                                        { !hasLocalWallet && (
-                                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
-                                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
-                                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
-                                            </li>
-                                        )}
-                                    </ul>
-                                </div>]
-                            }
-                        </div>
+                            {/* Dynamic Menu Item */}
+                            <li>{dynamicMenuItem}</li>
+                        </ul>
                     </div>
                 </div>
-                {/* Send modal */}
-                <SendModal id="send_modal_header" ref="send_modal" from_name={currentAccount} />
-                {/* Deposit modal */}
+
+                <div onClick={this._toggleAccountDropdownMenu.bind(this)} className="truncated active-account">
+                    <div className="text account-name">
+                        { this.props.currentAccount == null ? null :
+                            <span>
+                                {this.props.locked ? <Icon className="icon-14px" name="locked"/> : <Icon className="icon-14px" name="unlocked"/>}
+                            </span>
+                        }
+                        {currentAccount}
+                    </div>
+                    {walletBalance}
+
+                    {hasLocalWallet && (
+                        <ul className={cnames("dropdown header-menu local-wallet-menu")} style={{right: 0, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto", position:"absolute",width:"200px"}}>
+                            <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                            </li>
+                            {accountsList}
+                        </ul>
+                    )}
+                </div>
+
+                <div className="app-menu">
+                    <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})} onClick={this._toggleDropdownMenu}>
+                        <div className="hamburger">{hamburger}</div>
+                        <ul className="dropdown header-menu" style={{left: -200, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
+                            <li className="divider" onClick={this._toggleLock.bind(this)}>
+                                <div className="table-cell"><Icon size="2x" name="power" /></div>
+                                <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
+                            </li>
+
+                            {this.props.locked ? [
+                                <li className={cnames({active: active.indexOf("/create-account/password") !== -1})} onClick={this._onNavigate.bind(this, "/create-account/password")}>
+                                    <div className="table-cell"><Icon size="2x" name="user" /></div>
+                                    <div className="table-cell"><Translate content="header.create_account" /></div>
+                                </li>
+                            ] : null}
+
+                            {!this.props.locked ? [
+                                <li className={cnames({active: active.indexOf("/account") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}`)}>
+                                    <div className="table-cell"><Icon size="2x" name="dashboard" /></div>
+                                    <div className="table-cell"><Translate content="header.dashboard" /></div>
+                                </li>
+                            ] : null}
+
+                            {!isMyAccount ? <li className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
+                                <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
+                                <div className="table-cell"><Translate content={`account.${isContact ? "unfollow" : "follow"}`} /></div>
+                            </li> : null}
+
+                            <li className={cnames({active: active.indexOf("/market/") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, tradeUrl)}>
+                                <div className="table-cell"><Icon size="2x" name="trade" /></div>
+                                <div className="table-cell"><Translate content="header.exchange" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/explorer") !== -1}, "column-show-small")} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                <div className="table-cell"><Icon size="2x" name="server" /></div>
+                                <div className="table-cell"><Translate content="header.explorer" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/transfer") !== -1}, {disabled: !isMyAccount})} onClick={!isMyAccount ? () => {} : this._onNavigate.bind(this, "/transfer")}>
+                                <div className="table-cell"><Icon size="2x" name="transfer" /></div>
+                                <div className="table-cell"><Translate content="header.payments_legacy" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                <div className="table-cell"><Translate content="gateway.deposit" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._showDeposit.bind(this)}>
+                                <div className="table-cell"><Icon size="2x" name="deposit" /></div>
+                                <div className="table-cell"><Translate content="modal.deposit.submit_beta" /></div>
+                            </li>
+
+                            <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._onNavigate.bind(this, "/deposit-withdraw")}>
+                                <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
+                                <div className="table-cell"><Translate content="modal.withdraw.submit" /></div>
+                            </li>
+
+
+                            <li className={cnames({active: active.indexOf("/settings") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/settings")}>
+                                <div className="table-cell"><Icon size="2x" name="cogs" /></div>
+                                <div className="table-cell"><Translate content="header.settings" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/news") !== -1})} onClick={this._onNavigate.bind(this, "/news")}>
+                                <div className="table-cell"><Icon size="2x" name="news" /></div>
+                                <div className="table-cell"><Translate content="news.news" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/help/introduction/bitshares") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/help/introduction/bitshares")}>
+                                <div className="table-cell"><Icon size="2x" name="question-circle" /></div>
+                                <div className="table-cell"><Translate content="header.help" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/voting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/voting`)}>
+                                <div className="table-cell"><Icon size="2x" name="thumbs-up" /></div>
+                                <div className="table-cell"><Translate content="account.voting" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/assets") !== -1 && active.indexOf("/account/") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/assets`)}>
+                                <div className="table-cell"><Icon size="2x" name="assets" /></div>
+                                <div className="table-cell"><Translate content="explorer.assets.title" /></div>
+                            </li>
+                            <li className={cnames({active: active.indexOf("/signedmessages") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/signedmessages`)}>
+                                <div className="table-cell"><Icon size="2x" name="text" /></div>
+                                <div className="table-cell"><Translate content="account.signedmessages.menuitem" /></div>
+                            </li>
+
+                            <li className={cnames({active: active.indexOf("/member-stats") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/member-stats`)}>
+                                <div className="table-cell"><Icon size="2x" name="text" /></div>
+                                <div className="table-cell"><Translate content="account.member.stats" /></div>
+                            </li>
+
+                            {isMyAccount ? <li className={cnames({active: active.indexOf("/vesting") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/vesting`)}>
+                                <div className="table-cell"><Icon size="2x" name="hourglass" /></div>
+                                <div className="table-cell"><Translate content="account.vesting.title" /></div>
+                            </li> : null}
+
+                            <li className={cnames({active: active.indexOf("/whitelist") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/whitelist`)}>
+                                <div className="table-cell"><Icon size="2x" name="list" /></div>
+                                <div className="table-cell"><Translate content="account.whitelist.title" /></div>
+                            </li>
+
+                            <li className={cnames("divider", {active: active.indexOf("/permissions") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}/permissions`)}>
+                                <div className="table-cell"><Icon size="2x" name="warning" /></div>
+                                <div className="table-cell"><Translate content="account.permissions" /></div>
+                            </li>
+
+                            { !hasLocalWallet && (
+                                <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
+                                    <div className="table-cell"><Icon size="2x" name="folder" /></div>
+                                    <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+                <SendModal id="send_modal_header"
+                    ref="send_modal"
+                    from_name={currentAccount} />
+
                 <DepositModal
                     ref="deposit_modal_new"
                     modalId="deposit_modal_new"
                     account={currentAccount}
-                    backedCoins={this.props.backedCoins}
-                />
+                    backedCoins={this.props.backedCoins} />
             </div>
 
         );

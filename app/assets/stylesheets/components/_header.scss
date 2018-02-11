@@ -20,7 +20,7 @@
         border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 64px;
+  //min-height: 64px;
   // text-transform: uppercase;
   .menu-bar > li {
     //display: list-item;
@@ -40,7 +40,7 @@
   }
 
   div.account-drop-down div.total-value {
-      text-align: left;
+      text-align: right;
       font-size: 80%;
       line-height: initial;
   }
@@ -192,4 +192,26 @@ ul.dropdown.header-menu {
             }
         }
     }
+}
+
+.account-summary {
+    text-align: right;
+    line-height: initial;
+    display: inline-block;
+  
+    .icon {
+        margin-right: 5px;
+    }
+
+    svg path {
+        fill: #fff;
+    }
+}
+
+.account-name .icon {
+    margin-right: 5px;
+}
+
+.active-account {
+    padding-right: 20px;
 }
