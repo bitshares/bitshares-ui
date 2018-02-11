@@ -252,13 +252,13 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, passwordAccount, height} = this.props;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
 
         const a = ChainStore.getAccount(currentAccount);
-        const isMyAccount = !a ? false : AccountStore.isMyAccount(a);
+        const isMyAccount = !a ? false : (AccountStore.isMyAccount(a) || (passwordLogin && currentAccount === passwordAccount));
         const isContact = this.props.linkedAccounts.has(currentAccount);
         const enableDepositWithdraw = Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
 
@@ -650,6 +650,7 @@ export default connect(Header, {
             backedCoins: GatewayStore.getState().backedCoins,
             linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,
             lastMarket: SettingsStore.getState().viewSettings.get(`lastMarket${chainID ? ("_" + chainID.substr(0, 8)) : ""}`),
