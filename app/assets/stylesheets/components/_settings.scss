@@ -12,3 +12,15 @@
         }
     }
 }
+
+.nodes-header {
+    text-transform: uppercase;
+    font-size: 1rem;
+    padding: 6px 10px;
+    margin-bottom: 2em;
+    font-weight: 500;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    transition: border-color 0.3s ease 0s;
+    overflow:hidden;
+}
