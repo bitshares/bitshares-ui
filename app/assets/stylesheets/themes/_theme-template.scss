@@ -252,7 +252,7 @@ $pulsate-red-end
 
 
     .page-layout {
-        background-color: $bg-color;
+        background-color: lighten($account-header, 4%);
 
         .left-column {
             border-top-color: $bg-color;

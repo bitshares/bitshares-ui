@@ -32,6 +32,7 @@
     "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
+    "deposit-withdraw": "Deposit/Withdraw",
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",

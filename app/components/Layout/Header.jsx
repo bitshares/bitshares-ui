@@ -315,10 +315,6 @@ class Header extends React.Component {
         // ) : null;
 
         let tradeUrl = this.props.lastMarket ? `/market/${this.props.lastMarket}` : "/market/USD_BTS";
-        let tradeLink = <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
-                <Translate component="span" content="header.exchange" />
-            </a>;
 
         // Account selector: Only active inside the exchange
         let account_display_name, accountsList;
@@ -343,8 +339,96 @@ class Header extends React.Component {
         }
 
         let hamburger = this.state.dropdownActive ? <Icon className="icon-14px" name="hamburger-x" /> : <Icon className="icon-14px" name="hamburger" />;
-
         const hasLocalWallet = !!WalletDb.getWallet();
+
+        /* Dynamic Menu Item */
+        let dynamicMenuItem;
+        if(active.indexOf("transfer") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: true})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
+                    <Translate className="column-hide-small" component="span" content="header.payments" />
+                </a>;
+        }
+        if(active.indexOf("settings") !== -1) {
+            dynamicMenuItem =
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
+                    <Translate className="column-hide-small" component="span" content="header.settings" />
+                </a>;
+        }
+        if(active.indexOf("deposit-withdraw") !== -1) {
+            dynamicMenuItem =
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("deposit-withdraw") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="deposit"/>
+                    <Translate className="column-hide-small" component="span" content="header.deposit-withdraw" />
+                </a>;
+        }
+        if(active.indexOf("news") !== -1) {
+            dynamicMenuItem =
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("news") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="news"/>
+                    <Translate className="column-hide-small" component="span" content="news.news" />
+                </a>;
+        }
+        if(active.indexOf("help") !== -1) {
+            dynamicMenuItem =
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("help") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="question-circle"/>
+                    <Translate className="column-hide-small" component="span" content="header.help" />
+                </a>;
+        }
+        if(active.indexOf("/voting") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/voting") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="thumbs-up"/>
+                    <Translate className="column-hide-small" component="span" content="account.voting" />
+                </a>;
+        }
+        if(active.indexOf("/assets") !== -1 && active.indexOf("explorer") === -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/assets") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="assets"/>
+                    <Translate className="column-hide-small" component="span" content="explorer.assets.title" />
+                </a>;
+        }
+        if(active.indexOf("/signedmessages") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/signedmessages") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="text"/>
+                    <Translate className="column-hide-small" component="span" content="account.signedmessages.menuitem" />
+                </a>;
+        }
+        if(active.indexOf("/member-stats") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/member-stats") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="text"/>
+                    <Translate className="column-hide-small" component="span" content="account.member.stats" />
+                </a>;
+        }
+        if(active.indexOf("/vesting") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/vesting") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="hourglass"/>
+                    <Translate className="column-hide-small" component="span" content="account.vesting.title" />
+                </a>;
+        }
+        if(active.indexOf("/whitelist") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/whitelist") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="list"/>
+                    <Translate className="column-hide-small" component="span" content="account.whitelist.title" />
+                </a>;
+        }
+        if(active.indexOf("/permissions") !== -1) {
+            dynamicMenuItem = 
+                <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("/permissions") !== -1})}>
+                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="warning"/>
+                    <Translate className="column-hide-small" component="span" content="account.permissions" />
+                </a>;
+        }
+        
+
         return (
             <div className="header menu-group primary">
                 {/*<div className="show-for-small-only">
@@ -371,32 +455,28 @@ class Header extends React.Component {
                         <li>{dashboard}</li>
                         {!currentAccount || !!createAccountLink ? null :
                         <li>
-                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1})}>
+                            <Link style={{flexFlow: "row"}} to={`/account/${currentAccount}`} className={cnames({active: active.indexOf("account/") !== -1 && active.indexOf("/account/") !== -1 && active.indexOf("/assets") === -1 && active.indexOf("/voting") === -1 && active.indexOf("/signedmessages") === -1 && active.indexOf("/member-stats") === -1 && active.indexOf("/vesting") === -1 && active.indexOf("/whitelist") === -1 && active.indexOf("/permissions") === -1})}>
                                 <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="dashboard"/>
                                 <Translate className="column-hide-small" content="header.dashboard" />
                             </Link>
                         </li>}
-                        <li className="column-hide-small">{tradeLink}</li>
-                        {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
-                        <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
-                                <Translate component="span" content="header.explorer" />
+                        <li>
+                            <a style={{flexFlow: "row"}} className={cnames(active.indexOf("market/") !== -1 ? null : "column-hide-xxs", {active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
+                                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
+                                <Translate className="column-hide-small" component="span" content="header.exchange" />
                             </a>
                         </li>
-                        {!!createAccountLink ? null : <li className="column-hide-small">
-                            <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
-                                <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
-                                <span><Translate content="header.payments" /></span>
+                        {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
+                        <li>
+                            <a style={{flexFlow: "row"}} className={cnames(active.indexOf("explorer") !== -1 ? null : "column-hide-xs", {active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
+                                <Translate className="column-hide-small" component="span" content="header.explorer" />
                             </a>
-                        </li>}
+                        </li>
 
-                        {!!createAccountLink ? <li>
-                            <a style={{flexFlow: "row"}} className={cnames({active: active.indexOf("settings") !== -1})} onClick={this._onNavigate.bind(this, "/settings")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="cogs"/>
-                                <span className="column-hide-tiny"><Translate content="header.settings" /></span>
-                            </a>
-                        </li> : null}
+                        {/* Dynamic Menu Item */}
+                        <li>{dynamicMenuItem}</li>
+                                
                         {/* {enableDepositWithdraw && currentAccount && myAccounts.indexOf(currentAccount) !== -1 ? <li><Link to={"/deposit-withdraw/"} activeClassName="active"><Translate content="account.deposit_withdraw"/></Link></li> : null} */}
                     </ul>
                 </div>
