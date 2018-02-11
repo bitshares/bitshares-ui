@@ -63,7 +63,7 @@ class WalletManager extends Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-container" style={{maxWidth: "40rem"}}>
-                    <div className="content-block center-content">
+                    <div className="content-block">
                         <div className="page-header">
                             <Translate component="h3" content={this.getTitle()} />
                         </div>

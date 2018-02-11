@@ -357,3 +357,8 @@ a.button span {
 .market-button {
   margin: 1rem 0;
 }
+
+input[type=text].input-button {
+  border-top-right-radius: 0!important;
+  border-bottom-right-radius: 0!important;
+}
