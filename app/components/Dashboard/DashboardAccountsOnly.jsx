@@ -150,6 +150,7 @@ class Accounts extends React.Component {
                                 <div className="box-content">
                                     <DashboardList
                                         accounts={Immutable.List(names)}
+                                        passwordAccount={passwordAccount}
                                         ignoredAccounts={Immutable.List(ignored)}
                                         width={width}
                                         onToggleIgnored={this._onToggleIgnored.bind(this)}

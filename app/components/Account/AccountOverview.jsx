@@ -526,12 +526,17 @@ class AccountOverview extends React.Component {
             hiddenBalances = hidden;
         }
 
-        let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-
-        let portFolioValue =
+        let portfolioHiddenAssetsBalance =
             <TotalBalanceValue
                 noTip
-                balances={totalBalanceList}
+                balances={hiddenBalancesList}
+                hide_asset
+            />;
+
+        let portfolioActiveAssetsBalance =
+            <TotalBalanceValue
+                noTip
+                balances={includedBalancesList}
                 hide_asset
             />;
         let ordersValue =
@@ -573,7 +578,9 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioActiveAssetsBalance}</td><td colSpan="9"></td></tr>);
+
+        hiddenBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioHiddenAssetsBalance}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
