@@ -30,6 +30,8 @@ let oldChain = "";
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState().defaults.apiServer
     .filter(a => {
+        // Skip hidden nodes
+        if (a.hidden) return false;
         /*
         * Since we don't want users accidentally connecting to the testnet,
         * we filter out the testnet address from the fallback list

@@ -6,6 +6,8 @@ import { settingsAPIs } from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 import { withRouter } from "react-router/es";
 import { connect } from "alt-react";
+import cnames from "classnames";
+
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
 const testnetAPI = settingsAPIs.WS_NODE_LIST.find(a => a.url.indexOf("node.testnet.bitshares.eu") !== -1);
@@ -38,9 +40,17 @@ class ApiNode extends React.Component {
         this.props.triggerModal(e, url, name);
     }
 
+    show(url) {
+        SettingsActions.showWS(url)
+    }
+
+    hide(url) {
+        SettingsActions.hideWS(url);
+    }
+
     render(){
         const { props, state } = this;
-        const { allowActivation, allowRemoval, automatic, autoActive, name, url, displayUrl, ping, up } = props;
+        const { allowActivation, allowRemoval, automatic, autoActive, name, url, displayUrl, ping, up, hidden } = props;
 
         let color;
         let latencyKey;
@@ -90,6 +100,12 @@ class ApiNode extends React.Component {
 
             {(allowActivation || allowRemoval) && state.hovered && !(automatic && autoActive) &&
                 <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
+                    {!automatic && (hidden ?
+                        <div className="button" onClick={this.show.bind(this, url)}><Translate content="settings.show"/>
+                        </div>
+                        :
+                        <div className="button" onClick={this.hide.bind(this, url)}><Translate content="settings.hide"/>
+                        </div>)}
                     { allowRemoval && <div className="button" onClick={this.remove.bind(this, url, name)}><Translate id="remove" content="settings.remove" /></div>}
                     {(automatic || isTestnet ? true : true) && allowActivation && <div className="button" onClick={this.activate.bind(this)}><Translate content="settings.activate" /></div>}
                 </div>
@@ -105,7 +121,8 @@ ApiNode.defaultProps = {
     up: true,
     ping: null,
     allowActivation: false,
-    allowRemoval: false
+    allowRemoval: false,
+    hidden: false
 };
 
 const ApiNodeWithRouter = withRouter(ApiNode);
@@ -113,6 +130,10 @@ const ApiNodeWithRouter = withRouter(ApiNode);
 class AccessSettings extends React.Component {
     constructor(props){
         super(props);
+
+        this.state = {
+            activeTab: "available-nodes"
+        };
 
         let isDefaultNode = {};
 
@@ -124,18 +145,12 @@ class AccessSettings extends React.Component {
     }
 
     getNodeIndexByURL(url){
-        const { props } = this;
+        const { nodes } = this.props;
 
-        var index = null;
-
-        for(var i=0;i<props.nodes.length;i++){
-            let node = props.nodes[i];
-            if(node.url == url){
-                index = i;
-                break;
-            }
+        let index = nodes.findIndex((node) => node.url === url);
+        if (index === -1) {
+            return null;
         }
-
         return index;
     }
 
@@ -153,7 +168,8 @@ class AccessSettings extends React.Component {
             name: node.location || "Unknown location",
             url: node.url,
             up: node.url in props.apiLatencies,
-            ping: props.apiLatencies[node.url]
+            ping: props.apiLatencies[node.url],
+            hidden: !!node.hidden
         };
     }
 
@@ -183,13 +199,25 @@ class AccessSettings extends React.Component {
         );
     }
 
+    _changeTab(tab) {
+        this.setState({
+            activeTab: tab
+        })
+    }
+
     render(){
         const { props } = this;
         let getNode = this.getNode.bind(this);
         let renderNode = this.renderNode.bind(this);
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
+        let hc = "nodes-header clickable";
+        let showAvailableNodes = this.state.activeTab === "available-nodes";
+        let availableClass = cnames(hc, {inactive: !showAvailableNodes});
+        let hiddenClass = cnames(hc, {inactive: showAvailableNodes});
         let nodes = props.nodes.map((node)=>{
             return getNode(node);
+        }).filter((node) => {
+            return node.hidden !== showAvailableNodes;
         });
 
         let activeNode = getNode(props.nodes[currentNodeIndex] || props.nodes[0]);
@@ -224,8 +252,15 @@ class AccessSettings extends React.Component {
                 { renderNode(activeNode, false) }
             </div>
 
-            <div className="available-nodes" style={{position: "relative", marginBottom: "2em"}}>
-                <Translate component="p" content="settings.available_nodes" />
+            <div className="nodes" style={{position: "relative", marginBottom: "2em"}}>
+                <div className="grid-block shrink" style={{marginLeft: 0}}>
+                    <div className={availableClass} onClick={this._changeTab.bind(this, "available-nodes")}>
+                        <Translate content="settings.available_nodes" />
+                    </div>
+                    <div className={hiddenClass} onClick={this._changeTab.bind(this, "hidden-nodes")}>
+                        <Translate content="settings.hidden_nodes" />
+                    </div>
+                </div>
                 <span onClick={props.triggerModal.bind(this)} style={{cursor: "pointer", position: "absolute", right: 0, top: "5px", color: "#049cce"}} >
                     <Translate id="add" component="span" content="settings.add_api" />
                 </span>

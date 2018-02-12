@@ -347,7 +347,7 @@ $pulsate-red-end
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
-                    fill: $account-dimmed;
+                    fill: $bs-blue;
                 }
             }
             &:hover {
@@ -431,7 +431,7 @@ $pulsate-red-end
             }
             > span { @include RobotoMedium; }
         }
-        svg > path { fill: $secondary-text-color; }
+        svg > path { fill: #fff; }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
@@ -1393,6 +1393,15 @@ $pulsate-red-end
         }
     }
 
+    .nodes-header {
+      border-bottom-color: $button-bg-color;
+      background-color: $bg-color;
+      &.inactive {
+        border-bottom-color: transparent;
+        color: $secondary-text-color;
+      }
+    }
+
     .react-stockcharts-tooltip {
         fill: $primary-text-color;
     }
@@ -1817,8 +1826,31 @@ $pulsate-red-end
         text-overflow: ellipsis;
         text-align: right;
     }
+
 }
 
 #unlock_wallet_modal2 .close-button {
     color: $bs-blue;
 }
+
+@media screen and (max-width: 640px) {
+    .responsive-list > .help-content > ul {
+        background: steelblue;
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 6px;
+        background: #2a2a2a;
+        border: 1px solid #4b5158;
+        margin-bottom: 2rem!important;
+
+        li {
+            border-bottom: 1px solid #393939;
+            padding: 4px;
+
+            ul li {
+                border: 0;
+            }
+        }
+    }
+}
+

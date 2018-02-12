@@ -290,9 +290,8 @@ class Header extends React.Component {
 
         let dashboard = (
             <a
-            style={{padding: "12px 1.75rem"}}
-            className={cnames({active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
-            onClick={this._onNavigate.bind(this, "/dashboard")}
+                className={cnames("logo", {active: active === "/" || (active.indexOf("dashboard") !== -1 && active.indexOf("account") === -1)})}
+                onClick={this._onNavigate.bind(this, "/dashboard")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>
@@ -329,7 +328,7 @@ class Header extends React.Component {
                 .filter((name) => name !== currentAccount)
                 .map((name) => {
                     return (
-                        <li className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)} key={name}>
+                        <li key={name} className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)}>
                             <div style={{paddingTop: 0}} className="table-cell"><AccountImage style={{position: "relative", top: 4}} size={{height: 20, width: 20}} account={name}/></div>
                             <div className="table-cell" style={{paddingLeft: 10}}><a className={"lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</a></div>
                         </li>
@@ -447,6 +446,7 @@ class Header extends React.Component {
                                 </li>
                             </ul>
                         </div> : null}
+
                         <ul className="menu-bar">
                             <li>{dashboard}</li>
                             {!currentAccount || !!createAccountLink ? null :
@@ -457,26 +457,24 @@ class Header extends React.Component {
                                 </Link>
                             </li>}
                             <li>
-                            <a style={{flexFlow: "row"}} className={cnames(active.indexOf("market/") !== -1 ? null : "column-hide-xxs", {active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
-                                <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
-                                <Translate className="column-hide-small" component="span" content="header.exchange" />
-                            </a>
-                        </li>
-                        {/* {currentAccount || myAccounts.length ? <li><a className={cnames({active: active.indexOf("transfer") !== -1})} onClick={this._onNavigate.bind(this, "/transfer")}><Translate component="span" content="header.payments" /></a></li> : null} */}
-                        <li>
-                            <a style={{flexFlow: "row"}} className={cnames(active.indexOf("explorer") !== -1 ? null : "column-hide-xs", {active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
-                                <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
-                                <Translate className="column-hide-small" component="span" content="header.explorer" />
-                            </a>
-                        </li>
-
+                                <a style={{flexFlow: "row"}} className={cnames(active.indexOf("market/") !== -1 ? null : "column-hide-xxs", {active: active.indexOf("market/") !== -1})} onClick={this._onNavigate.bind(this, tradeUrl)}>
+                                    <Icon size="1_5x" style={{position: "relative", top: -2, left: -8}} name="trade"/>
+                                    <Translate className="column-hide-small" component="span" content="header.exchange" />
+                                </a>
+                            </li>
+                            <li>
+                                <a style={{flexFlow: "row"}} className={cnames(active.indexOf("explorer") !== -1 ? null : "column-hide-xs", {active: active.indexOf("explorer") !== -1})} onClick={this._onNavigate.bind(this, "/explorer/blocks")}>
+                                    <Icon size="2x" style={{position: "relative", top: 0, left: -8}} name="server"/>
+                                    <Translate className="column-hide-small" component="span" content="header.explorer" />
+                                </a>
+                            </li>
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>
                     </div>
                 </div>
 
-                <div onClick={this._toggleAccountDropdownMenu.bind(this)} className="truncated active-account">
+                <div onClick={this._toggleAccountDropdownMenu} className="truncated active-account">
                     <div className="text account-name">
                         { this.props.currentAccount == null ? null :
                             <span>
@@ -488,7 +486,7 @@ class Header extends React.Component {
                     {walletBalance}
 
                     {hasLocalWallet && (
-                        <ul className={cnames("dropdown header-menu local-wallet-menu")} style={{right: 0, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto", position:"absolute",width:"200px"}}>
+                        <ul className="dropdown header-menu local-wallet-menu" style={{right: 0, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto", position:"absolute",width:"200px"}}>
                             <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
                                 <div className="table-cell"><Icon size="2x" name="folder" /></div>
                                 <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
@@ -499,7 +497,7 @@ class Header extends React.Component {
                 </div>
 
                 <div className="app-menu">
-                    <div key="dropdown" className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})} onClick={this._toggleDropdownMenu}>
+                    <div className={cnames("menu-dropdown-wrapper dropdown-wrapper", {active: this.state.dropdownActive})} onClick={this._toggleDropdownMenu}>
                         <div className="hamburger">{hamburger}</div>
                         <ul className="dropdown header-menu" style={{left: -200, top: 64, maxHeight: !this.state.dropdownActive ? 0 : maxHeight, overflowY: "auto"}}>
                             <li className="divider" onClick={this._toggleLock.bind(this)}>
@@ -507,19 +505,19 @@ class Header extends React.Component {
                                 <div className="table-cell"><Translate content={`header.${this.props.locked ? "unlock_short" : "lock_short"}`} /></div>
                             </li>
 
-                            {this.props.locked ? [
+                            {this.props.locked ?
                                 <li className={cnames({active: active.indexOf("/create-account/password") !== -1})} onClick={this._onNavigate.bind(this, "/create-account/password")}>
                                     <div className="table-cell"><Icon size="2x" name="user" /></div>
                                     <div className="table-cell"><Translate content="header.create_account" /></div>
                                 </li>
-                            ] : null}
+                            : null}
 
-                            {!this.props.locked ? [
+                            {!this.props.locked ?
                                 <li className={cnames({active: active.indexOf("/account") !== -1})} onClick={this._onNavigate.bind(this, `/account/${currentAccount}`)}>
                                     <div className="table-cell"><Icon size="2x" name="dashboard" /></div>
                                     <div className="table-cell"><Translate content="header.dashboard" /></div>
                                 </li>
-                            ] : null}
+                            : null}
 
                             {!isMyAccount ? <li className="divider" onClick={this[isContact ? "_onUnLinkAccount" : "_onLinkAccount"].bind(this)}>
                                 <div className="table-cell"><Icon size="2x" name={`${isContact ? "minus" : "plus"}-circle`} /></div>
@@ -625,7 +623,6 @@ class Header extends React.Component {
                     account={currentAccount}
                     backedCoins={this.props.backedCoins} />
             </div>
-
         );
 
     }
