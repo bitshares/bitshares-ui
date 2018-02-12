@@ -142,6 +142,7 @@ a.action-button > span {
 div.header-selector {
     > .selector div {
         font-size: 1rem;
+        margin-bottom: 0.5rem;
         cursor: pointer;
         &:nth-of-type(n + 1) {
             padding-left: 10px;

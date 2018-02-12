@@ -606,7 +606,7 @@ class AccountOverview extends React.Component {
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <Tabs defaultActiveTab={0} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
-                            <Tab title="account.portfolio" subText={portFolioValue}>
+                            <Tab title="account.portfolio" subText={portfolioActiveAssetsBalance}>
                                 <div className="header-selector">
                                     <div className="selector">
                                         <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>

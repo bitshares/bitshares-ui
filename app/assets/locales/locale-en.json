@@ -160,6 +160,11 @@
       "whitelist_authorities": "Whitelist authority",
       "blacklist_authorities": "Blacklist authority"
     },
+    "transactions": {
+      "type": "Type",
+      "info": "Info",
+      "time": "Time"
+    },
     "vesting": {
       "title": "Vesting balances",
       "balance_number": "Balance #%(id)s",
