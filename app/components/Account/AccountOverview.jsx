@@ -17,7 +17,7 @@ import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import {Link} from "react-router/es";
 import ChainTypes from "../Utility/ChainTypes";
-import EquivalentPrice from "../Utility/EquivalentPrice";
+import EquivalentPrice from "./EquivalentPrice";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";

@@ -10,7 +10,7 @@ import SettingsStore from "stores/SettingsStore";
 import {List} from "immutable";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {MarketStatsCheck} from "./EquivalentPrice";
+import MarketStatsCheck from "./MarketStatsCheck";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
