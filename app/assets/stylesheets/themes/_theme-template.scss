@@ -347,7 +347,7 @@ $pulsate-red-end
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
-                    fill: $account-dimmed;
+                    fill: $bs-blue;
                 }
             }
             &:hover {
@@ -431,7 +431,7 @@ $pulsate-red-end
             }
             > span { @include RobotoMedium; }
         }
-        svg > path { fill: $secondary-text-color; }
+        svg > path { fill: #fff; }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
@@ -1710,4 +1710,92 @@ $pulsate-red-end
 }
 .market-filter-input:not(:valid) ~ .clear-text {
     display: none;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 64px;
+    background-color: #3f3f3f;
+
+    .menu-bar {
+        overflow: visible;
+    }
+
+    .logo {
+        padding-top: .7rem;
+        padding-bottom: .8rem;
+    }
+
+    .dropdown-wrapper:after {
+        display: none;
+    }
+
+    .menu-dropdown-wrapper {
+        height: 65px;
+        width: 65px;
+        text-align: center;
+        border-radius: 0;
+
+        &.active {
+            background: #2a2a2a;
+        }
+
+        .hamburger .icon {
+            position: relative;
+            top: 12px;
+        }
+    }
+
+    .dropdown.header-menu {
+        top: 65px;
+        background-color: #2a2a2a!important;
+
+        li.divider {
+            border-bottom: 1px solid #323131!important;
+        }
+
+        > li:hover {
+            background-color: #6a6a6a;
+        }
+    }
+
+    .hamburger svg rect, .hamburger-x svg rect {
+        fill: $bs-blue;
+    }
+
+    .total-value {
+        color: #7ed321;
+        text-align: right;
+        font-size: 80%;
+        line-height: normal;
+    }
+}
+
+.local-wallet-menu {
+    // top: 50px!important;
+
+    .table-cell {
+        display: inline-block;
+    }
+}
+
+.app-menu {
+  flex: 0;
+}
+
+.truncated {
+  flex: 1;
+  min-width: 0; /* or some value */
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+}
+
+#unlock_wallet_modal2 .close-button {
+    color: $bs-blue;
 }
