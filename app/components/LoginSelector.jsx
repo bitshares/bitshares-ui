@@ -45,8 +45,6 @@ class LoginSelector extends React.Component {
         });
     }
 
-
-
     onSelect(route) {
         this.props.router.push("/create-account/" + route);
     }
@@ -139,5 +137,3 @@ export default connect(LoginSelector, {
         };
     }
 });
-
-// export default launchIntroJS();
