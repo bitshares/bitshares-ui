@@ -104,6 +104,7 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
+        steem.api.setOptions({ url: "https://api.steemit.com" });
         steem.api.getDiscussionsByBlog(query, (err, discussions) => {
             if (err) this.setState({isLoading: false, isWrong: true})
             this.orderDiscussions(discussions)
