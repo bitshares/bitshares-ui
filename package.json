@@ -139,6 +139,7 @@
     "immutable": "^3.8.1",
     "indexeddbshim": "^2.2.1",
     "intl": "^1.1.0",
+    "intro.js": "^2.8.0-alpha.1",
     "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
     "js-sha256": "^0.2.3",
     "lodash": "^3.10.1",
