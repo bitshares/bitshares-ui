@@ -46,7 +46,6 @@ export const settingsAPIs = {
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
         {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
-        {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
         {url: "wss://eu.nodes.bitshares.works", location: "Central Europe - BitShares Infrastructure Program"},

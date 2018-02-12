@@ -1381,6 +1381,15 @@ $pulsate-red-end
         }
     }
 
+    .nodes-header {
+      border-bottom-color: $button-bg-color;
+      background-color: $bg-color;
+      &.inactive {
+        border-bottom-color: transparent;
+        color: $secondary-text-color;
+      }
+    }
+
     .react-stockcharts-tooltip {
         fill: $primary-text-color;
     }
