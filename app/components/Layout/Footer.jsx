@@ -76,7 +76,26 @@ class Footer extends React.Component {
     }
 
     launchIntroJS() {
-        guide.introJs().start();
+        const translator = require("counterpart");
+
+        var hintData = document.querySelectorAll('[data-intro]');
+        var theme = SettingsStore.getState().settings.get("themes");
+
+        if(hintData.length == 0) {
+            window.open("http://docs.bitshares.org/bitshares/user/index.html", "_blank");
+        } else {
+            guide.introJs().setOptions({
+                tooltipClass: theme,
+                highlightClass: theme,
+                showBullets: false,
+                hideNext: true,
+                hidePrev: true,
+                nextLabel: translator.translate("walkthrough.next_label"),
+                prevLabel: translator.translate("walkthrough.prev_label"),
+                skipLabel: translator.translate("walkthrough.skip_label"),
+                doneLabel: translator.translate("walkthrough.done_label")
+            }).start();
+        }
     }
 
     render() {
@@ -109,7 +128,7 @@ class Footer extends React.Component {
                             } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
                             {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
                             <span style={updateStyles}>
-                                <Translate content="footer.title"  />
+                                <Translate content="footer.title" />
                                 <span className="version">{version}</span>
                             </span>
 
