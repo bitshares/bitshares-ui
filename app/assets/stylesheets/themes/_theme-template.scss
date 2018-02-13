@@ -39,6 +39,11 @@ $pulsate-red-start,
 $pulsate-red-end
 ) {
 
+
+  .dark-text-color {
+    color: $dark-text-color;
+  }
+
   .fz_12 {
     font-size: 12px;
   }
@@ -1359,15 +1364,22 @@ $pulsate-red-end
 
     // Settings
     .settings-menu {
+        width: 200px;
+        transition: .3s;
         margin-left: 0;
         > li {
-            padding: .2rem 1rem;
+            border-radius: 2px;
+            color: $dark-text-color;
+            padding: .2rem .75rem;
+            margin: .3rem 0;
             &:hover {
-                background-color: darken($light-panel-bg-color, 5%);
+                color: $primary-text-color;
+                background-color: darken($light-panel-bg-color, 20%);
             }
 
             &.active {
-                color: $link-text-color;
+                color: $primary-text-color;
+                background-color: darken($light-panel-bg-color, 20%);
             }
         }
     }
