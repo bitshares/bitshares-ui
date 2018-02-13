@@ -1659,6 +1659,48 @@ $pulsate-red-end
         }
     }
 
+    .introjs-launcher {
+        margin-left: 15px;
+        background-color: $bs-blue;
+        padding: 0 10px;
+        font-size: 18px;
+        line-height: 1.8;
+        transition: background-color .2s ease;
+        color: #fff;
+
+        &:hover {
+            cursor: pointer;
+            background-color: darken($bs-blue, 10%);
+        }
+
+        @include breakpoint(small only) {
+            position: absolute;
+            bottom: 1rem;
+            right: .3rem;
+            z-index: 9999;
+            display: block;
+            line-height: 0;
+            font-size: 0;
+            color: transparent;
+            background-color: transparent;
+
+            &:after {
+                content: '?';
+                color: #fff;
+                font-size: 1rem;
+                line-height: 1.5;
+                text-align: center;
+                padding: .3rem .8rem;
+                background-color: $bs-blue;
+                border: 1px solid $bg-color;
+            }
+        }
+    }
+
+    .footer {
+        padding-right: 0;
+    }
+
 }
 
 .midnightTheme .gate_fee .amount-selector {

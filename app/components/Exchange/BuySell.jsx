@@ -209,10 +209,25 @@ class BuySell extends React.Component {
 
         let {name, prefix} = utils.replaceName(this.props[isBid ? "base" : "quote"].get("symbol"), !!this.props[isBid ? "base" : "quote"].get("bitasset"));
         let buyBorrowDepositName = (prefix ? prefix : "") + name;
+
+        const translator = require("counterpart");
+        let buyFormHint = translator.translate("walkthrough.buy_form");
+        let sellFormHint = translator.translate("walkthrough.sell_form");
+
+        let dataIntro = null;
+
+        if (type == "bid") {
+            dataIntro =translator.translate("walkthrough.buy_form");
+        }
+
+        if (type == "ask") {
+            dataIntro =translator.translate("walkthrough.sell_form");
+        }
+
         return (
             <div className={this.props.className}>
                 <div className="exchange-bordered buy-sell-container">
-                    <div className={"exchange-content-header " + type}>
+                    <div className={"exchange-content-header " + type} data-intro={dataIntro}>
                         <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span>
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8646;</span> : null}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}}>  &#8645;</span> : null}

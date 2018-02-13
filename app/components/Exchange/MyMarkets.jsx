@@ -661,16 +661,18 @@ class MyMarkets extends React.Component {
             listStyle.height = listHeight;
         }
 
+        const translator = require("counterpart");
+
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div
                     style={this.props.headerStyle}
                     className="grid-block shrink left-orderbook-header bottom-header"
                 >
-                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "my-market")}>
+                    <div ref="myMarkets" className={starClass} onClick={this._changeTab.bind(this, "my-market")} data-intro={translator.translate("walkthrough.my_markets_tab")}>
                         <Translate content="exchange.market_name" />
                     </div>
-                    <div className={allClass} onClick={this._changeTab.bind(this, "find-market")} >
+                    <div className={allClass} onClick={this._changeTab.bind(this, "find-market")} data-intro={translator.translate("walkthrough.find_markets_tab")}>
                         <Translate content="exchange.more" />
                     </div>
                 </div>
