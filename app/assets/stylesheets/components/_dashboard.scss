@@ -1,59 +1,3 @@
-div.fm-outer-container {
-    border-left: 1px solid $border-color;
-    border-top: 1px solid $border-color;
-    margin-bottom: 20px;
-}
-
-@include breakpoint(large) {
-    div.fm-container {
-        > div:first-child() {
-            padding-right: 15px;
-        }
-
-        > div:last-child() {
-            padding-right: 15px;
-        }
-    }
-}
-
-div.fm-container {
-    border: 1px solid $border-color;
-    border-top: none;
-    border-left: none;
-    padding: 1rem 0.5rem;
-    min-width: 13rem;
-   &:hover {
-    background-color: #D8D8D8;
-    cursor: pointer;
-   }
-
-   .fm-title, .fm-volume, .fm-change {
-    font-size: 0.85rem;
-   }
-
-   .fm-name {
-        @include RobotoMedium;
-        padding-bottom: 10px;
-        font-size: 1.125rem;
-
-   }
-
-   .fm-volume, .fm-change {
-        text-transform: lowercase;
-        font-variant: small-caps;
-        padding-top: 6px;
-   }
-}
-
-.Dashboard__intro-text {
-    padding: 20px;
-
-    > p:nth-of-type(2) {
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid $border-color;
-    }
-}
-
 .SimpleTrade__modal {
     // overflow: auto;
     .Modal__header {
@@ -249,7 +193,8 @@ div.input-wrapper {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
-            height: 650px;
+            height: auto;
+            min-height: 650px;
 
             .Modal__header {
                 text-align: center;
@@ -265,6 +210,7 @@ div.input-wrapper {
             }
 
             .Modal__body {
+                flex: 1;
                 height: 90%;
                 padding-top: 16px;
             }

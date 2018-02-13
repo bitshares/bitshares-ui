@@ -38,8 +38,20 @@ class SettingsActions {
         return index;
     }
 
+    hideWS(url) {
+        return url;
+    }
+
+    showWS(url) {
+        return url;
+    }
+
     hideAsset(id, status) {
 
+        return {id, status};
+    }
+
+    hideMarket(id, status) {
         return {id, status};
     }
 

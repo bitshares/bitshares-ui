@@ -145,10 +145,17 @@ class AccountSelector extends React.Component {
 
         if (this.props.typeahead) {
             this.props.typeahead.map(function(account){
-                typeAheadAccounts.push({id:account,label:account})
+                typeAheadAccounts.push({id:account,label:account});
             });
 
             isGreenAccount = this.props.typeahead.indexOf(lookup_name) !== -1;
+        }
+
+        let typeaheadHasAccount = !!this.props.account ? typeAheadAccounts.reduce((boolean, a) => {
+            return boolean || a.label === this.props.account.get("name");
+        }, false) : false;
+        if (!!this.props.account && !typeaheadHasAccount) {
+            typeAheadAccounts.push({id: this.props.account.get("name"), label: this.props.account.get("name")});
         }
 
         let linked_status = !this.props.accountName ? null : (linkedAccounts.has(this.props.accountName)) ?
@@ -183,6 +190,7 @@ class AccountSelector extends React.Component {
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}
                                     tabIndex={this.props.tabIndex}
+                                    inputProps={{placeholder: "Search for an account"}}
                                 />
                             :<input style={{textTransform: "lowercase", fontVariant: "initial"}}
                                     name="username"

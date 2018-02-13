@@ -138,7 +138,6 @@ class Tabs extends React.Component {
 
         let activeContent = null;
 
-        let tabIndex = [];
         let tabs = React.Children.map(children, (child, index) => {
             if (!child) {
                 return null;
@@ -150,12 +149,7 @@ class Tabs extends React.Component {
             }
 
             return React.cloneElement(child, {collapsed: collapseTabs, isActive, changeTab: this._changeTab.bind(this), index: index} );
-        }).filter(a => {
-            if (a) {
-                tabIndex.push(a.props.index);
-            }
-            return a !== null;
-        });
+        }).filter(a => a !== null);
 
         if (!activeContent) {
             activeContent = tabs[0].props.children;
@@ -164,7 +158,6 @@ class Tabs extends React.Component {
         return (
             <div className={cnames(!!this.props.actionButtons ? "with-buttons" : "", this.props.className)}>
                 <div className="service-selector">
-
                     <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
                         {collapseTabs ?
                             <li style={{paddingLeft: 10, paddingRight: 10, minWidth: "15rem"}}>
@@ -182,10 +175,9 @@ class Tabs extends React.Component {
                         {this.props.actionButtons ? <li className="tabs-action-buttons">{this.props.actionButtons}</li> : null}
                     </ul>
                 </div>
-                <div className={contentClass + " tab-content"} >
+                <div className={cnames("tab-content", contentClass)} >
                     {activeContent}
                 </div>
-
             </div>
         );
     }

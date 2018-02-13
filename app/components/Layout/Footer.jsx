@@ -10,6 +10,9 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
+// import { launchIntroJS } from "";
+import "intro.js/introjs.css";
+import guide from "intro.js"
 
 class Footer extends React.Component {
 
@@ -72,6 +75,29 @@ class Footer extends React.Component {
         document.body.removeChild(a);
     }
 
+    launchIntroJS() {
+        const translator = require("counterpart");
+
+        var hintData = document.querySelectorAll('[data-intro]');
+        var theme = SettingsStore.getState().settings.get("themes");
+
+        if(hintData.length == 0) {
+            window.open("http://docs.bitshares.org/bitshares/user/index.html", "_blank");
+        } else {
+            guide.introJs().setOptions({
+                tooltipClass: theme,
+                highlightClass: theme,
+                showBullets: false,
+                hideNext: true,
+                hidePrev: true,
+                nextLabel: translator.translate("walkthrough.next_label"),
+                prevLabel: translator.translate("walkthrough.prev_label"),
+                skipLabel: translator.translate("walkthrough.skip_label"),
+                doneLabel: translator.translate("walkthrough.done_label")
+            }).start();
+        }
+    }
+
     render() {
         const { state } = this;
         const {synced} = this.props;
@@ -88,65 +114,71 @@ class Footer extends React.Component {
         let logoProps = {};
 
         return (
-            <div className="show-for-medium grid-block shrink footer">
-                <div className="align-justify grid-block">
-                    <div className="grid-block">
-                        <div className="logo" style={
-                            {
-                                fontSize: state.newVersion ? "0.9em" : "1em",
-                                cursor: state.newVersion ? "pointer" : "normal",
-                                marginTop: state.newVersion ? "-5px" : "0px",
-                                overflow: "hidden"
-                            }
-                        } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
-                        {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
-                        <span style={updateStyles}>
-                            <Translate content="footer.title"  />
-                            <span className="version">{version}</span>
-                        </span>
+            <div>
+                <div className="show-for-medium grid-block shrink footer">
+                    <div className="align-justify grid-block">
+                        <div className="grid-block">
+                            <div className="logo" style={
+                                {
+                                    fontSize: state.newVersion ? "0.9em" : "1em",
+                                    cursor: state.newVersion ? "pointer" : "normal",
+                                    marginTop: state.newVersion ? "-5px" : "0px",
+                                    overflow: "hidden"
+                                }
+                            } onClick={state.newVersion ? this.downloadVersion.bind(this)  : null} {...logoProps}>
+                            {state.newVersion && <Icon name="download" style={{marginRight: "20px", marginTop: "10px", fontSize: "1.35em",  display: "inline-block"}} />}
+                            <span style={updateStyles}>
+                                <Translate content="footer.title" />
+                                <span className="version">{version}</span>
+                            </span>
 
-                        {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}
+                            {state.newVersion && <Translate content="footer.update_available" style={{color: "#FCAB53", position: "absolute", top: "8px", left: "36px"}}/>}
+                            </div>
                         </div>
+                        {synced ? null : <div className="grid-block shrink txtlabel cancel"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
+                        {!connected ? <div className="grid-block shrink txtlabel error"><Translate content="footer.connection" />&nbsp; &nbsp;</div> : null}
+                        {this.props.backup_recommended ?
+                        <span>
+                            <div className="grid-block">
+                                <a className="shrink txtlabel facolor-alert"
+                                    data-tip="Please understand that you are responsible for making your own backup&hellip;"
+                                    data-type="warning"
+                                    onClick={this.onBackup.bind(this)}><Translate content="footer.backup" />
+                                </a>
+                                &nbsp;&nbsp;
+                            </div>
+                        </span> : null}
+                        {this.props.backup_brainkey_recommended ? <span>
+                            <div className="grid-block">
+                                <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}><Translate content="footer.brainkey" /></a>
+                                &nbsp;&nbsp;
+                            </div>
+                        </span>:null}
+                        {block_height ?
+                        (<div className="grid-block shrink">
+                            <div className="tooltip" style={{position:"relative"}} onClick={this.onAccess.bind(this)} data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`) + " " + currentNode} data-place="top">
+                                <div className="footer-status">
+                                    { !connected ?
+                                        <span className="warning"><Translate content="footer.disconnected" /></span> :
+                                        <span className="success"><Translate content="footer.connected" /></span>}
+                                </div>
+                                <div className="footer-block">
+                                    <span>
+                                        <span className="footer-block-title"><Translate content="footer.latency" /></span>
+                                            &nbsp;{!connected ? "-" : !currentNodePing ? "-" : currentNodePing + "ms"}&nbsp;/&nbsp;
+                                        <span className="footer-block-title"><Translate content="footer.block" /></span>
+                                            &nbsp;#{block_height}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="grid-block">
+                                <div className="introjs-launcher" onClick={() => { this.launchIntroJS() }}>Help</div>
+                            </div>
+                        </div>) :
+                        <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                     </div>
-                    {synced ? null : <div className="grid-block shrink txtlabel cancel"><Translate content="footer.nosync" />&nbsp; &nbsp;</div>}
-                    {!connected ? <div className="grid-block shrink txtlabel error"><Translate content="footer.connection" />&nbsp; &nbsp;</div> : null}
-                    {this.props.backup_recommended ?
-                    <span>
-                        <div className="grid-block">
-                            <a className="shrink txtlabel facolor-alert"
-                                data-tip="Please understand that you are responsible for making your own backup&hellip;"
-                                data-type="warning"
-                                onClick={this.onBackup.bind(this)}><Translate content="footer.backup" />
-                            </a>
-                            &nbsp;&nbsp;
-                        </div>
-                    </span> : null}
-                    {this.props.backup_brainkey_recommended ? <span>
-                        <div className="grid-block">
-                            <a className="grid-block shrink txtlabel facolor-alert" onClick={this.onBackupBrainkey.bind(this)}><Translate content="footer.brainkey" /></a>
-                            &nbsp;&nbsp;
-                        </div>
-                    </span>:null}
-                    {block_height ?
-                    (<div className="grid-block shrink">
-                        <div className="tooltip" onClick={this.onAccess.bind(this)} data-tip={counterpart.translate(`tooltip.${!connected ? "disconnected" : synced ? "sync_yes" : "sync_no"}`) + " " + currentNode} data-place="top">
-                            <div className="footer-status">
-                                { !connected ?
-                                    <span className="warning"><Translate content="footer.disconnected" /></span> :
-                                    <span className="success"><Translate content="footer.connected" /></span>}
-                            </div>
-                            <div className="footer-block">
-                                <span>
-                                    <span className="footer-block-title"><Translate content="footer.latency" /></span>
-                                        &nbsp;{!connected ? "-" : !currentNodePing ? "-" : currentNodePing + "ms"}&nbsp;/&nbsp;
-                                    <span className="footer-block-title"><Translate content="footer.block" /></span>
-                                        &nbsp;#{block_height}
-                                </span>
-                            </div>
-                        </div>
-                    </div>) :
-                    <div className="grid-block shrink"><Translate content="footer.loading" /></div>}
                 </div>
+                <div className="introjs-launcher show-for-small-only" onClick={() => { this.launchIntroJS() }}>Help</div>
             </div>
         );
     }
