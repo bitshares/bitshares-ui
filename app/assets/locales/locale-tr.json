@@ -601,7 +601,7 @@
   "explorer": {
     "accounts": {
       "title": "Hesaplar",
-      "filter": "Ara", 
+      "filter": "Ara",
       "filter_contacts": "Süzgeç kontakları"
     },
     "blocks": {
@@ -1192,7 +1192,8 @@
     },
     "purchase": "%(asset)s satın al",
     "purchase_1": "%(inputAsset)s kullanarak hızlı ve kolayca %(outputAsset)s satın almak için burayı kullanabilirsiniz. Bu hizmet <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> tarafından sağlanmaktadır.",
-    "deposit_limit": "Yatırma limiti"
+    "deposit_limit": "Yatırma limiti",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

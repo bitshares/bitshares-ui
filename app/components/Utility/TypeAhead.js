@@ -46,7 +46,9 @@ export default class TypeAhead extends React.Component {
     dropDown = () => {
         const { props, state } = this;
         const { filter = "" } = state;
-        const inputProps = props.tabIndex ? { tabIndex: props.tabIndex } : {};
+        let inputProps = props.inputProps || {};
+
+        if (props.tabIndex) inputProps.tabIndex = props.tabIndex;
         return (
             <Autocomplete
                 ref="autocomplete"
@@ -134,7 +136,6 @@ export default class TypeAhead extends React.Component {
 
     render() {
         const { gatewayStatus } = this.props;
-        console.log("gatewayStatus",gatewayStatus);
         return (
             <div
                 style={{

@@ -1472,7 +1472,8 @@
       "transfering":"передача",
       "success":"успех",
       "fail":"не удалось"
-    }
+    },
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error":{
     "expire":"Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."

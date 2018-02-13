@@ -446,7 +446,7 @@
         "older": "更早"
     },
     "transfer": {
-        "header": "转账详情", 
+        "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
         "from": "来自",
         "pay_from": "支付自",
@@ -699,7 +699,7 @@
     "explorer": {
         "accounts": {
             "title": "账户",
-            "filter": "筛选账户", 
+            "filter": "筛选账户",
             "filter_contacts": "筛选联系人"
         },
         "blocks": {
@@ -1444,7 +1444,8 @@
             "transfering": "转账确认中",
             "success": "充值成功",
             "fail": "充值失败"
-        }
+        },
+        "asset_search_deposit": "Search for an asset to deposit"
     },
     "trx_error": {
         "expire": "你的交易确认超时，请稍后尝试。"
