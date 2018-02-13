@@ -474,15 +474,10 @@ class Header extends React.Component {
                     </div>
                 </div>
 
-                <div onClick={this._toggleAccountDropdownMenu} className="truncated active-account">
+                <div onClick={this._toggleAccountDropdownMenu} className="truncated active-account" style={{"cursor": "pointer"}}>
                     <div className="text account-name">
-                        { this.props.currentAccount == null ? null :
-                            <span>
-                                {this.props.locked ? <Icon className="icon-14px" name="locked"/> : <Icon className="icon-14px" name="unlocked"/>}
-                            </span>
-                        }
-                        {currentAccount}
-                    </div>
+                       {currentAccount}
+                     </div>
                     {walletBalance}
 
                     {hasLocalWallet && (
@@ -494,6 +489,13 @@ class Header extends React.Component {
                             {accountsList}
                         </ul>
                     )}
+                </div>
+                <div>
+                    { this.props.currentAccount == null ? null :
+                        <span onClick={this._toggleLock.bind(this)} style={{"cursor": "pointer"}}>
+                            <Icon className="lock-unlock" size="2x" name={this.props.locked ? "locked" : "unlocked"}/>
+                        </span>
+                    }
                 </div>
 
                 <div className="app-menu">
