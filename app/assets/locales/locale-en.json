@@ -100,6 +100,7 @@
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "search": "Search for an account",
     "new_user": "New user?",
     "existing_user": "Existing user",
     "restore": "Restore",

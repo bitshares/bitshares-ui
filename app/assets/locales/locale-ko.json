@@ -57,6 +57,7 @@
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
   "account": {
+    "search": "Search for an account",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",

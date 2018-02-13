@@ -135,7 +135,6 @@ export default class TypeAhead extends React.Component {
     };
 
     render() {
-        const { gatewayStatus } = this.props;
         return (
             <div
                 style={{

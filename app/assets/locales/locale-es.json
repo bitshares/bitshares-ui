@@ -96,6 +96,7 @@
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "search": "Search for an account",
     "new_user": "Nuevo usuario?",
     "existing_user": "Usuario existente",
     "restore": "Restaurar",

@@ -80,6 +80,7 @@
   "propose": "Proponi",
   "cancel": "Annulla",
   "account": {
+    "search": "Search for an account",
     "new_user": "Nuovo utente?",
     "existing_user": "Utente esistente",
     "restore": "Ripristina",

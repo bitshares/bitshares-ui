@@ -98,6 +98,7 @@
   "propose":"Предложить",
   "cancel":"Отменить",
   "account":{
+    "search": "Search for an account",
     "new_user":"Новый пользователь?",
     "existing_user":"Существующий пользователь",
     "restore":"Восстановить",

@@ -96,6 +96,7 @@
     "propose": "提议",
     "cancel": "取消",
     "account": {
+        "search": "Search for an account",
         "new_user": "新用户？",
         "existing_user": "老用户",
         "restore": "还原",

@@ -60,6 +60,7 @@
   "propose": "vorschlagen",
   "cancel": "abbrechen",
   "account": {
+    "search": "Search for an account",
     "contacts": "Kontakte",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",

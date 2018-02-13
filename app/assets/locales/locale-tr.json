@@ -65,6 +65,7 @@
   "propose": "Teklif Et",
   "cancel": "İptal",
   "account": {
+    "search": "Search for an account",
     "intro_text_title": "Bitshares'e Hoş Geldiniz",
     "intro_text_1": "<b>Bitshares Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
     "intro_text_2": "<b>Bitshares</b>'de al-sat işlemleri herhangi bir aracı olmaksızın, doğrudan kullanıcıların kendi arasında gerçekleşir.",
