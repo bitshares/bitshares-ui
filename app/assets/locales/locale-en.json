@@ -97,9 +97,33 @@
     "follow_user_add": "Click to Follow this user",
     "gateway": "Gateways back desposits by 100% real assets"
   },
+  "walkthrough": {
+    "language_flag": "Choose from 9 different languages to use in the DEX.",
+    "restore_account": "Restore a wallet using your backup file.",
+    "create_cloud_wallet": "Access the cloud wallet using an account name and password.",
+    "create_local_wallet": "Create a local wallet and download any private keys belonging to it.",
+    "switch_button": "Switch the trading pairs using this button.",
+    "favourite_button": "Mark this pair as a favourite in your markets list.",
+    "depth_chart": "Use a market depth chart to show the supply and demand at different prices.",
+    "price_chart": "View price action of an asset using the price chart.",
+    "chart_tool_zoom": "Adjust the price chart to show more or less price history.",
+    "chart_tool_duration": "Group trade data using different intervals.",
+    "chart_tool_indicators": "Add technical indicators to the price chart to identify trading opportunities.",
+    "buy_form": "Place buy orders using this form.",
+    "sell_form": "Place sell orders using this form.",
+    "buy_orders": "View all buy orders for this market.",
+    "sell_orders": "View all sell orders for this market.",
+    "my_markets_tab": "This tab lists commonly used markets.",
+    "find_markets_tab": "This tab allows you to search and add additional markets to the 'my markets' tab.",
+    "next_label": "Next",
+    "prev_label": "Back",
+    "skip_label": "Skip",
+    "done_label": "Done"
+  },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "search": "Search for an account",
     "new_user": "New user?",
     "existing_user": "Existing user",
     "restore": "Restore",
@@ -948,6 +972,9 @@
     "node_up": "Available",
     "node_down": "Unreachable",
     "available_nodes": "Available Nodes",
+    "hidden_nodes": "Hidden Nodes",
+    "show": "Show",
+    "hide": "Hide",
     "add_api": "Add Node",
     "remove_api": "Remove Node",
     "remove": "Remove",
@@ -1480,7 +1507,8 @@
       "transfering":"transfering",
       "success":"success",
       "fail":"fail"
-    }
+    },
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."

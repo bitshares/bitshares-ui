@@ -165,7 +165,7 @@ class NewWalletName extends Component {
         }
         if( has_current_wallet && this.props.backup.name && ! this.state.new_wallet) {
             // begning of the file name might make a good wallet name
-            let new_wallet = this.props.backup.name.match(/[a-z0-9_-]*/)[0]
+            let new_wallet = this.props.backup.name.toLowerCase().match(/[a-z0-9_-]*/)[0];
             if( new_wallet )
                 this.setState({new_wallet})
         }

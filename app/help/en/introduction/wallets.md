@@ -29,7 +29,7 @@ process actually easy. See managing [backups](/help/introduction/backups).
 Rest assured that our servers do not have access to your funds because none of
 your private keys ever leave your browser. Instead, they are encrypted with your
 passphrase and are stored in your local browser's database. As such, you should
-make sure to have a proper [Backup](../introduction/backups.md) in the event
+make sure to have a proper [Backup](/help/introduction/backups) in the event
 something happens to your computer or browser.
 
 ## Management

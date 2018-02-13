@@ -6,6 +6,7 @@ import { rudexAPIs } from "api/apiConfig";
 import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
+import counterpart from "counterpart";
 
 class DepositWithdrawAssetSelector  extends React.Component {
     constructor (props) {
@@ -43,7 +44,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 
         let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).sort(function(a, b) { return a.id.localeCompare(b.id); });
 
-        return <TypeAhead items={coinItems} {...this.props} label="gateway.asset" />;
+        return <TypeAhead items={coinItems} {...this.props} inputProps={{placeholder: counterpart.translate("gateway.asset_search_deposit")}} label="gateway.asset" />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);

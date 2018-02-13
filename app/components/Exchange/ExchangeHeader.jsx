@@ -105,6 +105,8 @@ export default class ExchangeHeader extends React.Component {
             }
         }
 
+        const translator = require("counterpart");
+
         return (
                 <div className="grid-block shrink no-padding overflow-visible top-bar">
                     <div className="grid-block overflow-visible">
@@ -128,7 +130,6 @@ export default class ExchangeHeader extends React.Component {
                                     }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
                                         <Icon className="shuffle" name="shuffle"/>
                                     </Link>
-                                    
                                     
                                     <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }}>
                                         <Icon className={starClass} name="fi-star"/>
@@ -163,7 +164,9 @@ export default class ExchangeHeader extends React.Component {
                                 </ul>
                                 <ul className="market-stats stats top-stats">
                                     <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
+
                                         {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+
                                     </li>
                                 </ul>
                             </div>

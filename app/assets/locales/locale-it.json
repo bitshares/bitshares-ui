@@ -77,9 +77,33 @@
     "disconnected": "Non sei connesso a un nodo API, prova a ricaricare o a scegliere un nuovo punto di accesso nelle Impostazioni",
     "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato."
   },
+  "walkthrough": {
+    "language_flag": "Scegli tra 9 lingue diverse da utilizzare nel DEX.",
+    "restore_account": "Ripristina un portafoglio utilizzando il tuo file di backup.",
+    "create_cloud_wallet": "Accedi al portafoglio cloud utilizzando un nome account e una password.",
+    "create_local_wallet": "Crea un portafoglio locale e scarica tutte le chiavi private ad esso appartenenti.",
+    "switch_button": "Cambia le coppie di trading usando questo pulsante.",
+    "favourite_button": "Segna questa coppia come preferita nella tua lista dei mercati.",
+    "depth_chart": "Utilizzare una tabella di profondità del mercato per mostrare l'offerta e la domanda a prezzi diversi.",
+    "price_chart": "Visualizza l'azione del prezzo di una risorsa utilizzando la tabella dei prezzi.",
+    "chart_tool_zoom": "Regola il grafico dei prezzi per mostrare più o meno la cronologia dei prezzi.",
+    "chart_tool_duration": "Raggruppa i dati commerciali utilizzando intervalli diversi.",
+    "chart_tool_indicators": "Aggiungi indicatori tecnici al grafico dei prezzi per identificare le opportunità di trading.",
+    "buy_form": "Inserisci ordini di acquisto utilizzando questo modulo.",
+    "sell_form": "Inserisci ordini di vendita utilizzando questo modulo.",
+    "buy_orders": "Visualizza tutti gli ordini di acquisto per questo mercato.",
+    "sell_orders": "Visualizza tutti gli ordini di vendita per questo mercato.",
+    "my_markets_tab": "Questa scheda elenca i mercati di uso comune.",
+    "find_markets_tab": "Questa scheda ti consente di cercare e aggiungere ulteriori mercati alla scheda I miei mercati.",
+    "next_label": "Prossimo",
+    "prev_label": "Indietro",
+    "skip_label": "Saltare",
+    "done_label": "Fatto"
+  },
   "propose": "Proponi",
   "cancel": "Annulla",
   "account": {
+    "search": "Search for an account",
     "new_user": "Nuovo utente?",
     "existing_user": "Utente esistente",
     "restore": "Ripristina",
@@ -875,6 +899,9 @@
     "node_up": "SU",
     "node_down": "GIÙ",
     "available_nodes": "Nodi disponibili",
+    "hidden_nodes": "Nodi nascosti",
+    "show": "mostra",
+    "hide": "Nascondi",
     "add_api": "Aggiungi Nodo",
     "remove_api": "Rimuovi Nodo",
     "remove": "Rimuovi",
@@ -1334,7 +1361,8 @@
     "unavailable_bridge": "Il servizio di bridge per questo asset non è al momento disponibile, riprova più tardi",
     "unavailable_OPEN": "Il Gateway OpenLedger non è disponibile o non risponde",
     "unavailable_RUDEX": "Il Gateway RuDEX non è disponibile o non risponde",
-    "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde"
+    "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
     "trx_error": {
         "expire": "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."
