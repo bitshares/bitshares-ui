@@ -62,7 +62,7 @@ export default class SettingsEntry extends React.Component {
 
             case "walletLockTimeout":
                 value = selected;
-                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
+                input = <input type="text" className="settings-input" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
                 break;
 
             case "reset":
@@ -106,7 +106,7 @@ export default class SettingsEntry extends React.Component {
                         return <option value={entry.translate ? entry.translate : entry} key={key}>{option}</option>;
                     });
                 } else {
-                    input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>;
+                    input = <input className="settings-input" type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>;
                 }
                 break;
         }
@@ -122,7 +122,7 @@ export default class SettingsEntry extends React.Component {
                 {options ? <ul>
                     <li className="with-dropdown">
                         {optional}
-                        <select value={value} onChange={this.props.onChange.bind(this, setting)}>
+                        <select value={value} className="settings-select" onChange={this.props.onChange.bind(this, setting)}>
                             {options}
                         </select>
                         {confirmButton}

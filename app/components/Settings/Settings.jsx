@@ -211,7 +211,7 @@ class Settings extends React.Component {
             entries = <AccessSettings faucet={settings.get("faucet_address")} nodes={defaults.apiServer} onChange={this._onChangeSetting.bind(this)} triggerModal={this.triggerModal.bind(this)} />;
             break;
         case "faucet_address":
-            entries = <input type="text" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
+            entries = <input type="text" className="settings-input" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
             break;
         default:
             entries = settingEntries[activeEntry].map(setting => {

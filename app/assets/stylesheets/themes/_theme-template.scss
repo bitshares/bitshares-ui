@@ -36,9 +36,31 @@ $account-tabs-background,
 $pulsate-green-start,
 $pulsate-green-end,
 $pulsate-red-start,
-$pulsate-red-end
+$pulsate-red-end,
+$settings-select-bg,
+$settings-select-color,
+$settings-menu-hover-bg,
+$settings-menu-active-bg,
+$main-content-margin-block-bg-color
 ) {
 
+  .settings-select {
+    height: 36px;
+    background-color: $settings-select-bg;
+    color: $settings-select-color;
+  }
+
+  .settings-input {
+    /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
+    .block-list and it uses on many places. To keep everything OK and do not break something I just do
+    overwrite for Inputs on settings and keep default styles for inputs on another places.
+    */
+    color: $settings-select-color !important;
+    height: 36px !important;
+    background-color: $settings-select-bg !important;
+    border-bottom: 0 !important;
+    max-width: 100% !important;
+  }
 
   .dark-text-color {
     color: $dark-text-color;
@@ -532,6 +554,15 @@ $pulsate-red-end
         &.no-border-bottom {
           li {
             border-bottom: 0;
+          }
+        }
+
+        li.with-dropdown {
+          .settings-select {
+            @extend .settings-select;
+          }
+          > input.settings-input[type="text"] {
+            @extend .settings-input;
           }
         }
     }
@@ -1379,12 +1410,12 @@ $pulsate-red-end
             margin: 5px;
             &:hover {
                 color: $primary-text-color;
-                background-color: darken($light-panel-bg-color, 20%);
+                background-color: $settings-menu-hover-bg;
             }
 
             &.active {
                 color: $primary-text-color;
-                background-color: darken($light-panel-bg-color, 20%);
+                background-color: $settings-menu-active-bg;
             }
         }
     }
