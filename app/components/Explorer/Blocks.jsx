@@ -247,7 +247,7 @@ class Blocks extends React.Component {
         }
 
         return (
-            <div ref="outerWrapper" className="grid-block vertical page-layout">
+            <div ref="outerWrapper" className="grid-block vertical">
 
                 {/* First row of stats */}
                 <div className="align-center grid-block shrink small-horizontal blocks-row">
