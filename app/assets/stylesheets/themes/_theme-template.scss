@@ -41,6 +41,7 @@ $settings-select-bg,
 $settings-select-color,
 $settings-menu-hover-bg,
 $settings-menu-active-bg,
+$settings-api-node-border-color,
 $main-content-margin-block-bg-color
 ) {
 
@@ -1395,6 +1396,16 @@ $main-content-margin-block-bg-color
         border: 0;
         &:hover, &:focus, &:active {
             background-color: $input-background;
+        }
+    }
+
+    .api-node {
+        border: 1px solid $settings-api-node-border-color;
+        &:nth-child(n+1) {
+            border-bottom: 0;
+        }
+        &:last-child {
+            border: 1px solid $settings-api-node-border-color;
         }
     }
 

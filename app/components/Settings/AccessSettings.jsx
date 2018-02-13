@@ -87,7 +87,7 @@ class ApiNode extends React.Component {
 
         return <div
             className="api-node"
-            style={{border: "1px solid #fff", position: "relative", padding: "0.5em 1em 0.5em 1em"}}
+            style={{position: "relative", padding: "0.5em 1em 0.5em 1em"}}
             onMouseOver={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >

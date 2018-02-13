@@ -11,6 +11,7 @@ $error-text-color: #E3745B;
 
 $settings-select-bg: #1e1f25;
 $settings-select-color: #737373;
+$settings-api-node-border-color: #2a2b34;
 $main-content-margin-block-bg-color: #151619;
 $bg-color: #191A1F;
 $panel-bg-color: #2C2E37;
@@ -94,6 +95,7 @@ $pulsate-red-end:#ef7c82;
     $settings-select-color,
     $settings-menu-hover-bg,
     $settings-menu-active-bg,
+    $settings-api-node-border-color,
     $main-content-margin-block-bg-color
   );
 }
