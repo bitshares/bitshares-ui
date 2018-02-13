@@ -113,7 +113,7 @@ const routes = (
         <Route path="market/:marketID" getComponent={(location, cb) => {
             System.import("components/Exchange/ExchangeContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
-        <Route path="settings" getComponent={(location, cb) => {
+        <Route path="settings/:tab" getComponent={(location, cb) => {
             System.import("components/Settings/SettingsContainer").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="block/:height" getComponent={(location, cb) => {

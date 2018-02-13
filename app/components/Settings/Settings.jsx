@@ -15,15 +15,20 @@ import AccessSettings from "./AccessSettings";
 
 class Settings extends React.Component {
 
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    };
+
     constructor(props) {
         super();
 
         let menuEntries = this._getMenuEntries(props);
-        let activeSetting = props.viewSettings.get("activeSetting", 0);
-        if (activeSetting > (menuEntries.length - 1)) {
-            activeSetting = 0;
-        }
-        if (props.deprecated) activeSetting = 1;
+        let activeSetting = 0;
+
+        let tabIndex = menuEntries.indexOf(props.params.tab);
+
+        if(tabIndex >= 0)
+            activeSetting = tabIndex;
 
         this.state = {
             apiServer: props.settings.get("apiServer"),
@@ -178,6 +183,8 @@ class Settings extends React.Component {
         this.setState({
             activeSetting: index
         });
+
+        this.context.router.push("/settings/"+entry);
 
         SettingsActions.changeViewSetting({activeSetting: index});
     }
