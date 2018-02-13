@@ -206,19 +206,20 @@ class AccountOverview extends React.Component {
     }
 
     _renderBuy = (symbol, canBuy, assetName, emptyCell, balance) => {
-        if(symbol === "BTS" && balance <= 1){
-            return <span>
-                            <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
-                                <PulseIcon onIcon="dollar" offIcon="dollar-green" duration={1000} className="icon-14px" />
-                            </a>
-                        </span>;
-        }else{
+        if(symbol === "BTS" && balance <= 10^5) { // Precision of 5, 1 = 10^5
+            return (
+                <span>
+                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
+                        <PulseIcon onIcon="dollar" offIcon="dollar-green" duration={1000} className="icon-14px" />
+                    </a>
+                </span>);
+        } else {
             return canBuy && this.props.isMyAccount ?
                 <span>
-                            <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
-                                <Icon name="dollar" className="icon-14px" />
-                            </a>
-                        </span> : emptyCell;
+                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
+                        <Icon name="dollar" className="icon-14px" />
+                    </a>
+                </span> : emptyCell;
         }
     };
 
@@ -286,7 +287,7 @@ class AccountOverview extends React.Component {
             const thisAssetName = asset.get("symbol").split(".");
             const canDeposit =
                 (
-                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") && 
+                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
                     !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
                     !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
                 ) || asset.get("symbol") == "BTS";
