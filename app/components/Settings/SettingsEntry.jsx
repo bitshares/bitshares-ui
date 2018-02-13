@@ -117,7 +117,7 @@ export default class SettingsEntry extends React.Component {
         }
   
         return (
-            <section className="block-list">
+            <section className="block-list no-border-bottom">
                 {noHeader ? null : <header><Translate component="span" style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}} content={`settings.${setting}`} /></header>}
                 {options ? <ul>
                     <li className="with-dropdown">

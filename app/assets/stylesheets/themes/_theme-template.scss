@@ -529,6 +529,11 @@ $pulsate-red-end
             margin-bottom: 1rem;
             color: $secondary-text-color;
         }
+        &.no-border-bottom {
+          li {
+            border-bottom: 0;
+          }
+        }
     }
 
 
