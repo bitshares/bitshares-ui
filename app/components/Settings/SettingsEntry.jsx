@@ -65,20 +65,6 @@ export default class SettingsEntry extends React.Component {
                 input = <input type="text" className="settings-input" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
                 break;
 
-            case "reset":
-                value = true;
-
-                input = <div
-                    style={{height: 60, width: "100%", paddingTop: 20}}
-                    className="button"
-                    onClick={() => {SettingsActions.clearSettings().then(() => {this._setMessage("settings.restore_default_success");});}}
-                >
-                    {counterpart.translate("settings.reset")}
-                </div>;
-
-                noHeader = true;
-                break;
-
             default:
 
                 if (typeof selected === "number") {

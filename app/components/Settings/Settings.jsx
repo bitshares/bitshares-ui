@@ -9,6 +9,7 @@ import AccountsSettings from "./AccountsSettings";
 import WalletSettings from "./WalletSettings";
 import PasswordSettings from "./PasswordSettings";
 import RestoreSettings from "./RestoreSettings";
+import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 
@@ -73,7 +74,8 @@ class Settings extends React.Component {
             "backup",
             "restore",
             "access",
-            "faucet_address"
+            "faucet_address",
+            "reset"
         ];
 
         if (props.settings.get("passwordLogin")) {
@@ -213,6 +215,11 @@ class Settings extends React.Component {
         case "faucet_address":
             entries = <input type="text" className="settings-input" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
             break;
+
+        case "reset":
+            entries = <ResetSettings />;
+            break;
+
         default:
             entries = settingEntries[activeEntry].map(setting => {
                 return (
