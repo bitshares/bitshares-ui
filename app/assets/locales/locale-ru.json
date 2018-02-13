@@ -121,6 +121,7 @@
   "propose":"Предложить",
   "cancel":"Отменить",
   "account":{
+    "search": "Search for an account",
     "new_user":"Новый пользователь?",
     "existing_user":"Существующий пользователь",
     "restore":"Восстановить",
@@ -962,6 +963,9 @@
     "node_up":"OK",
     "node_down":"отключено",
     "available_nodes":"Доступные узлы",
+    "hidden_nodes":"Скрытые узлы",
+    "show": "Показать",
+    "hide": "Скрыть",
     "add_api":"Добавить API",
     "remove_api":"Удалить API",
     "remove":"Удалить",
@@ -1492,7 +1496,8 @@
       "transfering":"передача",
       "success":"успех",
       "fail":"не удалось"
-    }
+    },
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error":{
     "expire":"Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."

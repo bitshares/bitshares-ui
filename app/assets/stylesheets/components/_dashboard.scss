@@ -249,7 +249,8 @@ div.input-wrapper {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
-            height: 650px;
+            height: auto;
+            min-height: 650px;
 
             .Modal__header {
                 text-align: center;
@@ -265,6 +266,7 @@ div.input-wrapper {
             }
 
             .Modal__body {
+                flex: 1;
                 height: 90%;
                 padding-top: 16px;
             }
