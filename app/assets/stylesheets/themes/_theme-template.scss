@@ -1370,8 +1370,8 @@ $pulsate-red-end
         > li {
             border-radius: 2px;
             color: $dark-text-color;
-            padding: .2rem .75rem;
-            margin: .3rem 0;
+            padding: 3px 11px;
+            margin: 5px;
             &:hover {
                 color: $primary-text-color;
                 background-color: darken($light-panel-bg-color, 20%);
