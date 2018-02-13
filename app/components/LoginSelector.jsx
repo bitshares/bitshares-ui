@@ -50,6 +50,8 @@ class LoginSelector extends React.Component {
     }
 
     render() {
+        const translator = require("counterpart");
+        
         const childCount = React.Children.count(this.props.children);
         
         const flagDropdown = <ActionSheet>
@@ -92,7 +94,7 @@ class LoginSelector extends React.Component {
                                
                                 <div className="shrink text-center">
                                     <div className="grp-menu-item overflow-visible account-drop-down">
-                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}} data-intro="Choose from 9 different languages to use in the DEX.">
+                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}} data-intro={translator.translate("walkthrough.language_flag")}>
                                         {flagDropdown}
                                         </div>
                                     </div>
@@ -102,7 +104,7 @@ class LoginSelector extends React.Component {
                         
                         {!!childCount ? null :
                         <div className="grid-block account-login-options">
-                            <Link to="/create-account/password" className="button primary" data-intro="Access the cloud wallet using an account name and password.">
+                            <Link to="/create-account/password" className="button primary" data-intro={translator.translate("walkthrough.create_cloud_wallet")}>
                                 <Translate content="header.create_account" />
                             </Link>
 
@@ -116,7 +118,7 @@ class LoginSelector extends React.Component {
 
                         {!!childCount ? null :
                         <div className="additional-account-options">
-                            <p>Optionally, <Link to="/wallet/backup/restore" data-intro="Restore a wallet using your backup file.">restore your account</Link> or create an account using the <Link to="/create-account/wallet" data-intro="Create a local wallet and download any private keys belonging to it.">advanced form</Link>.</p>
+                            <p>Optionally, <Link to="/wallet/backup/restore" data-intro={translator.translate("walkthrough.restore_account")}>restore your account</Link> or create an account using the <Link to="/create-account/wallet" data-intro={translator.translate("walkthrough.create_local_wallet")}>advanced form</Link>.</p>
                         </div>}
 
                         {this.props.children}
