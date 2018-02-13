@@ -4,6 +4,7 @@
 $primary-text-color,
 $bg-color,
 $dark-text-color,
+$inactive-text-color,
 $link-text-color,
 $light-text-color,
 $secondary-text-color,
@@ -401,7 +402,7 @@ $pulsate-red-end
     }
 
 
-    .header span.icon.lock-unlock > svg > path {
+    .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
 
@@ -669,7 +670,7 @@ $pulsate-red-end
             }
             .selector {
                 .inactive {
-                    color: $dark-text-color;
+                    color: $inactive-text-color;
                 }
             }
         }
