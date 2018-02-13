@@ -139,48 +139,45 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
-div.hide-selector {
-    padding-bottom: 10px;
-    > div {
-        h4 {
-            @include RobotoMedium;
+div.header-selector {
+    > .filter {
+        margin-right: 1rem;
+        input {
+            margin: 0;
+            height: 2rem;
+            padding: 0 10px;
         }
-        font-size: 1.15rem;
+    }
+    > .selector div {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
         cursor: pointer;
-        &:nth-of-type(n + 2) {
+        &:nth-of-type(n + 1) {
             padding-left: 10px;
-        }
-        &.inactive {
-            h4 {
-                @include RobotoRegular;
-            }
-            color: grey;
+            padding-right: 10px;
+            border-right: 1px solid white;
         }
         &:hover.inactive {
             color: inherit;
         }
     }
+    > .selector div:last-of-type {
+        border-right: 0px;
+    }
 }
 
 div.account-tabs {
+    .padding { 
+        padding: 20px; 
+    }
     > div.service-selector {
         margin-bottom: 0;
         border: none;
         overflow-x: hidden;
     }
 
-    div.hide-selector {
-        padding-left: 12px;
-        padding-bottom: 17px;
-    }
-
-    > div.tab-content {
-
-         @include breakpoint(large) {
-             max-width: rem-calc(1200);
-             margin-left: auto !important;
-             margin-right: auto !important;
-         }
+    div.header-selector {
+        padding: 1rem;
     }
 
     &.with-buttons ul.account-overview > li:not(.total-value) > a {
@@ -289,14 +286,14 @@ table.table.dashboard-table {
     }
 }
 
-div.hide-selector > div.new-worker-button {
+div.header-selector > div.new-worker-button {
     padding-left: 0;
     padding-top: 10px;
 
     @include breakpoint(medium) {
         padding-top: 0;
         position: relative;
-        top: -10px;
+        top: -20px;
         float: right;
         clear: both;
     }
@@ -328,7 +325,6 @@ div.tabs-container {
         font-size: 1.2em;
     }
 
-    div.tab-content,
     div.permissions-buttons {
         margin: 0 1rem;
     }

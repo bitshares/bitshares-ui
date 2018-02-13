@@ -23,8 +23,7 @@
   // min-height: 64px;
   // text-transform: uppercase;
   .menu-bar > li {
-
-    display: list-item;
+    //display: list-item;
     padding: 0;
     border-right: none;
     > a {
@@ -196,23 +195,23 @@ ul.dropdown.header-menu {
 }
 
 .account-summary {
-  text-align: right;
-  line-height: initial;
-  display: inline-block;
+    text-align: right;
+    line-height: initial;
+    display: inline-block;
+  
+    .icon {
+        margin-right: 5px;
+    }
 
-  .icon {
-    margin-right: 5px;
-  }
-
-  svg path {
-    fill: #fff;
-  }
+    svg path {
+        fill: #fff;
+    }
 }
 
 .account-name .icon {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .active-account {
-  padding-right: 20px;
+    padding-right: 20px;
 }

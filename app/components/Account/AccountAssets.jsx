@@ -245,7 +245,7 @@ class AccountAssets extends React.Component {
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
 
-                        <Tabs segmented={false} setting="issuedAssetsTab" className="account-tabs" tabsClass="account-overview bordered-header content-block">
+                        <Tabs segmented={false} setting="issuedAssetsTab" className="account-tabs" tabsClass="account-overview bordered-header content-block" contentClass="padding">
 
                             <Tab title="account.user_issued_assets.issued_assets">
                                 <div className="content-block">

@@ -69,10 +69,8 @@ class CommitteeMemberRow extends React.Component {
 
     render() {
         let {committee_member, rank} = this.props;
-        let committee_member_data = ChainStore.getCommitteeMemberById( committee_member.get("id") )
+        let committee_member_data = ChainStore.getCommitteeMemberById( committee_member.get("id") );
         if ( !committee_member_data ) return null;
-        let total_votes = committee_member_data.get( "total_votes" );
-
         let url = committee_member_data.get("url");
 
         url = url && url.length > 0 && url.indexOf("http") === -1 ? "http://" + url : url;
@@ -81,10 +79,10 @@ class CommitteeMemberRow extends React.Component {
             <tr>
                 <td onClick={this._onRowClick.bind(this)}>{rank}</td>
                 <td onClick={this._onRowClick.bind(this)}>{committee_member.get("name")}</td>
-                <td onClick={this._onRowClick.bind(this)}><FormattedAsset amount={committee_member_data.get('total_votes')} asset="1.3.0" /></td>
+                <td onClick={this._onRowClick.bind(this)}><FormattedAsset amount={committee_member_data.get("total_votes")} asset="1.3.0" /></td>
                 <td><a href={url} rel="noopener noreferrer" target="_blank">{committee_member_data.get("url")}</a></td>
             </tr>
-        )
+        );
     }
 }
 CommitteeMemberRow = BindToChainState(CommitteeMemberRow, {keep_updating: true});
@@ -97,8 +95,8 @@ class CommitteeMemberList extends React.Component {
     constructor () {
         super();
         this.state = {
-          sortBy: 'rank',
-          inverseSort: true
+            sortBy: "rank",
+            inverseSort: true
         };
     }
 
@@ -153,7 +151,7 @@ class CommitteeMemberList extends React.Component {
                     }
 
                     switch (sortBy) {
-                        case 'name':
+                        case "name":
                             if (a_account.get("name") > b_account.get("name")) {
                                 return inverseSort ? 1 : -1;
                             } else if (a_account.get("name") < b_account.get("name")) {
@@ -190,18 +188,17 @@ class CommitteeMemberList extends React.Component {
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'rank')}><Translate content="explorer.witnesses.rank" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'name')}><Translate content="account.votes.name" /></th>
-                            <th className="clickable" onClick={this._setSort.bind(this, 'total_votes')}><Translate content="account.votes.votes" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, "rank")}><Translate content="explorer.witnesses.rank" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, "name")}><Translate content="account.votes.name" /></th>
+                            <th className="clickable" onClick={this._setSort.bind(this, "total_votes")}><Translate content="account.votes.votes" /></th>
                             <th ><Translate content="account.votes.url" /></th>
                         </tr>
                     </thead>
-                <tbody>
-                    {itemRows}
-                </tbody>
-
-            </table>
-            )
+                    <tbody>
+                        {itemRows}
+                    </tbody>
+                </table>
+            );
         }
         else {
             return (
@@ -272,7 +269,7 @@ class CommitteeMembers extends React.Component {
 
         let content = 
             <div className="grid-block">
-                <div className="grid-block page-layout vertical medium-horizontal">
+                <div className="grid-block vertical medium-horizontal">
                     <div className="grid-block shrink">
                         <div className="grid-content">
                             <h5><Translate content="explorer.committee_members.active" />: {Object.keys(globalObject.active_committee_members).length}</h5>

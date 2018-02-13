@@ -65,7 +65,7 @@ class AccountList extends React.Component {
                     account={account}
                     index={index + 1}
                 />
-            )
+            );
         }).toArray();
 
         let showHeaders = true;
@@ -77,7 +77,7 @@ class AccountList extends React.Component {
                         <Translate content={this.props.emptyText} account={this.props.account.get("name")}/>
                     </td>
                 </tr>
-            )
+            );
         }
 
         return (
@@ -219,7 +219,7 @@ class AccountWhitelist extends React.Component {
                                             removeButton
                                         />
                                     </div>
-                                    <div style={{padding: "2rem 0"}}>
+                                    <div style={{padding: "2rem 1rem"}}>
                                         <AccountSelector
                                             label={"account.whitelist.add_black"}
                                             accountName={accountName}
@@ -263,7 +263,7 @@ class AccountWhitelist extends React.Component {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 
 }
