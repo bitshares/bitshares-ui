@@ -663,7 +663,10 @@ $pulsate-red-end
 
     .tab-content {
         background-color: lighten($account-header, 4%);
-        > div.header-selector {
+        div.header-selector {
+            .filter input {
+                background-color: $bg-color;
+            }
             .selector {
                 .inactive {
                     color: $dark-text-color;
@@ -1600,35 +1603,6 @@ $pulsate-red-end
                         fill: grey;
                     }
                 }
-            }
-        }
-    }
-
-    div.dashboard-filter {
-        display: flex;
-        padding: 10px 2.5rem;
-        background-color: lighten($account-header, 4%);
-
-        > input {
-            background-color: $bg-color;
-            border: 0;
-            margin-right: 15px;
-            line-height: 28px;
-            padding: 0 10px;
-        }
-
-        > div > a {
-            line-height: 28px;
-            padding: 0 10px;       
-            font-size: 0.875rem;     
-            color: $account-dimmed;
-
-            &:first-child {
-                border-right: 1px solid $account-dimmed;
-            }
-
-            &.is-active {
-                color: $account-primarytext;
             }
         }
     }

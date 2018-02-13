@@ -175,7 +175,7 @@ class Tabs extends React.Component {
                         {this.props.actionButtons ? <li className="tabs-action-buttons">{this.props.actionButtons}</li> : null}
                     </ul>
                 </div>
-                <div className={cnames(!!this.props.noWrap ? "" : "tab-content", contentClass)} >
+                <div className={cnames("tab-content", contentClass)} >
                     {activeContent}
                 </div>
             </div>

@@ -258,33 +258,37 @@ class MarketsTable extends React.Component {
 
         return (
             <div>
-                <div className="dashboard-filter">
-                    <input placeholder="Filter" onChange={this._handleFilterInput.bind(this)} />
-                    <div>
-                        <a className={cnames({ "is-active": !showHidden })} onClick={this._toggleShowHidden.bind(this, false)}><Translate content="account.hide_hidden" /></a>
-                        <a className={cnames({ "is-active": showHidden })} onClick={this._toggleShowHidden.bind(this, true)}><Translate content="account.show_hidden" /></a>
+                <div className="header-selector">
+                    <div className="filter inline-block">
+                        <input type="text" placeholder="Filter" onChange={this._handleFilterInput.bind(this)} />
+                    </div>
+                    <div className="selector inline-block">
+                        <div className={cnames("inline-block", { "inactive": showHidden })} onClick={this._toggleShowHidden.bind(this, false)}>
+                            <Translate content="account.hide_hidden" />
+                        </div>
+                        <div className={cnames("inline-block", { "inactive": !showHidden })} onClick={this._toggleShowHidden.bind(this, true)}>
+                            <Translate content="account.show_hidden" />
+                        </div>
                     </div>
                 </div>
-                <div className="tab-content">
-                    <table className="table dashboard-table table-hover">
-                        <thead>
-                            <tr>
-                                <th style={{textAlign: "left"}}><Translate component="span" content="account.asset" /></th>
-                                <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
-                                <th style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
-                                <th className="column-hide-small" style={{textAlign: "right"}}><Translate content="exchange.volume" /></th>
-                                {showFlip ? <th className="column-hide-small"><Translate content="exchange.flip" /></th> : null}
-                                <th><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="table-empty" style={{ display: visibleRow ? "none" : "" }}>
-                                <td colSpan={showFlip ? 6 : 5}><Translate content="dashboard.table_empty"/></td>
-                            </tr>
-                            {markets}
-                        </tbody>
-                    </table>
-                </div>
+                <table className="table dashboard-table table-hover">
+                    <thead>
+                        <tr>
+                            <th style={{textAlign: "left"}}><Translate component="span" content="account.asset" /></th>
+                            <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
+                            <th style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
+                            <th className="column-hide-small" style={{textAlign: "right"}}><Translate content="exchange.volume" /></th>
+                            {showFlip ? <th className="column-hide-small"><Translate content="exchange.flip" /></th> : null}
+                            <th><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="table-empty" style={{ display: visibleRow ? "none" : "" }}>
+                            <td colSpan={showFlip ? 6 : 5}><Translate content="dashboard.table_empty"/></td>
+                        </tr>
+                        {markets}
+                    </tbody>
+                </table>
             </div>
         );
     }

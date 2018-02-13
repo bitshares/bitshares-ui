@@ -11,7 +11,7 @@ class DashboardPage extends React.Component {
                     <div className="grid-content app-tables no-padding" ref="appTables">
                         <div className="content-block small-12">
                             <div className="tabs-container generic-bordered-box">
-                                <Tabs noWrap={true} defaultActiveTab={1} segmented={false} setting="dashboardTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
+                                <Tabs defaultActiveTab={1} segmented={false} setting="dashboardTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
                                     <Tab title="dashboard.starred_markets">
                                         <StarredMarkets />
                                     </Tab>
