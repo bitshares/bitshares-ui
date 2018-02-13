@@ -77,6 +77,7 @@ class DashboardList extends React.Component {
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
 			nextProps.linkedAccounts !== this.props.linkedAccounts ||
+			nextProps.passwordAccount !== this.props.passwordAccount ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state )
 		);
@@ -131,7 +132,7 @@ class DashboardList extends React.Component {
 
 	_renderList(accounts) {
 
-		const {width, starredAccounts, showMyAccounts} = this.props;
+		const {width, starredAccounts, showMyAccounts, passwordAccount} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
 
@@ -209,7 +210,7 @@ class DashboardList extends React.Component {
 					});
 				}
 
-				let isMyAccount = AccountStore.isMyAccount(account);
+				let isMyAccount = AccountStore.isMyAccount(account) || accountName === passwordAccount;
 
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
@@ -229,6 +230,9 @@ class DashboardList extends React.Component {
 								<Icon name="minus-circle"/>
 							</td>
 						: null}
+						<td style={{textAlign: "left"}}>
+							{ account.get("id") }
+						</td>
 						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, accountName, 0)} className={"clickable" + (isMyAccount ? " my-account" : "")}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
@@ -262,17 +266,17 @@ class DashboardList extends React.Component {
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
                 
-                let hasLocalWallet = !!WalletDb.getWallet();
+		let hasLocalWallet = !!WalletDb.getWallet();
                 
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
-					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
-						<input placeholder={filterText} style={{display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                                                {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
+					<section style={{paddingTop: "1rem", paddingLeft: "2rem"}}>
+						<input placeholder={filterText} style={{maxWidth: "20rem", display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+							{hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", marginLeft: 5, marginBottom: "1rem"}} className="button small">
 							<Translate content="header.create_account" />
 						</div>):null}
-                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
+						{this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div>:null}
 					</section>) : null}
@@ -282,6 +286,7 @@ class DashboardList extends React.Component {
 						<tr>
 							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
 							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
+							<th style={{textAlign: "left"}}>ID</th>
 							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}

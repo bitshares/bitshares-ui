@@ -8,21 +8,21 @@ class AccountsContainer extends React.Component {
     
     render() {
         let content = 
-              <AltContainer 
-                  stores={[AccountStore]}
-                  inject={{
+            <AltContainer
+                stores={[AccountStore]}
+                inject={{
                     searchAccounts: () => {
                         return AccountStore.getState().searchAccounts;
                     },
                     searchTerm: () => {
                         return AccountStore.getState().searchTerm;
                     }
-                  }} 
-                  >
+                }}
+            >
                 <Accounts />
-              </AltContainer>;
+            </AltContainer>;
                       
-             return (<Explorer tab="accounts" content={content}/>);         
+        return (<Explorer tab="accounts" content={content}/>);
     }
 }
 

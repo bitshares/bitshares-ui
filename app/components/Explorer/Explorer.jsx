@@ -1,7 +1,4 @@
 import React from "react";
-import {Link} from "react-router/es";
-import Translate from "react-translate-component";
-import Icon from "../Icon/Icon";
 import {Tabs, Tab} from "../Utility/Tabs";
 
 class Explorer extends React.Component {
@@ -34,7 +31,7 @@ class Explorer extends React.Component {
 
     render() {
         
-        let defaultActiveTab = this.state.tabs.findIndex(t => t.name === this.props.tab)
+        let defaultActiveTab = this.state.tabs.findIndex(t => t.name === this.props.tab);
         
         let tabs = [];
         
@@ -48,10 +45,12 @@ class Explorer extends React.Component {
         }
         
         
-        return (<Tabs defaultActiveTab={defaultActiveTab} segmented={false} setting="explorerTab-{this.props.tab}" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
-                    {tabs}
-                </Tabs>);
-        }
+        return (
+            <Tabs defaultActiveTab={defaultActiveTab} segmented={false} setting="explorerTab-{this.props.tab}" className="account-tabs" tabsClass="account-overview bordered-header content-block" contentClass="tab-content padding">
+                {tabs}
+            </Tabs>
+        );
     }
+}
 
-    export default Explorer;
+export default Explorer;

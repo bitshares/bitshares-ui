@@ -32,6 +32,7 @@
     "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
+    "deposit-withdraw": "Deposit/Withdraw",
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
@@ -158,6 +159,11 @@
       "empty_black_by": "No accounts have blacklisted %(account)s.",
       "whitelist_authorities": "Whitelist authority",
       "blacklist_authorities": "Blacklist authority"
+    },
+    "transactions": {
+      "type": "Type",
+      "info": "Info",
+      "time": "Time"
     },
     "vesting": {
       "title": "Vesting balances",
@@ -948,6 +954,9 @@
     "node_up": "Available",
     "node_down": "Unreachable",
     "available_nodes": "Available Nodes",
+    "hidden_nodes": "Hidden Nodes",
+    "show": "Show",
+    "hide": "Hide",
     "add_api": "Add Node",
     "remove_api": "Remove Node",
     "remove": "Remove",

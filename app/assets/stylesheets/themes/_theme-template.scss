@@ -39,7 +39,7 @@ $pulsate-red-start,
 $pulsate-red-end
 ) {
 
-  .fz_12{
+  .fz_12 {
     font-size: 12px;
   }
 
@@ -252,7 +252,7 @@ $pulsate-red-end
 
 
     .page-layout {
-        background-color: $bg-color;
+        background-color: lighten($account-header, 4%);
 
         .left-column {
             border-top-color: $bg-color;
@@ -338,7 +338,7 @@ $pulsate-red-end
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 1rem .25rem;
+            padding: 0.9rem .25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -347,7 +347,7 @@ $pulsate-red-end
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
-                    fill: $account-dimmed;
+                    fill: $bs-blue;
                 }
             }
             &:hover {
@@ -431,7 +431,7 @@ $pulsate-red-end
             }
             > span { @include RobotoMedium; }
         }
-        svg > path { fill: $secondary-text-color; }
+        svg > path { fill: #fff; }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
@@ -660,6 +660,18 @@ $pulsate-red-end
             }
         }
     }
+
+    .tab-content {
+        background-color: lighten($account-header, 4%);
+        > div.header-selector {
+            .selector {
+                .inactive {
+                    color: $dark-text-color;
+                }
+            }
+        }
+    }
+
 
 
 
@@ -1380,6 +1392,15 @@ $pulsate-red-end
         }
     }
 
+    .nodes-header {
+      border-bottom-color: $button-bg-color;
+      background-color: $bg-color;
+      &.inactive {
+        border-bottom-color: transparent;
+        color: $secondary-text-color;
+      }
+    }
+
     .react-stockcharts-tooltip {
         fill: $primary-text-color;
     }
@@ -1678,6 +1699,32 @@ $pulsate-red-end
         }
     }
 
+    .header-container {
+        background-color: $account-background;
+
+        .menu-dropdown-wrapper {
+            &.active {
+                background: $panel-bg-color;
+            }
+        }
+
+        .dropdown.header-menu {
+            background-color: $panel-bg-color;
+    
+            li.divider {
+                border-bottom: 1px solid $dark-text-color;
+            }
+    
+            > li:hover {
+                background-color: $super-light-panel-bg-color
+            }
+        }
+
+        .total-value {
+            color: $account-green
+        }
+    }
+
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1739,3 +1786,99 @@ $pulsate-red-end
 .market-filter-input:not(:valid) ~ .clear-text {
     display: none;
 }
+
+.header-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 64px;
+
+    .menu-bar {
+        overflow: visible;
+    }
+
+    .logo {
+        padding-top: .7rem;
+        padding-bottom: .8rem;
+    }
+
+    .dropdown-wrapper:after {
+        display: none;
+    }
+
+    .menu-dropdown-wrapper {
+        height: 65px;
+        width: 65px;
+        text-align: center;
+        border-radius: 0;
+
+        .hamburger .icon {
+            position: relative;
+            top: 12px;
+        }
+    }
+
+    .dropdown.header-menu {
+        top: 65px;
+    }
+
+    .hamburger svg rect, .hamburger-x svg rect {
+        fill: $bs-blue;
+    }
+
+    .total-value {
+        text-align: right;
+        font-size: 80%;
+        line-height: normal;
+    }
+}
+
+.local-wallet-menu {
+    // top: 50px!important;
+
+    .table-cell {
+        display: inline-block;
+    }
+}
+
+.app-menu {
+    flex: 0;
+}
+
+.truncated {
+    flex: 1;
+    min-width: 0; /* or some value */
+    .text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: right;
+    }
+
+}
+
+#unlock_wallet_modal2 .close-button {
+    color: $bs-blue;
+}
+
+@media screen and (max-width: 640px) {
+    .responsive-list > .help-content > ul {
+        background: steelblue;
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 6px;
+        background: #2a2a2a;
+        border: 1px solid #4b5158;
+        margin-bottom: 2rem!important;
+
+        li {
+            border-bottom: 1px solid #393939;
+            padding: 4px;
+
+            ul li {
+                border: 0;
+            }
+        }
+    }
+}
+

@@ -30,6 +30,8 @@ class SettingsStore {
             onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
+            onShowWS: SettingsActions.showWS,
+            onHideWS: SettingsActions.hideWS,
             onHideAsset: SettingsActions.hideAsset,
             onHideMarket: SettingsActions.hideMarket,
             onClearSettings: SettingsActions.clearSettings,
@@ -113,13 +115,7 @@ class SettingsStore {
             let olIdx = savedDefaults.themes.findIndex(a => a === "olDarkTheme");
             if (olIdx !== -1) savedDefaults.themes[olIdx] = "midnightTheme";
         }
-        if (savedDefaults.apiServer) {
-            savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
-                return !defaults.apiServer.find(b => {
-                    return b.url === a.url;
-                });
-            });
-        }
+
         this.defaults = merge({}, defaults, savedDefaults);
 
         (savedDefaults.apiServer || []).forEach(api => {
@@ -351,6 +347,18 @@ class SettingsStore {
 
     onRemoveWS(index) {
         this.defaults.apiServer.splice(index, 1);
+        ss.set("defaults_v1", this.defaults);
+    }
+
+    onHideWS(url) {
+        let node = this.defaults.apiServer.find((node) => node.url === url);
+        node.hidden = true;
+        ss.set("defaults_v1", this.defaults);
+    }
+
+    onShowWS(url) {
+        let node = this.defaults.apiServer.find((node) => node.url === url);
+        node.hidden = false;
         ss.set("defaults_v1", this.defaults);
     }
 
