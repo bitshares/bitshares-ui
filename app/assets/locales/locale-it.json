@@ -1337,7 +1337,8 @@
     "unavailable_bridge": "Il servizio di bridge per questo asset non è al momento disponibile, riprova più tardi",
     "unavailable_OPEN": "Il Gateway OpenLedger non è disponibile o non risponde",
     "unavailable_RUDEX": "Il Gateway RuDEX non è disponibile o non risponde",
-    "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde"
+    "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
     "trx_error": {
         "expire": "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."

@@ -1483,7 +1483,8 @@
       "transfering":"transfering",
       "success":"success",
       "fail":"fail"
-    }
+    },
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."

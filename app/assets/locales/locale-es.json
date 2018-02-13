@@ -435,7 +435,7 @@
     "eq_value_header": "Valor ({asset})",
     "qty": "Qty",
     "quote": "Citar",
-    "total": "Total ({asset})"  
+    "total": "Total ({asset})"
   },
   "pagination": {
     "newer": "Más reciente",
@@ -480,7 +480,7 @@
   },
   "operation": {
     "pending": "%(blocks)s bloques pendientes",
-    "no_recent": "Sin transacciones recientes",  
+    "no_recent": "Sin transacciones recientes",
     "reg_account": "{registrar} Cuenta registrada {new_account}",
     "transfer": "{from} enviado {amount} a {to}",
     "proposal_create": "{account} transacción propuesta creada",
@@ -941,7 +941,7 @@
     "connection_error": "No se puede conectar al nodo API %(url)s, retrocediendo a nodos de trabajo conocidos",
     "low_latency": "Baja latencia",
     "medium_latency": "Latencia media",
-    "high_latency": "Alta latencia"    
+    "high_latency": "Alta latencia"
   },
   "footer": {
     "title": "BitShares",
@@ -977,7 +977,7 @@
         "price_title": "Indicadores de precio",
         "volume_title": "Indicadores de volumen"
     },
-    "market": "Mercado", 
+    "market": "Mercado",
     "price_history": "Gráfico de Precios",
     "order_depth": "Profundidad de Mercado",
     "history": "Trades del mercado",
@@ -1165,7 +1165,7 @@
     "import_password": "Ingrese la contraseña del archivo de importación",
     "import_pass_match": "La contraseña coincide. Descifrando la copia de seguridad ahora...",
     "submit": "Enviar",
-    "import_balance": "Importar balance(s)",  
+    "import_balance": "Importar balance(s)",
     "import_bts": "Importar a BTS 0.9.3c exportar llave",
     "import_private_key": "Importar llave privada",
     "wallet_browser": "Su navegador web es su billetera",
@@ -1402,7 +1402,8 @@
     "unavailable_RUDEX": "RuDEX Gateway está inactivo o no responde",
     "unavailable_TRADE": "El puente de Blocktrades está inactivo o no responde",
     "contact_TRADE": "Contacta Blocktrades",
-    "over_limit": "Límite alcanzado"
+    "over_limit": "Límite alcanzado",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
     "trx_error": {
         "expire": "Su transacción ha expirado sin confirmación, intente de nuevo más tarde."
