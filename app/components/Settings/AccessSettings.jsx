@@ -88,7 +88,7 @@ class ApiNode extends React.Component {
         return <div
             className="api-node"
             style={{border: "1px solid #fff", position: "relative", padding: "0.5em 1em 0.5em 1em"}}
-            onMouseEnter={this.setHovered.bind(this)}
+            onMouseOver={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
@@ -244,6 +244,10 @@ class AccessSettings extends React.Component {
             }
 
             return 0;
+        });
+
+        nodes = nodes.filter((node) => {
+            return node.hidden !== showAvailableNodes;
         });
 
         return <div style={{paddingTop: "1em"}}>
