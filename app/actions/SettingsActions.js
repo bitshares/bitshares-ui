@@ -51,10 +51,6 @@ class SettingsActions {
         return {id, status};
     }
 
-    hideMarket(id, status) {
-        return {id, status};
-    }
-
     clearSettings() {
         return (dispatch) => {
             return new Promise((resolve) => {
