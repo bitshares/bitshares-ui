@@ -37,6 +37,6 @@ transparent, trustworthy, efficient and most importantly profitable.
 ## Wallet
 This wallet allows access most features of the BitShares network including
 
-- [BitAssets](/help/assets/mpa.md)
-- [User-Issued Assets](/help/assets/uia.md)
-- [The DEX](/help/dex/introduction.md)
+- [BitAssets](/help/assets/mpa)
+- [User-Issued Assets](/help/assets/uia)
+- [The DEX](/help/dex/introduction)

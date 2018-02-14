@@ -2,19 +2,13 @@ import React from "react";
 import Immutable from "immutable";
 import DashboardList from "./DashboardList";
 import { RecentTransactions } from "../Account/RecentTransactions";
-import Translate from "react-translate-component";
-import MarketCard from "./MarketCard";
-import utils from "common/utils";
-import { Apis } from "bitsharesjs-ws";
 import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
-import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import { connect } from "alt-react";
 import AccountStore from "stores/AccountStore";
 import MarketsStore from "stores/MarketsStore";
-
+import {Tabs, Tab} from "../Utility/Tabs";
 import AltContainer from "alt-container";
 
 class AccountsContainer extends React.Component {
@@ -97,6 +91,7 @@ class Accounts extends React.Component {
     }
 
     _onSwitchType(type) {
+        console.log("Switching " + type);
         this.setState({
             currentEntry: type
         });
@@ -126,25 +121,18 @@ class Accounts extends React.Component {
             return <LoginSelector />;
         }
 
-        const entries = ["accounts", "contacts", "recent"];
-        const activeIndex = entries.indexOf(currentEntry);
-
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
-                    {accountCount ? (
-                        <div style={{paddingBottom: "3rem"}}>
-                            <div className="hide-selector" style={{paddingBottom: "1rem"}}>
-                                {entries.map((type, index) => {
-                                    return (
-                                        <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                            <Translate content={`account.${type}`} />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {(currentEntry === "accounts" || currentEntry === "contacts") ? <div className="generic-bordered-box" style={{marginBottom: 5}}>
+                <div ref="container" className="tabs-container generic-bordered-box">
+                    <Tabs
+                        setting="accountTab"
+                        className="account-tabs"
+                        defaultActiveTab={1}
+                        segmented={false}
+                        tabsClass="account-overview no-padding bordered-header content-block"
+                    >
+                        <Tab title="account.accounts">
+                            <div className="generic-bordered-box">
                                 <div className="box-content">
                                     <DashboardList
                                         accounts={Immutable.List(names)}
@@ -152,23 +140,37 @@ class Accounts extends React.Component {
                                         width={width}
                                         onToggleIgnored={this._onToggleIgnored.bind(this)}
                                         showIgnored={showIgnored}
-                                        showMyAccounts={currentEntry === "accounts"}
+                                        showMyAccounts={true}
                                     />
-                                    {/* {showIgnored ? <DashboardList accounts={Immutable.List(ignored)} width={width} /> : null} */}
                                 </div>
-                            </div> : null}
-
-                            {currentEntry === "recent" ? <RecentTransactions
-                                style={{marginBottom: 20, marginTop: 20}}
+                            </div>
+                        </Tab>
+                        <Tab title="account.contacts">
+                            <div className="generic-bordered-box">
+                                <div className="box-content">
+                                    <DashboardList
+                                        accounts={Immutable.List(names)}
+                                        passwordAccount={passwordAccount}
+                                        ignoredAccounts={Immutable.List(ignored)}
+                                        width={width}
+                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
+                                        showIgnored={showIgnored}
+                                        showMyAccounts={false}
+                                    />
+                                </div>
+                            </div>
+                        </Tab>
+                        <Tab title="account.recent">
+                            <RecentTransactions
                                 accountsList={linkedAccounts}
                                 limit={10}
                                 compactView={false}
                                 fullHeight={true}
                                 showFilters={true}
                                 dashboard
-                            /> : null}
-                        </div>
-                    ) : null}
+                            />
+                        </Tab>
+                    </Tabs>
                 </div>
             </div>
         );
