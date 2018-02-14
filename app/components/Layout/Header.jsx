@@ -101,6 +101,7 @@ class Header extends React.Component {
             nextProps.starredAccounts !== this.props.starredAccounts ||
             nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active ||
+            nextState.hiddenAssets !== this.props.hiddenAssets ||
             nextState.dropdownActive !== this.state.dropdownActive ||
             nextState.dropdownSubmenuActive !== this.state.dropdownSubmenuActive ||
             nextState.accountsListDropdownActive !== this.state.accountsListDropdownActive ||
@@ -306,13 +307,14 @@ class Header extends React.Component {
         let myAccountCount = myAccounts.length;
 
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
-                            <div className="total-value" >
-                                <TotalBalanceValue.AccountWrapper
-                                    accounts={[this.props.currentAccount]}
-                                    noTip
-                                    style={{minHeight: 15}}
-                                />
-                            </div>) : null;
+            <div className="total-value" >
+                <TotalBalanceValue.AccountWrapper
+                    hiddenAssets={this.props.hiddenAssets}
+                    accounts={[this.props.currentAccount]}
+                    noTip
+                    style={{minHeight: 15}}
+                />
+            </div>) : null;
 
         let dashboard = (
             <a
@@ -774,8 +776,9 @@ export default connect(Header, {
             starredAccounts: AccountStore.getState().starredAccounts,
             passwordLogin: SettingsStore.getState().settings.get("passwordLogin"),
             currentLocale: SettingsStore.getState().settings.get("locale"),
-            locales: SettingsStore.getState().defaults.locale,
+            hiddenAssets: SettingsStore.getState().hiddenAssets,
             settings: SettingsStore.getState().settings,
+            locales: SettingsStore.getState().defaults.locale
         };
     }
 });
