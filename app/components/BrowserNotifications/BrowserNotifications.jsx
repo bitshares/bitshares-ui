@@ -12,8 +12,40 @@ let OPERATIONS = Object.keys(operations);
 class BrowserNotifications extends React.Component {
 
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired
+        account: ChainTypes.ChainAccount.isRequired,
+        settings: React.PropTypes.object,
     };
+
+    componentWillReceiveProps(nextProps) {
+
+        // if browser notifications disabled on settings we can skip all checks
+        if(!nextProps.settings.get("browser_notifications").allow) {
+            console.log("browser notifications disabled by settings");
+            return false;
+        }
+
+        // if app not permitted to send notifications skip all checks
+        if(Notify.needsPermission) {
+            console.log("browser notifications disabled by Browser Permissions");
+            return false;
+        }
+
+        if (nextProps.account.size && this.props.account.get("history")) {
+
+            let lastOperationOld = this.props.account.get("history").first();
+            let lastOperationNew = nextProps.account.get("history").first();
+
+            // if operations not updated do not notify user
+            if(lastOperationNew.get("id") === lastOperationOld.get("id")) {
+                return false;
+            }
+
+            if(this._isOperationTransfer(lastOperationNew) && this._isTransferToMyAccount(lastOperationNew)) {
+                this._notifyUserAboutTransferToHisAccount(lastOperationNew);
+            }
+
+        }
+    }
 
     _getOperationName(operation) {
         if (operation.getIn(["op", 0]) !== undefined)
@@ -56,18 +88,6 @@ class BrowserNotifications extends React.Component {
             body: body,
             closeOnClick: true,
         });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.account.size && this.props.account.get("history")) {
-
-            let lastOperation = this.props.account.get("history").first();
-
-            if(this._isOperationTransfer(lastOperation) && this._isTransferToMyAccount(lastOperation)) {
-                this._notifyUserAboutTransferToHisAccount(lastOperation);
-            }
-
-        }
     }
 
     notifyUsingBrowserNotification(params = {}) {
