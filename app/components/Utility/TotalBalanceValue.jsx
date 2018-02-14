@@ -293,7 +293,10 @@ class AccountWrapper extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return !utils.are_equal_shallow(nextProps.accounts, this.props.accounts);
+        return (
+            !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+            !utils.are_equal_shallow(nextProps.hiddenAssets.toJS(), this.props.hiddenAssets.toJS())
+        );
     }
 
     render() {
@@ -334,7 +337,10 @@ class AccountWrapper extends React.Component {
                 });
 
                 let account_balances = account.get("balances");
-                account_balances && account_balances.forEach( balance => {
+                account_balances && account_balances.forEach( (balance, asset_type) => {
+                    if (this.props.hiddenAssets.includes(asset_type)) {
+                        return null;
+                    }
                     let balanceAmount = ChainStore.getObject(balance);
                     if (!balanceAmount || !balanceAmount.get("balance")) {
                         return null;
