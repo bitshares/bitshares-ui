@@ -125,19 +125,26 @@ export default class ExchangeHeader extends React.Component {
                                 )}
                                 <div className="label-actions">
                                     <Translate component="span" style={{padding: "5px 0 0 5px"}} className="stat-text" content="exchange.trading_pair" />
-                                    <Link onClick={() => {
-                                        MarketsActions.switchMarket();
-                                    }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
+                                    <Link
+                                        onClick={() => {
+                                            MarketsActions.switchMarket();
+                                        }}
+                                        to={`/market/${baseSymbol}_${quoteSymbol}`}
+                                        data-intro={translator.translate("walkthrough.switch_button")}
+                                    >
                                         <Icon className="shuffle" name="shuffle"/>
                                     </Link>
-                                    
-                                    <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }}>
+
+                                    <Link
+                                        onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }}
+                                        data-intro={translator.translate("walkthrough.favourite_button")}
+                                    >
                                         <Icon className={starClass} name="fi-star"/>
                                     </Link>
                                 </div>
                             </div>
                         </div>
-                
+
                         <div className="grid-block vertical" style={{overflow: "visible"}}>
                             <div className="grid-block wrap market-stats-container">
                                 <ul className="market-stats stats top-stats">
@@ -150,29 +157,36 @@ export default class ExchangeHeader extends React.Component {
                                         </span>
                                         <Translate component="div" className="stat-text" content="account.hour_24" />
                                     </li>
-                
+
                                     {(volumeBase >= 0) ? <PriceStatWithLabel ignoreColorChange={true} onClick={this.changeVolumeBase.bind(this)} ready={marketReady} decimals={0} volume={true} price={volume24h} className="hide-order-2 clickable" base={volume24hAsset} market={marketID} content="exchange.volume_24"/> : null}
-                
+
                                     {!hasPrediction && feedPrice ?
                                         <PriceStatWithLabel ignoreColorChange={true} toolTip={counterpart.translate("tooltip.settle_price")} ready={marketReady} className="hide-order-3" price={feedPrice.toReal()} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.settle"/> : null}
-                
+
                                     {lowestCallPrice && showCallLimit ?
                                         <PriceStatWithLabel toolTip={counterpart.translate("tooltip.call_limit")} ready={marketReady} className="hide-order-4 is-call" price={lowestCallPrice} quote={quoteAsset} base={baseAsset} market={marketID} content="explorer.block.call_limit"/> : null}
-                
+
                                     {feedPrice && showCallLimit ?
                                         <PriceStatWithLabel toolTip={counterpart.translate("tooltip.margin_price")} ready={marketReady} className="hide-order-5 is-call" price={feedPrice.getSqueezePrice({real: true})} quote={quoteAsset} base={baseAsset} market={marketID} content="exchange.squeeze"/> : null}
                                 </ul>
                                 <ul className="market-stats stats top-stats">
                                     <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
 
-                                        {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+                                        {!showDepthChart ?
+                                            <Translate
+                                                content="exchange.order_depth"
+                                                data-intro={translator.translate("walkthrough.depth_chart")}
+                                            /> : <Translate
+                                                content="exchange.price_history"
+                                                data-intro={translator.translate("walkthrough.price_chart")}
+                                            />}
 
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
                 );
             }
         }
