@@ -443,6 +443,8 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notifications de navigateurs",
+    "browser_notifications_allow": "Activer les notifications",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Orientation préféré pour les marchés",
     "unit": "Unité de valeur préféré",

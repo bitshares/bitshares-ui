@@ -931,6 +931,8 @@
     "midnightTheme": "Midnight",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
+    "browser_notifications": "Browser Notifications",
+    "browser_notifications_allow": "Enable notifications",
     "general": "General",
     "wallet": "Local Wallet",
     "accounts": "Accounts",

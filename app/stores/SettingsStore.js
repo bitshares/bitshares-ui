@@ -49,7 +49,10 @@ class SettingsStore {
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            passwordLogin: true
+            passwordLogin: true,
+            browser_notifications: {
+                allow: true
+            }
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js

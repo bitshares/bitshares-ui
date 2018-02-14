@@ -885,6 +885,8 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notificaciones del navegador",
+    "browser_notifications_allow": "Permitir notificaciones",
     "passwordLogin": "Modo de acceso",
     "cloud_login": "Inicio de sesión en el Cloud Wallet",
     "local_wallet": "Acceso local a la billetera",

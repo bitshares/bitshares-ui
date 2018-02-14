@@ -892,6 +892,8 @@
         }
     },
     "settings": {
+        "browser_notifications": "瀏覽器通知",
+        "browser_notifications_allow": "啟用通知",
         "passwordLogin": "登录方式",
         "cloud_login": "账号模式",
         "local_wallet": "本地钱包模式",
