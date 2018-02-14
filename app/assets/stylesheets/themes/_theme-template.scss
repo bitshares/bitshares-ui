@@ -36,10 +36,41 @@ $account-tabs-background,
 $pulsate-green-start,
 $pulsate-green-end,
 $pulsate-red-start,
-$pulsate-red-end
+$pulsate-red-end,
+$settings-select-bg,
+$settings-select-color,
+$settings-menu-hover-bg,
+$settings-menu-active-bg,
+$settings-api-node-border-color,
+$main-content-margin-block-bg-color
 ) {
 
-  .fz_12{
+  $hamburger-submenu-display-endpoint: 990px;
+
+  .settings-select {
+    height: 36px;
+    padding: 0 12px;
+    background-color: $settings-select-bg;
+    color: $settings-select-color;
+  }
+
+  .settings-input {
+    /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
+    .block-list and it uses on many places. To keep everything OK and do not break something I just do
+    overwrite for Inputs on settings and keep default styles for inputs on another places.
+    */
+    color: $settings-select-color !important;
+    height: 36px !important;
+    background-color: $settings-select-bg !important;
+    border-bottom: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .dark-text-color {
+    color: $dark-text-color;
+  }
+
+  .fz_12 {
     font-size: 12px;
   }
 
@@ -268,6 +299,11 @@ $pulsate-red-end
 
         .main-content {
             background-color: $bg-color;
+
+          &.margin-block {
+            background-color: $main-content-margin-block-bg-color;
+          }
+
         }
 
         .right-column {
@@ -398,8 +434,31 @@ $pulsate-red-end
                 }
             }
         }
+
+        ul.dropdown.header-submenu {
+            > li {
+                &.parent-item {
+                    background-color: $main-content-margin-block-bg-color;
+                    color: $dark-text-color;
+                    &:hover {
+                        color: lighten($dark-text-color, 10%);
+                        background-color: lighten($main-content-margin-block-bg-color, 10%);
+                    }
+                }
+            }
+        }
     }
 
+    @media (max-width: $hamburger-submenu-display-endpoint) {
+        ul.dropdown.header-menu {
+            li.mobile-only {
+                display: block;
+            }
+            li.desktop-only {
+                display: none;
+            }
+        }
+    }
 
     .header span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
@@ -510,6 +569,20 @@ $pulsate-red-end
             margin-left: 0;
             margin-bottom: 1rem;
             color: $secondary-text-color;
+        }
+        &.no-border-bottom {
+          li {
+            border-bottom: 0;
+          }
+        }
+
+        li.with-dropdown {
+          .settings-select {
+            @extend .settings-select;
+          }
+          > input.settings-input[type="text"] {
+            @extend .settings-input;
+          }
         }
     }
 
@@ -1329,27 +1402,48 @@ $pulsate-red-end
         }
     }
 
-
-
-
     div.fm-container:hover {
         background-color: darken($light-panel-bg-color, 5%);
         cursor: pointer;
     }
 
+    .api-node {
+        border: 1px solid $settings-api-node-border-color;
+        &:nth-child(n+1) {
+            border-bottom: 0;
+        }
+        &:last-child {
+            border: 1px solid $settings-api-node-border-color;
+        }
+    }
 
     // Settings
     .settings-menu {
-        margin-left: 0;
-        > li {
-            padding: .2rem 1rem;
-            &:hover {
-                background-color: darken($light-panel-bg-color, 5%);
-            }
+        > ul {
+            width: 200px;
+            transition: .3s;
+            margin-left: 0;
+            > li {
+                border-radius: 2px;
+                color: $dark-text-color;
+                padding: 3px 11px;
+                margin: 5px;
+                &:hover {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-hover-bg;
+                }
 
-            &.active {
-                color: $link-text-color;
+                &.active {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-active-bg;
+                }
             }
+        }
+    }
+
+    @media(max-width: $hamburger-submenu-display-endpoint) {
+        .settings-menu {
+            display: none;
         }
     }
 

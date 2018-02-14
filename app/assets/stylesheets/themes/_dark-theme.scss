@@ -9,10 +9,16 @@ $secondary-text-color: darken($primary-text-color, 20%);
 $link-text-color: #049cce;
 $error-text-color: #ff3950;
 
+$settings-select-bg: #2a2a2a;
+$settings-select-color: #8a8a8a;
+$settings-api-node-border-color: #2a2a2a;
+$main-content-margin-block-bg-color: #1E1E1E;
 $bg-color: #2a2a2a;
 $panel-bg-color: #3f3f3f;
 $light-panel-bg-color: #6a6a6a;
 $super-light-panel-bg-color: lighten($light-panel-bg-color, 8%);
+$settings-menu-hover-bg: darken($light-panel-bg-color, 20%);
+$settings-menu-active-bg: darken($light-panel-bg-color, 20%);
 $button-bg-color: #049cce;
 $secondary-button-bg-color: #999999;
 $input-background: lighten($bg-color, 8%);
@@ -84,6 +90,12 @@ $pulsate-red-end:#ef4040;
     $pulsate-green-start,
     $pulsate-green-end,
     $pulsate-red-start,
-    $pulsate-red-end
+    $pulsate-red-end,
+    $settings-select-bg,
+    $settings-select-color,
+    $settings-menu-hover-bg,
+    $settings-menu-active-bg,
+    $settings-api-node-border-color,
+    $main-content-margin-block-bg-color
   );
 }

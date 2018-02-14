@@ -10,10 +10,16 @@ $dark-text-color: lighten($light-text-color, 12%);
 $link-text-color: #337ab7;
 $error-text-color: #E3745B;
 
+$settings-select-bg: #e5e6e4;
+$settings-select-color: #656565;
+$settings-api-node-border-color: #e6e6e6;
+$main-content-margin-block-bg-color: #f8f9f8;
 $bg-color: #FFF;
 $panel-bg-color: #e5e6e4;
 $light-panel-bg-color: #FFF;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
+$settings-menu-hover-bg: darken($light-panel-bg-color, 10%);
+$settings-menu-active-bg: darken($light-panel-bg-color, 10%);
 $button-bg-color: #2196F3;
 $secondary-button-bg-color: #999999;
 $input-background: darken($bg-color, 8%);
@@ -85,7 +91,13 @@ $pulsate-red-end:#e87f84;
     $pulsate-green-start,
     $pulsate-green-end,
     $pulsate-red-start,
-    $pulsate-red-end
+    $pulsate-red-end,
+    $settings-select-bg,
+    $settings-select-color,
+    $settings-menu-hover-bg,
+    $settings-menu-active-bg,
+    $settings-api-node-border-color,
+    $main-content-margin-block-bg-color
   );
 
   .change-up {

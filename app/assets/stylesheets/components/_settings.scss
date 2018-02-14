@@ -1,14 +1,16 @@
 .settings-menu {
-    > li {
-        list-style-type: none;
-        cursor: pointer;
-        padding: 5px 0;
-        &:hover {
+    > ul {
+        > li {
+            list-style-type: none;
+            cursor: pointer;
+            padding: 5px 0;
+            &:hover {
                 background-color: red;
-        }
+            }
 
-        &.active {
-            color: blue;
+            &.active {
+                color: blue;
+            }
         }
     }
 }
