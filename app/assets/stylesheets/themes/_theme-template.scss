@@ -1809,6 +1809,69 @@ $main-content-margin-block-bg-color
         padding-right: 0;
     }
 
+    .header-container {
+        background-color: $account-background;
+
+        .menu-dropdown-wrapper {
+            &.active {
+                background: $panel-bg-color;
+            }
+        }
+
+        .dropdown.header-menu {
+            background-color: $panel-bg-color;
+
+            li.divider {
+                border-bottom: 1px solid $dark-text-color;
+            }
+
+            > li:hover {
+                background-color: $super-light-panel-bg-color
+            }
+        }
+
+        .total-value {
+            color: $account-green
+        }
+    }
+
+    .flip-arrow:hover {
+        color: $bs-blue;
+        cursor: pointer;
+    }
+
+    .order-2 .flip-arrow, .order-5 .flip-arrow {
+        display: none;
+    }
+
+    .order-book-button-h svg > path {
+        fill: #fff;
+
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+    }
+
+    .order-book-button-v {
+        display: none;
+    }
+
+    @include breakpoint(large) {
+        .order-book-button-v {
+            display: inline-block;
+            margin-left: 5px;
+
+            svg > path {
+                fill: #fff;
+
+                &:hover {
+                    fill: $bs-blue;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1961,7 +2024,6 @@ $main-content-margin-block-bg-color
 
 @media screen and (max-width: 640px) {
     .responsive-list > .help-content > ul {
-        background: steelblue;
         height: 300px;
         overflow-y: scroll;
         border-radius: 6px;
