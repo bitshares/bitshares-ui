@@ -95,6 +95,7 @@ class Header extends React.Component {
             nextProps.starredAccounts !== this.props.starredAccounts ||
             nextProps.currentLocale !== this.props.currentLocale ||
             nextState.active !== this.state.active ||
+            nextState.hiddenAssets !== this.props.hiddenAssets ||
             nextState.dropdownActive !== this.state.dropdownActive ||
             nextState.accountsListDropdownActive !== this.state.accountsListDropdownActive ||
             nextProps.height !== this.props.height
@@ -282,6 +283,7 @@ class Header extends React.Component {
         let walletBalance = myAccounts.length && this.props.currentAccount ? (
             <div className="total-value" >
                 <TotalBalanceValue.AccountWrapper
+                    hiddenAssets={this.props.hiddenAssets}
                     accounts={[this.props.currentAccount]}
                     noTip
                     style={{minHeight: 15}}
@@ -645,6 +647,7 @@ export default connect(Header, {
             starredAccounts: AccountStore.getState().starredAccounts,
             passwordLogin: SettingsStore.getState().settings.get("passwordLogin"),
             currentLocale: SettingsStore.getState().settings.get("locale"),
+            hiddenAssets: SettingsStore.getState().hiddenAssets,
             locales: SettingsStore.getState().defaults.locale
         };
     }
