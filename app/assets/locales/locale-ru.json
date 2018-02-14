@@ -900,6 +900,7 @@
   "settings":{
     "browser_notifications": "Уведомления браузера",
     "browser_notifications_allow": "Включить уведомления",
+    "browser_notifications_additional_transfer_to_me": "Уведомлять о переводах на мой счет",
     "passwordLogin":"Режим входа",
     "cloud_login":"Вход в облачный кошелек (модель \"Аккаунт\")",
     "local_wallet":"Вход в локальный кошелек (модель \"Кошелек\")",

@@ -690,6 +690,7 @@
   "settings": {
     "browser_notifications": "Browserbenachrichtigungen",
     "browser_notifications_allow": "Benachrichtigungen aktivieren",
+    "browser_notifications_additional_transfer_to_me": "Über Überweisungen an mein Konto benachrichtigen",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Bevorzugte Marktorientierung",
     "unit": "Bevorzugte Rechnungseinheit",

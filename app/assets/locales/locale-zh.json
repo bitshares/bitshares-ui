@@ -898,6 +898,7 @@
     "settings": {
         "browser_notifications": "瀏覽器通知",
         "browser_notifications_allow": "啟用通知",
+        "browser_notifications_additional_transfer_to_me": "通知我的帐户转账",
         "passwordLogin": "登录方式",
         "cloud_login": "账号模式",
         "local_wallet": "本地钱包模式",

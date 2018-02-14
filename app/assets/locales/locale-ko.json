@@ -572,6 +572,7 @@
   "settings": {
     "browser_notifications": "브라우저 알림",
     "browser_notifications_allow": "알림 사용",
+    "browser_notifications_additional_transfer_to_me": "내 계정으로의 이전 알림",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",

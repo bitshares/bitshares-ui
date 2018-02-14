@@ -449,6 +449,7 @@
   "settings": {
     "browser_notifications": "Notifications de navigateurs",
     "browser_notifications_allow": "Activer les notifications",
+    "browser_notifications_additional_transfer_to_me": "Notifier les transferts sur mon compte",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Orientation préféré pour les marchés",
     "unit": "Unité de valeur préféré",
