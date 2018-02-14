@@ -6,7 +6,7 @@ let icons = ["user", "trash", "chevron-down", "menu", "database", "download", "s
     "plus-circle", "question-circle", "cross-circle", "cog", "layers", "users", "wand", "b-logo",
     "accounts", "witnesses", "assets", "proposals", "blocks", "committee_members", "workers", "key",
     "checkmark-circle", "checkmark", "piggy", "locked", "unlocked" , "markets", "fi-star" ,"fees",
-    "thumb-tack", "clock", "clippy", "shuffle", "transfer", "dollar", "dollar-green", "deposit", "withdraw",
+    "thumb-tack", "thumb-untack", "clock", "clippy", "shuffle", "transfer", "dollar", "dollar-green", "deposit", "withdraw",
     "settle", "trade", "adjust", "excel", "share", "minus-circle", "cogs", "dashboard",
     "server", "power", "thumbs-up", "folder", "warning", "gift", "text", "list",
     "hourglass", "news", "hamburger", "hamburger-x"];
