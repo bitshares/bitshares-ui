@@ -1740,6 +1740,44 @@ $pulsate-red-end
             color: $account-green
         }
     }
+
+    .flip-arrow:hover {
+        color: $bs-blue;
+        cursor: pointer;
+    }
+
+    .order-2 .flip-arrow, .order-5 .flip-arrow {
+        display: none;
+    }
+
+    .order-book-button-h svg > path {
+        fill: #fff;
+
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+    }
+
+    .order-book-button-v {
+        display: none;
+    }
+
+    @include breakpoint(large) {
+        .order-book-button-v {
+            display: inline-block;
+            margin-left: 5px;
+
+            svg > path {
+                fill: #fff;
+
+                &:hover {
+                    fill: $bs-blue;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1878,7 +1916,6 @@ $pulsate-red-end
 
 @media screen and (max-width: 640px) {
     .responsive-list > .help-content > ul {
-        background: steelblue;
         height: 300px;
         overflow-y: scroll;
         border-radius: 6px;
