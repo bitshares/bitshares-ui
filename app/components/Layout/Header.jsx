@@ -274,7 +274,7 @@ class Header extends React.Component {
 
     render() {
         let {active} = this.state;
-        let {currentAccount, starredAccounts, passwordLogin, height} = this.props;
+        let {currentAccount, starredAccounts, passwordLogin, passwordAccount, height} = this.props;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";

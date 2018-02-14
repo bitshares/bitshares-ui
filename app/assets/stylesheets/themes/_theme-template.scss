@@ -1424,22 +1424,24 @@ $main-content-margin-block-bg-color
 
     // Settings
     .settings-menu {
-        width: 200px;
-        transition: .3s;
-        margin-left: 0;
-        > li {
-            border-radius: 2px;
-            color: $dark-text-color;
-            padding: 3px 11px;
-            margin: 5px;
-            &:hover {
-                color: $primary-text-color;
-                background-color: $settings-menu-hover-bg;
-            }
+        > ul {
+            width: 200px;
+            transition: .3s;
+            margin-left: 0;
+            > li {
+                border-radius: 2px;
+                color: $dark-text-color;
+                padding: 3px 11px;
+                margin: 5px;
+                &:hover {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-hover-bg;
+                }
 
-            &.active {
-                color: $primary-text-color;
-                background-color: $settings-menu-active-bg;
+                &.active {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-active-bg;
+                }
             }
         }
     }

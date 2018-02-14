@@ -246,10 +246,10 @@ class Settings extends React.Component {
         return (
             <div className={this.props.deprecated ? "" : "grid-block page-layout"}>
                 <div className="grid-block main-content margin-block wrap">
-                    <div className="grid-content shrink" style={{paddingRight: "2rem"}}>
+                    <div className="grid-content shrink settings-menu" style={{paddingRight: "2rem"}}>
                         <Translate style={{paddingBottom: 10, paddingLeft: 10}} component="h3" content="header.settings" className={"dark-text-color"}/>
 
-                        <ul className="settings-menu">
+                        <ul>
                             {menuEntries.map((entry, index) => {
                                 return <li className={index === activeSetting ? "active" : ""} onClick={this._onChangeMenu.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
                             })}
