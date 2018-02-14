@@ -6,6 +6,7 @@ $light-text-color: #fff;
 $dark-text-color: #444;
 $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
+$inactive-text-color: darken($primary-text-color, 40%);
 $link-text-color: #049cce;
 $error-text-color: #E3745B;
 
@@ -21,7 +22,7 @@ $settings-menu-hover-bg: darken($light-panel-bg-color, 5%);
 $settings-menu-active-bg: darken($light-panel-bg-color, 5%);
 $button-bg-color: #049cce;
 $secondary-button-bg-color: #546979;
-$input-background: lighten($bg-color, 8%);
+$input-background: lighten($bg-color, 1%);
 
 $alert-color: $error-text-color;
 $info-color: #4A90E2;
@@ -58,6 +59,7 @@ $pulsate-red-end:#ef7c82;
     $primary-text-color,
     $bg-color,
     $dark-text-color,
+    $inactive-text-color,
     $link-text-color,
     $light-text-color,
     $secondary-text-color,

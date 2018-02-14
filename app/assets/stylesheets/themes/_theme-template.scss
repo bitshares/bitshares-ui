@@ -4,6 +4,7 @@
 $primary-text-color,
 $bg-color,
 $dark-text-color,
+$inactive-text-color,
 $link-text-color,
 $light-text-color,
 $secondary-text-color,
@@ -726,6 +727,19 @@ $main-content-margin-block-bg-color
         }
     }
 
+    .tab-content {
+        background-color: lighten($account-header, 4%);
+        div.header-selector {
+            .filter input {
+                background-color: $bg-color;
+            }
+            .selector {
+                .inactive {
+                    color: $inactive-text-color;
+                }
+            }
+        }
+    }
 
 
     // Exchange
@@ -1395,10 +1409,10 @@ $main-content-margin-block-bg-color
 
     select.bts-select, select.native-coin-types, select.external-coin-types {
         color: $secondary-text-color;
-        background-color: $input-background;
+        background-color: $light-panel-bg-color;
         border: 0;
         &:hover, &:focus, &:active {
-            background-color: $input-background;
+            background-color: $light-panel-bg-color;
         }
     }
 
