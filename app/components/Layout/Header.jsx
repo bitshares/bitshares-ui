@@ -608,8 +608,8 @@ class Header extends React.Component {
                                 </li>
 
                                 {this.props.locked ?
-                                    <li className={cnames({active: active.indexOf("/create-account/password") !== -1})}
-                                        onClick={this._onNavigate.bind(this, "/create-account/password")}>
+                                    <li className={cnames({active: active.indexOf(`/create-account/${!passwordLogin ? "wallet" : "password"}`) !== -1})}
+                                        onClick={this._onNavigate.bind(this, `/create-account/${!passwordLogin ? "wallet" : "password"}`)}>
                                         <div className="table-cell"><Icon size="2x" name="user"/></div>
                                         <div className="table-cell"><Translate content="header.create_account"/></div>
                                     </li>
