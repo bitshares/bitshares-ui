@@ -431,6 +431,19 @@ $main-content-margin-block-bg-color
                 }
             }
         }
+
+        ul.dropdown.header-submenu {
+            > li {
+                &.parent-item {
+                    background-color: $main-content-margin-block-bg-color;
+                    color: $dark-text-color;
+                    &:hover {
+                        color: lighten($dark-text-color, 10%);
+                        background-color: lighten($main-content-margin-block-bg-color, 10%);
+                    }
+                }
+            }
+        }
     }
 
 
