@@ -39,7 +39,7 @@ $pulsate-red-start,
 $pulsate-red-end
 ) {
 
-  .fz_12 {
+  .fz_12{
     font-size: 12px;
   }
 
@@ -252,7 +252,7 @@ $pulsate-red-end
 
 
     .page-layout {
-        background-color: lighten($account-header, 4%);
+        background-color: $bg-color;
 
         .left-column {
             border-top-color: $bg-color;
@@ -338,7 +338,7 @@ $pulsate-red-end
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 0.9rem .25rem;
+            padding: 1rem .25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -486,14 +486,6 @@ $pulsate-red-end
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
-        }
-        > tbody > tr.table-empty > td {
-            padding: 5rem 0;
-            font-size: 1.5rem;
-
-            text-align: center;
-            color: $account-dimmed !important;
-            background-color: $bg-color !important;
         }
     }
 
@@ -660,21 +652,6 @@ $pulsate-red-end
             }
         }
     }
-
-    .tab-content {
-        background-color: lighten($account-header, 4%);
-        div.header-selector {
-            .filter input {
-                background-color: $bg-color;
-            }
-            .selector {
-                .inactive {
-                    color: $dark-text-color;
-                }
-            }
-        }
-    }
-
 
 
 
@@ -1352,6 +1329,15 @@ $pulsate-red-end
         }
     }
 
+
+
+
+    div.fm-container:hover {
+        background-color: darken($light-panel-bg-color, 5%);
+        cursor: pointer;
+    }
+
+
     // Settings
     .settings-menu {
         margin-left: 0;
@@ -1715,31 +1701,6 @@ $pulsate-red-end
         padding-right: 0;
     }
 
-    .header-container {
-        background-color: $account-background;
-
-        .menu-dropdown-wrapper {
-            &.active {
-                background: $panel-bg-color;
-            }
-        }
-
-        .dropdown.header-menu {
-            background-color: $panel-bg-color;
-
-            li.divider {
-                border-bottom: 1px solid $dark-text-color;
-            }
-
-            > li:hover {
-                background-color: $super-light-panel-bg-color
-            }
-        }
-
-        .total-value {
-            color: $account-green
-        }
-    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1807,6 +1768,7 @@ $pulsate-red-end
     align-items: center;
     flex-wrap: nowrap;
     height: 64px;
+    background-color: #3f3f3f;
 
     .menu-bar {
         overflow: visible;
@@ -1827,6 +1789,10 @@ $pulsate-red-end
         text-align: center;
         border-radius: 0;
 
+        &.active {
+            background: #2a2a2a;
+        }
+
         .hamburger .icon {
             position: relative;
             top: 12px;
@@ -1835,6 +1801,15 @@ $pulsate-red-end
 
     .dropdown.header-menu {
         top: 65px;
+        background-color: #2a2a2a!important;
+
+        li.divider {
+            border-bottom: 1px solid #323131!important;
+        }
+
+        > li:hover {
+            background-color: #6a6a6a;
+        }
     }
 
     .hamburger svg rect, .hamburger-x svg rect {
@@ -1842,6 +1817,7 @@ $pulsate-red-end
     }
 
     .total-value {
+        color: #7ed321;
         text-align: right;
         font-size: 80%;
         line-height: normal;
@@ -1857,19 +1833,18 @@ $pulsate-red-end
 }
 
 .app-menu {
-    flex: 0;
+  flex: 0;
 }
 
 .truncated {
-    flex: 1;
-    min-width: 0; /* or some value */
-    .text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: right;
-    }
-
+  flex: 1;
+  min-width: 0; /* or some value */
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
 }
 
 #unlock_wallet_modal2 .close-button {

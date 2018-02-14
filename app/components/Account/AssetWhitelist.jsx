@@ -145,7 +145,7 @@ class AssetWhitelist extends React.Component {
         return (
             <div className="small-12 large-8 large-offset-2 grid-content">
                 <div>
-                    <div className="header-selector" style={{paddingBottom: "2rem"}}>
+                    <div className="hide-selector" style={{paddingBottom: "2rem"}}>
                         {this.state.listTypes.map((type, index) => {
                             return (
                                 <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
