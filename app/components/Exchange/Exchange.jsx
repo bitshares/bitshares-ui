@@ -572,11 +572,13 @@ class Exchange extends React.Component {
     }
 
     _flipBuySell() {
+        this.setState({
+            flipBuySell: !this.state.flipBuySell
+        });
+        
         SettingsActions.changeViewSetting({
             flipBuySell: !this.state.flipBuySell
         });
-
-        this.setState({ flipBuySell: !this.state.flipBuySell });
     }
 
     _toggleOpenBuySell() {
@@ -1040,8 +1042,8 @@ class Exchange extends React.Component {
                 feeAsset={buyFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
                 isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                onTogglePosition={this._toggleBuySellPosition.bind(this)}
+                onFlip={this.state._flipBuySell ? null : this._flipBuySell.bind(this)}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
@@ -1085,7 +1087,8 @@ class Exchange extends React.Component {
                 feeAsset={sellFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
                 isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+                onFlip={!this.state._flipBuySell ? this._flipBuySell.bind(this) : null}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
