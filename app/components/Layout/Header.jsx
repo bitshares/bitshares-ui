@@ -261,7 +261,10 @@ class Header extends React.Component {
         } while ((el = el.parentNode));
 
         if(!insideAccountDropdown) this._closeAccountsListDropdown();
-        if(!insideMenuDropdown) this._closeMenuDropdown();
+        if(!insideMenuDropdown) {
+            this._closeMenuDropdown();
+            this._closeDropdownSubmenu();
+        }
     }
 
     _onLinkAccount() {
