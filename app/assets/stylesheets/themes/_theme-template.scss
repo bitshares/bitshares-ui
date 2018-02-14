@@ -45,6 +45,8 @@ $settings-api-node-border-color,
 $main-content-margin-block-bg-color
 ) {
 
+  $hamburger-submenu-display-endpoint: 990px;
+
   .settings-select {
     height: 36px;
     background-color: $settings-select-bg;
@@ -446,6 +448,16 @@ $main-content-margin-block-bg-color
         }
     }
 
+    @media (max-width: $hamburger-submenu-display-endpoint) {
+        ul.dropdown.header-menu {
+            li.mobile-only {
+                display: block;
+            }
+            li.desktop-only {
+                display: none;
+            }
+        }
+    }
 
     .header span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
@@ -1443,6 +1455,12 @@ $main-content-margin-block-bg-color
                     background-color: $settings-menu-active-bg;
                 }
             }
+        }
+    }
+
+    @media(max-width: $hamburger-submenu-display-endpoint) {
+        .settings-menu {
+            display: none;
         }
     }
 

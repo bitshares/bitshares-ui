@@ -1,5 +1,3 @@
-$mobile-endpoint: 600px;
-
 .header.menu-group {
   justify-content: flex-start;
 }
@@ -215,17 +213,6 @@ ul.dropdown.header-menu {
     }
     li.desktop-only {
         display: block;
-    }
-}
-
-@media (max-width: $mobile-endpoint) {
-    ul.dropdown.header-menu {
-        li.mobile-only {
-            display: block;
-        }
-        li.desktop-only {
-            display: none;
-        }
     }
 }
 
