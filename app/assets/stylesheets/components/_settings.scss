@@ -19,6 +19,17 @@
     input[type="checkbox"] {
         cursor: pointer;
     }
+    .settings--notifications--group {
+        margin: 15px 10px;
+        .settings--notifications--item {
+            label {
+                text-transform: none;
+            }
+        }
+    }
+    > .settings--notifications--group {
+        margin-left: 0;
+    }
 }
 
 .nodes-header {

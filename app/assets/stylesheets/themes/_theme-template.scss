@@ -1455,6 +1455,16 @@ $main-content-margin-block-bg-color
         }
     }
 
+    .settings--notifications {
+        .settings--notifications--group {
+            .settings--notifications--item {
+                label {
+                    color: $settings-select-color;
+                }
+            }
+        }
+    }
+
     @media(max-width: $hamburger-submenu-display-endpoint) {
         .settings-menu {
             display: none;
