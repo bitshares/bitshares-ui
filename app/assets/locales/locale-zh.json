@@ -53,6 +53,10 @@
         "account_notify": "当前活跃账户为 %(account)s",
         "account_value": "账户价值"
     },
+    "browser_notification_messages": {
+        "money_received_title": "从转移 %(from)s",
+        "money_received_body": "发给你了 %(amount)s %(symbol)s"
+    },
     "tooltip": {
         "call_limit": "市场中抵押率最低的债仓的平仓价",
         "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",

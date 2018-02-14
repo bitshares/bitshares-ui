@@ -54,6 +54,10 @@
     "account_notify":"Активный аккаунт в настоящее время %(account)s",
     "account_value":"Оценка"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Перевод от %(from)s",
+    "money_received_body": "Отправлено Вам %(amount)s %(symbol)s"
+  },
   "tooltip":{
     "call_limit":"Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
     "margin_price":"Это максимальная цена, которую может быть вынуждена заплатить позиция с затребованным дополнительным обеспечением. Также она называется Squeeze Price.",

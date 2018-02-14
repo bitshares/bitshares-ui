@@ -33,6 +33,10 @@
     "account_notify": "The active account is now %(account)s",
     "account_value": "Kontowert"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Übertragen von %(from)s",
+    "money_received_body": "Hat dich geschickt %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
