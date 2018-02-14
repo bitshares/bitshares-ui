@@ -42,6 +42,12 @@ class Settings extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps.params.tab !== this.props.params.tab) {
+            this._onChangeMenu(this.props.params.tab);
+        }
+    }
+
     componentWillReceiveProps(np) {
         if (np.settings.get("passwordLogin") !== this.props.settings.get("passwordLogin")) {
             const currentEntries = this._getMenuEntries(this.props);
@@ -178,13 +184,15 @@ class Settings extends React.Component {
         SettingsActions.clearSettings();
     }
 
+    _redirectToEntry(entry) {
+        this.context.router.push("/settings/"+entry);
+    }
+
     _onChangeMenu(entry) {
         let index = this.state.menuEntries.indexOf(entry);
         this.setState({
             activeSetting: index
         });
-
-        this.context.router.push("/settings/"+entry);
 
         SettingsActions.changeViewSetting({activeSetting: index});
     }
@@ -251,7 +259,7 @@ class Settings extends React.Component {
 
                         <ul>
                             {menuEntries.map((entry, index) => {
-                                return <li className={index === activeSetting ? "active" : ""} onClick={this._onChangeMenu.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
+                                return <li className={index === activeSetting ? "active" : ""} onClick={this._redirectToEntry.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
                             })}
                         </ul>
                     </div>
