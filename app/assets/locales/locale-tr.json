@@ -783,6 +783,8 @@
     }
   },
   "settings": {
+    "browser_notifications": "Tarayıcı Bildirimleri",
+    "browser_notifications_allow": "Bildirimleri etkinleştir",
     "inverseMarket": "Piyasa eğilim tercihi",
     "unit": "Tercih edilen hesap birimi",
     "confirmMarketOrder": "Piyasa emirleri için teyit iste",

@@ -11,6 +11,8 @@ export default class SettingsEntry extends React.Component {
         this.state = {
             message: null
         };
+
+        this.handleNotificationChange = this.handleNotificationChange.bind(this);
     }
 
     _setMessage(key) {
@@ -27,10 +29,17 @@ export default class SettingsEntry extends React.Component {
         clearTimeout(this.timer);
     }
 
+    handleNotificationChange(path) {
+        return (evt) => {
+            this.props.onNotificationChange(path, !!evt.target.checked);
+        };
+    }
+
     render() {
         let {defaults, setting, settings} = this.props;
         let options, optional, confirmButton, value, input, selected = settings.get(setting);
         let noHeader = false;
+        let component = null;
 
         switch (setting) {
             case "locale":
@@ -52,6 +61,23 @@ export default class SettingsEntry extends React.Component {
 
                     return <option key={entry} value={entry}>{value}</option>;
                 });
+
+                break;
+
+            case "browser_notifications":
+
+                value = selected;
+
+                component = (
+                    <div className="settings--notifications">
+                        <div className="settings--notifications--group">
+                            <div className="settings--notifications--item">
+                                <input type="checkbox" id="browser_notifications.allow" checked={!!value.allow} onChange={this.handleNotificationChange("allow")}/>
+                                <label htmlFor="browser_notifications.allow">{ counterpart.translate("settings.browser_notifications_allow") }</label>
+                            </div>
+                        </div>
+                    </div>
+                );
 
                 break;
 
@@ -115,6 +141,8 @@ export default class SettingsEntry extends React.Component {
                     </li>
                 </ul> : null}
                 {input ? <ul><li>{input}</li></ul> : null}
+
+                {component ? component : null}
 
                 <div className="facolor-success">{this.state.message}</div>
             </section>

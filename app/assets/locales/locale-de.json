@@ -684,6 +684,8 @@
     }
   },
   "settings": {
+    "browser_notifications": "Browserbenachrichtigungen",
+    "browser_notifications_allow": "Benachrichtigungen aktivieren",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Bevorzugte Marktorientierung",
     "unit": "Bevorzugte Rechnungseinheit",
