@@ -40,7 +40,7 @@ class BrowserNotifications extends React.Component {
                 return false;
             }
 
-            if(this._isOperationTransfer(lastOperationNew) && this._isTransferToMyAccount(lastOperationNew)) {
+            if(this._isOperationTransfer(lastOperationNew) && this._isTransferToMyAccount(lastOperationNew) && nextProps.settings.get("browser_notifications").additional.transferToMe) {
                 this._notifyUserAboutTransferToHisAccount(lastOperationNew);
             }
 

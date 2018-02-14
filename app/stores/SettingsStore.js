@@ -51,7 +51,10 @@ class SettingsStore {
             themes: "darkTheme",
             passwordLogin: true,
             browser_notifications: {
-                allow: true
+                allow: true,
+                additional: {
+                    transferToMe: true
+                }
             }
         });
 

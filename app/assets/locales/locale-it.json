@@ -844,6 +844,7 @@
   "settings": {
     "browser_notifications": "Notifiche del browser",
     "browser_notifications_allow": "Attivare le notifiche",
+    "browser_notifications_additional_transfer_to_me": "Notifica sui trasferimenti al mio account",
     "passwordLogin": "Fai il login usando il modalità account",
     "cloud_login": "Login Portafoglio Cloud",
     "local_wallet": "Login Portafoglio locale",
