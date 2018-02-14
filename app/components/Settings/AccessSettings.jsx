@@ -87,7 +87,7 @@ class ApiNode extends React.Component {
 
         return <div
             className="api-node"
-            style={{border: "1px solid #fff", position: "relative", padding: "0.5em 1em 0.5em 1em"}}
+            style={{position: "relative", padding: "0.5em 1em 0.5em 1em"}}
             onMouseOver={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >
@@ -251,7 +251,7 @@ class AccessSettings extends React.Component {
         });
 
         return <div style={{paddingTop: "1em"}}>
-            <Translate component="p" content="settings.active_node" />
+            <Translate component="p" content="settings.active_node" className="dark-text-color"/>
             <div className="active-node" style={{marginBottom: "2em"}}>
                 { renderNode(activeNode, false) }
             </div>
@@ -259,7 +259,7 @@ class AccessSettings extends React.Component {
             <div className="nodes" style={{position: "relative", marginBottom: "2em"}}>
                 <div className="grid-block shrink" style={{marginLeft: 0}}>
                     <div className={availableClass} onClick={this._changeTab.bind(this, "available-nodes")}>
-                        <Translate content="settings.available_nodes" />
+                        <Translate content="settings.available_nodes" className="dark-text-color"/>
                     </div>
                     <div className={hiddenClass} onClick={this._changeTab.bind(this, "hidden-nodes")}>
                         <Translate content="settings.hidden_nodes" />

@@ -18,11 +18,16 @@ export default class TypeAhead extends React.Component {
         }
     }
 
-    focus = e => {
-        const { autocomplete } = this.refs;
-        autocomplete.refs.input.click();
-        autocomplete.refs.input.focus();
-        e.stopPropagation();
+    onClick = () => {
+        // Timer is used to keep menu from popping back open due to order of blur then click event
+        if (this.blockClick) {
+            return;
+        }
+        const { isMenuShowing } = this.state || {};
+        this.setState({ isMenuShowing: !isMenuShowing, filter: "" }, () => {
+            const { autocomplete } = this.refs;
+            autocomplete.refs.input.focus();
+        });
     };
 
     onChange = e => {
@@ -33,24 +38,31 @@ export default class TypeAhead extends React.Component {
     };
 
     onSelect = value => {
-        this.setState({ value, filter: "" });
+        this.setState({ value, filter: "", isMenuShowing: false });
         if (this.props.onSelect) {
             this.props.onSelect(value);
         }
     };
 
-    onMenuVisibilityChange = isOpen => {
-        this.setState({ isOpen, filter: "" });
+    renderInput = props => {
+        const { isMenuShowing } = this.state || {};
+        return isMenuShowing ? (
+            <input {...props} style={TypeAhead.inputStyle} />
+        ) : null;
     };
 
     dropDown = () => {
         const { props, state } = this;
-        const { filter = "" } = state;
+        const { filter = "", isMenuShowing } = state;
         let inputProps = props.inputProps || {};
 
         if (props.tabIndex) inputProps.tabIndex = props.tabIndex;
+        const wrapperStyle = isMenuShowing
+            ? TypeAhead.menuShowingwrapperStyle
+            : TypeAhead.menuHiddenwrapperStyle;
         return (
             <Autocomplete
+                renderInput={this.renderInput}
                 ref="autocomplete"
                 items={
                     props.items || [
@@ -66,23 +78,63 @@ export default class TypeAhead extends React.Component {
                 renderItem={this.renderItem}
                 value={filter}
                 onChange={this.onChange}
-                onMenuVisibilityChange={this.onMenuVisibilityChange}
                 onSelect={this.onSelect}
-                inputProps={inputProps}
+                inputProps={{ ...inputProps, onBlur: this.onBlur }}
                 menuStyle={TypeAhead.menuStyle}
+                wrapperStyle={wrapperStyle}
+                open={isMenuShowing}
             />
         );
     };
 
+    onBlur = () => {
+        // Timer is used to keep menu from popping back open due to order of blur then click event
+        this.timer && clearTimeout(this.timer);
+        this.blockClick = true;
+        this.setState({ isMenuShowing: false });
+        this.timer = setTimeout(() => {
+            this.blockClick = false;
+        }, 300); // Magic number that seems fast and slow enough for events and render to complete
+    };
+
+    static inputStyle = {
+        marginTop: 4
+    };
+
+    static menuShowingwrapperStyle = {
+        backgroundColor: "rgb(62, 62, 62)",
+        paddingLeft: 10,
+        paddingRight: 10,
+        marginTop: -4,
+        paddingTop: 4,
+        paddingBottom: 50,
+        position: "fixed",
+        width: "100%",
+        maxWidth: 436,
+        zIndex: 1
+    };
+
+    static menuHiddenwrapperStyle = {};
+
     static menuStyle = {
-        borderRadius: "3px",
+        borderBottomRightRadius: 3,
+        borderBottomLeftRadius: 3,
         boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
         background: "rgba(255, 255, 255, 0.9)",
-        padding: "2px 0",
+        paddingTop: 5,
+        paddingLeft: 5,
+        paddingRight: 10,
+        paddingBottom: 5,
+        marginTop: 5,
+        marginLeft: -10,
+        width: "100%",
+        maxWidth: 436,
         fontSize: "90%",
         position: "fixed",
-        overflow: "auto",
-        maxHeight: "20%"
+        overflowX: "visible",
+        overflowY: "scroll",
+        maxHeight: "20%",
+        zIndex: 1
     };
 
     renderItem = (item, highlighted) => {
@@ -105,11 +157,6 @@ export default class TypeAhead extends React.Component {
         );
     };
 
-    getItemByValue = value => {
-        const { items } = this.props;
-        return items.find(item => item.label === value);
-    };
-
     getValueFromItem = item => item.label;
 
     selectedDisplay = () => {
@@ -120,14 +167,14 @@ export default class TypeAhead extends React.Component {
                     width: "100%",
                     backgroundColor: "#3e3e3e",
                     height: 32,
-                    marginBottom: 10,
+
                     borderRadius: 5,
                     paddingLeft: 10,
                     paddingRight: 10,
                     paddingTop: 8,
                     paddingBottom: 5
                 }}
-                onClick={this.focus}
+                onClick={this.onClick}
             >
                 {value}
             </div>
@@ -135,6 +182,8 @@ export default class TypeAhead extends React.Component {
     };
 
     render() {
+        console.log("render");
+        const { isMenuShowing } = this.state || {};
         return (
             <div
                 style={{
@@ -156,9 +205,9 @@ export default class TypeAhead extends React.Component {
                     style={{
                         position: "absolute",
                         right: 10,
-                        top: !!this.props.label ? 35 : 7
+                        top: !!this.props.label ? 35 : 7,
+                        transform: isMenuShowing ? "rotate(180deg)" : null
                     }}
-                    onClick={this.focus}
                 />
             </div>
         );
