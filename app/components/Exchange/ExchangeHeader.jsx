@@ -131,7 +131,6 @@ export default class ExchangeHeader extends React.Component {
                                         <Icon className="shuffle" name="shuffle"/>
                                     </Link>
 
-
                                     <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }} data-intro={translator.translate("walkthrough.favourite_button")}>
                                         <Icon className={starClass} name="fi-star"/>
                                     </Link>
