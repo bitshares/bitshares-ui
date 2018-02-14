@@ -127,12 +127,11 @@ export default class ExchangeHeader extends React.Component {
                                     <Translate component="span" style={{padding: "5px 0 0 5px"}} className="stat-text" content="exchange.trading_pair" />
                                     <Link onClick={() => {
                                         MarketsActions.switchMarket();
-                                    }} to={`/market/${baseSymbol}_${quoteSymbol}`} data-intro={translator.translate("walkthrough.switch_button")}>
+                                    }} to={`/market/${baseSymbol}_${quoteSymbol}`}>
                                         <Icon className="shuffle" name="shuffle"/>
                                     </Link>
                                     
-                                    
-                                    <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }} data-intro={translator.translate("walkthrough.favourite_button")}>
+                                    <Link onClick={() => { this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol")); }}>
                                         <Icon className={starClass} name="fi-star"/>
                                     </Link>
                                 </div>
@@ -165,7 +164,9 @@ export default class ExchangeHeader extends React.Component {
                                 </ul>
                                 <ul className="market-stats stats top-stats">
                                     <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
-                                        {!showDepthChart ? <Translate content="exchange.order_depth" data-intro={translator.translate("walkthrough.depth_chart")} /> : <Translate content="exchange.price_history" data-intro={translator.translate("walkthrough.price_chart")} />}
+
+                                        {!showDepthChart ? <Translate content="exchange.order_depth" /> : <Translate content="exchange.price_history" />}
+
                                     </li>
                                 </ul>
                             </div>
