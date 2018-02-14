@@ -1,7 +1,9 @@
 import React from "react";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainTypes as GraphChainTypes} from "bitsharesjs/es";
+import {ChainTypes as GraphChainTypes, ChainStore} from "bitsharesjs/es";
+import counterpart from "counterpart";
+import utils from "common/utils";
 import Notify from "notifyjs";
 let {operations} = GraphChainTypes;
 
@@ -30,10 +32,28 @@ class BrowserNotifications extends React.Component {
         return operation.getIn(["op", 1, "to"]) === this.props.account.get("id");
     }
 
-    _notifyUserAboutTransferToHisAccount(/*operation*/) {
+    _notifyUserAboutTransferToHisAccount(operation) {
+
+        const assetId = operation.getIn(["op", 1, "amount", "asset_id"]);
+        const from = operation.getIn(["op", 1, "from"]);
+
+        const amount = operation.getIn(["op", 1, "amount", "amount"]);
+
+        if(!assetId || !from || !amount)
+            throw Error("Operation has wrong format");
+
+        const title = counterpart.translate("browser_notification_messages.money_received_title", {
+            from: this._getAccountNameById(from),
+        });
+
+        const body = counterpart.translate("browser_notification_messages.money_received_body", {
+            amount: this._getRealAmountByAssetId(amount, assetId),
+            symbol: this._getAssetSymbolByAssetId(assetId)
+        });
+
         this.notifyUsingBrowserNotification({
-            title: "Money received",
-            body: "Somebody sent some coins for you! Nice day!",
+            title: title,
+            body: body,
             closeOnClick: true,
         });
     }
@@ -85,6 +105,24 @@ class BrowserNotifications extends React.Component {
         const notify = new Notify(params.title, notifyParams);
 
         notify.show();
+    }
+
+    _getRealAmountByAssetId(amount, assetId) {
+        const asset = ChainStore.getAsset(assetId);
+
+        return utils.get_asset_amount(amount, asset);
+    }
+
+    _getAssetSymbolByAssetId(assetId) {
+        const asset = ChainStore.getAsset(assetId);
+
+        return asset.get("symbol");
+    }
+
+    _getAccountNameById(accountId) {
+        const account = ChainStore.getAccount(accountId);
+
+        return account.get("name");
     }
 
     render() {
