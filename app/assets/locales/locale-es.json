@@ -919,6 +919,8 @@
     "backup": "Backup",
     "restore": "Restaurar/Importar",
     "access": "Acceso",
+    "reset_text": "Restaure la configuración a sus valores predeterminados originales",
+    "reset_text_description": "Esto restablecerá todas sus configuraciones %(generalName)s, de %(accessName)s y de %(faucetName)s",
     "general_text": "Ajusta la configuración básica.",
     "wallet_text": "Controle los detalles de su billetera local.",
     "accounts_text": "Su lista de cuentas.",

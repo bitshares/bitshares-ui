@@ -872,6 +872,8 @@
     "backup": "Backup",
     "restore": "Ripristina/Importa",
     "access": "Accesso",
+    "reset_text": "Ripristina le impostazioni ai loro valori originali",
+    "reset_text_description": "Ciò ripristinerà tutte le impostazioni %(generalName)s, di %(accessName)s e di %(faucetName)s",
     "general_text": "Modifica le impostazioni di base.",
     "wallet_text": "Controlla i dettagli del tuo portafoglio.",
     "accounts_text": "La tua lista di account.",

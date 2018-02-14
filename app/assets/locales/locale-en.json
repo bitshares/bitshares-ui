@@ -938,6 +938,8 @@
     "backup": "Backup",
     "restore": "Restore/Import",
     "access": "Access",
+    "reset_text": "Restore settings to their original defaults.",
+    "reset_text_description": "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
     "general_text": "Adjust the basic settings.",
     "wallet_text": "Control the details of your local wallet.",
     "accounts_text": "Your accounts list.",
