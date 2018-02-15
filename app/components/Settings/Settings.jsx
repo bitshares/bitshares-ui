@@ -268,10 +268,10 @@ class Settings extends React.Component {
         }
 
         return (
-            <div className={this.props.deprecated ? "" : "grid-block page-layout"}>
+            <div className={this.props.deprecated ? "" : "grid-block"}>
                 <div className="grid-block main-content margin-block wrap">
                     <div className="grid-content shrink settings-menu" style={{paddingRight: "2rem"}}>
-                        <Translate style={{paddingBottom: 10, paddingLeft: 10}} component="h3" content="header.settings" className={"dark-text-color"}/>
+                        <Translate style={{paddingBottom: 10, paddingLeft: 10}} component="h3" content="header.settings" className={"panel-bg-color"}/>
 
                         <ul>
                             {menuEntries.map((entry, index) => {
@@ -283,7 +283,7 @@ class Settings extends React.Component {
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
                         <div className="grid-block small-12 medium-10 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]}/>
-                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 5, marginBottom: 30}} content={`settings.${menuEntries[activeSetting]}_text`} className="dark-text-color"/>}
+                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 5, marginBottom: 30}} content={`settings.${menuEntries[activeSetting]}_text`} className="panel-bg-color"/>}
                             {entries}
                         </div>
                     </div>

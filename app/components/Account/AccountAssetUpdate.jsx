@@ -599,7 +599,7 @@ class AccountAssetUpdate extends React.Component {
         let isPredictionMarketAsset = asset.getIn(["bitasset", "is_prediction_market"]);
 
         return (
-            <div className="grid-content app-tables no-padding" ref="appTables">
+            <div className="grid-content app-tables" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <div className="tabs-header">
