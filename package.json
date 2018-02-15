@@ -136,6 +136,7 @@
     "foundation-apps": "git+https://github.com/zurb/foundation-apps.git",
     "fractional": "^1.0.0",
     "highcharts": "4.2.6",
+    "highcharts-more-node": "1.0.2",
     "immutable": "^3.8.1",
     "indexeddbshim": "^2.2.1",
     "intl": "^1.1.0",

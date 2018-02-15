@@ -37,11 +37,7 @@ import { checkMarginStatus } from "common/accountHelper";
 import SendModal from "../Modal/SendModal";
 import PulseIcon from "../Icon/PulseIcon";
 
-import { Asset, Price } from "common/MarketClasses";
-import MarketUtils from "common/market_utils";
-import MarketsStore from "stores/MarketsStore";
-import TreeMap from "react-d3-treemap";
-import "react-d3-treemap/dist/react.d3.treemap.css";
+import AccountTreemap from "./AccountTreemap"
 
 class AccountOverview extends React.Component {
 
@@ -623,7 +619,6 @@ class AccountOverview extends React.Component {
         hiddenBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioHiddenAssetsBalance}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
-        const visualData = shownAssets == "visual" ? this._calculateVisualAssetData(includedBalancesList) : {};
 
         // Find the current Openledger coins
         // const currentDepositAsset = this.props.backedCoins.get("OPEN", []).find(c => {
@@ -698,7 +693,7 @@ class AccountOverview extends React.Component {
                                             {showHidden && hiddenBalances.length ? hiddenBalances : includedBalances}
                                         </tbody>
                                     </table> :
-                                    <BalanceTreemap balanceList={includedBalancesList}/>
+                                    <AccountTreemap balanceAssets={includedBalancesList}/>
                                 }
                             </Tab>
 

@@ -1,8 +1,14 @@
 import React from "react";
 import Immutable from "immutable";
 import Highcharts from "react-highcharts";
+import 'highcharts-more-node';
 import {PropTypes} from "react";
 import utils from "common/utils";
+import ChainTypes from "../Utility/ChainTypes";
+import {ChainStore} from "bitsharesjs/es";
+import { Asset, Price } from "common/MarketClasses";
+import MarketUtils from "common/market_utils";
+import MarketsStore from "stores/MarketsStore";
 
 class AccountTreemap extends React.Component {
 
@@ -16,6 +22,9 @@ class AccountTreemap extends React.Component {
         core_asset: "1.3.0"
     }
 
+    constructor(props) {
+        super(props);
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
@@ -115,15 +124,18 @@ class AccountTreemap extends React.Component {
     }
 
     render() {
-        let {assets, balances} = this.props;
+        let {balanceAssets} = this.props;
+        balanceAssets = balanceAssets.toJS();
         let accountBalances = null;
 
-        if (balances && balances.length > 0 && assets.size > 0) {
-            accountBalances = balances.map((balance, index) => {
-                let asset = assets.get(balance.asset_id);
+        if (balanceAssets && balanceAssets.length > 0) {
+            accountBalances = balanceAssets.map((balance, index) => {
+                let balanceObject = ChainStore.getObject(balance);
+                let asset_type = balanceObject.get("asset_type");
+                let asset = ChainStore.getObject(asset_type);
                 return {
                         name: asset.symbol,
-                        value: utils.get_asset_amount(balance.amount, asset),
+                        value: utils.get_asset_amount(balanceObject.amount, asset),
                         colorValue: index
                     };
 
@@ -133,6 +145,10 @@ class AccountTreemap extends React.Component {
         if (accountBalances && accountBalances.length === 1 && accountBalances[0].value === 0) {
             accountBalances = null;
         }
+
+        console.log("here");
+        console.log(accountBalances);
+        console.log(balanceAssets);
 
         let config = {
             chart: {
@@ -183,7 +199,7 @@ class AccountTreemap extends React.Component {
         };
 
         return (
-            accountBalances ? <Highcharts config={config}/> : null
+            accountBalances ? <Highcharts config={config}/> : <div></div>
         );
     }
 }
