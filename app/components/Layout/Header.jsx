@@ -547,6 +547,12 @@ class Header extends React.Component {
                                     <Translate className="column-hide-small" component="span" content="header.explorer" />
                                 </a>
                             </li>
+                            {!!createAccountLink ? null : <li className="column-hide-small">
+                                <a style={{flexFlow: "row"}} onClick={this._showSend.bind(this)}>
+                                    <Icon size="1_5x" style={{position: "relative", top: 0, left: -8}} name="transfer"/>
+                                    <span><Translate content="header.payments" /></span>
+                                </a>
+                            </li>}
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>
