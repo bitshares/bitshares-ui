@@ -10,7 +10,6 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import cnames from "classnames";
 
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
@@ -249,29 +248,23 @@ class RecentTransactions extends React.Component {
                             <span>{this.props.title ? this.props.title : <Translate content="account.recent" />}</span>
                         </div>
                     </div>}
-                    <div className="header-selector">
-                        <div className="selector">
-                            <div className={cnames("inline-block")}>
-                                {this.props.showFilters ? (
-                                    <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5, width: "auto"}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
-                                ) : null}
-                            </div>
-                        </div>
-                    </div>
+
                     <div
                         className="box-content grid-block no-margin"
                         style={!this.props.fullHeight ? {
                             maxHeight: maxHeight - headerHeight
                         } : null}
                         ref="transactions">
-                        
-
-                        <table className={"table table-striped " + (compactView ? "compact" : "") + (this.props.dashboard ? " dashboard-table table-hover" : "")}>
+                        <table className={"table" + (compactView ? " compact" : "") + (this.props.dashboard ? " dashboard-table table-hover" : "")}>
                             <thead>
                                 <tr>
-                                    <th className="column-hide-tiny" style={alignLeft}><Translate content="account.transactions.type" /></th>
-                                    <th style={alignLeft}><Translate content="account.transactions.info" /></th>
-                                    <th style={alignLeft}><Translate content="account.transactions.time" /></th>
+                                    {compactView ? null : <th style={alignLeft} className="column-hide-tiny">
+                                        {this.props.showFilters ? (
+                                            <select data-place="left" data-tip={counterpart.translate("tooltip.filter_ops")} style={{paddingTop: 5, width: "auto"}} className="bts-select no-margin" value={this.state.filter} onChange={this._onChangeFilter.bind(this)}>{options}</select>
+                                        ) : null}
+                                    </th>}
+                                    <th style={alignLeft}><Translate content="account.votes.info" /></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <TransitionWrapper

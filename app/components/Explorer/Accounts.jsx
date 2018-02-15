@@ -127,7 +127,7 @@ class Accounts extends React.Component {
         }
 
         return (
-            <div className="grid-block">
+            <div className="grid-block page-layout">
                 <div className="grid-block vertical medium-6 medium-offset-3">
                     <div className="grid-content shrink">
                         <Translate component="h3" content="explorer.accounts.title" />

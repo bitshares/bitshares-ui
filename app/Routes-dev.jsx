@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect, IndexRedirect } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
 // Components imported here for react hot loader (does not work with async route loading)
-import DashboardPage from "./components/Dashboard/DashboardPage";
+import DashboardContainer from "./components/Dashboard/DashboardContainer";
 import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
@@ -59,9 +59,9 @@ class Auth extends React.Component {
 
 const routes = (
     <Route path="/" component={App} onEnter={willTransitionTo}>
-        <IndexRedirect to="/dashboard"/>
+        <IndexRoute component={DashboardContainer}/>
         <Route path="/auth/:data" component={Auth}/>
-        <Route path="/dashboard" component={DashboardPage}/>
+        <Route path="/dashboard" component={DashboardContainer}/>
         <Route path="explorer" component={Explorer}/>
         <Route path="/explorer/fees" component={FeesContainer} />
         <Route path="/explorer/blocks" component={BlocksContainer} />
@@ -94,6 +94,7 @@ const routes = (
         <Route path="explorer/markets" component={MarketsContainer} />
         <Route path="market/:marketID" component={ExchangeContainer} />
         <Route path="settings" component={SettingsContainer} />
+        <Route path="settings/:tab" component={SettingsContainer} />
         <Route path="block/:height" component={BlockContainer} />
         <Route path="asset/:symbol" component={Asset} />
         <Route path="create-account" component={LoginSelector}>

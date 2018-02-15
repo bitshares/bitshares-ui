@@ -62,21 +62,7 @@ export default class SettingsEntry extends React.Component {
 
             case "walletLockTimeout":
                 value = selected;
-                input = <input type="text" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
-                break;
-
-            case "reset":
-                value = true;
-
-                input = <div
-                    style={{height: 60, width: "100%", paddingTop: 20}}
-                    className="button"
-                    onClick={() => {SettingsActions.clearSettings().then(() => {this._setMessage("settings.restore_default_success");});}}
-                >
-                    {counterpart.translate("settings.reset")}
-                </div>;
-
-                noHeader = true;
+                input = <input type="text" className="settings-input" value={selected} onChange={this.props.onChange.bind(this, setting)}/>;
                 break;
 
             default:
@@ -106,7 +92,7 @@ export default class SettingsEntry extends React.Component {
                         return <option value={entry.translate ? entry.translate : entry} key={key}>{option}</option>;
                     });
                 } else {
-                    input = <input type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>;
+                    input = <input className="settings-input" type="text" defaultValue={value} onBlur={this.props.onChange.bind(this, setting)}/>;
                 }
                 break;
         }
@@ -117,12 +103,12 @@ export default class SettingsEntry extends React.Component {
         }
   
         return (
-            <section className="block-list">
+            <section className="block-list no-border-bottom">
                 {noHeader ? null : <header><Translate component="span" style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}} content={`settings.${setting}`} /></header>}
                 {options ? <ul>
                     <li className="with-dropdown">
                         {optional}
-                        <select value={value} onChange={this.props.onChange.bind(this, setting)}>
+                        <select value={value} className="settings-select" onChange={this.props.onChange.bind(this, setting)}>
                             {options}
                         </select>
                         {confirmButton}

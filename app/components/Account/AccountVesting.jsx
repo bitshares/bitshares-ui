@@ -138,7 +138,7 @@ class AccountVesting extends React.Component {
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
-                        <Tabs segmented={false} setting="vestingTab" className="account-tabs" tabsClass="account-overview bordered-header content-block" contentClass="padding">
+                        <Tabs segmented={false} setting="vestingTab" className="account-tabs" tabsClass="account-overview bordered-header content-block">
                             <Tab title="account.vesting.title">
                                 <Translate content="account.vesting.explain" component="p" />
 

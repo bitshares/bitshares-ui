@@ -606,7 +606,7 @@ class AccountAssetCreate extends React.Component {
                             setting="createAssetTab"
                             className="account-tabs"
                             tabsClass="account-overview no-padding bordered-header content-block"
-                            contentClass="grid-block shrink small-vertical medium-horizontal padding"
+                            contentClass="grid-block shrink small-vertical medium-horizontal"
                             segmented={false}
                             actionButtons={confirmButtons}
                         >

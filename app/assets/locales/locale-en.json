@@ -32,7 +32,6 @@
     "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
-    "deposit-withdraw": "Deposit/Withdraw",
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
@@ -183,11 +182,6 @@
       "empty_black_by": "No accounts have blacklisted %(account)s.",
       "whitelist_authorities": "Whitelist authority",
       "blacklist_authorities": "Blacklist authority"
-    },
-    "transactions": {
-      "type": "Type",
-      "info": "Info",
-      "time": "Time"
     },
     "vesting": {
       "title": "Vesting balances",
@@ -944,6 +938,8 @@
     "backup": "Backup",
     "restore": "Restore/Import",
     "access": "Access",
+    "reset_text": "Restore settings to their original defaults.",
+    "reset_text_description": "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
     "general_text": "Adjust the basic settings.",
     "wallet_text": "Control the details of your local wallet.",
     "accounts_text": "Your accounts list.",
@@ -1054,7 +1050,6 @@
     "buy_min": "Buy at least",
     "sell": "Sell",
     "receive": "Receive",
-    "flip": "Flip",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
     "market_name": "My Markets",
@@ -1109,12 +1104,6 @@
     "description": "Description",
     "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
     "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
-  },
-  "dashboard": {
-    "starred_markets": "Starred Markets",
-    "top_markets": "Top Markets",
-    "featured_markets": "Featured Markets",
-    "table_empty": "No market matched"
   },
   "fees": {
     "title": "Fee Schedule"

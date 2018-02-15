@@ -331,7 +331,7 @@ class Witnesses extends React.Component {
 
         let content =
             <div className="grid-block">
-                <div className="grid-block">
+                <div className="grid-block page-layout">
                     <div className="grid-block vertical small-5 medium-3">
                         <div className="grid-content">
                             <br/>
