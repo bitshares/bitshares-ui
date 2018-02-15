@@ -1,14 +1,28 @@
 .settings-menu {
-    > li {
-        list-style-type: none;
-        cursor: pointer;
-        padding: 5px 0;
-        &:hover {
+    > ul {
+        > li {
+            list-style-type: none;
+            cursor: pointer;
+            padding: 5px 0;
+            &:hover {
                 background-color: red;
-        }
+            }
 
-        &.active {
-            color: blue;
+            &.active {
+                color: blue;
+            }
         }
     }
+}
+
+.nodes-header {
+    text-transform: uppercase;
+    font-size: 1rem;
+    padding: 6px 10px;
+    margin-bottom: 2em;
+    font-weight: 500;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    transition: border-color 0.3s ease 0s;
+    overflow:hidden;
 }

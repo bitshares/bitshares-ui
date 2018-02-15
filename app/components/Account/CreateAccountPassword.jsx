@@ -206,11 +206,11 @@ class CreateAccountPassword extends React.Component {
                         noLabel
                     />
 
-                <section>
+                <section className="form-group">
                     <label className="left-label"><Translate content="wallet.generated" />&nbsp;&nbsp;<span className="tooltip" data-html={true} data-tip={counterpart.translate("tooltip.generate")}><Icon name="question-circle" /></span></label>
                     <div style={{paddingBottom: "0.5rem"}}>
                         <span className="inline-label">
-                            <input style={{maxWidth: "calc(30rem - 48px)", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text"/>
+                            <input style={{maxWidth: "calc(30rem - 48px)", fontSize: "80%"}} disabled value={this.state.generatedPassword} type="text" className="input-button"/>
                             <CopyButton
                                 text={this.state.generatedPassword}
                                 tip="tooltip.copy_password"

@@ -93,9 +93,33 @@
         "follow_user": "您正在关注该账户",
         "follow_user_add": "点击关注该账户"
     },
+    "walkthrough": {
+        "language_flag": "在DEX中选择9种不同的语言。",
+        "restore_account": "使用备份文件还原钱包。",
+        "create_cloud_wallet": "使用帐户名称和密码访问云钱包。",
+        "create_local_wallet": "创建一个本地钱包并下载属于它的任何私钥。",
+        "switch_button": "使用此按钮切换交易对。",
+        "favourite_button": "将这一对标记为您的市场列表中的最爱。",
+        "depth_chart": "使用市场深度图来显示不同价格的供应和需求。",
+        "price_chart": "使用价格图查看资产的价格动作。",
+        "chart_tool_zoom": "调整价格图表以显示更多或更少的价格历史记录。",
+        "chart_tool_duration": "使用不同的时间间隔分组贸易数据",
+        "chart_tool_indicators": "将技术指标添加到价格图表中以识别交易机会。",
+        "buy_form": "使用此表格下订单",
+        "sell_form": "使用此表单发出卖单。",
+        "buy_orders": "查看该市场的所有购买订单。",
+        "sell_orders": "查看此市场的所有订单。",
+        "my_markets_tab": "此选项卡列出常用市场。",
+        "find_markets_tab": "此标签允许您搜索并添加更多市场到'我的市场'标签。",
+        "next_label": "下",
+        "prev_label": "背部",
+        "skip_label": "跳跃",
+        "done_label": "完成"
+    },
     "propose": "提议",
     "cancel": "取消",
     "account": {
+        "search": "Search for an account",
         "new_user": "新用户？",
         "existing_user": "老用户",
         "restore": "还原",
@@ -446,7 +470,7 @@
         "older": "更早"
     },
     "transfer": {
-        "header": "转账详情", 
+        "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
         "from": "来自",
         "pay_from": "支付自",
@@ -699,7 +723,7 @@
     "explorer": {
         "accounts": {
             "title": "账户",
-            "filter": "筛选账户", 
+            "filter": "筛选账户",
             "filter_contacts": "筛选联系人"
         },
         "blocks": {
@@ -937,6 +961,9 @@
         "node_up": "在线",
         "node_down": "离线",
         "available_nodes": "可用节点",
+        "hidden_nodes": "隐藏节点",
+        "show": "显示",
+        "hide": "隐藏",
         "add_api": "添加 API 服务器节点",
         "remove_api": "移除 API 服务器节点",
         "remove": "删除",
@@ -1441,7 +1468,8 @@
             "transfering": "转账确认中",
             "success": "充值成功",
             "fail": "充值失败"
-        }
+        },
+        "asset_search_deposit": "Search for an asset to deposit"
     },
     "trx_error": {
         "expire": "你的交易确认超时，请稍后尝试。"
@@ -1466,8 +1494,9 @@
 		"gateway": {
 			"support_block": "获得客户支持，请联络 Winex:",
 			"fee":"网关手续费",
-			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回"
-
+			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
+            "click_getaddress":"请先获取充值地址",
+            "get_deposit_address": "获取充值地址"
 		},
 		"withdraw": {
 			"winAmount": "最低提现数量:%(min_amount)s %(asset)s",

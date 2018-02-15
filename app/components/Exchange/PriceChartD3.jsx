@@ -627,26 +627,28 @@ export default class Wrapper extends React.Component {
             );
         }
 
+        const translator = require("counterpart");
+
         return (
             <div className="no-margin no-padding" style={{overflow: "visible", width: "100%"}}>
                 <CandleStickChartWithZoomPan ref="FitWidth" {...this.props} />
                 <div style={{paddingBottom: 10}}>
                     <ul style={{justifyContent: "center"}} className="market-stats stats bottom-stats">
                         {/* Chart controls */}
-                            <li className="stat">
+                            <li className="stat" data-intro={translator.translate("walkthrough.chart_tool_zoom")}>
                                 <span>
                                     <span><Translate content="exchange.zoom" />:</span>
                                     <span>{zoomOptions}</span>
                                 </span>
                             </li>
-                            <li className="stat">
+                            <li className="stat" data-intro={translator.translate("walkthrough.chart_tool_duration")}>
                                 <span>
                                     <span><Translate content="exchange.time" />:</span>
                                     <span>{bucketOptions}</span>
                                 </span>
                             </li>
 
-                            <li className="stat input custom-dropdown">
+                            <li className="stat input custom-dropdown" data-intro={translator.translate("walkthrough.chart_tool_indicators")}>
                                 <div className="v-align indicators clickable" onClick={this._toggleDropdown.bind(this, "indicators")}>
                                     <Translate content="exchange.chart_options.title" />
                                 </div>

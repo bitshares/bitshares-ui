@@ -163,6 +163,9 @@ class Exchange extends React.Component {
     };
 
     _checkFeeStatus(assets = [this.props.coreAsset, this.props.baseAsset, this.props.quoteAsset], account = this.props.currentAccount) {
+        if (assets[0] === assets[2] || assets[1] === assets[2]) {
+            assets.splice(2, 1);
+        }
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -569,11 +572,13 @@ class Exchange extends React.Component {
     }
 
     _flipBuySell() {
+        this.setState({
+            flipBuySell: !this.state.flipBuySell
+        });
+        
         SettingsActions.changeViewSetting({
             flipBuySell: !this.state.flipBuySell
         });
-
-        this.setState({ flipBuySell: !this.state.flipBuySell });
     }
 
     _toggleOpenBuySell() {
@@ -1037,8 +1042,8 @@ class Exchange extends React.Component {
                 feeAsset={buyFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
                 isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                onTogglePosition={this._toggleBuySellPosition.bind(this)}
+                onFlip={this.state._flipBuySell ? null : this._flipBuySell.bind(this)}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
@@ -1082,7 +1087,8 @@ class Exchange extends React.Component {
                 feeAsset={sellFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
                 isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+                onFlip={!this.state._flipBuySell ? this._flipBuySell.bind(this) : null}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
@@ -1112,6 +1118,8 @@ class Exchange extends React.Component {
                 currentAccount={this.props.currentAccount.get("id")}
             />
         );
+
+        
 
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
@@ -1208,7 +1216,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
+                                    feedPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
@@ -1226,7 +1234,7 @@ class Exchange extends React.Component {
                                 {isFrozen ? <div className="error small-12 no-overflow" style={{margin: "0 10px", lineHeight: "1.2rem"}}><Translate content="exchange.market_frozen" asset={frozenAsset} component="p"/></div> : null}
                                 {buyForm}
                                 {sellForm}
-                                
+
                                 <MarketHistory
                                     className={cnames(
                                         !smallScreen && !leftOrderBook ? "medium-6 xlarge-4" : "",

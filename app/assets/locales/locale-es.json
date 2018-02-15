@@ -93,9 +93,33 @@
     "follow_user": "Usted está siguiendo a este usuario",
     "follow_user_add": "Haga clic para seguir a este usuario"
   },
+  "walkthrough": {
+    "language_flag": "Elija entre 9 idiomas diferentes para usar en el DEX.",
+    "restore_account": "Restaure una billetera usando su archivo de respaldo.",
+    "create_cloud_wallet": "Acceda a la billetera en la nube usando un nombre de cuenta y contraseña.",
+    "create_local_wallet": "Cree una billetera local y descargue las llaves privadas que le pertenecen.",
+    "switch_button": "Cambia los pares de trading usando este botón.",
+    "favourite_button": "Mark this pair as a favourite in your markets list.",
+    "depth_chart": "Use un gráfico de profundidad de mercado para mostrar la oferta y la demanda a diferentes precios.",
+    "price_chart": "Ver la acción del precio de un activo usando el gráfico de precios.",
+    "chart_tool_zoom": "Ajuste el gráfico de precios para mostrar más o menos historial de precios.",
+    "chart_tool_duration": "Agrupe datos comerciales usando diferentes intervalos.",
+    "chart_tool_indicators": "Agregue indicadores técnicos al gráfico de precios para identificar oportunidades comerciales.",
+    "buy_form": "Coloque las órdenes de compra usando este formulario.",
+    "sell_form": "Coloque las órdenes de venta usando este formulario.",
+    "buy_orders": "Ver todas las órdenes de compra para este mercado.",
+    "sell_orders": "Ver todas las órdenes de venta para este mercado.",
+    "my_markets_tab": "Esta pestaña enumera los mercados comúnmente utilizados.",
+    "find_markets_tab": "Esta pestaña le permite buscar y agregar mercados adicionales a la pestaña mis mercados.",
+    "next_label": "Siguiente",
+    "prev_label": "Volver",
+    "skip_label": "Skip",
+    "done_label": "Hecho"
+  },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "search": "Search for an account",
     "new_user": "Nuevo usuario?",
     "existing_user": "Usuario existente",
     "restore": "Restaurar",
@@ -435,7 +459,7 @@
     "eq_value_header": "Valor ({asset})",
     "qty": "Qty",
     "quote": "Citar",
-    "total": "Total ({asset})"  
+    "total": "Total ({asset})"
   },
   "pagination": {
     "newer": "Más reciente",
@@ -480,7 +504,7 @@
   },
   "operation": {
     "pending": "%(blocks)s bloques pendientes",
-    "no_recent": "Sin transacciones recientes",  
+    "no_recent": "Sin transacciones recientes",
     "reg_account": "{registrar} Cuenta registrada {new_account}",
     "transfer": "{from} enviado {amount} a {to}",
     "proposal_create": "{account} transacción propuesta creada",
@@ -895,6 +919,8 @@
     "backup": "Backup",
     "restore": "Restaurar/Importar",
     "access": "Acceso",
+    "reset_text": "Restaure la configuración a sus valores predeterminados originales",
+    "reset_text_description": "Esto restablecerá todas sus configuraciones %(generalName)s, de %(accessName)s y de %(faucetName)s",
     "general_text": "Ajusta la configuración básica.",
     "wallet_text": "Controle los detalles de su billetera local.",
     "accounts_text": "Su lista de cuentas.",
@@ -929,6 +955,9 @@
     "node_up": "UP",
     "node_down": "DOWN",
     "available_nodes": "Nodos disponibles",
+    "hidden_nodes": "Nodos ocultos",
+    "show": "Mostrar",
+    "hide": "Ocultar",
     "add_api": "Añadir nodo",
     "remove_api": "Eliminar nodo",
     "remove": "retirar",
@@ -938,7 +967,7 @@
     "connection_error": "No se puede conectar al nodo API %(url)s, retrocediendo a nodos de trabajo conocidos",
     "low_latency": "Baja latencia",
     "medium_latency": "Latencia media",
-    "high_latency": "Alta latencia"    
+    "high_latency": "Alta latencia"
   },
   "footer": {
     "title": "BitShares",
@@ -974,7 +1003,7 @@
         "price_title": "Indicadores de precio",
         "volume_title": "Indicadores de volumen"
     },
-    "market": "Mercado", 
+    "market": "Mercado",
     "price_history": "Gráfico de Precios",
     "order_depth": "Profundidad de Mercado",
     "history": "Trades del mercado",
@@ -1162,7 +1191,7 @@
     "import_password": "Ingrese la contraseña del archivo de importación",
     "import_pass_match": "La contraseña coincide. Descifrando la copia de seguridad ahora...",
     "submit": "Enviar",
-    "import_balance": "Importar balance(s)",  
+    "import_balance": "Importar balance(s)",
     "import_bts": "Importar a BTS 0.9.3c exportar llave",
     "import_private_key": "Importar llave privada",
     "wallet_browser": "Su navegador web es su billetera",
@@ -1399,7 +1428,8 @@
     "unavailable_RUDEX": "RuDEX Gateway está inactivo o no responde",
     "unavailable_TRADE": "El puente de Blocktrades está inactivo o no responde",
     "contact_TRADE": "Contacta Blocktrades",
-    "over_limit": "Límite alcanzado"
+    "over_limit": "Límite alcanzado",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
     "trx_error": {
         "expire": "Su transacción ha expirado sin confirmación, intente de nuevo más tarde."

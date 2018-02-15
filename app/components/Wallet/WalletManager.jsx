@@ -63,7 +63,7 @@ class WalletManager extends Component {
         return (
             <div className="grid-block vertical">
                 <div className="grid-container" style={{maxWidth: "40rem"}}>
-                    <div className="content-block center-content">
+                    <div className="content-block">
                         <div className="page-header">
                             <Translate component="h3" content={this.getTitle()} />
                         </div>
@@ -208,9 +208,10 @@ class ChangeActiveWallet extends Component {
                     <header><Translate content="wallet.active_wallet" />:</header>
 
                         <ul>
-                        <li className="with-dropdown">
-                            {state.wallet_names.count() <= 1 ? <div style={{paddingLeft :10}}>{this.state.current_wallet}</div> : (
+                        <li className="with-dropdown" style={{borderBottom: 0}}>
+                            {state.wallet_names.count() <= 1 ? <div style={{paddingLeft :10, lineHeight: "36px", borderRadius: "3px"}} className="settings-input">{this.state.current_wallet}</div> : (
                                 <select
+                                className="settings-select"
                                 value={this.state.current_wallet}
                                 onChange={this.onChange.bind(this)}
                             >
@@ -312,8 +313,9 @@ class WalletDelete extends Component {
                 <section className="block-list">
                 <header><Translate content="wallet.delete_wallet" /></header>
                 <ul>
-                    <li className="with-dropdown">
+                    <li className="with-dropdown" style={{borderBottom: 0}}>
                         <select
+                            className="settings-select"
                             value={this.state.selected_wallet || ""}
                             style={{margin: "0 auto"}}
                             onChange={this.onChange.bind(this)}

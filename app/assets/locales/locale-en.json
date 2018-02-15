@@ -57,8 +57,9 @@
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
-    "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+    "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
     "settle_price": "This is the price at which settle orders will execute.",
+    "feed_price": "This is the current external feed price",
     "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
     "latest_price": "This is the latest price seen in this market.",
     "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
@@ -96,9 +97,33 @@
     "follow_user_add": "Click to Follow this user",
     "gateway": "Gateways back desposits by 100% real assets"
   },
+  "walkthrough": {
+    "language_flag": "Choose from 9 different languages to use in the DEX.",
+    "restore_account": "Restore a wallet using your backup file.",
+    "create_cloud_wallet": "Access the cloud wallet using an account name and password.",
+    "create_local_wallet": "Create a local wallet and download any private keys belonging to it.",
+    "switch_button": "Switch the trading pairs using this button.",
+    "favourite_button": "Mark this pair as a favourite in your markets list.",
+    "depth_chart": "Use a market depth chart to show the supply and demand at different prices.",
+    "price_chart": "View price action of an asset using the price chart.",
+    "chart_tool_zoom": "Adjust the price chart to show more or less price history.",
+    "chart_tool_duration": "Group trade data using different intervals.",
+    "chart_tool_indicators": "Add technical indicators to the price chart to identify trading opportunities.",
+    "buy_form": "Place buy orders using this form.",
+    "sell_form": "Place sell orders using this form.",
+    "buy_orders": "View all buy orders for this market.",
+    "sell_orders": "View all sell orders for this market.",
+    "my_markets_tab": "This tab lists commonly used markets.",
+    "find_markets_tab": "This tab allows you to search and add additional markets to the 'my markets' tab.",
+    "next_label": "Next",
+    "prev_label": "Back",
+    "skip_label": "Skip",
+    "done_label": "Done"
+  },
   "propose": "Propose",
   "cancel": "Cancel",
   "account": {
+    "search": "Search for an account",
     "new_user": "New user?",
     "existing_user": "Existing user",
     "restore": "Restore",
@@ -755,6 +780,7 @@
       "max_margin_period_sec": "Max margin period (s)",
       "call_limit": "Call limit",
       "short_limit": "Short limit",
+      "feed_price": "Feed price",
       "settlement_price": "Settlement price",
       "go_to": "Go to block"
     },
@@ -786,7 +812,9 @@
         "settlement_price": "Settlement price",
         "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
         "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-        "global_settlement_price" : "Global settlement price"
+        "global_settlement_price" : "Global settlement price",
+        "settlement_delay" : "Settlement delay",
+        "force_settlement_offset" : "Force settlement offset"
       },
       "fee_pool": {
         "title": "Fee Pool",
@@ -911,6 +939,8 @@
     "backup": "Backup",
     "restore": "Restore/Import",
     "access": "Access",
+    "reset_text": "Restore settings to their original defaults.",
+    "reset_text_description": "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
     "general_text": "Adjust the basic settings.",
     "wallet_text": "Control the details of your local wallet.",
     "accounts_text": "Your accounts list.",
@@ -945,6 +975,9 @@
     "node_up": "Available",
     "node_down": "Unreachable",
     "available_nodes": "Available Nodes",
+    "hidden_nodes": "Hidden Nodes",
+    "show": "Show",
+    "hide": "Hide",
     "add_api": "Add Node",
     "remove_api": "Remove Node",
     "remove": "Remove",
@@ -992,6 +1025,7 @@
         "volume_title": "Volume indicators"
     },
     "market": "Market",
+    "feed_price": "Feed Price",
     "price_history": "Price Chart",
     "order_depth": "Market Depth",
     "history": "Market trades",
@@ -1357,6 +1391,8 @@
   },
   "gateway": {
     "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+    "min_deposit_warning_amount": "Minimum value to deposit should be %(minDeposit)s %(coin)s.",
+    "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
     "copy_memo": "Copy memo",
     "please_generate_address": "Please, get new address ",
     "generate_new": "Get new address",
@@ -1474,7 +1510,8 @@
       "transfering":"transfering",
       "success":"success",
       "fail":"fail"
-    }
+    },
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
       "expire": "Your transaction has expired without being confirmed, please try again later."
@@ -1499,7 +1536,9 @@
     "gateway": {
       "support_block": "For support, please contact Winex at:",
       "fee":"Gateway Fee",
-      "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered"
+      "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+      "click_getaddress":"Please get deposit address",
+      "get_deposit_address": "get deposit address"
     },
     "withdraw": {
       "winAmount": "Minimum amount: %(min_amount)s %(asset)s",

@@ -20,7 +20,7 @@
         border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 64px;
+  // min-height: 64px;
   // text-transform: uppercase;
   .menu-bar > li {
 
@@ -41,7 +41,7 @@
   }
 
   div.account-drop-down div.total-value {
-      text-align: left;
+      text-align: right;
       font-size: 80%;
       line-height: initial;
   }
@@ -168,6 +168,7 @@ ul.dropdown.header-menu {
     border: none;
     z-index: 1004;
     > li {
+        height: 41px;
         padding: 2px 5px 2px 10px;
         > div {
             vertical-align: middle;
@@ -192,5 +193,48 @@ ul.dropdown.header-menu {
                 fill: grey !important;
             }
         }
+        &.has-submenu {
+            position: relative;
+            &:after {
+                content: ">";
+                position: absolute;
+                right: 10px;
+                margin-top: -13.5px;
+                top: 50%;
+            }
+        }
+        &.parent-item {
+            .parent-item-icon {
+                margin-right: 10px;
+            }
+        }
     }
+    li.mobile-only {
+        display: none;
+    }
+    li.desktop-only {
+        display: block;
+    }
+}
+
+.account-summary {
+  text-align: right;
+  line-height: initial;
+  display: inline-block;
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  svg path {
+    fill: #fff;
+  }
+}
+
+.account-name .icon {
+  margin-right: 5px;
+}
+
+.active-account {
+    padding-right: 10px;
 }

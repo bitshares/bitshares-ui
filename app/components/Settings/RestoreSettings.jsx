@@ -38,7 +38,7 @@ export default class RestoreSettings extends React.Component {
             return (
                 <div>
                     <Translate content="settings.wallet_required" component="h4" />
-                    <p><Translate content="settings.wallet_required_text" />:</p>
+                    <p className="dark-text-color"><Translate content="settings.wallet_required_text" />:</p>
 
                     <button className="button" onClick={this._setWalletMode}><Translate content="settings.enable_wallet" /></button>
                 </div>
