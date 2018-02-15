@@ -33,6 +33,10 @@
     "account_notify": "Aktif hesap: %(account)s",
     "account_value": "Hesap değeri"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Şuradan transfer %(from)s",
+    "money_received_body": "Seni gönderdi %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
     "margin_price": "Teminat tamamlama çağrısı yapılmış pozisyonun ödemesi istenebilecek en yüksek değer",
@@ -783,6 +787,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Tarayıcı Bildirimleri",
+    "browser_notifications_allow": "Bildirimleri etkinleştir",
+    "browser_notifications_additional_transfer_to_me": "Hesabıma yapılan aktarmalar hakkında bilgi ver",
     "inverseMarket": "Piyasa eğilim tercihi",
     "unit": "Tercih edilen hesap birimi",
     "confirmMarketOrder": "Piyasa emirleri için teyit iste",
