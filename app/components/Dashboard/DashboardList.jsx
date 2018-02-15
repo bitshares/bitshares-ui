@@ -137,6 +137,12 @@ class DashboardList extends React.Component {
 		let balanceList = Immutable.List();
 
 		return accounts
+		.filter(account => {
+			let accountName = account.get("name");
+			let isMyAccount = AccountStore.isMyAccount(account) || accountName === passwordAccount;
+
+			return (isMyAccount === this.props.showMyAccounts);
+		})
 		.filter(a => {
 			if (!a) return false;
 			return a.get("name").toLowerCase().indexOf(dashboardFilter) !== -1;
@@ -215,11 +221,6 @@ class DashboardList extends React.Component {
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
 
-				let shouldShow = (isMyAccount === this.props.showMyAccounts);
-
-				if(!shouldShow)
-					return (null);
-
 				return (
 					<tr key={accountName}>
 						<td className="clickable" onClick={this._onStar.bind(this, accountName, isStarred)}>
@@ -267,7 +268,7 @@ class DashboardList extends React.Component {
 		filterText += "...";
                 
                 let hasLocalWallet = !!WalletDb.getWallet();
-                
+
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
@@ -296,7 +297,7 @@ class DashboardList extends React.Component {
 					</thead>) : null}
 					<tbody>
 						{includedAccounts}
-						{showIgnored && showMyAccounts ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
+						{showIgnored && hiddenAccounts.length ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
 						{hiddenAccounts}
 					</tbody>
 				</table>
