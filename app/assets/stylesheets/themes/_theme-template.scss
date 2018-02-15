@@ -1663,6 +1663,15 @@ $main-content-margin-block-bg-color
             color: $account-primarytext;
             border-color: $account-border;
         }
+        > tbody > tr.dashboard-table--hiddenAccounts {
+            > td {
+                height: 20px;
+                text-align: left;
+                padding-left: 45px;
+                background-color: $account-header;
+                color: $account-primarytext;
+            }
+        }
         > tbody > tr {
             > td {
                 background-color: $account-cells;

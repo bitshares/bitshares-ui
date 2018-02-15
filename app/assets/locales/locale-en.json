@@ -163,6 +163,7 @@
     "unignore": "Unhide",
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
+    "hidden_accounts_row": "Hidden Accounts",
     "accounts": "Accounts",
     "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
