@@ -276,18 +276,18 @@ class DashboardList extends React.Component {
 
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
-                
-                let hasLocalWallet = !!WalletDb.getWallet();
+
+		let hasLocalWallet = !!WalletDb.getWallet();
 
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
-					<section style={{paddingLeft: "5px", width: "100%", position: "relative"}}>
-						<input placeholder={filterText} style={{display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
-                                                {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
+					<section style={{paddingTop: "1rem", paddingLeft: "2rem"}}>
+						<input placeholder={filterText} style={{maxWidth: "20rem", display:"inline-block"}} type="text" value={dashboardFilter} onChange={this._onFilter.bind(this)} />
+							{hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", marginLeft: 5, marginBottom: "1rem"}} className="button small">
 							<Translate content="header.create_account" />
 						</div>):null}
-                                                {hiddenAccounts && hiddenAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
+                        {hiddenAccounts && hiddenAccounts.length ? <div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div>:null}
 					</section>) : null}
@@ -302,7 +302,7 @@ class DashboardList extends React.Component {
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
 							{width >= 1200 ? <th style={{textAlign: "right"}}><Translate content="transaction.borrow_amount" /></th> : null}
-							<th style={{textAlign: "right"}}><Translate content="account.total_value" /></th>
+							<th style={{textAlign: "right", marginRight: 20}}><Translate content="account.total_value" /></th>
 						</tr>
 					</thead>) : null}
 					<tbody>

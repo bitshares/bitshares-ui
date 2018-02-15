@@ -32,6 +32,7 @@
     "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
+    "deposit-withdraw": "Deposit/Withdraw",
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
@@ -187,6 +188,11 @@
       "empty_black_by": "No accounts have blacklisted %(account)s.",
       "whitelist_authorities": "Whitelist authority",
       "blacklist_authorities": "Blacklist authority"
+    },
+    "transactions": {
+      "type": "Type",
+      "info": "Info",
+      "time": "Time"
     },
     "vesting": {
       "title": "Vesting balances",
