@@ -16,6 +16,12 @@ class BrowserNotifications extends React.Component {
         settings: React.PropTypes.object,
     };
 
+    componentWillMount() {
+        if(Notify.needsPermission) {
+            Notify.requestPermission();
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
 
         // if browser notifications disabled on settings we can skip all checks
