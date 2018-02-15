@@ -36,7 +36,7 @@ class BrowserNotifications extends React.Component {
             return false;
         }
 
-        if (nextProps.account.size && this.props.account.get("history")) {
+        if (nextProps.account.size && this.props.account.get("history") && nextProps.account.get("history")) {
 
             let lastOperationOld = this.props.account.get("history").first();
             let lastOperationNew = nextProps.account.get("history").first();
