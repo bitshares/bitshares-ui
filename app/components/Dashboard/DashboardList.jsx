@@ -296,7 +296,7 @@ class DashboardList extends React.Component {
 					</thead>) : null}
 					<tbody>
 						{includedAccounts}
-						{showIgnored ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
+						{showIgnored && showMyAccounts ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
 						{hiddenAccounts}
 					</tbody>
 				</table>
