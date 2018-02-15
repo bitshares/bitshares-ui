@@ -130,7 +130,12 @@ class DashboardList extends React.Component {
 		AccountActions.unlinkAccount(account);
 	}
 
-	_renderList(accounts) {
+    _onLinkAccount(account, e) {
+        e.preventDefault();
+        AccountActions.linkAccount(account);
+    }
+
+	_renderList(accounts, isHiddenAccountsList) {
 
 		const {width, starredAccounts, showMyAccounts, passwordAccount} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
@@ -226,10 +231,15 @@ class DashboardList extends React.Component {
 						<td className="clickable" onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
-						{!showMyAccounts ?
-							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
-								<Icon name="minus-circle"/>
-							</td>
+						{!showMyAccounts ? (isHiddenAccountsList && (
+                                <td onClick={this._onLinkAccount.bind(this, accountName)}>
+                                    <Icon name="plus-circle"/>
+                                </td>
+                            ) || (
+                                <td onClick={this._onUnLinkAccount.bind(this, accountName)}>
+                                    <Icon name="minus-circle"/>
+                                </td>
+                            ))
 						: null}
 						<td style={{textAlign: "left"}}>
 							{ account.get("id") }
@@ -262,7 +272,7 @@ class DashboardList extends React.Component {
 
 		let includedAccounts = this._renderList(this.props.accounts);
 
-		let hiddenAccounts = showIgnored ? this._renderList(this.props.ignoredAccounts) : null;
+		let hiddenAccounts = this._renderList(this.props.ignoredAccounts, true);
 
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
@@ -277,7 +287,7 @@ class DashboardList extends React.Component {
                                                 {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
 							<Translate content="header.create_account" />
 						</div>):null}
-                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
+                                                {hiddenAccounts && hiddenAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div>:null}
 					</section>) : null}
@@ -298,7 +308,7 @@ class DashboardList extends React.Component {
 					<tbody>
 						{includedAccounts}
 						{showIgnored && hiddenAccounts.length ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
-						{hiddenAccounts}
+						{showIgnored && hiddenAccounts}
 					</tbody>
 				</table>
 			</div>
