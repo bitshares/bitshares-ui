@@ -9,31 +9,46 @@ import AccountsSettings from "./AccountsSettings";
 import WalletSettings from "./WalletSettings";
 import PasswordSettings from "./PasswordSettings";
 import RestoreSettings from "./RestoreSettings";
+import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
+import _ from "lodash";
 
 class Settings extends React.Component {
+
+    static contextTypes = {
+        router: React.PropTypes.object.isRequired
+    };
 
     constructor(props) {
         super();
 
         let menuEntries = this._getMenuEntries(props);
-        let activeSetting = props.viewSettings.get("activeSetting", 0);
-        if (activeSetting > (menuEntries.length - 1)) {
-            activeSetting = 0;
-        }
-        if (props.deprecated) activeSetting = 1;
+        let activeSetting = 0;
+
+        let tabIndex = menuEntries.indexOf(props.params.tab);
+
+        if(tabIndex >= 0)
+            activeSetting = tabIndex;
 
         this.state = {
             apiServer: props.settings.get("apiServer"),
             activeSetting,
             menuEntries,
             settingEntries: {
-                general: ["locale", "unit", "showSettles", "walletLockTimeout", "themes",
+                general: ["locale", "unit", "browser_notifications", "showSettles", "walletLockTimeout", "themes",
                 "showAssetPercent", "passwordLogin", "reset"],
                 access: ["apiServer", "faucet_address"]
             }
         };
+
+        this._handleNotificationChange = this._handleNotificationChange.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.params.tab !== this.props.params.tab) {
+            this._onChangeMenu(this.props.params.tab);
+        }
     }
 
     componentWillReceiveProps(np) {
@@ -73,7 +88,8 @@ class Settings extends React.Component {
             "backup",
             "restore",
             "access",
-            "faucet_address"
+            "faucet_address",
+            "reset"
         ];
 
         if (props.settings.get("passwordLogin")) {
@@ -86,6 +102,18 @@ class Settings extends React.Component {
 
     triggerModal(e, ...args) {
         this.refs.ws_modal.show(e, ...args);
+    }
+
+    _handleNotificationChange(path, value) {
+        // use different change handler because checkbox doesn't work
+        // normal with e.preventDefault()
+
+        let updatedValue = _.set(this.props.settings.get("browser_notifications"), path, value);
+
+        SettingsActions.changeSetting({
+            setting: "browser_notifications",
+            value: updatedValue
+        });
     }
 
     _onChangeSetting(setting, e) {
@@ -171,6 +199,10 @@ class Settings extends React.Component {
         SettingsActions.clearSettings();
     }
 
+    _redirectToEntry(entry) {
+        this.context.router.push("/settings/"+entry);
+    }
+
     _onChangeMenu(entry) {
         let index = this.state.menuEntries.indexOf(entry);
         this.setState({
@@ -211,8 +243,13 @@ class Settings extends React.Component {
             entries = <AccessSettings faucet={settings.get("faucet_address")} nodes={defaults.apiServer} onChange={this._onChangeSetting.bind(this)} triggerModal={this.triggerModal.bind(this)} />;
             break;
         case "faucet_address":
-            entries = <input type="text" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
+            entries = <input type="text" className="settings-input" defaultValue={settings.get("faucet_address")} onChange={this._onChangeSetting.bind(this, "faucet_address")}/>
             break;
+
+        case "reset":
+            entries = <ResetSettings />;
+            break;
+
         default:
             entries = settingEntries[activeEntry].map(setting => {
                 return (
@@ -222,6 +259,7 @@ class Settings extends React.Component {
                         settings={settings}
                         defaults={defaults[setting]}
                         onChange={this._onChangeSetting.bind(this)}
+                        onNotificationChange={this._handleNotificationChange}
                         locales={this.props.localesObject}
                         {...this.state}
                     />);
@@ -231,21 +269,21 @@ class Settings extends React.Component {
 
         return (
             <div className={this.props.deprecated ? "" : "grid-block page-layout"}>
-                <div className="grid-block main-content wrap regular-padding">
-                    <div className="grid-content large-offset-2 shrink" style={{paddingRight: "4rem"}}>
-                        <Translate style={{paddingBottom: 20}} className="bottom-border" component="h4" content="header.settings" />
+                <div className="grid-block main-content margin-block wrap">
+                    <div className="grid-content shrink settings-menu" style={{paddingRight: "2rem"}}>
+                        <Translate style={{paddingBottom: 10, paddingLeft: 10}} component="h3" content="header.settings" className={"dark-text-color"}/>
 
-                        <ul className="settings-menu">
+                        <ul>
                             {menuEntries.map((entry, index) => {
-                                return <li className={index === activeSetting ? "active" : ""} onClick={this._onChangeMenu.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
+                                return <li className={index === activeSetting ? "active" : ""} onClick={this._redirectToEntry.bind(this, entry)} key={entry}><Translate content={"settings." + entry} /></li>;
                             })}
                         </ul>
                     </div>
 
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
                         <div className="grid-block small-12 medium-10 no-margin vertical">
-                            <Translate component="h3" content={"settings." + menuEntries[activeSetting]} />
-                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 10, paddingBottom: 20, marginBottom: 30}} className="bottom-border" content={`settings.${menuEntries[activeSetting]}_text`} />}
+                            <Translate component="h3" content={"settings." + menuEntries[activeSetting]}/>
+                            {activeEntry != "access" && <Translate unsafe style={{paddingTop: 5, marginBottom: 30}} content={`settings.${menuEntries[activeSetting]}_text`} className="dark-text-color"/>}
                             {entries}
                         </div>
                     </div>

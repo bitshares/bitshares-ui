@@ -11,6 +11,7 @@ import { connect, supplyFluxContext } from "alt-react";
 import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
+import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
 import Header from "components/Layout/Header";
 // import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
@@ -215,6 +216,7 @@ class App extends React.Component {
                         }}
                     />
                     <TransactionConfirm/>
+                    <BrowserNotifications/>
                     <WalletUnlockModal/>
                     <BrowserSupportModal ref="browser_modal"/>
                 </div>

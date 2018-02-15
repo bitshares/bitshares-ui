@@ -700,7 +700,7 @@ class AccountVoting extends React.Component {
                                         </thead> :
                                         <thead>
                                             <tr>
-                                                <th></th>
+                                                <th colSpan="2"></th>
                                                 <th style={{textAlign: "left"}}><Translate content="account.votes.total_budget" /> (<AssetName name={preferredUnit} />)</th>
                                                 <th colSpan="4" className="hide-column-small"></th>
                                                 <th style={{textAlign: "right"}}>
@@ -715,6 +715,7 @@ class AccountVoting extends React.Component {
                                         <thead>
                                             <tr>
                                                 {workerTableIndex === 2 ? null : <th style={{textAlign: "right"}}><Translate content="account.votes.line" /></th>}
+                                                <th style={{textAlign: "center"}}><Translate content="account.user_issued_assets.id" /></th>
                                                 <th style={{textAlign: "left"}}><Translate content="account.user_issued_assets.description" /></th>
                                                 <th style={{textAlign: "right"}} className="hide-column-small">
                                                     <Translate content="account.votes.total_votes" />

@@ -5,9 +5,10 @@
     "fr": "Français",
     "ko": "한국어",
     "de": "Deutsch",
-    "es": "İspanyolca",
+    "es": "Español",
     "it": "Italiano",
-    "tr": "Türkçe"
+    "tr": "Türkçe",
+    "ru": "Русский"
   },
   "header": {
     "title": "BitKapital",
@@ -31,6 +32,10 @@
     "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
     "account_notify": "Aktif hesap: %(account)s",
     "account_value": "Hesap değeri"
+  },
+  "browser_notification_messages": {
+    "money_received_title": "Şuradan transfer %(from)s",
+    "money_received_body": "Seni gönderdi %(amount)s %(symbol)s"
   },
   "tooltip": {
     "call_limit": "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
@@ -61,9 +66,33 @@
     "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
+  "walkthrough": {
+    "language_flag": "DEX'de kullanmak için 9 farklı dilden birini seçin.",
+    "restore_account": "Yedekleme dosyanızı kullanarak bir cüzdan geri yükleyin.",
+    "create_cloud_wallet": "Bir hesap adı ve parola kullanarak bulut cüzdanına erişin.",
+    "create_local_wallet": "Yerel bir cüzdan oluşturun ve ona ait özel anahtarları indirin.",
+    "switch_button": "Bu düğmeyi kullanarak ticaret çiftlerini değiştirin.",
+    "favourite_button": "Bu çifti, pazarlar listenizde favori olarak işaretleyin.",
+    "depth_chart": "Arz ve talebi farklı fiyatlarla göstermek için bir piyasa derinliği grafiği kullanın.",
+    "price_chart": "Fiyat grafiğini kullanarak bir varlığın fiyat hareketini görüntüleyin.",
+    "chart_tool_zoom": "Fiyat grafiğini az ya da çok fiyat geçmişini gösterecek şekilde ayarlayın.",
+    "chart_tool_duration": "Farklı aralıklarla ticaret verileri.",
+    "chart_tool_indicators": "Ticaret fırsatlarını belirlemek için fiyat grafiklerine teknik göstergeler ekleyin.",
+    "buy_form": "Bu formu kullanarak satın alma siparişleri verin.",
+    "sell_form": "Bu formu kullanarak satış siparişleri verin.",
+    "buy_orders": "Bu pazar için tüm satınalma siparişlerini görüntüleyin.",
+    "sell_orders": "Bu pazarın tüm satış siparişlerini görüntüleyin.",
+    "my_markets_tab": "Bu sekmede sık kullanılan pazarlar listelenir.",
+    "find_markets_tab": "Bu sekme, 'pazarlarım' sekmesine arama yaparak ek pazarlar eklemenizi sağlar.",
+    "next_label": "sonraki",
+    "prev_label": "geri",
+    "skip_label": "atlamak",
+    "done_label": "tamam"
+  },
   "propose": "Teklif Et",
   "cancel": "İptal",
   "account": {
+    "search": "Search for an account",
     "intro_text_title": "Bitshares'e Hoş Geldiniz",
     "intro_text_1": "<b>Bitshares Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
     "intro_text_2": "<b>Bitshares</b>'de al-sat işlemleri herhangi bir aracı olmaksızın, doğrudan kullanıcıların kendi arasında gerçekleşir.",
@@ -600,7 +629,7 @@
   "explorer": {
     "accounts": {
       "title": "Hesaplar",
-      "filter": "Ara", 
+      "filter": "Ara",
       "filter_contacts": "Süzgeç kontakları"
     },
     "blocks": {
@@ -758,6 +787,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Tarayıcı Bildirimleri",
+    "browser_notifications_allow": "Bildirimleri etkinleştir",
+    "browser_notifications_additional_transfer_to_me": "Hesabıma yapılan aktarmalar hakkında bilgi ver",
     "inverseMarket": "Piyasa eğilim tercihi",
     "unit": "Tercih edilen hesap birimi",
     "confirmMarketOrder": "Piyasa emirleri için teyit iste",
@@ -1191,7 +1223,8 @@
     },
     "purchase": "%(asset)s satın al",
     "purchase_1": "%(inputAsset)s kullanarak hızlı ve kolayca %(outputAsset)s satın almak için burayı kullanabilirsiniz. Bu hizmet <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> tarafından sağlanmaktadır.",
-    "deposit_limit": "Yatırma limiti"
+    "deposit_limit": "Yatırma limiti",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."

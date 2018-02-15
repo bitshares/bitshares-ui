@@ -11,3 +11,11 @@ input[role="combobox"] {
         z-index: 1003;
     }
 }
+
+.typeahead .icon.chevron-down:hover, .selectWrapper:hover {
+	cursor: pointer;
+}
+
+.selectWrapper + .icon.chevron-down {
+	pointer-events: none;
+}

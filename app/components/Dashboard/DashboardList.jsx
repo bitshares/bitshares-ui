@@ -77,6 +77,7 @@ class DashboardList extends React.Component {
 			nextProps.showIgnored !== this.props.showIgnored ||
 			nextProps.locked !== this.props.locked ||
 			nextProps.linkedAccounts !== this.props.linkedAccounts ||
+			nextProps.passwordAccount !== this.props.passwordAccount ||
 			!utils.are_equal_shallow(nextProps.starredAccounts, this.props.starredAccounts) ||
 			!utils.are_equal_shallow(nextState, this.state )
 		);
@@ -129,13 +130,24 @@ class DashboardList extends React.Component {
 		AccountActions.unlinkAccount(account);
 	}
 
-	_renderList(accounts) {
+    _onLinkAccount(account, e) {
+        e.preventDefault();
+        AccountActions.linkAccount(account);
+    }
 
-		const {width, starredAccounts, showMyAccounts} = this.props;
+	_renderList(accounts, isHiddenAccountsList) {
+
+		const {width, starredAccounts, showMyAccounts, passwordAccount} = this.props;
 		const {dashboardFilter, sortBy, inverseSort} = this.state;
 		let balanceList = Immutable.List();
 
 		return accounts
+		.filter(account => {
+			let accountName = account.get("name");
+			let isMyAccount = AccountStore.isMyAccount(account) || accountName === passwordAccount;
+
+			return (isMyAccount === this.props.showMyAccounts);
+		})
 		.filter(a => {
 			if (!a) return false;
 			return a.get("name").toLowerCase().indexOf(dashboardFilter) !== -1;
@@ -209,26 +221,29 @@ class DashboardList extends React.Component {
 					});
 				}
 
-				let isMyAccount = AccountStore.isMyAccount(account);
+				let isMyAccount = AccountStore.isMyAccount(account) || accountName === passwordAccount;
 
 				let isStarred = starredAccounts.has(accountName);
 				let starClass = isStarred ? "gold-star" : "grey-star";
-
-				let shouldShow = (isMyAccount === this.props.showMyAccounts);
-
-				if(!shouldShow)
-					return (null);
 
 				return (
 					<tr key={accountName}>
 						<td className="clickable" onClick={this._onStar.bind(this, accountName, isStarred)}>
 							<Icon className={starClass} name="fi-star"/>
 						</td>
-						{!showMyAccounts ?
-							<td onClick={this._onUnLinkAccount.bind(this, accountName)}>
-								<Icon name="minus-circle"/>
-							</td>
+						{!showMyAccounts ? (isHiddenAccountsList && (
+                                <td onClick={this._onLinkAccount.bind(this, accountName)}>
+                                    <Icon name="plus-circle"/>
+                                </td>
+                            ) || (
+                                <td onClick={this._onUnLinkAccount.bind(this, accountName)}>
+                                    <Icon name="minus-circle"/>
+                                </td>
+                            ))
 						: null}
+						<td style={{textAlign: "left"}}>
+							{ account.get("id") }
+						</td>
 						<td style={{textAlign: "left", paddingLeft: 10}} onClick={this._goAccount.bind(this, accountName, 0)} className={"clickable" + (isMyAccount ? " my-account" : "")}>
 							<span className={isLTM ? "lifetime" : ""}>{accountName}</span>
 						</td>
@@ -257,13 +272,13 @@ class DashboardList extends React.Component {
 
 		let includedAccounts = this._renderList(this.props.accounts);
 
-		let hiddenAccounts = showIgnored ? this._renderList(this.props.ignoredAccounts) : null;
+		let hiddenAccounts = this._renderList(this.props.ignoredAccounts, true);
 
 		let filterText = (showMyAccounts) ? counterpart.translate("explorer.accounts.filter") : counterpart.translate("explorer.accounts.filter_contacts");
 		filterText += "...";
                 
                 let hasLocalWallet = !!WalletDb.getWallet();
-                
+
 		return (
 			<div style={this.props.style}>
 				{!this.props.compact ? (
@@ -272,7 +287,7 @@ class DashboardList extends React.Component {
                                                 {hasLocalWallet ? (<div onClick={this._createAccount.bind(this)} style={{display: "inline-block", float:"right",marginRight:0}} className="button small">
 							<Translate content="header.create_account" />
 						</div>):null}
-                                                {this.props.ignoredAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
+                                                {hiddenAccounts && hiddenAccounts.length ?<div onClick={this.props.onToggleIgnored} style={{display: "inline-block",float:"right",marginRight:"20px"}} className="button small">
 							<Translate content={`account.${ this.props.showIgnored ? "hide_ignored" : "show_ignored" }`} />
 						</div>:null}
 					</section>) : null}
@@ -282,6 +297,7 @@ class DashboardList extends React.Component {
 						<tr>
 							<th onClick={this._setSort.bind(this, "star")} className="clickable"><Icon className="grey-star" name="fi-star"/></th>
 							{!showMyAccounts ? <th><Icon name="user"/></th> : null}
+							<th style={{textAlign: "left"}}>ID</th>
 							<th style={{textAlign: "left", paddingLeft: 10}} onClick={this._setSort.bind(this, "name")} className="clickable"><Translate content="header.account" /></th>
 							<th style={{textAlign: "right"}}><Translate content="account.open_orders" /></th>
 							{width >= 750 ? <th style={{textAlign: "right"}}><Translate content="account.as_collateral" /></th> : null}
@@ -291,8 +307,8 @@ class DashboardList extends React.Component {
 					</thead>) : null}
 					<tbody>
 						{includedAccounts}
-						{showIgnored ? <tr style={{backgroundColor: "transparent"}} key="hidden"><td style={{height: 20}} colSpan="4"></td></tr> : null}
-						{hiddenAccounts}
+						{showIgnored && hiddenAccounts.length ? <tr className="dashboard-table--hiddenAccounts" style={{backgroundColor: "transparent"}} key="hidden"><td colSpan="8">{ counterpart.translate("account.hidden_accounts_row") }:</td></tr> : null}
+						{showIgnored && hiddenAccounts}
 					</tbody>
 				</table>
 			</div>

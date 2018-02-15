@@ -21,8 +21,6 @@ import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-// import IndicatorModal from "./IndicatorModal";
-import OpenSettleOrders from "./OpenSettleOrders";
 import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
@@ -165,6 +163,9 @@ class Exchange extends React.Component {
     };
 
     _checkFeeStatus(assets = [this.props.coreAsset, this.props.baseAsset, this.props.quoteAsset], account = this.props.currentAccount) {
+        if (assets[0] === assets[2] || assets[1] === assets[2]) {
+            assets.splice(2, 1);
+        }
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -571,11 +572,13 @@ class Exchange extends React.Component {
     }
 
     _flipBuySell() {
+        this.setState({
+            flipBuySell: !this.state.flipBuySell
+        });
+        
         SettingsActions.changeViewSetting({
             flipBuySell: !this.state.flipBuySell
         });
-
-        this.setState({ flipBuySell: !this.state.flipBuySell });
     }
 
     _toggleOpenBuySell() {
@@ -993,7 +996,7 @@ class Exchange extends React.Component {
         }
 
         let orderMultiplier = leftOrderBook ? 2 : 1;
-        const minChartHeight = 300
+        const minChartHeight = 300;
         const height = Math.max(
             this.state.height > 1100 ? chartHeight : chartHeight - 125,
             minChartHeight
@@ -1039,8 +1042,8 @@ class Exchange extends React.Component {
                 feeAsset={buyFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "buy")}
                 isPredictionMarket={base.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={!this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
-                onTogglePosition={this._toggleBuySellPosition.bind(this)}
+                onFlip={this.state._flipBuySell ? null : this._flipBuySell.bind(this)}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
@@ -1084,7 +1087,8 @@ class Exchange extends React.Component {
                 feeAsset={sellFeeAsset}
                 onChangeFeeAsset={this.onChangeFeeAsset.bind(this, "sell")}
                 isPredictionMarket={quote.getIn(["bitasset", "is_prediction_market"])}
-                onFlip={this.state.flipBuySell ? this._flipBuySell.bind(this) : null}
+                onFlip={!this.state._flipBuySell ? this._flipBuySell.bind(this) : null}
+                onTogglePosition={!this.state._toggleBuySellPosition ? this._toggleBuySellPosition.bind(this) : null}
             />
         );
 
@@ -1115,9 +1119,12 @@ class Exchange extends React.Component {
             />
         );
 
+        
+
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}
                     <ExchangeHeader
+                        account={this.props.currentAccount}
                         quoteAsset={quoteAsset} baseAsset={baseAsset}
                         hasPrediction={hasPrediction} starredMarkets={starredMarkets}
                         lowestAsk={lowestAsk} highestBid={highestBid}
@@ -1209,7 +1216,7 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     height={height}
                                     onClick={this._depthChartClick.bind(this, base, quote)}
-                                    settlementPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
+                                    feedPrice={(!hasPrediction && feedPrice) && feedPrice.toReal()}
                                     spread={spread}
                                     LCP={showCallLimit ? lowestCallPrice : null}
                                     leftOrderBook={leftOrderBook}
@@ -1272,36 +1279,19 @@ class Exchange extends React.Component {
                                     )}
                                     key="open_orders"
                                     orders={marketLimitOrders}
+                                    settleOrders={marketSettleOrders}
                                     currentAccount={currentAccount}
                                     base={base}
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    activeTab={this.props.viewSettings.get("ordersTab")}
                                     onCancel={this._cancelLimitOrder.bind(this)}
                                     flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                                     feedPrice={this.props.feedPrice}
                                 />) : null}
                             </div>
-
-
-                            {/* Settle Orders */}
-
-                            {(base.get("id") === "1.3.0" || quote.get("id") === "1.3.0") ? (
-                            <OpenSettleOrders
-                                key="settle_orders"
-                                className={cnames(!smallScreen && !leftOrderBook ? "medium-6 xlarge-4 order-12" : "",
-                                    `small-12 medium-6 no-padding align-spaced ps-container middle-content order-12`
-                                )}
-                                orders={marketSettleOrders}
-                                base={base}
-                                quote={quote}
-                                baseSymbol={baseSymbol}
-                                quoteSymbol={quoteSymbol}
-                            />) : null}
-
-
                         </div>{ /* end CenterContent */}
-
 
                     </div>{/* End of Main Content Column */}
 

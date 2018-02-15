@@ -12,7 +12,7 @@ import {didOrdersChange} from "common/MarketClasses";
 class DepthHighChart extends React.Component {
 
 	shouldComponentUpdate(nextProps) {
-		let settleCheck = isNaN(nextProps.settlementPrice) ? false : nextProps.settlementPrice !== this.props.settlementPrice;
+		let settleCheck = isNaN(nextProps.feedPrice) ? false : nextProps.feedPrice !== this.props.feedPrice;
 		return (
 			didOrdersChange(nextProps.orders, this.props.orders) ||
 			didOrdersChange(nextProps.call_orders, this.props.call_orders) ||
@@ -23,7 +23,7 @@ class DepthHighChart extends React.Component {
 			nextProps.LCP !== this.props.LCP ||
 			nextProps.showCallLimit !== this.props.showCallLimit ||
 			nextProps.hasPrediction !== this.props.hasPrediction ||
-			nextProps.settlementPrice !== this.props.settlementPrice ||
+			nextProps.feedPrice !== this.props.feedPrice ||
 			nextProps.marketReady !== this.props.marketReady
 		);
 	}
@@ -65,7 +65,7 @@ class DepthHighChart extends React.Component {
 	render() {
 
 		let {flat_bids, flat_asks, flat_calls, flat_settles, totalBids, totalAsks,
-			base, quote, settlementPrice} = this.props;
+			base, quote, feedPrice} = this.props;
 
 		const { primaryText, callColor, settleColor, settleFillColor, bidColor,
 			bidFillColor, askColor, askFillColor, axisLineColor } = this._getThemeColors();
@@ -319,15 +319,15 @@ class DepthHighChart extends React.Component {
 		// }
 
 
-		if (settlementPrice) {
+		if (feedPrice) {
 			const settlementColor = (base.has("bitasset")) ? askColor : bidColor;
 			config.xAxis.plotLines.push({
 				color: settlementColor,
 				id: "plot_line",
 				dashStyle: "solid",
-				value: settlementPrice * power,
+				value: feedPrice * power,
 				label: {
-					text: counterpart.translate("explorer.block.settlement_price"),
+					text: counterpart.translate("explorer.block.feed_price"),
 					style: {
 						color: primaryText,
 						fontWeight: "bold"
@@ -348,7 +348,7 @@ class DepthHighChart extends React.Component {
 		}
 
 		// Add settle orders
-		if (settlementPrice && (flatSettles && flatSettles.length)) {
+		if (feedPrice && (flatSettles && flatSettles.length)) {
 			// flat_settles.forEach(settle => {
 			//	 settle[0] *= power;
 			// });
