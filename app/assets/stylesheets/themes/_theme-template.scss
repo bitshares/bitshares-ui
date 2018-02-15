@@ -1463,6 +1463,10 @@ $main-content-margin-block-bg-color
                 }
             }
         }
+        .settings--notifications--no-browser-support {
+            color: $error-text-color;
+            font-size: 12px;
+        }
     }
 
     @media(max-width: $hamburger-submenu-display-endpoint) {

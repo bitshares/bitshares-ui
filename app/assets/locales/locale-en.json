@@ -938,6 +938,7 @@
     "browser_notifications": "Browser Notifications",
     "browser_notifications_allow": "Enable notifications",
     "browser_notifications_additional_transfer_to_me": "Notify about transfers to my account",
+    "browser_notifications_disabled_by_browser_notify": "Your browser disabled notifications. Click to learn how enable browser notifications",
     "general": "General",
     "wallet": "Local Wallet",
     "accounts": "Accounts",
