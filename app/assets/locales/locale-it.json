@@ -42,6 +42,10 @@
     "account_notify": "L'account attivo è ora %(account)s",
     "account_value": "Valore dell'Account"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Trasferito da %(from)s",
+    "money_received_body": "Ti ho inviato %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "Questo è il prezzo di chiamata (call price) della posizione con margine nel mercato con la più bassa garanzia.",
     "margin_price": "Questo è il prezzo massimo che una posizione con margine può essere tenuta a pagare in caso di chiamata. È anche detto Squeeze Price.",
@@ -838,6 +842,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notifiche del browser",
+    "browser_notifications_allow": "Attivare le notifiche",
+    "browser_notifications_additional_transfer_to_me": "Notifica sui trasferimenti al mio account",
     "passwordLogin": "Fai il login usando il modalità account",
     "cloud_login": "Login Portafoglio Cloud",
     "local_wallet": "Login Portafoglio locale",

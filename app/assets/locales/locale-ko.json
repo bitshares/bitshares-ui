@@ -32,6 +32,10 @@
     "account_notify": "The active account is now %(account)s",
     "account_value": "계정 값"
   },
+  "browser_notification_messages": {
+    "money_received_title": "에서 이전 %(from)s",
+    "money_received_body": "너 한테 보냈어 %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
@@ -566,6 +570,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "브라우저 알림",
+    "browser_notifications_allow": "알림 사용",
+    "browser_notifications_additional_transfer_to_me": "내 계정으로의 이전 알림",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",

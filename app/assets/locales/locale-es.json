@@ -53,6 +53,10 @@
     "account_notify": "La cuenta activa es ahora %(account)s",
     "account_value": "Valor de la cuenta"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Transferido de %(from)s",
+    "money_received_body": "Enviado %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "Este es el precio de llamada (call price) de la posición en el mercado colateralizada a margen .",
     "margin_price": "Este es el precio máximo que una posición a margen puede pagar. Es tambien llamado precio Squeeze.",
@@ -885,6 +889,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notificaciones del navegador",
+    "browser_notifications_allow": "Permitir notificaciones",
+    "browser_notifications_additional_transfer_to_me": "Notificar sobre transferencias a mi cuenta",
     "passwordLogin": "Modo de acceso",
     "cloud_login": "Inicio de sesión en el Cloud Wallet",
     "local_wallet": "Acceso local a la billetera",

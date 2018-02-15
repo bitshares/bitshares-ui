@@ -1455,6 +1455,20 @@ $main-content-margin-block-bg-color
         }
     }
 
+    .settings--notifications {
+        .settings--notifications--group {
+            .settings--notifications--item {
+                label {
+                    color: $settings-select-color;
+                }
+            }
+        }
+        .settings--notifications--no-browser-support {
+            color: $error-text-color;
+            font-size: 12px;
+        }
+    }
+
     @media(max-width: $hamburger-submenu-display-endpoint) {
         .settings-menu {
             display: none;
@@ -1662,6 +1676,15 @@ $main-content-margin-block-bg-color
             background-color: $account-header;
             color: $account-primarytext;
             border-color: $account-border;
+        }
+        > tbody > tr.dashboard-table--hiddenAccounts {
+            > td {
+                height: 20px;
+                text-align: left;
+                padding-left: 45px;
+                background-color: $account-header;
+                color: $account-primarytext;
+            }
         }
         > tbody > tr {
             > td {
