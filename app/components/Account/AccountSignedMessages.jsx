@@ -210,7 +210,7 @@ class AccountSignedMessages extends React.Component {
                             className="account-tabs"
                             tabsClass="account-overview no-padding bordered-header content-block"
                             setting="accountSignedMessagesTab"
-                            contentClass="grid-content shrink small-vertical medium-horizontal no-padding"
+                            contentClass="grid-content shrink small-vertical medium-horizontal padding"
                             segmented={false}
                         >
 
