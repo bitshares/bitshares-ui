@@ -230,7 +230,7 @@ class AccessSettings extends React.Component {
         }
 
         nodes = nodes.slice(0, currentNodeIndex).concat(nodes.slice(currentNodeIndex+1)).sort(function(a,b){
-            let isTestnet = a.url === testnetAPI.url || url === testnetAPI2.url;
+            let isTestnet = a.url === testnetAPI.url || a.url === testnetAPI2.url;
             if(a.url == autoSelectAPI){
                 return -1;
             } else if(a.up && b.up){
