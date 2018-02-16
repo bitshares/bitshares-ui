@@ -14,7 +14,7 @@ label.horizontal {
     border: none;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 
 }
@@ -96,7 +96,7 @@ div.account-image {
 
 .error-area {
     min-height: 2rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     line-height: normal;
 }
 
@@ -174,8 +174,8 @@ div.transfer-input {
     }
 
     > div:first-of-type {
-        font-size: 0.9rem;
-        font-weight: bold;
+        font-size: 0.875rem;
+        @include RobotoMedium;
 
         > span.hidden {
             visibility: hidden;
@@ -223,8 +223,8 @@ div.transfer-input {
             }
 
             > span {
-                font-size: 0.9rem;
-                font-weight: bold;
+                font-size: 0.875rem;
+                @include RobotoMedium;
                 display: block;
                 text-decoration: none;
                 color: #333;
@@ -322,10 +322,43 @@ form.full-width {
 button.red, button.green, button.blue {
     padding: 10px 0px 10px 0px;
     width: 8rem;
-    border-radius: 5px 5px 5px 5px;
     color: rgb(242, 242, 242);
+    font-size: 0.875rem;
+    font-weight: normal;
 }
 button.red { background-color: rgb(245, 27, 27); }
 button.green { background-color: rgb(48, 185, 14); }
 button.blue { background-color: rgb(65, 116, 184); }
 button.disabled { background-color: rgb(77, 94, 116); }
+
+.button.hollow {
+  background-color: transparent;
+  @include RobotoCondensed;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+a.button span {
+  color: #fff;
+}
+
+.button.hollow.primary {
+  border-color: $bs-blue;
+  color: $bs-blue!important;
+  background: transparent;
+
+    &:hover {
+        color: #fff!important;
+    }  
+}
+
+.market-button {
+  margin: 1rem 0;
+}
+
+input[type=text].input-button {
+  border-top-right-radius: 0!important;
+  border-bottom-right-radius: 0!important;
+}

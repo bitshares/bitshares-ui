@@ -32,14 +32,16 @@ div.fm-container {
    }
 
    .fm-name {
-    font-weight: bold;
-    padding-bottom: 10px;
+        @include RobotoMedium;
+        padding-bottom: 10px;
+        font-size: 1.125rem;
+
    }
 
    .fm-volume, .fm-change {
-    text-transform: lowercase;
-    font-variant: small-caps;
-    padding-top: 6px;
+        text-transform: lowercase;
+        font-variant: small-caps;
+        padding-top: 6px;
    }
 }
 
@@ -111,7 +113,7 @@ div.fm-container {
         font-size: 90%;
         width: 100%;
         color: #ff3633;
-        font-weight: bold;
+        @include RobotoMedium;
         > span {
             vertical-align: top;
             top: 0px;
@@ -214,7 +216,7 @@ div.button.create-account {
 div.input-wrapper {
     > div.input-right-symbol {
         font-size: 0.9rem;
-        font-weight: bold;
+        @include RobotoMedium;
         position: absolute;
         top: 12px;
         right: 8px;
@@ -226,7 +228,7 @@ div.input-wrapper {
         padding-bottom: 5px;
         > div.float-right {
             clear: both;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 }
@@ -247,7 +249,8 @@ div.input-wrapper {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
-            height: 650px;
+            height: auto;
+            min-height: 650px;
 
             .Modal__header {
                 text-align: center;
@@ -257,13 +260,15 @@ div.input-wrapper {
                 }
                 > p {
                     font-size: 1.8rem;
-                    font-weight: bold;
+                    @include RobotoMedium;
                     margin-bottom: 0px;
                 }
             }
 
             .Modal__body {
+                flex: 1;
                 height: 90%;
+                padding-top: 16px;
             }
 
 
@@ -309,7 +314,7 @@ div.input-wrapper {
 
 
                 > .maxDeposit {
-                    font-weight: bold;
+                    @include RobotoMedium;
                     font-size: 0.9rem;
                 }
 

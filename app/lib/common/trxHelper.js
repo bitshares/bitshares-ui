@@ -186,10 +186,26 @@ function checkBalance(amount, sendAsset, feeAmount, balance) {
     return true;
 }
 
+function shouldPayFeeWithAssetAsync(fromAccount, feeAmount) {
+    if (fromAccount && feeAmount && feeAmount.asset_id === "1.3.0") {
+        const balanceID = fromAccount.getIn([
+            "balances",
+            feeAmount.asset_id
+        ]);
+        return FetchChain("getObject", balanceID)
+            .then(balanceObject => {
+                const balance = balanceObject.get("balance");
+                if (balance <= feeAmount.amount) return true;
+            });
+    }
+    return new Promise((resolve) => resolve(false));
+};
+
 export {
     estimateFee,
     estimateFeeAsync,
     checkFeePoolAsync,
     checkFeeStatusAsync,
-    checkBalance
+    checkBalance,
+    shouldPayFeeWithAssetAsync
 };

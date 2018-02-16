@@ -11,8 +11,6 @@ import AccountBalance from "../../Account/AccountBalance";
 import RuDexDepositAddressCache from "common/RuDexDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress} from "common/RuDexMethods";
-import { rudexAPIs } from "api/apiConfig";
 import utils from "common/utils";
 import counterpart from "counterpart";
 
@@ -70,13 +68,10 @@ class RuDexGatewayDepositRequest extends React.Component {
         };
     }
 
-    componentWillMount() {
-        let account_name = this.props.account.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
-        // if (!receive_address) {
-        //     requestDepositAddress(this._getDepositObject());
-        // }
-    }
+    // componentWillMount() {
+    //     let account_name = this.props.account.get("name");
+    //     let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+    // }
 
     componentWillUnmount() {
         document.removeEventListener("copy", this._copy);
@@ -116,7 +111,7 @@ class RuDexGatewayDepositRequest extends React.Component {
 
         let account_balances_object = this.props.account.get("balances");
 
-        let balance = "0 " + this.props.receive_asset.get("symbol");
+        // let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of)
         {
             let has_nonzero_balance = false;
@@ -204,23 +199,23 @@ class RuDexGatewayDepositRequest extends React.Component {
                                 <tbody>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_deposit" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>{this.props.deposit_asset}</td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.intermediate" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.your_account" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.account.get("id")} /></td>
                                 </tr>
                                 <tr>
                                     <td><Translate content="gateway.balance" />:</td>
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>
                                         <AccountBalance
                                             account={this.props.account.get("name")}
                                             asset={this.props.receive_asset.get("symbol")}
@@ -253,7 +248,6 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <div className="button-group" style={{paddingTop: 10}}>
                                 {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}>Copy address</div> : null}
                                 {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
-                                {/*<button className={"button"} onClick={requestDepositAddress.bind(null, this._getDepositObject())}><Translate content="gateway.generate_new" /></button>*/}
                             </div>
                         </div>
                     </div>
@@ -269,19 +263,19 @@ class RuDexGatewayDepositRequest extends React.Component {
                                 <tbody>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_withdraw" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><AssetName name={this.props.receive_asset.get("symbol")} replace={false} /></td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.asset_to_receive" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>{this.props.deposit_asset}</td>
                                 </tr>
                                 <tr>
                                     <Translate component="td" content="gateway.intermediate" />
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}><LinkToAccountById account={this.props.issuer_account.get("id")} /></td>
                                 </tr>
                                 <tr>
                                     <td><Translate content="gateway.balance" />:</td>
-                                    <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                                    <td style={{fontWeight: "bold", color: "#049cce", textAlign: "right"}}>
                                         <AccountBalance
                                             account={this.props.account.get("name")}
                                             asset={this.props.receive_asset.get("symbol")}

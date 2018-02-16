@@ -32,6 +32,7 @@ class ValueComponent extends MarketStatsCheck {
         toAsset: "1.3.0",
         fullPrecision: true,
         noDecimals: false,
+        fullDecimals: false,
         hide_asset: false,
         coreAsset: "1.3.0"
     };
@@ -99,7 +100,7 @@ class ValueComponent extends MarketStatsCheck {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
-        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}/>;
+        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.fullDecimals ? 0 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}/>;
     }
 }
 ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
