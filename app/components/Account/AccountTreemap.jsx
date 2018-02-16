@@ -1,7 +1,8 @@
 import React from "react";
 import Immutable from "immutable";
-import Highcharts from "react-highcharts";
-import 'highcharts-more-node';
+import ReactHighcharts from "react-highcharts";
+import Treemap from 'highcharts/modules/treemap';
+import Heatmap from 'highcharts/modules/heatmap';
 import {PropTypes} from "react";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
@@ -9,6 +10,9 @@ import {ChainStore} from "bitsharesjs/es";
 import { Asset, Price } from "common/MarketClasses";
 import MarketUtils from "common/market_utils";
 import MarketsStore from "stores/MarketsStore";
+
+Treemap(ReactHighcharts.Highcharts);
+Heatmap(ReactHighcharts.Highcharts);
 
 class AccountTreemap extends React.Component {
 
@@ -106,8 +110,6 @@ class AccountTreemap extends React.Component {
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
 
-            let amount = Number(balanceObject.get("balance"));
-            const finalValue = MarketUtils.convertValue(amount, ChainStore.getAsset(preferredUnit), asset, false, MarketsStore.getState().allMarketStats, core_asset);
 
             balances.push({
                 "name": asset.get("symbol"),
@@ -124,43 +126,60 @@ class AccountTreemap extends React.Component {
     }
 
     render() {
-        let {balanceAssets} = this.props;
+        let {balanceAssets, core_asset} = this.props;
         balanceAssets = balanceAssets.toJS();
+        core_asset = ChainStore.getAsset(core_asset);
         let accountBalances = null;
 
         if (balanceAssets && balanceAssets.length > 0) {
             accountBalances = balanceAssets.map((balance, index) => {
                 let balanceObject = ChainStore.getObject(balance);
                 let asset_type = balanceObject.get("asset_type");
-                let asset = ChainStore.getObject(asset_type);
-                return {
-                        name: asset.symbol,
-                        value: utils.get_asset_amount(balanceObject.amount, asset),
-                        colorValue: index
-                    };
+                let asset = ChainStore.getAsset(asset_type);
+                if (asset.get("symbol") == "USD") {
+                  window.s = balanceObject;
+                }
 
-            });
+                let amount = Number(balanceObject.get("balance"));
+
+                const eqValue = MarketUtils.convertValue(
+                  amount,
+                  core_asset,
+                  asset,
+                  true,
+                  MarketsStore.getState().allMarketStats,
+                  core_asset
+                );
+
+                const precision = utils.get_asset_precision(asset.get("precision"));
+                const finalValue = eqValue / precision;
+                return finalValue >= 1 ? {
+                        name: asset.get("symbol"),
+                        value: finalValue,
+                        colorValue: index
+                    } : null;
+
+            }).filter(n => { return n; });
         }
+
+        console.log(accountBalances);
 
         if (accountBalances && accountBalances.length === 1 && accountBalances[0].value === 0) {
             accountBalances = null;
         }
 
-        console.log("here");
-        console.log(accountBalances);
-        console.log(balanceAssets);
-
         let config = {
             chart: {
                 backgroundColor: "rgba(255, 0, 0, 0)",
-                height: 125,
+                height: 250,
                 spacingLeft: 0,
                 spacingRight: 0,
                 spacingBottom: 0
             },
             colorAxis: {
-                minColor: "#FCAB53",
-                maxColor: "#50D2C2"
+                min: 0,
+                minColor: '#ffffff',
+                maxColor: '#7cb5ec'
             },
             credits: {
                 enabled: false
@@ -185,10 +204,6 @@ class AccountTreemap extends React.Component {
                         enabled: true,
                         align: "center",
                         verticalAlign: "middle",
-                        style: {
-                            fontSize: "13px",
-                            fontWeight: "bold"
-                        }
                     }
                 }],
                 data: accountBalances
@@ -199,7 +214,7 @@ class AccountTreemap extends React.Component {
         };
 
         return (
-            accountBalances ? <Highcharts config={config}/> : <div></div>
+            <div className="account-treemap"><ReactHighcharts config={config}/></div>
         );
     }
 }

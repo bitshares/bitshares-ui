@@ -358,3 +358,10 @@ div.tabs-container {
         }
     }
 }
+
+.account-treemap {
+    margin: 10px;
+    text {
+        @include RobotoRegular;
+    }
+}

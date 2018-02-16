@@ -300,6 +300,8 @@ class AccountOverview extends React.Component {
             const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
 
+            // console.log(balance.getIn(["balance", "amount"]));
+
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
@@ -461,16 +463,6 @@ class AccountOverview extends React.Component {
 
         balances.sort(this.sortFunctions[this.state.sortKey]);
         return balances;
-    }
-
-    _treemapBalanceList(balanceList) {
-        let {hiddenAssets} = this.props;
-        return balanceList.filter( balance => {
-            let balanceObject = ChainStore.getObject(balance);
-            let asset_type = balanceObject.get("asset_type");
-            let asset = ChainStore.getObject(asset_type);
-            return !hiddenAssets.includes(asset_type);
-        });
     }
 
     _toggleHiddenAssets() {
