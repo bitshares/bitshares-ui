@@ -1,14 +1,14 @@
 import React from "react";
 import { findDOMNode } from "react-dom";
 import utils from "common/utils";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import ChainTypes from "./ChainTypes";
+import BindToChainState from "./BindToChainState";
 import AltContainer from "alt-container";
-import FormattedPrice from "../Utility/FormattedPrice";
+import FormattedPrice from "./FormattedPrice";
 import MarketsStore from "stores/MarketsStore";
-import MarketStatsCheck from "../Utility/MarketStatsCheck";
+import MarketStatsCheck from "./MarketStatsCheck";
 
-class EquivalentPrice extends MarketStatsCheck {
+class PulsingEquivalentPrice extends MarketStatsCheck {
 
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
@@ -110,9 +110,9 @@ class EquivalentPrice extends MarketStatsCheck {
     }
 }
 
-EquivalentPrice = BindToChainState(EquivalentPrice);
+PulsingEquivalentPrice = BindToChainState(PulsingEquivalentPrice);
 
-export default class EquivalentPriceWrapper extends React.Component {
+export default class PulsingEquivalentPriceWrapper extends React.Component {
 
     render() {
         return (
@@ -124,7 +124,7 @@ export default class EquivalentPriceWrapper extends React.Component {
                 }
             }}
           >
-            <EquivalentPrice
+            <PulsingEquivalentPrice
                 {...this.props}
                 ref={this.props.refCallback}
             />
