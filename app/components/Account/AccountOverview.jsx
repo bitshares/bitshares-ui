@@ -56,7 +56,6 @@ class AccountOverview extends React.Component {
             sortKey: props.viewSettings.get("portfolioSort", "totalValue"),
             sortDirection: props.viewSettings.get("portfolioSortDirection", true), // alphabetical A -> B, numbers high to low
             settleAsset: "1.3.0",
-            showHidden: false,
             shownAssets: "active",
             depositAsset: null,
             withdrawAsset: null,
@@ -465,12 +464,6 @@ class AccountOverview extends React.Component {
         return balances;
     }
 
-    _toggleHiddenAssets() {
-        this.setState({
-            showHidden: !this.state.showHidden
-        });
-    }
-
     _changeShownAssets(shownAssets = "active") {
         this.setState({
             shownAssets: shownAssets
@@ -497,7 +490,7 @@ class AccountOverview extends React.Component {
 
     render() {
         let {account, hiddenAssets, settings, orders} = this.props;
-        let {showHidden, shownAssets} = this.state;
+        let {shownAssets} = this.state;
 
         if (!account) {
             return null;
@@ -637,14 +630,14 @@ class AccountOverview extends React.Component {
 
                             <Tab title="account.portfolio" subText={portfolioActiveAssetsBalance}>
                                 <div className="hide-selector">
-                                    <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                    <div className={cnames("inline-block", {inactive: shownAssets != "active"})} onClick={shownAssets != "active" ? this._changeShownAssets.bind(this, "active"): () => {}}>
                                         <h4><Translate content="account.hide_hidden" /></h4>
                                     </div>
-                                    {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                    {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: shownAssets != "hidden"})} onClick={shownAssets != "visual" ? this._changeShownAssets.bind(this, "hidden"): () => {}}>
                                         <h4><Translate content="account.show_hidden" /></h4>
                                     </div> : null}
-                                    <div className="inline-block" onClick={shownAssets != "visual" ? this._changeShownAssets.bind(this, "visual"): () => {}}>
-                                        <Translate content="account.show_visual" />
+                                    <div className={cnames("inline-block", {inactive: shownAssets != "visual"})} onClick={shownAssets != "visual" ? this._changeShownAssets.bind(this, "visual"): () => {}}>
+                                        <h4><Translate content="account.show_visual" /></h4>
                                     </div>
 
                                     {/* Send Modal */}
@@ -678,11 +671,11 @@ class AccountOverview extends React.Component {
                                                 <th><Translate content="account.trade" /></th>
                                                 <th><Translate content="exchange.borrow" /></th>
                                                 <th><Translate content="account.settle" /></th>
-                                                <th className="column-hide-small"><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
+                                                <th className="column-hide-small"><Translate content={shownAssets == "active" ? "exchange.hide" : "account.perm.show"} /></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {showHidden && hiddenBalances.length ? hiddenBalances : includedBalances}
+                                            {shownAssets == "hidden" && hiddenBalances.length ? hiddenBalances : includedBalances}
                                         </tbody>
                                     </table> :
                                     <AccountTreemap balanceAssets={includedBalancesList}/>
