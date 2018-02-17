@@ -170,7 +170,7 @@ class Dashboard extends React.Component {
         }
 
         return (
-            <div ref="wrapper" className="grid-block page-layout vertical">
+            <div ref="wrapper" className="grid-block tab-layout vertical">
                 <div ref="container" className="grid-container" style={{padding: "2rem 8px"}}>
                     {this.props.onlyAccounts ? null : <div className="block-content-header" style={{marginBottom: 15, paddingTop: 0}}>
                         <Translate content="exchange.featured"/>
