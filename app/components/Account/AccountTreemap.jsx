@@ -7,9 +7,12 @@ import {PropTypes} from "react";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
 import {ChainStore} from "bitsharesjs/es";
+import BindToChainState from "../Utility/BindToChainState";
 import { Asset, Price } from "common/MarketClasses";
 import MarketUtils from "common/market_utils";
 import MarketsStore from "stores/MarketsStore";
+import SettingsStore from "stores/SettingsStore";
+
 
 Treemap(ReactHighcharts.Highcharts);
 Heatmap(ReactHighcharts.Highcharts);
@@ -36,104 +39,22 @@ class AccountTreemap extends React.Component {
         );
     }
 
-    _calculateVisualAssetData() {
-        const {core_asset, balanceAssets} = this.props;
-        let {settings, hiddenAssets, orders} = this.props;
-        let preferredUnit = settings.get("unit") || core_asset.get("symbol");
-        let showAssetPercent = settings.get("showAssetPercent", false);
-
-        const renderBorrow = (asset, account) => {
-            let isBitAsset = asset && asset.has("bitasset_data_id");
-            let modalRef = "cp_modal_" + asset.get("id");
-            return {
-                isBitAsset,
-                borrowModal: !isBitAsset ? null : <BorrowModal
-                    ref={modalRef}
-                    quote_asset={asset.get("id")}
-                    backing_asset={asset.getIn(["bitasset", "options", "short_backing_asset"])}
-                    account={account}
-                />,
-                borrowLink: !isBitAsset ? null : <a onClick={() => {ReactTooltip.hide();this.refs[modalRef].show();}}><Icon name="dollar" className="icon-14px" /></a>
-            };
-        };
-
-        let balances = [];
-        const emptyCell = "-";
-
-        balanceList.forEach( balance => {
-            let balanceObject = ChainStore.getObject(balance);
-            let asset_type = balanceObject.get("asset_type");
-            let asset = ChainStore.getObject(asset_type);
-
-            let directMarketLink, settleLink, transferLink;
-            let symbol = "";
-            if (!asset) return null;
-
-            const assetName = asset.get("symbol");
-            const notCore = asset.get("id") !== "1.3.0";
-            const notCorePrefUnit = preferredUnit !== core_asset.get("symbol");
-
-            let {market} = assetUtils.parseDescription(asset.getIn(["options", "description"]));
-            symbol = asset.get("symbol");
-            if (symbol.indexOf("OPEN.") !== -1 && !market) market = "USD";
-            let preferredMarket = market ? market : preferredUnit;
-
-            if (notCore && preferredMarket === symbol) preferredMarket = core_asset.get("symbol");
-
-            /* Table content */
-            directMarketLink = notCore ?
-                <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}><Icon name="trade" className="icon-14px" /></Link> :
-                notCorePrefUnit ? <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}><Icon name="trade" className="icon-14px" /></Link> :
-                emptyCell;
-            transferLink = <a onClick={this.triggerSend.bind(this, asset.get("id"))}><Icon name="transfer" className="icon-14px" /></a>;
-
-            let {isBitAsset, borrowModal, borrowLink} = renderBorrow(asset, this.props.account);
-
-            /* Popover content */
-            settleLink = <a href onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
-                <Icon name="settle" className="icon-14px" />
-            </a>;
-
-            const includeAsset = !hiddenAssets.includes(asset_type);
-            const hasBalance = !!balanceObject.get("balance");
-            const hasOnOrder = !!orders[asset_type];
-
-            const thisAssetName = asset.get("symbol").split(".");
-            const canDeposit =
-                (
-                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
-                    !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
-                    !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
-                ) || asset.get("symbol") == "BTS";
-
-            const canDepositWithdraw = !!this.props.backedCoins.get("OPEN", []).find(a => a.symbol === asset.get("symbol"));
-            const canWithdraw = canDepositWithdraw && (hasBalance && balanceObject.get("balance") != 0);
-            const canBuy = !!this.props.bridgeCoins.get(symbol);
-
-
-            balances.push({
-                "name": asset.get("symbol"),
-                "value": finalValue
-            });
-        });
-
-        console.log(balances);
-
-        return ({
-            "name": "Assets",
-            "children": balances
-        });
-    }
-
     render() {
         let {balanceAssets, core_asset} = this.props;
-        balanceAssets = balanceAssets.toJS();
+        let settings = SettingsStore.getState().settings;
+        let preferredUnit = core_asset;
+        if (settings.get("unit")) {
+            console.log(settings.get("unit"));
+            preferredUnit = ChainStore.getAsset(settings.get("unit"));
+        }
+        balanceAssets = balanceAssets.toJS ? balanceAssets.toJS() : balanceAssets;
+        console.log(balanceAssets);
         core_asset = ChainStore.getAsset(core_asset);
         let accountBalances = null;
 
         if (balanceAssets && balanceAssets.length > 0) {
             accountBalances = balanceAssets.map((balance, index) => {
-                let balanceObject = ChainStore.getObject(balance);
+                let balanceObject = typeof(balance) == 'string' ? ChainStore.getObject(balance) : balance;
                 let asset_type = balanceObject.get("asset_type");
                 let asset = ChainStore.getAsset(asset_type);
                 if (asset.get("symbol") == "USD") {
@@ -144,7 +65,7 @@ class AccountTreemap extends React.Component {
 
                 const eqValue = MarketUtils.convertValue(
                   amount,
-                  core_asset,
+                  preferredUnit,
                   asset,
                   true,
                   MarketsStore.getState().allMarketStats,
@@ -218,5 +139,7 @@ class AccountTreemap extends React.Component {
         );
     }
 }
+
+AccountTreemap = BindToChainState(AccountTreemap);
 
 export default AccountTreemap;
