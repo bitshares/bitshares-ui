@@ -191,13 +191,27 @@ class BorrowModalContent extends React.Component {
             initialCollateral = utils.get_asset_amount(currentPosition.collateral, this.props.backing_asset);
         }
 
-        // Make sure we don't go over the maximum collateral ratio of
         let maximizedCollateral = Math.floor(Math.min(
           this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset) + initialCollateral - 10,
           (this.state.short_amount / this._getFeedPrice()) * 1000.0
         ));
 
         this._onCollateralChange(new Object({ amount: maximizedCollateral.toString() }));
+    }
+
+    _maximizeDebt() {
+        const maximumCollateral = (this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset)) - 10;
+        const short_amount =  maximumCollateral / this.state.collateral_ratio * this._getFeedPrice();
+
+        const newState = {
+            short_amount: short_amount,
+            collateral: maximumCollateral,
+            collateral_ratio: this.state.collateral_ratio
+        };
+
+        this.setState(newState);
+        this._validateFields(newState);
+        this._setUpdatedPosition(newState);
     }
 
     _setUpdatedPosition(newState) {
@@ -438,19 +452,22 @@ class BorrowModalContent extends React.Component {
                             <div>
                                 <div className={collateralRatioClass}>
                                     <Translate component="label" content="borrow.coll_ratio" />
-                                    <input min="0" max="6" step="0.01" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" disabled={!short_amount}/>
+                                    <input min="0" max="6" step="0.01" onChange={this._onRatioChange.bind(this)} value={collateral_ratio} type="range" />
                                     <div className="inline-block">{utils.format_number(collateral_ratio, 2)}</div>
                                     {errors.below_maintenance || errors.close_maintenance ? <div style={{maxWidth: "calc(100% - 50px)"}} className="float-right">{errors.below_maintenance}{errors.close_maintenance}</div> : null}
                                 </div>
                             </div>
                           ) : null}
-                        <div className="no-padding grid-content button-group no-overflow">
+                        <div className="no-padding grid-content button-group no-overflow float-left">
                             <div onClick={this._onSubmit.bind(this)} href className={buttonClass}><Translate content="borrow.adjust" /></div>
                             <div onClick={(e) => {e.preventDefault(); this.setState(this._initialState(this.props));}} href className="button info"><Translate content="wallet.reset" /></div>
                             {/*<Trigger close={this.props.modalId}>
                                 <div className="button"><Translate content="account.perm.cancel" /></div>
                             </Trigger>*/}
-                            <div href className="float-right button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
+                        </div>
+                        <div className="no-padding grid-content button-group no-overflow float-right">
+                            <div href className="button info" onClick={this._maximizeDebt.bind(this)}>Maximize Debt</div>
+                            <div href className="button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
                         </div>
                     </div>
                 </form>
