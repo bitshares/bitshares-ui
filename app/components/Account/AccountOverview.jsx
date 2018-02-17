@@ -671,11 +671,11 @@ class AccountOverview extends React.Component {
                                                 <th><Translate content="account.trade" /></th>
                                                 <th><Translate content="exchange.borrow" /></th>
                                                 <th><Translate content="account.settle" /></th>
-                                                <th className="column-hide-small"><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
+                                                <th className="column-hide-small"><Translate content={shownAssets == "active" ? "exchange.hide" : "account.perm.show"} /></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {showHidden && hiddenBalances.length ? hiddenBalances : includedBalances}
+                                            {shownAssets == "hidden" && hiddenBalances.length ? hiddenBalances : includedBalances}
                                         </tbody>
                                     </table> :
                                     <AccountTreemap balanceAssets={includedBalancesList}/>
