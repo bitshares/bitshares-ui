@@ -71,7 +71,6 @@ class ValueComponent extends MarketStatsCheck {
         }
 
         let eqValue = this.getValue();
-        console.log(toSymbol, eqValue);
 
         if (!eqValue && eqValue !== 0) {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;

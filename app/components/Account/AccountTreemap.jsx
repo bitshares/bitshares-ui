@@ -8,11 +8,11 @@ import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
 import {ChainStore} from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
+import AltContainer from "alt-container";
 import { Asset, Price } from "common/MarketClasses";
 import MarketUtils from "common/market_utils";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
-
 
 Treemap(ReactHighcharts.Highcharts);
 Heatmap(ReactHighcharts.Highcharts);
@@ -40,16 +40,13 @@ class AccountTreemap extends React.Component {
     }
 
     render() {
-        let {balanceAssets, core_asset} = this.props;
-        let settings = SettingsStore.getState().settings;
+        let {balanceAssets, core_asset, settings, marketStats} = this.props;
         let preferredUnit = core_asset;
         if (settings.get("unit")) {
-            console.log(settings.get("unit"));
             preferredUnit = ChainStore.getAsset(settings.get("unit"));
         }
+
         balanceAssets = balanceAssets.toJS ? balanceAssets.toJS() : balanceAssets;
-        console.log(balanceAssets);
-        core_asset = ChainStore.getAsset(core_asset);
         let accountBalances = null;
 
         if (balanceAssets && balanceAssets.length > 0) {
@@ -57,23 +54,23 @@ class AccountTreemap extends React.Component {
                 let balanceObject = typeof(balance) == 'string' ? ChainStore.getObject(balance) : balance;
                 let asset_type = balanceObject.get("asset_type");
                 let asset = ChainStore.getAsset(asset_type);
-                if (asset.get("symbol") == "USD") {
-                  window.s = balanceObject;
-                }
 
                 let amount = Number(balanceObject.get("balance"));
 
                 const eqValue = MarketUtils.convertValue(
-                  amount,
-                  preferredUnit,
-                  asset,
-                  true,
-                  MarketsStore.getState().allMarketStats,
-                  core_asset
+                    amount,
+                    preferredUnit,
+                    asset,
+                    true,
+                    marketStats,
+                    core_asset
                 );
 
-                const precision = utils.get_asset_precision(asset.get("precision"));
+                if (!eqValue) { return null; }
+
+                const precision = utils.get_asset_precision(preferredUnit.get("precision"));
                 const finalValue = eqValue / precision;
+
                 return finalValue >= 1 ? {
                         name: asset.get("symbol"),
                         value: finalValue,
@@ -82,8 +79,6 @@ class AccountTreemap extends React.Component {
 
             }).filter(n => { return n; });
         }
-
-        console.log(accountBalances);
 
         if (accountBalances && accountBalances.length === 1 && accountBalances[0].value === 0) {
             accountBalances = null;
@@ -142,4 +137,26 @@ class AccountTreemap extends React.Component {
 
 AccountTreemap = BindToChainState(AccountTreemap);
 
-export default AccountTreemap;
+export default class AccountTreemapWrapper extends React.Component {
+
+    render() {
+        return (
+          <AltContainer
+            stores={[SettingsStore, MarketsStore]}
+            inject={{
+                marketStats: () => {
+                    return MarketsStore.getState().allMarketStats;
+                },
+                settings: () => {
+                  return SettingsStore.getState().settings;
+                }
+            }}
+          >
+            <AccountTreemap
+                {...this.props}
+                ref={this.props.refCallback}
+            />
+          </AltContainer>
+        );
+    }
+}
