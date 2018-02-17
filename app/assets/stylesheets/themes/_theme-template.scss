@@ -4,6 +4,7 @@
 $primary-text-color,
 $bg-color,
 $dark-text-color,
+$inactive-text-color,
 $link-text-color,
 $light-text-color,
 $secondary-text-color,
@@ -36,10 +37,41 @@ $account-tabs-background,
 $pulsate-green-start,
 $pulsate-green-end,
 $pulsate-red-start,
-$pulsate-red-end
+$pulsate-red-end,
+$settings-select-bg,
+$settings-select-color,
+$settings-menu-hover-bg,
+$settings-menu-active-bg,
+$settings-api-node-border-color,
+$main-content-margin-block-bg-color
 ) {
 
-  .fz_12{
+  $hamburger-submenu-display-endpoint: 990px;
+
+  .settings-select {
+    height: 36px;
+    padding: 0 12px;
+    background-color: $settings-select-bg;
+    color: $settings-select-color;
+  }
+
+  .settings-input {
+    /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
+    .block-list and it uses on many places. To keep everything OK and do not break something I just do
+    overwrite for Inputs on settings and keep default styles for inputs on another places.
+    */
+    color: $settings-select-color !important;
+    height: 36px !important;
+    background-color: $settings-select-bg !important;
+    border-bottom: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .dark-text-color {
+    color: $dark-text-color;
+  }
+
+  .fz_12 {
     font-size: 12px;
   }
 
@@ -252,7 +284,7 @@ $pulsate-red-end
 
 
     .page-layout {
-        background-color: $bg-color;
+        background-color: lighten($account-header, 4%);
 
         .left-column {
             border-top-color: $bg-color;
@@ -268,6 +300,11 @@ $pulsate-red-end
 
         .main-content {
             background-color: $bg-color;
+
+          &.margin-block {
+            background-color: $main-content-margin-block-bg-color;
+          }
+
         }
 
         .right-column {
@@ -338,7 +375,7 @@ $pulsate-red-end
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 1rem .25rem;
+            padding: 0.9rem .25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -347,7 +384,7 @@ $pulsate-red-end
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
-                    fill: $account-dimmed;
+                    fill: $bs-blue;
                 }
             }
             &:hover {
@@ -398,10 +435,33 @@ $pulsate-red-end
                 }
             }
         }
+
+        ul.dropdown.header-submenu {
+            > li {
+                &.parent-item {
+                    background-color: $main-content-margin-block-bg-color;
+                    color: $dark-text-color;
+                    &:hover {
+                        color: lighten($dark-text-color, 10%);
+                        background-color: lighten($main-content-margin-block-bg-color, 10%);
+                    }
+                }
+            }
+        }
     }
 
+    @media (max-width: $hamburger-submenu-display-endpoint) {
+        ul.dropdown.header-menu {
+            li.mobile-only {
+                display: block;
+            }
+            li.desktop-only {
+                display: none;
+            }
+        }
+    }
 
-    .header span.icon.lock-unlock > svg > path {
+    .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
 
@@ -431,7 +491,7 @@ $pulsate-red-end
             }
             > span { @include RobotoMedium; }
         }
-        svg > path { fill: $secondary-text-color; }
+        svg > path { fill: #fff; }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
@@ -510,6 +570,20 @@ $pulsate-red-end
             margin-left: 0;
             margin-bottom: 1rem;
             color: $secondary-text-color;
+        }
+        &.no-border-bottom {
+          li {
+            border-bottom: 0;
+          }
+        }
+
+        li.with-dropdown {
+          .settings-select {
+            @extend .settings-select;
+          }
+          > input.settings-input[type="text"] {
+            @extend .settings-input;
+          }
         }
     }
 
@@ -653,6 +727,19 @@ $pulsate-red-end
         }
     }
 
+    .tab-content {
+        background-color: lighten($account-header, 4%);
+        div.header-selector {
+            .filter input {
+                background-color: $bg-color;
+            }
+            .selector {
+                .inactive {
+                    color: $inactive-text-color;
+                }
+            }
+        }
+    }
 
 
     // Exchange
@@ -1322,34 +1409,69 @@ $pulsate-red-end
 
     select.bts-select, select.native-coin-types, select.external-coin-types {
         color: $secondary-text-color;
-        background-color: $input-background;
+        background-color: $light-panel-bg-color;
         border: 0;
         &:hover, &:focus, &:active {
-            background-color: $input-background;
+            background-color: $light-panel-bg-color;
         }
     }
-
-
-
 
     div.fm-container:hover {
         background-color: darken($light-panel-bg-color, 5%);
         cursor: pointer;
     }
 
+    .api-node {
+        border: 1px solid $settings-api-node-border-color;
+        &:nth-child(n+1) {
+            border-bottom: 0;
+        }
+        &:last-child {
+            border: 1px solid $settings-api-node-border-color;
+        }
+    }
 
     // Settings
     .settings-menu {
-        margin-left: 0;
-        > li {
-            padding: .2rem 1rem;
-            &:hover {
-                background-color: darken($light-panel-bg-color, 5%);
-            }
+        > ul {
+            width: 200px;
+            transition: .3s;
+            margin-left: 0;
+            > li {
+                border-radius: 2px;
+                color: $secondary-text-color;
+                padding: 3px 11px;
+                margin: 5px;
+                &:hover {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-hover-bg;
+                }
 
-            &.active {
-                color: $link-text-color;
+                &.active {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-active-bg;
+                }
             }
+        }
+    }
+
+    .settings--notifications {
+        .settings--notifications--group {
+            .settings--notifications--item {
+                label {
+                    color: $settings-select-color;
+                }
+            }
+        }
+        .settings--notifications--no-browser-support {
+            color: $error-text-color;
+            font-size: 12px;
+        }
+    }
+
+    @media(max-width: $hamburger-submenu-display-endpoint) {
+        .settings-menu {
+            display: none;
         }
     }
 
@@ -1379,6 +1501,15 @@ $pulsate-red-end
             color: $dark-text-color;
             @include RobotoMedium;
         }
+    }
+
+    .nodes-header {
+      border-bottom-color: $button-bg-color;
+      background-color: $bg-color;
+      &.inactive {
+        border-bottom-color: transparent;
+        color: $secondary-text-color;
+      }
     }
 
     .react-stockcharts-tooltip {
@@ -1546,6 +1677,15 @@ $pulsate-red-end
             color: $account-primarytext;
             border-color: $account-border;
         }
+        > tbody > tr.dashboard-table--hiddenAccounts {
+            > td {
+                height: 20px;
+                text-align: left;
+                padding-left: 45px;
+                background-color: $account-header;
+                color: $account-primarytext;
+            }
+        }
         > tbody > tr {
             > td {
                 background-color: $account-cells;
@@ -1650,6 +1790,111 @@ $pulsate-red-end
         }
     }
 
+    .introjs-launcher {
+        margin-left: 15px;
+        background-color: $bs-blue;
+        padding: 0 10px;
+        font-size: 18px;
+        line-height: 1.8;
+        transition: background-color .2s ease;
+        color: #fff;
+
+        &:hover {
+            cursor: pointer;
+            background-color: darken($bs-blue, 10%);
+        }
+
+        @include breakpoint(small only) {
+            position: absolute;
+            bottom: 1rem;
+            right: .3rem;
+            z-index: 9999;
+            display: block;
+            line-height: 0;
+            font-size: 0;
+            color: transparent;
+            background-color: transparent;
+
+            &:after {
+                content: '?';
+                color: #fff;
+                font-size: 1rem;
+                line-height: 1.5;
+                text-align: center;
+                padding: .3rem .8rem;
+                background-color: $bs-blue;
+                border: 1px solid $bg-color;
+            }
+        }
+    }
+
+    .footer {
+        padding-right: 0;
+    }
+
+    .header-container {
+        background-color: $account-background;
+
+        .menu-dropdown-wrapper {
+            &.active {
+                background: $panel-bg-color;
+            }
+        }
+
+        .dropdown.header-menu {
+            background-color: $panel-bg-color;
+
+            li.divider {
+                border-bottom: 1px solid $dark-text-color;
+            }
+
+            > li:hover {
+                background-color: $super-light-panel-bg-color
+            }
+        }
+
+        .total-value {
+            color: $account-green
+        }
+    }
+
+    .flip-arrow:hover {
+        color: $bs-blue;
+        cursor: pointer;
+    }
+
+    .order-2 .flip-arrow, .order-5 .flip-arrow {
+        display: none;
+    }
+
+    .order-book-button-h svg > path {
+        fill: #fff;
+
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+    }
+
+    .order-book-button-v {
+        display: none;
+    }
+
+    @include breakpoint(large) {
+        .order-book-button-v {
+            display: inline-block;
+            margin-left: 5px;
+
+            svg > path {
+                fill: #fff;
+
+                &:hover {
+                    fill: $bs-blue;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1710,4 +1955,97 @@ $pulsate-red-end
 }
 .market-filter-input:not(:valid) ~ .clear-text {
     display: none;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 64px;
+
+    .menu-bar {
+        overflow: visible;
+    }
+
+    .logo {
+        padding-top: .7rem;
+        padding-bottom: .8rem;
+    }
+
+    .dropdown-wrapper:after {
+        display: none;
+    }
+
+    .menu-dropdown-wrapper {
+        height: 65px;
+        width: 65px;
+        text-align: center;
+        border-radius: 0;
+
+        .hamburger .icon {
+            position: relative;
+            top: 12px;
+        }
+    }
+
+    .dropdown.header-menu {
+        top: 65px;
+    }
+
+    .hamburger svg rect, .hamburger-x svg rect {
+        fill: $bs-blue;
+    }
+
+    .total-value {
+        text-align: right;
+        font-size: 80%;
+        line-height: normal;
+    }
+}
+
+.local-wallet-menu {
+    // top: 50px!important;
+
+    .table-cell {
+        display: inline-block;
+    }
+}
+
+.app-menu {
+  flex: 0;
+}
+
+.truncated {
+  flex: 1;
+  min-width: 0; /* or some value */
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+}
+
+#unlock_wallet_modal2 .close-button {
+    color: $bs-blue;
+}
+
+@media screen and (max-width: 640px) {
+    .responsive-list > .help-content > ul {
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 6px;
+        background: #2a2a2a;
+        border: 1px solid #4b5158;
+        margin-bottom: 2rem!important;
+
+        li {
+            border-bottom: 1px solid #393939;
+            padding: 4px;
+
+            ul li {
+                border: 0;
+            }
+        }
+    }
 }

@@ -34,6 +34,7 @@ import cnames from "classnames";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { checkMarginStatus } from "common/accountHelper";
 import SendModal from "../Modal/SendModal";
+import PulseIcon from "../Icon/PulseIcon";
 
 class AccountOverview extends React.Component {
 
@@ -204,6 +205,24 @@ class AccountOverview extends React.Component {
         });
     }
 
+    _renderBuy = (symbol, canBuy, assetName, emptyCell, balance) => {
+        if(symbol === "BTS" && balance <= 100000) { // Precision of 5, 1 = 10^5
+            return (
+                <span>
+                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
+                        <PulseIcon onIcon="dollar" offIcon="dollar-green" duration={1000} className="icon-14px" />
+                    </a>
+                </span>);
+        } else {
+            return canBuy && this.props.isMyAccount ?
+                <span>
+                    <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
+                        <Icon name="dollar" className="icon-14px" />
+                    </a>
+                </span> : emptyCell;
+        }
+    };
+
     _renderBalances(balanceList, optionalAssets, visible) {
         const {core_asset} = this.props;
         let {settings, hiddenAssets, orders} = this.props;
@@ -268,7 +287,7 @@ class AccountOverview extends React.Component {
             const thisAssetName = asset.get("symbol").split(".");
             const canDeposit =
                 (
-                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") && 
+                    (thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
                     !!this.props.backedCoins.get("OPEN", []).find(a => a.backingCoinType === thisAssetName[1]) ||
                     !!this.props.backedCoins.get("RUDEX", []).find(a => a.backingCoin === thisAssetName[1])
                 ) || asset.get("symbol") == "BTS";
@@ -317,12 +336,9 @@ class AccountOverview extends React.Component {
                         {transferLink}
                     </td>
                     <td>
-                        {canBuy && this.props.isMyAccount ?
-                        <span>
-                            <a onClick={this._showDepositWithdraw.bind(this, "bridge_modal", assetName, false)}>
-                                <Icon name="dollar" className="icon-14px" />
-                            </a>
-                        </span> : emptyCell}
+                        {
+                           this._renderBuy(asset.get("symbol"), canBuy, assetName, emptyCell, balanceObject.get("balance"))
+                        }
                     </td>
                     <td>
                         {canDeposit && this.props.isMyAccount? (
@@ -526,12 +542,17 @@ class AccountOverview extends React.Component {
             hiddenBalances = hidden;
         }
 
-        let totalBalanceList = includedBalancesList.concat(hiddenBalancesList);
-
-        let portFolioValue =
+        let portfolioHiddenAssetsBalance =
             <TotalBalanceValue
                 noTip
-                balances={totalBalanceList}
+                balances={hiddenBalancesList}
+                hide_asset
+            />;
+
+        let portfolioActiveAssetsBalance =
+            <TotalBalanceValue
+                noTip
+                balances={includedBalancesList}
                 hide_asset
             />;
         let ordersValue =
@@ -573,7 +594,9 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td><td colSpan="9"></td></tr>);
+        includedBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioActiveAssetsBalance}</td><td colSpan="9"></td></tr>);
+
+        hiddenBalances.push(<tr key="portfolio" className="total-value"><td style={{textAlign: "left"}}>{totalValueText}</td><td></td><td className="column-hide-small"></td><td></td><td className="column-hide-small" style={{textAlign: "right"}}>{portfolioHiddenAssetsBalance}</td><td colSpan="9"></td></tr>);
 
         let showAssetPercent = settings.get("showAssetPercent", false);
 
@@ -599,20 +622,20 @@ class AccountOverview extends React.Component {
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <Tabs defaultActiveTab={0} segmented={false} setting="overviewTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
-
-                            <Tab title="account.portfolio" subText={portFolioValue}>
-                                <div className="hide-selector">
-                                    <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <h4><Translate content="account.hide_hidden" /></h4>
+                            <Tab title="account.portfolio" subText={portfolioActiveAssetsBalance}>
+                                <div className="header-selector">
+                                    <div className="selector">
+                                        <div className={cnames("inline-block", {inactive: showHidden && hiddenBalances.length})} onClick={showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                            <Translate content="account.hide_hidden" />
+                                        </div>
+                                        {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
+                                            <Translate content="account.show_hidden" />
+                                        </div> : null}
                                     </div>
-                                    {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: !showHidden})} onClick={!showHidden ? this._toggleHiddenAssets.bind(this) : () => {}}>
-                                        <h4><Translate content="account.show_hidden" /></h4>
-                                    </div> : null}
-
-                                    {/* Send Modal */}
-                                    <SendModal id="send_modal_portfolio" ref="send_modal" from_name={this.props.account.get("name")} asset_id={this.state.send_asset || "1.3.0"}/>
-
                                 </div>
+
+                                {/* Send Modal */}
+                                <SendModal id="send_modal_portfolio" ref="send_modal" from_name={this.props.account.get("name")} asset_id={this.state.send_asset || "1.3.0"}/>
 
                                 <table className="table dashboard-table table-hover">
                                     <thead>

@@ -192,6 +192,12 @@ table > tbody > tr.control-row > td {
   border-radius: 0px;
 }
 
+@media screen and (max-width: 640px) {
+  .modal {
+    background: #2a2a2a!important;
+  }
+}
+
 div.modal {
   overflow: visible !important;
 }
@@ -378,6 +384,18 @@ select.bts-select.full-width {
     height: 2.35em;
 }
 
+@media screen and (max-width: 525px) {
+  .column-hide-xs {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .column-hide-xxs {
+    display: none !important;
+  }
+}
+  
 @media screen and (min-width: 900px) {
     .column-show-small {
         display: none !important;
