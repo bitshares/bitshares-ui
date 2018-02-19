@@ -667,11 +667,16 @@ class Header extends React.Component {
                                     <div className="table-cell"><Translate content="modal.deposit.submit_beta"/></div>
                                 </li>
 
-                                <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})}
+                                <li className={cnames({active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})}
                                     onClick={!enableDepositWithdraw ? () => {
                                     } : this._onNavigate.bind(this, "/deposit-withdraw")}>
                                     <div className="table-cell"><Icon size="2x" name="withdraw"/></div>
                                     <div className="table-cell"><Translate content="modal.withdraw.submit"/></div>
+                                </li>
+
+                                <li className={cnames("divider", {active: active.indexOf("/deposit-withdraw") !== -1}, {disabled: !enableDepositWithdraw})} onClick={!enableDepositWithdraw ? () => {} : this._showWithdraw.bind(this)}>
+                                  <div className="table-cell"><Icon size="2x" name="withdraw" /></div>
+                                  <div className="table-cell"><Translate content="modal.withdraw.submit_beta" /></div>
                                 </li>
 
 

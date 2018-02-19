@@ -1,6 +1,4 @@
-
-import Autocomplete from "react-autocomplete";
-import React from "react";
+import React from "react"
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component"
 import Autocomplete from "react-autocomplete";
@@ -48,7 +46,6 @@ export default class TypeAhead extends React.Component {
         if(this.props.onSelect) this.props.onSelect(value, asset);
     }
 
-
     renderInput = props => {
         const { isMenuShowing } = this.state || {};
         return isMenuShowing ? (
@@ -83,7 +80,7 @@ export default class TypeAhead extends React.Component {
                 renderItem={this.renderItem}
                 value={filter}
                 onChange={this.onChange}
-                onSelect={this.onSelect}
+                onSelect={this.onSelect.bind(this)}
                 inputProps={{ ...inputProps, onBlur: this.onBlur }}
                 menuStyle={TypeAhead.menuStyle}
                 wrapperStyle={wrapperStyle}
@@ -187,7 +184,6 @@ export default class TypeAhead extends React.Component {
     };
 
     render() {
-        console.log("render");
         const { isMenuShowing } = this.state || {};
         return (
             <div
