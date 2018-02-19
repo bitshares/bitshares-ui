@@ -13,7 +13,7 @@ import { RecentTransactions } from "../Account/RecentTransactions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
-import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
+import { checkFeeStatusAsync, checkBalance, shouldPayFeeWithAssetAsync } from "common/trxHelper";
 import { debounce, isNaN } from "lodash";
 import classnames from "classnames";
 import { Asset } from "common/MarketClasses";
@@ -160,7 +160,7 @@ class Transfer extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        let { fee_asset_id, from_account } = state;
+        let { fee_asset_id, from_account, asset_id } = state;
         const { fee_asset_types } = this._getAvailableAssets(state);
         if ( fee_asset_types.length === 1 && fee_asset_types[0] !== fee_asset_id) {
             fee_asset_id = fee_asset_types[0];
@@ -175,15 +175,19 @@ class Transfer extends React.Component {
                 content: state.memo
             }
         })
-        .then(({fee, hasBalance, hasPoolBalance}) => {
-            this.setState({
-                feeAmount: fee,
-                fee_asset_id: fee.asset_id,
-                hasBalance,
-                hasPoolBalance,
-                error: (!hasBalance || !hasPoolBalance)
-            });
-        });
+        .then(({fee, hasBalance, hasPoolBalance}) =>
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should => should ?
+                  this.setState({fee_asset_id: asset_id}, this._updateFee)
+              :
+                  this.setState({
+                      feeAmount: fee,
+                      fee_asset_id: fee.asset_id,
+                      hasBalance,
+                      hasPoolBalance,
+                      error: (!hasBalance || !hasPoolBalance)
+                  })
+            )
+        );
     }
 
     fromChanged(from_name) {
@@ -423,7 +427,7 @@ class Transfer extends React.Component {
                         <div className="content-block transfer-input">
                             {memo && memo.length ? <label className="right-label">{memo.length}</label> : null}
                             <Translate className="left-label tooltip" component="label" content="transfer.memo" data-place="top" data-tip={counterpart.translate("tooltip.memo_tip")}/>
-                            <textarea style={{marginBottom: 0}} rows="1" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
+                            <textarea style={{marginBottom: 0}} rows="3" value={memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
                             {/* warning */}
                             { this.state.propose ?
                                 <div className="error-area" style={{position: "absolute"}}>

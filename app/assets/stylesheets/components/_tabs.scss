@@ -20,11 +20,6 @@ div.account-tabs.with-buttons ul {
     }
 }
 
-div.tab-content {
-    padding-top: 20px;
-    padding-bottom: 1rem;
-}
-
 @include breakpoint(large) {
     div.account-tabs.with-buttons ul {
         > li.tabs-action-buttons {

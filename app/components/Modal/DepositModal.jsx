@@ -14,7 +14,7 @@ import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAsse
 import { _getAvailableGateways, gatewaySelector, _getNumberAvailableGateways, _onAssetSelected } from "lib/common/assetGatewayMixin";
 
 class DepositModalContent extends DecimalChecker {
-    
+
     constructor() {
         super();
 
@@ -95,6 +95,9 @@ class DepositModalContent extends DecimalChecker {
         }
 
         if(selectedGateway == "OPEN") {
+            this.setState({
+                isOpenledger: true
+            });
             let depositAddress = this.deposit_address_cache.getCachedInputAddress(
                 selectedGateway.toUpperCase(),
                 account,
@@ -120,7 +123,8 @@ class DepositModalContent extends DecimalChecker {
                     address: backingAsset.gatewayWallet,
                     memo: "dex:" + account,
                 },
-                fetchingAddress: false
+                fetchingAddress: false,
+                isOpenledger: false
             });
         } else {
             console.log("Withdraw Modal Error: Unknown Gateway " + selectedGateway + " for asset " + selectedAsset);
@@ -154,7 +158,6 @@ class DepositModalContent extends DecimalChecker {
     render() {
         let {selectedAsset, selectedGateway, depositAddress, fetchingAddress, gatewayStatus, backingAsset} = this.state;
         let {account} = this.props;
-
         let usingGateway = true;
 
         if(selectedGateway == null && selectedAsset == "BTS") {
@@ -194,7 +197,7 @@ class DepositModalContent extends DecimalChecker {
                                 <div className="inline-label input-wrapper">
                                     <DepositWithdrawAssetSelector
                                         defaultValue={selectedAsset}
-                                        onSelect={this.onAssetSelected.bind(this)} 
+                                        onSelect={this.onAssetSelected.bind(this)}
                                         selectOnBlur />
                                 </div>
                             </div>
@@ -210,8 +213,8 @@ class DepositModalContent extends DecimalChecker {
 
                         {!fetchingAddress ? 
                             (!usingGateway || (usingGateway && selectedGateway && gatewayStatus[selectedGateway].enabled)) && depositAddress && !depositAddress.memo ?
-                                <div className="container-row" style={{textAlign: "center"}}>{QR}</div> : 
-                                null : 
+                                <div className="container-row" style={{textAlign: "center"}}>{QR}</div> :
+                                null :
                             <div className="container-row" style={{textAlign: "center"}}><LoadingIndicator type="three-bounce" /></div>
                         }
                         {selectedGateway && gatewayStatus[selectedGateway].enabled && depositAddress && !depositAddress.error ?
@@ -225,6 +228,11 @@ class DepositModalContent extends DecimalChecker {
                                             symbol={selectedAsset} />
                                     </div>
                                 : null }
+                                {this.state.isOpenledger && 
+                                    <Translate className="grid-block container-row maxDeposit" component="div" content="gateway.min_deposit_warning_amount" minDeposit={backingAsset.gateFee * 2 || 0} coin={selectedAsset}/>
+                                }
+                
+                                 
                                 <div className="grid-block container-row deposit-details">
                                     <div className="copyIcon">
                                         <CopyButton text={depositAddress.address} className={"copyIcon"} />
@@ -256,6 +264,10 @@ class DepositModalContent extends DecimalChecker {
                             </div>
                         : null}
                     </div>
+                    {this.state.isOpenledger && 
+                        <Translate className="fz_12" component="p" content="gateway.min_deposit_warning_asset" minDeposit={backingAsset.gateFee * 2 || 0} coin={selectedAsset}/>
+                    }
+                
                     <div className="Modal__footer">
                         <div className="container-row" style={{paddingBottom: 35}}>
                             <button className="ActionButton_Close" style={{width: "100%"}} onClick={this.onClose.bind(this)}>

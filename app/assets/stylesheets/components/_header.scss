@@ -20,11 +20,9 @@
         border-bottom: none;
     }
   padding-left: 0 !important;
-  min-height: 64px;
+  // min-height: 64px;
   // text-transform: uppercase;
   .menu-bar > li {
-
-    display: list-item;
     padding: 0;
     border-right: none;
     > a {
@@ -41,7 +39,7 @@
   }
 
   div.account-drop-down div.total-value {
-      text-align: left;
+      text-align: right;
       font-size: 80%;
       line-height: initial;
   }
@@ -118,15 +116,8 @@ div.header-right-menu {
 div.account-drop-down div.dropdown-wrapper {
     padding: 0;
 
-    div.hamburger {
-        position: absolute;
-        right: 12px;
-        top: 22px;
-    }
-
     > li {
         list-style: none;
-        min-width: 200px;
         > div.table-cell {
             padding: 15px 5px 14px 5px;
             text-align: center;
@@ -148,11 +139,34 @@ div.account-drop-down div.dropdown-wrapper {
         }
     }
 }
+
+div.account-drop-down div.account-dropdown-wrapper {
+  > li {
+    > div.table-cell {
+      height: 64px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}
+
+div.account-drop-down div.menu-dropdown-wrapper {
+  > li {
+    width: 64.55px;
+
+    > div.table-cell {
+      height: 64px;
+      padding: 23px 5px 24px 5px;
+    }
+  }
+}
+
 ul.dropdown.header-menu {
     transition: padding 0s, height 3s linear;
     border: none;
     z-index: 1004;
     > li {
+        height: 41px;
         padding: 2px 5px 2px 10px;
         > div {
             vertical-align: middle;
@@ -177,5 +191,48 @@ ul.dropdown.header-menu {
                 fill: grey !important;
             }
         }
+        &.has-submenu {
+            position: relative;
+            &:after {
+                content: ">";
+                position: absolute;
+                right: 10px;
+                margin-top: -13.5px;
+                top: 50%;
+            }
+        }
+        &.parent-item {
+            .parent-item-icon {
+                margin-right: 10px;
+            }
+        }
     }
+    li.mobile-only {
+        display: none;
+    }
+    li.desktop-only {
+        display: block;
+    }
+}
+
+.account-summary {
+  text-align: right;
+  line-height: initial;
+  display: inline-block;
+
+  .icon {
+    margin-right: 5px;
+  }
+
+  svg path {
+    fill: #fff;
+  }
+}
+
+.account-name .icon {
+  margin-right: 5px;
+}
+
+.active-account {
+    padding-right: 10px;
 }

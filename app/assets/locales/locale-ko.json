@@ -7,7 +7,8 @@
     "de": "Deutsch",
     "es": "Español",
     "it": "Italiano",
-    "tr": "Turkish"
+    "tr": "Türkçe",
+    "ru": "Русский"
   },
   "header": {
     "title": "비트쉐어 2.0",
@@ -30,6 +31,10 @@
     "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
     "account_notify": "The active account is now %(account)s",
     "account_value": "계정 값"
+  },
+  "browser_notification_messages": {
+    "money_received_title": "에서 이전 %(from)s",
+    "money_received_body": "너 한테 보냈어 %(amount)s %(symbol)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -55,7 +60,31 @@
     "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
+  "walkthrough": {
+    "language_flag": "DEX에서 사용할 9 가지 언어 중에서 선택하십시오.",
+    "restore_account": "백업 파일을 사용하여 지갑을 복원하십시오.",
+    "create_cloud_wallet": "계정 이름과 암호를 사용하여 클라우드 지갑에 액세스하십시오.",
+    "create_local_wallet": "로컬 Wallet을 작성하고 로컬 지갑에 속한 개인 키를 다운로드하십시오.",
+    "switch_button": "이 버튼을 사용하여 거래 쌍을 전환하십시오.",
+    "favourite_button": "시장 목록에서이 쌍을 즐겨 찾기로 표시하십시오.",
+    "depth_chart": "시장 심층 차트를 사용하여 다른 가격으로 수요와 공급을 표시하십시오.",
+    "price_chart": "가격 차트를 사용하여 자산의 가격 조치를 봅니다.",
+    "chart_tool_zoom": "가격 내역을 더 많거나 적게 표시하도록 가격 차트를 조정하십시오.",
+    "chart_tool_duration": "다른 간격을 사용하여 무역 데이터를 그룹화하십시오.",
+    "chart_tool_indicators": "가격 차트에 기술 지표를 추가하여 거래 기회를 파악하십시오.",
+    "buy_form": "이 양식을 사용하여 구매 주문을하십시오.",
+    "sell_form": "이 양식을 사용하여 판매 주문을하십시오.",
+    "buy_orders": "이 시장에 대한 모든 구매 주문을보십시오.",
+    "sell_orders": "이 시장에 대한 모든 판매 주문을보십시오.",
+    "my_markets_tab": "이 탭은 일반적으로 사용되는 시장을 나열합니다.",
+    "find_markets_tab": "이 탭을 사용하면 내 시장 탭에 추가 시장을 검색하고 추가 할 수 있습니다.",
+    "next_label": "다음",
+    "prev_label": "뒤로",
+    "skip_label": "건너 뛰기",
+    "done_label": "완료"
+  },
   "account": {
+    "search": "Search for an account",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
     "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
     "transfer_actions": "Transfer actions",
@@ -541,6 +570,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "브라우저 알림",
+    "browser_notifications_allow": "알림 사용",
+    "browser_notifications_additional_transfer_to_me": "내 계정으로의 이전 알림",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "선호 거래쌍",
     "unit": "선호 화폐단위",
@@ -786,7 +818,8 @@
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit": "Deposit limit"
+    "deposit_limit": "Deposit limit",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
