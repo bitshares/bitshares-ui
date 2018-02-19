@@ -2,7 +2,7 @@ import React from "react";
 import BindToChainState from "components/Utility/BindToChainState";
 import BaseModal from "components/Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import DepositWithdrawAssetSelector from "./DepositWithdrawAssetSelector";
+import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector";
 import Translate from "react-translate-component";
 import ExchangeInput from "components/Exchange/ExchangeInput";
 import _ from "lodash";
@@ -166,6 +166,7 @@ class WithdrawModalNew extends React.Component {
         if(balances && withdrawalCurrencyId){
             balances.forEach((balance)=>{
                 if(balance && balance.toJS){
+                  console.log('balance', balance.toJS());
                     if(balance.get("asset_type") == withdrawalCurrencyId){
                         withdrawalCurrencyBalanceId = balance.get("id");
                         withdrawalCurrencyBalance = balance.get("balance");
@@ -210,8 +211,16 @@ class WithdrawModalNew extends React.Component {
 
         if(Number.isFinite(withdrawalCurrencyBalance) && withdrawalCurrencyPrecision){
             let l = String(withdrawalCurrencyBalance).length;
+            console.log('l is', l);
             let decimalPart = String(withdrawalCurrencyBalance).substr(0, l-withdrawalCurrencyPrecision);
             let mantissa = String(withdrawalCurrencyBalance).substr(l-withdrawalCurrencyPrecision);
+
+            if(!decimalPart){
+              decimalPart = "0";
+              mantissa = String(withdrawalCurrencyBalance);
+            }
+
+            console.log('decimalPart', decimalPart, 'mantissa', mantissa);
             convertedBalance = Number(decimalPart + "." + mantissa);
         }
 
@@ -386,13 +395,21 @@ class WithdrawModalNew extends React.Component {
     onAssetChanged(value){
         value = value.toUpperCase();
 
+        let stateObj = null;
+
         if(value == "BTS"){
-            this.setState({isBTS: true});
+            stateObj = {isBTS: true};
         }
 
         if(!value){
-            this.setState({selectedAsset: "", selectedGateway: "", addressError: false, fee: 0, isBTS: false});
+            stateObj = {selectedAsset: "", selectedGateway: "", addressError: false, fee: 0, isBTS: false}
         }
+
+        stateObj.estimatedValue = 0;
+        stateObj.memo = "";
+        stateObj.address = "";
+
+        this.setState(stateObj);
     }
 
     onGatewayChanged(){
@@ -663,7 +680,7 @@ class WithdrawModalNew extends React.Component {
                   <Translate component="span" content="modal.withdraw.address"/>
               </label>
               {addressError ? <div className="has-error" style={{position: "absolute", right: "1em", marginTop: "-30px"}}>
-                  <Translate content="modal.withdraw.address_not_valid" coin_type={selectedAsset} />
+                  <Translate content="modal.withdraw.address_not_valid" />
               </div> : null}
               <div className="blocktrades-select-dropdown">
                   <div className="inline-label">
@@ -743,7 +760,7 @@ class WithdrawModalNew extends React.Component {
           }
 
           {/*Submit Buttons*/}
-          <div style={{clear: "both"}}>
+          <div style={{clear: "both", position: "absolute", bottom: "-1em", right: "1em", left: "1em"}}>
             <div style={leftColumn} className="button-group">
               <button style={buttonStyle} className="button danger" onClick={this.props.close}><Translate content="modal.withdraw.cancel" /></button>
             </div>

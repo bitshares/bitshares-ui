@@ -25,7 +25,7 @@ import notify from "actions/NotificationActions";
 // import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs";
-import WithdrawModal from "../DepositWithdraw/WithdrawModalNew";
+import WithdrawModal from "../Modal/WithdrawModalNew";
 
 var logo = require("assets/logo-ico-blue.png");
 

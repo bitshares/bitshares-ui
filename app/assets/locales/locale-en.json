@@ -1341,7 +1341,8 @@
       "no_estimate": "No estimate available for this object",
       "header": "Withdraw (beta)",
       "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
-      "address_not_valid": "Invalid address"
+      "address_not_valid": "Invalid address",
+      "cannot_cover": "You do not have sufficient funds to cover this withdrawal"
     },
     "deposit": {
       "header": "Deposit to %(account_name)s",

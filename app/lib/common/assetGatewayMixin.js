@@ -82,7 +82,7 @@ function gatewaySelector(args){
                 </label>
 
                 <div className="inline-label input-wrapper">
-                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged} id="gatewaySelector">
+                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged} id="gatewaySelector" disabled="disabled" style={{cursor: "default"}}>
                         {!selectedGateway && nAvailableGateways != 0 ? <Translate component="option" value="" content="modal.deposit_withdraw.select_gateway" /> : null}
                         {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
                         {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}
