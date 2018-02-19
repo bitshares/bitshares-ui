@@ -166,7 +166,6 @@ class WithdrawModalNew extends React.Component {
         if(balances && withdrawalCurrencyId){
             balances.forEach((balance)=>{
                 if(balance && balance.toJS){
-                  console.log('balance', balance.toJS());
                     if(balance.get("asset_type") == withdrawalCurrencyId){
                         withdrawalCurrencyBalanceId = balance.get("id");
                         withdrawalCurrencyBalance = balance.get("balance");
@@ -211,7 +210,6 @@ class WithdrawModalNew extends React.Component {
 
         if(Number.isFinite(withdrawalCurrencyBalance) && withdrawalCurrencyPrecision){
             let l = String(withdrawalCurrencyBalance).length;
-            console.log('l is', l);
             let decimalPart = String(withdrawalCurrencyBalance).substr(0, l-withdrawalCurrencyPrecision);
             let mantissa = String(withdrawalCurrencyBalance).substr(l-withdrawalCurrencyPrecision);
 
@@ -220,7 +218,6 @@ class WithdrawModalNew extends React.Component {
               mantissa = String(withdrawalCurrencyBalance);
             }
 
-            console.log('decimalPart', decimalPart, 'mantissa', mantissa);
             convertedBalance = Number(decimalPart + "." + mantissa);
         }
 
