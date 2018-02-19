@@ -29,6 +29,7 @@ import AmountSelector from "components/Utility/AmountSelector";
 import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs/es";
+const logo = require("assets/logo-ico-blue.png");
 
 class WithdrawModalNew extends React.Component {
     constructor(props){
@@ -50,8 +51,6 @@ class WithdrawModalNew extends React.Component {
             quantity: 0,
             address: "",
             memo: "",
-            loadedFromAsset: "",
-            loadedToAsset: "",
             userEstimate: null,
             addressError: false,
             gatewayStatus: {
@@ -77,6 +76,17 @@ class WithdrawModalNew extends React.Component {
         this._checkFeeStatus();
         this._updateFee = _.debounce(this._updateFee.bind(this), 250);
         this._updateFee(this.state);
+
+        let { backedCoins } = this.props;
+
+        AssetActions.getAssetList("BTS", 1);
+        backedCoins.forEach((gateway)=>{
+          gateway.forEach((coin)=>{
+            let symbol = coin.backingCoinType || coin.symbol;
+            AssetActions.getAssetList(coin.backingCoinType, 1);
+            AssetActions.getAssetList(coin.symbol, 1);
+          });
+        })
     }
 
     shouldComponentUpdate(np, ns){
@@ -102,18 +112,8 @@ class WithdrawModalNew extends React.Component {
 
     componentDidUpdate(){
         let { preferredCurrency } = this.props;
-        let { selectedAsset, selectedGateway, quantity, loadedFromAsset, loadedToAsset } = this.state;
-        let fullSymbol = selectedGateway + "." + selectedAsset;
-
-        if(selectedAsset && loadedFromAsset != fullSymbol){
-            this.setState({loadedFromAsset: fullSymbol});
-            AssetActions.getAssetList(fullSymbol, 1);
-        }
-
-        if(preferredCurrency && selectedAsset && loadedToAsset != preferredCurrency){
-            this.setState({loadedToAsset: preferredCurrency});
-            AssetActions.getAssetList(preferredCurrency, 1);                
-        }
+        let { selectedAsset, selectedGateway, quantity  } = this.state;
+        let fullSymbol = selectedGateway ? selectedGateway + "." + selectedAsset : selectedAsset;
 
         this.setState(this._getAssetPairVariables());
     }
@@ -144,7 +144,9 @@ class WithdrawModalNew extends React.Component {
 
     _getAssetPairVariables(props, state){
         let { assets, marketStats, balances, preferredCurrency } = props || this.props;
-        let { selectedAsset, quantity, loadedFromAsset, loadedToAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee } = state || this.state; 
+        let { selectedAsset, quantity, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee } = state || this.state; 
+        quantity = Number(quantity);
+        gateFee = Number(gateFee);
         let fullSymbol = selectedGateway ? (selectedGateway + "." + selectedAsset) : selectedAsset;
 
         let withdrawalCurrencyId = null;
@@ -220,7 +222,9 @@ class WithdrawModalNew extends React.Component {
         let isBTS = false;
         if(coreAsset){
             if(selectedAsset == coreAsset.get("symbol")) isBTS = true;
-        }  
+        } else if(selectedAsset == "BTS"){
+            isBTS = true;
+        }
 
         let canCoverWithdrawal = convertedBalance != null ? convertedBalance >= (quantity + gateFee) : true;
 
@@ -382,12 +386,12 @@ class WithdrawModalNew extends React.Component {
     onAssetChanged(value){
         value = value.toUpperCase();
 
-        if(value == 'BTS'){
+        if(value == "BTS"){
             this.setState({isBTS: true});
         }
 
         if(!value){
-            this.setState({selectedGateway: "", addressError: false, fee: 0, isBTS: false});
+            this.setState({selectedAsset: "", selectedGateway: "", addressError: false, fee: 0, isBTS: false});
         }
     }
 
@@ -447,6 +451,7 @@ class WithdrawModalNew extends React.Component {
 
     onMemoChanged(e){
         this.setState({memo: e.target.value});
+        this._updateFee();
     }
 
     onClickAvailableBalance(available){
@@ -535,9 +540,9 @@ class WithdrawModalNew extends React.Component {
             state.feeAmount ? state.feeAmount.asset_id : "1.3.0"
         ]
 
-        AccountActions.transfer(...args);
-
-        ZfApi.publish(this.props.modalId, "close");
+        AccountActions.transfer(...args).then(()=>{
+          ZfApi.publish(this.props.modalId, "close");
+        });
     }
 
     onBTSAccountNameChanged(btsAccountName){
@@ -566,19 +571,41 @@ class WithdrawModalNew extends React.Component {
     render() {
         const { state, props } = this;
         let { preferredCurrency, assets, marketStats, balances } = props;
-        let { selectedAsset, loadedFromAsset, loadedToAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee, withdrawalCurrencyId, withdrawalCurrencyBalance, withdrawalCurrencyBalanceId, withdrawalCurrencyPrecision, preferredCurrencyPrecision, precisionDifference, coreAsset, convertedBalance, estimatedValue, nAvailableGateways, assetAndGateway, isBTS, canCoverWithdrawal, fee_asset_types, quantity, address, btsAccount } = this.state;
+        let { selectedAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee, withdrawalCurrencyId, withdrawalCurrencyBalance, withdrawalCurrencyBalanceId, withdrawalCurrencyPrecision, preferredCurrencyPrecision, precisionDifference, coreAsset, convertedBalance, estimatedValue, nAvailableGateways, assetAndGateway, isBTS, canCoverWithdrawal, fee_asset_types, quantity, address, btsAccount } = this.state;
+
+        let symbolsToInclude = [];
+
+        balances.forEach((item)=>{
+          let id = item.get("asset_type");
+          let asset = assets.get(id);
+
+          if(asset && item.get("balance") > 0){
+            symbolsToInclude.push(asset.symbol);
+          }
+        });
 
         let { halfWidth, leftColumn, rightColumn, buttonStyle } = this._getStyleHelpers();
         let { onFocus, onBlur } = this._getBindingHelpers();
 
-        const shouldDisable = isBTS ? !quantity || !btsAccount : !assetAndGateway || !quantity || !address || !canCoverWithdrawal;
+        const shouldDisable = isBTS ? !quantity || !btsAccount : !assetAndGateway || !quantity || !address || !canCoverWithdrawal || addressError;
         let storedAddresses = WithdrawAddresses.get(selectedAsset.toLowerCase());
 
-        return <div>
+        return <div id="withdraw_modal_new">
+          <div className="Modal__header" style={{textAlign: "center"}}>
+              <img src={logo} /><br />
+              <p><Translate content="modal.withdraw.header" /></p>
+          </div>
+
           {/*ASSET SELECTION*/}
           <div style={{marginBottom: "1em"}}>
-            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} selectOnBlur />
+            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur />
           </div>
+
+          {
+            !isBTS && selectedAsset && !selectedGateway ?
+            <Translate content="modal.withdraw.no_gateways" /> : 
+            null
+          }
 
           {/*GATEWAY SELECTION*/}
           <div style={{marginBottom: "1em"}}>
@@ -595,11 +622,11 @@ class WithdrawModalNew extends React.Component {
           {
             assetAndGateway || isBTS ? 
             <div>
-              {(loadedToAsset && preferredCurrency) ? <div style={{fontSize: "0.8em", position: "absolute", right: "1.25em"}}>
+              {(preferredCurrency) ? <div style={{fontSize: "0.8em", position: "absolute", right: "1.25em"}}>
                 <Translate content="modal.withdraw.available" />
                 <span style={{color: canCoverWithdrawal ? null : "red", cursor: "pointer", textDecoration: "underline"}} onClick={this.onClickAvailableBalance.bind(this, convertedBalance)}>
                     {/*Some currencies do not appear in balances, display zero balance if not found*/}
-                    {withdrawalCurrencyBalanceId ? <BalanceComponent balance={withdrawalCurrencyBalanceId} /> : '0.00'}
+                    {withdrawalCurrencyBalanceId ? <BalanceComponent balance={withdrawalCurrencyBalanceId} /> : "0.00"}
                 </span>
               </div> : null}
               <label className="left-label">
@@ -607,6 +634,14 @@ class WithdrawModalNew extends React.Component {
               </label>
               <ExchangeInput value={quantity} onChange={this.onQuantityChanged.bind(this)} onFocus={onFocus} onBlur={onBlur} />
             </div> : 
+            null
+          }
+
+          {
+            (assetAndGateway || isBTS) && !canCoverWithdrawal ? 
+            <div style={{marginBottom: "1em"}}>
+              <Translate content="modal.withdraw.cannot_cover" />
+            </div> :
             null
           }
 
@@ -623,10 +658,13 @@ class WithdrawModalNew extends React.Component {
           {/*WITHDRAW ADDRESS*/}
           {
             (assetAndGateway && !isBTS) ? 
-            <div style={{marginBottom: '1em'}}>
+            <div style={{marginBottom: "1em"}}>
               <label className="left-label">
                   <Translate component="span" content="modal.withdraw.address"/>
               </label>
+              {addressError ? <div className="has-error" style={{position: "absolute", right: "1em", marginTop: "-30px"}}>
+                  <Translate content="modal.withdraw.address_not_valid" coin_type={selectedAsset} />
+              </div> : null}
               <div className="blocktrades-select-dropdown">
                   <div className="inline-label">
                       <input type="text" value={address} onChange = {this.onAddressChanged.bind(this)} autoComplete="off" />
@@ -636,15 +674,12 @@ class WithdrawModalNew extends React.Component {
               <div className="blocktrades-position-options">
                   {this._renderStoredAddresses.call(this)}
               </div>
-              {addressError ? <div className="has-error" style={{marginBottom: "1em"}}>
-                  <Translate content="gateway.valid_address" coin_type={selectedAsset} />
-              </div> : null}
             </div> : null
           }
 
           {
             isBTS ? 
-            <div style={{marginBottom: '1em'}}>
+            <div style={{marginBottom: "1em"}}>
                 <AccountSelector 
                     label="transfer.to"
                     accountName={state.btsAccountName}
@@ -754,7 +789,7 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper, {}), {
+const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper, {keep_updating: true}), {
     listenTo() {
         return [AccountStore];
     },

@@ -39,11 +39,19 @@ function _getNumberAvailableGateways(){
 function _onAssetSelected(selectedAsset) {
     // Preselect gateway on single choise
     let gatewayStatus = _getAvailableGateways.call(this, selectedAsset);
+
     let selectedGateway = null;
     let nAvailable = 0;
 
     for(let g in gatewayStatus) { if(gatewayStatus[g].enabled) { nAvailable++; } }
-    if(nAvailable == 1) { for(let g in gatewayStatus) { if(gatewayStatus[g].enabled) { selectedGateway = g; } } }
+    if(nAvailable >= 1 && !selectedGateway || (this.state.selectedAsset != selectedAsset)) { 
+      for(let g in gatewayStatus) { 
+        if(gatewayStatus[g].enabled) { 
+          selectedGateway = g; 
+          break;
+        } 
+      } 
+    }
 
     // Fetch address if we have a selected gateway
     else {
@@ -60,6 +68,7 @@ function _onAssetSelected(selectedAsset) {
 
 function gatewaySelector(args){
     let { selectedGateway, gatewayStatus, nAvailableGateways, error, onGatewayChanged } = args;
+
     return <div className="container-row">
         <div className="no-margin no-padding">
             <section className="block-list">
@@ -73,7 +82,7 @@ function gatewaySelector(args){
                 </label>
 
                 <div className="inline-label input-wrapper">
-                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged}>
+                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged} id="gatewaySelector">
                         {!selectedGateway && nAvailableGateways != 0 ? <Translate component="option" value="" content="modal.deposit_withdraw.select_gateway" /> : null}
                         {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
                         {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}

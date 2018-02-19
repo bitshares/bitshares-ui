@@ -188,7 +188,8 @@ div.fm-container {
 #send_modal,
 #send_modal_header,
 #send_modal_portfolio,
-#deposit_modal_new {
+#deposit_modal_new,
+#withdraw_modal_new {
     overflow: auto !important;
     max-width: 500px;
 }
@@ -249,23 +250,9 @@ div.input-wrapper {
             padding-right: 2rem;
             height: 650px;
 
-            .Modal__header {
-                text-align: center;
-                > img {
-                    margin: 0px;
-                    height: 80px;
-                }
-                > p {
-                    font-size: 1.8rem;
-                    font-weight: bold;
-                    margin-bottom: 0px;
-                }
-            }
-
             .Modal__body {
                 height: 90%;
             }
-
 
             .container-row {
                 padding-bottom: 1rem;
@@ -335,4 +322,23 @@ div.input-wrapper {
     .close-button {
         display: none;
     }
+}
+
+#deposit_modal_new, #withdraw_modal_new {
+  .Modal__header {
+      text-align: center;
+      > img {
+          margin: 0px;
+          height: 80px;
+      }
+      > p {
+          font-size: 1.8rem;
+          font-weight: bold;
+          margin-bottom: 0px;
+      }
+  }
+}
+
+#withdraw_modal_new {
+
 }

@@ -14,6 +14,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 
     render(){
         const { props } = this;
+        const { include } = props;
         let idMap = {};
 
         let getCoinOption = (item) => {
@@ -48,7 +49,18 @@ class DepositWithdrawAssetSelector  extends React.Component {
             }
         };
 
-        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).sort(function(a, b) { return a.id.localeCompare(b.id); });
+        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).filter((item)=>{
+          let symbolWithGateway = item.gateway + '.' + item.id;
+          let symbolWithoutGateway = item.id;
+
+          if(symbolWithoutGateway == "BTS") return true;
+
+          if(include){
+            return include.includes(symbolWithGateway) || include.includes(symbolWithoutGateway);
+          }
+
+          return true;
+        }).sort(function(a, b) { return a.id.localeCompare(b.id); });
 
         return <TypeAhead items={coinItems} {...this.props} label="gateway.asset" />;
     }

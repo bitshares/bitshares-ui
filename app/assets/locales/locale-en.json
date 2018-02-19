@@ -1284,7 +1284,10 @@
       "cancel": "Cancel",
       "available": "Available: ",
       "submit_beta": "Withdraw (beta)",
-      "no_estimate": "No estimate available for this object"
+      "no_estimate": "No estimate available for this object",
+      "header": "Withdraw (beta)",
+      "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
+      "address_not_valid": "Invalid address"
     },
     "deposit": {
       "header": "Deposit to %(account_name)s",
