@@ -247,34 +247,34 @@ class Blocks extends React.Component {
         }
 
         return (
-            <div ref="outerWrapper" className="grid-block vertical page-layout">
+            <div ref="outerWrapper" className="grid-block vertical">
 
                 {/* First row of stats */}
                 <div className="align-center grid-block shrink small-horizontal blocks-row">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.current_block" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.current_block" /></span>
                             <h2>#{utils.format_number(dynGlobalObject.get("head_block_number"), 0)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
 
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.last_block" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.last_block" /></span>
                               <BlockTimeAgo blockTime={headBlock} />
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
 
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.trx_per_sec" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.trx_per_sec" /></span>
                             <h2>{utils.format_number(trxPerSec, 2)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow">
 
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.avg_conf_time" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.avg_conf_time" /></span>
                             <h2>{utils.format_number(avgTime / 2, 2)}s</h2>
                         </div>
                     </div>
@@ -284,7 +284,7 @@ class Blocks extends React.Component {
                 <div  className="align-center grid-block shrink small-horizontal  blocks-row">
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_witnesses" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.active_witnesses" /></span>
                             <h2 className="txtlabel success">
                                 {globalObject.get("active_witnesses").size}
                             </h2>
@@ -293,7 +293,7 @@ class Blocks extends React.Component {
 
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.active_committee_members" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.active_committee_members" /></span>
                             <h2 className="txtlabel success">
                                 {globalObject.get("active_committee_members").size}
                             </h2>
@@ -302,13 +302,13 @@ class Blocks extends React.Component {
 
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.trx_per_block" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.trx_per_block" /></span>
                             <h2>{utils.format_number(trxCount / blockCount || 0, 2)}</h2>
                         </div>
                     </div>
                     <div className="grid-block text-center small-6 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.blocks.recently_missed_blocks" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.blocks.recently_missed_blocks" /></span>
                             <h2 className="txtlabel warning" style={{fontWeight: "100"}}>
                                 {dynGlobalObject.get("recently_missed_count")}
                             </h2>
@@ -320,7 +320,7 @@ class Blocks extends React.Component {
                 <div className="align-center grid-block shrink small-vertical medium-horizontal blocks-row">
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.asset.summary.current_supply" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.asset.summary.current_supply" /></span>
                             <h3 className="txtlabel">
                                 <FormattedAsset
                                     amount={coreAsset.getIn(["dynamic", "current_supply"])}
@@ -332,19 +332,19 @@ class Blocks extends React.Component {
                     </div>
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow">
-                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.block_times" /></div>
+                            <div className="txtlabel"><Translate component="span" content="explorer.blocks.block_times" /></div>
                                 <BlocktimeChart blockTimes={blockTimes} head_block_number={dynGlobalObject.get("head_block_number")} />
                             </div>
                         </div>
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow">
-                            <div className="text-left txtlabel"><Translate component="span" content="explorer.blocks.trx_per_block" /></div>
+                            <div className="txtlabel"><Translate component="span" content="explorer.blocks.trx_per_block" /></div>
                             <TransactionChart blocks={latestBlocks} head_block={dynGlobalObject.get("head_block_number")}/>
                         </div>
                     </div>
                     <div className="grid-block text-center small-12 medium-3">
                         <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel subheader"><Translate component="span" content="explorer.asset.summary.stealth_supply" /></span>
+                            <span className="txtlabel"><Translate component="span" content="explorer.asset.summary.stealth_supply" /></span>
                             <h3 className="txtlabel">
                                 <FormattedAsset
                                     amount={coreAsset.getIn(["dynamic", "confidential_supply"])}
@@ -383,7 +383,7 @@ class Blocks extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="grid-block medium-6 show-for-medium vertical no-overflow" style={{paddingBottom: 0}}>
+                    <div className="grid-block medium-6 show-for-medium vertical no-overflow" style={{paddingBottom: 0, paddingLeft: 5}}>
                         <div className="grid-block vertical no-overflow generic-bordered-box">
                                 <div ref="blocksText">
                                     <div className="block-content-header">

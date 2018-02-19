@@ -1,4 +1,48 @@
 ---------------------------------------------------------------------
+Release 2.0.180215
+---------------------------------------------------------------------
+New features
+--------
+- #686: Browser notifications for transfers
+- #904: Implement Settings UX
+- Page walkthrough guides implemented for #1139
+- #359: Added green pulsing buy button when BTS is under 1 BTS
+- Nodes hiding functionality (#1148)
+- #1091: Display Accounts ID on Accounts Page
+- #1061: Deduct Hidden Assets from Portolio Total and provide Total for Hidden
+- #776 add force settlement offset and delay to asset page (#1123)
+
+Bug fixes
+--------
+- #1130: Contacts page bugs and improvements
+- Fix styles of hidden accounts divider #1130
+- Fix issues with colours after changes in PR #1143
+- Deduct hiddenAssets from Header Account Balance #1061
+- Add valid accounts to AccountSelector typeahead for selection #993
+- #993: Enable reset of search for TypeAhead component
+- Fix #1147: Make sure backup filename is converted to lowercase
+- Help pages for #1107
+- Update steem package, fix #887
+- Remove duplicate API node entry
+- Fix Issue #889
+- Use native font family for active/hidden bold (#1128)
+- Add total balance for Hidden assets table #1061
+- Deduct hidden assets balance from total portfolio balance #1061
+- Enable deposit/withdraw links for cloud model accounts while unlocked
+- Fix issue with FormattedPrice decimals
+- Add minimal deposit warning (#1122)
+- Fix Settlement / Feed Price (#1113)
+- #1099 - Tweak account active/hidden styling
+- Fix some Exchange warnings
+- Fix for Winex gateway not generating addresses properly
+- Implemented updated UI styles
+- Fix for the asset page where unwanted wrapping occurs when there isn't a market description
+- Fixed some more typos in the German translation
+- Added colspan to fix issue with daily budget on active worker proposal
+- Removed round edges from the side of input touching the copy button.
+- Update winex gateway，need to manually get deposit address
+
+---------------------------------------------------------------------
 Release 2.0.180115
 ---------------------------------------------------------------------
 New features

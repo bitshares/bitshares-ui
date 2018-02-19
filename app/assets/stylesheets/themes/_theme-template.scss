@@ -284,7 +284,7 @@ $main-content-margin-block-bg-color
 
 
     .page-layout {
-        background-color: $bg-color;
+        background-color: lighten($account-header, 4%);
 
         .left-column {
             border-top-color: $bg-color;
@@ -375,7 +375,7 @@ $main-content-margin-block-bg-color
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 1rem .25rem;
+            padding: 0.9rem .25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -1439,7 +1439,7 @@ $main-content-margin-block-bg-color
             margin-left: 0;
             > li {
                 border-radius: 2px;
-                color: $dark-text-color;
+                color: $secondary-text-color;
                 padding: 3px 11px;
                 margin: 5px;
                 &:hover {
@@ -1452,6 +1452,20 @@ $main-content-margin-block-bg-color
                     background-color: $settings-menu-active-bg;
                 }
             }
+        }
+    }
+
+    .settings--notifications {
+        .settings--notifications--group {
+            .settings--notifications--item {
+                label {
+                    color: $settings-select-color;
+                }
+            }
+        }
+        .settings--notifications--no-browser-support {
+            color: $error-text-color;
+            font-size: 12px;
         }
     }
 
@@ -1662,6 +1676,15 @@ $main-content-margin-block-bg-color
             background-color: $account-header;
             color: $account-primarytext;
             border-color: $account-border;
+        }
+        > tbody > tr.dashboard-table--hiddenAccounts {
+            > td {
+                height: 20px;
+                text-align: left;
+                padding-left: 45px;
+                background-color: $account-header;
+                color: $account-primarytext;
+            }
         }
         > tbody > tr {
             > td {
@@ -1939,7 +1962,6 @@ $main-content-margin-block-bg-color
     align-items: center;
     flex-wrap: nowrap;
     height: 64px;
-    background-color: #3f3f3f;
 
     .menu-bar {
         overflow: visible;
@@ -1960,10 +1982,6 @@ $main-content-margin-block-bg-color
         text-align: center;
         border-radius: 0;
 
-        &.active {
-            background: #2a2a2a;
-        }
-
         .hamburger .icon {
             position: relative;
             top: 12px;
@@ -1972,15 +1990,6 @@ $main-content-margin-block-bg-color
 
     .dropdown.header-menu {
         top: 65px;
-        background-color: #2a2a2a!important;
-
-        li.divider {
-            border-bottom: 1px solid #323131!important;
-        }
-
-        > li:hover {
-            background-color: #6a6a6a;
-        }
     }
 
     .hamburger svg rect, .hamburger-x svg rect {
@@ -1988,7 +1997,6 @@ $main-content-margin-block-bg-color
     }
 
     .total-value {
-        color: #7ed321;
         text-align: right;
         font-size: 80%;
         line-height: normal;

@@ -32,6 +32,7 @@
     "title": "BitShares UI",
     "account": "Account",
     "dashboard": "Dashboard",
+    "deposit-withdraw": "Deposit/Withdraw",
     "explorer": "Explore",
     "exchange": "Exchange",
     "payments": "Send",
@@ -54,6 +55,10 @@
     "unlocked_tip": "<br/>Click to log out.<br/><br/>Closing the browser window will also log you out.",
     "account_notify": "The active account is now %(account)s",
     "account_value": "Account value"
+  },
+  "browser_notification_messages": {
+    "money_received_title": "Transfer from %(from)s",
+    "money_received_body": "Sent you %(amount)s %(symbol)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -163,6 +168,7 @@
     "unignore": "Unhide",
     "show_ignored": "Show hidden accounts",
     "hide_ignored": "Hide hidden accounts",
+    "hidden_accounts_row": "Hidden Accounts",
     "accounts": "Accounts",
     "contacts": "Contacts",
     "estimate_value": "Estimated Account value",
@@ -182,6 +188,11 @@
       "empty_black_by": "No accounts have blacklisted %(account)s.",
       "whitelist_authorities": "Whitelist authority",
       "blacklist_authorities": "Blacklist authority"
+    },
+    "transactions": {
+      "type": "Type",
+      "info": "Info",
+      "time": "Time"
     },
     "vesting": {
       "title": "Vesting balances",
@@ -930,6 +941,10 @@
     "midnightTheme": "Midnight",
     "olDarkTheme": "Openledger dark",
     "reset": "Reset settings",
+    "browser_notifications": "Browser Notifications",
+    "browser_notifications_allow": "Enable notifications",
+    "browser_notifications_additional_transfer_to_me": "Notify about transfers to my account",
+    "browser_notifications_disabled_by_browser_notify": "Your browser disabled notifications. Click to learn how enable browser notifications",
     "general": "General",
     "wallet": "Local Wallet",
     "accounts": "Accounts",

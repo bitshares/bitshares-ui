@@ -28,6 +28,10 @@
     "account_notify": "The active account is now %(account)s",
     "account_value": "Valeur de compte"
   },
+  "browser_notification_messages": {
+    "money_received_title": "Transfert à partir de %(from)s",
+    "money_received_body": "Vous a envoyé %(amount)s %(symbol)s"
+  },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
     "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
@@ -443,6 +447,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notifications de navigateurs",
+    "browser_notifications_allow": "Activer les notifications",
+    "browser_notifications_additional_transfer_to_me": "Notifier les transferts sur mon compte",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Orientation préféré pour les marchés",
     "unit": "Unité de valeur préféré",
