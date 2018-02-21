@@ -549,6 +549,14 @@ $mobile-input-bg
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
         }
+        > tbody > tr.table-empty > td {
+            padding: 5rem 0;
+            font-size: 1.5rem;
+
+            text-align: center;
+            color: $account-dimmed !important;
+            background-color: $bg-color !important;
+        }
     }
 
     // block-list
@@ -1416,11 +1424,6 @@ $mobile-input-bg
         &:hover, &:focus, &:active {
             background-color: $light-panel-bg-color;
         }
-    }
-
-    div.fm-container:hover {
-        background-color: darken($light-panel-bg-color, 5%);
-        cursor: pointer;
     }
 
     .api-node {
