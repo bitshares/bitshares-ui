@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route, IndexRoute, Redirect } from "react-router/es";
+import { Route, IndexRoute, Redirect, IndexRedirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
@@ -26,12 +26,10 @@ function errorLoading(err) {
 
 const routes = (
     <Route path="/" component={App} onEnter={willTransitionTo}>
-        <IndexRoute getComponent={(location, cb) => {
-            System.import("components/Dashboard/DashboardContainer").then(loadRoute(cb)).catch(errorLoading);
-        }}/>
+        <IndexRedirect to="/dashboard" />
         <Route path="/auth/:data" component={Auth}/>
         <Route path="/dashboard" getComponent={(location, cb) => {
-            System.import("components/Dashboard/DashboardContainer").then(loadRoute(cb)).catch(errorLoading);
+            System.import("components/Dashboard/DashboardPage").then(loadRoute(cb)).catch(errorLoading);
         }}/>
         <Route path="explorer" getComponent={(location, cb) => {
             System.import("components/Explorer/Explorer").then(loadRoute(cb)).catch(errorLoading);
