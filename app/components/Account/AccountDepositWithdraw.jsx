@@ -181,7 +181,7 @@ class AccountDepositWithdraw extends React.Component {
         let services = this.renderServices(openLedgerGatewayCoins, rudexGatewayCoins, cryptoBridgeGatewayCoins);
 
         let options = services.map((services_obj, index) => {
-            return <option key={index} value={index}>{services_obj.name}</option>;
+            return <option key={index} value={index}>{services_obj.name + '1'}</option>;
         });
 
 

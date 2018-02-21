@@ -90,7 +90,9 @@ class CryptoBridgeGateway extends React.Component {
 
         let coinOptions = filteredCoins.map(coin => {
             let option = action === "deposit" ? coin.backingCoinType.toUpperCase().replace('BRIDGE.', '') : coin.symbol.toUpperCase().replace('BRIDGE.', '')
-            return <option value={option} key={coin.symbol}>{option}</option>;
+            let displayName = option;
+            if (displayName === 'DV') displayName = 'DV7';
+            return <option value={option} key={coin.symbol}>{displayName}</option>;
         }).filter(a => {
             return a !== null;
         });

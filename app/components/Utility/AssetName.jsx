@@ -68,6 +68,10 @@ class AssetName extends React.Component {
 				replacedName = 'SUB1X';
 			}
 
+			if (name === 'BRIDGE.DV') {
+				replacedName = 'DV7';
+			}
+
 			if (prefix === 'bridge.') {
 				return (
 					<div

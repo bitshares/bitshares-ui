@@ -248,7 +248,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 <tbody>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_deposit" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset}</td>
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset === 'DV' ? 'DV7' : this.props.deposit_asset}</td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.your_account" />
@@ -270,7 +270,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                     </div>
                     <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.deposit_inst" />
-                        <label className="left-label"><Translate unsafe content="gateway.deposit_to" asset={this.props.deposit_asset} />:</label>
+                        <label className="left-label"><Translate unsafe content="gateway.deposit_to" asset={this.props.deposit_asset === 'DV' ? 'DV7' : this.props.deposit_asset } />:</label>
 
                             {this.state.loading ? <LoadingIndicator type="three-bounce"/> :
                                 this.generateDepositAddress(deposit_address_fragment, deposit_memo, memoText, clipboardText)
