@@ -14,6 +14,9 @@ import LinkToAccountById from "components/Utility/LinkToAccountById";
 import LoadingIndicator from "components/LoadingIndicator";
 import {requestDepositAddress} from "common/blockTradesMethods";
 import { blockTradesAPIs } from "api/apiConfig";
+import WalletDb from "stores/WalletDb";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import AccountActions from "actions/AccountActions";
 
 class CryptoBridgeGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -84,6 +87,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     requestNewDepositAddress() {
+
         this.setState({loading: true});
         requestDepositAddress(this._getDepositObject());
     }
@@ -106,8 +110,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     getWithdrawModalId() {
-        // console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
-        // console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
+        //console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
+        //console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
         return "withdraw_asset_"+this.props.issuer_account.get("name") + "_"+this.props.receive_asset.get("symbol");
     }
 
@@ -128,26 +132,50 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
 
     generateDepositAddress(deposit_address_fragment, deposit_memo, memoText, clipboardText ) {
-        return (
-            <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
-                <table className="table">
-                    <tbody>
-                        <tr>
-                            <td>{deposit_address_fragment}</td>
-                        </tr>
-                        {deposit_memo ? (
-                        <tr>
-                            <td>memo: {deposit_memo}</td>
-                        </tr>) : null}
-                    </tbody>
-                </table>
-                <div className="button-group" style={{paddingTop: 10}}>
-                    {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}><Translate content="gateway.copy_address" /></div> : null}
-                    {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
-                    <button className={"button"} onClick={this.requestNewDepositAddress}><Translate content="gateway.generate_new" /></button>
+
+      if (WalletDb.isLocked()) {
+           WalletUnlockActions.unlock().then(() => {
+               AccountActions.tryToSetCurrentAccount();
+           });
+
+
+            return (
+                <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
+                    <table className="table">
+                        <tbody>
+                            <tr>
+                                <td>Your wallet must be unlocked before you make a deposit</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-        );
+            );
+
+
+        } else {
+            return (
+                <div style={{padding: "10px 0", fontSize: "1.1rem", fontWeight: "bold"}}>
+                    <table className="table">
+                        <tbody>
+                            <tr>
+                                <td>{deposit_address_fragment}</td>
+                            </tr>
+                            {deposit_memo ? (
+                            <tr>
+                                <td>memo: {deposit_memo}</td>
+                            </tr>) : null}
+                        </tbody>
+                    </table>
+                    <div className="button-group" style={{paddingTop: 10}}>
+                        {deposit_address_fragment ? <div className="button" onClick={this.toClipboard.bind(this, clipboardText)}><Translate content="gateway.copy_address" /></div> : null}
+                        {memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}
+                        <button className={"button"} onClick={this.requestNewDepositAddress}><Translate content="gateway.generate_new" /></button>
+                    </div>
+                </div>
+            );
+
+        }
+
     }
 
     render() {
@@ -331,7 +359,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 output_coin_symbol={this.props.deposit_asset}
                                 output_coin_type={this.props.deposit_coin_type}
                                 output_wallet_type={this.props.deposit_wallet_type}
-								output_supports_memos={this.props.supports_output_memos}
+                                output_supports_memos={this.props.supports_output_memos}
                                 transactionFee={this.props.transactionFee}
                                 symbol={this.props.symbol}
                                 memo_prefix={withdraw_memo_prefix}
