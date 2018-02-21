@@ -542,7 +542,7 @@ class AccountOverview extends React.Component {
             ]}
         />;
 
-
+        if (includedBalances) {
         includedBalances.push(
             <tr key="portfolio" className="total-value">
                 <td style={{textAlign: "left", paddingLeft: 10}}>{totalValueText}</td>
@@ -550,6 +550,7 @@ class AccountOverview extends React.Component {
                 <td className="column-hide-small"></td>
                 <td className="column-hide-small" style={{textAlign: "right"}}>{portFolioValue}</td>
                 <td colSpan="8"></td></tr>);
+        }
 
 
         let showAssetPercent = settings.get("showAssetPercent", false);

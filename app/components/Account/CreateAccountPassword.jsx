@@ -327,12 +327,13 @@ class CreateAccountPassword extends React.Component {
                 <div className="divider" />
                 <p className="txtlabel warning"><Translate unsafe content="wallet.password_lose_warning" /></p>
 
-                <div style={{width: "100%"}} onClick={() => {this.context.router.push("/dashboard");;}} className="button"><Translate content="wallet.ok_done" /></div>
+                <div style={{width: "100%"}} onClick={() => {window.location = "/";}} className="button"><Translate content="wallet.ok_done" /></div>
             </div>
         );
     }
 
     _renderGetStarted() {
+
 
         return (
             <div>
@@ -341,29 +342,29 @@ class CreateAccountPassword extends React.Component {
 
                         <tr>
                             <td><Translate content="wallet.tips_dashboard" />:</td>
-                            <td><Link to="/dashboard"><Translate content="header.dashboard" /></Link></td>
+                            <td><a href="/dashboard"><Translate content="header.dashboard" /></a></td>
                         </tr>
 
                         <tr>
                             <td><Translate content="wallet.tips_account" />:</td>
-                            <td><Link to={`/account/${this.state.accountName}/overview`} ><Translate content="wallet.link_account" /></Link></td>
+                            <td><a href={`/account/${this.state.accountName}/overview`} ><Translate content="wallet.link_account" /></a></td>
                         </tr>
 
                         <tr>
                             <td><Translate content="wallet.tips_deposit" />:</td>
-                            <td><Link to="/deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
+                            <td><a href="/deposit-withdraw"><Translate content="wallet.link_deposit" /></a></td>
                         </tr>
 
 
 
                         <tr>
                             <td><Translate content="wallet.tips_transfer" />:</td>
-                            <td><Link to="/transfer"><Translate content="wallet.link_transfer" /></Link></td>
+                            <td><a href="/transfer"><Translate content="wallet.link_transfer" /></a></td>
                         </tr>
 
                         <tr>
                             <td><Translate content="wallet.tips_settings" />:</td>
-                            <td><Link to="/settings"><Translate content="header.settings" /></Link></td>
+                            <td><a href="/settings"><Translate content="header.settings" /></a></td>
                         </tr>
                     </tbody>
 

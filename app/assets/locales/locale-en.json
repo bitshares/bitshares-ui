@@ -1384,6 +1384,7 @@
     "receive_account": "Receiving account:",
     "deposit_summary": "Deposit summary",
     "deposit_inst": "Deposit instructions",
+    "deposit_login": "Your wallet must be unlocked before you make a deposit",
     "recent_deposit": "Recent deposits",
     "recent_withdraw": "Recent withdrawals",
     "withdraw_summary": "Withdrawal summary",

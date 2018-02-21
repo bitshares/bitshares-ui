@@ -1385,6 +1385,7 @@
     "receive_account": "受け取りアカウント:",
     "deposit_summary": "入金概要",
     "deposit_inst": "入金指示",
+    "deposit_login": "入金するにはウォレットのロックを解除する必要があります",
     "recent_deposit": "最近の入金",
     "recent_withdraw": "最近の出金",
     "withdraw_summary": "出金概要",

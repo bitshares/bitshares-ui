@@ -789,6 +789,7 @@ class Exchange extends React.Component {
                 base: currentBase,
                 quote: currentQuote,
             }).toReal().toString();
+
         }
     }
 
@@ -813,8 +814,11 @@ class Exchange extends React.Component {
 
     _onInputSell(type, isBid, e) {
         let current = this.state[type];
+
         // const isBid = type === "bid";
         current.for_sale.setAmount({real: parseFloat(e.target.value) || 0});
+
+
 
         if (current.price.isValid()) {
             this._setReceive(current, isBid);

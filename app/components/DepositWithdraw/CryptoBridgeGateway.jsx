@@ -20,6 +20,7 @@ class CryptoBridgeGateway extends React.Component {
     }
 
     _getActiveCoin(props, state) {
+        state = 'deposit';
         let cachedCoin = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
 		let firstTimeCoin = null;
 		if ((props.provider == 'cryptobridge') && (state.action == 'deposit')) {
@@ -64,7 +65,7 @@ class CryptoBridgeGateway extends React.Component {
 
         let activeCoin = this._getActiveCoin(this.props, {action: type});
 
-
+        console.log(activeCoin);
         this.setState({
             action: type,
             activeCoin: activeCoin
@@ -90,9 +91,11 @@ class CryptoBridgeGateway extends React.Component {
 
         let coinOptions = filteredCoins.map(coin => {
             let option = action === "deposit" ? coin.backingCoinType.toUpperCase().replace('BRIDGE.', '') : coin.symbol.toUpperCase().replace('BRIDGE.', '')
+            let name = coin.name;
             let displayName = option;
             if (displayName === 'DV') displayName = 'DV7';
-            return <option value={option} key={coin.symbol}>{displayName}</option>;
+            if (displayName === 'NLC') displayName = 'NLC2';
+            return <option value={option} key={coin.symbol}>{displayName} - {name}</option>;
         }).filter(a => {
             return a !== null;
         });
@@ -138,8 +141,7 @@ class CryptoBridgeGateway extends React.Component {
                         </div>
                     </div>
                 </div>
-
-                {!coin ? null :
+                {!coin ? <LoadingIndicator/> :
                 <div>
 
 

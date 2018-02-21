@@ -49,7 +49,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         this.state = {
             receive_address: null,
             url: props.url || urls[props.gateway],
-            loading: false
+            loading: false,
+            requestedDeposit: false
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -79,7 +80,11 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
     componentWillMount() {
         let account_name = this.props.account.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+        let receive_address;
+        if (this.props.deposit_coin_type !== 'bridge.smart') {
+            receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+        }
+
         if (!receive_address || receive_address.address === 'unknown') {
             this.setState({loading: true});
             requestDepositAddress(this._getDepositObject());
@@ -87,9 +92,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     requestNewDepositAddress() {
-
-        this.setState({loading: true});
-        requestDepositAddress(this._getDepositObject());
+        if (!this.state.requestedDeposit) {
+            this.setState({loading: true, requestedDeposit: true});
+            requestDepositAddress(this._getDepositObject());
+        }
     }
 
     componentWillUnmount() {
@@ -97,10 +103,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     addDepositAddress( receive_address ) {
-        this.setState({loading: false});
+        this.setState({loading: false, requestedDeposit: false});
         let account_name = this.props.account.get("name");
         try {
-            this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, receive_address.memo);
+            this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, c_address.memo);
         } catch (err) {
 
         }
@@ -144,7 +150,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                     <table className="table">
                         <tbody>
                             <tr>
-                                <td>Your wallet must be unlocked before you make a deposit</td>
+                                <td><Translate content="gateway.deposit_login" /></td>
                             </tr>
                         </tbody>
                     </table>
@@ -178,9 +184,22 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
     }
 
+    renameAssets(asset) {
+        switch (asset) {
+            case 'DV':
+                return 'DV7';
+                break;
+            case 'NLC':
+                return 'NLC2';
+                break;
+
+        }
+        return asset;
+    }
+
     render() {
 
-        let emptyRow = <div style={{display:"none", minHeight: 150}}></div>;
+        let emptyRow = <div><LoadingIndicator type="three-bounce"/></div>;
         if( !this.props.account || !this.props.issuer_account || !this.props.receive_asset )
             return emptyRow;
 
@@ -218,10 +237,13 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         let receive_address = this.state.receive_address;
 
+
+
         if( !receive_address )  {
             let account_name = this.props.account.get("name");
             receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
         }
+
 
         if( !receive_address ) {
             //this.setState({loading: true});
@@ -276,7 +298,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 <tbody>
                                     <tr>
                                         <Translate component="td" content="gateway.asset_to_deposit" />
-                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.props.deposit_asset === 'DV' ? 'DV7' : this.props.deposit_asset}</td>
+                                        <td style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>{this.renameAssets(this.props.deposit_asset)}</td>
                                     </tr>
                                     <tr>
                                         <Translate component="td" content="gateway.your_account" />
@@ -298,7 +320,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                     </div>
                     <div className="small-12 medium-7">
                         <Translate component="h4" content="gateway.deposit_inst" />
-                        <label className="left-label"><Translate unsafe content="gateway.deposit_to" asset={this.props.deposit_asset === 'DV' ? 'DV7' : this.props.deposit_asset } />:</label>
+                        <label className="left-label"><Translate unsafe content="gateway.deposit_to" asset={this.renameAssets(this.props.deposit_asset) } />:</label>
 
                             {this.state.loading ? <LoadingIndicator type="three-bounce"/> :
                                 this.generateDepositAddress(deposit_address_fragment, deposit_memo, memoText, clipboardText)

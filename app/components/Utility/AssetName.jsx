@@ -72,6 +72,10 @@ class AssetName extends React.Component {
 				replacedName = 'DV7';
 			}
 
+			if (name === 'BRIDGE.NLC') {
+				replacedName = 'NLC2';
+			}
+
 			if (prefix === 'bridge.') {
 				return (
 					<div

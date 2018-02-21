@@ -23,6 +23,10 @@ class BlockTradesDepositAddressCache {
     // returns {"address": address, "memo": memo}, with a null memo if not applicable
     getCachedInputAddress(exchange_name, account_name, input_coin_type, output_coin_type)
     {
+        if (input_coin_type === 'bridge.smart') {
+            return null;
+        }
+
         let wallet = WalletDb.getWallet();
         wallet = null;
 
@@ -49,6 +53,11 @@ class BlockTradesDepositAddressCache {
 
     cacheInputAddress(exchange_name, account_name, input_coin_type, output_coin_type, address, memo)
     {
+
+        if (input_coin_type === 'bridge.smart') {
+            return null;
+        }
+
         if (!address) return;
         let wallet = WalletDb.getWallet();
         wallet = null;
