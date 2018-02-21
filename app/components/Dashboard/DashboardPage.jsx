@@ -1,10 +1,25 @@
 import React from "react";
+import { connect } from "alt-react";
+
+import LoadingIndicator from "../LoadingIndicator";
+import LoginSelector from "../LoginSelector";
+import AccountStore from "stores/AccountStore";
 
 import { Tabs, Tab } from "../Utility/Tabs";
 import { StarredMarkets, TopMarkets, FeaturedMarkets } from "./Markets";
 
 class DashboardPage extends React.Component {
     render() {
+        let { linkedAccounts, myIgnoredAccounts, accountsReady, passwordAccount } = this.props;
+        if (!accountsReady) {
+            return <LoadingIndicator />;
+        }
+        
+        let accountCount = linkedAccounts.size + myIgnoredAccounts.size + (passwordAccount ? 1 : 0);
+        if (!accountCount) {
+            return <LoginSelector />;
+        }
+
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block no-padding">
@@ -31,4 +46,18 @@ class DashboardPage extends React.Component {
     }
 }
 
-export default DashboardPage;
+export default connect(DashboardPage, {
+    listenTo () {
+        return [AccountStore];
+    },
+    getProps() {
+        let { linkedAccounts, myIgnoredAccounts, passwordAccount, accountsLoaded, refsLoaded } = AccountStore.getState();
+
+        return {
+            linkedAccounts,
+            myIgnoredAccounts,
+            passwordAccount,
+            accountsReady: accountsLoaded && refsLoaded
+        };
+    }
+});
