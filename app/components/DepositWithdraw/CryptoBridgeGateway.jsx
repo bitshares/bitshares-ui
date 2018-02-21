@@ -20,7 +20,7 @@ class CryptoBridgeGateway extends React.Component {
     }
 
     _getActiveCoin(props, state) {
-        state = 'deposit';
+        state.action = 'deposit';
         let cachedCoin = props.viewSettings.get(`activeCoin_${props.provider}_${state.action}`, null);
 		let firstTimeCoin = null;
 		if ((props.provider == 'cryptobridge') && (state.action == 'deposit')) {
@@ -30,6 +30,7 @@ class CryptoBridgeGateway extends React.Component {
 			firstTimeCoin = 'BRIDGE.BCO';
 		}
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
+        console.log('Active COIN = ', activeCoin);
         return activeCoin;
     }
 
@@ -103,6 +104,7 @@ class CryptoBridgeGateway extends React.Component {
         let coin = filteredCoins.filter(coin => {
             return (action === "deposit" ? coin.backingCoinType.toUpperCase().replace('BRIDGE.', '') === activeCoin : coin.symbol.toUpperCase().replace('BRIDGE.', '') === activeCoin);
         })[0];
+        console.log('ACTIVE COIN: ' , activeCoin);
 
         if (!coin) coin = filteredCoins[0];
 
@@ -113,6 +115,8 @@ class CryptoBridgeGateway extends React.Component {
         let issuer = issuers[provider];
 
         let isDeposit = this.state.action === "deposit";
+
+        console.log('LOG:' , coin);
 
         return (
 
@@ -146,6 +150,7 @@ class CryptoBridgeGateway extends React.Component {
 
 
                     <div style={{marginBottom: 15}}>
+
                         <CryptoBridgeGatewayDepositRequest
                             key={`${provider}.${coin.symbol}`}
                             gateway={provider}
