@@ -8,3 +8,4 @@ require("file-loader?name=language-dropdown/[name].[ext]!./img/IT.png");
 require("file-loader?name=language-dropdown/KO.[ext]!./img/KR.png");
 require("file-loader?name=language-dropdown/[name].[ext]!./img/ES.png");
 require("file-loader?name=language-dropdown/[name].[ext]!./img/RU.png");
+require("file-loader?name=language-dropdown/[name].[ext]!./img/JA.png");
