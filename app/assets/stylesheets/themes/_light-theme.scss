@@ -55,6 +55,8 @@ $pulsate-green-end:#70c117;
 $pulsate-red-start:$negative-color;
 $pulsate-red-end:#e87f84;
 
+$modal-bg-color: #fff;
+
 .lightTheme {
   @include theme(
     $primary-text-color,
@@ -99,7 +101,8 @@ $pulsate-red-end:#e87f84;
     $settings-menu-hover-bg,
     $settings-menu-active-bg,
     $settings-api-node-border-color,
-    $main-content-margin-block-bg-color
+    $main-content-margin-block-bg-color,
+    $modal-bg-color
   );
 
   .change-up {
