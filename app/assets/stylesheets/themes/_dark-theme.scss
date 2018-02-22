@@ -56,6 +56,8 @@ $pulsate-red-end:#ef4040;
 
 $modal-bg-color: #2a2a2a;
 
+$mobile-input-bg: #4b5158;
+
 .darkTheme {
   @include theme(
     $primary-text-color,
@@ -101,6 +103,7 @@ $modal-bg-color: #2a2a2a;
     $settings-menu-active-bg,
     $settings-api-node-border-color,
     $main-content-margin-block-bg-color,
-    $modal-bg-color
+    $modal-bg-color,
+    $mobile-input-bg
   );
 }
