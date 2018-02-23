@@ -12,7 +12,7 @@ import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
 // import { launchIntroJS } from "";
 import "intro.js/introjs.css";
-import guide from "intro.js"
+import guide from "intro.js";
 
 class Footer extends React.Component {
 
@@ -193,7 +193,7 @@ class Footer extends React.Component {
 
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
-        this.context.router.push("/settings");
+        this.context.router.push("/settings/access");
     }
 }
 Footer = BindToChainState(Footer, {keep_updating: true});

@@ -26,8 +26,7 @@ class Settings extends React.Component {
         let menuEntries = this._getMenuEntries(props);
         let activeSetting = 0;
 
-        let tabIndex = menuEntries.indexOf(props.params.tab);
-
+        let tabIndex = !!props.params.tab ? menuEntries.indexOf(props.params.tab) : props.viewSettings.get("activeSetting", 0);
         if(tabIndex >= 0)
             activeSetting = tabIndex;
 
@@ -217,6 +216,7 @@ class Settings extends React.Component {
         const {menuEntries, activeSetting, settingEntries} = this.state;
         let entries;
         let activeEntry = menuEntries[activeSetting] || menuEntries[0];
+
         switch (activeEntry) {
 
         case "accounts":
