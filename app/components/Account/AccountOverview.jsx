@@ -17,7 +17,7 @@ import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import {Link} from "react-router/es";
 import ChainTypes from "../Utility/ChainTypes";
-import EquivalentPrice from "../Utility/EquivalentPrice";
+import PulsingEquivalentPrice from "../Utility/PulsingEquivalentPrice";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
@@ -305,7 +305,7 @@ class AccountOverview extends React.Component {
                         {hasBalance || hasOnOrder ? <BalanceComponent balance={balance} hide_asset /> : null}
                     </td>
                     <td style={{textAlign: "right"}} className="column-hide-small">
-                        <EquivalentPrice
+                        <PulsingEquivalentPrice
                             refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             fromAsset={asset.get("id")}
                             hide_symbols
