@@ -137,7 +137,7 @@ class EquivalentPrice extends MarketStatsCheck {
 
         let finalPrice;
         if (toPrice && fromPrice) {
-            if(fromPrice.base.amount == 0) return null;
+            if(fromPrice.base.amount == 0 || toPrice.base.amount == 0) return null;
             finalPrice = toPrice.times(fromPrice);
         } else if (toPrice) {
             finalPrice = toPrice;
