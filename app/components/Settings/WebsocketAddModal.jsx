@@ -20,13 +20,20 @@ class WebsocketAddModal extends React.Component {
             name: "My node",
             type: "remove",
             remove: {},
-            addError: null
+            addError: null,
+            existsError: null,
         };
     }
 
     onServerInput(e) {
         let state = {
             ws: e.target.value  
+        }
+
+        if (this.apiExists(state.ws)) {
+            state.existsError = true
+        } else {
+            state.existsError = null
         }
 
         if(state.ws.indexOf(wss) !== 0 && state.ws.indexOf(ws) !== 0){
@@ -36,6 +43,10 @@ class WebsocketAddModal extends React.Component {
         }
 
         this.setState(state);
+    }
+
+    apiExists(url) {
+        return !!this.props.apis.find((api) => api.url === url);
     }
 
     onNameInput(e){
@@ -114,9 +125,11 @@ class WebsocketAddModal extends React.Component {
                             </li>
                         </ul>
                         {this.state.addError && <p style={{marginBottom: '1em'}}><Translate content="settings.valid_node_url" /></p>}
+                        {this.state.existsError && <p style={{marginBottom: '1em'}}><Translate content="settings.node_already_exists" /></p>}
                         </section>
                         <div className="button-group">
-                            <button type="submit" className={"button " + (this.state.addError ? "disabled" : "")} onClick={this.onAddSubmit.bind(this)} disabled={this.state.addError} >
+                            <button type="submit" className={"button " + (this.state.addError || this.state.existsError ? "disabled" : "")}
+                                    onClick={this.onAddSubmit.bind(this)} disabled={this.state.addError} >
                                 <Translate content="transfer.confirm" />
                             </button>
                             <Trigger close={"ws_modal_add"}>

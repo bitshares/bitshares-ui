@@ -998,6 +998,7 @@
     "activate": "Activate",
     "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
     "valid_node_url": "Node URL must begin with ws:// or wss://",
+    "node_already_exists": "Node with such URL already exists",
     "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes",
     "low_latency": "Low latency",
     "medium_latency": "Medium latency",
