@@ -331,7 +331,7 @@ class Witnesses extends React.Component {
 
         let content =
             <div className="grid-block">
-                <div className="grid-block page-layout">
+                <div className="grid-block">
                     <div className="grid-block vertical small-5 medium-3">
                         <div className="grid-content">
                             <br/>
@@ -359,7 +359,7 @@ class Witnesses extends React.Component {
                                     </tr>
                                     <tr>
                                         <td><Translate content="explorer.witnesses.next_vote"/></td>
-                                        <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time)} /></td>
+                                        <td> <TimeAgo time={new Date(dynGlobalObject.next_maintenance_time + "Z")} /></td>
                                     </tr>
                                     <tr>
                                        <td> <Translate component="h4" content="markets.filter" /> </td>

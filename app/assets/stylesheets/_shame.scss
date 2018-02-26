@@ -192,6 +192,12 @@ table > tbody > tr.control-row > td {
   border-radius: 0px;
 }
 
+@media screen and (max-width: 640px) {
+  .modal {
+    background: #2a2a2a!important;
+  }
+}
+
 div.modal {
   overflow: visible !important;
 }
@@ -234,7 +240,7 @@ div.disabled input {
 }
 
 .memo {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   word-break: break-word;
 }
 
@@ -294,6 +300,10 @@ label.inline {
 
   .help-content h3 {
     color: white;
+  }
+
+  .help-content p {
+    font-weight: normal!important;
   }
 }
 
@@ -365,10 +375,27 @@ select.bts-select {
     appearance: menulist;
 }
 
+select.bts-select.full-width {
+  width: 100%;
+  max-width: 100%;
+}
+
 .windows select.bts-select {
     height: 2.35em;
 }
 
+@media screen and (max-width: 525px) {
+  .column-hide-xs {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .column-hide-xxs {
+    display: none !important;
+  }
+}
+  
 @media screen and (min-width: 900px) {
     .column-show-small {
         display: none !important;
@@ -443,9 +470,13 @@ section progress {
 }
 
 h4 {
-    font-weight: 600;
+    @include RobotoMedium;
 }
 
 ul > li {
     transition: background-color 0.3s ease 0s;
+}
+
+.modal {
+    border-radius: 6px!important;
 }

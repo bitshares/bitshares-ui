@@ -45,3 +45,5 @@ require("file-loader?name=asset-symbols/[name].png!./muse.png");
 require("file-loader?name=asset-symbols/[name].png!./ppy.png");
 require("file-loader?name=asset-symbols/[name].png!./stealth.png");
 require("file-loader?name=asset-symbols/[name].png!./kexcoin.png");
+require("file-loader?name=asset-symbols/[name].png!./bto.png");
+require("file-loader?name=asset-symbols/[name].png!./btm.png");

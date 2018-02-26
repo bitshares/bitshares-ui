@@ -253,6 +253,7 @@ class AccountPermissions extends React.Component {
                             setting="permissionsTab"
                             className="account-tabs"
                             tabsClass="account-overview bordered-header content-block"
+                            contentClass="padding"
                             actionButtons={<div className="action-buttons">
                                         <button className={reset_buttons_class} onClick={this.onReset} tabIndex={8}>
                                             <Translate content="account.perm.reset"/>
@@ -367,7 +368,7 @@ class AccountPermissions extends React.Component {
                             </Tab>
                         </Tabs>
 
-                        <div className="tab-content">
+                        <div className="tab-content" style={{padding: 10}}>
                             <div className="divider"></div>
 
                             <RecentTransactions

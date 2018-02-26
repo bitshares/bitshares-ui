@@ -9,8 +9,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import AccountActions from "actions/AccountActions";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
-import {requestDepositAddress, validateAddress, WithdrawAddresses} from "common/blockTradesMethods";
-import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
+import {requestDepositAddress, validateAddress, WithdrawAddresses, getDepositAddress} from "common/blockTradesMethods";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
@@ -40,7 +39,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
     constructor(props) {
         super();
-        console.log("constructor");
         this.state = {
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue:"",
@@ -51,12 +49,13 @@ class DepositWithdrawContent extends DecimalChecker {
                 precision: props.asset.get("precision")
             }),
             fee_asset_id: "1.3.0",
-            feeStatus: {}
+            feeStatus: {},
+            loading: false,
+            emptyAddressDeposit: false
         };
 
         this._validateAddress(this.state.toAddress, props);
 
-        this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
@@ -92,13 +91,9 @@ class DepositWithdrawContent extends DecimalChecker {
 
     _getDepositAddress() {
         if (!this.props.backingCoinType) return;
-        let account_name = this.props.sender.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(
-            "openledger",
-            account_name,
-            this.props.backingCoinType.toLowerCase(),
-            this.props.symbol.toLowerCase()
-        );
+
+        let receive_address =  getDepositAddress({coin: `open.${(this.props.backingCoinType).toLowerCase()}`,  account: this.props.account,  stateCallback: this.addDepositAddress})
+
         if (!receive_address) {
             requestDepositAddress(this._getDepositObject());
         } else {
@@ -117,18 +112,22 @@ class DepositWithdrawContent extends DecimalChecker {
         };
     }
 
-    addDepositAddress( receive_address ) {
-        let account_name = this.props.sender.get("name");
-        this.deposit_address_cache.cacheInputAddress(
-            "openledger",
-            account_name,
-            this.props.backingCoinType.toLowerCase(),
-            this.props.symbol.toLowerCase(),
-            receive_address.address,
-            receive_address.memo
-        );
+    requestDepositAddressLoad(){
         this.setState({
-            receive_address
+            loading: true,
+            emptyAddressDeposit: false
+        });
+        requestDepositAddress(this._getDepositObject());
+    }
+
+    addDepositAddress( receive_address ) {
+        if(receive_address.error){
+            receive_address.error.message === "no_address" ? this.setState({emptyAddressDeposit: true}) : this.setState({emptyAddressDeposit: false})
+        };
+
+        this.setState({
+            receive_address,
+            loading: false
         });
     }
 
@@ -448,7 +447,7 @@ class DepositWithdrawContent extends DecimalChecker {
                     <div className="SimpleTrade__withdraw-row">
                         <label className="left-label">{counterpart.translate("transfer.memo")}</label>
                             <div className="inline-label input-wrapper">
-                                <textarea rows="1" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
+                                <textarea rows="3" value={this.state.memo} tabIndex={tabIndex++} onChange={this._onMemoChanged.bind(this)} />
                             </div>
                         {!this.state.validAddress && this.state.toAddress ? <div className="has-error" style={{paddingTop: 10}}><Translate content="gateway.valid_address" coin_type={assetName} /></div> : null}
                     </div>
@@ -464,7 +463,7 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _renderDeposit() {
-        const {receive_address} = this.state;
+        const {receive_address, loading, emptyAddressDeposit} = this.state;
         const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
         const hasMemo = receive_address && "memo" in receive_address && receive_address.memo;
         const addressValue = receive_address && receive_address.address || "";
@@ -492,15 +491,10 @@ class DepositWithdrawContent extends DecimalChecker {
                 <div className="SimpleTrade__withdraw-row">
                     <p style={{marginBottom: 10}} data-place="right" data-tip={counterpart.translate("tooltip.deposit_tip", {asset: assetName})}>
                         <Translate className="help-tooltip" content="gateway.deposit_to" asset={assetName} />:
+                        <label className="fz_12 left-label"><Translate content="gateway.deposit_notice_delay" /></label>
                     </p>
                     {!addressValue ? <LoadingIndicator type="three-bounce"/> :<label>
-                        <span className="inline-label">
-                            <input readOnly type="text" value={addressValue} />
-
-                            <CopyButton
-                                text={addressValue}
-                            />
-                        </span>
+                       {emptyAddressDeposit ? <Translate content="gateway.please_generate_address" /> : <span className="inline-label"><input readOnly type="text" value={addressValue} /><CopyButton text={addressValue} /> </span> }
                     </label>}
                     {hasMemo ?
                         <label>
@@ -520,8 +514,8 @@ class DepositWithdrawContent extends DecimalChecker {
                 </div>
 
                 <div className="button-group SimpleTrade__withdraw-row">
-                    <button tabIndex={tabIndex++} className="button" onClick={requestDepositAddress.bind(null, this._getDepositObject())} type="submit" >
-                        <Translate content="gateway.generate_new" />
+                    <button tabIndex={tabIndex++} className="button spinner-button-circle" onClick={this.requestDepositAddressLoad.bind(this)} type="submit" >
+                        {loading ? <LoadingIndicator type="circle" /> : null}<Translate content="gateway.generate_new" />
                     </button>
                 </div>
             </div>

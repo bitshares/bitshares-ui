@@ -21,6 +21,7 @@ import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import AccountImage from "../Account/AccountImage";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
+import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
 
 class AccountDepositWithdraw extends React.Component {
 
@@ -126,7 +127,7 @@ class AccountDepositWithdraw extends React.Component {
                         {/* <div className="float-right">
                             <a href="https://www.ccedk.com/" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a>
                         </div> */}
-                        <div className="service-selector">
+                        <div className="service-selector" style={{marginBottom:"2rem"}}>
                             <ul className="button-group segmented no-margin">
                                 <li onClick={this.toggleOLService.bind(this, "gateway")} className={olService === "gateway" ? "is-active" : ""}><a><Translate content="gateway.gateway" /></a></li>
                                 <li onClick={this.toggleOLService.bind(this, "fiat")} className={olService === "fiat" ? "is-active" : ""}><a>Fiat</a></li>
@@ -142,7 +143,7 @@ class AccountDepositWithdraw extends React.Component {
 
                         {olService === "fiat" ?
                         <div>
-                            <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.fiat_text" /></div>
+                            <div style={{paddingBottom: 15}}><Translate component="h5" content="gateway.fiat_text" unsafe /></div>
 
                             <OpenLedgerFiatDepositWithdrawal
                                 rpc_url={settingsAPIs.RPC_URL}
@@ -160,7 +161,7 @@ class AccountDepositWithdraw extends React.Component {
             name: "RuDEX (RUDEX.X)",
             template: (
                 <div className="content-block">
-                    <div className="service-selector">
+                    <div className="service-selector" style={{marginBottom:"2rem"}}>
                         <ul className="button-group segmented no-margin">
                             <li onClick={this.toggleRuDEXService.bind(this, "gateway")}
                                 className={rudexService === "gateway" ? "is-active" : ""}><a><Translate
@@ -188,7 +189,7 @@ class AccountDepositWithdraw extends React.Component {
                         <div className="content-block">
                             {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
 
-                            <div className="service-selector">
+                            <div className="service-selector" style={{marginBottom:"2rem"}}>
                                 <ul className="button-group segmented no-margin">
                                     <li onClick={this.toggleBTService.bind(this, "bridge")} className={btService === "bridge" ? "is-active" : ""}><a><Translate content="gateway.bridge" /></a></li>
                                 </ul>
@@ -227,6 +228,20 @@ class AccountDepositWithdraw extends React.Component {
                 </div>
             )
         });
+
+        serList.push({
+            name: "Winex",
+            template: (
+                <div>
+
+                    <WinexGateway
+                        account={account}
+                        provider="Winex"/>
+                </div>
+            )
+        });
+
+
         return serList;
     }
 
@@ -262,7 +277,7 @@ class AccountDepositWithdraw extends React.Component {
             return <option key={index} value={index}>{services_obj.name}</option>;
         });
 
-        const serviceNames = ["GDEX", "OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
+        const serviceNames = ["Winex","GDEX", "OPEN", "RUDEX", "TRADE", "BITKAPITAL"];
         const currentServiceName = serviceNames[activeService];
         const currentServiceDown = servicesDown.get(currentServiceName);
 

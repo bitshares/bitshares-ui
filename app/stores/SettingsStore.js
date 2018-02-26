@@ -30,6 +30,8 @@ class SettingsStore {
             onClearStarredMarkets: SettingsActions.clearStarredMarkets,
             onAddWS: SettingsActions.addWS,
             onRemoveWS: SettingsActions.removeWS,
+            onShowWS: SettingsActions.showWS,
+            onHideWS: SettingsActions.hideWS,
             onHideAsset: SettingsActions.hideAsset,
             onClearSettings: SettingsActions.clearSettings,
             onSwitchLocale: IntlActions.switchLocale,
@@ -47,7 +49,13 @@ class SettingsStore {
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
-            passwordLogin: true
+            passwordLogin: true,
+            browser_notifications: {
+                allow: true,
+                additional: {
+                    transferToMe: true
+                }
+            }
         });
 
         // If you want a default value to be translated, add the translation to settings in locale-xx.js
@@ -112,13 +120,7 @@ class SettingsStore {
             let olIdx = savedDefaults.themes.findIndex(a => a === "olDarkTheme");
             if (olIdx !== -1) savedDefaults.themes[olIdx] = "midnightTheme";
         }
-        if (savedDefaults.apiServer) {
-            savedDefaults.apiServer = savedDefaults.apiServer.filter(a => {
-                return !defaults.apiServer.find(b => {
-                    return b.url === a.url;
-                });
-            });
-        }
+
         this.defaults = merge({}, defaults, savedDefaults);
 
         (savedDefaults.apiServer || []).forEach(api => {
@@ -178,7 +180,8 @@ class SettingsStore {
                     "OPEN.INCNT", "KAPITAL", "OPEN.MAID", "OPEN.SBD", "OPEN.GRC",
                     "YOYOW", "HERO", "RUBLE", "SMOKE", "STEALTH", "BRIDGE.BCO",
                     "BRIDGE.BTC", "KEXCOIN", "PPY", "OPEN.EOS", "OPEN.OMG", "CVCOIN",
-                    "BRIDGE.ZNY", "BRIDGE.MONA", "OPEN.LTC"
+                    "BRIDGE.ZNY", "BRIDGE.MONA", "OPEN.LTC", "GDEX.BTC", "GDEX.EOS", "GDEX.ETH",
+                    "GDEX.BTO", "WIN.ETH", "WIN.ETC", "WIN.HSR"
                 ],
                 markets_39f5e2ed: [ // TESTNET
                     "PEG.FAKEUSD", "BTWTY"
@@ -336,6 +339,18 @@ class SettingsStore {
 
     onRemoveWS(index) {
         this.defaults.apiServer.splice(index, 1);
+        ss.set("defaults_v1", this.defaults);
+    }
+
+    onHideWS(url) {
+        let node = this.defaults.apiServer.find((node) => node.url === url);
+        node.hidden = true;
+        ss.set("defaults_v1", this.defaults);
+    }
+
+    onShowWS(url) {
+        let node = this.defaults.apiServer.find((node) => node.url === url);
+        node.hidden = false;
         ss.set("defaults_v1", this.defaults);
     }
 

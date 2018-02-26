@@ -4,6 +4,7 @@
 $primary-text-color,
 $bg-color,
 $dark-text-color,
+$inactive-text-color,
 $link-text-color,
 $light-text-color,
 $secondary-text-color,
@@ -32,8 +33,57 @@ $account-primarytext,
 $account-dimmed,
 $account-border,
 $account-background,
-$account-tabs-background
+$account-tabs-background,
+$pulsate-green-start,
+$pulsate-green-end,
+$pulsate-red-start,
+$pulsate-red-end,
+$settings-select-bg,
+$settings-select-color,
+$settings-menu-hover-bg,
+$settings-menu-active-bg,
+$settings-api-node-border-color,
+$main-content-margin-block-bg-color
 ) {
+
+  $hamburger-submenu-display-endpoint: 990px;
+
+  .settings-select {
+    height: 36px;
+    padding: 0 12px;
+    background-color: $settings-select-bg;
+    color: $settings-select-color;
+  }
+
+  .settings-input {
+    /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
+    .block-list and it uses on many places. To keep everything OK and do not break something I just do
+    overwrite for Inputs on settings and keep default styles for inputs on another places.
+    */
+    color: $settings-select-color !important;
+    height: 36px !important;
+    background-color: $settings-select-bg !important;
+    border-bottom: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .dark-text-color {
+    color: $dark-text-color;
+  }
+
+  .fz_12 {
+    font-size: 12px;
+  }
+
+  .spinner-button-circle .circle-wrapper{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 7px;
+    margin-top: -2px;
+    .circle:before{
+      background-color: #fff;
+    }
+  }
 
     .font-secondary {
         color: $secondary-text-color;
@@ -100,6 +150,22 @@ $account-tabs-background
     }
 
     .txtlabel.cancel, .label.alert {
+        color: $alert-color;
+    }
+
+    .txtann.success {
+        color: $success-color;
+    }
+
+    .txtann.info {
+        color: $info-color;
+    }
+
+    .txtann.warning {
+        color: $warning-color;
+    }
+
+    .txtann.error {
         color: $alert-color;
     }
 
@@ -218,13 +284,12 @@ $account-tabs-background
 
 
     .page-layout {
-        background-color: $bg-color;
+        background-color: lighten($account-header, 4%);
 
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
             background-color: $panel-bg-color; //lighten($bg-color, 4%);
-
         }
 
         .left-column-2 {
@@ -235,6 +300,11 @@ $account-tabs-background
 
         .main-content {
             background-color: $bg-color;
+
+          &.margin-block {
+            background-color: $main-content-margin-block-bg-color;
+          }
+
         }
 
         .right-column {
@@ -243,6 +313,10 @@ $account-tabs-background
             background-color: darken($bg-color, 4%);
         }
 
+    }
+
+    .asset-prefix {
+        color: $light-text-color !important;
     }
 
     .transfer-top {
@@ -299,18 +373,33 @@ $account-tabs-background
             color: $account-green;
         }
 
+        div.header-right-lock {
+            cursor: pointer;
+            padding: 0.9rem .25rem;
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
         div.dropdown-wrapper {
             > li {
-                > div.table-cell {
-                    &:nth-child(1):hover {
-                        background-color: $bg-color;
-                    }
-
-                    &:nth-child(2):hover {
-                        background-color: $bg-color;
-                    }
+                div.hamburger > .icon > svg rect {
+                    fill: $bs-blue;
                 }
             }
+            &:hover {
+                background-color: $bg-color;
+            }
+        }
+
+        div.dropdown-wrapper.hover-transparent {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        div.dropdown-wrapper.cursor-default {
+          cursor: default;
         }
 
         div.dropdown-wrapper.active {
@@ -320,8 +409,10 @@ $account-tabs-background
                 background-color: $bg-color;
             }
 
-            span.caret {
-                color: $link-text-color;
+            > li {
+                div.hamburger > .icon > svg rect {
+                    fill: $link-text-color;
+                }
             }
         }
 
@@ -344,10 +435,33 @@ $account-tabs-background
                 }
             }
         }
+
+        ul.dropdown.header-submenu {
+            > li {
+                &.parent-item {
+                    background-color: $main-content-margin-block-bg-color;
+                    color: $dark-text-color;
+                    &:hover {
+                        color: lighten($dark-text-color, 10%);
+                        background-color: lighten($main-content-margin-block-bg-color, 10%);
+                    }
+                }
+            }
+        }
     }
 
+    @media (max-width: $hamburger-submenu-display-endpoint) {
+        ul.dropdown.header-menu {
+            li.mobile-only {
+                display: block;
+            }
+            li.desktop-only {
+                display: none;
+            }
+        }
+    }
 
-    .header span.icon.lock-unlock > svg > path {
+    .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
 
@@ -375,9 +489,9 @@ $account-tabs-background
             &:hover {
                 color: $info-color;
             }
-            > span { font-weight: bold; }
+            > span { @include RobotoMedium; }
         }
-        svg > path { fill: $secondary-text-color; }
+        svg > path { fill: #fff; }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
@@ -428,6 +542,7 @@ $account-tabs-background
         }
         > tbody > tr > td {
             border-bottom-color: $dark-text-color;
+            font-size: 0.875rem;
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
@@ -455,6 +570,20 @@ $account-tabs-background
             margin-left: 0;
             margin-bottom: 1rem;
             color: $secondary-text-color;
+        }
+        &.no-border-bottom {
+          li {
+            border-bottom: 0;
+          }
+        }
+
+        li.with-dropdown {
+          .settings-select {
+            @extend .settings-select;
+          }
+          > input.settings-input[type="text"] {
+            @extend .settings-input;
+          }
         }
     }
 
@@ -543,7 +672,7 @@ $account-tabs-background
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"] {
+    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"], select[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -553,6 +682,10 @@ $account-tabs-background
         &:focus {
             border-color: #aaa;
         }
+    }
+
+    textarea {
+        line-height: 22px;
     }
 
     // Typeahead
@@ -594,6 +727,19 @@ $account-tabs-background
         }
     }
 
+    .tab-content {
+        background-color: lighten($account-header, 4%);
+        div.header-selector {
+            .filter input {
+                background-color: $bg-color;
+            }
+            .selector {
+                .inactive {
+                    color: $inactive-text-color;
+                }
+            }
+        }
+    }
 
 
     // Exchange
@@ -626,12 +772,12 @@ $account-tabs-background
 
     .value.negative {
         color: $ask-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .value.positive {
         color: $bid-color !important;
-        font-weight: bold;
+        @include RobotoMedium;
     }
 
     .active-bucket {
@@ -661,7 +807,7 @@ $account-tabs-background
             color: $primary-text-color;
         }
         h6 {
-            font-weight: bold;
+            @include RobotoMedium;
         }
         .bottom {
             border-top-color: $bg-color;
@@ -685,7 +831,7 @@ $account-tabs-background
             border: 2px solid $button-bg-color;
 
             > a {
-                font-weight: bold;
+                @include RobotoMedium;
                 color: $primary-text-color;
             }
         }
@@ -715,7 +861,7 @@ $account-tabs-background
     }
 
     .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 
@@ -843,11 +989,78 @@ $account-tabs-background
         color: $secondary-text-color;
     }
 
+    .help-content-layout div {
+        background-color: $bg-color !important;
+        .help-toc {
+            ul {
+                margin: 0px;
+                li {
+                    padding-top: 3px;
+                    padding-left: 5px;
+                    background: none;
+                    color: $secondary-text-color;
+                    a {
+                        color: $secondary-text-color;
+                    }
+                    a:hover {
+                        color: $light-text-color;
+                    }
+                    ul {
+                        margin-left: 1.1rem;
+                    }
+                }
+                li:hover {
+                    background-color: $header-color;
+                    a {
+                        color: $light-text-color;
+                    }
+                    a:hover {
+                        background-color: $header-color;
+                        color: $light-text-color;
+                    }
+                }
+            }
+            h4 {
+                color: $secondary-text-color;
+            }
+            a {
+                display: block;
+            }
+        }
+    }
+
     .help-content {
+        padding: 10px;
+
+        ul {
+            list-style: none;
+        }
+        li {
+            @include image($bg-color);
+            background-size: 7px 10px;
+            padding-left: 12px;
+        }
+        a {
+            color: $link-text-color;
+        }
+        a:hover {
+            background-color: $link-text-color;
+            color: $bg-color;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            width: 100%;
+            background-color: $panel-bg-color;
+        }
         code {
             color: $primary-text-color;
             background-color: transparent;
             border-color: $dark-text-color;
+        }
+        blockquote {
+            color: $secondary-text-color;
+            border-left: 3px solid $panel-bg-color;
         }
     }
 
@@ -946,10 +1159,10 @@ $account-tabs-background
     //   @include RobotoLight;
     // }
 
-    td.orderHistoryBid {
+    .orderHistoryBid {
 
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $bid-color;
         }
 
@@ -961,9 +1174,9 @@ $account-tabs-background
 
     }
 
-    td.orderHistoryAsk  {
+    .orderHistoryAsk  {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $ask-color;
         }
 
@@ -973,9 +1186,9 @@ $account-tabs-background
         }
     }
 
-    td.orderHistoryCall {
+    .orderHistoryCall {
         > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
-            font-weight: bold;
+            @include RobotoMedium;
             color: $call-color;
         }
 
@@ -985,14 +1198,15 @@ $account-tabs-background
         }
     }
 
-    table.order-table > tbody, tbody.orderbook {
-        > tr.my-order > td {
-            font-weight: bold;
-            color: $info-color;
-            > span.price-integer, > span > span.price-integer, > span >span.price-decimal {
-                color: $info-color;
-                opacity: 1;
-            }
+    .order-table .my-order {
+        > .vertical-order-table-cell, > td {
+          font-weight: bold;
+          color: $info-color;
+        }
+
+        span.price-integer, span.price-decimal {
+            color: $info-color !important;
+            opacity: 1;
         }
     }
 
@@ -1006,18 +1220,55 @@ $account-tabs-background
 
     .orderbook-latest-price {
         > div {
+            $orderbook-center-horizontal-margin: 5px;
+            margin-top: $orderbook-center-horizontal-margin;
+            margin-bottom: $orderbook-center-horizontal-margin;
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            font-weight: bold;
+            @include RobotoMedium;
             font-size: 13px;
         }
     }
 
+    .sticky-table .sticky-table-column, .sticky-table .sticky-table-header, .sticky-table .sticky-table-corner {
+        @include color($primary-text-color, $bg-color);
+    }
+
+    .left-order-book {
+      background-color: $bg-color;
+
+      .spread .spread-value {
+        color: $primary-text-color;
+      }
+    }
+
+    .sticky-table-header {
+        width: 100%;
+        height: 32px;
+        border-bottom: 1px solid grey;
+
+        .sticky-table-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #sticky-header-row {
+            background-color: $panel-bg-color;
+        }
+
+        .sticky-table-row  {
+            width: 100%;
+            background-color: $bg-color;
+
+            &.order-row:hover {
+              background-color: $panel-bg-color;
+            }
+        }
+    }
 
     .order-table {
-
         > tbody > tr:nth-of-type(even) {
             background-color: $row-accent-color;
         }
@@ -1039,21 +1290,29 @@ $account-tabs-background
     li.stat.input {
         &:hover {background-color: lighten($panel-bg-color, 4%);}
     }
-    .stats .stat {
-        > span {
-            > span:first-of-type {
-                color: $primary-text-color;
-            }
+    .stats .stressed-stat {
 
-            > span.symbol-text {
-                color: #468EDE;
-            }
-        }
+        padding: 10px 0;
+        font-size:18px;
+
         &.is-call {
-            >span > b {
-                color: $call-color;
+            color: $call-color!important;
+        }
+
+        &.daily_change {
+            &.positive {
+                color:$account-green!important;
+            }
+            &.negative {
+                color:$negative-color !important;
             }
         }
+    }
+
+    .stat-text {
+        margin-top: 3px;
+        font-size: 11px;
+        color: gray;
     }
 
     .buy-sell-box {
@@ -1072,6 +1331,7 @@ $account-tabs-background
 
             > option {
                 color: $primary-text-color;
+                background-color: $header-color;
             }
         }
     }
@@ -1085,7 +1345,7 @@ $account-tabs-background
     }
 
     .header-sub-title {
-        font-size: 80%;
+        font-size: 11px;
         color: $light-text-color;
     }
 
@@ -1097,7 +1357,7 @@ $account-tabs-background
         background-color: $header-color;
         padding: 8px 35px;
         border-bottom: 1px solid grey;
-        font-weight: bold;
+        @include RobotoMedium;
         text-transform: uppercase;
         cursor: pointer;
     }
@@ -1149,34 +1409,69 @@ $account-tabs-background
 
     select.bts-select, select.native-coin-types, select.external-coin-types {
         color: $secondary-text-color;
-        background-color: $input-background;
+        background-color: $light-panel-bg-color;
         border: 0;
         &:hover, &:focus, &:active {
-            background-color: $input-background;
+            background-color: $light-panel-bg-color;
         }
     }
-
-
-
 
     div.fm-container:hover {
         background-color: darken($light-panel-bg-color, 5%);
         cursor: pointer;
     }
 
+    .api-node {
+        border: 1px solid $settings-api-node-border-color;
+        &:nth-child(n+1) {
+            border-bottom: 0;
+        }
+        &:last-child {
+            border: 1px solid $settings-api-node-border-color;
+        }
+    }
 
     // Settings
     .settings-menu {
-        margin-left: 0;
-        > li {
-            padding: .2rem 1rem;
-            &:hover {
-                background-color: darken($light-panel-bg-color, 5%);
-            }
+        > ul {
+            width: 200px;
+            transition: .3s;
+            margin-left: 0;
+            > li {
+                border-radius: 2px;
+                color: $secondary-text-color;
+                padding: 3px 11px;
+                margin: 5px;
+                &:hover {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-hover-bg;
+                }
 
-            &.active {
-                color: $link-text-color;
+                &.active {
+                    color: $primary-text-color;
+                    background-color: $settings-menu-active-bg;
+                }
             }
+        }
+    }
+
+    .settings--notifications {
+        .settings--notifications--group {
+            .settings--notifications--item {
+                label {
+                    color: $settings-select-color;
+                }
+            }
+        }
+        .settings--notifications--no-browser-support {
+            color: $error-text-color;
+            font-size: 12px;
+        }
+    }
+
+    @media(max-width: $hamburger-submenu-display-endpoint) {
+        .settings-menu {
+            display: none;
         }
     }
 
@@ -1198,14 +1493,23 @@ $account-tabs-background
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
 
         > td.warning {
             background-color: darken($warning-color, 15%) !important;
             color: $dark-text-color;
-            font-weight: bold;
+            @include RobotoMedium;
         }
+    }
+
+    .nodes-header {
+      border-bottom-color: $button-bg-color;
+      background-color: $bg-color;
+      &.inactive {
+        border-bottom-color: transparent;
+        color: $secondary-text-color;
+      }
     }
 
     .react-stockcharts-tooltip {
@@ -1291,7 +1595,7 @@ $account-tabs-background
 
     table.table > tbody > tr.in-use {
         > td:nth-child(2) {
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 
@@ -1306,7 +1610,7 @@ $account-tabs-background
     }
 
     input.my-key, td.my-key a {
-        font-weight: bold;
+        @include RobotoMedium;
         color: $info-color;
     }
 
@@ -1373,6 +1677,15 @@ $account-tabs-background
             color: $account-primarytext;
             border-color: $account-border;
         }
+        > tbody > tr.dashboard-table--hiddenAccounts {
+            > td {
+                height: 20px;
+                text-align: left;
+                padding-left: 45px;
+                background-color: $account-header;
+                color: $account-primarytext;
+            }
+        }
         > tbody > tr {
             > td {
                 background-color: $account-cells;
@@ -1412,7 +1725,8 @@ $account-tabs-background
     }
 
     div.account-creation {
-        background-color: $account-cells;
+        border: 1px solid $account-cells;
+        border-radius: 6px;
 
         div.button > a {
             color: $primary-text-color;
@@ -1445,6 +1759,142 @@ $account-tabs-background
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
+
+    .pulsate {
+
+        &.red {
+            animation: pulsate-red .5s ease-out;
+        }
+
+        &.green {
+            animation: pulsate-green .5s ease-out;
+        }
+
+        animation-iteration-count: 1;
+    }
+
+    @-webkit-keyframes pulsate-green {
+        0% {
+            color: $pulsate-green-start;
+        }
+        100% {
+            color: $pulsate-green-end;
+        }
+    }
+    @-webkit-keyframes pulsate-red {
+        0% {
+            color: $pulsate-red-start;
+        }
+        100% {
+            color: $pulsate-red-end;
+        }
+    }
+
+    .introjs-launcher {
+        margin-left: 15px;
+        background-color: $bs-blue;
+        padding: 0 10px;
+        font-size: 18px;
+        line-height: 1.8;
+        transition: background-color .2s ease;
+        color: #fff;
+
+        &:hover {
+            cursor: pointer;
+            background-color: darken($bs-blue, 10%);
+        }
+
+        @include breakpoint(small only) {
+            position: absolute;
+            bottom: 1rem;
+            right: .3rem;
+            z-index: 9999;
+            display: block;
+            line-height: 0;
+            font-size: 0;
+            color: transparent;
+            background-color: transparent;
+
+            &:after {
+                content: '?';
+                color: #fff;
+                font-size: 1rem;
+                line-height: 1.5;
+                text-align: center;
+                padding: .3rem .8rem;
+                background-color: $bs-blue;
+                border: 1px solid $bg-color;
+            }
+        }
+    }
+
+    .footer {
+        padding-right: 0;
+    }
+
+    .header-container {
+        background-color: $account-background;
+
+        .menu-dropdown-wrapper {
+            &.active {
+                background: $panel-bg-color;
+            }
+        }
+
+        .dropdown.header-menu {
+            background-color: $panel-bg-color;
+
+            li.divider {
+                border-bottom: 1px solid $dark-text-color;
+            }
+
+            > li:hover {
+                background-color: $super-light-panel-bg-color
+            }
+        }
+
+        .total-value {
+            color: $account-green
+        }
+    }
+
+    .flip-arrow:hover {
+        color: $bs-blue;
+        cursor: pointer;
+    }
+
+    .order-2 .flip-arrow, .order-5 .flip-arrow {
+        display: none;
+    }
+
+    .order-book-button-h svg > path {
+        fill: #fff;
+
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+    }
+
+    .order-book-button-v {
+        display: none;
+    }
+
+    @include breakpoint(large) {
+        .order-book-button-v {
+            display: inline-block;
+            margin-left: 5px;
+
+            svg > path {
+                fill: #fff;
+
+                &:hover {
+                    fill: $bs-blue;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -1463,4 +1913,139 @@ $account-tabs-background
 .midnightTheme .gate_fee .right-selector .right-selector-input {
     text-align: right;
     width: 100%;
+}
+
+.clear-text, .search-wrapper {
+    position: relative;
+}
+
+.market-filter-input, .clear-text, .search-wrapper {
+    position: relative;
+}
+
+.clear-text {
+    top: 10px;
+    right: -30px;
+    position: absolute;
+    border: 0;
+    background-color: transparent;
+    display: block;
+    outline: 0;
+    cursor: pointer;
+}
+.clear-text:after {
+    content: "X";
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-color: transparent;
+    z-index: 1;
+    right: 35px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 2px;
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    cursor: pointer;
+}
+.market-filter-input:not(:valid) ~ .clear-text {
+    display: none;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 64px;
+
+    .menu-bar {
+        overflow: visible;
+    }
+
+    .logo {
+        padding-top: .7rem;
+        padding-bottom: .8rem;
+    }
+
+    .dropdown-wrapper:after {
+        display: none;
+    }
+
+    .menu-dropdown-wrapper {
+        height: 65px;
+        width: 65px;
+        text-align: center;
+        border-radius: 0;
+
+        .hamburger .icon {
+            position: relative;
+            top: 12px;
+        }
+    }
+
+    .dropdown.header-menu {
+        top: 65px;
+    }
+
+    .hamburger svg rect, .hamburger-x svg rect {
+        fill: $bs-blue;
+    }
+
+    .total-value {
+        text-align: right;
+        font-size: 80%;
+        line-height: normal;
+    }
+}
+
+.local-wallet-menu {
+    // top: 50px!important;
+
+    .table-cell {
+        display: inline-block;
+    }
+}
+
+.app-menu {
+  flex: 0;
+}
+
+.truncated {
+  flex: 1;
+  min-width: 0; /* or some value */
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+}
+
+#unlock_wallet_modal2 .close-button {
+    color: $bs-blue;
+}
+
+@media screen and (max-width: 640px) {
+    .responsive-list > .help-content > ul {
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 6px;
+        background: #2a2a2a;
+        border: 1px solid #4b5158;
+        margin-bottom: 2rem!important;
+
+        li {
+            border-bottom: 1px solid #393939;
+            padding: 4px;
+
+            ul li {
+                border: 0;
+            }
+        }
+    }
 }

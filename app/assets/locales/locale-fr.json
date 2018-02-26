@@ -7,7 +7,8 @@
     "de": "Deutsch",
     "es": "Español",
     "it": "Italiano",
-    "tr": "Turkish"
+    "tr": "Türkçe",
+    "ru": "Русский"
   },
   "header": {
     "title": "BitShares",
@@ -26,6 +27,10 @@
     "unlock_short": "Login",
     "account_notify": "The active account is now %(account)s",
     "account_value": "Valeur de compte"
+  },
+  "browser_notification_messages": {
+    "money_received_title": "Transfert à partir de %(from)s",
+    "money_received_body": "Vous a envoyé %(amount)s %(symbol)s"
   },
   "tooltip": {
     "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -51,7 +56,31 @@
     "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
     "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
   },
+  "walkthrough": {
+    "language_flag": "Choisissez parmi 9 langues différentes à utiliser dans le DEX.",
+    "restore_account": "Restaurez un portefeuille en utilisant votre fichier de sauvegarde.",
+    "create_cloud_wallet": "Accédez au portefeuille de cloud en utilisant un nom de compte et un mot de passe.",
+    "create_local_wallet": "Créez un portefeuille local et téléchargez les clés privées qui lui appartiennent.",
+    "switch_button": "Changez les paires de négociation en utilisant ce bouton.",
+    "favourite_button": "Marquez cette paire comme favorite dans votre liste de marchés.",
+    "depth_chart": "Utilisez un tableau de profondeur du marché pour montrer l'offre et la demande à différents prix.",
+    "price_chart": "Voir l'action des prix d'un actif en utilisant le tableau des prix.",
+    "chart_tool_zoom": "Ajustez le graphique des prix pour afficher plus ou moins d'historique des prix.",
+    "chart_tool_duration": "Groupe de données commerciales en utilisant différents intervalles.",
+    "chart_tool_indicators": "Ajoutez des indicateurs techniques au tableau des prix pour identifier les opportunités de trading.",
+    "buy_form": "Placez les ordres d'achat en utilisant ce formulaire.",
+    "sell_form": "Placez les ordres de vente en utilisant ce formulaire.",
+    "buy_orders": "Voir toutes les commandes d'achat pour ce marché.",
+    "sell_orders": "Voir toutes les commandes de vente pour ce marché.",
+    "my_markets_tab": "Cet onglet répertorie les marchés couramment utilisés.",
+    "find_markets_tab": "Cet onglet vous permet de rechercher et d'ajouter des marchés supplémentaires à l'onglet Mes marchés.",
+    "next_label": "Suivant",
+    "prev_label": "Retour",
+    "skip_label": "Skip",
+    "done_label": "Fait"
+  },
   "account": {
+    "search": "Search for an account",
     "accounts": "Comptes",
     "contacts": "Contacts",
     "in_open": "This is the amount of %(asset)s you have in open orders.",
@@ -418,6 +447,9 @@
     }
   },
   "settings": {
+    "browser_notifications": "Notifications de navigateurs",
+    "browser_notifications_allow": "Activer les notifications",
+    "browser_notifications_additional_transfer_to_me": "Notifier les transferts sur mon compte",
     "passwordLogin": "Login using the account model",
     "inverseMarket": "Orientation préféré pour les marchés",
     "unit": "Unité de valeur préféré",
@@ -551,7 +583,8 @@
     },
     "purchase": "Purchase %(asset)s",
     "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-    "deposit_limit": "Deposit limit"
+    "deposit_limit": "Deposit limit",
+    "asset_search_deposit": "Search for an asset to deposit"
   },
   "trx_error": {
         "expire": "Your transaction has expired without being confirmed, please try again later."
