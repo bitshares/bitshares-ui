@@ -327,6 +327,7 @@ class AccountOverview extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
+                                pulsate={{ reverse: true, fill: "forwards" }}
                                 refCallback={(c) => {if (c && c.refs.bound_component) this.valueRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             /> : null}
                     </td>
