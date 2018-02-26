@@ -22,16 +22,13 @@ class EquivalentPrice extends MarketStatsCheck {
         forceDirection: true
     }
 
-    constructor(props) {
-        super(props);
-    }
-
     shouldComponentUpdate(np, nextState) {
         return (
             super.shouldComponentUpdate(np) ||
             np.base_amount !== this.props.base_amount ||
             np.quote_amount !== this.props.quote_amount ||
             np.decimals !== this.props.decimals ||
+            !utils.are_equal_shallow(np.pulsate, this.props.pulsate) ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }

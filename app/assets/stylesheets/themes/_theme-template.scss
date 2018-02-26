@@ -1761,19 +1761,23 @@ $main-content-margin-block-bg-color
     }
 
     .pulsate {
+        animation: .5s ease-out 1;
 
         &.red {
-            animation: pulsate-red .5s ease-out;
+            animation-name: pulsate-red;
         }
-
+             
         &.green {
-            animation: pulsate-green .5s ease-out;
+            animation-name: pulsate-green;
         }
-
-        animation-iteration-count: 1;
+             
+        &.reverse {
+            animation-timing-function: ease-in;
+            animation-direction: reverse;
+        }
     }
 
-    @-webkit-keyframes pulsate-green {
+    @keyframes pulsate-green {
         0% {
             color: $pulsate-green-start;
         }
@@ -1781,7 +1785,7 @@ $main-content-margin-block-bg-color
             color: $pulsate-green-end;
         }
     }
-    @-webkit-keyframes pulsate-red {
+    @keyframes pulsate-red {
         0% {
             color: $pulsate-red-start;
         }

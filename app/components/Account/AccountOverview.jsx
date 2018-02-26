@@ -308,6 +308,7 @@ class AccountOverview extends React.Component {
                         <EquivalentPrice
                             refCallback={(c) => {if (c && c.refs.bound_component) this.priceRefs[asset.get("symbol")] = c.refs.bound_component;}}
                             fromAsset={asset.get("id")}
+                            pulsate={{ reverse: true, fill: "forwards" }}
                             hide_symbols
                         />
                     </td>
