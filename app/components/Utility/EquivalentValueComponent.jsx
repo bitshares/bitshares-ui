@@ -75,9 +75,9 @@ class ValueComponent extends MarketStatsCheck {
         }
 
         let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close :
-                                        fromID === "1.3.0" || fromAsset.has("bitasset") ? fromAsset : null,
+                                        fromID === "1.3.0" ? fromAsset : null,
                                         toStats && toStats.close ? toStats.close :
-                                        (toID === "1.3.0" || toAsset.has("bitasset")) ? toAsset : null,
+                                        toID === "1.3.0" ? toAsset : null,
                                         fromID,
                                         toID);
 
