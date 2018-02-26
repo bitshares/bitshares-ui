@@ -787,7 +787,7 @@ class WithdrawModalNew extends React.Component {
           }
 
           {/*Submit Buttons*/}
-          <div style={{clear: "both", position: "absolute", bottom: "-1em", right: "1em", left: "1em"}}>
+          <div style={{clear: "both", position: "absolute", bottom: "-1em", right: "2em", left: "2em"}}>
             <div style={leftColumn} className="button-group">
               <button style={buttonStyle} className="button danger" onClick={this.props.close}><Translate content="modal.withdraw.cancel" /></button>
             </div>
