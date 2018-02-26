@@ -36,32 +36,15 @@ function _getNumberAvailableGateways(){
     return nAvailableGateways;
 }
 
-function _onAssetSelected(selectedAsset) {
-    // Preselect gateway on single choise
+function _onAssetSelected(selectedAsset, assetDetails) {
     let gatewayStatus = _getAvailableGateways.call(this, selectedAsset);
+    let selectedGateway = assetDetails.gateway;
 
-    let selectedGateway = null;
-    let nAvailable = 0;
-
-    for(let g in gatewayStatus) { if(gatewayStatus[g].enabled) { nAvailable++; } }
-    if(nAvailable >= 1 && !selectedGateway || (this.state.selectedAsset != selectedAsset)) { 
-      for(let g in gatewayStatus) { 
-        if(gatewayStatus[g].enabled) { 
-          selectedGateway = g; 
-          break;
-        } 
-      } 
-    }
-
-    // Fetch address if we have a selected gateway
-    else {
-        this.setState({
-            selectedAsset,
-            selectedGateway,
-            backingAsset: null,
-            gatewayStatus
-        });
-    }
+    this.setState({
+        selectedAsset,
+        selectedGateway,
+        gatewayStatus
+    });
 
     return { selectedAsset, selectedGateway }
 }
@@ -82,7 +65,7 @@ function gatewaySelector(args){
                 </label>
 
                 <div className="inline-label input-wrapper">
-                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged} id="gatewaySelector" disabled="disabled" style={{cursor: "default"}}>
+                    <select role="combobox" className="selectWrapper" value={!selectedGateway ? "" : selectedGateway} onChange={onGatewayChanged} id="gatewaySelector" style={{cursor: "default"}} disabled="disabled">
                         {!selectedGateway && nAvailableGateways != 0 ? <Translate component="option" value="" content="modal.deposit_withdraw.select_gateway" /> : null}
                         {gatewayStatus.RUDEX.enabled ? <option value="RUDEX">{gatewayStatus.RUDEX.name}</option> : null}
                         {gatewayStatus.OPEN.enabled ? <option value="OPEN">{gatewayStatus.OPEN.name}</option> : null}

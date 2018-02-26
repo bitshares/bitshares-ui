@@ -77,7 +77,7 @@ class WithdrawModalNew extends React.Component {
         this._updateFee = _.debounce(this._updateFee.bind(this), 250);
         this._updateFee(this.state);
 
-        let { backedCoins } = this.props;
+        let { backedCoins, openLedgerBackedCoins, rudexBackedCoins } = this.props;
 
         AssetActions.getAssetList("BTS", 1);
         backedCoins.forEach((gateway)=>{
@@ -384,7 +384,7 @@ class WithdrawModalNew extends React.Component {
     }
 
     onAssetSelected(value, asset){
-        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, value);
+        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, value, asset);
         let address = WithdrawAddresses.getLast(value.toLowerCase());
         this.setState({selectedAsset, selectedGateway, gateFee: asset.gateFee, issuer: asset.issuer, address, isBTS: false});
     }
@@ -586,7 +586,6 @@ class WithdrawModalNew extends React.Component {
         const { state, props } = this;
         let { preferredCurrency, assets, marketStats, balances } = props;
         let { selectedAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee, withdrawalCurrencyId, withdrawalCurrencyBalance, withdrawalCurrencyBalanceId, withdrawalCurrencyPrecision, preferredCurrencyPrecision, precisionDifference, coreAsset, convertedBalance, estimatedValue, nAvailableGateways, assetAndGateway, isBTS, canCoverWithdrawal, fee_asset_types, quantity, address, btsAccount } = this.state;
-
         let symbolsToInclude = [];
 
         balances.forEach((item)=>{
@@ -597,6 +596,7 @@ class WithdrawModalNew extends React.Component {
             symbolsToInclude.push(asset.symbol);
           }
         });
+
 
         let { halfWidth, leftColumn, rightColumn, buttonStyle } = this._getStyleHelpers();
         let { onFocus, onBlur } = this._getBindingHelpers();
@@ -710,7 +710,7 @@ class WithdrawModalNew extends React.Component {
 
           {/*MEMO*/}
           {
-            (assetAndGateway || isBTS) ? <div>
+            ((assetAndGateway || isBTS) && selectedGateway != 'OPEN') ? <div>
               <label className="left-label"><Translate content="modal.withdraw.memo" /></label>
               <input type="text" value={state.memo} onChange={this.onMemoChanged.bind(this)} />
             </div> : null

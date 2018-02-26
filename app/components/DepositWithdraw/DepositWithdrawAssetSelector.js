@@ -15,7 +15,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 
     render(){
         const { props } = this;
-        const { include, openLedgerBackedCoins, rudexBackedCoins, blockTradesBackedCoins } = props;
+        const { include } = props;
         let idMap = {};
 
         let getCoinOption = (item) => {
@@ -50,7 +50,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
             }
         };
 
-        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(openLedgerBackedCoins.map(getCoinOption)).concat(rudexBackedCoins.map(getCoinOption)).concat(blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).filter((item)=>{
+        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).filter((item)=>{
           let symbolWithGateway = item.gateway + '.' + item.id;
           let symbolWithoutGateway = item.id;
 
