@@ -8,7 +8,7 @@ import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
-import {MarketStatsCheck} from "../Utility/EquivalentPrice";
+import MarketStatsCheck from "./MarketStatsCheck";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
