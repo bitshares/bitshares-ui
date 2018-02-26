@@ -604,7 +604,7 @@ class WithdrawModalNew extends React.Component {
         const shouldDisable = isBTS ? !quantity || !btsAccount : !assetAndGateway || !quantity || !address || !canCoverWithdrawal || addressError;
         let storedAddresses = WithdrawAddresses.get(selectedAsset.toLowerCase());
 
-        return <div id="withdraw_modal_new">
+        return <div>
           <div className="Modal__header" style={{textAlign: "center"}}>
               <img src={logo} /><br />
               <p><Translate content="modal.withdraw.header" /></p>
@@ -636,7 +636,7 @@ class WithdrawModalNew extends React.Component {
           {
             assetAndGateway || isBTS ? 
             <div>
-              {(preferredCurrency) ? <div style={{fontSize: "0.8em", position: "absolute", right: "1.25em"}}>
+              {(preferredCurrency) ? <div style={{fontSize: "0.8em", position: "absolute", right: "2.5em"}}>
                 <Translate content="modal.withdraw.available" />
                 <span style={{color: canCoverWithdrawal ? null : "red", cursor: "pointer", textDecoration: "underline"}} onClick={this.onClickAvailableBalance.bind(this, convertedBalance)}>
                     {/*Some currencies do not appear in balances, display zero balance if not found*/}
