@@ -65,7 +65,7 @@ class DepositModalContent extends DecimalChecker {
     }
 
     onAssetSelected(asset, assetDetails) {
-        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, asset, assetDetails);
+        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, asset);
         if(selectedGateway) { this._getDepositAddress(selectedAsset, selectedGateway); }
     }
 

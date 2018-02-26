@@ -36,6 +36,7 @@ import { checkMarginStatus } from "common/accountHelper";
 import BalanceWrapper from "./BalanceWrapper";
 import SendModal from "../Modal/SendModal";
 import PulseIcon from "../Icon/PulseIcon";
+import WithdrawModal from "../Modal/WithdrawModalNew";
 
 class AccountOverview extends React.Component {
 
@@ -351,7 +352,7 @@ class AccountOverview extends React.Component {
                     <td>
                         {canWithdraw && this.props.isMyAccount? (
                             <span>
-                                <a className={!canWithdraw ? "disabled" : ""} onClick={canWithdraw ? this._showDepositWithdraw.bind(this, "withdraw_modal", assetName, false) : () => {}}>
+                                <a className={!canWithdraw ? "disabled" : ""} onClick={canWithdraw ? this._showDepositWithdraw.bind(this, "withdraw_modal_new", assetName, false) : () => {}}>
                                     <Icon name="withdraw" className="icon-14px" />
                                 </a>
                             </span>
@@ -758,6 +759,13 @@ class AccountOverview extends React.Component {
                     balances={this.props.balances}
                     {...currentWithdrawAsset}
                     isDown={this.props.gatewayDown.get("OPEN")}
+                />
+
+                <WithdrawModal
+                  ref="withdraw_modal_new"
+                  modalId="withdraw_modal_new"
+                  backedCoins={this.props.backedCoins}
+                  initialSymbol={this.state.withdrawAsset}
                 />
 
                 {/* Deposit Modal */}

@@ -22,7 +22,7 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BalanceComponent from "../Utility/BalanceComponent";
-import { _getAvailableGateways, gatewaySelector, _getNumberAvailableGateways, _onAssetSelected } from "lib/common/assetGatewayMixin";
+import { _getAvailableGateways, gatewaySelector, _getNumberAvailableGateways, _onAssetSelected, _getCoinToGatewayMapping } from "lib/common/assetGatewayMixin";
 import { validateAddress as blocktradesValidateAddress, WithdrawAddresses } from "lib/common/blockTradesMethods";
 import { blockTradesAPIs } from "api/apiConfig";
 import AmountSelector from "components/Utility/AmountSelector";
@@ -30,6 +30,7 @@ import { checkFeeStatusAsync, checkBalance } from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs/es";
 const logo = require("assets/logo-ico-blue.png");
+const gatewayBoolCheck = "withdrawalAllowed";
 
 class WithdrawModalNew extends React.Component {
     constructor(props){
@@ -76,17 +77,37 @@ class WithdrawModalNew extends React.Component {
         this._checkFeeStatus();
         this._updateFee = _.debounce(this._updateFee.bind(this), 250);
         this._updateFee(this.state);
+        let initialState = {};
 
         let { backedCoins, openLedgerBackedCoins, rudexBackedCoins } = this.props;
 
         AssetActions.getAssetList("BTS", 1);
-        backedCoins.forEach((gateway)=>{
+        backedCoins.forEach((gateway, gatewayName)=>{
           gateway.forEach((coin)=>{
             let symbol = coin.backingCoinType || coin.symbol;
             AssetActions.getAssetList(coin.backingCoinType, 1);
             AssetActions.getAssetList(coin.symbol, 1);
           });
-        })
+        });
+
+        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this, gatewayBoolCheck);
+        initialState.coinToGatewayMapping = coinToGatewayMapping;
+
+        if(this.props.initialSymbol){
+          initialState = _.extend(initialState, this._getAssetAndGatewayFromInitialSymbol(this.props.initialSymbol));
+
+          initialState.gatewayStatus = _getAvailableGateways.call(this, initialState.selectedAsset, gatewayBoolCheck);
+        }
+
+        this.setState(initialState);
+    }
+
+    _getAssetAndGatewayFromInitialSymbol(initialSymbol){
+        let pieces = initialSymbol.split(".");
+        let selectedAsset = pieces[1];
+        let selectedGateway = pieces[0];
+
+        return { selectedAsset, selectedGateway };
     }
 
     shouldComponentUpdate(np, ns){
@@ -107,6 +128,12 @@ class WithdrawModalNew extends React.Component {
         if(np.account != this.props.account){
             this._checkFeeStatus();
             this._updateFee(ns);
+        }
+
+        if(np.initialSymbol != this.props.initialSymbol){
+          let newState = this._getAssetAndGatewayFromInitialSymbol(np.initialSymbol)
+          newState.gatewayStatus = _getAvailableGateways.call(this, newState.selectedAsset, gatewayBoolCheck);
+          this.setState(newState);
         }
     }
 
@@ -158,20 +185,21 @@ class WithdrawModalNew extends React.Component {
         let coreAsset = null;
         let convertedBalance = null;
         let estimatedValue = 0;
+        let balancesByAssetAndGateway = {};
 
         assets.forEach((item)=>{
             if(item.symbol == fullSymbol) withdrawalCurrencyId = item.id;
         });
 
-        if(balances && withdrawalCurrencyId){
-            balances.forEach((balance)=>{
-                if(balance && balance.toJS){
-                    if(balance.get("asset_type") == withdrawalCurrencyId){
-                        withdrawalCurrencyBalanceId = balance.get("id");
-                        withdrawalCurrencyBalance = balance.get("balance");
-                    }
-                }
-            });
+        if(balances){
+          balances.forEach((balance)=>{
+            if(balance && balance.toJS){
+              if(withdrawalCurrencyId && balance.get("asset_type") == withdrawalCurrencyId){
+                  withdrawalCurrencyBalanceId = balance.get("id");
+                  withdrawalCurrencyBalance = balance.get("balance");
+              }
+            }
+          });
         }
 
         if(!withdrawalCurrencyBalance){ //In case does not exist in balances
@@ -384,7 +412,7 @@ class WithdrawModalNew extends React.Component {
     }
 
     onAssetSelected(value, asset){
-        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, value, asset);
+        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, value, gatewayBoolCheck);
         let address = WithdrawAddresses.getLast(value.toLowerCase());
         this.setState({selectedAsset, selectedGateway, gateFee: asset.gateFee, issuer: asset.issuer, address, isBTS: false});
     }
@@ -409,7 +437,9 @@ class WithdrawModalNew extends React.Component {
         this.setState(stateObj);
     }
 
-    onGatewayChanged(){
+    onGatewayChanged(e){
+        let selectedGateway = e.target.value;
+        this.setState({selectedGateway});
         this._updateFee();
     }
 
@@ -584,8 +614,8 @@ class WithdrawModalNew extends React.Component {
 
     render() {
         const { state, props } = this;
-        let { preferredCurrency, assets, marketStats, balances } = props;
-        let { selectedAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee, withdrawalCurrencyId, withdrawalCurrencyBalance, withdrawalCurrencyBalanceId, withdrawalCurrencyPrecision, preferredCurrencyPrecision, precisionDifference, coreAsset, convertedBalance, estimatedValue, nAvailableGateways, assetAndGateway, isBTS, canCoverWithdrawal, fee_asset_types, quantity, address, btsAccount } = this.state;
+        let { preferredCurrency, assets, marketStats, balances, backedCoins } = props;
+        let { selectedAsset, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee, withdrawalCurrencyId, withdrawalCurrencyBalance, withdrawalCurrencyBalanceId, withdrawalCurrencyPrecision, preferredCurrencyPrecision, precisionDifference, coreAsset, convertedBalance, estimatedValue, nAvailableGateways, assetAndGateway, isBTS, canCoverWithdrawal, fee_asset_types, quantity, address, btsAccount, coinToGatewayMapping } = this.state;
         let symbolsToInclude = [];
 
         balances.forEach((item)=>{
@@ -596,7 +626,6 @@ class WithdrawModalNew extends React.Component {
             symbolsToInclude.push(asset.symbol);
           }
         });
-
 
         let { halfWidth, leftColumn, rightColumn, buttonStyle } = this._getStyleHelpers();
         let { onFocus, onBlur } = this._getBindingHelpers();
@@ -612,7 +641,7 @@ class WithdrawModalNew extends React.Component {
 
           {/*ASSET SELECTION*/}
           <div style={{marginBottom: "1em"}}>
-            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur />
+            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} />
           </div>
 
           {
@@ -626,7 +655,8 @@ class WithdrawModalNew extends React.Component {
             { selectedGateway ? gatewaySelector.call(this, {
                 selectedGateway, 
                 gatewayStatus, 
-                nAvailableGateways, 
+                nAvailableGateways,
+                availableGateways: coinToGatewayMapping[selectedAsset],
                 error: false,
                 onGatewayChanged: this.onGatewayChanged.bind(this)
             }) : null}
@@ -710,7 +740,7 @@ class WithdrawModalNew extends React.Component {
 
           {/*MEMO*/}
           {
-            ((assetAndGateway || isBTS) && selectedGateway != 'OPEN') ? <div>
+            ((assetAndGateway || isBTS) && selectedGateway != "OPEN") ? <div>
               <label className="left-label"><Translate content="modal.withdraw.memo" /></label>
               <input type="text" value={state.memo} onChange={this.onMemoChanged.bind(this)} />
             </div> : null
