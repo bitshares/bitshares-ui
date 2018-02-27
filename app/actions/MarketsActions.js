@@ -10,7 +10,7 @@ import Immutable from "immutable";
 let subs = {};
 let currentBucketSize;
 let marketStats = {};
-let statTTL = 60 * 2 * 1000; // 2 minutes
+let statTTL = 60 * 1 * 1000; // 1 minute
 
 let cancelBatchIDs = Immutable.List();
 let dispatchCancelTimeout = null;
@@ -41,39 +41,28 @@ class MarketsActions {
     }
 
     getMarketStats(base, quote) {
+        const {marketName, first, second} = marketUtils.getMarketName(base, quote);
         return (dispatch) => {
             if (base === quote) return dispatch({});
-            let market = quote.get("id") + "_" + base.get("id");
-            let marketName = quote.get("symbol") + "_" + base.get("symbol");
             let now = new Date();
-            let endDate = new Date();
-            let startDateShort = new Date();
-            endDate.setDate(endDate.getDate() + 1);
-            startDateShort = new Date(startDateShort.getTime() - 3600 * 50 * 1000);
 
             let refresh = false;
 
-            if (marketStats[market]) {
-                if ((now - marketStats[market].lastFetched) < statTTL) {
+            if (marketStats[marketName]) {
+                if ((now - marketStats[marketName].lastFetched) < statTTL) {
                     return false;
                 } else {
                     refresh = true;
                 }
             }
 
-            if (!marketStats[market] || refresh) {
-                marketStats[market] = {
+            if (!marketStats[marketName] || refresh) {
+                marketStats[marketName] = {
                     lastFetched: new Date()
                 };
-                Promise.all([
-                    // Apis.instance().history_api().exec("get_market_history", [
-                    //     base.get("id"), quote.get("id"), 3600, startDateShort.toISOString().slice(0, -5), endDate.toISOString().slice(0, -5)
-                    // ]),
-                    // Apis.instance().history_api().exec("get_fill_order_history", [base.get("id"), quote.get("id"), 1]),
-                    Apis.instance().db_api().exec("get_ticker", [base.get("id"), quote.get("id")])
-                ])
+                Apis.instance().db_api().exec("get_ticker", [second.get("id"), first.get("id")])
                 .then(result => {
-                    dispatch({ticker: result[0], market: marketName, base, quote});
+                    dispatch({ticker: result, market: marketName, base: second, quote: first});
                 }).catch(err => {
                     console.log("getMarketStats error:", err);
                 });

@@ -7,6 +7,7 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import marketUtils from "common/market_utils";
 
 class MarketRow extends React.Component {
 

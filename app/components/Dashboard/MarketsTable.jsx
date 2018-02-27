@@ -78,7 +78,7 @@ class MarketRow extends React.Component {
     }
 
     _clearInterval () {
-        clearInterval(this.statsInterval);        
+        clearInterval(this.statsInterval);
     }
 
     _onError(imgName) {
@@ -146,7 +146,7 @@ class MarketsTable extends React.Component {
 
         this.update = this.update.bind(this);
     }
-    
+
     componentWillReceiveProps(nextProps) {
         this.update(nextProps);
     }
@@ -177,15 +177,15 @@ class MarketsTable extends React.Component {
                     isHidden: props.hiddenMarkets.includes(key)
                 };
             } else {
-                let { marketID: key, first: quote, second: base } = 
-                    market_utils.getMarketID(ChainStore.getAsset(first), ChainStore.getAsset(second));
+                let { marketName: key, first: quote, second: base } = 
+                    market_utils.getMarketName(ChainStore.getAsset(first), ChainStore.getAsset(second));
                 if (!quote || !base) return null;
 
                 let inverted = props.marketDirections.get(key);
                 if (inverted) {
                     [quote, base] = [base, quote];
                 }
-                
+
                 return {
                     key,
                     inverted,
@@ -212,12 +212,12 @@ class MarketsTable extends React.Component {
         e.preventDefault();
         this.setState({filter: e.target.value.toUpperCase()});
     }
-    
+
     _handleHide (row, status) {
         if (this.props.handleHide) {
             return this.props.handleHide(row, status);
         }
-        
+
         SettingsActions.hideMarket(row.key, status);
     }
 
@@ -238,7 +238,7 @@ class MarketsTable extends React.Component {
         let visibleRow = 0;
         markets = markets.map(row => {
             let visible = true;
-            
+
             if (row.isHidden !== this.state.showHidden) {
                 visible = false;
             } else if (filter) {
@@ -297,11 +297,11 @@ class MarketsTable extends React.Component {
 export default connect(MarketsTable, {
     listenTo() {
         return [SettingsStore];
-        
+
     },
     getProps() {
         let { marketDirections, hiddenMarkets } = SettingsStore.getState();
-        
+
         return {
             marketDirections,
             hiddenMarkets
