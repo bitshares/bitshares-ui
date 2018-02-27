@@ -6,7 +6,10 @@ import cnames from "classnames";
 import ReactTooltip from "react-tooltip";
 
 export default class PriceStatWithLabel extends React.Component {
+<<<<<<< HEAD:app/components/Exchange/PriceStat.jsx
 
+=======
+>>>>>>> 6b31ad1a71e56ca4d629fa68df744b0bb7a7ec4c:app/components/Exchange/PriceStat.jsx
     constructor() {
         super();
         this.state = {
