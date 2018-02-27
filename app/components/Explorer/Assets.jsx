@@ -38,10 +38,6 @@ class Assets extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.assets, this.props.assets) ||
-            nextState.filterMPA !== this.state.filterMPA ||
-            nextState.filterUIA !== this.state.filterUIA ||
-            nextState.filterPM !== this.state.filterPM ||
-            nextProps.isLoading !== this.state.isLoading ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }
