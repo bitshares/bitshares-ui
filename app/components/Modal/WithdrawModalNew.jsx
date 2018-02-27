@@ -172,6 +172,7 @@ class WithdrawModalNew extends React.Component {
     _getAssetPairVariables(props, state){
         let { assets, marketStats, balances, preferredCurrency } = props || this.props;
         let { selectedAsset, quantity, selectedGateway, userEstimate, gatewayStatus, addressError, gateFee } = state || this.state; 
+        if(isNaN(gateFee)) gateFee = 0;
         quantity = Number(quantity);
         gateFee = Number(gateFee);
         let fullSymbol = selectedGateway ? (selectedGateway + "." + selectedAsset) : selectedAsset;
@@ -232,7 +233,10 @@ class WithdrawModalNew extends React.Component {
             }
 
             if(quantity && fromAsset && toAsset){
-              estimatedValue = quantity * equivalentPrice(coreAsset, fromAsset, toAsset, marketStats, true) * Math.pow(10, precisionDifference); //Need to compensate for different precisions between currencies
+              estimatedValue = quantity * equivalentPrice(coreAsset, fromAsset, toAsset, marketStats, true);
+              if(precisionDifference > 0){ //Need to compensate for different precisions between currencies
+                estimatedValue = estimatedValue * Math.pow(10, precisionDifference); 
+              } //No need to compensate for precision difference < 0
             }
         }
 
