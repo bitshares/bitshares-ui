@@ -1,0 +1,52 @@
+.table {
+  width: 100%;
+}
+
+.table > thead > tr > th {
+  border-bottom: 1px solid #ddd;
+  padding: 12px 5px;
+  //padding-right: 8px;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: #777;
+  text-align: left;
+}
+
+.table > tbody > tr > td {
+  // border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+
+.table > tbody > tr:last-of-type > td {
+  border-bottom: none;
+}
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+  background-color: #f5f5f5;
+}
+
+.key-value-table {
+  tr > td:first-child {
+    padding-left: 0 !important;
+  }
+  tr > td:last-child {
+    text-align: right;
+  }
+}
+
+.table.compact {
+  td, th {
+    font-size: 94%;
+  }
+}
+
+
+/* Wrap table in div with this class to make horizontal scroll */
+.responsive-table {
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+  width: 100vw;
+}

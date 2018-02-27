@@ -1,0 +1,349 @@
+.account-left-panel {
+    > div.grid-block {
+        border-right: 1px solid $border-color;
+    }
+    .account-buttons-row .button {
+        min-width: 4.5rem;
+    }
+    .bottom {
+        border-top: 1px solid transparent;
+        padding: 0.5rem;
+        > .center {
+            width: auto;
+            margin: 0 auto;
+        }
+    }
+
+    span.button {
+        font-size: 1.1rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    a.pay-button {
+        font-weight: bold;
+        letter-spacing: 2px;
+        font-size: 1.1rem;
+        border: 0;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+    }
+}
+
+@keyframes flash {
+  from, 50%, to {
+    opacity: 1;
+  }
+
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  animation-name: flash;
+}
+
+.account-info {
+    text-align: center;
+    .account-title {
+        transition: opacity 0.25s linear, transform 0.25s linear, color 0.25s linear;
+        margin-bottom: 0;
+        font-weight: 600;
+        &.flash {
+            opacity: 0.35;
+            transform: scale(1.1);
+        }
+    }
+    > p:first-of-type {
+        font-size: 85%;
+        line-height: 1.2;
+    }
+
+    .account-image {
+
+        padding-bottom: 1rem;
+        > canvas {
+            padding: 1rem;
+            border: 1px solid $border-color;
+        }
+    }
+    > div.secondary {
+        padding-bottom: 1rem;
+        position: relative;
+
+        > span:first-of-type {
+            font-weight: bold;
+        }
+
+        > span.my-account-label {
+            top: 4px;
+            font-size: 0.8rem;
+            position: absolute;
+            right: 0;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+    }
+}
+
+.account-left-menu {
+    > li {
+        &.menu-subheader {
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            padding: 1.5rem 0.5rem 0.25rem 0.5rem;
+            text-align: center;
+            border-bottom: none !important;
+
+            > span {
+                display: inline-block;
+                color: inherit;
+                cursor: pointer;
+            }
+        }
+
+        > a {
+            padding-left: 1.75rem !important;
+            border-right: 3px solid transparent;
+        }
+    }
+}
+
+// .no-amount {
+//     padding-right: 1rem;
+//     padding-left: 0.7rem;
+//     font-size: 0.9rem;
+//     font-weight: bold;
+// }
+
+.weight-input {
+    display: table-cell;
+    margin: 0 1rem !important;
+    width: 30% !important;
+}
+
+.threshold input {
+    width: 5rem !important;
+}
+
+.more-button {
+    padding-top: 0.5rem;
+}
+
+.create-account-header {
+    height: 180px;
+}
+
+a.action-button > span {
+    text-transform: lowercase;
+}
+
+div.header-selector {
+    > .selector div {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        &:nth-of-type(n + 1) {
+            padding-left: 10px;
+            padding-right: 10px;
+            border-right: 1px solid white; // TODO: FIX
+        }
+        &:hover.inactive {
+            color: inherit;
+        }
+    }
+    > .selector div:last-of-type {
+        border-right: 0px;
+    }
+}
+
+div.account-tabs {
+    .padding { 
+        padding: 20px; 
+    }
+
+    > div.service-selector {
+        margin-bottom: 0;
+        border: none;
+        overflow-x: hidden;
+    }
+
+    div.header-selector {
+        padding: 1rem;
+    }
+
+    &.with-buttons ul.account-overview > li:not(.total-value) > a {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    ul.account-overview > li.total-value {
+        input {
+            min-width: 13rem;
+        }
+        > a {
+            span.tab-title {
+                text-transform: uppercase;
+                font-variant: small-caps;
+                font-size: 0.8rem;
+            }
+            div.tab-subtext {
+                font-size: 0.8rem;
+                text-align: right;
+            }
+        }
+    }
+
+    ul > li.tabs-action-buttons {
+        margin: 5px auto;
+    }
+}
+ul.account-overview {
+    display: table;
+    li {
+        display: table-cell;
+        vertical-align: middle;
+        > a {
+            font-size: 1.1rem;
+
+            > div.tab-subtext {
+                font-size: 70%;
+                text-align: right;
+            }
+        }
+        &.total-value {
+            > a {
+                cursor: default;
+                > span.tab-title {
+                    font-size: 95%;
+                }
+            }
+        }
+    }
+}
+
+table.table.dashboard-table {
+    > thead > tr > th:first-of-type, > tbody > tr > td:first-of-type {
+        padding-left: 1.5rem;
+    }
+    > thead > tr > th {
+        @include RobotoMedium;
+        font-size: 0.875rem;
+        text-align: center;
+        border: none;
+    }
+    > tbody > tr {
+        > td {
+            font-size: 0.875rem;
+            text-align: center;
+            border: none;
+
+            &.worker-name {
+                max-width: 15rem;
+                overflow-x: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                > div span.icon > svg {
+                    width: 1.75rem;
+                    height: 1.75rem;
+                }
+                > div > a {
+                    font-size: 90%;
+                }
+            }
+
+            &.worker-id {
+                width: 3rem;
+                max-width: 5rem;
+            }
+        }
+        &.total-value {
+            td {
+                vertical-align: middle;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                border-bottom: none;
+                word-wrap: none;
+            }
+            td:first-of-type {
+                text-align: left;
+                text-transform: uppercase;
+                @include RobotoMedium;
+            }
+            td:nth-child(3) {
+                @include RobotoMedium;
+                text-align: right;
+            }
+        }
+    }
+}
+
+div.header-selector > div.new-worker-button {
+    padding-left: 0;
+    padding-top: 10px;
+
+    @include breakpoint(medium) {
+        padding-top: 0;
+        position: relative;
+        top: -20px;
+        float: right;
+        clear: both;
+    }
+}
+
+.shuffle-rev {
+    > a span.icon > svg {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+    }
+}
+
+.trading-pair {
+    > a span.icon > svg { margin-left: 10px; margin-right: 10px; }
+}
+
+div.tabs-container {
+    > div {
+        padding: 0px;
+    }
+
+    div.permissions-buttons > button {
+        margin: 0rem;
+        margin-left: 1rem;
+        font-size: 1.2em;
+    }
+
+    div.permissions-buttons {
+        margin: 0 1rem;
+    }
+
+    div.help-content {
+        max-width: 800px;
+    }
+
+    div.tabs-header > h1,
+    div.tabs-header > h2,
+    div.tabs-header > h3,
+    div.tabs-header > h4,
+    div.tabs-header > h5 {
+        margin: 10px 15px;
+    }
+
+    td .button span {
+        white-space: nowrap;
+    }
+
+    .action-buttons {
+        text-align: right;
+
+        button {
+            min-width: 5rem;
+            margin-left: 0.5rem;
+        }
+    }
+}

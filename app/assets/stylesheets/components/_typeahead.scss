@@ -1,0 +1,21 @@
+// Typeahead
+input[role="combobox"] {
+    padding: 5px 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.typeahead > div {
+    width: 100%;
+    > div {
+        z-index: 1003;
+    }
+}
+
+.typeahead .icon.chevron-down:hover, .selectWrapper:hover {
+	cursor: pointer;
+}
+
+.selectWrapper + .icon.chevron-down {
+	pointer-events: none;
+}

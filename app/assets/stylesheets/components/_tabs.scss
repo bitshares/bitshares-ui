@@ -1,0 +1,37 @@
+div.account-tabs.with-buttons ul {
+    width: 100%;
+
+    // > li.total-value {
+    //     max-width: 15rem;
+    // }
+    > li.tabs-action-buttons {
+        text-align: right;
+        padding-right: 10px;
+
+        > div > button:nth-of-type(2) {
+            &.button {
+                margin-left: 10px;
+            }
+        }
+        > div > button.button {
+            margin: 5px 0;
+            min-width: 5.5rem;
+        }
+    }
+}
+
+@include breakpoint(large) {
+    div.account-tabs.with-buttons ul {
+        > li.tabs-action-buttons {
+            padding-left: 1rem;
+            > div > button:nth-of-type(2) {
+                &.button {
+                    margin-left: 10px;
+                }
+            }
+            > div > button.button {
+                margin: 10px auto;
+            }
+        }
+    }
+}
