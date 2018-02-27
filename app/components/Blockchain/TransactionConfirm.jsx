@@ -117,7 +117,7 @@ class TransactionConfirm extends React.Component {
             );
             button_group = (
                 <div className="button-group">
-                    <div className="button" onClick={this.onCloseClick.bind(this)}>
+                    <div className="button primary hollow" onClick={this.onCloseClick.bind(this)}>
                         <Translate content="transfer.close" />
                     </div>
                 </div>
@@ -131,7 +131,7 @@ class TransactionConfirm extends React.Component {
             );
             button_group = (
                 <div className="button-group">
-                    <div className="button" onClick={this.onCloseClick.bind(this)}>
+                    <div className="button primary hollow" onClick={this.onCloseClick.bind(this)}>
                         <Translate content="transfer.close" />
                     </div>
                 </div>
@@ -159,7 +159,7 @@ class TransactionConfirm extends React.Component {
                                 <Translate content="transfer.confirm" />
                             }
                         </div>
-                        <div className="button" onClick={this.onCloseClick.bind(this)}>
+                        <div className="button primary hollow" onClick={this.onCloseClick.bind(this)}>
                             <Translate content="account.perm.cancel" />
                         </div>
                     </div>

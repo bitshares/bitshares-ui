@@ -171,7 +171,6 @@ export default class ExchangeHeader extends React.Component {
                                 </ul>
                                 <ul className="market-stats stats top-stats">
                                     <li className="stressed-stat input clickable" style={{padding:"16px"}} onClick={this.props.onToggleCharts}>
-
                                         {!showDepthChart ?
                                             <Translate
                                                 content="exchange.order_depth"
@@ -180,7 +179,6 @@ export default class ExchangeHeader extends React.Component {
                                                 content="exchange.price_history"
                                                 data-intro={translator.translate("walkthrough.price_chart")}
                                             />}
-
                                     </li>
                                 </ul>
                             </div>
