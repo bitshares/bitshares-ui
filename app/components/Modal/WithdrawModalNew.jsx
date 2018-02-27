@@ -686,14 +686,14 @@ class WithdrawModalNew extends React.Component {
           }
 
           {/*ESTIMATED VALUE*/}
-          {
+          {/*
             (assetAndGateway || quantity) && !isBTS ? 
             <div>
               <label className="left-label"><Translate content="modal.withdraw.estimated_value" /> ({preferredCurrency})</label>
               <ExchangeInput value={userEstimate != null ? userEstimate : estimatedValue} onChange={this.onEstimateChanged.bind(this)} onFocus={onFocus} onBlur={onBlur} />
             </div> :
             null
-          }
+          */}
 
           {/*WITHDRAW ADDRESS*/}
           {
