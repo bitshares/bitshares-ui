@@ -14,11 +14,9 @@ class MarketStats extends React.Component {
         super();
 
         this.statsInterval = null;
-        const {marketID, first, second} = marketUtils.getMarketID(props.base, props.quote);
+        const {marketName} = marketUtils.getMarketName(props.base, props.quote);
         this.state = {
-            marketID,
-            first,
-            second
+            marketName
         };
     }
 
@@ -32,16 +30,16 @@ class MarketStats extends React.Component {
 
     shouldComponentUpdate(np) {
         return (
-            this._checkStats(np.allMarketStats.get(this.state.marketID), this.props.allMarketStats.get(this.state.marketID)) ||
+            this._checkStats(np.allMarketStats.get(this.state.marketName), this.props.allMarketStats.get(this.state.marketName)) ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id")
         );
     }
 
     componentWillMount() {
-        MarketsActions.getMarketStats.defer(this.state.second, this.state.first);
+        MarketsActions.getMarketStats.defer(this.props.base, this.props.quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.state.second, this.state.first), 35 * 1000);
+        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.props.base, this.props.quote), 35 * 1000);
     }
 
     componentWillUnmount() {
@@ -68,8 +66,8 @@ class MarketPriceInner extends MarketStats {
 
     render() {
         let {allMarketStats} = this.props;
-        const {marketID} = this.state;
-        const marketStats = allMarketStats.get(marketID);
+        const {marketName} = this.state;
+        const marketStats = allMarketStats.get(marketName);
         let price = marketStats && marketStats.price ? marketStats.price : null;
         // if (!price && marketStatsInverted && marketStatsInverted.price) {
         //     price = marketStatsInverted.price.invert();

@@ -140,6 +140,14 @@ a.action-button > span {
 }
 
 div.header-selector {
+    > .filter {
+        margin-right: 1rem;
+        input {
+            margin: 0;
+            height: 2rem;
+            padding: 0 10px;
+        }
+    }
     > .selector div {
         font-size: 1rem;
         margin-bottom: 0.5rem;

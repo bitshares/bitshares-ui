@@ -26,8 +26,7 @@ class Settings extends React.Component {
         let menuEntries = this._getMenuEntries(props);
         let activeSetting = 0;
 
-        let tabIndex = menuEntries.indexOf(props.params.tab);
-
+        let tabIndex = !!props.params.tab ? menuEntries.indexOf(props.params.tab) : props.viewSettings.get("activeSetting", 0);
         if(tabIndex >= 0)
             activeSetting = tabIndex;
 
@@ -217,6 +216,7 @@ class Settings extends React.Component {
         const {menuEntries, activeSetting, settingEntries} = this.state;
         let entries;
         let activeEntry = menuEntries[activeSetting] || menuEntries[0];
+
         switch (activeEntry) {
 
         case "accounts":
@@ -281,7 +281,7 @@ class Settings extends React.Component {
                     </div>
 
                     <div className="grid-content" style={{paddingLeft: "1rem", paddingRight: "1rem", maxWidth: 1000}}>
-                        <div className="grid-block small-12 medium-10 no-margin vertical">
+                        <div className="grid-block small-12 no-margin vertical">
                             <Translate component="h3" content={"settings." + menuEntries[activeSetting]}/>
                             {activeEntry != "access" && <Translate unsafe style={{paddingTop: 5, marginBottom: 30}} content={`settings.${menuEntries[activeSetting]}_text`} className="panel-bg-color"/>}
                             {entries}

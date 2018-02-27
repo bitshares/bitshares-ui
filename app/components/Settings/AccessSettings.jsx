@@ -80,27 +80,29 @@ class ApiNode extends React.Component {
         */
         const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
 
-        var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
-         <Translate className={up ? "low" : "high"} style={{marginBottom: 0}} component="h3" content={"settings." + (up ? "node_up" : "node_down")} />
+        var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: 5}}>
           {up && <span className={color}><Translate content={`settings.${latencyKey}`} /> ({friendlyPing})</span>}
           {!up && <span className="high">__</span>}
         </div>;
 
+        let showApiStatus = (allowActivation && !automatic) || (!allowActivation && !allowRemoval && !automatic);
+
         return <div
             className="api-node"
-            style={{position: "relative", padding: "0.5em 1em 0.5em 1em"}}
             onMouseOver={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >
             <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
-            <p style={{marginBottom: 0}}>{displayUrl}</p>
+            <div className="api-status">
+                <span style={{marginBottom: 0}}>{displayUrl}</span>
+                {showApiStatus && <span> | </span>}
+                {showApiStatus && <Translate className={up ? "low" : "high"} style={{marginBottom: 0}} component="span" content={"settings." + (up ? "node_up" : "node_down")} />}
+            </div>
             {automatic && autoActive ? <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}><Translate content="account.votes.active_short" component="h3" className="low" style={{marginBottom: 0}} /></div> : null}
             {(!allowActivation && !allowRemoval && !automatic) && Status}
-
             {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
-
             {(allowActivation || allowRemoval) && state.hovered && !(automatic && autoActive) &&
-                <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
+                <div style={{position: "absolute", right: "1em", top: "1em"}}>
                     {!automatic && (hidden ?
                         <div className="button" onClick={this.show.bind(this, url)}><Translate content="settings.show"/>
                         </div>

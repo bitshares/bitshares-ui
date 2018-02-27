@@ -18,7 +18,7 @@ class AccountPermissions extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {isOwner: false};
+        this.state = {};
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
     }
@@ -132,8 +132,7 @@ class AccountPermissions extends React.Component {
         if (this.didChange("active")) {
             updateObject.active = this.permissionsToJson(s.active_threshold, s.active_accounts, s.active_keys, s.active_addresses, s.active_weights);
         }
-        /* Also include owner keys if the user has indicated it is necessary using the checkbox */
-        if (this.didChange("owner") || this.state.isOwner) {
+        if (this.didChange("owner")) {
             updateObject.owner = this.permissionsToJson(s.owner_threshold, s.owner_accounts, s.owner_keys, s.owner_addresses, s.owner_weights);
         }
         if (this.didChange("owner") && s.owner_keys.size === 0 && s.owner_addresses.size === 0 && s.owner_accounts.size === 1 && s.owner_accounts.first() === updated_account.id) {
@@ -290,24 +289,6 @@ class AccountPermissions extends React.Component {
                                 />
                                 <br/>
                                 {error1 ? <div className="content-block has-error">{error1}</div> : null}
-
-                                <div>
-                                    <label
-                                        className="inline-block"
-                                        style={{
-                                            position: "relative",
-                                            top: -10,
-                                            margin: 0
-                                        }}
-                                        data-place="bottom"
-                                        data-tip={counterpart.translate("tooltip.sign_owner")}
-                                    ><span ><Translate content="account.perm.sign_owner" />:&nbsp;&nbsp;</span>
-                                    </label>
-                                    <div className="switch" onClick={() => {this.setState({isOwner: !this.state.isOwner});}}>
-                                        <input type="checkbox" checked={this.state.isOwner} />
-                                        <label />
-                                    </div>
-                                </div>
                             </Tab>
 
                             <Tab title="account.perm.owner">
