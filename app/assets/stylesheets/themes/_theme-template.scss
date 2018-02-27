@@ -699,20 +699,38 @@ $mobile-input-bg
     }
 
     // Typeahead
-    .typeahead > div {
+    .typeahead {
         > div {
-            z-index: 1003;
-            background-color: $input-background !important;
             > div {
-                color: $primary-text-color !important;
-                background-color: transparent !important;
-                &:hover, &:active, &:focus, &:visited {
-                    background-color: darken($input-background, 10%) !important;
+                z-index: 1003;
+                background-color: $input-background !important;
+                > div {
+                    color: $primary-text-color !important;
+                    background-color: transparent !important;
+                    &:hover, &:active, &:focus, &:visited {
+                        background-color: darken($input-background, 10%) !important;
+                    }
                 }
             }
         }
-    }
+        .typeahead__input {
+            background: $input-background;
+        }
+        .typeahead__innerList {
+            background: $panel-bg-color;
+        }
+        .typeahead__innerItem {
+            color: $primary-text-color;
+            
+            > .typeahead__innerItem__highlight {
+                background-color: darken($input-background, 10%) !important;
+            }
 
+            > .typeahead__innerItem__disabled {
+                color: $inactive-text-color;
+            }
+        }
+    }
 
     ul.button-group.segmented {
         > li.is-active > a {
