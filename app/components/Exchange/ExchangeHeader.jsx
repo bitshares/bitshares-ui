@@ -99,9 +99,9 @@ export default class ExchangeHeader extends React.Component {
             /* Settlment Offset */
             let settleAsset = baseAsset.get("id") == "1.3.0" ? quoteAsset : quoteAsset.get("id") == "1.3.0" ? baseAsset : null;
 
-            if(settleAsset) {
+            if(settleAsset && feedPrice) {
                 let offset_percent = settleAsset.getIn(["bitasset", "options"]).toJS().force_settlement_offset_percent;
-                settlePrice = baseAsset.get("id") == "1.3.0" ? feedPrice.toReal()/(1 + (offset_percent / 10000)) : feedPrice.toReal()*(1 + (offset_percent / 10000))
+                settlePrice = baseAsset.get("id") == "1.3.0" ? feedPrice.toReal()/(1 + (offset_percent / 10000)) : feedPrice.toReal()*(1 + (offset_percent / 10000));
             }
         }
 
