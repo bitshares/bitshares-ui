@@ -1427,6 +1427,9 @@ $mobile-input-bg
     }
 
     .api-node {
+        &:hover {
+            background-color: lighten($bg-color, 4%);
+        }
         border: 1px solid $settings-api-node-border-color;
         &:nth-child(n+1) {
             border-bottom: 0;

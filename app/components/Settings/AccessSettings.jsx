@@ -80,7 +80,7 @@ class ApiNode extends React.Component {
         */
         const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
 
-        var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: "0.5em"}}>
+        var Status =  (isTestnet && !ping) ? null : <div className="api-status" style={{position: "absolute", textAlign: "right", right: "1em", top: 5}}>
           {up && <span className={color}><Translate content={`settings.${latencyKey}`} /> ({friendlyPing})</span>}
           {!up && <span className="high">__</span>}
         </div>;
@@ -89,7 +89,6 @@ class ApiNode extends React.Component {
 
         return <div
             className="api-node"
-            style={{position: "relative", padding: "0.5em 1em 0.5em 1em"}}
             onMouseOver={this.setHovered.bind(this)}
             onMouseLeave={this.clearHovered.bind(this)}
         >
@@ -103,7 +102,7 @@ class ApiNode extends React.Component {
             {(!allowActivation && !allowRemoval && !automatic) && Status}
             {allowActivation && !automatic && (up ? !state.hovered : (allowRemoval ? !state.hovered : true) ) && Status}
             {(allowActivation || allowRemoval) && state.hovered && !(automatic && autoActive) &&
-                <div style={{position: "absolute", right: "1em", top: "1.2em"}}>
+                <div style={{position: "absolute", right: "1em", top: "1em"}}>
                     {!automatic && (hidden ?
                         <div className="button" onClick={this.show.bind(this, url)}><Translate content="settings.show"/>
                         </div>
