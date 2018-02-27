@@ -124,8 +124,8 @@ class Header extends React.Component {
 
     _showWithdraw(e) {
       e.preventDefault();
-      this.refs.withdraw_modal_new.show();
       this._closeDropdown();
+      this.refs.withdraw_modal_new.show();
     }
 
     _triggerMenu(e) {

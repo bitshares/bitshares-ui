@@ -209,6 +209,7 @@ export default class TypeAhead extends React.Component {
                         top: !!this.props.label ? 35 : 7,
                         transform: isMenuShowing ? "rotate(180deg)" : null
                     }}
+                    onClick={this.onClick}
                 />
             </div>
         );

@@ -32,6 +32,7 @@ import {ChainStore} from "bitsharesjs/es";
 const logo = require("assets/logo-ico-blue.png");
 const gatewayBoolCheck = "withdrawalAllowed";
 
+var renders = 0;
 class WithdrawModalNew extends React.Component {
     constructor(props){
         super(props);
@@ -80,15 +81,6 @@ class WithdrawModalNew extends React.Component {
         let initialState = {};
 
         let { backedCoins, openLedgerBackedCoins, rudexBackedCoins } = this.props;
-
-        AssetActions.getAssetList("BTS", 1);
-        backedCoins.forEach((gateway, gatewayName)=>{
-          gateway.forEach((coin)=>{
-            let symbol = coin.backingCoinType || coin.symbol;
-            AssetActions.getAssetList(coin.backingCoinType, 1);
-            AssetActions.getAssetList(coin.symbol, 1);
-          });
-        });
 
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(this, gatewayBoolCheck);
         initialState.coinToGatewayMapping = coinToGatewayMapping;
@@ -815,7 +807,6 @@ const ConnectedWithdrawModal = connect(WithdrawModalNew, {
             openLedgerBackedCoins: GatewayStore.getState().backedCoins.get("OPEN", []),
             rudexBackedCoins: GatewayStore.getState().backedCoins.get("RUDEX", []),
             blockTradesBackedCoins: GatewayStore.getState().backedCoins.get("TRADE", []),
-            assets: AssetStore.getState().assets,
             preferredCurrency: SettingsStore.getSetting("unit"),
             marketStats: MarketsStore.getState().allMarketStats,
         };
@@ -833,7 +824,17 @@ class WithdrawModalWrapper extends React.Component {
 
     render(){
       const { props } = this;
-      return <BalanceWrapper wrap={ConnectedWithdrawModal} {...props} balances={props.account.get("balances")} />
+
+      let balances = props.account.get("balances");
+      let assets = Immutable.fromJS({});
+      balances.forEach((item, id)=>{
+        try {
+          let asset = ChainStore.getObject(id).toJS();
+          assets = assets.set(id, asset);
+        } catch(e){}
+      });
+
+      return <BalanceWrapper wrap={ConnectedWithdrawModal} {...props} balances={props.account.get("balances")} assets={assets} />
     }
 }
 
@@ -841,7 +842,7 @@ const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper, {keep_up
     listenTo() {
         return [AccountStore];
     },
-    getProps() {
+    getProps(props) {
         return {
             account: AccountStore.getState().currentAccount
         };
