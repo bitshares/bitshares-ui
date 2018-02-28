@@ -11,9 +11,11 @@ class WalletUnlockStore {
 
     constructor() {
         this.bindActions(WalletUnlockActions);
+        const storedSettings = ss.get("settings_v3");
+        let passwordLogin = "passwordLogin" in storedSettings ? storedSettings.passwordLogin : true;
         this.state = {
             locked: true,
-            passwordLogin: ss.get("settings_v3").passwordLogin || false
+            passwordLogin: passwordLogin
         };
 
         this.walletLockTimeout = this._getTimeout(); // seconds (10 minutes)

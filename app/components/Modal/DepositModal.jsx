@@ -328,7 +328,7 @@ class DepositModalContent extends DecimalChecker {
                 
                     <div className="Modal__footer">
                         <div className="container-row" style={{paddingBottom: 35}}>
-                            <button className="ActionButton_Close" style={{width: "100%"}} onClick={this.onClose.bind(this)}>
+                            <button className="button primary hollow" onClick={this.onClose.bind(this)}>
                                 <Translate content="modal.deposit.close" />
                             </button>
                         </div>

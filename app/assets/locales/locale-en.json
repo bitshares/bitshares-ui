@@ -17,7 +17,8 @@
     "es": "Español",
     "it": "Italiano",
     "tr": "Türkçe",
-    "ru": "Русский"
+    "ru": "Русский",
+    "ja": "日本語"
   },
   "incognito": {
     "no_support": "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
@@ -998,6 +999,7 @@
     "activate": "Activate",
     "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
     "valid_node_url": "Node URL must begin with ws:// or wss://",
+    "node_already_exists": "Node with such URL already exists",
     "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes",
     "low_latency": "Low latency",
     "medium_latency": "Medium latency",
@@ -1065,6 +1067,7 @@
     "buy_min": "Buy at least",
     "sell": "Sell",
     "receive": "Receive",
+    "flip": "Flip",
     "vertical": "Vertical",
     "horizontal": "Horizontal",
     "market_name": "My Markets",
@@ -1119,6 +1122,12 @@
     "description": "Description",
     "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
     "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
+  },
+  "dashboard": {
+    "starred_markets": "Starred Markets",
+    "top_markets": "Top Markets",
+    "featured_markets": "Featured Markets",
+    "table_empty": "No market matched"
   },
   "fees": {
     "title": "Fee Schedule"

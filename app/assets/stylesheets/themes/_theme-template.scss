@@ -43,7 +43,9 @@ $settings-select-color,
 $settings-menu-hover-bg,
 $settings-menu-active-bg,
 $settings-api-node-border-color,
-$main-content-margin-block-bg-color
+$main-content-margin-block-bg-color,
+$modal-bg-color,
+$mobile-input-bg
 ) {
 
   $hamburger-submenu-display-endpoint: 990px;
@@ -547,6 +549,14 @@ $main-content-margin-block-bg-color
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
         }
+        > tbody > tr.table-empty > td {
+            padding: 5rem 0;
+            font-size: 1.5rem;
+
+            text-align: center;
+            color: $account-dimmed !important;
+            background-color: $bg-color !important;
+        }
     }
 
     // block-list
@@ -689,20 +699,38 @@ $main-content-margin-block-bg-color
     }
 
     // Typeahead
-    .typeahead > div {
+    .typeahead {
         > div {
-            z-index: 1003;
-            background-color: $input-background !important;
             > div {
-                color: $primary-text-color !important;
-                background-color: transparent !important;
-                &:hover, &:active, &:focus, &:visited {
-                    background-color: darken($input-background, 10%) !important;
+                z-index: 1003;
+                background-color: $input-background !important;
+                > div {
+                    color: $primary-text-color !important;
+                    background-color: transparent !important;
+                    &:hover, &:active, &:focus, &:visited {
+                        background-color: darken($input-background, 10%) !important;
+                    }
                 }
             }
         }
-    }
+        .typeahead__input {
+            background: $input-background;
+        }
+        .typeahead__innerList {
+            background: $panel-bg-color;
+        }
+        .typeahead__innerItem {
+            color: $primary-text-color;
+            
+            > .typeahead__innerItem__highlight {
+                background-color: darken($input-background, 10%) !important;
+            }
 
+            > .typeahead__innerItem__disabled {
+                color: $inactive-text-color;
+            }
+        }
+    }
 
     ul.button-group.segmented {
         > li.is-active > a {
@@ -1416,12 +1444,10 @@ $main-content-margin-block-bg-color
         }
     }
 
-    div.fm-container:hover {
-        background-color: darken($light-panel-bg-color, 5%);
-        cursor: pointer;
-    }
-
     .api-node {
+        &:hover {
+            background-color: lighten($bg-color, 4%);
+        }
         border: 1px solid $settings-api-node-border-color;
         &:nth-child(n+1) {
             border-bottom: 0;
@@ -1761,19 +1787,23 @@ $main-content-margin-block-bg-color
     }
 
     .pulsate {
+        animation: .5s ease-out 1;
 
         &.red {
-            animation: pulsate-red .5s ease-out;
+            animation-name: pulsate-red;
         }
-
+             
         &.green {
-            animation: pulsate-green .5s ease-out;
+            animation-name: pulsate-green;
         }
-
-        animation-iteration-count: 1;
+             
+        &.reverse {
+            animation-timing-function: ease-in;
+            animation-direction: reverse;
+        }
     }
 
-    @-webkit-keyframes pulsate-green {
+    @keyframes pulsate-green {
         0% {
             color: $pulsate-green-start;
         }
@@ -1781,7 +1811,7 @@ $main-content-margin-block-bg-color
             color: $pulsate-green-end;
         }
     }
-    @-webkit-keyframes pulsate-red {
+    @keyframes pulsate-red {
         0% {
             color: $pulsate-red-start;
         }
@@ -1895,6 +1925,21 @@ $main-content-margin-block-bg-color
             }
         }
     }
+
+    .modal {
+        border-radius: 6px;
+    }
+
+    @media screen and (max-width: 640px) {
+      .modal {
+        background-color: $modal-bg-color;
+        border-radius: 0;
+
+        input[type="text"], input[type="text"]:focus, input[type="text"]:active, input[type="password"], input[type="password"]:focus, input[type="password"]:active, input[type="email"], input[type="email"]:focus, input[type="email"]:active, input[type="number"], input[type="number"]:focus, input[type="number"]:active, input[type="search"], input[type="search"]:focus, input[type="search"]:active, textarea, textarea:focus, textarea:active, input[role="combobox"], input[role="combobox"]:focus, input[role="combobox"]:active, select[role="combobox"], select[role="combobox"]:focus, select[role="combobox"]:active, .typeahead > div {
+            background-color: $mobile-input-bg;
+        }
+      }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -2005,9 +2050,14 @@ $main-content-margin-block-bg-color
 
 .local-wallet-menu {
     // top: 50px!important;
-
     .table-cell {
         display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:nth-of-type(2) {
+            max-width: 17em;
+        }
     }
 }
 

@@ -91,7 +91,7 @@ const MarketUtils = {
         if (typeof buy.amount !== "number") {
             buy.amount = parseInt(buy.amount, 10);
         }
-        let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision)
+        let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision);
         let price = utils.price_to_text(fullPrice, order.call_price ? base : quote, order.call_price ? quote : base);
 
         let amount, value;
@@ -157,7 +157,7 @@ const MarketUtils = {
         if (order.time) {
             time = order.time.split("T")[1];
             let now = new Date();
-            let offset = now.getTimezoneOffset() / 60;            
+            let offset = now.getTimezoneOffset() / 60;
             let date = utils.format_date(order.time).split(/\W/);
             let hour = time.substr(0, 2);
             let hourNumber = parseInt(hour, 10);
@@ -351,13 +351,16 @@ const MarketUtils = {
         };
     },
 
-    getMarketID(base, quote) {
-        if (!base || !quote) return {marketId: "_"};
+    getMarketName(base, quote) {
+        if (!base || !quote) return {marketName: "_"};
         let baseID = parseInt(base.get("id").split(".")[2], 10);
         let quoteID = parseInt(quote.get("id").split(".")[2], 10);
-        const marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
-        return {baseID, quoteID, marketID, first: quoteID > baseID ? quote : base, second: quoteID > baseID ? base : quote};
+        let first = quoteID > baseID ? quote : base;
+        let second = quoteID > baseID ? base : quote;
+
+        const marketName = `${first.get("symbol")}_${second.get("symbol")}`;
+        return {baseID, quoteID, marketName, first, second};
     }
 };
 

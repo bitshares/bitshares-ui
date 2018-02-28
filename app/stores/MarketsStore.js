@@ -331,6 +331,8 @@ class MarketsStore {
             );
 
             this.allMarketStats = this.allMarketStats.set(marketName, stats);
+            let {invertedStats, invertedMarketName} = this._invertMarketStats(stats, marketName);
+            this.allMarketStats = this.allMarketStats.set(invertedMarketName, invertedStats);
 
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set("volumeBase", stats.volumeBase);
@@ -973,13 +975,32 @@ class MarketsStore {
             price,
             close
         };
+    }
 
+    _invertMarketStats(stats, market) {
+        let invertedMarketName = market.split("_")[1] + "_" + market.split("_")[0];
+        return {
+            invertedStats: {
+                change: ((1 / (1 + parseFloat(stats.change) / 100) -1) * 100).toFixed(2),
+                price: stats.price ? stats.price.invert() : stats.price,
+                volumeBase: stats.volumeQuote,
+                volumeQuote: stats.volumeBase,
+                close: stats.close ? {
+                    base: stats.close.quote,
+                    quote: stats.close.base
+                } : stats.close
+            },
+            invertedMarketName
+        };
     }
 
     onGetMarketStats(payload) {
         if (payload && payload.ticker) {
             let stats = this._calcMarketStats(payload.base, payload.quote, payload.market, payload.ticker);
             this.allMarketStats = this.allMarketStats.set(payload.market, stats);
+
+            let {invertedStats, invertedMarketName} = this._invertMarketStats(stats, payload.market);
+            this.allMarketStats = this.allMarketStats.set(invertedMarketName, invertedStats);
         }
     }
 

@@ -151,35 +151,35 @@ class AccountOrders extends React.Component {
                 // let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
 
 
-                // let marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
-                const {marketID} = marketUtils.getMarketID(base, quote);
-                const direction = marketDirections.get(marketID);
+                // let marketName = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
+                const {marketName} = marketUtils.getMarketName(base, quote);
+                const direction = marketDirections.get(marketName);
 
-                if (!markets[marketID]) {
+                if (!markets[marketName]) {
                     if (direction) {
-                        markets[marketID] = {
+                        markets[marketName] = {
                             base: {id: base.get("id"), symbol: base.get("symbol"), precision: base.get("precision")},
                             quote: {id: quote.get("id"), symbol: quote.get("symbol"), precision: quote.get("precision")}
                         };
                     } else {
-                        markets[marketID] = {
+                        markets[marketName] = {
                             base: {id: quote.get("id"), symbol: quote.get("symbol"), precision: quote.get("precision")},
                             quote: {id: base.get("id"), symbol: base.get("symbol"), precision: base.get("precision")}
                         };
                     }
                 }
-                let limitOrder = new LimitOrder(order, assets, markets[marketID].quote.id);
+                let limitOrder = new LimitOrder(order, assets, markets[marketName].quote.id);
 
-                let marketBase = ChainStore.getAsset(markets[marketID].base.id);
-                let marketQuote = ChainStore.getAsset(markets[marketID].quote.id);
+                let marketBase = ChainStore.getAsset(markets[marketName].base.id);
+                let marketQuote = ChainStore.getAsset(markets[marketName].quote.id);
 
-                if (!marketOrders[marketID]) {
-                    marketOrders[marketID] = [];
+                if (!marketOrders[marketName]) {
+                    marketOrders[marketName] = [];
                 }
 
-                marketOrders[marketID].push(
+                marketOrders[marketName].push(
                     <OrderRow
-                        ref={markets[marketID].base.symbol}
+                        ref={markets[marketName].base.symbol}
                         key={order.id}
                         order={limitOrder}
                         base={marketBase}
@@ -192,7 +192,7 @@ class AccountOrders extends React.Component {
                         dashboard
                         isMyAccount={this.props.isMyAccount}
                         settings={this.props.settings}
-                        onFlip={this.onFlip.bind(this, marketID)}
+                        onFlip={this.onFlip.bind(this, marketName)}
                         onCheckCancel={this.onCheckCancel.bind(this, order.id)}
                     />
                 );

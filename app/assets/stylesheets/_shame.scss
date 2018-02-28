@@ -192,12 +192,6 @@ table > tbody > tr.control-row > td {
   border-radius: 0px;
 }
 
-@media screen and (max-width: 640px) {
-  .modal {
-    background: #2a2a2a!important;
-  }
-}
-
 div.modal {
   overflow: visible !important;
 }
@@ -475,8 +469,4 @@ h4 {
 
 ul > li {
     transition: background-color 0.3s ease 0s;
-}
-
-.modal {
-    border-radius: 6px!important;
 }

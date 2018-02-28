@@ -17,7 +17,8 @@
     "es": "Español",
     "it": "Italiano",
     "tr": "Türkçe",
-    "ru": "Русский"
+    "ru": "Русский",
+    "ja": "日本語"
   },
   "incognito": {
     "no_support": "Esta billetera BitShares se basa en el almacenamiento local y IndexedDB que no son persistentes cuando se está usando el navegador en Incógnito. Recomendamos usar una sesión de navegación normal.",

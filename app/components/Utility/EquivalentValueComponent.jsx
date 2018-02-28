@@ -8,7 +8,7 @@ import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
-import {MarketStatsCheck} from "../Utility/EquivalentPrice";
+import MarketStatsCheck from "./MarketStatsCheck";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -48,6 +48,7 @@ class ValueComponent extends MarketStatsCheck {
     shouldComponentUpdate(np) {
         return (
             super.shouldComponentUpdate(np) ||
+            !utils.are_equal_shallow(np.pulsate, this.props.pulsate) ||
             np.toAsset !== this.props.toAsset ||
             np.fromAsset !== this.props.fromAsset ||
             np.amount !== this.props.amount
@@ -74,9 +75,9 @@ class ValueComponent extends MarketStatsCheck {
         }
 
         let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close :
-                                        fromID === "1.3.0" || fromAsset.has("bitasset") ? fromAsset : null,
+                                        fromID === "1.3.0" ? fromAsset : null,
                                         toStats && toStats.close ? toStats.close :
-                                        (toID === "1.3.0" || toAsset.has("bitasset")) ? toAsset : null,
+                                        toID === "1.3.0" ? toAsset : null,
                                         fromID,
                                         toID);
 
@@ -85,7 +86,7 @@ class ValueComponent extends MarketStatsCheck {
     }
 
     render() {
-        let {amount, toAsset, fromAsset, fullPrecision} = this.props;
+        let {amount, toAsset, fromAsset, fullPrecision, ...others} = this.props;
 
         let toID = toAsset.get("id");
         let toSymbol = toAsset.get("symbol");
@@ -100,7 +101,15 @@ class ValueComponent extends MarketStatsCheck {
             return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
         }
 
-        return <FormattedAsset hide_asset={this.props.hide_asset} noPrefix amount={eqValue} asset={toID} decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.fullDecimals ? 0 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}/>;
+        return (
+            <FormattedAsset 
+                noPrefix
+                amount={eqValue}
+                asset={toID}
+                decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.fullDecimals ? 0 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}
+                {...others}
+            />
+        );
     }
 }
 ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
@@ -131,13 +140,20 @@ class BalanceValueComponent extends React.Component {
     }
 
     render() {
-        const {balance} = this.props;
+        const {balance, ...others} = this.props;
         const isBalanceObject = !!balance.getIn(["balance", "amount"]);
 
         let amount = Number(isBalanceObject ? balance.getIn(["balance", "amount"]) : balance.get("balance"));
         let fromAsset = isBalanceObject ? balance.getIn(["balance", "asset_id"]) : balance.get("asset_type");
         if (isNaN(amount)) return <span>--</span>;
-        return <EquivalentValueComponent refCallback={this.props.refCallback} hide_asset={this.props.hide_asset} amount={amount} fromAsset={fromAsset} noDecimals={true} toAsset={this.props.toAsset}/>;
+        return (
+            <EquivalentValueComponent
+                amount={amount}
+                fromAsset={fromAsset}
+                noDecimals={true}
+                {...others}
+            />
+        );
     }
 }
 BalanceValueComponent = BindToChainState(BalanceValueComponent, {keep_updating: true});

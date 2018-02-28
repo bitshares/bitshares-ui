@@ -8,6 +8,7 @@ import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
+import Pulsate from "./Pulsate";
 import {ChainStore} from "bitsharesjs/es";
 
 /**
@@ -60,7 +61,7 @@ class FormattedAsset extends React.Component {
     }
 
     render() {
-        let {amount, decimalOffset, color, asset, hide_asset, hide_amount, asPercentage} = this.props;
+        let {amount, decimalOffset, color, asset, hide_asset, hide_amount, asPercentage, pulsate} = this.props;
 
         if( asset && asset.toJS ) asset = asset.toJS();
 
@@ -98,15 +99,28 @@ class FormattedAsset extends React.Component {
             />
             {this.props.assetInfo}
         </div>;
+
+        let formattedValue = null;
+        if (!hide_amount) {
+            let value = this.props.exact_amount ? amount : amount / precision;
+            formattedValue = (
+                <FormattedNumber
+                    value={value}
+                    minimumFractionDigits={Math.max(decimals, 0)}
+                    maximumFractionDigits={Math.max(decimals, 0)}
+                />
+            );
+            
+            if (pulsate) {
+                if (typeof pulsate !== "object") pulsate = {};
+                formattedValue = (
+                    <Pulsate value={value} {...pulsate}>{formattedValue}</Pulsate>
+                );
+            }
+        }
         return (
-                <span className={colorClass}  >
-                {!hide_amount ?
-                    <FormattedNumber
-                        value={this.props.exact_amount ? amount : amount / precision}
-                        minimumFractionDigits={Math.max(decimals, 0)}
-                        maximumFractionDigits={Math.max(decimals, 0)}
-                    />
-                : null}
+                <span className={colorClass}>
+                {formattedValue}
                 {!hide_asset && (this.props.assetInfo ? (
                     <span>&nbsp;
                     <Popover
