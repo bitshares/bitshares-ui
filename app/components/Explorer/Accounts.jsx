@@ -11,6 +11,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
 import { connect } from "alt-react";
+import LoadingIndicator from "../LoadingIndicator";
 
 class AccountRow extends React.Component {
     static propTypes = {
@@ -79,7 +80,8 @@ class Accounts extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            searchTerm: props.searchTerm
+            searchTerm: props.searchTerm,
+            isLoading: false
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
@@ -88,17 +90,19 @@ class Accounts extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
                 !Immutable.is(nextProps.searchAccounts, this.props.searchAccounts) ||
-                nextState.searchTerm !== this.state.searchTerm
+                nextState.searchTerm !== this.state.searchTerm ||
+                nextState.isLoading !== this.state.isLoading
             );
     }
 
     _onSearchChange(e) {
-        this.setState({searchTerm: e.target.value.toLowerCase()});
+        this.setState({searchTerm: e.target.value.toLowerCase(), isLoading: true});
         this._searchAccounts(e.target.value);
     }
 
     _searchAccounts(searchTerm) {
         AccountActions.accountSearch(searchTerm);
+        this.setState({isLoading: false});
     }
 
     render() {
@@ -146,9 +150,14 @@ class Accounts extends React.Component {
                             </thead>
 
                             <tbody>
-                                {accountRows}
+                                {this.state.isLoading ? 
+                                    <tr colSpan="5"></tr>
+                                    :
+                                    accountRows
+                                }
                             </tbody>
                         </table>
+                        {this.state.isLoading ? <div style={{textAlign: "center", padding: 10}}><LoadingIndicator type="three-bounce" /></div> : null}
                     </div>
                 </div>
             </div>
