@@ -69,11 +69,11 @@ const MarketUtils = {
         if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
             toPrice = marketStats.get(toMarket).price.clone();
         }
-
         if (toAsset.get("id") === fromAsset.get("id")) return 1;
 
         let finalPrice;
         if (toPrice && fromPrice) {
+            if(fromPrice.base.amount == 0 || toPrice.base.amount == 0) return null;
             finalPrice = toPrice.times(fromPrice);
         } else if (toPrice) {
             finalPrice = toPrice;
@@ -152,7 +152,7 @@ const MarketUtils = {
         if (typeof buy.amount !== "number") {
             buy.amount = parseInt(buy.amount, 10);
         }
-        let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision)
+        let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision);
         let price = utils.price_to_text(fullPrice, order.call_price ? base : quote, order.call_price ? quote : base);
 
         let amount, value;
@@ -412,13 +412,16 @@ const MarketUtils = {
         };
     },
 
-    getMarketID(base, quote) {
-        if (!base || !quote) return {marketId: "_"};
+    getMarketName(base, quote) {
+        if (!base || !quote) return {marketName: "_"};
         let baseID = parseInt(base.get("id").split(".")[2], 10);
         let quoteID = parseInt(quote.get("id").split(".")[2], 10);
-        const marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
-        return {baseID, quoteID, marketID, first: quoteID > baseID ? quote : base, second: quoteID > baseID ? base : quote};
+        let first = quoteID > baseID ? quote : base;
+        let second = quoteID > baseID ? base : quote;
+
+        const marketName = `${first.get("symbol")}_${second.get("symbol")}`;
+        return {baseID, quoteID, marketName, first, second};
     }
 };
 

@@ -191,7 +191,7 @@ class Operation extends React.Component {
                 color = "warning";
                 let o = op[1];
                 /*
-                marketID = OPEN.ETH_USD
+                marketName = OPEN.ETH_USD
                 if (!inverted) (default)
                     price = USD / OPEN.ETH
                     buy / sell OPEN.ETH
@@ -207,8 +207,8 @@ class Operation extends React.Component {
                         <span>
                             <BindToChainState.Wrapper base={o.min_to_receive.asset_id} quote={o.amount_to_sell.asset_id}>
                                 { ({base, quote}) => {
-                                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
-                                    const inverted = this.props.marketDirections.get(marketID);
+                                    const {marketName, first, second} = marketUtils.getMarketName(base, quote);
+                                    const inverted = this.props.marketDirections.get(marketName);
                                     // const paySymbol = base.get("symbol");
                                     // const receiveSymbol = quote.get("symbol");
 
@@ -633,7 +633,7 @@ class Operation extends React.Component {
                 o = op[1];
 
                 /*
-                marketID = OPEN.ETH_USD
+                marketName = OPEN.ETH_USD
                 if (!inverted) (default)
                     price = USD / OPEN.ETH
                     buy / sell OPEN.ETH
@@ -645,8 +645,8 @@ class Operation extends React.Component {
                     isBid = amount_to_sell.asset_symbol = OPEN.ETH
                     amount =
 
-                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
-                    const inverted = this.props.marketDirections.get(marketID);
+                    const {marketName, first, second} = marketUtils.getMarketName(base, quote);
+                    const inverted = this.props.marketDirections.get(marketName);
                     // const paySymbol = base.get("symbol");
                     // const receiveSymbol = quote.get("symbol");
 
@@ -662,8 +662,8 @@ class Operation extends React.Component {
                             <BindToChainState.Wrapper base={o.receives.asset_id} quote={o.pays.asset_id}>
                                 { ({base, quote}) => {
 
-                                    const {marketID, first, second} = marketUtils.getMarketID(base, quote);
-                                    const inverted = this.props.marketDirections.get(marketID);
+                                    const {marketName, first, second} = marketUtils.getMarketName(base, quote);
+                                    const inverted = this.props.marketDirections.get(marketName);
                                     const isBid = o.pays.asset_id === (inverted ? first.get("id") : second.get("id"));
 
 

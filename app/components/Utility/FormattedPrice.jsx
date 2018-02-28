@@ -39,9 +39,9 @@ class FormattedPrice extends React.Component {
 
     constructor(props) {
         super(props);
-        const {marketID, first, second} = marketUtils.getMarketID(this.props.base_asset, this.props.quote_asset);
+        const {marketName, first, second} = marketUtils.getMarketName(this.props.base_asset, this.props.quote_asset);
 
-        this.state = {isPopoverOpen: false, marketId: marketID, first, second};
+        this.state = {isPopoverOpen: false, marketName, first, second};
         this.togglePopover = this.togglePopover.bind(this);
         this.closePopover = this.closePopover.bind(this);
     }
@@ -49,8 +49,8 @@ class FormattedPrice extends React.Component {
     componentWillReceiveProps(np) {
         if (np.base_asset !== this.props.base_asset ||
             np.quote_asset !== this.props.quote_asset) {
-            const {marketID, first, second} = marketUtils.getMarketID(np.base_asset, np.quote_asset);
-            this.setState({marketId: marketID, first, second});
+            const {marketName, first, second} = marketUtils.getMarketName(np.base_asset, np.quote_asset);
+            this.setState({marketName, first, second});
         }
     }
 
@@ -66,7 +66,7 @@ class FormattedPrice extends React.Component {
     onFlip() {
         let setting = {};
 
-        setting[this.state.marketId] = !this.props.marketDirections.get(this.state.marketId);
+        setting[this.state.marketName] = !this.props.marketDirections.get(this.state.marketName);
         SettingsActions.changeMarketDirection(setting);
     }
 
@@ -82,8 +82,8 @@ class FormattedPrice extends React.Component {
 
     goToMarket(e) {
         e.preventDefault();
-        const { marketId, first, second } = this.state;
-        const inverted = this.props.marketDirections.get(marketId);
+        const { marketName, first, second } = this.state;
+        const inverted = this.props.marketDirections.get(marketName);
         this.context.router.push(`/market/${!inverted ? first.get("symbol") : second.get("symbol")}_${!inverted ? second.get("symbol") : first.get("symbol")}`);
     }
 
@@ -91,8 +91,8 @@ class FormattedPrice extends React.Component {
 
         let {base_asset, base_amount, quote_amount,
           marketDirections, hide_symbols, noPopOver} = this.props;
-        const {marketId, first, second} = this.state;
-        let inverted = marketDirections.get(marketId) || this.props.invert;
+        const {marketName, first, second} = this.state;
+        let inverted = marketDirections.get(marketName) || this.props.invert;
         if (this.props.force_direction && second.get("symbol") === this.props.force_direction && inverted) {
             inverted = false;
         } else if (this.props.force_direction && first.get("symbol") === this.props.force_direction && !inverted) {
@@ -139,9 +139,6 @@ class FormattedPrice extends React.Component {
             }
             let decimals = this.props.decimals ? this.props.decimals : price.base.precision;
             decimals = Math.min(8, decimals);
-            if (base.get("id") === "1.3.0") {
-                base.get("precision");
-            }
             formatted_value = (
                 <FormattedNumber
                     value={value}

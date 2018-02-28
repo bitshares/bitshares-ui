@@ -100,7 +100,7 @@ class QrcodeModal extends React.Component {
                                     :
                                     null
                                 }
-                                <button className="button" data-place="bottom" data-html onClick={this.onCancel}>
+                                <button className="button primary hollow" data-place="bottom" data-html onClick={this.onCancel}>
                                     <Translate content="cancel"/>
                                 </button>
                             </div>

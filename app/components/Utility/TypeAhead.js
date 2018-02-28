@@ -182,7 +182,6 @@ export default class TypeAhead extends React.Component {
     };
 
     render() {
-        console.log("render");
         const { isMenuShowing } = this.state || {};
         return (
             <div

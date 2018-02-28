@@ -551,22 +551,22 @@ export default class SendModal extends React.Component {
                                 </div>
                                 :null}
 
-                                <div className="content-block transfer-input" style={{textAlign: "center"}}>
+                                <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
                                         <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
-                                            <button className={classnames("red")} type="submit" value="Cancel" tabIndex={tabIndex++} onClick={this.onClose.bind(this)}>
-                                                <Translate component="span" content="transfer.cancel" />
-                                            </button>
-                                        </div>
-                                        <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
                                             {propose ?
-                                                <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
+                                                <button className={classnames("button primary", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
                                                     <Translate component="span" content="propose" />
                                                 </button> :
-                                                <button className={classnames("blue", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
+                                                <button className={classnames("button primary", {disabled: isSendNotValid})} type="submit" value="Submit" onClick={!isSendNotValid ? this.onSubmit.bind(this) : null} tabIndex={tabIndex++}>
                                                     <Translate component="span" content="transfer.send" />
                                                 </button>
                                             }
+                                        </div>
+                                        <div className="small-6" style={{display: "inline-block", paddingRight: "10px"}}>
+                                            <button className={classnames("button hollow primary")} type="submit" value="Cancel" tabIndex={tabIndex++} onClick={this.onClose.bind(this)}>
+                                                <Translate component="span" content="transfer.cancel" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
