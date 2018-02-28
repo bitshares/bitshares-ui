@@ -631,13 +631,13 @@ class AccountOverview extends React.Component {
                                 <div className="header-selector">
                                     <div className="selector">
                                         <div className={cnames("inline-block", {inactive: shownAssets != "active"})} onClick={shownAssets != "active" ? this._changeShownAssets.bind(this, "active"): () => {}}>
-                                            <h4><Translate content="account.hide_hidden" /></h4>
+                                            <Translate content="account.hide_hidden" />
                                         </div>
                                         {hiddenBalances.length ? <div className={cnames("inline-block", {inactive: shownAssets != "hidden"})} onClick={shownAssets != "hidden" ? this._changeShownAssets.bind(this, "hidden"): () => {}}>
-                                            <h4><Translate content="account.show_hidden" /></h4>
+                                            <Translate content="account.show_hidden" />
                                         </div> : null}
                                         <div className={cnames("inline-block", {inactive: shownAssets != "visual"})} onClick={shownAssets != "visual" ? this._changeShownAssets.bind(this, "visual"): () => {}}>
-                                            <h4><Translate content="account.show_visual" /></h4>
+                                            <Translate content="account.show_visual" />
                                         </div>
                                     </div>
                                 </div>

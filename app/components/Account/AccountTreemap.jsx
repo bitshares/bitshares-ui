@@ -46,6 +46,29 @@ class AccountTreemap extends React.Component {
         let accountBalances = null;
 
         if (balanceObjects && balanceObjects.length > 0) {
+            let totalValue = 0;
+            accountBalances = balanceObjects.forEach((balance) => {
+                if (!balance) return;
+                let balanceObject = typeof(balance) == "string" ? ChainStore.getObject(balance) : balance;
+                let asset_type = balanceObject.get("asset_type");
+                let asset = ChainStore.getAsset(asset_type);
+                if (!asset) return;
+                let amount = Number(balanceObject.get("balance"));
+
+                const eqValue = MarketUtils.convertValue(
+                    amount,
+                    preferredUnit,
+                    asset,
+                    true,
+                    marketStats,
+                    core_asset
+                );
+
+                if (!eqValue) return;
+                const precision = utils.get_asset_precision(preferredUnit.get("precision"));
+                totalValue += (eqValue / precision);
+            });
+
             accountBalances = balanceObjects.map((balance, index) => {
                 if (!balance) return null;
                 let balanceObject = typeof(balance) == "string" ? ChainStore.getObject(balance) : balance;
@@ -69,7 +92,7 @@ class AccountTreemap extends React.Component {
                 const finalValue = eqValue / precision;
 
                 return finalValue >= 1 ? {
-                    name: asset.get("symbol"),
+                    name: `${asset.get("symbol")} (${totalValue === 0 ? 0 : (finalValue / totalValue * 100).toFixed(2)}%)`,
                     value: finalValue,
                     color: ReactHighcharts.Highcharts.getOptions().colors[index]
                 } : null;
