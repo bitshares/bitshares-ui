@@ -163,6 +163,7 @@ export default class TypeAhead extends React.Component {
                 {this.selectedDisplay()}
                 {this.dropDown()}
                 <Icon
+                    onClick={this.onClick}
                     name="chevron-down"
                     style={{
                         position: "absolute",
