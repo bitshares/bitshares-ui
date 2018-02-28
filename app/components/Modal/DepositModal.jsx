@@ -11,10 +11,14 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
-import { _getAvailableGateways, gatewaySelector, _getNumberAvailableGateways, _onAssetSelected } from "lib/common/assetGatewayMixin";
+import {
+    _getAvailableGateways,
+    gatewaySelector,
+    _getNumberAvailableGateways,
+    _onAssetSelected
+} from "lib/common/assetGatewayMixin";
 
 class DepositModalContent extends DecimalChecker {
-
     constructor() {
         super();
 
@@ -25,8 +29,22 @@ class DepositModalContent extends DecimalChecker {
             fetchingAddress: false,
             backingAsset: null,
             gatewayStatus: {
-                OPEN: { id: "OPEN", name: "OPENLEDGER", enabled: false, selected: false, support_url: "https://wallet.bitshares.org/#/help/gateways/openledger" },
-                RUDEX: { id: "RUDEX", name: "RUDEX", enabled: false, selected: false, support_url: "https://wallet.bitshares.org/#/help/gateways/rudex" }
+                OPEN: {
+                    id: "OPEN",
+                    name: "OPENLEDGER",
+                    enabled: false,
+                    selected: false,
+                    support_url:
+                        "https://wallet.bitshares.org/#/help/gateways/openledger"
+                },
+                RUDEX: {
+                    id: "RUDEX",
+                    name: "RUDEX",
+                    enabled: false,
+                    selected: false,
+                    support_url:
+                        "https://wallet.bitshares.org/#/help/gateways/rudex"
+                }
             }
         };
 
@@ -41,32 +59,39 @@ class DepositModalContent extends DecimalChecker {
     componentWillMount() {
         let {asset} = this.props;
 
-        if(!asset) return;
+        if (!asset) return;
 
         let backedAsset = asset.split(".");
-        let usingGateway = this.state.gatewayStatus[backedAsset[0]] ? true : false;
+        let usingGateway = this.state.gatewayStatus[backedAsset[0]]
+            ? true
+            : false;
 
-        if(usingGateway) {
+        if (usingGateway) {
             let assetName = backedAsset[1];
             let assetGateway = backedAsset[0];
             this._getDepositAddress(assetName, assetGateway);
         } else {
-            this.setState({ selectedAsset: "BTS" });
+            this.setState({selectedAsset: "BTS"});
         }
     }
 
     shouldComponentUpdate(np, ns) {
-        return(!utils.are_equal_shallow(ns, this.state));
+        return !utils.are_equal_shallow(ns, this.state);
     }
 
     onGatewayChanged(e) {
-        if(!e.target.value) return;
+        if (!e.target.value) return;
         this._getDepositAddress(this.state.selectedAsset, e.target.value);
     }
 
     onAssetSelected(asset, assetDetails) {
-        let { selectedAsset, selectedGateway } = _onAssetSelected.call(this, asset);
-        if(selectedGateway) { this._getDepositAddress(selectedAsset, selectedGateway); }
+        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
+            this,
+            asset
+        );
+        if (selectedGateway) {
+            this._getDepositAddress(selectedAsset, selectedGateway);
+        }
     }
 
     _getDepositAddress(selectedAsset, selectedGateway) {
@@ -79,11 +104,16 @@ class DepositModalContent extends DecimalChecker {
         });
 
         // Get Backing Asset for Gateway
-        let backingAsset = this.props.backedCoins.get(selectedGateway.toUpperCase(), []).find(c => {
-            return c.backingCoinType === selectedAsset || c.backingCoin === selectedAsset;
-        });
+        let backingAsset = this.props.backedCoins
+            .get(selectedGateway.toUpperCase(), [])
+            .find(c => {
+                return (
+                    c.backingCoinType === selectedAsset ||
+                    c.backingCoin === selectedAsset
+                );
+            });
 
-        if(!backingAsset) {
+        if (!backingAsset) {
             //console.log(selectedGateway + " does not support " + selectedAsset);
             this.setState({
                 depositAddress: null,
@@ -94,7 +124,7 @@ class DepositModalContent extends DecimalChecker {
             return;
         }
 
-        if(selectedGateway == "OPEN") {
+        if (selectedGateway == "OPEN") {
             this.setState({
                 isOpenledger: true
             });
@@ -102,9 +132,11 @@ class DepositModalContent extends DecimalChecker {
                 selectedGateway.toUpperCase(),
                 account,
                 selectedAsset.toLowerCase(),
-                selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase(),
+                selectedGateway.toLowerCase() +
+                    "." +
+                    selectedAsset.toLowerCase()
             );
-            if(!depositAddress) {
+            if (!depositAddress) {
                 requestDepositAddress({
                     inputCoinType: selectedAsset.toLowerCase(),
                     outputCoinType: "open." + selectedAsset.toLowerCase(),
@@ -114,20 +146,25 @@ class DepositModalContent extends DecimalChecker {
             } else {
                 this.setState({
                     depositAddress,
-                    fetchingAddress: false,
+                    fetchingAddress: false
                 });
             }
-        } else if(selectedGateway == "RUDEX") {
+        } else if (selectedGateway == "RUDEX") {
             this.setState({
                 depositAddress: {
                     address: backingAsset.gatewayWallet,
-                    memo: "dex:" + account,
+                    memo: "dex:" + account
                 },
                 fetchingAddress: false,
                 isOpenledger: false
             });
         } else {
-            console.log("Withdraw Modal Error: Unknown Gateway " + selectedGateway + " for asset " + selectedAsset);
+            console.log(
+                "Withdraw Modal Error: Unknown Gateway " +
+                    selectedGateway +
+                    " for asset " +
+                    selectedAsset
+            );
         }
 
         this.setState({
@@ -156,26 +193,40 @@ class DepositModalContent extends DecimalChecker {
     }
 
     render() {
-        let {selectedAsset, selectedGateway, depositAddress, fetchingAddress, gatewayStatus, backingAsset} = this.state;
+        let {
+            selectedAsset,
+            selectedGateway,
+            depositAddress,
+            fetchingAddress,
+            gatewayStatus,
+            backingAsset
+        } = this.state;
         let {account} = this.props;
         let usingGateway = true;
 
-        if(selectedGateway == null && selectedAsset == "BTS") {
+        if (selectedGateway == null && selectedAsset == "BTS") {
             usingGateway = false;
-            depositAddress = { address: account };
+            depositAddress = {address: account};
         }
 
         // Count available gateways
         let nAvailableGateways = _getNumberAvailableGateways.call(this);
 
-        const QR = depositAddress && depositAddress.address && !depositAddress.error ?
-            <div className="QR"><QRCode size={140} value={depositAddress.address}/></div> :
-            <div>
-                <Icon size="5x" name="minus-circle" />
-                <p className="error-msg">
-                    <Translate content="modal.deposit.address_generation_error" />
-                </p>
-            </div>;
+        const QR =
+            depositAddress &&
+            depositAddress.address &&
+            !depositAddress.error ? (
+                <div className="QR">
+                    <QRCode size={140} value={depositAddress.address} />
+                </div>
+            ) : (
+                <div>
+                    <Icon size="5x" name="minus-circle" />
+                    <p className="error-msg">
+                        <Translate content="modal.deposit.address_generation_error" />
+                    </p>
+                </div>
+            );
 
         const logo = require("assets/logo-ico-blue.png");
 
@@ -183,12 +234,21 @@ class DepositModalContent extends DecimalChecker {
             <div className="DepositModal">
                 <div className="canvas grid-block vertical no-overflow">
                     <div className="Modal__header">
-                        <img src={logo} /><br />
+                        <img src={logo} />
+                        <br />
                         <p>
-                            {usingGateway && account ?
-                                <Translate content="modal.deposit.header" account_name={<span className="send-name">{account}</span>} />
-                                : <Translate content="modal.deposit.header_short" />
-                            }
+                            {usingGateway && account ? (
+                                <Translate
+                                    content="modal.deposit.header"
+                                    account_name={
+                                        <span className="send-name">
+                                            {account}
+                                        </span>
+                                    }
+                                />
+                            ) : (
+                                <Translate content="modal.deposit.header_short" />
+                            )}
                         </p>
                     </div>
                     <div className="Modal__body">
@@ -197,80 +257,158 @@ class DepositModalContent extends DecimalChecker {
                                 <div className="inline-label input-wrapper">
                                     <DepositWithdrawAssetSelector
                                         defaultValue={selectedAsset}
-                                        onSelect={this.onAssetSelected.bind(this)}
-                                        selectOnBlur />
+                                        onSelect={this.onAssetSelected.bind(
+                                            this
+                                        )}
+                                        selectOnBlur
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        {usingGateway && selectedAsset ? gatewaySelector.call(this, {
-                          selectedGateway, 
-                          gatewayStatus, 
-                          nAvailableGateways, 
-                          error: depositAddress && depositAddress.error, 
-                          onGatewayChanged: this.onGatewayChanged.bind(this)
-                        }) : null}
+                        {usingGateway && selectedAsset
+                            ? gatewaySelector.call(this, {
+                                  selectedGateway,
+                                  gatewayStatus,
+                                  nAvailableGateways,
+                                  error: depositAddress && depositAddress.error,
+                                  onGatewayChanged: this.onGatewayChanged.bind(
+                                      this
+                                  )
+                              })
+                            : null}
 
-                        {!fetchingAddress ? 
-                            (!usingGateway || (usingGateway && selectedGateway && gatewayStatus[selectedGateway].enabled)) && depositAddress && !depositAddress.memo ?
-                                <div className="container-row" style={{textAlign: "center"}}>{QR}</div> :
-                                null :
-                            <div className="container-row" style={{textAlign: "center"}}><LoadingIndicator type="three-bounce" /></div>
-                        }
-                        {selectedGateway && gatewayStatus[selectedGateway].enabled && depositAddress && !depositAddress.error ?
-                            <div className="container-row deposit-info" style={{textAlign: "center"}}>
-
-                                {backingAsset.minAmount ?
+                        {!fetchingAddress ? (
+                            (!usingGateway ||
+                                (usingGateway &&
+                                    selectedGateway &&
+                                    gatewayStatus[selectedGateway].enabled)) &&
+                            depositAddress &&
+                            !depositAddress.memo ? (
+                                <div
+                                    className="container-row"
+                                    style={{textAlign: "center"}}
+                                >
+                                    {QR}
+                                </div>
+                            ) : null
+                        ) : (
+                            <div
+                                className="container-row"
+                                style={{textAlign: "center"}}
+                            >
+                                <LoadingIndicator type="three-bounce" />
+                            </div>
+                        )}
+                        {selectedGateway &&
+                        gatewayStatus[selectedGateway].enabled &&
+                        depositAddress &&
+                        !depositAddress.error ? (
+                            <div
+                                className="container-row deposit-info"
+                                style={{textAlign: "center"}}
+                            >
+                                {backingAsset.minAmount ? (
                                     <div className="grid-block container-row maxDeposit">
                                         <Translate
                                             content="gateway.rudex.min_amount"
-                                            minAmount={utils.format_number(backingAsset.minAmount / utils.get_asset_precision(backingAsset.precision), backingAsset.precision, false)}
-                                            symbol={selectedAsset} />
+                                            minAmount={utils.format_number(
+                                                backingAsset.minAmount /
+                                                    utils.get_asset_precision(
+                                                        backingAsset.precision
+                                                    ),
+                                                backingAsset.precision,
+                                                false
+                                            )}
+                                            symbol={selectedAsset}
+                                        />
                                     </div>
-                                : null }
-                                {this.state.isOpenledger && 
-                                    <Translate className="grid-block container-row maxDeposit" component="div" content="gateway.min_deposit_warning_amount" minDeposit={backingAsset.gateFee * 2 || 0} coin={selectedAsset}/>
-                                }
-                
-                                 
+                                ) : null}
+                                {this.state.isOpenledger && (
+                                    <Translate
+                                        className="grid-block container-row maxDeposit"
+                                        component="div"
+                                        content="gateway.min_deposit_warning_amount"
+                                        minDeposit={
+                                            backingAsset.gateFee * 2 || 0
+                                        }
+                                        coin={selectedAsset}
+                                    />
+                                )}
+
                                 <div className="grid-block container-row deposit-details">
                                     <div className="copyIcon">
-                                        <CopyButton text={depositAddress.address} className={"copyIcon"} />
+                                        <CopyButton
+                                            text={depositAddress.address}
+                                            className={"copyIcon"}
+                                        />
                                     </div>
                                     <div>
-                                        <div><Translate content="gateway.purchase_notice" inputAsset={selectedAsset} outputAsset={selectedGateway + "." + selectedAsset} /></div>
+                                        <div>
+                                            <Translate
+                                                content="gateway.purchase_notice"
+                                                inputAsset={selectedAsset}
+                                                outputAsset={
+                                                    selectedGateway +
+                                                    "." +
+                                                    selectedAsset
+                                                }
+                                            />
+                                        </div>
                                         <div>{depositAddress.address}</div>
                                     </div>
                                 </div>
-                                {depositAddress.memo ?
+                                {depositAddress.memo ? (
                                     <div className="grid-block container-row deposit-details">
                                         <div className="copyIcon">
-                                            <CopyButton text={depositAddress.memo} className={"copyIcon"} />
+                                            <CopyButton
+                                                text={depositAddress.memo}
+                                                className={"copyIcon"}
+                                            />
                                         </div>
                                         <div>
-                                            <div><Translate unsafe content="gateway.purchase_notice_memo" /></div>
+                                            <div>
+                                                <Translate
+                                                    unsafe
+                                                    content="gateway.purchase_notice_memo"
+                                                />
+                                            </div>
                                             <div>{depositAddress.memo}</div>
                                         </div>
                                     </div>
-                                : null}
+                                ) : null}
                             </div>
-                        : null}
-                        {!usingGateway ?
+                        ) : null}
+                        {!usingGateway ? (
                             <div className="container-row deposit-directly">
-                                <p><span className="send-name">{account}</span></p>
+                                <p>
+                                    <span className="send-name">{account}</span>
+                                </p>
                                 <p>
                                     <Translate content="modal.deposit.bts_transfer_description" />
                                 </p>
                             </div>
-                        : null}
+                        ) : null}
                     </div>
-                    {this.state.isOpenledger && 
-                        <Translate className="fz_12" component="p" content="gateway.min_deposit_warning_asset" minDeposit={backingAsset.gateFee * 2 || 0} coin={selectedAsset}/>
-                    }
-                
+                    {this.state.isOpenledger && (
+                        <Translate
+                            className="fz_12"
+                            component="p"
+                            content="gateway.min_deposit_warning_asset"
+                            minDeposit={backingAsset.gateFee * 2 || 0}
+                            coin={selectedAsset}
+                        />
+                    )}
+
                     <div className="Modal__footer">
-                        <div className="container-row" style={{paddingBottom: 35}}>
-                            <button className="ActionButton_Close" style={{width: "100%"}} onClick={this.onClose.bind(this)}>
+                        <div
+                            className="container-row"
+                            style={{paddingBottom: 35}}
+                        >
+                            <button
+                                className="button primary hollow"
+                                onClick={this.onClose.bind(this)}
+                            >
                                 <Translate content="modal.deposit.close" />
                             </button>
                         </div>
@@ -299,11 +437,16 @@ export default class DepositModal extends React.Component {
     }
 
     render() {
-        return (
-            this.state.open ?
-            <BaseModal style={{maxWidth: 500}} className={this.props.modalId} onClose={this.onClose.bind(this)} overlay={true} id={this.props.modalId}>
+        return this.state.open ? (
+            <BaseModal
+                style={{maxWidth: 500}}
+                className={this.props.modalId}
+                onClose={this.onClose.bind(this)}
+                overlay={true}
+                id={this.props.modalId}
+            >
                 <DepositModalContent {...this.props} open={this.state.open} />
-            </BaseModal> : null
-        );
+            </BaseModal>
+        ) : null;
     }
 }

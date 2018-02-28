@@ -5,4 +5,8 @@ then
     # npm run build-github
     npm run build-hash
 fi
-npm run-script package
+if [ $TRAVIS_TAG ]
+then
+    npm run-script package
+    sha256sum $TRAVIS_BUILD_DIR/binaries/* > $TRAVIS_BUILD_DIR/shasums_$TRAVIS_JOB_NUMBER.txt
+fi
