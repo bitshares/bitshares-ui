@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOMServer from 'react-dom/server';
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import BalanceComponent from "../Utility/BalanceComponent";
