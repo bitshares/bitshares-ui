@@ -43,7 +43,9 @@ $settings-select-color,
 $settings-menu-hover-bg,
 $settings-menu-active-bg,
 $settings-api-node-border-color,
-$main-content-margin-block-bg-color
+$main-content-margin-block-bg-color,
+$modal-bg-color,
+$mobile-input-bg
 ) {
 
   $hamburger-submenu-display-endpoint: 990px;
@@ -546,6 +548,14 @@ $main-content-margin-block-bg-color
         }
         &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
+        }
+        > tbody > tr.table-empty > td {
+            padding: 5rem 0;
+            font-size: 1.5rem;
+
+            text-align: center;
+            color: $account-dimmed !important;
+            background-color: $bg-color !important;
         }
     }
 
@@ -1416,12 +1426,10 @@ $main-content-margin-block-bg-color
         }
     }
 
-    div.fm-container:hover {
-        background-color: darken($light-panel-bg-color, 5%);
-        cursor: pointer;
-    }
-
     .api-node {
+        &:hover {
+            background-color: lighten($bg-color, 4%);
+        }
         border: 1px solid $settings-api-node-border-color;
         &:nth-child(n+1) {
             border-bottom: 0;
@@ -1894,6 +1902,21 @@ $main-content-margin-block-bg-color
                 }
             }
         }
+    }
+
+    .modal {
+        border-radius: 6px;
+    }
+
+    @media screen and (max-width: 640px) {
+      .modal {
+        background-color: $modal-bg-color;
+        border-radius: 0;
+
+        input[type="text"], input[type="text"]:focus, input[type="text"]:active, input[type="password"], input[type="password"]:focus, input[type="password"]:active, input[type="email"], input[type="email"]:focus, input[type="email"]:active, input[type="number"], input[type="number"]:focus, input[type="number"]:active, input[type="search"], input[type="search"]:focus, input[type="search"]:active, textarea, textarea:focus, textarea:active, input[role="combobox"], input[role="combobox"]:focus, input[role="combobox"]:active, select[role="combobox"], select[role="combobox"]:focus, select[role="combobox"]:active, .typeahead > div {
+            background-color: $mobile-input-bg;
+        }
+      }
     }
 }
 

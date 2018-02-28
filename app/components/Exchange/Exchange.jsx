@@ -412,13 +412,13 @@ class Exchange extends React.Component {
                 amount: 0
             }
         });
-        const {marketID, first} = market_utils.getMarketID(this.props.baseAsset, this.props.quoteAsset);
-        const inverted = this.props.marketDirections.get(marketID);
+        const {marketName, first} = market_utils.getMarketName(this.props.baseAsset, this.props.quoteAsset);
+        const inverted = this.props.marketDirections.get(marketName);
         const shouldFlip = inverted && first.get("id") !== this.props.baseAsset.get("id") ||
             !inverted && first.get("id") !== this.props.baseAsset.get("id");
         if (shouldFlip) {
             let setting = {};
-            setting[marketID] = !inverted;
+            setting[marketName] = !inverted;
             SettingsActions.changeMarketDirection(setting);
         }
         console.log("order:", JSON.stringify(order.toObject()));
@@ -575,7 +575,7 @@ class Exchange extends React.Component {
         this.setState({
             flipBuySell: !this.state.flipBuySell
         });
-        
+
         SettingsActions.changeViewSetting({
             flipBuySell: !this.state.flipBuySell
         });
@@ -1119,7 +1119,7 @@ class Exchange extends React.Component {
             />
         );
 
-        
+
 
         return (<div className="grid-block vertical">
             {!this.props.marketReady ? <LoadingIndicator /> : null}

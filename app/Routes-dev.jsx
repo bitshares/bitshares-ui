@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect } from "react-router/es";
+import { Router, Route, IndexRoute, browserHistory, hashHistory, Redirect, IndexRedirect } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
 
 // Components imported here for react hot loader (does not work with async route loading)
-import DashboardContainer from "./components/Dashboard/DashboardContainer";
+import DashboardPage from "./components/Dashboard/DashboardPage";
 import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
@@ -59,9 +59,9 @@ class Auth extends React.Component {
 
 const routes = (
     <Route path="/" component={App} onEnter={willTransitionTo}>
-        <IndexRoute component={DashboardContainer}/>
+        <IndexRedirect to="/dashboard"/>
         <Route path="/auth/:data" component={Auth}/>
-        <Route path="/dashboard" component={DashboardContainer}/>
+        <Route path="/dashboard" component={DashboardPage}/>
         <Route path="explorer" component={Explorer}/>
         <Route path="/explorer/fees" component={FeesContainer} />
         <Route path="/explorer/blocks" component={BlocksContainer} />

@@ -97,7 +97,7 @@ const willTransitionTo = (nextState, replaceState, callback, appInit=true) => { 
     * the pre-defined URLs, ranked by latency
     */
     let connectionString = SettingsStore.getSetting("apiServer");
-    if (!connectionString) connectionString = urls[0].url;
+    if (!connectionString) connectionString = urls[0];
     /* Don't use an insecure websocket url when using secure protocol */
     if (window.location.protocol === "https:" && connectionString.indexOf("ws://") !== -1) {
         connectionString = urls[0];

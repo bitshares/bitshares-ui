@@ -133,11 +133,11 @@ class EquivalentPrice extends MarketStatsCheck {
         if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
             toPrice = marketStats.get(toMarket).price.clone();
         }
-
         if (toAsset.get("id") === fromAsset.get("id")) return 1;
 
         let finalPrice;
         if (toPrice && fromPrice) {
+            if(fromPrice.base.amount == 0 || toPrice.base.amount == 0) return null;
             finalPrice = toPrice.times(fromPrice);
         } else if (toPrice) {
             finalPrice = toPrice;

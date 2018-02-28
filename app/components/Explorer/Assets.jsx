@@ -13,7 +13,10 @@ import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs/es";
 import cnames from "classnames";
 import utils from "common/utils";
+import LoadingIndicator from "../LoadingIndicator";
+import ls from "common/localStorage";
 
+let accountStorage = new ls("__graphene__");
 
 class Assets extends React.Component {
 
@@ -22,6 +25,8 @@ class Assets extends React.Component {
         this.state = {
             foundLast: false,
             lastAsset: "",
+            isLoading: false,
+            totalAssets: typeof accountStorage.get("totalAssets") != "object" ? accountStorage.get("totalAssets") : 3000,
             assetsFetched: 0,
             activeFilter: "market",
             filterUIA: props.filterUIA || "",
@@ -33,9 +38,6 @@ class Assets extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.assets, this.props.assets) ||
-            nextState.filterMPA !== this.state.filterMPA ||
-            nextState.filterUIA !== this.state.filterUIA ||
-            nextState.filterPM !== this.state.filterPM ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }
@@ -45,6 +47,7 @@ class Assets extends React.Component {
     }
 
     _checkAssets(assets, force) {
+        this.setState({isLoading: true});
         let lastAsset = assets.sort((a, b) => {
             if (a.symbol > b.symbol) {
                 return 1;
@@ -54,13 +57,21 @@ class Assets extends React.Component {
                 return 0;
             }
         }).last();
-
+        
         if (assets.size === 0 || force) {
             AssetActions.getAssetList.defer("A", 100);
             this.setState({assetsFetched: 100});
         } else if (assets.size >= this.state.assetsFetched) {
             AssetActions.getAssetList.defer(lastAsset.symbol, 100);
             this.setState({assetsFetched: this.state.assetsFetched + 99});
+        }
+        
+        if(assets.size > this.state.totalAssets) { 
+            accountStorage.set("totalAssets", assets.size); 
+        }
+
+        if(this.state.assetsFetched >= this.state.totalAssets - 100) {
+            this.setState({isLoading: false});
         }
     }
 
@@ -202,7 +213,7 @@ class Assets extends React.Component {
                 }
             }).toArray();
         }
-
+        
         return (
             <div className="grid-block vertical">
                 <div className="grid-block vertical">
@@ -221,7 +232,7 @@ class Assets extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            
+                            {this.state.isLoading ? <LoadingIndicator /> : null}
                             {activeFilter == "market" ? 
                                 <div className="grid-block shrink">
                                     <div className="grid-content">
