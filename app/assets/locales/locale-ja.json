@@ -1410,7 +1410,6 @@
       "min_deposit_warning_asset": "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
     "copy_memo": "メモをコピー",
     "please_generate_address": "新しいアドレスを取得",
-    "generate_new": "新しいアドレスを取得",
     "copy_address": "アドレスをコピー",
     "use_copy_button": "アドレス、またはメモをコピーするにはコピーボタンを使用してください。",
     "fee": "ゲートウェイ手数料",
