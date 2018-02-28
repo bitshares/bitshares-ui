@@ -88,7 +88,7 @@ export default class TypeAhead extends React.Component {
         // Timer is used to keep menu from popping back open due to order of blur then click event
         this.timer && clearTimeout(this.timer);
         this.blockClick = true;
-        this.setState({ isMenuShowing: true });
+        this.setState({ isMenuShowing: false });
         this.timer = setTimeout(() => {
             this.blockClick = false;
         }, 300); // Magic number that seems fast and slow enough for events and render to complete
