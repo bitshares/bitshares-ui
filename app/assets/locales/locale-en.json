@@ -1312,7 +1312,9 @@
       "below": "Your collateral ratio is below %(mr)s which is not allowed.",
       "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
       "collateral": "Insufficient collateral balance"
-    }
+    },
+    "maximize_debt": "Maximize Debt",
+    "maximize_collateral": "Maximize Collateral"
   },
   "modal": {
     "send": {

@@ -466,8 +466,8 @@ class BorrowModalContent extends React.Component {
                             </Trigger>*/}
                         </div>
                         <div className="no-padding grid-content button-group no-overflow float-right">
-                            <div href className="button info" onClick={this._maximizeDebt.bind(this)}>Maximize Debt</div>
-                            <div href className="button info" onClick={this._maximizeCollateral.bind(this)}>Maximize Collateral</div>
+                            <div href className="button info" onClick={this._maximizeDebt.bind(this)}><Translate content="borrow.maximize_debt" /></div>
+                            <div href className="button info" onClick={this._maximizeCollateral.bind(this)}><Translate content="borrow.maximize_debt" /></div>
                         </div>
                     </div>
                 </form>
