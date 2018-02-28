@@ -2005,9 +2005,9 @@ $main-content-margin-block-bg-color
 
 .local-wallet-menu {
     // top: 50px!important;
-
     .table-cell {
         display: inline-block;
+        @extend .truncated;
     }
 }
 

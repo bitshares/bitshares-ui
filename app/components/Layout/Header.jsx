@@ -358,7 +358,7 @@ class Header extends React.Component {
                     return (
                         <li key={name} className={cnames({active: active.replace("/account/", "").indexOf(name) === 0})} onClick={this._accountClickHandler.bind(this, name)}>
                             <div style={{paddingTop: 0}} className="table-cell"><AccountImage style={{position: "relative", top: 4}} size={{height: 20, width: 20}} account={name}/></div>
-                            <div className="table-cell" style={{paddingLeft: 10}}><a className={"lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</a></div>
+                            <div className="table-cell" style={{paddingLeft: 10}}><a className={"text lower-case" + (name === account_display_name ? " current-account" : "")}>{name}</a></div>
                         </li>
                     );
                 });
@@ -567,7 +567,7 @@ class Header extends React.Component {
                     {walletBalance}
 
                     {hasLocalWallet && (
-                        <ul className="dropdown header-menu local-wallet-menu" style={{right: 0, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto", position:"absolute",width:"200px"}}>
+                        <ul className="dropdown header-menu local-wallet-menu" style={{right: 0, maxHeight: !this.state.accountsListDropdownActive ? 0 : maxHeight, overflowY: "auto", position:"absolute",width:"250px"}}>
                             <li className={cnames({active: active.indexOf("/accounts") !== -1}, "divider")} onClick={this._onNavigate.bind(this, "/accounts")}>
                                 <div className="table-cell"><Icon size="2x" name="folder" /></div>
                                 <div className="table-cell"><Translate content="explorer.accounts.title" /></div>
