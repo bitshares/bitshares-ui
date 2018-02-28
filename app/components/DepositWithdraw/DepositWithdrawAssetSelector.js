@@ -74,22 +74,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-class DepositStoreWrapper extends React.Component {
-
-    componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins.defer(); // Openledger
-            GatewayActions.fetchCoinsSimple.defer({backer: "RUDEX", url:rudexAPIs.BASE+rudexAPIs.COINS_LIST}); // RuDEX
-            GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
-        }
-    }
-
-    render() {
-        return <DepositWithdrawAssetSelector {...this.props}/>;
-    }
-}
-
-export default connect(DepositStoreWrapper, {
+export default connect(DepositWithdrawAssetSelector, {
     listenTo() {
         return [GatewayStore];
     },

@@ -643,9 +643,7 @@ class WithdrawModalNew extends React.Component {
           </div>
 
           {/*ASSET SELECTION*/}
-          <div style={{marginBottom: "1em"}}>
             <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} includeBTS={false} />
-          </div>
 
           {
             !isBTS && selectedAsset && !selectedGateway ?
@@ -841,7 +839,7 @@ class WithdrawModalWrapper extends React.Component {
         } catch(e){}
       });
 
-      return <BalanceWrapper wrap={ConnectedWithdrawModal} {...props} balances={props.account.get("balances")} assets={assets} />
+      return <BalanceWrapper wrap={ConnectedWithdrawModal} {...props} balances={props.account.get("balances")} assets={assets} skipCoinFetch={true} />
     }
 }
 
