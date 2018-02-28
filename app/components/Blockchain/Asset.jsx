@@ -377,8 +377,12 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
                             <td> {globalSettlementPrice ? globalSettlementPrice : "-"} </td>
                         </tr>
+                        
+                    </tbody>
+                </table>
 
-                        <br /><br />
+                <table className="table key-value-table table-hover"  style={{ marginTop: "2rem" }}>
+                    <tbody>
 
                         <tr>
                              <td> <Translate content="explorer.asset.price_feed.settlement_delay"/> </td>
