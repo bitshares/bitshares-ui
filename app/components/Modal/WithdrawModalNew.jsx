@@ -423,7 +423,7 @@ class WithdrawModalNew extends React.Component {
     onAssetChanged(value){
         value = value.toUpperCase();
 
-        let stateObj = null;
+        let stateObj = {};
 
         if(value == "BTS"){
             stateObj = {isBTS: true};
@@ -644,7 +644,7 @@ class WithdrawModalNew extends React.Component {
 
           {/*ASSET SELECTION*/}
           <div style={{marginBottom: "1em"}}>
-            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} />
+            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} includeBTS={false} />
           </div>
 
           {
