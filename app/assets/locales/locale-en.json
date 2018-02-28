@@ -164,6 +164,7 @@
     "total_value": "Total value",
     "show_hidden": "Hidden",
     "hide_hidden": "Active",
+    "show_visual": "Visual",
     "ignore": "Hide",
     "unignore": "Unhide",
     "show_ignored": "Show hidden accounts",

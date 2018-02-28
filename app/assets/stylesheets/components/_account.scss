@@ -167,8 +167,8 @@ div.header-selector {
 }
 
 div.account-tabs {
-    .padding { 
-        padding: 20px; 
+    .padding {
+        padding: 20px;
     }
 
     > div.service-selector {
@@ -353,5 +353,12 @@ div.tabs-container {
             min-width: 5rem;
             margin-left: 0.5rem;
         }
+    }
+}
+
+.account-treemap {
+    padding: 10px;
+    text {
+        @include RobotoRegular;
     }
 }
