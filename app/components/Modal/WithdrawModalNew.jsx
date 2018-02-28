@@ -233,13 +233,20 @@ class WithdrawModalNew extends React.Component {
         }
 
         if(Number.isFinite(withdrawalCurrencyBalance) && withdrawalCurrencyPrecision){
-            let l = String(withdrawalCurrencyBalance).length;
-            let decimalPart = String(withdrawalCurrencyBalance).substr(0, l-withdrawalCurrencyPrecision);
-            let mantissa = String(withdrawalCurrencyBalance).substr(l-withdrawalCurrencyPrecision);
+            let withdrawalCurrencyBalanceString = String(withdrawalCurrencyBalance);
+            let l = withdrawalCurrencyBalanceString.length;
+
+            while(l<withdrawalCurrencyPrecision){ //Zero pad
+              withdrawalCurrencyBalanceString = "0" + withdrawalCurrencyBalanceString;
+              ++l;
+            }
+
+            let decimalPart = withdrawalCurrencyBalanceString.substr(0, l-withdrawalCurrencyPrecision);
+            let mantissa = withdrawalCurrencyBalanceString.substr(l-withdrawalCurrencyPrecision);
 
             if(!decimalPart){
               decimalPart = "0";
-              mantissa = String(withdrawalCurrencyBalance);
+              mantissa = withdrawalCurrencyBalanceString;
             }
 
             convertedBalance = Number(decimalPart + "." + mantissa);
