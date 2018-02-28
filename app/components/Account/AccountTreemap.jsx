@@ -17,32 +17,25 @@ Heatmap(ReactHighcharts.Highcharts);
 class AccountTreemap extends React.Component {
 
     static propTypes = {
-        assets: ChainTypes.ChainAssetsList
+        assets: ChainTypes.ChainAssetsList,
+        preferredAsset: ChainTypes.ChainAsset.isRequired
     };
 
     static defaultProps = {
-        assets: []
+        assets: [],
+        preferredAsset: "1.3.0"
     }
 
-    constructor(props) {
-        super(props);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return (
-            !utils.are_equal_shallow(nextProps.balanceObjects, this.props.balanceObjects) ||
-            !utils.are_equal_shallow(nextProps.assets, this.props.assets)
-        );
-    }
+    // shouldComponentUpdate(nextProps) {
+    //     return (
+    //         !utils.are_equal_shallow(nextProps.balanceObjects, this.props.balanceObjects) ||
+    //         !utils.are_equal_shallow(nextProps.assets, this.props.assets)
+    //     );
+    // }
 
     render() {
-        let {balanceObjects, core_asset, settings, marketStats} = this.props;
-        let preferredUnit = core_asset;
-        if (settings.get("unit")) {
-            preferredUnit = ChainStore.getAsset(settings.get("unit"));
-        }
+        let {balanceObjects, core_asset, marketStats, preferredAsset} = this.props;
 
-        // balanceObjects = balanceObjects.toJS ? balanceObjects.toJS() : balanceObjects;
         let accountBalances = null;
 
         if (balanceObjects && balanceObjects.length > 0) {
@@ -52,12 +45,11 @@ class AccountTreemap extends React.Component {
                 let balanceObject = typeof(balance) == "string" ? ChainStore.getObject(balance) : balance;
                 let asset_type = balanceObject.get("asset_type");
                 let asset = ChainStore.getAsset(asset_type);
-                if (!asset) return;
+                if (!asset || !preferredAsset) return;
                 let amount = Number(balanceObject.get("balance"));
-
                 const eqValue = MarketUtils.convertValue(
                     amount,
-                    preferredUnit,
+                    preferredAsset,
                     asset,
                     true,
                     marketStats,
@@ -65,7 +57,7 @@ class AccountTreemap extends React.Component {
                 );
 
                 if (!eqValue) return;
-                const precision = utils.get_asset_precision(preferredUnit.get("precision"));
+                const precision = utils.get_asset_precision(preferredAsset.get("precision"));
                 totalValue += (eqValue / precision);
             });
 
@@ -79,7 +71,7 @@ class AccountTreemap extends React.Component {
 
                 const eqValue = MarketUtils.convertValue(
                     amount,
-                    preferredUnit,
+                    preferredAsset,
                     asset,
                     true,
                     marketStats,
@@ -88,7 +80,7 @@ class AccountTreemap extends React.Component {
 
                 if (!eqValue) { return null; }
 
-                const precision = utils.get_asset_precision(preferredUnit.get("precision"));
+                const precision = utils.get_asset_precision(preferredAsset.get("precision"));
                 const finalValue = eqValue / precision;
 
                 return finalValue >= 1 ? {
@@ -128,7 +120,7 @@ class AccountTreemap extends React.Component {
                     animation: false,
                     tooltip: {
                         pointFormatter: function() {
-                            return `<b>${this.name}</b>: ${ReactHighcharts.Highcharts.numberFormat(this.value, 0)} ${preferredUnit.get("symbol")}`;
+                            return `<b>${this.name}</b>: ${ReactHighcharts.Highcharts.numberFormat(this.value, 0)} ${preferredAsset.get("symbol")}`;
                         }
                     }
                 }
@@ -174,7 +166,7 @@ class AccountTreemapBalanceWrapper extends React.Component {
         let assets = this.props.balanceObjects.filter(a => !!a).map(a => {
             return a.get("asset_type");
         });
-        return <AccountTreemap assets={assets} {...this.props} />;
+        return <AccountTreemap preferredAsset={this.props.settings.get("unit", "1.3.0")} assets={assets} {...this.props} />;
     }
 }
 
