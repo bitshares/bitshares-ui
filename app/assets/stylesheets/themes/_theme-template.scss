@@ -2052,7 +2052,12 @@ $mobile-input-bg
     // top: 50px!important;
     .table-cell {
         display: inline-block;
-        @extend .truncated;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:nth-of-type(2) {
+            max-width: 17em;
+        }
     }
 }
 
