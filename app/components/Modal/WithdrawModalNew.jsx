@@ -98,8 +98,17 @@ class WithdrawModalNew extends React.Component {
         let pieces = initialSymbol.split(".");
         let selectedAsset = pieces[1];
         let selectedGateway = pieces[0];
+        let gateFee = 0;
 
-        return { selectedAsset, selectedGateway };
+        if(selectedGateway){
+          this.props.backedCoins.get(selectedGateway).forEach((item)=>{
+            if(item.symbol == [selectedGateway, selectedAsset].join(".") || item.backingCoinType == selectedAsset){
+              gateFee = item.gateFee;
+            }
+          });
+        }
+
+        return { selectedAsset, selectedGateway, gateFee };
     }
 
     shouldComponentUpdate(np, ns){
@@ -788,7 +797,7 @@ class WithdrawModalNew extends React.Component {
           }
 
           {/*Submit Buttons*/}
-          <div style={{clear: "both", position: "absolute", bottom: "-1em", right: "2em", left: "2em"}}>
+          <div style={{clear: "both", position: "absolute", bottom: "0", right: "2em", left: "2em"}}>
             <div style={leftColumn} className="button-group">
               <button style={buttonStyle} className="button danger" onClick={this.props.close}><Translate content="modal.withdraw.cancel" /></button>
             </div>
