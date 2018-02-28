@@ -54,7 +54,7 @@ class AccountOverview extends React.Component {
             sortKey: props.viewSettings.get("portfolioSort", "totalValue"),
             sortDirection: props.viewSettings.get("portfolioSortDirection", true), // alphabetical A -> B, numbers high to low
             settleAsset: "1.3.0",
-            shownAssets: "active",
+            shownAssets: props.viewSettings.get("shownAssets", "active"),
             depositAsset: null,
             withdrawAsset: null,
             bridgeAsset: null,
@@ -466,7 +466,10 @@ class AccountOverview extends React.Component {
 
     _changeShownAssets(shownAssets = "active") {
         this.setState({
-            shownAssets: shownAssets
+            shownAssets
+        });
+        SettingsActions.changeViewSetting({
+            shownAssets
         });
     }
 
