@@ -82,9 +82,16 @@ class AccountTreemap extends React.Component {
 
                 const precision = utils.get_asset_precision(preferredAsset.get("precision"));
                 const finalValue = eqValue / precision;
+                const percent = (finalValue / totalValue * 100);
+
+                /*
+                * Filter out assets that make up a small percentage of
+                * the total value of the account
+                */
+                if (percent < 0.5) return null;
 
                 return finalValue >= 1 ? {
-                    name: `${asset.get("symbol")} (${totalValue === 0 ? 0 : (finalValue / totalValue * 100).toFixed(2)}%)`,
+                    name: `${asset.get("symbol")} (${totalValue === 0 ? 0 : percent.toFixed(2)}%)`,
                     value: finalValue,
                     color: ReactHighcharts.Highcharts.getOptions().colors[index]
                 } : null;
