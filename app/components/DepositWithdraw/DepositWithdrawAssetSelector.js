@@ -69,7 +69,9 @@ class DepositWithdrawAssetSelector  extends React.Component {
           return true;
         }).sort(function(a, b) { return a.id.localeCompare(b.id); });
 
-        return <TypeAhead items={coinItems} {...this.props} inputProps={{placeholder: counterpart.translate("gateway.asset_search_deposit")}} label="gateway.asset" />;
+        let i18n = props.usageContext == "withdraw" ? "gateway.asset_search_withdraw" : "gateway.asset_search_deposit";
+
+        return <TypeAhead items={coinItems} {...this.props} inputProps={{placeholder: counterpart.translate(i18n)}} label="gateway.asset" />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);

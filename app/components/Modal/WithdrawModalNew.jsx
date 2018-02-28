@@ -643,7 +643,7 @@ class WithdrawModalNew extends React.Component {
           </div>
 
           {/*ASSET SELECTION*/}
-            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} includeBTS={false} />
+            <DepositWithdrawAssetSelector onSelect={this.onAssetSelected.bind(this)} onChange={this.onAssetChanged.bind(this)} include={symbolsToInclude} selectOnBlur defaultValue={selectedAsset} includeBTS={false} usageContext="withdraw" />
 
           {
             !isBTS && selectedAsset && !selectedGateway ?

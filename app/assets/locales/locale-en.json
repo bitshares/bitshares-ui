@@ -1755,7 +1755,8 @@
             "success": "success",
             "fail": "fail"
         },
-        "asset_search_deposit": "Search for an asset to deposit"
+        "asset_search_deposit": "Search for an asset to deposit",
+        "asset_search_withdraw": "Search for an asset to withdraw"
     },
     "trx_error": {
         "expire":
