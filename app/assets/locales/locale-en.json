@@ -17,7 +17,8 @@
     "es": "Español",
     "it": "Italiano",
     "tr": "Türkçe",
-    "ru": "Русский"
+    "ru": "Русский",
+    "ja": "日本語"
   },
   "incognito": {
     "no_support": "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
