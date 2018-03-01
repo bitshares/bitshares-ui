@@ -9,6 +9,7 @@ import SettingsActions from "actions/SettingsActions";
 import Popover from "react-popover";
 import Translate from "react-translate-component";
 import AssetName from "./AssetName";
+import Pulsate from "./Pulsate";
 import marketUtils from "common/market_utils";
 import { Asset, Price } from "common/MarketClasses";
 
@@ -76,6 +77,7 @@ class FormattedPrice extends React.Component {
             nextProps.base_amount !== this.props.base_amount ||
             nextProps.quote_amount !== this.props.quote_amount ||
             nextProps.decimals !== this.props.decimals ||
+            !utils.are_equal_shallow(nextProps.pulsate, this.props.pulsate) ||
             !utils.are_equal_shallow(nextState, this.state)
         );
     }
@@ -90,7 +92,7 @@ class FormattedPrice extends React.Component {
     render() {
 
         let {base_asset, base_amount, quote_amount,
-          marketDirections, hide_symbols, noPopOver} = this.props;
+          marketDirections, hide_symbols, noPopOver, pulsate} = this.props;
         const {marketName, first, second} = this.state;
         let inverted = marketDirections.get(marketName) || this.props.invert;
         if (this.props.force_direction && second.get("symbol") === this.props.force_direction && inverted) {
@@ -146,6 +148,13 @@ class FormattedPrice extends React.Component {
                     maximumFractionDigits={Math.max(2, decimals)}
                 />
             );
+
+            if (pulsate) {
+                if (typeof pulsate !== "object") pulsate = {};
+                formatted_value = (
+                    <Pulsate value={value} {...pulsate}>{formatted_value}</Pulsate>
+                );
+            }
         }
         let symbols = hide_symbols ? "" :
                       (<span data-place="bottom" data-tip={noPopOver ? "Click to invert the price" : null} className={noPopOver ? "clickable inline-block" : ""} onClick={noPopOver ? this.onFlip.bind(this) : null}>

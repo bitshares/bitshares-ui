@@ -699,20 +699,38 @@ $mobile-input-bg
     }
 
     // Typeahead
-    .typeahead > div {
+    .typeahead {
         > div {
-            z-index: 1003;
-            background-color: $input-background !important;
             > div {
-                color: $primary-text-color !important;
-                background-color: transparent !important;
-                &:hover, &:active, &:focus, &:visited {
-                    background-color: darken($input-background, 10%) !important;
+                z-index: 1003;
+                background-color: $input-background !important;
+                > div {
+                    color: $primary-text-color !important;
+                    background-color: transparent !important;
+                    &:hover, &:active, &:focus, &:visited {
+                        background-color: darken($input-background, 10%) !important;
+                    }
                 }
             }
         }
-    }
+        .typeahead__input {
+            background: $input-background;
+        }
+        .typeahead__innerList {
+            background: $panel-bg-color;
+        }
+        .typeahead__innerItem {
+            color: $primary-text-color;
+            
+            > .typeahead__innerItem__highlight {
+                background-color: darken($input-background, 10%) !important;
+            }
 
+            > .typeahead__innerItem__disabled {
+                color: $inactive-text-color;
+            }
+        }
+    }
 
     ul.button-group.segmented {
         > li.is-active > a {
@@ -1769,19 +1787,23 @@ $mobile-input-bg
     }
 
     .pulsate {
+        animation: .5s ease-out 1;
 
         &.red {
-            animation: pulsate-red .5s ease-out;
+            animation-name: pulsate-red;
         }
-
+             
         &.green {
-            animation: pulsate-green .5s ease-out;
+            animation-name: pulsate-green;
         }
-
-        animation-iteration-count: 1;
+             
+        &.reverse {
+            animation-timing-function: ease-in;
+            animation-direction: reverse;
+        }
     }
 
-    @-webkit-keyframes pulsate-green {
+    @keyframes pulsate-green {
         0% {
             color: $pulsate-green-start;
         }
@@ -1789,7 +1811,7 @@ $mobile-input-bg
             color: $pulsate-green-end;
         }
     }
-    @-webkit-keyframes pulsate-red {
+    @keyframes pulsate-red {
         0% {
             color: $pulsate-red-start;
         }
@@ -2028,9 +2050,14 @@ $mobile-input-bg
 
 .local-wallet-menu {
     // top: 50px!important;
-
     .table-cell {
         display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:nth-of-type(2) {
+            max-width: 17em;
+        }
     }
 }
 

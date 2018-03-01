@@ -73,7 +73,8 @@ class SettingsStore {
                 "es",
                 "it",
                 "tr",
-                "ru"
+                "ru",
+                "ja"
             ],
             apiServer: apiServer,
             unit: [

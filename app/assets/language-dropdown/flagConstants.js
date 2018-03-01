@@ -16,7 +16,7 @@ export const languages = [
   {flag: 'gr', language: 'Greek'},
   {flag: 'cz', language: 'Czech'},
   {flag: 'dk', language: 'Danish'},
-  {flag: 'jp', language: 'Japanese'},
+  {flag: 'ja', language: 'Japanese'},
   {flag: 'no', language: 'Norwegian'},
   {flag: 'fi', language: 'Finnish'},
   {flag: 'sk', language: 'Slovak'},

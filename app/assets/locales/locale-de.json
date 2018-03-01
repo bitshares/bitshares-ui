@@ -8,7 +8,8 @@
     "es": "Español",
     "it": "Italiano",
     "tr": "Türkçe",
-    "ru": "Русский"
+    "ru": "Русский",
+    "ja": "日本語"
   },
   "header": {
     "title": "BitShares UI",
