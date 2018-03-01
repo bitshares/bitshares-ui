@@ -377,8 +377,12 @@ class Asset extends React.Component {
                             <td> <Translate content="explorer.asset.price_feed.global_settlement_price"/> </td>
                             <td> {globalSettlementPrice ? globalSettlementPrice : "-"} </td>
                         </tr>
+                        
+                    </tbody>
+                </table>
 
-                        <br /><br />
+                <table className="table key-value-table table-hover"  style={{ marginTop: "2rem" }}>
+                    <tbody>
 
                         <tr>
                              <td> <Translate content="explorer.asset.price_feed.settlement_delay"/> </td>
@@ -772,7 +776,7 @@ class Asset extends React.Component {
                     <div className="">
                         <Tabs defaultActiveTab={0} segmented={false} setting="bitassetDataTabs">
                             <Tab title="explorer.asset.price_feed_data.title">
-                                <div className="responsive-table" style={{marginTop:"-10px"}}>
+                                <div className="responsive-table">
                                     <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
                                         {header}
                                         <tbody>

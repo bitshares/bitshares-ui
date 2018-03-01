@@ -1,7 +1,7 @@
 import React, {PropTypes} from "react";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 
@@ -23,7 +23,6 @@ import SettingsStore from "stores/SettingsStore";
  */
 
 class Tab extends React.Component {
-
     static propTypes = {
         changeTab: PropTypes.func,
         isActive: PropTypes.bool.isRequired,
@@ -40,17 +39,45 @@ class Tab extends React.Component {
     };
 
     render() {
-        let {isActive, index, changeTab, title, className, disabled} = this.props;
+        let {
+            isActive,
+            index,
+            changeTab,
+            title,
+            className,
+            disabled
+        } = this.props;
         let c = cnames({"is-active": isActive}, className);
 
         if (this.props.collapsed) {
-            return <option value={index} data-is-link-to={this.props.isLinkTo} >{typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}</option>;
+            return (
+                <option value={index} data-is-link-to={this.props.isLinkTo}>
+                    {typeof title === "string" && title.indexOf(".") > 0 ? (
+                        <Translate className="tab-title" content={title} />
+                    ) : (
+                        <span className="tab-title">{title}</span>
+                    )}
+                </option>
+            );
         }
         return (
-            <li className={c} onClick={!disabled ? changeTab.bind(this, index,this.props.isLinkTo) : null}>
+            <li
+                className={c}
+                onClick={
+                    !disabled
+                        ? changeTab.bind(this, index, this.props.isLinkTo)
+                        : null
+                }
+            >
                 <a>
-                    {typeof title === "string" && title.indexOf(".") > 0 ? <Translate className="tab-title" content={title} /> : <span className="tab-title">{title}</span>}
-                    {this.props.subText ? <div className="tab-subtext">{this.props.subText}</div> : null}
+                    {typeof title === "string" && title.indexOf(".") > 0 ? (
+                        <Translate className="tab-title" content={title} />
+                    ) : (
+                        <span className="tab-title">{title}</span>
+                    )}
+                    {this.props.subText ? (
+                        <div className="tab-subtext">{this.props.subText}</div>
+                    ) : null}
                 </a>
             </li>
         );
@@ -58,7 +85,6 @@ class Tab extends React.Component {
 }
 
 class Tabs extends React.Component {
-
     static propTypes = {
         setting: PropTypes.string,
         defaultActiveTab: PropTypes.number,
@@ -80,7 +106,9 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting ? props.viewSettings.get(props.setting, props.defaultActiveTab) : props.defaultActiveTab,
+            activeTab: props.setting
+                ? props.viewSettings.get(props.setting, props.defaultActiveTab)
+                : props.defaultActiveTab,
             width: window.innerWidth
         };
 
@@ -89,7 +117,10 @@ class Tabs extends React.Component {
 
     componentDidMount() {
         this._setDimensions();
-        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
+        window.addEventListener("resize", this._setDimensions, {
+            capture: false,
+            passive: true
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -113,7 +144,7 @@ class Tabs extends React.Component {
         }
     }
 
-    _changeTab(value,isLinkTo) {
+    _changeTab(value, isLinkTo) {
         if (value === this.state.activeTab) return;
         // Persist current tab if desired
 
@@ -129,12 +160,13 @@ class Tabs extends React.Component {
         }
         this.setState({activeTab: value});
 
-        if(this.props.onChangeTab) this.props.onChangeTab(value);
+        if (this.props.onChangeTab) this.props.onChangeTab(value);
     }
 
     render() {
         let {children, contentClass, tabsClass, style, segmented} = this.props;
-        const collapseTabs = this.state.width < 900 && React.Children.count(children) > 2;
+        const collapseTabs =
+            this.state.width < 900 && React.Children.count(children) > 2;
 
         let activeContent = null;
 
@@ -148,7 +180,12 @@ class Tabs extends React.Component {
                 activeContent = child.props.children;
             }
 
-            return React.cloneElement(child, {collapsed: collapseTabs, isActive, changeTab: this._changeTab.bind(this), index: index} );
+            return React.cloneElement(child, {
+                collapsed: collapseTabs,
+                isActive,
+                changeTab: this._changeTab.bind(this),
+                index: index
+            });
         }).filter(a => a !== null);
 
         if (!activeContent) {
@@ -156,26 +193,55 @@ class Tabs extends React.Component {
         }
 
         return (
-            <div className={cnames(!!this.props.actionButtons ? "with-buttons" : "", this.props.className)}>
+            <div
+                className={cnames(
+                    !!this.props.actionButtons ? "with-buttons" : "",
+                    this.props.className
+                )}
+            >
                 <div className="service-selector">
-                    <ul style={style} className={cnames("button-group no-margin", tabsClass, {segmented})}>
-                        {collapseTabs ?
-                            <li style={{paddingLeft: 10, paddingRight: 10, minWidth: "15rem"}}>
+                    <ul
+                        style={style}
+                        className={cnames("button-group no-margin", tabsClass, {
+                            segmented
+                        })}
+                    >
+                        {collapseTabs ? (
+                            <li
+                                style={{
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                    minWidth: "15rem"
+                                }}
+                            >
                                 <select
                                     value={this.state.activeTab}
                                     style={{marginTop: 10, marginBottom: 10}}
                                     className="bts-select"
-                                    onChange={(e) => { let ind = parseInt(e.target.value, 10); this._changeTab(ind,e.target[ind].attributes["data-is-link-to"].value);}}
+                                    onChange={e => {
+                                        let ind = parseInt(e.target.value, 10);
+                                        this._changeTab(
+                                            ind,
+                                            e.target[ind].attributes[
+                                                "data-is-link-to"
+                                            ].value
+                                        );
+                                    }}
                                 >
                                     {tabs}
                                 </select>
-                            </li> :
+                            </li>
+                        ) : (
                             tabs
-                        }
-                        {this.props.actionButtons ? <li className="tabs-action-buttons">{this.props.actionButtons}</li> : null}
+                        )}
+                        {this.props.actionButtons ? (
+                            <li className="tabs-action-buttons">
+                                {this.props.actionButtons}
+                            </li>
+                        ) : null}
                     </ul>
                 </div>
-                <div className={cnames("tab-content", contentClass)} >
+                <div className={cnames("tab-content", contentClass)}>
                     {activeContent}
                 </div>
             </div>
