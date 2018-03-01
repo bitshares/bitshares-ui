@@ -174,7 +174,6 @@ function estimateFee(op_type, options, globalObject, data = {}) {
 
             if (option === "price_per_kbyte") {
                 if (data.type === "memo" && !!data.content) {
-                    console.log("using this memo", data.content);
                     /* Dummy priv key */
                     let pKey = _privKey || PrivateKey.fromWif(privKey);
                     if (_privKey) _privKey = pKey;
