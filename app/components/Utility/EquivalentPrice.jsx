@@ -9,8 +9,46 @@ import MarketStatsCheck from "./MarketStatsCheck";
 import MarketsStore from "stores/MarketsStore";
 import MarketUtils from "common/market_utils";
 
-class EquivalentPrice extends MarketStatsCheck {
+export function equivalentPrice(
+    coreAsset,
+    fromAsset,
+    toAsset,
+    marketStats,
+    real = false
+) {
+    const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
+    const fromMarket = fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
+    let toPrice, fromPrice;
+    if (marketStats.get(fromMarket) && marketStats.get(fromMarket).price) {
+        fromPrice = marketStats.get(fromMarket).price.clone();
+    }
+    if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
+        toPrice = marketStats.get(toMarket).price.clone();
+    }
 
+    if (toAsset.get("id") === fromAsset.get("id")) return 1;
+
+    let finalPrice;
+    if (toPrice && fromPrice) {
+        finalPrice = toPrice.times(fromPrice);
+    } else if (toPrice) {
+        finalPrice = toPrice;
+    } else if (fromPrice) {
+        finalPrice = fromPrice;
+    }
+    if (!finalPrice) return null;
+    const finalId = finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
+    if (
+        finalId.indexOf(toAsset.get("id")) === -1 ||
+        finalId.indexOf(fromAsset.get("id")) === -1
+    ) {
+        return null;
+    }
+    if (real) return finalPrice.toReal();
+    return finalPrice;
+}
+
+class EquivalentPrice extends MarketStatsCheck {
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
         fromAsset: ChainTypes.ChainAsset.isRequired,
@@ -21,7 +59,7 @@ class EquivalentPrice extends MarketStatsCheck {
         toAsset: "1.3.0",
         coreAsset: "1.3.0",
         forceDirection: true
-    }
+    };
 
     shouldComponentUpdate(np, nextState) {
         return (
@@ -36,11 +74,17 @@ class EquivalentPrice extends MarketStatsCheck {
 
     getFinalPrice(real = false) {
         const {coreAsset, fromAsset, toAsset, marketStats} = this.props;
-        MarketUtils.getFinalPrice(coreAsset, fromAsset, toAsset, marketStats, real);
+        MarketUtils.getFinalPrice(
+            coreAsset,
+            fromAsset,
+            toAsset,
+            marketStats,
+            real
+        );
     }
 
     render() {
-        const { toAsset, forceDirection, ...others} = this.props;
+        const {toAsset, forceDirection, ...others} = this.props;
 
         const finalPrice = this.getFinalPrice();
 
@@ -66,25 +110,27 @@ class EquivalentPrice extends MarketStatsCheck {
 EquivalentPrice = BindToChainState(EquivalentPrice);
 
 export default class EquivalentPriceWrapper extends React.Component {
-
     render() {
         return (
-          <AltContainer
-            stores={[SettingsStore, MarketsStore]}
-            inject={{
-                toAsset: () => {
-                    return this.props.toAsset || SettingsStore.getState().settings.get("unit", "1.3.0");
-                },
-                marketStats: () => {
-                    return MarketsStore.getState().allMarketStats;
-                }
-            }}
-          >
-            <EquivalentPrice
-                {...this.props}
-                ref={this.props.refCallback}
-            />
-          </AltContainer>
+            <AltContainer
+                stores={[SettingsStore, MarketsStore]}
+                inject={{
+                    toAsset: () => {
+                        return (
+                            this.props.toAsset ||
+                            SettingsStore.getState().settings.get(
+                                "unit",
+                                "1.3.0"
+                            )
+                        );
+                    },
+                    marketStats: () => {
+                        return MarketsStore.getState().allMarketStats;
+                    }
+                }}
+            >
+                <EquivalentPrice {...this.props} ref={this.props.refCallback} />
+            </AltContainer>
         );
     }
 }

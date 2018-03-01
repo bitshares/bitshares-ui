@@ -17,7 +17,6 @@
             display: inline-block;
             padding-bottom: 10px;
         }
-
     }
     .SimpleTrade__QR {
         > canvas {
@@ -89,11 +88,11 @@
 }
 
 .balance-row.active {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
 }
 
 .balance-row:hover {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
 }
 
 .balance-row {
@@ -134,7 +133,8 @@
 #send_modal,
 #send_modal_header,
 #send_modal_portfolio,
-#deposit_modal_new {
+#deposit_modal_new,
+#withdraw_modal_new {
     overflow: auto !important;
     max-width: 500px;
 }
@@ -196,25 +196,11 @@ div.input-wrapper {
             height: auto;
             min-height: 650px;
 
-            .Modal__header {
-                text-align: center;
-                > img {
-                    margin: 0px;
-                    height: 80px;
-                }
-                > p {
-                    font-size: 1.8rem;
-                    @include RobotoMedium;
-                    margin-bottom: 0px;
-                }
-            }
-
             .Modal__body {
                 flex: 1;
                 height: 90%;
                 padding-top: 16px;
             }
-
 
             .container-row {
                 padding-bottom: 1rem;
@@ -255,8 +241,6 @@ div.input-wrapper {
                 margin-left: 0.2rem;
                 overflow: "hidden";
 
-
-
                 > .maxDeposit {
                     @include RobotoMedium;
                     font-size: 0.9rem;
@@ -278,10 +262,29 @@ div.input-wrapper {
                 }
             }
         }
-
-
     }
     .close-button {
         display: none;
     }
+}
+
+#deposit_modal_new,
+#withdraw_modal_new {
+    .Modal__header {
+        text-align: center;
+        > img {
+            margin: 0px;
+            height: 80px;
+        }
+        > p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#withdraw_modal_new {
+    height: 800px;
+    padding: 1rem 2rem 110px 2rem;
 }
