@@ -4,7 +4,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import cnames from "classnames";
 import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import utils from "common/utils";
 import FormattedPrice from "./FormattedPrice";
 import marketUtils from "common/market_utils";
@@ -23,23 +23,39 @@ class MarketStats extends React.Component {
     _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
         return (
             newStats.volumeBase !== oldStats.volumeBase ||
-            !utils.are_equal_shallow(newStats.close && newStats.close.base, oldStats.close && oldStats.close.base) ||
-            !utils.are_equal_shallow(newStats.close && newStats.close.quote, oldStats.close && oldStats.close.quote)
+            !utils.are_equal_shallow(
+                newStats.close && newStats.close.base,
+                oldStats.close && oldStats.close.base
+            ) ||
+            !utils.are_equal_shallow(
+                newStats.close && newStats.close.quote,
+                oldStats.close && oldStats.close.quote
+            )
         );
     }
 
     shouldComponentUpdate(np) {
         return (
-            this._checkStats(np.allMarketStats.get(this.state.marketName), this.props.allMarketStats.get(this.state.marketName)) ||
+            this._checkStats(
+                np.allMarketStats.get(this.state.marketName),
+                this.props.allMarketStats.get(this.state.marketName)
+            ) ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id")
         );
     }
 
     componentWillMount() {
-        MarketsActions.getMarketStats.defer(this.props.base, this.props.quote);
+        MarketsActions.getMarketStats(this.props.base, this.props.quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, this.props.base, this.props.quote), 35 * 1000);
+        this.statsInterval = setInterval(
+            MarketsActions.getMarketStats.bind(
+                this,
+                this.props.base,
+                this.props.quote
+            ),
+            35 * 1000
+        );
     }
 
     componentWillUnmount() {
@@ -48,7 +64,6 @@ class MarketStats extends React.Component {
 }
 
 class MarketPriceInner extends MarketStats {
-
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
         base: ChainTypes.ChainAsset.isRequired
@@ -59,9 +74,7 @@ class MarketPriceInner extends MarketStats {
     }
 
     shouldComponentUpdate(np) {
-        return (
-            super.shouldComponentUpdate(np)
-        );
+        return super.shouldComponentUpdate(np);
     }
 
     render() {
@@ -75,15 +88,18 @@ class MarketPriceInner extends MarketStats {
 
         return (
             <span className={cnames("", this.props.className)}>
-                {price ?
+                {price ? (
                     <FormattedPrice
-                        base_amount={price.base.amount} base_asset={price.base.asset_id}
-                        quote_amount={price.quote.amount} quote_asset={price.quote.asset_id}
+                        base_amount={price.base.amount}
+                        base_asset={price.base.asset_id}
+                        quote_amount={price.quote.amount}
+                        quote_asset={price.quote.asset_id}
                         force_direction={this.props.force_direction}
                         hide_symbols={this.props.hide_symbols}
                     />
-                    : "n/a"
-                }
+                ) : (
+                    "n/a"
+                )}
             </span>
         );
     }
@@ -93,9 +109,7 @@ MarketPriceInner = BindToChainState(MarketPriceInner);
 
 class MarketPrice extends React.Component {
     render() {
-        return (
-            <MarketPriceInner {...this.props} />
-        );
+        return <MarketPriceInner {...this.props} />;
     }
 }
 
@@ -110,7 +124,4 @@ MarketPrice = connect(MarketPrice, {
     }
 });
 
-export {
-    MarketPrice,
-    MarketStats
-};
+export {MarketPrice, MarketStats};
