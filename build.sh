@@ -8,5 +8,5 @@ fi
 if [ $TRAVIS_TAG ]
 then
     npm run-script package
-    sha256sum $TRAVIS_BUILD_DIR/binaries/* > $TRAVIS_BUILD_DIR/shasums_$TRAVIS_JOB_NUMBER.txt
+    sha256sum $TRAVIS_BUILD_DIR/build/binaries/* > $TRAVIS_BUILD_DIR/shasums_$TRAVIS_JOB_NUMBER.txt
 fi
