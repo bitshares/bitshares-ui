@@ -772,7 +772,7 @@ class Asset extends React.Component {
                     <div className="">
                         <Tabs defaultActiveTab={0} segmented={false} setting="bitassetDataTabs">
                             <Tab title="explorer.asset.price_feed_data.title">
-                                <div className="responsive-table" style={{marginTop:"-10px"}}>
+                                <div className="responsive-table">
                                     <table className=" table order-table table-hover" style={{ padding:"1.2rem"}}>
                                         {header}
                                         <tbody>
