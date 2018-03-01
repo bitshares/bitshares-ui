@@ -254,7 +254,7 @@ class AccessSettings extends React.Component {
         });
 
         return <div style={{paddingTop: "1em"}}>
-            <Translate component="p" content="settings.active_node" className="dark-text-color"/>
+            <Translate component="p" content="settings.active_node" />
             <div className="active-node" style={{marginBottom: "2em"}}>
                 { renderNode(activeNode, false) }
             </div>
