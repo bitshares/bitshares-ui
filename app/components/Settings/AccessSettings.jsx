@@ -387,7 +387,6 @@ class AccessSettings extends React.Component {
                 <Translate
                     component="p"
                     content="settings.active_node"
-                    className="dark-text-color"
                 />
                 <div className="active-node" style={{marginBottom: "2em"}}>
                     {renderNode(activeNode, false)}
@@ -407,7 +406,6 @@ class AccessSettings extends React.Component {
                         >
                             <Translate
                                 content="settings.available_nodes"
-                                className="dark-text-color"
                             />
                         </div>
                         <div

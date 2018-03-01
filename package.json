@@ -221,4 +221,4 @@
         "webpack-hot-middleware": "^2.14.0",
         "worker-loader": "^1.1.0"
     }
-}
+  }
