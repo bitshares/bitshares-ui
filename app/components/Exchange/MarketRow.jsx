@@ -7,7 +7,6 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
-import marketUtils from "common/market_utils";
 
 class MarketRow extends React.Component {
     static propTypes = {
@@ -39,7 +38,7 @@ class MarketRow extends React.Component {
     }
 
     componentDidMount() {
-        MarketsActions.getMarketStats.defer(this.props.base, this.props.quote);
+        MarketsActions.getMarketStats(this.props.base, this.props.quote);
         this.statsChecked = new Date();
         this.statsInterval = setInterval(
             MarketsActions.getMarketStats.bind(

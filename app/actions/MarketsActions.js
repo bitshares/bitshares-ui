@@ -45,7 +45,7 @@ class MarketsActions {
             quote
         );
         return dispatch => {
-            if (base === quote) return dispatch({});
+            if (base === quote) return;
             let now = new Date();
 
             if (marketStats[marketName] && !refresh) {

@@ -46,7 +46,7 @@ class MarketStats extends React.Component {
     }
 
     componentWillMount() {
-        MarketsActions.getMarketStats.defer(this.props.base, this.props.quote);
+        MarketsActions.getMarketStats(this.props.base, this.props.quote);
         this.statsChecked = new Date();
         this.statsInterval = setInterval(
             MarketsActions.getMarketStats.bind(
