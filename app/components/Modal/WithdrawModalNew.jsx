@@ -15,7 +15,7 @@ import SettingsStore from "stores/SettingsStore";
 import Immutable from "immutable";
 import {Asset, Price} from "common/MarketClasses";
 import utils from "common/utils";
-import {equivalentPrice} from "../Utility/EquivalentPrice";
+import MarketUtils from "common/market_utils";
 import BalanceWrapper from "../Account/BalanceWrapper";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -280,7 +280,7 @@ class WithdrawModalNew extends React.Component {
             if (quantity && fromAsset && toAsset) {
                 estimatedValue =
                     quantity *
-                    equivalentPrice(
+                    MarketUtils.getFinalPrice(
                         coreAsset,
                         fromAsset,
                         toAsset,

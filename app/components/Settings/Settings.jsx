@@ -367,7 +367,6 @@ class Settings extends React.Component {
                         </ul>
                     </div>
 
-
                     <div
                         className="grid-content"
                         style={{

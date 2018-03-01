@@ -9,6 +9,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import MarketStatsCheck from "./MarketStatsCheck";
+import MarketUtils from "common/market_utils";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -63,38 +64,14 @@ class ValueComponent extends MarketStatsCheck {
             marketStats,
             coreAsset
         } = this.props;
-        let toStats, fromStats;
-
-        let toID = toAsset.get("id");
-        let toSymbol = toAsset.get("symbol");
-        let fromID = fromAsset.get("id");
-        let fromSymbol = fromAsset.get("symbol");
-
-        if (!fullPrecision) {
-            amount = utils.get_asset_amount(amount, fromAsset);
-        }
-
-        if (coreAsset && marketStats) {
-            let coreSymbol = coreAsset.get("symbol");
-            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
-            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
-        }
-
-        let price = utils.convertPrice(
-            fromStats && fromStats.close
-                ? fromStats.close
-                : fromID === "1.3.0" ? fromAsset : null,
-            toStats && toStats.close
-                ? toStats.close
-                : toID === "1.3.0" ? toAsset : null,
-            fromID,
-            toID
+        return MarketUtils.convertValue(
+            amount,
+            toAsset,
+            fromAsset,
+            fullPrecision,
+            marketStats,
+            coreAsset
         );
-
-        let eqValue = price
-            ? utils.convertValue(price, amount, fromAsset, toAsset)
-            : null;
-        return eqValue;
     }
 
     render() {

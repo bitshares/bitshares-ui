@@ -7,6 +7,7 @@ import SettingsStore from "stores/SettingsStore";
 import FormattedPrice from "./FormattedPrice";
 import MarketStatsCheck from "./MarketStatsCheck";
 import MarketsStore from "stores/MarketsStore";
+import MarketUtils from "common/market_utils";
 
 export function equivalentPrice(
     coreAsset,
@@ -73,7 +74,7 @@ class EquivalentPrice extends MarketStatsCheck {
 
     getFinalPrice(real = false) {
         const {coreAsset, fromAsset, toAsset, marketStats} = this.props;
-        return equivalentPrice(
+        MarketUtils.getFinalPrice(
             coreAsset,
             fromAsset,
             toAsset,

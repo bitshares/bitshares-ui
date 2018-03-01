@@ -384,10 +384,7 @@ class AccessSettings extends React.Component {
 
         return (
             <div style={{paddingTop: "1em"}}>
-                <Translate
-                    component="p"
-                    content="settings.active_node"
-                />
+                <Translate component="p" content="settings.active_node" />
                 <div className="active-node" style={{marginBottom: "2em"}}>
                     {renderNode(activeNode, false)}
                 </div>
@@ -404,9 +401,7 @@ class AccessSettings extends React.Component {
                                 "available-nodes"
                             )}
                         >
-                            <Translate
-                                content="settings.available_nodes"
-                            />
+                            <Translate content="settings.available_nodes" />
                         </div>
                         <div
                             className={hiddenClass}
