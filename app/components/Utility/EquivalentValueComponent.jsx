@@ -3,7 +3,7 @@ import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -21,7 +21,6 @@ import MarketStatsCheck from "./MarketStatsCheck";
  */
 
 class ValueComponent extends MarketStatsCheck {
-
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
         fromAsset: ChainTypes.ChainAsset.isRequired,
@@ -56,7 +55,14 @@ class ValueComponent extends MarketStatsCheck {
     }
 
     getValue() {
-        let {amount, toAsset, fromAsset, fullPrecision, marketStats, coreAsset} = this.props;
+        let {
+            amount,
+            toAsset,
+            fromAsset,
+            fullPrecision,
+            marketStats,
+            coreAsset
+        } = this.props;
         let toStats, fromStats;
 
         let toID = toAsset.get("id");
@@ -74,14 +80,20 @@ class ValueComponent extends MarketStatsCheck {
             fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
         }
 
-        let price = utils.convertPrice(fromStats && fromStats.close ? fromStats.close :
-                                        fromID === "1.3.0" ? fromAsset : null,
-                                        toStats && toStats.close ? toStats.close :
-                                        toID === "1.3.0" ? toAsset : null,
-                                        fromID,
-                                        toID);
+        let price = utils.convertPrice(
+            fromStats && fromStats.close
+                ? fromStats.close
+                : fromID === "1.3.0" ? fromAsset : null,
+            toStats && toStats.close
+                ? toStats.close
+                : toID === "1.3.0" ? toAsset : null,
+            fromID,
+            toID
+        );
 
-        let eqValue = price ? utils.convertValue(price, amount, fromAsset, toAsset) : null;
+        let eqValue = price
+            ? utils.convertValue(price, amount, fromAsset, toAsset)
+            : null;
         return eqValue;
     }
 
@@ -98,15 +110,32 @@ class ValueComponent extends MarketStatsCheck {
         let eqValue = this.getValue();
 
         if (!eqValue && eqValue !== 0) {
-            return <div className="tooltip inline-block" data-place="bottom" data-tip={counterpart.translate("tooltip.no_price")} style={{fontSize: "0.9rem"}}><Translate content="account.no_price" /></div>;
+            return (
+                <div
+                    className="tooltip inline-block"
+                    data-place="bottom"
+                    data-tip={counterpart.translate("tooltip.no_price")}
+                    style={{fontSize: "0.9rem"}}
+                >
+                    <Translate content="account.no_price" />
+                </div>
+            );
         }
 
         return (
-            <FormattedAsset 
+            <FormattedAsset
                 noPrefix
                 amount={eqValue}
                 asset={toID}
-                decimalOffset={toSymbol.indexOf("BTC") !== -1 ? 4 : this.props.fullDecimals ? 0 : this.props.noDecimals ? toAsset.get("precision") : (toAsset.get("precision") - 2)}
+                decimalOffset={
+                    toSymbol.indexOf("BTC") !== -1
+                        ? 4
+                        : this.props.fullDecimals
+                            ? 0
+                            : this.props.noDecimals
+                                ? toAsset.get("precision")
+                                : toAsset.get("precision") - 2
+                }
                 {...others}
             />
         );
@@ -134,17 +163,22 @@ EquivalentValueComponent = connect(EquivalentValueComponent, {
 });
 
 class BalanceValueComponent extends React.Component {
-
     static propTypes = {
         balance: ChainTypes.ChainObject.isRequired
-    }
+    };
 
     render() {
         const {balance, ...others} = this.props;
         const isBalanceObject = !!balance.getIn(["balance", "amount"]);
 
-        let amount = Number(isBalanceObject ? balance.getIn(["balance", "amount"]) : balance.get("balance"));
-        let fromAsset = isBalanceObject ? balance.getIn(["balance", "asset_id"]) : balance.get("asset_type");
+        let amount = Number(
+            isBalanceObject
+                ? balance.getIn(["balance", "amount"])
+                : balance.get("balance")
+        );
+        let fromAsset = isBalanceObject
+            ? balance.getIn(["balance", "asset_id"])
+            : balance.get("asset_type");
         if (isNaN(amount)) return <span>--</span>;
         return (
             <EquivalentValueComponent
@@ -156,5 +190,7 @@ class BalanceValueComponent extends React.Component {
         );
     }
 }
-BalanceValueComponent = BindToChainState(BalanceValueComponent, {keep_updating: true});
+BalanceValueComponent = BindToChainState(BalanceValueComponent, {
+    keep_updating: true
+});
 export {EquivalentValueComponent, BalanceValueComponent};
