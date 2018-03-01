@@ -1,21 +1,29 @@
 import React from "react";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 
 import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import AccountStore from "stores/AccountStore";
 
-import { Tabs, Tab } from "../Utility/Tabs";
-import { StarredMarkets, TopMarkets, FeaturedMarkets } from "./Markets";
+import {Tabs, Tab} from "../Utility/Tabs";
+import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
 
 class DashboardPage extends React.Component {
     render() {
-        let { linkedAccounts, myIgnoredAccounts, accountsReady, passwordAccount } = this.props;
+        let {
+            linkedAccounts,
+            myIgnoredAccounts,
+            accountsReady,
+            passwordAccount
+        } = this.props;
         if (!accountsReady) {
             return <LoadingIndicator />;
         }
-        
-        let accountCount = linkedAccounts.size + myIgnoredAccounts.size + (passwordAccount ? 1 : 0);
+
+        let accountCount =
+            linkedAccounts.size +
+            myIgnoredAccounts.size +
+            (passwordAccount ? 1 : 0);
         if (!accountCount) {
             return <LoginSelector />;
         }
@@ -23,10 +31,19 @@ class DashboardPage extends React.Component {
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block no-padding">
-                    <div className="grid-content app-tables no-padding" ref="appTables">
+                    <div
+                        className="grid-content app-tables no-padding"
+                        ref="appTables"
+                    >
                         <div className="content-block small-12">
                             <div className="tabs-container generic-bordered-box">
-                                <Tabs defaultActiveTab={1} segmented={false} setting="dashboardTab" className="account-tabs" tabsClass="account-overview no-padding bordered-header content-block">
+                                <Tabs
+                                    defaultActiveTab={1}
+                                    segmented={false}
+                                    setting="dashboardTab"
+                                    className="account-tabs"
+                                    tabsClass="account-overview no-padding bordered-header content-block"
+                                >
                                     <Tab title="dashboard.starred_markets">
                                         <StarredMarkets />
                                     </Tab>
@@ -47,11 +64,17 @@ class DashboardPage extends React.Component {
 }
 
 export default connect(DashboardPage, {
-    listenTo () {
+    listenTo() {
         return [AccountStore];
     },
     getProps() {
-        let { linkedAccounts, myIgnoredAccounts, passwordAccount, accountsLoaded, refsLoaded } = AccountStore.getState();
+        let {
+            linkedAccounts,
+            myIgnoredAccounts,
+            passwordAccount,
+            accountsLoaded,
+            refsLoaded
+        } = AccountStore.getState();
 
         return {
             linkedAccounts,

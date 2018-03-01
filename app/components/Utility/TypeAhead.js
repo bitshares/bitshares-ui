@@ -14,7 +14,7 @@ export default class TypeAhead extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.value && nextProps.value != this.state.value) {
-            this.setState({ value: nextProps.value });
+            this.setState({value: nextProps.value});
         }
     }
 
@@ -23,37 +23,40 @@ export default class TypeAhead extends React.Component {
         if (this.blockClick) {
             return;
         }
-        const { isMenuShowing } = this.state || {};
-        this.setState({ isMenuShowing: !isMenuShowing, filter: "" }, () => {
-            const { autocomplete } = this.refs;
+        const {isMenuShowing} = this.state || {};
+        this.setState({isMenuShowing: !isMenuShowing, filter: ""}, () => {
+            const {autocomplete} = this.refs;
             autocomplete.refs.input.focus();
         });
     };
 
     onChange = e => {
-        this.setState({ filter: e.target.value });
+        this.setState({filter: e.target.value});
         if (this.props.onChange) {
             this.props.onChange(e.target.value);
         }
     };
 
-    onSelect = value => {
-        this.setState({ value, filter: "", isMenuShowing: false });
-        if (this.props.onSelect) {
-            this.props.onSelect(value);
-        }
-    };
+    onSelect(value) {
+        let asset = null;
+        this.props.items.forEach(item => {
+            if (value == item.id) asset = item;
+        });
+
+        this.setState({value, filter: "", isMenuShowing: false});
+        if (this.props.onSelect) this.props.onSelect(value, asset);
+    }
 
     renderInput = props => {
-        const { isMenuShowing } = this.state || {};
+        const {isMenuShowing} = this.state || {};
         return isMenuShowing ? (
             <input {...props} style={TypeAhead.inputStyle} />
         ) : null;
     };
 
     dropDown = () => {
-        const { props, state } = this;
-        const { filter = "", isMenuShowing } = state;
+        const {props, state} = this;
+        const {filter = "", isMenuShowing} = state;
         let inputProps = props.inputProps || {};
 
         if (props.tabIndex) inputProps.tabIndex = props.tabIndex;
@@ -63,22 +66,24 @@ export default class TypeAhead extends React.Component {
                 ref="autocomplete"
                 items={
                     props.items || [
-                        { id: "foo", label: "foo" },
-                        { id: "bar", label: "bar" },
-                        { id: "baz", label: "baz" }
+                        {id: "foo", label: "foo"},
+                        {id: "bar", label: "bar"},
+                        {id: "baz", label: "baz"}
                     ]
                 }
-                shouldItemRender={({ label }) =>
+                shouldItemRender={({label}) =>
                     label.toLowerCase().indexOf(filter.toLowerCase()) > -1
                 }
                 getItemValue={this.getValueFromItem}
                 renderItem={this.renderItem}
                 value={filter}
                 onChange={this.onChange}
-                onSelect={this.onSelect}
-                inputProps={{ ...inputProps, onBlur: this.onBlur }}
+                onSelect={this.onSelect.bind(this)}
+                inputProps={{...inputProps, onBlur: this.onBlur}}
                 menuStyle={TypeAhead.menuStyle}
-                wrapperProps={{ className: isMenuShowing ? "typeahead__innerList" : "" }}
+                wrapperProps={{
+                    className: isMenuShowing ? "typeahead__innerList" : ""
+                }}
                 open={isMenuShowing}
             />
         );
@@ -88,7 +93,7 @@ export default class TypeAhead extends React.Component {
         // Timer is used to keep menu from popping back open due to order of blur then click event
         this.timer && clearTimeout(this.timer);
         this.blockClick = true;
-        this.setState({ isMenuShowing: false });
+        this.setState({isMenuShowing: false});
         this.timer = setTimeout(() => {
             this.blockClick = false;
         }, 300); // Magic number that seems fast and slow enough for events and render to complete
@@ -97,7 +102,6 @@ export default class TypeAhead extends React.Component {
     static inputStyle = {
         marginTop: 4
     };
-
 
     // Suggestion Menu List
     static menuStyle = {
@@ -123,14 +127,19 @@ export default class TypeAhead extends React.Component {
         return (
             <div
                 key={item.id}
-                className={cnames("typeahead__innerItem", highlighted ? " typeahead__innerItem_highlighted" : "")}
+                className={cnames(
+                    "typeahead__innerItem",
+                    highlighted ? " typeahead__innerItem_highlighted" : ""
+                )}
             >
-                <span className={ isDisabled ? "typeahead__innerItem__disabled" : "" }>
+                <span
+                    className={
+                        isDisabled ? "typeahead__innerItem__disabled" : ""
+                    }
+                >
                     {item.label}
                 </span>
-                <span style={{ float: "right" }}>
-                    {item.status}
-                </span>
+                <span style={{float: "right"}}>{item.status}</span>
             </div>
         );
     };
@@ -138,21 +147,19 @@ export default class TypeAhead extends React.Component {
     getValueFromItem = item => item.label;
 
     selectedDisplay = () => {
-        const { value } = this.state;
+        const {value} = this.state;
         return (
-            <div
-                onClick={this.onClick}
-                className="typeahead__input"
-            >
+            <div onClick={this.onClick} className="typeahead__input">
                 {value}
             </div>
         );
     };
 
     render() {
-        const { isMenuShowing } = this.state || {};
+        const {isMenuShowing} = this.state || {};
         return (
-            <div className="typeahead"
+            <div
+                className="typeahead"
                 style={{paddingBottom: isMenuShowing ? "15px" : ""}} // Something is making the typeahead take less space when dropdown is open. Add extra padding for now...
             >
                 {!!this.props.label ? (
@@ -171,6 +178,7 @@ export default class TypeAhead extends React.Component {
                         top: !!this.props.label ? 35 : 7,
                         transform: isMenuShowing ? "rotate(180deg)" : null
                     }}
+                    onClick={this.onClick}
                 />
             </div>
         );

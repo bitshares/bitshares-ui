@@ -31,7 +31,7 @@ input[role="combobox"] {
         max-width: 460px;
         z-index: 1000;
         margin-top: -40px;
-        border-radius:  0px 0px 8px 8px;
+        border-radius: 0px 0px 8px 8px;
     }
 
     .typeahead__innerItem {
@@ -44,12 +44,13 @@ input[role="combobox"] {
             z-index: 1003;
         }
     }
-    
-    .icon.chevron-down:hover, .selectWrapper:hover {
+
+    .icon.chevron-down:hover,
+    .selectWrapper:hover {
         cursor: pointer;
     }
 }
 
 .selectWrapper + .icon.chevron-down {
-	pointer-events: none;
+    pointer-events: none;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { PropTypes } from "react";
+import {PropTypes} from "react";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -8,7 +8,7 @@ import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
-import { StickyTable } from "react-sticky-table";
+import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
 import "react-sticky-table/dist/react-sticky-table.css";
 
@@ -23,7 +23,7 @@ class OrderBookRowVertical extends React.Component {
     }
 
     render() {
-        let { order, quote, base, final } = this.props;
+        let {order, quote, base, final} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
         let integerClass = isCall
@@ -38,15 +38,15 @@ class OrderBookRowVertical extends React.Component {
                 onClick={this.props.onClick}
                 className={classnames(
                     "sticky-table-row order-row",
-                    { "final-row": final },
-                    { "my-order": order.isMine(this.props.currentAccount) }
+                    {"final-row": final},
+                    {"my-order": order.isMine(this.props.currentAccount)}
                 )}
             >
                 <div className="cell left">
                     {utils.format_number(
                         order[
                             isBid ? "amountForSale" : "amountToReceive"
-                        ]().getAmount({ real: true }),
+                        ]().getAmount({real: true}),
                         base.get("precision")
                     )}
                 </div>
@@ -54,7 +54,7 @@ class OrderBookRowVertical extends React.Component {
                     {utils.format_number(
                         order[
                             isBid ? "amountToReceive" : "amountForSale"
-                        ]().getAmount({ real: true }),
+                        ]().getAmount({real: true}),
                         quote.get("precision")
                     )}
                 </div>
@@ -77,7 +77,7 @@ class OrderBookRowHorizontal extends React.Component {
     }
 
     render() {
-        let { order, quote, base, position } = this.props;
+        let {order, quote, base, position} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
 
@@ -90,29 +90,29 @@ class OrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                  order.amountToReceive().getAmount({ real: true }),
+                  order.amountToReceive().getAmount({real: true}),
                   quote.get("precision")
               )
             : utils.format_number(
-                  order.amountForSale().getAmount({ real: true }),
+                  order.amountForSale().getAmount({real: true}),
                   quote.get("precision")
               );
         let value = isBid
             ? utils.format_number(
-                  order.amountForSale().getAmount({ real: true }),
+                  order.amountForSale().getAmount({real: true}),
                   base.get("precision")
               )
             : utils.format_number(
-                  order.amountToReceive().getAmount({ real: true }),
+                  order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
         let total = isBid
             ? utils.format_number(
-                  order.totalForSale().getAmount({ real: true }),
+                  order.totalForSale().getAmount({real: true}),
                   base.get("precision")
               )
             : utils.format_number(
-                  order.totalToReceive().getAmount({ real: true }),
+                  order.totalToReceive().getAmount({real: true}),
                   base.get("precision")
               );
 
@@ -126,7 +126,7 @@ class OrderBookRowHorizontal extends React.Component {
                 {position === "left" ? (
                     <td>{total}</td>
                 ) : (
-                    <td style={{ width: "25%" }} className={integerClass}>
+                    <td style={{width: "25%"}} className={integerClass}>
                         {price}
                     </td>
                 )}
@@ -135,7 +135,7 @@ class OrderBookRowHorizontal extends React.Component {
                 {position === "right" ? (
                     <td>{total}</td>
                 ) : (
-                    <td style={{ width: "25%" }} className={integerClass}>
+                    <td style={{width: "25%"}} className={integerClass}>
                         {price}
                     </td>
                 )}
@@ -191,7 +191,7 @@ class OrderBook extends React.Component {
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
 
             if (!this.props.horizontal) {
-                this.setState({ autoScroll: true });
+                this.setState({autoScroll: true});
             }
         }
 
@@ -250,14 +250,16 @@ class OrderBook extends React.Component {
             );
             const centerTextContainer = this.refs.center_text;
             const centeringOffset = 21;
-            const offset = !this.state.autoScroll && this.offset ? this.offset : 0;
+            const offset =
+                !this.state.autoScroll && this.offset ? this.offset : 0;
             const scrollTo =
                 centerTextContainer.offsetTop -
                 elemHeight(scrollableContainer) / 2 +
-                centeringOffset + offset;
+                centeringOffset +
+                offset;
 
             this.setState(
-                { ownScroll: true },
+                {ownScroll: true},
                 () => (scrollableContainer.scrollTop = scrollTo)
             );
         }
@@ -280,7 +282,7 @@ class OrderBook extends React.Component {
             flipOrderBook: !this.state.flip
         });
 
-        this.setState({ flip: !this.state.flip });
+        this.setState({flip: !this.state.flip});
     }
 
     _onToggleShowAll(type) {
@@ -310,7 +312,7 @@ class OrderBook extends React.Component {
     };
 
     toggleAutoScroll = () => {
-        const newState = { autoScroll: !this.state.autoScroll };
+        const newState = {autoScroll: !this.state.autoScroll};
         if (newState.autoScroll)
             this.setState(newState, this.centerVerticalScrollBar);
         else this.setState(newState);
@@ -532,7 +534,7 @@ class OrderBook extends React.Component {
                             >
                                 <Translate content="exchange.asks" />
                                 {this.state.flip ? (
-                                    <div style={{ display: "inline-block" }}>
+                                    <div style={{display: "inline-block"}}>
                                         <span
                                             onClick={this._flipBuySell.bind(
                                                 this
@@ -561,7 +563,7 @@ class OrderBook extends React.Component {
                                     </div>
                                 ) : null}
                                 <div
-                                    style={{ lineHeight: "16px" }}
+                                    style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
                                 >
                                     <Translate content="exchange.total" />
@@ -576,7 +578,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{ paddingRight: "0.6rem" }}>
+                            <div style={{paddingRight: "0.6rem"}}>
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {!this.state.flip
                                         ? rightHeader
@@ -593,7 +595,7 @@ class OrderBook extends React.Component {
                                 }}
                             >
                                 <table
-                                    style={{ paddingBottom: 5 }}
+                                    style={{paddingBottom: 5}}
                                     className="table order-table table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper
@@ -645,7 +647,7 @@ class OrderBook extends React.Component {
                             >
                                 <Translate content="exchange.bids" />
                                 {!this.state.flip ? (
-                                    <div style={{ display: "inline-block" }}>
+                                    <div style={{display: "inline-block"}}>
                                         <span
                                             onClick={this._flipBuySell.bind(
                                                 this
@@ -674,7 +676,7 @@ class OrderBook extends React.Component {
                                     </div>
                                 ) : null}
                                 <div
-                                    style={{ lineHeight: "16px" }}
+                                    style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
                                 >
                                     <Translate content="exchange.total" />
@@ -689,7 +691,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{ paddingRight: "0.6rem" }}>
+                            <div style={{paddingRight: "0.6rem"}}>
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {this.state.flip ? rightHeader : leftHeader}
                                 </table>
@@ -704,7 +706,7 @@ class OrderBook extends React.Component {
                                 }}
                             >
                                 <table
-                                    style={{ paddingBottom: 5 }}
+                                    style={{paddingBottom: 5}}
                                     className="table order-table table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper

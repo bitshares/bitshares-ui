@@ -1,7 +1,7 @@
 import React from "react";
-import { connect } from "alt-react";
-import { Link } from "react-router/es";
-import { ChainStore } from "bitsharesjs/es";
+import {connect} from "alt-react";
+import {Link} from "react-router/es";
+import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import cnames from "classnames";
 
@@ -17,7 +17,6 @@ import utils from "common/utils";
 import market_utils from "common/market_utils";
 
 class MarketRow extends React.Component {
-
     static propTypes = {
         quote: ChainTypes.ChainAsset.isRequired,
         base: ChainTypes.ChainAsset.isRequired
@@ -39,8 +38,14 @@ class MarketRow extends React.Component {
     _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
         return (
             newStats.volumeBase !== oldStats.volumeBase ||
-            !utils.are_equal_shallow(newStats.close && newStats.close.base, oldStats.close && oldStats.close.base) ||
-            !utils.are_equal_shallow(newStats.close && newStats.close.quote, oldStats.close && oldStats.close.quote)
+            !utils.are_equal_shallow(
+                newStats.close && newStats.close.base,
+                oldStats.close && oldStats.close.base
+            ) ||
+            !utils.are_equal_shallow(
+                newStats.close && newStats.close.quote,
+                oldStats.close && oldStats.close.quote
+            )
         );
     }
 
@@ -62,22 +67,27 @@ class MarketRow extends React.Component {
         this._clearInterval();
     }
 
-    componentWillReceiveProps (nextProps) {
-        if (nextProps.base.get("id") !== this.props.base.get("id") ||
-            nextProps.quote.get("id") !== this.props.quote.get("id")) {
+    componentWillReceiveProps(nextProps) {
+        if (
+            nextProps.base.get("id") !== this.props.base.get("id") ||
+            nextProps.quote.get("id") !== this.props.quote.get("id")
+        ) {
             this._clearInterval();
             this._setInterval(nextProps);
         }
     }
 
-    _setInterval (nextProps = null) {
-        let { base, quote } = nextProps || this.props;
+    _setInterval(nextProps = null) {
+        let {base, quote} = nextProps || this.props;
         MarketsActions.getMarketStats.defer(base, quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(MarketsActions.getMarketStats.bind(this, base, quote), 35 * 1000);
+        this.statsInterval = setInterval(
+            MarketsActions.getMarketStats.bind(this, base, quote),
+            35 * 1000
+        );
     }
 
-    _clearInterval () {
+    _clearInterval() {
         clearInterval(this.statsInterval);
     }
 
@@ -91,7 +101,16 @@ class MarketRow extends React.Component {
     }
 
     render() {
-        let {base, quote, marketStats, isHidden, inverted, visible, handleHide, handleFlip} = this.props;
+        let {
+            base,
+            quote,
+            marketStats,
+            isHidden,
+            inverted,
+            visible,
+            handleHide,
+            handleFlip
+        } = this.props;
 
         function getImageName(asset) {
             let symbol = asset.get("symbol");
@@ -100,23 +119,74 @@ class MarketRow extends React.Component {
             return imgName.length === 2 ? imgName[1] : imgName[0];
         }
         let imgName = getImageName(quote);
-        let changeClass = !marketStats ? "" : parseFloat(marketStats.change) > 0 ? "change-up" : parseFloat(marketStats.change) < 0 ? "change-down" : "";
+        let changeClass = !marketStats
+            ? ""
+            : parseFloat(marketStats.change) > 0
+                ? "change-up"
+                : parseFloat(marketStats.change) < 0 ? "change-down" : "";
 
         return (
-            <tr style={{ display: visible ? "" : "none" }}>
-                <td style={{ textAlign: "left" }}>
-                    <Link to={`/market/${this.props.quote.get("symbol")}_${this.props.base.get("symbol")}`}>
-                        <img ref={imgName.toLowerCase()} className="column-hide-small" onError={this._onError.bind(this, imgName)} style={{maxWidth: 20, marginRight: 10}} src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`} />
-                        <AssetName dataPlace="top" name={quote.get("symbol")} /> : <AssetName dataPlace="top" name={base.get("symbol")} />
+            <tr style={{display: visible ? "" : "none"}}>
+                <td style={{textAlign: "left"}}>
+                    <Link
+                        to={`/market/${this.props.quote.get(
+                            "symbol"
+                        )}_${this.props.base.get("symbol")}`}
+                    >
+                        <img
+                            ref={imgName.toLowerCase()}
+                            className="column-hide-small"
+                            onError={this._onError.bind(this, imgName)}
+                            style={{maxWidth: 20, marginRight: 10}}
+                            src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`}
+                        />
+                        <AssetName dataPlace="top" name={quote.get("symbol")} />{" "}
+                        :{" "}
+                        <AssetName dataPlace="top" name={base.get("symbol")} />
                     </Link>
                 </td>
-                <td style={{ textAlign: "right" }}>{marketStats && marketStats.price ? utils.price_text(marketStats.price.toReal(), quote, base) : null}</td>
-                <td style={{ textAlign: "right" }} className={cnames(changeClass)}>{!marketStats ? null : marketStats.change}%</td>
-                <td className="column-hide-small" style={{ textAlign: "right" }}>{!marketStats ? null : utils.format_volume(marketStats.volumeBase, base.get("precision"))}</td>
-                {inverted === null ? null : <td className="column-hide-small"><a onClick={handleFlip}><Icon name="shuffle"/></a></td>}
-                <td><a style={{marginRight: 0}} className={isHidden ? "action-plus" : "order-cancel"} onClick={handleHide}>
-                    <Icon name={isHidden ? "plus-circle" : "cross-circle"} className="icon-14px" />
-                </a></td>
+                <td style={{textAlign: "right"}}>
+                    {marketStats && marketStats.price
+                        ? utils.price_text(
+                              marketStats.price.toReal(),
+                              quote,
+                              base
+                          )
+                        : null}
+                </td>
+                <td
+                    style={{textAlign: "right"}}
+                    className={cnames(changeClass)}
+                >
+                    {!marketStats ? null : marketStats.change}%
+                </td>
+                <td className="column-hide-small" style={{textAlign: "right"}}>
+                    {!marketStats
+                        ? null
+                        : utils.format_volume(
+                              marketStats.volumeBase,
+                              base.get("precision")
+                          )}
+                </td>
+                {inverted === null ? null : (
+                    <td className="column-hide-small">
+                        <a onClick={handleFlip}>
+                            <Icon name="shuffle" />
+                        </a>
+                    </td>
+                )}
+                <td>
+                    <a
+                        style={{marginRight: 0}}
+                        className={isHidden ? "action-plus" : "order-cancel"}
+                        onClick={handleHide}
+                    >
+                        <Icon
+                            name={isHidden ? "plus-circle" : "cross-circle"}
+                            className="icon-14px"
+                        />
+                    </a>
+                </td>
             </tr>
         );
     }
@@ -129,7 +199,9 @@ MarketRow = connect(MarketRow, {
     },
     getProps(props) {
         return {
-            marketStats: MarketsStore.getState().allMarketStats.get(props.marketId)
+            marketStats: MarketsStore.getState().allMarketStats.get(
+                props.marketId
+            )
         };
     }
 });
@@ -160,47 +232,57 @@ class MarketsTable extends React.Component {
         ChainStore.unsubscribe(this.update);
     }
 
-    update (nextProps = null) {
+    update(nextProps = null) {
         let props = nextProps || this.props;
         let showFlip = !props.forceDirection || props.handleFlip;
-        let markets = props.markets.map(pair => {
-            let [ first, second ] = pair;
+        let markets = props.markets
+            .map(pair => {
+                let [first, second] = pair;
 
-            if (props.forceDirection) {
-                let key = `${first}_${second}`;
-                return {
-                    key,
-                    inverted: showFlip ? false : null,
-                    marketId: key,
-                    quote: first,
-                    base: second,
-                    isHidden: props.hiddenMarkets.includes(key)
-                };
-            } else {
-                let { marketName: key, first: quote, second: base } = 
-                    market_utils.getMarketName(ChainStore.getAsset(first), ChainStore.getAsset(second));
-                if (!quote || !base) return null;
+                if (props.forceDirection) {
+                    let key = `${first}_${second}`;
+                    return {
+                        key,
+                        inverted: showFlip ? false : null,
+                        marketId: key,
+                        quote: first,
+                        base: second,
+                        isHidden: props.hiddenMarkets.includes(key)
+                    };
+                } else {
+                    let {
+                        marketName: key,
+                        first: quote,
+                        second: base
+                    } = market_utils.getMarketName(
+                        ChainStore.getAsset(first),
+                        ChainStore.getAsset(second)
+                    );
+                    if (!quote || !base) return null;
 
-                let inverted = props.marketDirections.get(key);
-                if (inverted) {
-                    [quote, base] = [base, quote];
+                    let inverted = props.marketDirections.get(key);
+                    if (inverted) {
+                        [quote, base] = [base, quote];
+                    }
+
+                    return {
+                        key,
+                        inverted,
+                        marketId: `${quote.get("symbol")}_${base.get(
+                            "symbol"
+                        )}`,
+                        quote: quote.get("symbol"),
+                        base: base.get("symbol"),
+                        isHidden: props.hiddenMarkets.includes(key)
+                    };
                 }
+            })
+            .filter(a => a !== null);
 
-                return {
-                    key,
-                    inverted,
-                    marketId: `${quote.get("symbol")}_${base.get("symbol")}`,
-                    quote: quote.get("symbol"),
-                    base: base.get("symbol"),
-                    isHidden: props.hiddenMarkets.includes(key)
-                };
-            }
-        }).filter(a => a !== null);
-
-        this.setState({ showFlip, markets });
+        this.setState({showFlip, markets});
     }
 
-    _toggleShowHidden (val) {
+    _toggleShowHidden(val) {
         if (this.state.showHidden === val) return;
 
         this.setState({
@@ -208,12 +290,12 @@ class MarketsTable extends React.Component {
         });
     }
 
-    _handleFilterInput (e) {
+    _handleFilterInput(e) {
         e.preventDefault();
         this.setState({filter: e.target.value.toUpperCase()});
     }
 
-    _handleHide (row, status) {
+    _handleHide(row, status) {
         if (this.props.handleHide) {
             return this.props.handleHide(row, status);
         }
@@ -221,7 +303,7 @@ class MarketsTable extends React.Component {
         SettingsActions.hideMarket(row.key, status);
     }
 
-    _handleFlip (row, status) {
+    _handleFlip(row, status) {
         if (this.props.handleFlip) {
             return this.props.handleFlip(row, status);
         }
@@ -231,8 +313,8 @@ class MarketsTable extends React.Component {
         });
     }
 
-    render () {
-        let { markets, showFlip, showHidden, filter } = this.state;
+    render() {
+        let {markets, showFlip, showHidden, filter} = this.state;
         this.loaded = true;
 
         let visibleRow = 0;
@@ -242,7 +324,8 @@ class MarketsTable extends React.Component {
             if (row.isHidden !== this.state.showHidden) {
                 visible = false;
             } else if (filter) {
-                visible = row.quote.includes(filter) || row.base.includes(filter);
+                visible =
+                    row.quote.includes(filter) || row.base.includes(filter);
             }
 
             if (visible) ++visibleRow;
@@ -260,13 +343,27 @@ class MarketsTable extends React.Component {
             <div>
                 <div className="header-selector">
                     <div className="filter inline-block">
-                        <input type="text" placeholder="Filter" onChange={this._handleFilterInput.bind(this)} />
+                        <input
+                            type="text"
+                            placeholder="Filter"
+                            onChange={this._handleFilterInput.bind(this)}
+                        />
                     </div>
                     <div className="selector inline-block">
-                        <div className={cnames("inline-block", { "inactive": showHidden })} onClick={this._toggleShowHidden.bind(this, false)}>
+                        <div
+                            className={cnames("inline-block", {
+                                inactive: showHidden
+                            })}
+                            onClick={this._toggleShowHidden.bind(this, false)}
+                        >
                             <Translate content="account.hide_hidden" />
                         </div>
-                        <div className={cnames("inline-block", { "inactive": !showHidden })} onClick={this._toggleShowHidden.bind(this, true)}>
+                        <div
+                            className={cnames("inline-block", {
+                                inactive: !showHidden
+                            })}
+                            onClick={this._toggleShowHidden.bind(this, true)}
+                        >
                             <Translate content="account.show_hidden" />
                         </div>
                     </div>
@@ -274,17 +371,48 @@ class MarketsTable extends React.Component {
                 <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
-                            <th style={{textAlign: "left"}}><Translate component="span" content="account.asset" /></th>
-                            <th style={{textAlign: "right"}}><Translate content="exchange.price" /></th>
-                            <th style={{textAlign: "right"}}><Translate content="account.hour_24_short" /></th>
-                            <th className="column-hide-small" style={{textAlign: "right"}}><Translate content="exchange.volume" /></th>
-                            {showFlip ? <th className="column-hide-small"><Translate content="exchange.flip" /></th> : null}
-                            <th><Translate content={!showHidden ? "exchange.hide" : "account.perm.show"} /></th>
+                            <th style={{textAlign: "left"}}>
+                                <Translate
+                                    component="span"
+                                    content="account.asset"
+                                />
+                            </th>
+                            <th style={{textAlign: "right"}}>
+                                <Translate content="exchange.price" />
+                            </th>
+                            <th style={{textAlign: "right"}}>
+                                <Translate content="account.hour_24_short" />
+                            </th>
+                            <th
+                                className="column-hide-small"
+                                style={{textAlign: "right"}}
+                            >
+                                <Translate content="exchange.volume" />
+                            </th>
+                            {showFlip ? (
+                                <th className="column-hide-small">
+                                    <Translate content="exchange.flip" />
+                                </th>
+                            ) : null}
+                            <th>
+                                <Translate
+                                    content={
+                                        !showHidden
+                                            ? "exchange.hide"
+                                            : "account.perm.show"
+                                    }
+                                />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="table-empty" style={{ display: visibleRow ? "none" : "" }}>
-                            <td colSpan={showFlip ? 6 : 5}><Translate content="dashboard.table_empty"/></td>
+                        <tr
+                            className="table-empty"
+                            style={{display: visibleRow ? "none" : ""}}
+                        >
+                            <td colSpan={showFlip ? 6 : 5}>
+                                <Translate content="dashboard.table_empty" />
+                            </td>
                         </tr>
                         {markets}
                     </tbody>
@@ -297,10 +425,9 @@ class MarketsTable extends React.Component {
 export default connect(MarketsTable, {
     listenTo() {
         return [SettingsStore];
-
     },
     getProps() {
-        let { marketDirections, hiddenMarkets } = SettingsStore.getState();
+        let {marketDirections, hiddenMarkets} = SettingsStore.getState();
 
         return {
             marketDirections,

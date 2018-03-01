@@ -15,6 +15,7 @@ class DepositWithdrawAssetSelector  extends React.Component {
 
     render(){
         const { props } = this;
+        const { include } = props;
         let idMap = {};
 
         let getCoinOption = (item) => {
@@ -36,35 +37,46 @@ class DepositWithdrawAssetSelector  extends React.Component {
             // Return null if backedCoin is already stored
             if(!idMap[backedCoin]) {
                 idMap[backedCoin] = true;
-                return { id: backedCoin, label: backedCoin, gateway: gateway };
+
+                return { 
+                  id: backedCoin, 
+                  label: backedCoin, 
+                  gateway: gateway, 
+                  gateFee: item.gateFee, 
+                  issuer: item.issuerId ||  "1.2.96397" //Fall back to open ledger
+                };
             } else {
                 return null;
             }
         };
 
-        let coinItems = [{id: "BTS", label: "BTS", gateway: ""}].concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).sort(function(a, b) { return a.id.localeCompare(b.id); });
+        let coinArr = [];
 
-        return <TypeAhead items={coinItems} {...this.props} inputProps={{placeholder: counterpart.translate("gateway.asset_search_deposit")}} label="gateway.asset" />;
+        if(!(this.props.includeBTS === false)){
+          coinArr.push({id: "BTS", label: "BTS", gateway: ""});
+        }
+
+        let coinItems = coinArr.concat(props.openLedgerBackedCoins.map(getCoinOption)).concat(props.rudexBackedCoins.map(getCoinOption)).concat(props.blockTradesBackedCoins.map(getCoinOption)).filter((item) => { return item; }).filter((item)=>{
+          let symbolWithGateway = item.gateway + "." + item.id;
+          let symbolWithoutGateway = item.id;
+
+          if(symbolWithoutGateway == "BTS") return true;
+
+          if(include){
+            return include.includes(symbolWithGateway) || include.includes(symbolWithoutGateway);
+          }
+
+          return true;
+        }).sort(function(a, b) { return a.id.localeCompare(b.id); });
+
+        let i18n = props.usageContext == "withdraw" ? "gateway.asset_search_withdraw" : "gateway.asset_search_deposit";
+
+        return <TypeAhead items={coinItems} {...this.props} inputProps={{placeholder: counterpart.translate(i18n)}} label="gateway.asset" />;
     }
 };
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-class DepositStoreWrapper extends React.Component {
-
-    componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") { // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins.defer(); // Openledger
-            GatewayActions.fetchCoinsSimple.defer({backer: "RUDEX", url:rudexAPIs.BASE+rudexAPIs.COINS_LIST}); // RuDEX
-            GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
-        }
-    }
-
-    render() {
-        return <DepositWithdrawAssetSelector {...this.props}/>;
-    }
-}
-
-export default connect(DepositStoreWrapper, {
+export default connect(DepositWithdrawAssetSelector, {
     listenTo() {
         return [GatewayStore];
     },
