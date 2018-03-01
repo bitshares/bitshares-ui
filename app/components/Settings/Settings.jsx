@@ -367,11 +367,10 @@ class Settings extends React.Component {
                         </ul>
                     </div>
 
+
                     <div
                         className="grid-content"
                         style={{
-                            paddingLeft: "1rem",
-                            paddingRight: "1rem",
                             maxWidth: 1000
                         }}
                     >
