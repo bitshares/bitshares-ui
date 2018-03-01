@@ -21,7 +21,7 @@ import PrivateKeyActions from "actions/PrivateKeyActions";
 import SettingsActions from "actions/SettingsActions";
 import notify from "actions/NotificationActions";
 
-ChainStore.setDispatchFrequency(20);
+ChainStore.setDispatchFrequency(60);
 
 let connect = true;
 let connectionManager;

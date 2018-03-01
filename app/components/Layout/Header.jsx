@@ -26,6 +26,7 @@ import notify from "actions/NotificationActions";
 import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs";
 import WithdrawModal from "../Modal/WithdrawModalNew";
+import {List} from "immutable";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -339,7 +340,7 @@ class Header extends React.Component {
                 <div className="total-value">
                     <TotalBalanceValue.AccountWrapper
                         hiddenAssets={this.props.hiddenAssets}
-                        accounts={[this.props.currentAccount]}
+                        accounts={List([this.props.currentAccount])}
                         noTip
                         style={{minHeight: 15}}
                     />

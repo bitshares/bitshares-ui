@@ -26,8 +26,6 @@ import DepositModal from "../Modal/DepositModal";
 import ReactTooltip from "react-tooltip";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
-import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 import {Tabs, Tab} from "../Utility/Tabs";
 import AccountOrders from "./AccountOrders";
 import cnames from "classnames";
