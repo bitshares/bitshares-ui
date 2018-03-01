@@ -5,7 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector";
 import Translate from "react-translate-component";
 import ExchangeInput from "components/Exchange/ExchangeInput";
-import _ from "lodash";
+import {extend, debounce} from "lodash";
 import GatewayStore from "stores/GatewayStore";
 import AssetStore from "stores/AssetStore";
 import MarketsStore from "stores/MarketsStore";
@@ -93,12 +93,14 @@ class WithdrawModalNew extends React.Component {
             btsAccountName: "",
             btsAccount: ""
         };
+
+        this._checkFeeStatus = debounce(this._checkFeeStatus.bind(this), 250);
+        this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
 
     componentWillMount() {
-        this._checkFeeStatus();
-        this._updateFee = _.debounce(this._updateFee.bind(this), 250);
         this._updateFee(this.state);
+        this._checkFeeStatus();
         let initialState = {};
 
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(
@@ -108,7 +110,7 @@ class WithdrawModalNew extends React.Component {
         initialState.coinToGatewayMapping = coinToGatewayMapping;
 
         if (this.props.initialSymbol) {
-            initialState = _.extend(
+            initialState = extend(
                 initialState,
                 this._getAssetAndGatewayFromInitialSymbol(
                     this.props.initialSymbol
@@ -443,6 +445,11 @@ class WithdrawModalNew extends React.Component {
         // const assets = ["1.3.0", this.props.asset.get("id")];
         let feeStatus = {};
         let p = [];
+        let memoContent =
+            state.selectedAsset.toLowerCase() +
+            ":" +
+            state.address +
+            (state.memo ? ":" + state.memo : "");
         assets.forEach(a => {
             p.push(
                 checkFeeStatusAsync({
@@ -451,11 +458,7 @@ class WithdrawModalNew extends React.Component {
                     options: ["price_per_kbyte"],
                     data: {
                         type: "memo",
-                        content:
-                            state.selectedAsset.toLowerCase() +
-                            ":" +
-                            state.address +
-                            (state.memo ? ":" + state.memo : "")
+                        content: memoContent
                     }
                 })
             );
@@ -488,17 +491,19 @@ class WithdrawModalNew extends React.Component {
         }
 
         if (!btsAccount) return null;
+        let memoContent =
+            state.selectedAsset.toLowerCase() +
+            ":" +
+            state.address +
+            (state.memo ? ":" + state.memo : "");
+
         checkFeeStatusAsync({
             accountID: btsAccount.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content:
-                    this.props.output_coin_type +
-                    ":" +
-                    state.withdraw_address +
-                    (state.memo ? ":" + state.memo : "")
+                content: memoContent
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
             if (this.unMounted) return;
@@ -514,11 +519,11 @@ class WithdrawModalNew extends React.Component {
 
     _getStyleHelpers() {
         let halfWidth = {width: "50%", float: "left", boxSizing: "border-box"};
-        let leftColumn = _.extend(
+        let leftColumn = extend(
             {paddingRight: "0.5em", marginBottom: "1em"},
             halfWidth
         );
-        let rightColumn = _.extend(
+        let rightColumn = extend(
             {paddingLeft: "0.5em", marginBottom: "1em"},
             halfWidth
         );
@@ -619,7 +624,7 @@ class WithdrawModalNew extends React.Component {
     onAddressChanged(e) {
         let {value} = e.target;
         this.validateAddress(value);
-        this.setState({address: value});
+        this.setState({address: value}, this._updateFee);
     }
 
     validateAddress(address) {
@@ -639,12 +644,11 @@ class WithdrawModalNew extends React.Component {
         WithdrawAddresses.setLast({wallet: walletType, address});
 
         this.validateAddress(address);
-        this.setState({address});
+        this.setState({address}, this._updateFee);
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value});
-        this._updateFee();
+        this.setState({memo: e.target.value}, this._updateFee);
     }
 
     onClickAvailableBalance(available) {
