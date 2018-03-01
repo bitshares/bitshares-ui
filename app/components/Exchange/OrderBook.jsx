@@ -229,18 +229,20 @@ class OrderBook extends React.Component {
     }
 
     componentWillUpdate() {
-        const scrollableContainer = this.queryStickyTable(
-            "#sticky-table-y-wrapper"
-        );
+        if (!this.props.horizontal) {
+            const scrollableContainer = this.queryStickyTable(
+                "#sticky-table-y-wrapper"
+            );
 
-        const centerTextContainer = this.refs.center_text;
-        const centeringOffset = 21;
-        const scrollTo =
-            centerTextContainer.offsetTop -
-            elemHeight(scrollableContainer) / 2 +
-            centeringOffset;
+            const centerTextContainer = this.refs.center_text;
+            const centeringOffset = 21;
+            const scrollTo =
+                centerTextContainer.offsetTop -
+                elemHeight(scrollableContainer) / 2 +
+                centeringOffset;
 
-        this.offset = scrollableContainer.scrollTop - scrollTo;
+            this.offset = scrollableContainer.scrollTop - scrollTo;
+        }
     }
 
     centerVerticalScrollBar() {
