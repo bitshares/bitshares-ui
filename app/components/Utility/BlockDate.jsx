@@ -14,31 +14,40 @@ import getLocale from "browser-locale";
  **/
 
 class BlockDate extends React.Component {
-
     static defaultProps = {
-        format: getLocale().toLowerCase().indexOf("en-us") !== -1 ? "market_history_us": "market_history",
+        format:
+            getLocale()
+                .toLowerCase()
+                .indexOf("en-us") !== -1
+                ? "market_history_us"
+                : "market_history",
         tooltip: false,
         component: "span"
-    }
+    };
 
     componentWillMount() {
-        BlockchainActions.getBlock.defer(this.props.block_number);
+        if (!this.props.block)
+            BlockchainActions.getBlock(this.props.block_number);
     }
 
     shouldComponentUpdate(np) {
-        if (np.block && !this.props.block) setTimeout(ReactTooltip.rebuild, 1000);
+        if (np.block && !this.props.block)
+            setTimeout(ReactTooltip.rebuild, 1000);
         return np.block !== this.props.block;
     }
 
     render() {
         const {block, tooltip, component, format} = this.props;
         if (!block) return React.createElement(component);
-        return (
-            React.createElement(component, {className: tooltip ? "tooltip": "", "data-tip": tooltip ? block.timestamp : ""},
+        return React.createElement(
+            component,
+            {
+                className: tooltip ? "tooltip" : "",
+                "data-tip": tooltip ? block.timestamp : ""
+            },
             <span>
                 {counterpart.localize(block.timestamp, {type: "date", format})}
             </span>
-        )
         );
     }
 }

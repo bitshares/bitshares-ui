@@ -77,13 +77,13 @@ class Row extends React.Component {
     }
 
     render() {
-        let {block, fee, color, type, hideOpLabel} = this.props;
+        let {block, fee, color, type, hideOpLabel, hidePending} = this.props;
 
         let last_irreversible_block_num = this.props.dynGlobalObject.get(
             "last_irreversible_block_num"
         );
         let pending = null;
-        if (block > last_irreversible_block_num) {
+        if (!hidePending && block > last_irreversible_block_num) {
             pending = (
                 <span>
                     (<Translate
@@ -1310,6 +1310,7 @@ class Operation extends React.Component {
                 hideDate={this.props.hideDate}
                 info={column}
                 hideFee={this.props.hideFee}
+                hidePending={this.props.hidePending}
             />
         ) : null;
 
