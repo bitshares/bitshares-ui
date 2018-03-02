@@ -86,15 +86,18 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         }
 
         if (!receive_address || receive_address.address === 'unknown') {
-            this.setState({loading: true});
-            requestDepositAddress(this._getDepositObject());
+            this.requestNewDepositAddress();
         }
+    }
+
+    _requestDepositAddress() {
+        requestDepositAddress(this._getDepositObject());
     }
 
     requestNewDepositAddress() {
         if (!this.state.requestedDeposit) {
             this.setState({loading: true, requestedDeposit: true});
-            requestDepositAddress(this._getDepositObject());
+            this._requestDepositAddress();
         }
     }
 
@@ -103,7 +106,6 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     addDepositAddress( receive_address ) {
-        this.setState({loading: false, requestedDeposit: false});
         let account_name = this.props.account.get("name");
         try {
             this.deposit_address_cache.cacheInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type, receive_address.address, c_address.memo);
@@ -111,8 +113,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         }
 
-
-        this.setState( {receive_address} );
+        this.setState( {loading: false, requestedDeposit: false, receive_address} );
     }
 
     getWithdrawModalId() {
@@ -247,7 +248,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         if( !receive_address ) {
             //this.setState({loading: true});
-            requestDepositAddress(this._getDepositObject());
+            if( !this.state.requestedDeposit ) {
+                this._requestDepositAddress();
+            }
+
             return emptyRow;
         }
 
