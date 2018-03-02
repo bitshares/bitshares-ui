@@ -343,10 +343,14 @@ class BorrowModalContent extends React.Component {
                     a.getIn(["call_price", "quote", "asset_id"]) ===
                     props.quote_asset.get("id")
                 );
-            }) || {
-                collateral: null,
-                debt: null
-            };
+            });
+
+            currentPosition = !!currentPosition
+                ? currentPosition.toJS()
+                : {
+                      collateral: null,
+                      debt: null
+                  };
         }
         return currentPosition;
     }
