@@ -1,4 +1,37 @@
 ---------------------------------------------------------------------
+Release 2.0.180302
+---------------------------------------------------------------------
+New features
+--------
+- #588: New withdrawal modal
+- #1142: New dashboard layout
+- #691: Portfolio pulse on price change
+- #1189: Japanese translation
+- #1002: Visual representation of asset allocation
+
+Bug fixes
+--------
+- Fix for margin positions modal not showing existing positions
+- Improve explorer block fetching, reduce ops displayed
+- Fix bug in Orderbook when horizontal
+- Fix #1240: Reduce the ChainStore dispatch frequency and improve BindToChainState performance
+- Fix #1239: Don't defer market stats fetching
+- Fix Tab color for Nodes #1236
+- #1229: Memoize and cache certain calls in BlocktradesMethods
+- #1179: Open dropdown when clicking on chevron
+- Fix Issue #1179
+- Fix #1220: Force one market direction for stats checks
+- #1149: Fix latency overlapping
+- #1133: Add ability to turn off autoscroll
+- Fix Issue #1195 - Asset Equivalent Price Issue
+- Fix ##1219: Incorrect feed prices break the exchange page
+- #1199: Modal theme issues
+- Fix error in url assignment
+- Fix #1070: Asset search
+- #995: Remove 'sign as owner' in account update
+- Fix #1201: Settings redirection
+
+---------------------------------------------------------------------
 Release 2.0.180215
 ---------------------------------------------------------------------
 New features
