@@ -766,8 +766,22 @@ class BorrowModalContent extends React.Component {
                             <div className="no-padding grid-content button-group no-overflow float-right">
                                 <div
                                     href
-                                    className="button info"
-                                    onClick={this._maximizeDebt.bind(this)}
+                                    className={classNames("button info", {
+                                        disabled: collateral_ratio == 0
+                                    })}
+                                    onClick={
+                                        collateral_ratio == 0
+                                            ? ""
+                                            : this._maximizeDebt.bind(this)
+                                    }
+                                    data-place="left"
+                                    data-tip={
+                                        collateral_ratio == 0
+                                            ? counterpart.translate(
+                                                  "borrow.maximize_debt_set_ratio_slider"
+                                              )
+                                            : null
+                                    }
                                 >
                                     <Translate content="borrow.maximize_debt" />
                                 </div>
