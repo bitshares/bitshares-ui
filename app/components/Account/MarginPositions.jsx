@@ -278,6 +278,7 @@ class MarginPosition extends React.Component {
                     {debtAsset ? (
                         <BorrowModal
                             ref={"cp_modal_" + co.call_price.quote.asset_id}
+                            modalId={"cp_modal_" + co.call_price.quote.asset_id}
                             quote_asset={co.call_price.quote.asset_id}
                             backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={this.props.account}
@@ -455,6 +456,7 @@ class MarginPositionPlaceHolder extends React.Component {
                     {debtAsset ? (
                         <BorrowModal
                             ref={"cp_modal_" + debtAsset.get("id")}
+                            modalId={"cp_modal_" + debtAsset.get("id")}
                             quote_asset={debtAsset.get("id")}
                             backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
                             account={this.props.account}

@@ -92,7 +92,7 @@ class DepositWithdrawContent extends DecimalChecker {
     _getDepositAddress() {
         if (!this.props.backingCoinType) return;
 
-        let receive_address =  getDepositAddress({coin: `open.${(this.props.backingCoinType).toLowerCase()}`,  account: this.props.account,  stateCallback: this.addDepositAddress})
+        let receive_address =  getDepositAddress({coin: `open.${(this.props.backingCoinType).toLowerCase()}`,  account: this.props.account,  stateCallback: this.addDepositAddress});
 
         if (!receive_address) {
             requestDepositAddress(this._getDepositObject());
@@ -122,7 +122,7 @@ class DepositWithdrawContent extends DecimalChecker {
 
     addDepositAddress( receive_address ) {
         if(receive_address.error){
-            receive_address.error.message === "no_address" ? this.setState({emptyAddressDeposit: true}) : this.setState({emptyAddressDeposit: false})
+            receive_address.error.message === "no_address" ? this.setState({emptyAddressDeposit: true}) : this.setState({emptyAddressDeposit: false});
         };
 
         this.setState({
@@ -629,7 +629,7 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     }
 
     render() {
-        return (
+        return !this.state.open ? null : (
             <BaseModal className="test" onClose={this.onClose.bind(this)} overlay={true} id={this.props.modalId}>
                 {this.state.open ? <DepositWithdrawContent {...this.props} open={this.state.open} /> : null}
             </BaseModal>

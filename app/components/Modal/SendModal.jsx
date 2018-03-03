@@ -388,12 +388,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+                            feeAmount: fee,
+                            fee_asset_id: fee.asset_id,
+                            hasBalance,
+                            hasPoolBalance,
+                            error: !hasBalance || !hasPoolBalance
+                        })
             )
         );
     }
@@ -625,19 +625,18 @@ export default class SendModal extends React.Component {
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
 
-        const logo = require("assets/logo-ico-blue.png");
-        let tabIndex = 200; // tabindex is applied globally irrespective of overlays, etc.  Make sure we're at the top
+        let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
-        return (
+        return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
                 className={hidden || !this.state.open ? "hide" : ""}
             >
                 <BaseModal
                     id={this.props.id}
-                    className="send_modal"
+                    overlayClass="small"
                     overlay={true}
                     onClose={this.onClose.bind(this, false)}
                 >
@@ -646,21 +645,11 @@ export default class SendModal extends React.Component {
                             className="content-block"
                             style={{textAlign: "center", textTransform: "none"}}
                         >
-                            <img
-                                style={{
-                                    margin: 0,
-                                    height: 70,
-                                    marginBottom: 10
-                                }}
-                                src={logo}
-                            />
-                            <br />
                             {!propose ? (
                                 <div
                                     style={{
                                         fontSize: "1.8rem",
-                                        fontFamily:
-                                            "Roboto-Medium, arial, sans-serif"
+                                        fontFamily: "Roboto-Medium, arial, sans-serif"
                                     }}
                                 >
                                     <Translate

@@ -199,15 +199,6 @@ table > tbody > tr.control-row > td {
     }
 }
 
-.modal {
-    max-width: 700px;
-    border-radius: 0px;
-}
-
-div.modal {
-    overflow: visible !important;
-}
-
 .overflow-visible {
     overflow: visible;
 }
@@ -236,14 +227,6 @@ div.disabled * {
 
 div.disabled input {
     background-color: #444;
-}
-
-.modal-header {
-    > h3,
-    > h6 {
-        margin-bottom: 0;
-    }
-    margin-bottom: 1rem;
 }
 
 .memo {
