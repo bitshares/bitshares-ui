@@ -102,7 +102,7 @@ class TransactionChart extends React.Component {
             tooltip: {
                 shared: false,
                 formatter: function() {
-                    return tooltipLabel + ": " + this.point.y;
+                    return tooltipLabel + ": " + this.y;
                 }
             },
             series: [

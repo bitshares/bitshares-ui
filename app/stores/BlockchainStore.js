@@ -2,7 +2,7 @@ import Immutable from "immutable";
 import alt from "alt-instance";
 import BlockchainActions from "actions/BlockchainActions";
 import {ChainStore} from "bitsharesjs/es";
-import {Block} from "./tcomb_structs";
+// import {Block} from "./tcomb_structs";
 
 class BlockchainStore {
     constructor() {
@@ -16,10 +16,11 @@ class BlockchainStore {
         this.bindListeners({
             onGetBlock: BlockchainActions.getBlock,
             onGetLatest: BlockchainActions.getLatest,
-            onUpdateRpcConnectionStatus: BlockchainActions.updateRpcConnectionStatus
+            onUpdateRpcConnectionStatus:
+                BlockchainActions.updateRpcConnectionStatus
         });
 
-        this.maxBlocks = 100;
+        this.maxBlocks = 30;
     }
 
     onGetBlock(block) {
@@ -28,10 +29,7 @@ class BlockchainStore {
                 block.timestamp += "Z";
             }
             block.timestamp = new Date(block.timestamp);
-            this.blocks = this.blocks.set(
-                block.id,
-                Block(block)
-            );
+            this.blocks = this.blocks.set(block.id, block);
         }
     }
 
@@ -43,17 +41,19 @@ class BlockchainStore {
             }
         }
         block.timestamp = new Date(block.timestamp);
+        this.blocks = this.blocks.set(block.id, block);
         if (block.id > maxBlock - this.maxBlocks) {
-            this.latestBlocks = this.latestBlocks.unshift(Block(block));
+            this.latestBlocks = this.latestBlocks.unshift(block);
             if (this.latestBlocks.size > this.maxBlocks) {
                 this.latestBlocks = this.latestBlocks.pop();
             }
 
-
             if (block.transactions.length > 0) {
                 block.transactions.forEach(trx => {
                     trx.block_num = block.id;
-                    this.latestTransactions = this.latestTransactions.unshift(trx);
+                    this.latestTransactions = this.latestTransactions.unshift(
+                        trx
+                    );
                 });
             }
 
@@ -61,7 +61,6 @@ class BlockchainStore {
                 this.latestTransactions = this.latestTransactions.pop();
             }
         }
-
     }
 
     onUpdateRpcConnectionStatus(status) {
@@ -73,7 +72,6 @@ class BlockchainStore {
         if (this.no_ws_connection && status === "open")
             this.no_ws_connection = false;
     }
-
 }
 
 export default alt.createStore(BlockchainStore, "BlockchainStore");

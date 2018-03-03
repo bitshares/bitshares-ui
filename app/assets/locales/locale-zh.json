@@ -17,16 +17,19 @@
         "es": "Español",
         "it": "Italiano",
         "tr": "Türkçe",
-        "ru": "Русский"
+        "ru": "Русский",
+        "ja": "日本語"
     },
     "incognito": {
-        "no_support": "当前比特股钱包依赖于本地存储和IndexedDB，在使用隐身浏览时数据无法持续保存。我们建议您使用常规浏览方式。",
+        "no_support":
+            "当前比特股钱包依赖于本地存储和IndexedDB，在使用隐身浏览时数据无法持续保存。我们建议您使用常规浏览方式。",
         "ignore": "我了解，并继续。"
     },
     "sync_fail": {
         "title": "无法与API服务器同步",
         "sub_text_1": "请确认你的计算机系统时钟正确。",
-        "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
+        "sub_text_2":
+            "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
     },
     "header": {
         "title": "BitShares 钱包",
@@ -61,38 +64,52 @@
         "call_limit": "市场中抵押率最低的债仓的平仓价",
         "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",
         "settle_price": "清算单执行时将使用的价格",
-        "sign_owner": "如果你是账户的所有人，请选中此项，以便正确对交易进行签名。仅当你当前使用的账户拥有此账户的账户权限，而没有资金权限时，需要开启此项。",
+        "sign_owner":
+            "如果你是账户的所有人，请选中此项，以便正确对交易进行签名。仅当你当前使用的账户拥有此账户的账户权限，而没有资金权限时，需要开启此项。",
         "latest_price": "市场最新成交价",
         "no_price": "未找到该资产最近的成交价来评估价值",
         "hide_asset": "从列表中隐藏资产",
         "show_asset": "在主列表中显示资产",
-        "settle": "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
+        "settle":
+            "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
         "filter_ops": "根据操作类型过滤交易历史",
         "show_block": "显示收录交易的区块 #%(block)s 的信息",
         "coll_ratio": "债仓抵押率计算公式为：抵押物 * 喂价 / 债务",
         "call_price": "强制平仓触发价。如果喂价低于该价格，债仓将被强制平仓。",
         "close_position": "平仓。你至少需要 %(amount)s %(asset)s 进行平仓",
         "update_position": "更新债仓。你可随时更新债务及抵押物数量。",
-        "cr_danger": "该债仓的抵押率已低于要求水平。请考虑补仓以至少将抵押率提高到 %(mr)s 或进行平仓。",
-        "cr_warning": "该债仓已接近强制平仓触发价。如果抵押率低于 %(mr)s，该债仓将被强制平仓，请考虑补仓或平仓。",
+        "cr_danger":
+            "该债仓的抵押率已低于要求水平。请考虑补仓以至少将抵押率提高到 %(mr)s 或进行平仓。",
+        "cr_warning":
+            "该债仓已接近强制平仓触发价。如果抵押率低于 %(mr)s，该债仓将被强制平仓，请考虑补仓或平仓。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
-        "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
-        "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
-        "borrow": "从系统借出 %(asset)s 。系统将创建一个智能合约并冻结你的抵押物。你可以随时调整仓位或进行平仓。",
+        "login":
+            "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
+        "buy_min":
+            "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
+        "borrow":
+            "从系统借出 %(asset)s 。系统将创建一个智能合约并冻结你的抵押物。你可以随时调整仓位或进行平仓。",
         "transfer_actions": "点击这里进行转账，或充值/提取支持充提功能的资产。",
-        "deposit_tip": "请到 %(asset)s 的外盘钱包进行转账操作以进行充值，转账地址即列在当前页的地址。一旦转账得到确认，您将完成充值。如果此页转账信息中包含备注，您需要在转账时也将备注包括进去。",
+        "deposit_tip":
+            "请到 %(asset)s 的外盘钱包进行转账操作以进行充值，转账地址即列在当前页的地址。一旦转账得到确认，您将完成充值。如果此页转账信息中包含备注，您需要在转账时也将备注包括进去。",
         "copy_tip": "点击这里将内容复制到剪贴板上",
         "withdraw_full": "点击提款全部余额",
-        "withdraw_address": "如果您还没有 %(asset)s 的钱包地址，请您寻找钱包提供商并创建一个钱包，以完成提款。",
-        "memo_tip": "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
-        "generate": "密码由您的浏览器在本地生成。<br /><br /><strong>只有您能看到此密码。</strong><br /><br />请将它粘贴到下方并保存在一个您认为安全的地方。",
+        "withdraw_address":
+            "如果您还没有 %(asset)s 的钱包地址，请您寻找钱包提供商并创建一个钱包，以完成提款。",
+        "memo_tip":
+            "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
+        "generate":
+            "密码由您的浏览器在本地生成。<br /><br /><strong>只有您能看到此密码。</strong><br /><br />请将它粘贴到下方并保存在一个您认为安全的地方。",
         "copy_password": "点这里将您的密码复制到剪贴板上",
         "sync_yes": "当前节点已与区块链同步",
         "sync_no": "当前节点并未与区块链同步，请换一个节点。",
-        "disconnected": "您没有连接到任何 API 节点，请尝试刷新页面或在设置从选择一个新的接入点。",
-        "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
+        "disconnected":
+            "您没有连接到任何 API 节点，请尝试刷新页面或在设置从选择一个新的接入点。",
+        "market_fee":
+            "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "propose_tip": "提议另一个用户发起交易",
-        "bridge_TRADE": "BlockTrades 是提供即时资产交易的桥接服务。详情和使用条款请参阅 https://blocktrades.us",
+        "bridge_TRADE":
+            "BlockTrades 是提供即时资产交易的桥接服务。详情和使用条款请参阅 https://blocktrades.us",
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "follow_user": "您正在关注该账户",
         "follow_user_add": "点击关注该账户"
@@ -129,16 +146,20 @@
         "restore": "还原",
         "advanced": "高级",
         "intro_text_title": "欢迎使用比特股去中心化交易所！",
-        "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所（通称DEX）。 DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
-        "intro_text_2": "发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
+        "intro_text_1":
+            "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所（通称DEX）。 DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
+        "intro_text_2":
+            "发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
         "intro_text_3": "尽情享受交易的乐趣吧！",
-        "intro_text_4": "<br/>网站：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>GitHub：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
+        "intro_text_4":
+            "<br/>网站：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>GitHub：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
         "in_open": "这是你在所有委单中的 %(asset)s 资产的数量。",
         "in_open_value": "这是你在所有委单中的 %(asset)s 资产的大致价值。",
         "transfer_actions": "转账操作",
         "market_actions": "市场操作",
         "see_open": "查看委单",
-        "total_estimate": "这是你所有资产的估值，其中包含在界面中设置隐藏的资产、委单中的资产、债务及抵押物。估值采用实时获得的区块链上的价格，可能并不完全准确。",
+        "total_estimate":
+            "这是你所有资产的估值，其中包含在界面中设置隐藏的资产、委单中的资产、债务及抵押物。估值采用实时获得的区块链上的价格，可能并不完全准确。",
         "trade": "交易",
         "welcome": "欢迎使用 BitShares 系统",
         "asset": "资产",
@@ -166,8 +187,10 @@
         "accounts": "账户",
         "contacts": "联系人",
         "estimate_value": "账户价值估算",
-        "polo_scam": "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
-        "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。",
+        "polo_scam":
+            "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
+        "bittrex_scam":
+            "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。",
         "other_scam": "这个账户不是已知的官方账号，请反复核实后进行转账操作。",
         "whitelist": {
             "title": "白名单",
@@ -187,7 +210,8 @@
             "title": "待解冻余额",
             "balance_number": "余额 #%(id)s",
             "no_balances": "该账户无待解冻余额",
-            "explain": "待解冻金额包含通过推荐计划返现的手续费收入以及通过预算计划获得的收入。待解冻金额在解冻期间逐渐释放，直到全部释放为止。"
+            "explain":
+                "待解冻金额包含通过推荐计划返现的手续费收入以及通过预算计划获得的收入。待解冻金额在解冻期间逐渐释放，直到全部释放为止。"
         },
         "member": {
             "stats": "会员",
@@ -257,7 +281,8 @@
             "global_settle": "允许发行人进行全局强制清算",
             "advanced": "高级功能",
             "need_asset": "两个资产中至少有一个必须为 %(name)s",
-            "perm_warning": "警告：权限的禁用操作不可逆，一旦禁用后将无法重新启用！",
+            "perm_warning":
+                "警告：权限的禁用操作不可逆，一旦禁用后将无法重新启用！",
             "issued_assets": "我发行的资产",
             "short": "短名 (最多32个字符)",
             "condition": "条件 (最多60个字符)",
@@ -270,7 +295,8 @@
             "minimum_feeds": "最少喂价数量",
             "force_settlement_delay_sec": "强制清算发生前延迟时间（分钟）",
             "force_settlement_offset_percent": "强制清算价格偏离百分比",
-            "maximum_force_settlement_volume": "强制清算最大数量（总供应量百分比每小时）",
+            "maximum_force_settlement_volume":
+                "强制清算最大数量（总供应量百分比每小时）",
             "backing": "做空时抵押的资产类型",
             "error_precision": "该资产的精度与 %(asset)s 不同",
             "error_invalid": "该资产不能使用",
@@ -278,11 +304,14 @@
             "precision_warning": "警告：创建后该数值将无法更改。",
             "visible": "在搜索与市场中隐藏资产",
             "cer_warning_1": "警告！",
-            "cer_warning_2": "请确保手续费汇率高于市场价，否则其他人将可以从市场买入你的资产后通过手续费兑换操作进行套利。手续费汇率应当根据资产的市场交易价格时常进行更新。",
+            "cer_warning_2":
+                "请确保手续费汇率高于市场价，否则其他人将可以从市场买入你的资产后通过手续费兑换操作进行套利。手续费汇率应当根据资产的市场交易价格时常进行更新。",
             "feed_producers": "喂价提供者",
             "add_feed": "添加新的喂价提供者",
-            "feed_not_allowed_1": "由见证人或理事会成员进行喂价的资产无法手工设置喂价提供者。",
-            "feed_not_allowed_2": "请在活动标记中去除“允许见证人提供喂价”和“允许理事会成员提供喂价”以手工设置喂价提供者。"
+            "feed_not_allowed_1":
+                "由见证人或理事会成员进行喂价的资产无法手工设置喂价提供者。",
+            "feed_not_allowed_2":
+                "请在活动标记中去除“允许见证人提供喂价”和“允许理事会成员提供喂价”以手工设置喂价提供者。"
         },
         "connections": {
             "known": "识别为",
@@ -304,8 +333,10 @@
             "add_permission_label": "输入账户名/公钥以及权重",
             "account_name_or_key": "账户名或公钥",
             "memo_public_key": "备注公钥",
-            "warning1": "资金权限权重总和 %(weights_total)s 应不小于阈值设定 %(threshold)s",
-            "warning2": "账户权限权重总和 %(weights_total)s 应不小于阈值设定 %(threshold)s",
+            "warning1":
+                "资金权限权重总和 %(weights_total)s 应不小于阈值设定 %(threshold)s",
+            "warning2":
+                "账户权限权重总和 %(weights_total)s 应不小于阈值设定 %(threshold)s",
             "warning3": "账户名已经在列表中",
             "warning4": "公钥已经在列表中",
             "action": "操作",
@@ -318,36 +349,38 @@
             "from": "从此账户导入",
             "sign_owner": "以所有者身份签名",
             "password_model": "账号模式登录",
-            "password_model_1": "如果你想仅使用密码就能从任何地方（包括不同浏览器，不同的钱包提供网站）登录自己的账户，而不需要迁移钱包文件的话，你可以在本页面中设置密码并将新密钥添加到账户的权限中。添加新的密钥后，此账户就可以使用账号模式在任意地点登录。如果你同时想移除原来的密钥，可以在账户的活跃/账户权限标签中进行。如此账户现在正在使用账号模式登录，也可以在本页面中修改账号模式登录密码，只需要设置新密码并添加新密钥后将旧密钥删除即可。",
+            "password_model_1":
+                "如果你想仅使用密码就能从任何地方（包括不同浏览器，不同的钱包提供网站）登录自己的账户，而不需要迁移钱包文件的话，你可以在本页面中设置密码并将新密钥添加到账户的权限中。添加新的密钥后，此账户就可以使用账号模式在任意地点登录。如果你同时想移除原来的密钥，可以在账户的活跃/账户权限标签中进行。如此账户现在正在使用账号模式登录，也可以在本页面中修改账号模式登录密码，只需要设置新密码并添加新密钥后将旧密钥删除即可。",
             "password_model_2": "添加由密码衍生的密钥",
             "new_active": "新的资金权限密钥",
             "new_owner": "新的账户权限密钥",
             "new_memo": "新的备注权限密钥",
-            "memo_warning": "警告：如果你替换了备注权限密钥，那在你使用密码登录后，旧的交易消息你将无法再解密阅读。同样的，除非你将新的备注密钥导入到旧的钱包中，否则使用旧钱包时也将无法看到新的备注消息。",
+            "memo_warning":
+                "警告：如果你替换了备注权限密钥，那在你使用密码登录后，旧的交易消息你将无法再解密阅读。同样的，除非你将新的备注密钥导入到旧的钱包中，否则使用旧钱包时也将无法看到新的备注消息。",
             "use_text": "使用",
             "remove_text": "移除",
             "valid_pub": "公钥有效"
         },
         "signedmessages": {
-          "menuitem": "消息签名",
-          "invalidkey": "无法获取私钥，请确认公钥是否正确",
-          "title": "消息签名",
-          "signmessage": "签名消息",
-          "verifymessage": "验证消息签名",
-          "signing": "正在签名，请稍候…",
-          "verifying": "正在验证签名，请稍候…",
-          "invalidformat": "无法识别签名消息格式",
-          "invaliduser": "消息发送者账户名无效",
-          "invalidsignature": "签名验证失败，无法验证消息正确性",
-          "errorverifying": "验证签名时发生错误",
-          "keymismatch": "发送者的账户中没有签名使用的公钥",
-          "sign": "签名",
-          "verify": "验证",
-          "automaticcreation": "签名后的消息会自动生成",
-          "entermessage": "在此输入消息内容",
-          "copysuccessful": "签名后的消息已复制到剪贴板",
-          "copyunsuccessful": "复制消息失败",
-          "verifyonchange": "输入时自动验证签名"
+            "menuitem": "消息签名",
+            "invalidkey": "无法获取私钥，请确认公钥是否正确",
+            "title": "消息签名",
+            "signmessage": "签名消息",
+            "verifymessage": "验证消息签名",
+            "signing": "正在签名，请稍候…",
+            "verifying": "正在验证签名，请稍候…",
+            "invalidformat": "无法识别签名消息格式",
+            "invaliduser": "消息发送者账户名无效",
+            "invalidsignature": "签名验证失败，无法验证消息正确性",
+            "errorverifying": "验证签名时发生错误",
+            "keymismatch": "发送者的账户中没有签名使用的公钥",
+            "sign": "签名",
+            "verify": "验证",
+            "automaticcreation": "签名后的消息会自动生成",
+            "entermessage": "在此输入消息内容",
+            "copysuccessful": "签名后的消息已复制到剪贴板",
+            "copyunsuccessful": "复制消息失败",
+            "verifyonchange": "输入时自动验证签名"
         },
         "votes": {
             "proxy_current": "你当前选择的投票代理人是",
@@ -439,7 +472,8 @@
             "invalid": "非法的账户名",
             "unknown": "未知的账户",
             "not_yours": "不是你的账户",
-            "memo_missing": "你当前没有备注密钥对应的私钥。如要使用备注功能，请在账户权限中设置一个你拥有对应私钥的备注密钥。"
+            "memo_missing":
+                "你当前没有备注密钥对应的私钥。如要使用备注功能，请在账户权限中设置一个你拥有对应私钥的备注密钥。"
         },
         "collaterals": "抵押债仓",
         "eq_value": "换算值",
@@ -455,8 +489,10 @@
         "name_input": {
             "name_is_taken": "账户名已经被使用",
             "not_found": "账户未找到",
-            "premium_name_faucet": "你使用的是高级账户名。高级账户名的注册手续费更高，因此无法通过该免费水龙头服务进行注册。请选择其他名字，其中包含至少一个横杠、数字或者不含元音字母",
-            "premium_name_warning": "这是高级账户名。高级账户名的注册手续费更高。普通账户名要求包含至少一个横杠、数字或者不含元音字母"
+            "premium_name_faucet":
+                "你使用的是高级账户名。高级账户名的注册手续费更高，因此无法通过该免费水龙头服务进行注册。请选择其他名字，其中包含至少一个横杠、数字或者不含元音字母",
+            "premium_name_warning":
+                "这是高级账户名。高级账户名的注册手续费更高。普通账户名要求包含至少一个横杠、数字或者不含元音字母"
         },
         "propose_from": "发起账户",
         "settle": "清算",
@@ -494,11 +530,13 @@
             "valid": "请输入大于 0 的半角数字",
             "balance": "最终余额必须大于 0",
             "insufficient": "余额不足",
-            "noFeeBalance": "当前所选资产余额不足以支付手续费，请换一种用来支付手续费的资产。",
-            "noPoolBalance": "这个资产的手续费池中没有足够的余额用来支付手续费了，请联系资产所有者或换一种资产。",
+            "noFeeBalance":
+                "当前所选资产余额不足以支付手续费，请换一种用来支付手续费的资产。",
+            "noPoolBalance":
+                "这个资产的手续费池中没有足够的余额用来支付手续费了，请联系资产所有者或换一种资产。",
             "minimum_amount": "最小提现金额：%(amount)s %(symbol)s",
             "precision": "最小提现精度：%(precision)s",
-            "memo_error":"转账备注解析错误，请稍候再试。"
+            "memo_error": "转账备注解析错误，请稍候再试。"
         },
         "back": "返回",
         "confirm": "确认",
@@ -528,10 +566,13 @@
         "publish_feed": "{account} 发布了喂价 {price}",
         "set_proxy": "{account} 将 {proxy} 设置为投票代理",
         "update_account": "{account} 更新了账户信息",
-        "limit_order_sell": "{account} 提交卖单，以 {price} 的价格卖出 {amount} ",
-        "limit_order_buy": "{account} 提交买单，以 {price} 的价格买入 {amount} ",
+        "limit_order_sell":
+            "{account} 提交卖单，以 {price} 的价格卖出 {amount} ",
+        "limit_order_buy":
+            "{account} 提交买单，以 {price} 的价格买入 {amount} ",
         "limit_order_cancel": "{account} 取消了委单 #%(order)s",
-        "call_order_update": "{account} 将 {debtSymbol} 的债务调整了 {debt}，抵押额调整了 {collateral}",
+        "call_order_update":
+            "{account} 将 {debtSymbol} 的债务调整了 {debt}，抵押额调整了 {collateral}",
         "asset_reserve": "{account} 销毁了 {amount}",
         "asset_issue": "{account} 将 {amount} 发行给 {to}",
         "asset_fund_fee_pool": "{account} 向 {asset} 的手续费池注资了 {amount}",
@@ -545,21 +586,27 @@
         "transfer_account": "{account} 的所有权转移给了 {to}",
         "asset_update_feed_producers": "{account} 更新了资产 {asset} 的喂价者",
         "asset_settle": "{account} 请求清算 {amount}",
-        "asset_global_settle": "{account} 请求以 {price} 的价格进行全局清算 {asset}",
+        "asset_global_settle":
+            "{account} 请求以 {price} 的价格进行全局清算 {asset}",
         "witness_create": "{account} 升级到见证人",
         "witness_update": "{account} 更新了见证人信息",
         "witness_pay": "将见证人收入提取到账户",
         "witness_receive": "已从见证人处获取见证",
-        "committee_member_update_global_parameters": "{account} 更新了全局理事会参数",
+        "committee_member_update_global_parameters":
+            "{account} 更新了全局理事会参数",
         "worker_create": "{account} 创建了预算提案，请求每日支付 {pay}",
         "override_transfer": "{issuer} 从 {from} 将 {amount} 转账给 {to}"
     },
     "proposal": {
         "transfer": "将 {amount} 从账户 {from} 转账到 {to}",
-        "limit_order_create": "为账户 %(account)s 下单，买入 %(buy_amount)s，卖出 %(sell_amount)s",
-        "limit_order_sell": "为账户 {account} 下单，以价格 {price} 卖出 {amount}",
-        "limit_order_buy": "为账户 {account} 下单，以价格 {price} 买入 {amount}",
-        "committee_member_update_global_parameters": "由 {account} 更新理事会全局参数",
+        "limit_order_create":
+            "为账户 %(account)s 下单，买入 %(buy_amount)s，卖出 %(sell_amount)s",
+        "limit_order_sell":
+            "为账户 {account} 下单，以价格 {price} 卖出 {amount}",
+        "limit_order_buy":
+            "为账户 {account} 下单，以价格 {price} 买入 {amount}",
+        "committee_member_update_global_parameters":
+            "由 {account} 更新理事会全局参数",
         "action": "操作",
         "expires": "过期时间",
         "update_account": "更新账户 {account} 的信息",
@@ -577,12 +624,14 @@
         },
         "approve": "批准",
         "reject": "否决",
-        "override_transfer": "由 {issuer} 授权，将 {amount} 从账户 {from} 转账到 {to}",
+        "override_transfer":
+            "由 {issuer} 授权，将 {amount} 从账户 {from} 转账到 {to}",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 {amount}",
         "vesting_balance_withdraw": "从 {account} 的解冻余额中提取 {amount}",
         "feed_producer": "使用账户 {account} 更新资产 {asset} 的喂价提供者",
-        "call_order_update": "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押额调整 {collateral}"
+        "call_order_update":
+            "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押额调整 {collateral}"
     },
     "transaction": {
         "confirm": "请确认交易",
@@ -814,7 +863,8 @@
                 "pool_balance": "资金池余额",
                 "unclaimed_issuer_income": "发行人未申领收入",
                 "claim_fees": "领取手续费",
-                "fund_text": "所有网络手续费最终将使用 %(core)s 进行支付。手续费资金池用来承担从 %(asset)s 转换为 %(core)s 的费用，以便用户可以使用 %(asset)s 来支付手续费。如果资金池中余额用完，用户将无法继续使用 %(asset)s 支付手续费。",
+                "fund_text":
+                    "所有网络手续费最终将使用 %(core)s 进行支付。手续费资金池用来承担从 %(asset)s 转换为 %(core)s 的费用，以便用户可以使用 %(asset)s 来支付手续费。如果资金池中余额用完，用户将无法继续使用 %(asset)s 支付手续费。",
                 "claim_text": "资产发行人可以在这里领取累积的资产手续费。"
             },
             "permissions": {
@@ -873,13 +923,19 @@
             "website": "网站",
             "vesting_pay": "工资解冻周期 (天)",
             "create": "创建一个新的预算项目提案",
-            "create_text_1": "请填写下表创建新的预算项目。项目将由你当前活跃账户的名义创建，账户必须已取得终身会籍。",
+            "create_text_1":
+                "请填写下表创建新的预算项目。项目将由你当前活跃账户的名义创建，账户必须已取得终身会籍。",
             "create_text_2": "设置参数前请仔细估量，发布后将无法修改。",
-            "name_text": "预算项目的名字应该简短明了，比如'目标：改进账户名体系'",
-            "date_text": "开始时间应该至少设置在一周以后，以留有足够的时间让用户股东们发现、评估项目并投票。",
-            "pay_text": "每日支付设定的是每天你希望收到的酬劳，以 BTS 计价。目前的最佳实践是设定以美元或人民币计价的工资，并承诺销毁由于 BTS 升值导致的溢价部分。只要你的预算项目还是有效的，并且拥有足够的赞成票超过'回购项目'，你就能每日持续收到工资。",
-            "url_text": "你应该提供一个网站、GitHub 文档或者 Google 文档来详细描述你的工作目标和资金使用计划。",
-            "vesting_text": "解冻周期设定工作收入需要经过多少天的线性释放才能完全解冻并领取。"
+            "name_text":
+                "预算项目的名字应该简短明了，比如'目标：改进账户名体系'",
+            "date_text":
+                "开始时间应该至少设置在一周以后，以留有足够的时间让用户股东们发现、评估项目并投票。",
+            "pay_text":
+                "每日支付设定的是每天你希望收到的酬劳，以 BTS 计价。目前的最佳实践是设定以美元或人民币计价的工资，并承诺销毁由于 BTS 升值导致的溢价部分。只要你的预算项目还是有效的，并且拥有足够的赞成票超过'回购项目'，你就能每日持续收到工资。",
+            "url_text":
+                "你应该提供一个网站、GitHub 文档或者 Google 文档来详细描述你的工作目标和资金使用计划。",
+            "vesting_text":
+                "解冻周期设定工作收入需要经过多少天的线性释放才能完全解冻并领取。"
         },
         "proposals": {
             "title": "提案"
@@ -944,7 +1000,8 @@
         "view_keys": "查看密钥",
         "backup_backup": "从钱包备份文件恢复 (.bin)",
         "backup_key": "导入私钥",
-        "backup_legacy": "从BTS 0.9.3c 版本客户端导出的JSON钱包文件导入 (.json)",
+        "backup_legacy":
+            "从BTS 0.9.3c 版本客户端导出的JSON钱包文件导入 (.json)",
         "backup_brainkey": "从脑钱包密钥恢复钱包",
         "backup_favorites": "从备份文件恢复收藏的市场列表",
         "backup_favorites_error": "无法处理文件内容",
@@ -957,12 +1014,14 @@
         "backup_favoritestext": "将收藏的市场进行备份，以便在更新后进行恢复。",
         "lookup_text": "查看来自 BTS 1.0 的未领取余额",
         "delete_select": "选择要删除的钱包",
-        "restore_brainkey_text": "从脑钱包恢复前，你需要新建一个新的钱包。请为新钱包创建一个密码，然后输入你的脑钱包密钥。",
+        "restore_brainkey_text":
+            "从脑钱包恢复前，你需要新建一个新的钱包。请为新钱包创建一个密码，然后输入你的脑钱包密钥。",
         "restore_key_count": "恢复的密钥",
         "restore_default_success": "已成功恢复默认设置",
         "api_closest": "自动选择最佳服务器",
         "wallet_required": "需要使用钱包模式",
-        "wallet_required_text": "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
+        "wallet_required_text":
+            "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
         "enable_wallet": "启用钱包模式",
         "active_node": "当前使用的节点",
         "node_up": "在线",
@@ -977,7 +1036,8 @@
         "activate": "使用",
         "confirm_remove": "确定要将 %(name)s 从可用节点中删除吗？",
         "valid_node_url": "节点地址必须以 ws:// 或 wss:// 开头",
-        "connection_error": "无法连接到 API 节点 %(url)s, 正在尝试使用其他在线节点",
+        "connection_error":
+            "无法连接到 API 节点 %(url)s, 正在尝试使用其他在线节点",
         "low_latency": "低延迟",
         "medium_latency": "中延迟",
         "high_latency": "高延迟"
@@ -1052,8 +1112,10 @@
         "change": "涨跌幅",
         "confirm_buy": "你的委单价格超出最低卖出价 %(diff)s 倍，确定下单吗？",
         "confirm_sell": "你的委单价低于最高买入价 %(diff)s 倍，确定下单吗？",
-        "confirm_no_orders_buy": "你在一个没有委托卖单的市场下了一个买单，确定下单吗？",
-        "confirm_no_orders_sell": "你在一个没有委托买单的市场下了一个卖单，确定下单吗？",
+        "confirm_no_orders_buy":
+            "你在一个没有委托卖单的市场下了一个买单，确定下单吗？",
+        "confirm_no_orders_sell":
+            "你在一个没有委托买单的市场下了一个卖单，确定下单吗？",
         "indicators": "技术指标",
         "rsi": "相对强弱指数(RSI)",
         "ema": "指数移动平均线(EMA)",
@@ -1116,14 +1178,17 @@
         "change_wallet": "切换钱包",
         "wallet_created": "钱包已创建",
         "create_wallet": "创建新钱包",
-        "create_importkeys_text": "导入私钥前，你需要创建一个新的钱包来存储私钥。请根据提示创建钱包。",
+        "create_importkeys_text":
+            "导入私钥前，你需要创建一个新的钱包来存储私钥。请根据提示创建钱包。",
         "create_wallet_backup": "从备份创建新钱包",
         "import_bts1": "从BitShares 0.9.3c导入",
         "setup_wallet": "设置钱包",
         "delete_wallet": "删除钱包",
         "delete_confirm_line1": "你确定么？",
-        "delete_confirm_line2": "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
-        "delete_confirm_line3": "本操作不可撤销，如果你没有钱包的备份，钱包将永久丢失，无法找回。",
+        "delete_confirm_line2":
+            "如果你不仔细阅读以下提示，可能发生无法预料的事情。",
+        "delete_confirm_line3":
+            "本操作不可撤销，如果你没有钱包的备份，钱包将永久丢失，无法找回。",
         "delete_confirm_line4": "是的，删除钱包 %(name)s",
         "delete_wallet_name": "删除钱包 (%(name)s)",
         "balance_claims": "余额导入",
@@ -1135,7 +1200,8 @@
         "backup_brainkey": "备份脑钱包密钥",
         "create_backup_of": "为钱包 %(name)s 创建备份",
         "import_backup": "导入钱包备份文件 (.bin)",
-        "import_backup_choose": "请在对话框中选择备份文件。备份文件不会上传至远端服务器，只在本地浏览器中进行处理。",
+        "import_backup_choose":
+            "请在对话框中选择备份文件。备份文件不会上传至远端服务器，只在本地浏览器中进行处理。",
         "restore_backup": "从钱包备份恢复",
         "import_keys": "导入私钥",
         "import_keys_tool": "私钥导入工具",
@@ -1184,14 +1250,21 @@
         "need_backup": "钱包需要备份",
         "noneed_backup": "无需备份",
         "restore": "从备份恢复钱包",
-        "create_text": "钱包保存在你的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
-        "account_create_wallet_text": "这个密码将被用来创建你的钱包，并且仅保存在本地的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
-        "create_account_text": "请输入你期望的账户名。这个账户名将在区块链上进行注册，并将作为你的身份标识。",
-        "first_account_paid": "由于这是你的第一个账户，水龙头服务将为你支付账户在区块链上的注册费用。",
-        "not_first_account": "你已经拥有了账户，因此你需要自己支付创建新账户的费用。要完成这一操作，你的账户需要拥有终身会籍。你可以在账户页进行会籍购买。",
+        "create_text":
+            "钱包保存在你的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
+        "account_create_wallet_text":
+            "这个密码将被用来创建你的钱包，并且仅保存在本地的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
+        "create_account_text":
+            "请输入你期望的账户名。这个账户名将在区块链上进行注册，并将作为你的身份标识。",
+        "first_account_paid":
+            "由于这是你的第一个账户，水龙头服务将为你支付账户在区块链上的注册费用。",
+        "not_first_account":
+            "你已经拥有了账户，因此你需要自己支付创建新账户的费用。要完成这一操作，你的账户需要拥有终身会籍。你可以在账户页进行会籍购买。",
         "must_be_ltm": "费用的支付账户必须为一个终身会员账户。",
-        "backup_explain": "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
-        "backup_new_account": "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据和数字资产。",
+        "backup_explain":
+            "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
+        "backup_new_account":
+            "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据和数字资产。",
         "brainkey_not_backed_up": "该脑钱包密钥从未备份过。",
         "brainkey_backed_up": "该脑钱包密钥上次备份于",
         "new_password": "新密码",
@@ -1200,7 +1273,8 @@
         "change_backup": "你已经修改了密码，强烈建议你创建一个新的备份文件。",
         "paste_private": "将私钥粘贴在这里 (钱包导入格式 - WIF)",
         "totals": "资产总计",
-        "claim_later": "导入私钥后，你可以将私钥拥有的余额申领到你选择的账户中去。",
+        "claim_later":
+            "导入私钥后，你可以将私钥拥有的余额申领到你选择的账户中去。",
         "bts_09_export": "BTS 0.9.3c 私钥导出文件 (.json)",
         "import_password": "输入导入文件的密码",
         "import_pass_match": "密码相符。正在解密备份文件…",
@@ -1210,11 +1284,15 @@
         "import_bts": "导入一个 BTS 0.9.3c 私钥导出文件",
         "import_private_key": "导入私钥",
         "wallet_browser": "你的浏览器即你的钱包",
-        "has_wallet": "当你创建第一个账户时，一个钱包也同时被创建，并保存在你的浏览器中。这个钱包使用提供的密码加密，其中包含账户的私钥。在创建完成后，请记得备份钱包！",
+        "has_wallet":
+            "当你创建第一个账户时，一个钱包也同时被创建，并保存在你的浏览器中。这个钱包使用提供的密码加密，其中包含账户的私钥。在创建完成后，请记得备份钱包！",
         "go_get_started": "新手指南",
-        "wallet_crucial": "你的钱包<strong>只保存在</strong>本地浏览器中，所以创建备份是至关重要的。在你的计算机或浏览器发生意外时，你可以通过备份恢复钱包。<strong>如果你弄丢了备份文件，那么任何人都无法恢复你的账户！</strong>",
-        "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_lose_warning": "<strong>重要！如果你丢失了钱包或者忘记了钱包密码，你将无法访问钱包以及其中的私钥数据及相关数字资产。确保你创建了备份文件并放置在安全处，并且记牢你的密码！</strong>",
+        "wallet_crucial":
+            "你的钱包<strong>只保存在</strong>本地浏览器中，所以创建备份是至关重要的。在你的计算机或浏览器发生意外时，你可以通过备份恢复钱包。<strong>如果你弄丢了备份文件，那么任何人都无法恢复你的账户！</strong>",
+        "wallet_move":
+            "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
+        "wallet_lose_warning":
+            "<strong>重要！如果你丢失了钱包或者忘记了钱包密码，你将无法访问钱包以及其中的私钥数据及相关数字资产。确保你创建了备份文件并放置在安全处，并且记牢你的密码！</strong>",
         "tips_deposit": "进行充值",
         "link_deposit": "充值",
         "tips_dashboard": "查看仪表盘",
@@ -1232,47 +1310,65 @@
         "step_2": "第二步 - 创建备份",
         "step_3": "第三步 - 开始使用",
         "congrat": "恭喜，准备就绪！",
-        "tips_explore": "现在你已经成功创建了一个账户，并且下载了备份文件，让我们开始吧。点击下面的链接开始探索。",
-        "tips_header": "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
-        "tips_login": "重要！钱包没有登录/注销的概念。你只需要在发起交易时将钱包解锁即可使用。",
+        "tips_explore":
+            "现在你已经成功创建了一个账户，并且下载了备份文件，让我们开始吧。点击下面的链接开始探索。",
+        "tips_header":
+            "这些链接也可以在页面顶部，或者右上方账户名右侧的下拉菜单中找到。",
+        "tips_login":
+            "重要！钱包没有登录/注销的概念。你只需要在发起交易时将钱包解锁即可使用。",
         "import_key_success": "已成功导入 %(count)s 个密钥。",
         "brainkey_seq_reset": "重置脑钱包密钥序号",
-        "brainkey_seq_reset_text": "脑钱包密钥序号用于从脑钱包密钥衍生私钥。<br />重置序号可以强制从脑钱包密钥重新生成钱包内的私钥。",
+        "brainkey_seq_reset_text":
+            "脑钱包密钥序号用于从脑钱包密钥衍生私钥。<br />重置序号可以强制从脑钱包密钥重新生成钱包内的私钥。",
         "brainkey_seq_reset_button": "重置",
-        "brainkey_reset_success": "脑钱包密钥序号已成功重置。请刷新页面并解锁钱包以重新生成私钥。",
+        "brainkey_reset_success":
+            "脑钱包密钥序号已成功重置。请刷新页面并解锁钱包以重新生成私钥。",
         "wallet_password": "从任意地点使用密码登录",
-        "password_lose_warning": "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
-        "password_crucial": "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
+        "password_lose_warning":
+            "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
+        "password_crucial":
+            "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
         "password_show": "显示我的密码",
-        "tips_explore_pass": "你成功地创建了一个账户并备份了密码，可以开始探索了。点击下面的链接开始使用。",
-        "create_account_password_text": "新账户的相关密钥将从你的密码衍生出来。<strong>敏感信息不会保存在浏览器或中央服务器上，你必须确保能记住或妥善保管好密码！！</strong>",
+        "tips_explore_pass":
+            "你成功地创建了一个账户并备份了密码，可以开始探索了。点击下面的链接开始使用。",
+        "create_account_password_text":
+            "新账户的相关密钥将从你的密码衍生出来。<strong>敏感信息不会保存在浏览器或中央服务器上，你必须确保能记住或妥善保管好密码！！</strong>",
         "create_password": "使用密码创建一个账户",
         "login_type": "选择登录模式",
         "wallet_model": "钱包模式",
         "password_model": "账户模式",
-        "wallet_model_1": "钱包模式将使用你的密码对钱包文件进行加密，并保存在浏览器的存储区域中。可以通过使用脑钱包密钥或者加密的二进制文件对钱包进行备份，其中将包含账户中所有的私钥。",
-        "wallet_model_2": "钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
-        "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
+        "wallet_model_1":
+            "钱包模式将使用你的密码对钱包文件进行加密，并保存在浏览器的存储区域中。可以通过使用脑钱包密钥或者加密的二进制文件对钱包进行备份，其中将包含账户中所有的私钥。",
+        "wallet_model_2":
+            "钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
+        "wallet_model_3":
+            "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "password_model_1": "账户模式使用密码和账户名衍生出私钥。",
-        "password_model_2": "你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位以上！</strong>",
-        "password_model_3": "<li>单账户</li><li>简易登录</li><li>安全性：中</li>",
+        "password_model_2":
+            "你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位以上！</strong>",
+        "password_model_3":
+            "<li>单账户</li><li>简易登录</li><li>安全性：中</li>",
         "use_wallet": "使用钱包模式",
         "use_password": "使用账户模式",
-        "pass_length": "密码必须包含至少 %(minLength)s 位字符。理想的密码应为 20 位或更长，并且为数字、字母和特殊符号的组合。",
+        "pass_length":
+            "密码必须包含至少 %(minLength)s 位字符。理想的密码应为 20 位或更长，并且为数字、字母和特殊符号的组合。",
         "switch_model_wallet": "切换到钱包模式",
         "switch_model_password": "切换到账户模式",
         "account_public": "账户名称（公开可见）",
         "current_pass": "当前密码",
         "no_wallet": "你还没有钱包",
         "generated": "生成的密码",
-        "account_exp": "此账户名将被注册在区块链中，你将可以使用此账户名进行转账等任意操作。<strong>比特股中不使用类似比特币等的长地址！</strong>",
-        "understand_1": "我理解如果我忘记或丢失了密码，将没有任何人能够帮助我恢复",
+        "account_exp":
+            "此账户名将被注册在区块链中，你将可以使用此账户名进行转账等任意操作。<strong>比特股中不使用类似比特币等的长地址！</strong>",
+        "understand_1":
+            "我理解如果我忘记或丢失了密码，将没有任何人能够帮助我恢复",
         "understand_2": "我已经写下了或者用其它方式保存了我的密码",
         "understand_3": "我理解如果我丢失了密码，我将永远无法访问我的资产",
-        "bts_rules": "比特股法则第一条: 不要弄丢自己的密码。<br/>第二条法则: 不要弄丢自己的密码。<br />第三条法则: 没有人能帮你恢复。<br />第四条法则: 如果你仅凭脑力就能记住自己的密码，那通常来说它不够强。<br />第五条法则: 只用随机生成的密码。<br />第六条法则: 别告诉别人你的密码。<br />第七条法则: 总是备份你的密码。",
+        "bts_rules":
+            "比特股法则第一条: 不要弄丢自己的密码。<br/>第二条法则: 不要弄丢自己的密码。<br />第三条法则: 没有人能帮你恢复。<br />第四条法则: 如果你仅凭脑力就能记住自己的密码，那通常来说它不够强。<br />第五条法则: 只用随机生成的密码。<br />第六条法则: 别告诉别人你的密码。<br />第七条法则: 总是备份你的密码。",
         "ok_done": "好的，打开仪表盘",
         "local_switch": "密码和本地钱包匹配，正在切换到钱包模式"
-      },
+    },
     "borrow": {
         "title": "%(asset_symbol)s 抵押债仓",
         "no_valid": "无 %(asset_symbol)s 的有效喂价",
@@ -1284,14 +1380,17 @@
         "update": "调整",
         "errors": {
             "below": "抵押率低于要求的 %(mr)s，不允许操作",
-            "close": "抵押率接近要求的 %(mr)s，这意味着如果价格下跌，你的债仓有可能被强制平仓。",
+            "close":
+                "抵押率接近要求的 %(mr)s，这意味着如果价格下跌，你的债仓有可能被强制平仓。",
             "collateral": "可用抵押物不足"
         }
     },
     "modal": {
         "send": {
-          "header": "使用帐号 <span class=\"send-name\">%(fromName)s</span> 转账",
-          "header_propose": "提议帐号 <span class=\"send-name\">%(fromName)s</span> 转账"
+            "header":
+                "使用帐号 <span class=\"send-name\">%(fromName)s</span> 转账",
+            "header_propose":
+                "提议帐号 <span class=\"send-name\">%(fromName)s</span> 转账"
         },
         "issue": {
             "to": "发行给",
@@ -1308,8 +1407,8 @@
             "submit": "充值"
         },
         "convert": {
-          "amount": "兑换数量",
-          "submit": "确定"
+            "amount": "兑换数量",
+            "submit": "确定"
         },
         "settle": {
             "title": "请求清算资产 %(asset)s",
@@ -1348,7 +1447,8 @@
         "connected": "已连接",
         "not_connected": "未连接",
         "browser": "不支持的浏览器",
-        "browser_text": "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+        "browser_text":
+            "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
         "understand": "我理解"
     },
     "refcode": {
@@ -1368,10 +1468,14 @@
         "fee": "网关手续费",
         "title": "充值和提现",
         "assets": {
-            "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
-            "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
-            "bit": "<br/>bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
-            "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/"
+            "open":
+                "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
+            "trade":
+                "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
+            "bit":
+                "<br/>bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
+            "bitcny":
+                "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/"
         },
         "your_account": "你的账户",
         "bitkapital_text": "选择要充值或提现的资产：",
@@ -1385,7 +1489,8 @@
         "website": "访问网站",
         "deposit_to": "请将 %(asset)s 转账到以下地址",
         "deposit_address": "充值地址",
-        "add_funds": "轻松快捷地对比特股账户 <strong>%(account)s</strong> 进行充值。此服务由 OpenLedger 提供。",
+        "add_funds":
+            "轻松快捷地对比特股账户 <strong>%(account)s</strong> 进行充值。此服务由 OpenLedger 提供。",
         "withdraw_funds": "你将提现到 %(asset)s 的外部账户中。",
         "balance_asset": "当前 %(asset)s 余额",
         "withdraw_placeholder": "请输入 %(asset)s 地址",
@@ -1420,18 +1525,25 @@
         "withdraw_coin": "提现 %(coin)s (%(symbol)s)",
         "convert_coin": "兑换成 %(coin)s (%(symbol)s)",
         "limit": "限额: %(amount)s %(symbol)s",
-        "bridge_text": "桥接服务能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
-        "gateway_text": "网关能让你将 BitShares 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
-        "fiat_text": "法币的充值提现服务由 CCEDK 提供。你必须先行在 CCEDK 上进行账户注册。下面是支持的货币：",
+        "bridge_text":
+            "桥接服务能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
+        "gateway_text":
+            "网关能让你将 BitShares 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
+        "fiat_text":
+            "法币的充值提现服务由 CCEDK 提供。你必须先行在 CCEDK 上进行账户注册。下面是支持的货币：",
         "meta": {
             "open_website": "访问官网"
         },
         "purchase": "购买 %(asset)s",
-        "purchase_1": "快速简便地从外部钱包使用 %(inputAsset)s 购买 %(outputAsset)s 。这项服务由 <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> 提供",
-        "purchase_notice": "转账到这个地址的 %(inputAsset)s 将成为 %(outputAsset)s",
-        "purchase_notice_memo": "<b>需要正确填写备注</b>以便将资产存入您的账户中",
+        "purchase_1":
+            "快速简便地从外部钱包使用 %(inputAsset)s 购买 %(outputAsset)s 。这项服务由 <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> 提供",
+        "purchase_notice":
+            "转账到这个地址的 %(inputAsset)s 将成为 %(outputAsset)s",
+        "purchase_notice_memo":
+            "<b>需要正确填写备注</b>以便将资产存入您的账户中",
         "deposit_limit": "充值限额",
-        "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">并附上备注</span> %(memo)s",
+        "address_with_memo":
+            "%(address)s <span class=\"blocktrades-with-memo\">并附上备注</span> %(memo)s",
         "rudex": {
             "support_block": "请联系 RuDEX 获取客户支持：",
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
@@ -1445,22 +1557,24 @@
         "unavailable_TRADE": "Blocktrades 桥接服务不可用或无响应",
         "contact_TRADE": "联系 Blocktrades",
         "over_limit": "到达上限",
-        "agreement":{
-            "hint":"我已阅读并同意",
-            "name":"《用户服务协议》",
-            "register":"确认",
+        "agreement": {
+            "hint": "我已阅读并同意",
+            "name": "《用户服务协议》",
+            "register": "确认",
             "notice": "未同意用户协议"
         },
-        "deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
+        "deposit_warning":
+            "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
         "time": "创建时间",
         "info": "交易信息",
         "status": "状态",
         "asset_unavailable": "%(asset)s 资产网关暂停服务",
         "user_unavailable": "获取用户信息失败，请稍候再试",
         "frozen": "账户 %(account)s 充提服务被冻结",
-        "transaction_history_info": "交易 %(amount)s %(assetName)s，流水号：%(txid)s ",
+        "transaction_history_info":
+            "交易 %(amount)s %(assetName)s，流水号：%(txid)s ",
         "support_gdex": "请通过以下方式联系我们，获得客户支持",
-        "withdraw_history_status":{
+        "withdraw_history_status": {
             "confirming": "提现确认中",
             "auditing": "提现审核中",
             "audited": "完成审核",
@@ -1469,7 +1583,7 @@
             "success": "提现成功",
             "fail": "提现失败"
         },
-        "deposit_history_status":{
+        "deposit_history_status": {
             "confirming": "充值确认中",
             "waiting": "等待转账",
             "transfering": "转账确认中",
@@ -1483,36 +1597,39 @@
     },
     "migration": {
         "title": "迁移提示",
-        "announcement_1": "为了提高浏览器钱包的安全性，我们已经将服务迁移至以下地址。请更新您的书签。",
+        "announcement_1":
+            "为了提高浏览器钱包的安全性，我们已经将服务迁移至以下地址。请更新您的书签。",
         "text_1": "检测到本地钱包",
-        "text_2": "请立刻备份钱包，并在 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>将钱包恢复。请今后使用此地址访问浏览器钱包。感谢您一贯的支持。",
-        "text_3": "请今后使用 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> 访问浏览器钱包。您当前的账户和密码不变，可以继续使用。"
+        "text_2":
+            "请立刻备份钱包，并在 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>将钱包恢复。请今后使用此地址访问浏览器钱包。感谢您一贯的支持。",
+        "text_3":
+            "请今后使用 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> 访问浏览器钱包。您当前的账户和密码不变，可以继续使用。"
     },
     "news": {
         "news": "新闻",
         "author": "作者",
         "subject": "标题",
         "errors": {
-          "fetch": "获取新闻时发生错误……"
+            "fetch": "获取新闻时发生错误……"
         }
     },
-  "winex":
-	{
-		"gateway": {
-			"support_block": "获得客户支持，请联络 Winex:",
-			"fee":"网关手续费",
-			"deposit_warning":"禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
-            "click_getaddress":"请先获取充值地址",
+    "winex": {
+        "gateway": {
+            "support_block": "获得客户支持，请联络 Winex:",
+            "fee": "网关手续费",
+            "deposit_warning":
+                "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
+            "click_getaddress": "请先获取充值地址",
             "get_deposit_address": "获取充值地址"
-		},
-		"withdraw": {
-			"winAmount": "最低提现数量:%(min_amount)s %(asset)s",
-			"finalNumber": "预计到账：%(final_number)s"
-		},
-		"transfer": {
-			"errors": {
-				"minWithdraw": "最低提币数量：%(min_amount)s"
-			}
-		}
-	}
+        },
+        "withdraw": {
+            "winAmount": "最低提现数量:%(min_amount)s %(asset)s",
+            "finalNumber": "预计到账：%(final_number)s"
+        },
+        "transfer": {
+            "errors": {
+                "minWithdraw": "最低提币数量：%(min_amount)s"
+            }
+        }
+    }
 }
