@@ -1,7 +1,6 @@
 import alt from "alt-instance";
 
 class SettingsActions {
-
     changeSetting(value) {
         return value;
     }
@@ -22,7 +21,7 @@ class SettingsActions {
         return {quote, base};
     }
 
-    clearStarredMarkets(){
+    clearStarredMarkets() {
         return true;
     }
 
@@ -47,13 +46,16 @@ class SettingsActions {
     }
 
     hideAsset(id, status) {
+        return {id, status};
+    }
 
+    hideMarket(id, status) {
         return {id, status};
     }
 
     clearSettings() {
-        return (dispatch) => {
-            return new Promise((resolve) => {
+        return dispatch => {
+            return new Promise(resolve => {
                 dispatch(resolve);
             });
         };

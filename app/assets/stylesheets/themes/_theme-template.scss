@@ -1,96 +1,97 @@
 @import "../utils/utils";
 
 @mixin theme(
-$primary-text-color,
-$bg-color,
-$dark-text-color,
-$inactive-text-color,
-$link-text-color,
-$light-text-color,
-$secondary-text-color,
-$success-color,
-$info-color,
-$warning-color,
-$alert-color,
-$super-light-panel-bg-color,
-$panel-bg-color,
-$button-bg-color,
-$secondary-button-bg-color,
-$fee-color,
-$bid-color,
-$ask-color,
-$call-color,
-$light-panel-bg-color,
-$positive-color,
-$negative-color,
-$row-accent-color,
-$header-color,
-$input-background,
-$account-header,
-$account-cells,
-$account-green,
-$account-primarytext,
-$account-dimmed,
-$account-border,
-$account-background,
-$account-tabs-background,
-$pulsate-green-start,
-$pulsate-green-end,
-$pulsate-red-start,
-$pulsate-red-end,
-$settings-select-bg,
-$settings-select-color,
-$settings-menu-hover-bg,
-$settings-menu-active-bg,
-$settings-api-node-border-color,
-$main-content-margin-block-bg-color
+    $primary-text-color,
+    $bg-color,
+    $dark-text-color,
+    $inactive-text-color,
+    $link-text-color,
+    $light-text-color,
+    $secondary-text-color,
+    $success-color,
+    $info-color,
+    $warning-color,
+    $alert-color,
+    $super-light-panel-bg-color,
+    $panel-bg-color,
+    $button-bg-color,
+    $secondary-button-bg-color,
+    $fee-color,
+    $bid-color,
+    $ask-color,
+    $call-color,
+    $light-panel-bg-color,
+    $positive-color,
+    $negative-color,
+    $row-accent-color,
+    $header-color,
+    $input-background,
+    $account-header,
+    $account-cells,
+    $account-green,
+    $account-primarytext,
+    $account-dimmed,
+    $account-border,
+    $account-background,
+    $account-tabs-background,
+    $pulsate-green-start,
+    $pulsate-green-end,
+    $pulsate-red-start,
+    $pulsate-red-end,
+    $settings-select-bg,
+    $settings-select-color,
+    $settings-menu-hover-bg,
+    $settings-menu-active-bg,
+    $settings-api-node-border-color,
+    $main-content-margin-block-bg-color,
+    $modal-bg-color,
+    $mobile-input-bg
 ) {
+    $hamburger-submenu-display-endpoint: 990px;
 
-  $hamburger-submenu-display-endpoint: 990px;
+    .settings-select {
+        height: 36px;
+        padding: 0 12px;
+        background-color: $settings-select-bg;
+        color: $settings-select-color;
+    }
 
-  .settings-select {
-    height: 36px;
-    padding: 0 12px;
-    background-color: $settings-select-bg;
-    color: $settings-select-color;
-  }
-
-  .settings-input {
-    /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
+    .settings-input {
+        /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
     overwrite for Inputs on settings and keep default styles for inputs on another places.
     */
-    color: $settings-select-color !important;
-    height: 36px !important;
-    background-color: $settings-select-bg !important;
-    border-bottom: 0 !important;
-    max-width: 100% !important;
-  }
-
-  .dark-text-color {
-    color: $dark-text-color;
-  }
-
-  .fz_12 {
-    font-size: 12px;
-  }
-
-  .spinner-button-circle .circle-wrapper{
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 7px;
-    margin-top: -2px;
-    .circle:before{
-      background-color: #fff;
+        color: $settings-select-color !important;
+        height: 36px !important;
+        background-color: $settings-select-bg !important;
+        border-bottom: 0 !important;
+        max-width: 100% !important;
     }
-  }
+
+    .dark-text-color {
+        color: $dark-text-color;
+    }
+
+    .fz_12 {
+        font-size: 12px;
+    }
+
+    .spinner-button-circle .circle-wrapper {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 7px;
+        margin-top: -2px;
+        .circle:before {
+            background-color: #fff;
+        }
+    }
 
     .font-secondary {
         color: $secondary-text-color;
     }
 
     svg > path {
-      transition: all 0.3s ease 0s;
+        transition: all 0.3s ease 0s;
     }
 
     #content-wrapper {
@@ -104,12 +105,15 @@ $main-content-margin-block-bg-color
 
     a {
         color: $link-text-color;
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             color: lighten($link-text-color, 4%);
         }
     }
 
-    label, label > span {
+    label,
+    label > span {
         color: $primary-text-color;
     }
 
@@ -132,7 +136,8 @@ $main-content-margin-block-bg-color
         border-color: $warning-color;
     }
 
-    .label.cancel, .label.alert {
+    .label.cancel,
+    .label.alert {
         color: $alert-color;
         border-color: $alert-color;
     }
@@ -149,7 +154,8 @@ $main-content-margin-block-bg-color
         color: $warning-color;
     }
 
-    .txtlabel.cancel, .label.alert {
+    .txtlabel.cancel,
+    .label.alert {
         color: $alert-color;
     }
 
@@ -192,7 +198,10 @@ $main-content-margin-block-bg-color
             color: $light-text-color;
             border-top-color: $panel-bg-color;
             &:hover {
-                @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+                @include color(
+                    $light-text-color,
+                    lighten($super-light-panel-bg-color, 4%)
+                );
                 // color: $link-text-color;
             }
         }
@@ -218,7 +227,12 @@ $main-content-margin-block-bg-color
         color: $secondary-text-color !important;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         color: $primary-text-color;
     }
 
@@ -235,7 +249,7 @@ $main-content-margin-block-bg-color
                 color: $secondary-text-color;
             }
             &.has-error > h6 {
-                color: $error-text-color
+                color: $error-text-color;
             }
         }
         .circle-wrapper {
@@ -244,7 +258,8 @@ $main-content-margin-block-bg-color
             }
         }
         .table {
-            > thead > tr > th, > tbody > tr > td {
+            > thead > tr > th,
+            > tbody > tr > td {
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
@@ -282,7 +297,6 @@ $main-content-margin-block-bg-color
         @include color($secondary-text-color, $bg-color);
     }
 
-
     .page-layout {
         background-color: lighten($account-header, 4%);
 
@@ -301,10 +315,9 @@ $main-content-margin-block-bg-color
         .main-content {
             background-color: $bg-color;
 
-          &.margin-block {
-            background-color: $main-content-margin-block-bg-color;
-          }
-
+            &.margin-block {
+                background-color: $main-content-margin-block-bg-color;
+            }
         }
 
         .right-column {
@@ -312,7 +325,6 @@ $main-content-margin-block-bg-color
             border-bottom-color: $bg-color;
             background-color: darken($bg-color, 4%);
         }
-
     }
 
     .asset-prefix {
@@ -321,7 +333,8 @@ $main-content-margin-block-bg-color
 
     .transfer-top {
         background-color: $light-panel-bg-color;
-        label, label > span {
+        label,
+        label > span {
             color: $light-text-color;
         }
     }
@@ -330,7 +343,9 @@ $main-content-margin-block-bg-color
 
     .button {
         background: $button-bg-color;
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background-color: lighten($button-bg-color, 4%) !important;
         }
         &.outline {
@@ -343,15 +358,56 @@ $main-content-margin-block-bg-color
         }
     }
 
+    .button:disabled {
+        opacity: 0.2 !important;
+        cursor: not-allowed !important;
+    }
+
     .button.secondary {
         @include color($dark-text-color, $secondary-button-bg-color);
-        &:hover, &:focus, &:active {
-            @include color(lighten($dark-text-color, 4%), lighten($secondary-button-bg-color, 4%), true);
+        &:hover,
+        &:focus,
+        &:active {
+            @include color(
+                lighten($dark-text-color, 4%),
+                lighten($secondary-button-bg-color, 4%),
+                true
+            );
         }
     }
 
-    .header .button,  .header .button:active {
+    .button.danger {
+        @include color(white, $alert-color);
+        &:hover,
+        &:focus,
+        &:active {
+            @include color(white, lighten($alert-color, 4%), true);
+        }
+    }
+
+    .header .button,
+    .header .button:active {
         background-color: transparent !important;
+    }
+
+    .header .modal .button {
+        background-color: $button-bg-color !important;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: lighten($button-bg-color, 4%) !important;
+        }
+    }
+
+    .header .modal .button.danger {
+        background-color: $alert-color !important;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: lighten($alert-color, 4%) !important;
+        }
     }
 
     .header a.button.create-account {
@@ -375,7 +431,7 @@ $main-content-margin-block-bg-color
 
         div.header-right-lock {
             cursor: pointer;
-            padding: 0.9rem .25rem;
+            padding: 0.9rem 0.25rem;
             &:hover {
                 background-color: $bg-color;
             }
@@ -393,13 +449,13 @@ $main-content-margin-block-bg-color
         }
 
         div.dropdown-wrapper.hover-transparent {
-          &:hover {
-            background-color: transparent;
-          }
+            &:hover {
+                background-color: transparent;
+            }
         }
 
         div.dropdown-wrapper.cursor-default {
-          cursor: default;
+            cursor: default;
         }
 
         div.dropdown-wrapper.active {
@@ -426,7 +482,8 @@ $main-content-margin-block-bg-color
                     }
                 }
 
-                &:hover, &.active {
+                &:hover,
+                &.active {
                     background-color: $light-panel-bg-color;
                 }
 
@@ -443,7 +500,10 @@ $main-content-margin-block-bg-color
                     color: $dark-text-color;
                     &:hover {
                         color: lighten($dark-text-color, 10%);
-                        background-color: lighten($main-content-margin-block-bg-color, 10%);
+                        background-color: lighten(
+                            $main-content-margin-block-bg-color,
+                            10%
+                        );
                     }
                 }
             }
@@ -466,13 +526,16 @@ $main-content-margin-block-bg-color
     }
 
     .grp-menu-item button {
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $light-panel-bg-color !important;
         }
     }
 
     .grp-menu-item {
-        > a, .button {
+        > a,
+        .button {
             color: $primary-text-color !important;
         }
     }
@@ -489,18 +552,23 @@ $main-content-margin-block-bg-color
             &:hover {
                 color: $info-color;
             }
-            > span { @include RobotoMedium; }
+            > span {
+                @include RobotoMedium;
+            }
         }
-        svg > path { fill: #fff; }
+        svg > path {
+            fill: #fff;
+        }
         // svg:hover > path { fill: $primary-text-color; }
     }
 
     .settings-cog {
-        svg > path { fill: $secondary-text-color; }
+        svg > path {
+            fill: $secondary-text-color;
+        }
     }
 
     // cards
-
 
     .card-section {
         color: black;
@@ -512,7 +580,6 @@ $main-content-margin-block-bg-color
             margin-left: 0;
         }
     }
-
 
     .card {
         @include color($primary-text-color, $panel-bg-color);
@@ -544,8 +611,17 @@ $main-content-margin-block-bg-color
             border-bottom-color: $dark-text-color;
             font-size: 0.875rem;
         }
-        &.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+        &.table-hover > tbody > tr:hover > td,
+        .table-hover > tbody > tr:hover > th {
             background-color: lighten($bg-color, 4%);
+        }
+        > tbody > tr.table-empty > td {
+            padding: 5rem 0;
+            font-size: 1.5rem;
+
+            text-align: center;
+            color: $account-dimmed !important;
+            background-color: $bg-color !important;
         }
     }
 
@@ -559,7 +635,10 @@ $main-content-margin-block-bg-color
         li > a {
             color: $secondary-text-color;
         }
-        li > a:hover, li > label:hover, li select:hover, li.active > a {
+        li > a:hover,
+        li > label:hover,
+        li select:hover,
+        li.active > a {
             color: $light-text-color;
             background-color: lighten($bg-color, 4%);
         }
@@ -572,25 +651,25 @@ $main-content-margin-block-bg-color
             color: $secondary-text-color;
         }
         &.no-border-bottom {
-          li {
-            border-bottom: 0;
-          }
+            li {
+                border-bottom: 0;
+            }
         }
 
         li.with-dropdown {
-          .settings-select {
-            @extend .settings-select;
-          }
-          > input.settings-input[type="text"] {
-            @extend .settings-input;
-          }
+            .settings-select {
+                @extend .settings-select;
+            }
+            > input.settings-input[type="text"] {
+                @extend .settings-input;
+            }
         }
     }
 
-
     // forms
 
-    .right-label, .left-label {
+    .right-label,
+    .left-label {
         color: $secondary-text-color;
 
         > span {
@@ -620,7 +699,10 @@ $main-content-margin-block-bg-color
             /* Hover state */
 
             li:hover > span {
-                @include color($light-text-color, lighten($super-light-panel-bg-color, 4%));
+                @include color(
+                    $light-text-color,
+                    lighten($super-light-panel-bg-color, 4%)
+                );
                 color: $link-text-color;
             }
         }
@@ -629,7 +711,8 @@ $main-content-margin-block-bg-color
             border-color: $link-text-color transparent;
         }
 
-        &:after { /* Little arrow */
+        &:after {
+            /* Little arrow */
             border-color: $secondary-text-color transparent;
         }
     }
@@ -641,7 +724,8 @@ $main-content-margin-block-bg-color
             }
         }
     }
-    .account-selector, .pubkey-input {
+    .account-selector,
+    .pubkey-input {
         .account-image {
             > canvas {
                 color: black;
@@ -656,27 +740,49 @@ $main-content-margin-block-bg-color
             }
         }
     }
-    .has-error, div.has-error > label, div.has-error > label > span {
-        color: $error-text-color;
+    .has-error,
+    div.has-error > label,
+    div.has-error > label > span,
+    .error-msg {
+        color: $error-text-color !important;
     }
 
-    .has-warning, div.has-warning > label, div.has-warning > label > span {
+    .floatRight {
+        float: right;
+    }
+
+    .has-warning,
+    div.has-warning > label,
+    div.has-warning > label > span {
         color: $warning-color;
     }
 
-    div.has-error > input, div.has-error > input:hover, div.has-error > input:focus {
+    div.has-error > input,
+    div.has-error > input:hover,
+    div.has-error > input:focus {
         border-color: $error-text-color;
     }
 
-    .has-error input, .has-error select, .has-error textarea {
+    .has-error input,
+    .has-error select,
+    .has-error textarea {
         border-color: $error-text-color;
     }
 
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="search"], textarea, input[role="combobox"], select[role="combobox"] {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="search"],
+    textarea,
+    input[role="combobox"],
+    select[role="combobox"] {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $input-background;
         }
         &:focus {
@@ -689,21 +795,50 @@ $main-content-margin-block-bg-color
     }
 
     // Typeahead
-    .typeahead > div {
+    input[role="combobox"] {
+        padding: 5px 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .typeahead {
         > div {
-            z-index: 1003;
-            background-color: $input-background !important;
             > div {
-                color: $primary-text-color !important;
-                background-color: transparent !important;
-                &:hover, &:active, &:focus, &:visited {
-                    background-color: darken($input-background, 10%) !important;
+                z-index: 1003;
+                background-color: $input-background !important;
+                > div {
+                    color: $primary-text-color !important;
+                    background-color: transparent !important;
+                    &:hover,
+                    &:active,
+                    &:focus,
+                    &:visited {
+                        background-color: darken(
+                            $input-background,
+                            10%
+                        ) !important;
+                    }
                 }
             }
         }
+        .typeahead__input {
+            background: $input-background;
+        }
+        .typeahead__innerList {
+            background: $panel-bg-color;
+        }
+        .typeahead__innerItem {
+            color: $primary-text-color;
+
+            > .typeahead__innerItem__highlight {
+                background-color: darken($input-background, 10%) !important;
+            }
+
+            > .typeahead__innerItem__disabled {
+                color: $inactive-text-color;
+            }
+        }
     }
-
-
     ul.button-group.segmented {
         > li.is-active > a {
             background: $input-background;
@@ -721,7 +856,9 @@ $main-content-margin-block-bg-color
                 color: $primary-text-color;
                 border-bottom-color: $button-bg-color;
             }
-            &:hover, &:focus, &:active {
+            &:hover,
+            &:focus,
+            &:active {
                 color: $primary-text-color;
             }
         }
@@ -741,7 +878,6 @@ $main-content-margin-block-bg-color
         }
     }
 
-
     // Exchange
 
     .depthchart {
@@ -750,7 +886,7 @@ $main-content-margin-block-bg-color
             background-color: $bg-color;
         }
         &.area {
-            color: #FFF;
+            color: #fff;
         }
     }
 
@@ -781,7 +917,7 @@ $main-content-margin-block-bg-color
     }
 
     .active-bucket {
-        background-color: lighten($light-panel-bg-color, 12%) ;
+        background-color: lighten($light-panel-bg-color, 12%);
     }
 
     .bucket-option:hover {
@@ -793,7 +929,9 @@ $main-content-margin-block-bg-color
 
         > select {
             background-color: lighten($light-panel-bg-color, 12%);
-            background: lighten($light-panel-bg-color, 12%) url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E") right 10px center no-repeat;
+            background: lighten($light-panel-bg-color, 12%)
+                url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20version%3D%221.1%22%20width%3D%2232%22%20height%3D%2224%22%20viewBox%3D%220%200%2032%2024%22%3E%3Cpolygon%20points%3D%220%2C0%2032%2C0%2016%2C24%22%20style%3D%22fill%3A%20black%22%3E%3C/polygon%3E%3C/svg%3E")
+                right 10px center no-repeat;
         }
     }
 
@@ -835,8 +973,6 @@ $main-content-margin-block-bg-color
                 color: $primary-text-color;
             }
         }
-
-
     }
 
     .account-info {
@@ -860,13 +996,18 @@ $main-content-margin-block-bg-color
         }
     }
 
-    .my-account h5, .my-account h4, .my-account p, table.table > tbody > tr > td.my-account > span {
+    .my-account h5,
+    .my-account h4,
+    .my-account p,
+    table.table > tbody > tr > td.my-account > span {
         @include RobotoMedium;
         color: $info-color;
     }
 
     .account-left-menu {
-        > li > a:hover, > li > label:hover, > li select:hover {
+        > li > a:hover,
+        > li > label:hover,
+        > li select:hover {
             color: $light-text-color;
             background-color: lighten($panel-bg-color, 5%);
         }
@@ -876,7 +1017,6 @@ $main-content-margin-block-bg-color
             border-right-color: darken($button-bg-color, 4%);
         }
     }
-
 
     .pagination {
         background-color: $panel-bg-color;
@@ -946,23 +1086,25 @@ $main-content-margin-block-bg-color
     // Misc
 
     .chart-zoom-dropdown {
-        width:24px;
+        width: 24px;
         height: 28px;
         padding: 4px;
         opacity: 0.5;
         overflow: hidden;
-        -webkit-transition: all .5s ease;
-        -moz-transition: all .5s ease;
-        transition: all .5s ease;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        transition: all 0.5s ease;
 
-        &:hover, &:active, &:focus {
+        &:hover,
+        &:active,
+        &:focus {
             background-color: $bg-color;
             padding: 4px;
             opacity: 0.85;
             border-radius: 2px;
             color: $light-text-color;
             font-size: 60%;
-            width:348px;
+            width: 348px;
             height: 48px;
         }
     }
@@ -974,10 +1116,12 @@ $main-content-margin-block-bg-color
         font-size: 120%;
         background-color: transparent;
         border-radius: 0;
-        -webkit-transition: all .5s ease;
-        -moz-transition: all .5s ease;
-        transition: all .5s ease;
-        &:hover, &:active, &:focus {
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        &:hover,
+        &:active,
+        &:focus {
             color: $light-text-color;
             background-color: $alert-color;
             font-size: 120%;
@@ -1064,17 +1208,19 @@ $main-content-margin-block-bg-color
         }
     }
 
-
     .click-for-help {
         border-bottom-color: $secondary-text-color !important;
     }
 
     // Block List (section)
-    section.block-list input[type="text"], section.block-list input[type="password"] {
+    section.block-list input[type="text"],
+    section.block-list input[type="password"] {
         border-bottom: 1px solid $panel-bg-color;
         background-color: transparent;
         color: $primary-text-color;
-        &:hover, &:active, &:focus {
+        &:hover,
+        &:active,
+        &:focus {
             color: $primary-text-color;
             background-color: transparent;
             border-bottom: 1px solid $panel-bg-color;
@@ -1088,10 +1234,12 @@ $main-content-margin-block-bg-color
         font-size: 120%;
         background-color: transparent;
         border-radius: 0;
-        -webkit-transition: all .5s ease;
-        -moz-transition: all .5s ease;
-        transition: all .5s ease;
-        &:hover, &:active, &:focus {
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        &:hover,
+        &:active,
+        &:focus {
             color: $light-text-color;
             background-color: $alert-color;
             font-size: 120%;
@@ -1099,29 +1247,29 @@ $main-content-margin-block-bg-color
         }
     }
 
-    .menu-group.primary, .menu-group.primary .menu-bar {
+    .menu-group.primary,
+    .menu-group.primary .menu-bar {
         background-color: $account-background;
 
         li {
-
             > a {
                 color: $account-dimmed;
                 .icon > svg > path {
-                  fill: $account-dimmed;
+                    fill: $account-dimmed;
                 }
             }
 
-            > a:hover, > a.active{
+            > a:hover,
+            > a.active {
                 background-color: $bg-color !important;
                 color: $primary-text-color;
 
                 .icon > svg > path {
-                  fill: $primary-text-color;
+                    fill: $primary-text-color;
                 }
             }
         }
     }
-
 
     // Asset Detail
 
@@ -1130,7 +1278,6 @@ $main-content-margin-block-bg-color
             background: $panel-bg-color;
         }
     }
-
 
     // Exchange
     .mymarkets-header {
@@ -1160,51 +1307,59 @@ $main-content-margin-block-bg-color
     // }
 
     .orderHistoryBid {
-
-        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
+        > span.price-integer,
+        > span > span.price-integer,
+        > span.formatted-price > span {
             @include RobotoMedium;
             color: $bid-color;
         }
 
-        > span.price-decimal, > span > span.price-decimal {
+        > span.price-decimal,
+        > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
-
-
     }
 
-    .orderHistoryAsk  {
-        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
+    .orderHistoryAsk {
+        > span.price-integer,
+        > span > span.price-integer,
+        > span.formatted-price > span {
             @include RobotoMedium;
             color: $ask-color;
         }
 
-        > span.price-decimal, > span >span.price-decimal {
+        > span.price-decimal,
+        > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
     }
 
     .orderHistoryCall {
-        > span.price-integer, > span > span.price-integer, > span.formatted-price > span {
+        > span.price-integer,
+        > span > span.price-integer,
+        > span.formatted-price > span {
             @include RobotoMedium;
             color: $call-color;
         }
 
-        > span.price-decimal, > span >span.price-decimal {
+        > span.price-decimal,
+        > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
     }
 
     .order-table .my-order {
-        > .vertical-order-table-cell, > td {
-          font-weight: bold;
-          color: $info-color;
+        > .vertical-order-table-cell,
+        > td {
+            font-weight: bold;
+            color: $info-color;
         }
 
-        span.price-integer, span.price-decimal {
+        span.price-integer,
+        span.price-decimal {
             color: $info-color !important;
             opacity: 1;
         }
@@ -1232,16 +1387,18 @@ $main-content-margin-block-bg-color
         }
     }
 
-    .sticky-table .sticky-table-column, .sticky-table .sticky-table-header, .sticky-table .sticky-table-corner {
+    .sticky-table .sticky-table-column,
+    .sticky-table .sticky-table-header,
+    .sticky-table .sticky-table-corner {
         @include color($primary-text-color, $bg-color);
     }
 
     .left-order-book {
-      background-color: $bg-color;
+        background-color: $bg-color;
 
-      .spread .spread-value {
-        color: $primary-text-color;
-      }
+        .spread .spread-value {
+            color: $primary-text-color;
+        }
     }
 
     .sticky-table-header {
@@ -1258,12 +1415,12 @@ $main-content-margin-block-bg-color
             background-color: $panel-bg-color;
         }
 
-        .sticky-table-row  {
+        .sticky-table-row {
             width: 100%;
             background-color: $bg-color;
 
             &.order-row:hover {
-              background-color: $panel-bg-color;
+                background-color: $panel-bg-color;
             }
         }
     }
@@ -1278,8 +1435,9 @@ $main-content-margin-block-bg-color
         background-color: $header-color;
     }
 
-    tr.activeMarket, tr.activeMarket:hover {
-        color: #4C85D8;
+    tr.activeMarket,
+    tr.activeMarket:hover {
+        color: #4c85d8;
         background-color: $header-color;
     }
 
@@ -1288,23 +1446,24 @@ $main-content-margin-block-bg-color
     }
 
     li.stat.input {
-        &:hover {background-color: lighten($panel-bg-color, 4%);}
+        &:hover {
+            background-color: lighten($panel-bg-color, 4%);
+        }
     }
     .stats .stressed-stat {
-
         padding: 10px 0;
-        font-size:18px;
+        font-size: 18px;
 
         &.is-call {
-            color: $call-color!important;
+            color: $call-color !important;
         }
 
         &.daily_change {
             &.positive {
-                color:$account-green!important;
+                color: $account-green !important;
             }
             &.negative {
-                color:$negative-color !important;
+                color: $negative-color !important;
             }
         }
     }
@@ -1381,14 +1540,13 @@ $main-content-margin-block-bg-color
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
 
-
-    .indicators, li.stat.clickable{
+    .indicators,
+    li.stat.clickable {
         color: $secondary-text-color;
         // &:hover{
         //   @include button-focus($primary-text-color, $panel-bg-color, 10);
         // }
     }
-
 
     .mymarkets-tabs {
         > li {
@@ -1407,23 +1565,25 @@ $main-content-margin-block-bg-color
         border-top: 2px solid $panel-bg-color;
     }
 
-    select.bts-select, select.native-coin-types, select.external-coin-types {
+    select.bts-select,
+    select.native-coin-types,
+    select.external-coin-types {
         color: $secondary-text-color;
         background-color: $light-panel-bg-color;
         border: 0;
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $light-panel-bg-color;
         }
     }
 
-    div.fm-container:hover {
-        background-color: darken($light-panel-bg-color, 5%);
-        cursor: pointer;
-    }
-
     .api-node {
+        &:hover {
+            background-color: lighten($bg-color, 4%);
+        }
         border: 1px solid $settings-api-node-border-color;
-        &:nth-child(n+1) {
+        &:nth-child(n + 1) {
             border-bottom: 0;
         }
         &:last-child {
@@ -1435,7 +1595,7 @@ $main-content-margin-block-bg-color
     .settings-menu {
         > ul {
             width: 200px;
-            transition: .3s;
+            transition: 0.3s;
             margin-left: 0;
             > li {
                 border-radius: 2px;
@@ -1469,7 +1629,7 @@ $main-content-margin-block-bg-color
         }
     }
 
-    @media(max-width: $hamburger-submenu-display-endpoint) {
+    @media (max-width: $hamburger-submenu-display-endpoint) {
         .settings-menu {
             display: none;
         }
@@ -1478,13 +1638,13 @@ $main-content-margin-block-bg-color
     a {
         &.order-cancel > .icon > svg {
             > path {
-                fill : $negative-color;
+                fill: $negative-color;
             }
         }
 
         &.action-plus > .icon > svg {
             > path {
-                fill : $positive-color;
+                fill: $positive-color;
             }
         }
     }
@@ -1504,12 +1664,12 @@ $main-content-margin-block-bg-color
     }
 
     .nodes-header {
-      border-bottom-color: $button-bg-color;
-      background-color: $bg-color;
-      &.inactive {
-        border-bottom-color: transparent;
-        color: $secondary-text-color;
-      }
+        border-bottom-color: $button-bg-color;
+        background-color: $bg-color;
+        &.inactive {
+            border-bottom-color: transparent;
+            color: $secondary-text-color;
+        }
     }
 
     .react-stockcharts-tooltip {
@@ -1532,19 +1692,22 @@ $main-content-margin-block-bg-color
         }
     }
 
-    .blocktrades-bridge input, .blocktrades-bridge select{
+    .blocktrades-bridge input,
+    .blocktrades-bridge select {
         color: $secondary-text-color;
 
         border: 1px solid $secondary-text-color;
         background-color: $panel-bg-color !important;
-        &.native-coin-types, &.external-coin-types {
+        &.native-coin-types,
+        &.external-coin-types {
             background-color: transparent !important;
         }
         > option {
             color: $primary-text-color;
             background-color: $panel-bg-color !important;
         }
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             color: $primary-text-color;
             //box-shadow: 1px 2px 3px #000;
             border: 2px solid $primary-text-color;
@@ -1566,7 +1729,7 @@ $main-content-margin-block-bg-color
         }
     }
 
-    .switch input:checked + label{
+    .switch input:checked + label {
         background-color: darken($positive-color, 10%);
         &::after {
             border: none;
@@ -1609,7 +1772,8 @@ $main-content-margin-block-bg-color
         }
     }
 
-    input.my-key, td.my-key a {
+    input.my-key,
+    td.my-key a {
         @include RobotoMedium;
         color: $info-color;
     }
@@ -1651,7 +1815,8 @@ $main-content-margin-block-bg-color
                     color: $account-green;
                 }
             }
-            &.is-active, &:hover {
+            &.is-active,
+            &:hover {
                 background-color: lighten($account-header, 4%);
                 > a {
                     color: $account-primarytext;
@@ -1703,7 +1868,7 @@ $main-content-margin-block-bg-color
                 td {
                     background-color: $account-header;
                 }
-                td:nth-child(n+2) {
+                td:nth-child(n + 2) {
                     color: $account-green;
                     text-align: right;
                 }
@@ -1740,9 +1905,15 @@ $main-content-margin-block-bg-color
     }
 
     .api-status {
-        .low { color: $bid-color; }
-        .medium { color: $call-color; }
-        .high { color: $ask-color }
+        .low {
+            color: $bid-color;
+        }
+        .medium {
+            color: $call-color;
+        }
+        .high {
+            color: $ask-color;
+        }
     }
 
     .footer {
@@ -1761,19 +1932,23 @@ $main-content-margin-block-bg-color
     }
 
     .pulsate {
+        animation: 0.5s ease-out 1;
 
         &.red {
-            animation: pulsate-red .5s ease-out;
+            animation-name: pulsate-red;
         }
 
         &.green {
-            animation: pulsate-green .5s ease-out;
+            animation-name: pulsate-green;
         }
 
-        animation-iteration-count: 1;
+        &.reverse {
+            animation-timing-function: ease-in;
+            animation-direction: reverse;
+        }
     }
 
-    @-webkit-keyframes pulsate-green {
+    @keyframes pulsate-green {
         0% {
             color: $pulsate-green-start;
         }
@@ -1781,7 +1956,7 @@ $main-content-margin-block-bg-color
             color: $pulsate-green-end;
         }
     }
-    @-webkit-keyframes pulsate-red {
+    @keyframes pulsate-red {
         0% {
             color: $pulsate-red-start;
         }
@@ -1796,7 +1971,7 @@ $main-content-margin-block-bg-color
         padding: 0 10px;
         font-size: 18px;
         line-height: 1.8;
-        transition: background-color .2s ease;
+        transition: background-color 0.2s ease;
         color: #fff;
 
         &:hover {
@@ -1807,7 +1982,7 @@ $main-content-margin-block-bg-color
         @include breakpoint(small only) {
             position: absolute;
             bottom: 1rem;
-            right: .3rem;
+            right: 0.3rem;
             z-index: 9999;
             display: block;
             line-height: 0;
@@ -1816,12 +1991,12 @@ $main-content-margin-block-bg-color
             background-color: transparent;
 
             &:after {
-                content: '?';
+                content: "?";
                 color: #fff;
                 font-size: 1rem;
                 line-height: 1.5;
                 text-align: center;
-                padding: .3rem .8rem;
+                padding: 0.3rem 0.8rem;
                 background-color: $bs-blue;
                 border: 1px solid $bg-color;
             }
@@ -1849,12 +2024,12 @@ $main-content-margin-block-bg-color
             }
 
             > li:hover {
-                background-color: $super-light-panel-bg-color
+                background-color: $super-light-panel-bg-color;
             }
         }
 
         .total-value {
-            color: $account-green
+            color: $account-green;
         }
     }
 
@@ -1863,17 +2038,18 @@ $main-content-margin-block-bg-color
         cursor: pointer;
     }
 
-    .order-2 .flip-arrow, .order-5 .flip-arrow {
+    .order-2 .flip-arrow,
+    .order-5 .flip-arrow {
         display: none;
     }
 
     .order-book-button-h svg > path {
         fill: #fff;
 
-            &:hover {
-                fill: $bs-blue;
-                cursor: pointer;
-            }
+        &:hover {
+            fill: $bs-blue;
+            cursor: pointer;
+        }
     }
 
     .order-book-button-v {
@@ -1895,11 +2071,50 @@ $main-content-margin-block-bg-color
             }
         }
     }
+
+    .modal {
+        border-radius: 6px;
+    }
+
+    @media screen and (max-width: 640px) {
+        .modal {
+            background-color: $modal-bg-color;
+            border-radius: 0;
+
+            input[type="text"],
+            input[type="text"]:focus,
+            input[type="text"]:active,
+            input[type="password"],
+            input[type="password"]:focus,
+            input[type="password"]:active,
+            input[type="email"],
+            input[type="email"]:focus,
+            input[type="email"]:active,
+            input[type="number"],
+            input[type="number"]:focus,
+            input[type="number"]:active,
+            input[type="search"],
+            input[type="search"]:focus,
+            input[type="search"]:active,
+            textarea,
+            textarea:focus,
+            textarea:active,
+            input[role="combobox"],
+            input[role="combobox"]:focus,
+            input[role="combobox"]:active,
+            select[role="combobox"],
+            select[role="combobox"]:focus,
+            select[role="combobox"]:active,
+            .typeahead > div {
+                background-color: $mobile-input-bg;
+            }
+        }
+    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
-  width: 100%;
-  display: inline-block;
+    width: 100%;
+    display: inline-block;
 }
 
 .midnightTheme .gate_fee .right-selector {
@@ -1915,11 +2130,14 @@ $main-content-margin-block-bg-color
     width: 100%;
 }
 
-.clear-text, .search-wrapper {
+.clear-text,
+.search-wrapper {
     position: relative;
 }
 
-.market-filter-input, .clear-text, .search-wrapper {
+.market-filter-input,
+.clear-text,
+.search-wrapper {
     position: relative;
 }
 
@@ -1968,8 +2186,8 @@ $main-content-margin-block-bg-color
     }
 
     .logo {
-        padding-top: .7rem;
-        padding-bottom: .8rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.8rem;
     }
 
     .dropdown-wrapper:after {
@@ -1992,7 +2210,8 @@ $main-content-margin-block-bg-color
         top: 65px;
     }
 
-    .hamburger svg rect, .hamburger-x svg rect {
+    .hamburger svg rect,
+    .hamburger-x svg rect {
         fill: $bs-blue;
     }
 
@@ -2005,25 +2224,30 @@ $main-content-margin-block-bg-color
 
 .local-wallet-menu {
     // top: 50px!important;
-
     .table-cell {
         display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:nth-of-type(2) {
+            max-width: 17em;
+        }
     }
 }
 
 .app-menu {
-  flex: 0;
+    flex: 0;
 }
 
 .truncated {
-  flex: 1;
-  min-width: 0; /* or some value */
-  .text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: right;
-  }
+    flex: 1;
+    min-width: 0; /* or some value */
+    .text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: right;
+    }
 }
 
 #unlock_wallet_modal2 .close-button {
@@ -2037,7 +2261,7 @@ $main-content-margin-block-bg-color
         border-radius: 6px;
         background: #2a2a2a;
         border: 1px solid #4b5158;
-        margin-bottom: 2rem!important;
+        margin-bottom: 2rem !important;
 
         li {
             border-bottom: 1px solid #393939;
