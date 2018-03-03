@@ -10,6 +10,12 @@ import counterpart from "counterpart";
 
 class InitError extends React.Component {
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.rpc_connection_status === 'open' && nextProps.apiServer !== this.props.apiServer) {
+           SettingsActions.showWS(nextProps.apiServer);
+        }
+    }
+
     triggerModal(e) {
         this.refs.ws_modal.show(e);
     }
