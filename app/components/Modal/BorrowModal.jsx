@@ -228,8 +228,22 @@ class BorrowModalContent extends React.Component {
     }
 
     _maximizeDebt() {
-        const maximumCollateral = (this.props.backing_balance.get("balance") / utils.get_asset_precision(this.props.backing_asset)) - 10;
-        const short_amount =  maximumCollateral / this.state.collateral_ratio * this._getFeedPrice();
+        let backing_balance = !this.props.backing_balance
+            ? {balance: 0, id: null}
+            : this.props.backing_balance.toJS();
+        let backingBalance = backing_balance.id
+            ? ChainStore.getObject(backing_balance.id)
+            : null;
+        window.s = backingBalance;
+        let backingAmount = backingBalance ? backingBalance.get("balance") : 0;
+        const maximumCollateral =
+            backingAmount /
+                utils.get_asset_precision(this.props.backing_asset) -
+            10;
+        const short_amount =
+            maximumCollateral /
+            this.state.collateral_ratio *
+            this._getFeedPrice();
 
         const newState = {
             short_amount: short_amount,
@@ -631,8 +645,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                                ? "has-warning"
-                                                : "")
+                                              ? "has-warning"
+                                              : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -760,7 +774,9 @@ class BorrowModalContent extends React.Component {
                                 <div
                                     href
                                     className="button info"
-                                    onClick={this._maximizeCollateral.bind(this)}
+                                    onClick={this._maximizeCollateral.bind(
+                                        this
+                                    )}
                                 >
                                     <Translate content="borrow.maximize_collateral" />
                                 </div>
