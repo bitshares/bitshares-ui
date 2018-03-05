@@ -1,7 +1,6 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
-import ChainTypes from "./ChainTypes";
-import BindToChainState from "./BindToChainState";
+import AssetWrapper from "./AssetWrapper";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import ReactTooltip from "react-tooltip";
@@ -16,13 +15,7 @@ import {MarketStats} from "../Utility/MarketPrice";
  */
 
 class MarketChangeComponent extends MarketStats {
-    static propTypes = {
-        quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired
-    };
-
     static defaultProps = {
-        quote: "1.3.0",
         fullPrecision: false,
         noDecimals: false,
         hide_asset: false
@@ -69,8 +62,9 @@ class MarketChangeComponent extends MarketStats {
         );
     }
 }
-MarketChangeComponent = BindToChainState(MarketChangeComponent, {
-    keep_updating: true
+MarketChangeComponent = AssetWrapper(MarketChangeComponent, {
+    propNames: ["quote", "base"],
+    defaultProps: {quote: "1.3.0"}
 });
 
 class Market24HourChangeComponent extends React.Component {
