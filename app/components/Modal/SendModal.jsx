@@ -235,7 +235,7 @@ export default class SendModal extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
-        if (!asset) return;
+        if (!asset || !from_account) return;
         this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([

@@ -3,7 +3,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import AssetListWrapper from "../Utility/AssetListWrapper";
+import AssetWrapper from "../Utility/AssetWrapper";
 import AssetName from "../Utility/AssetName";
 import BorrowModal from "../Modal/BorrowModal";
 import WalletApi from "api/WalletApi";
@@ -639,7 +639,7 @@ class PlaceHolderWrapper extends React.Component {
     }
 }
 
-PlaceHolderWrapper = AssetListWrapper(PlaceHolderWrapper, {
+PlaceHolderWrapper = AssetWrapper(PlaceHolderWrapper, {
     propNames: ["optionals"],
     defaultProps: {
         optionals: [
@@ -653,7 +653,8 @@ PlaceHolderWrapper = AssetListWrapper(PlaceHolderWrapper, {
             "1.3.105",
             "1.3.106"
         ]
-    }
+    },
+    asList: true
 });
 
 const CollateralTable = ({

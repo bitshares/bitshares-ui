@@ -8,7 +8,7 @@ import FloatingDropdown from "./FloatingDropdown";
 import FormattedAsset from "./FormattedAsset";
 import Immutable from "immutable";
 import classnames from "classnames";
-import AssetListWrapper from "./AssetListWrapper";
+import AssetWrapper from "./AssetWrapper";
 
 class AssetDropdown extends React.Component {
     static propTypes = {
@@ -44,7 +44,7 @@ class AssetDropdown extends React.Component {
     }
 }
 
-AssetDropdown = AssetListWrapper(AssetDropdown);
+AssetDropdown = AssetWrapper(AssetDropdown, {asList: true});
 
 /**
  * @brief Allows the user to enter an account by name or #ID

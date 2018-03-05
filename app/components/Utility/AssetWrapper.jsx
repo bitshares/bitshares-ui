@@ -2,40 +2,117 @@ import React from "react";
 import {getDisplayName} from "common/reactUtils";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import {List} from "immutable";
 
-function AssetWrapper(Component, options = {propName: "asset"}) {
-    const {propName, propNames} = options;
+class DynamicObjectResolver extends React.Component {
+    static propTypes = {
+        dos: ChainTypes.ChainObjectsList
+    };
+    static defaultProps = {
+        dos: List()
+    };
 
-    const finalPropTypes = (propNames || ["asset"]).reduce((res, a) => {
-        res[a] = ChainTypes.ChainAsset.isRequired;
+    constructor() {
+        super();
+
+        this.getDynamicObject = this.getDynamicObject.bind(this);
+    }
+
+    getDynamicObject(assetID) {
+        return this.props.dos.find(a => {
+            return a && a.get("asset_id") === assetID;
+        });
+    }
+
+    render() {
+        return React.cloneElement(React.Children.only(this.props.children), {
+            ...this.props,
+            getDynamicObject: this.getDynamicObject
+        });
+    }
+}
+DynamicObjectResolver = BindToChainState(DynamicObjectResolver);
+
+/**
+ * HOC that resolves either a number of assets directly with ChainAsset,
+ * or a list of assets with ChainAssets
+ *
+ *  Options
+ *  -'propNames' an array of prop names to be resolved as assets. (defaults to "asset" or "assets")
+ *  -'defaultProps' default values to use for objects (optional)
+ *  -'asList' defines whether to use ChainAssetsList or not (useful for resolving large quantities of assets)
+ *  -'withDynamic' defines whether to also resolve dynamic objects or not
+ */
+
+function AssetWrapper(Component, options = {}) {
+    const {asList} = options;
+    options.propNames = options.propNames || [asList ? "assets" : "asset"];
+    const finalPropTypes = options.propNames.reduce((res, type) => {
+        res[type] = asList
+            ? ChainTypes.ChainAssetsList
+            : ChainTypes.ChainAsset.isRequired;
         return res;
     }, {});
 
-    class AssetResolver extends React.Component {
+    const defaultProps = Object.keys(finalPropTypes).reduce((res, a) => {
+        res[a] = asList ? List() : "1.3.0";
+        return res;
+    }, {});
+
+    class AssetsResolver extends React.Component {
         static propTypes = finalPropTypes;
-        static defaultProps = options.defaultProps || {asset: "1.3.0"};
+        static defaultProps = defaultProps;
 
         render() {
-            const {propName, asset, ...others} = this.props;
-            return React.cloneElement(
+            let finalAssets = {};
+            let passTroughProps = {};
+            let dos = List();
+            Object.keys(this.props).forEach(prop => {
+                if (options.propNames.indexOf(prop) !== -1) {
+                    if (options.withDynamic) {
+                        if (!options.asList) {
+                            dos = dos.push(
+                                this.props[prop].get("dynamic_asset_data_id")
+                            );
+                        } else {
+                            this.props[prop].forEach(a => {
+                                if (!!a)
+                                    dos = dos.push(
+                                        a.get("dynamic_asset_data_id")
+                                    );
+                            });
+                        }
+                    }
+                    finalAssets[prop] = options.asList
+                        ? this.props[prop].filter(a => !!a)
+                        : this.props[prop];
+                } else {
+                    passTroughProps[prop] = this.props[prop];
+                }
+            });
+
+            let wrapped = React.cloneElement(
                 React.Children.only(this.props.children),
-                {...others, [propName]: asset}
+                {...passTroughProps, ...finalAssets}
             );
+
+            if (options.withDynamic)
+                return (
+                    <DynamicObjectResolver dos={dos}>
+                        {wrapped}
+                    </DynamicObjectResolver>
+                );
+            else return wrapped;
         }
     }
-    AssetResolver = BindToChainState(AssetResolver);
+    AssetsResolver = BindToChainState(AssetsResolver);
 
     class Wrapper extends React.Component {
         render() {
-            const asset = this.props[propName];
             return (
-                <AssetResolver
-                    propName={propName}
-                    {...this.props}
-                    asset={asset}
-                >
+                <AssetsResolver {...this.props}>
                     <Component />
-                </AssetResolver>
+                </AssetsResolver>
             );
         }
     }

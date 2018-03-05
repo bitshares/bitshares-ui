@@ -11,7 +11,7 @@ import {List} from "immutable";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import MarketStatsCheck from "./MarketStatsCheck";
-import AssetListWrapper from "./AssetListWrapper";
+import AssetWrapper from "./AssetWrapper";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -324,7 +324,10 @@ class TotalValue extends MarketStatsCheck {
     }
 }
 TotalValue = BindToChainState(TotalValue, {keep_updating: true});
-TotalValue = AssetListWrapper(TotalValue, {propNames: ["fromAssets"]});
+TotalValue = AssetWrapper(TotalValue, {
+    propNames: ["fromAssets"],
+    asList: true
+});
 
 class ValueStoreWrapper extends React.Component {
     render() {
