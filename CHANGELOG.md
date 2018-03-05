@@ -1,4 +1,103 @@
 ---------------------------------------------------------------------
+Release 2.0.180302
+---------------------------------------------------------------------
+New features
+--------
+- #588: New withdrawal modal
+- #1142: New dashboard layout
+- #691: Portfolio pulse on price change
+- #1189: Japanese translation
+- #1002: Visual representation of asset allocation
+
+Bug fixes
+--------
+- Fix for margin positions modal not showing existing positions
+- Improve explorer block fetching, reduce ops displayed
+- Fix bug in Orderbook when horizontal
+- Fix #1240: Reduce the ChainStore dispatch frequency and improve BindToChainState performance
+- Fix #1239: Don't defer market stats fetching
+- Fix Tab color for Nodes #1236
+- #1229: Memoize and cache certain calls in BlocktradesMethods
+- #1179: Open dropdown when clicking on chevron
+- Fix Issue #1179
+- Fix #1220: Force one market direction for stats checks
+- #1149: Fix latency overlapping
+- #1133: Add ability to turn off autoscroll
+- Fix Issue #1195 - Asset Equivalent Price Issue
+- Fix ##1219: Incorrect feed prices break the exchange page
+- #1199: Modal theme issues
+- Fix error in url assignment
+- Fix #1070: Asset search
+- #995: Remove 'sign as owner' in account update
+- Fix #1201: Settings redirection
+
+---------------------------------------------------------------------
+Release 2.0.180215
+---------------------------------------------------------------------
+New features
+--------
+- #686: Browser notifications for transfers
+- #904: Implement Settings UX
+- Page walkthrough guides implemented for #1139
+- #359: Added green pulsing buy button when BTS is under 1 BTS
+- Nodes hiding functionality (#1148)
+- #1091: Display Accounts ID on Accounts Page
+- #1061: Deduct Hidden Assets from Portolio Total and provide Total for Hidden
+- #776 add force settlement offset and delay to asset page (#1123)
+
+Bug fixes
+--------
+- #1130: Contacts page bugs and improvements
+- Fix styles of hidden accounts divider #1130
+- Fix issues with colours after changes in PR #1143
+- Deduct hiddenAssets from Header Account Balance #1061
+- Add valid accounts to AccountSelector typeahead for selection #993
+- #993: Enable reset of search for TypeAhead component
+- Fix #1147: Make sure backup filename is converted to lowercase
+- Help pages for #1107
+- Update steem package, fix #887
+- Remove duplicate API node entry
+- Fix Issue #889
+- Use native font family for active/hidden bold (#1128)
+- Add total balance for Hidden assets table #1061
+- Deduct hidden assets balance from total portfolio balance #1061
+- Enable deposit/withdraw links for cloud model accounts while unlocked
+- Fix issue with FormattedPrice decimals
+- Add minimal deposit warning (#1122)
+- Fix Settlement / Feed Price (#1113)
+- #1099 - Tweak account active/hidden styling
+- Fix some Exchange warnings
+- Fix for Winex gateway not generating addresses properly
+- Implemented updated UI styles
+- Fix for the asset page where unwanted wrapping occurs when there isn't a market description
+- Fixed some more typos in the German translation
+- Added colspan to fix issue with daily budget on active worker proposal
+- Removed round edges from the side of input touching the copy button.
+- Update winex gateway，need to manually get deposit address
+
+---------------------------------------------------------------------
+Release 2.0.180115
+---------------------------------------------------------------------
+New features
+--------
+- Change exchange header #888
+- Show Balance on Margin Positions Tab #994
+- #985 - Move account table out from market dashboard
+- update gdex api service (#1017)
+
+Bug fixes
+--------
+- Electron build - Add context menu for copy/paste support
+- Fix similar names appearing as active in the header dropdown
+- Fix Issue #1001
+- Hide the header unlock icon on small screens
+- Unlock wallet doesn't unlock operations until refresh
+- Updated blckchnd api node info
+- Fix flash of modal and input not being cleared
+- Fix #996: change LTM fee rate for asset creation
+- Fix #991: move the lock button out of the menu area
+
+---------------------------------------------------------------------
 Release 2.0.180108
 ---------------------------------------------------------------------
 New features

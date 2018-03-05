@@ -79,8 +79,9 @@ label, label > span {
 }
 
 button, .button {
-  @include RobotoRegular;
+  @include RobotoCondensed;
   text-transform: uppercase;
+  font-size: 0.875rem;
 }
 
 // .content-block > h3 {
@@ -130,6 +131,10 @@ button, .button {
 }
 
 .table > thead > tr > th {
+  @include RobotoRegular;
+}
+
+.vertical-order-table-cell {
   @include RobotoRegular;
 }
 
@@ -204,4 +209,12 @@ button, .button {
     @include RobotoRegular;
   }
 
+}
+
+.menu-bar li span:nth-of-type(2) {
+  @include RobotoMedium;
+}
+
+strong, b {
+  @include RobotoMedium;
 }

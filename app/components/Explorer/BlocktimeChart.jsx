@@ -103,7 +103,7 @@ class BlocktimeChart extends React.Component {
             tooltip: {
                 shared: false,
                 formatter: function() {
-                    return tooltipLabel + ": " + this.point.y + "s";
+                    return tooltipLabel + ": " + this.y + "s";
                 }
             },
             series: [

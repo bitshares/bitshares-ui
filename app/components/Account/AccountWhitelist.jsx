@@ -219,7 +219,7 @@ class AccountWhitelist extends React.Component {
                                             removeButton
                                         />
                                     </div>
-                                    <div style={{padding: "2rem 0"}}>
+                                    <div style={{padding: "2rem 1rem"}}>
                                         <AccountSelector
                                             label={"account.whitelist.add_black"}
                                             accountName={accountName}

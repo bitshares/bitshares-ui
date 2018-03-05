@@ -1,57 +1,3 @@
-div.fm-outer-container {
-    border-left: 1px solid $border-color;
-    border-top: 1px solid $border-color;
-    margin-bottom: 20px;
-}
-
-@include breakpoint(large) {
-    div.fm-container {
-        > div:first-child() {
-            padding-right: 15px;
-        }
-
-        > div:last-child() {
-            padding-right: 15px;
-        }
-    }
-}
-
-div.fm-container {
-    border: 1px solid $border-color;
-    border-top: none;
-    border-left: none;
-    padding: 1rem 0.5rem;
-    min-width: 13rem;
-   &:hover {
-    background-color: #D8D8D8;
-    cursor: pointer;
-   }
-
-   .fm-title, .fm-volume, .fm-change {
-    font-size: 0.85rem;
-   }
-
-   .fm-name {
-    font-weight: bold;
-    padding-bottom: 10px;
-   }
-
-   .fm-volume, .fm-change {
-    text-transform: lowercase;
-    font-variant: small-caps;
-    padding-top: 6px;
-   }
-}
-
-.Dashboard__intro-text {
-    padding: 20px;
-
-    > p:nth-of-type(2) {
-        padding-bottom: 1.25rem;
-        border-bottom: 1px solid $border-color;
-    }
-}
-
 .SimpleTrade__modal {
     // overflow: auto;
     .Modal__header {
@@ -71,7 +17,6 @@ div.fm-container {
             display: inline-block;
             padding-bottom: 10px;
         }
-
     }
     .SimpleTrade__QR {
         > canvas {
@@ -111,7 +56,7 @@ div.fm-container {
         font-size: 90%;
         width: 100%;
         color: #ff3633;
-        font-weight: bold;
+        @include RobotoMedium;
         > span {
             vertical-align: top;
             top: 0px;
@@ -143,11 +88,11 @@ div.fm-container {
 }
 
 .balance-row.active {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
 }
 
 .balance-row:hover {
-    background-color: #3C3C3C;
+    background-color: #3c3c3c;
 }
 
 .balance-row {
@@ -188,7 +133,8 @@ div.fm-container {
 #send_modal,
 #send_modal_header,
 #send_modal_portfolio,
-#deposit_modal_new {
+#deposit_modal_new,
+#withdraw_modal_new {
     overflow: auto !important;
     max-width: 500px;
 }
@@ -214,7 +160,7 @@ div.button.create-account {
 div.input-wrapper {
     > div.input-right-symbol {
         font-size: 0.9rem;
-        font-weight: bold;
+        @include RobotoMedium;
         position: absolute;
         top: 12px;
         right: 8px;
@@ -226,7 +172,7 @@ div.input-wrapper {
         padding-bottom: 5px;
         > div.float-right {
             clear: both;
-            font-weight: bold;
+            @include RobotoMedium;
         }
     }
 }
@@ -247,25 +193,14 @@ div.input-wrapper {
             padding-top: 1rem;
             padding-left: 2rem;
             padding-right: 2rem;
-            height: 650px;
-
-            .Modal__header {
-                text-align: center;
-                > img {
-                    margin: 0px;
-                    height: 80px;
-                }
-                > p {
-                    font-size: 1.8rem;
-                    font-weight: bold;
-                    margin-bottom: 0px;
-                }
-            }
+            height: auto;
+            min-height: 650px;
 
             .Modal__body {
+                flex: 1;
                 height: 90%;
+                padding-top: 16px;
             }
-
 
             .container-row {
                 padding-bottom: 1rem;
@@ -306,10 +241,8 @@ div.input-wrapper {
                 margin-left: 0.2rem;
                 overflow: "hidden";
 
-
-
                 > .maxDeposit {
-                    font-weight: bold;
+                    @include RobotoMedium;
                     font-size: 0.9rem;
                 }
 
@@ -329,10 +262,29 @@ div.input-wrapper {
                 }
             }
         }
-
-
     }
     .close-button {
         display: none;
     }
+}
+
+#deposit_modal_new,
+#withdraw_modal_new {
+    .Modal__header {
+        text-align: center;
+        > img {
+            margin: 0px;
+            height: 80px;
+        }
+        > p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#withdraw_modal_new {
+    height: 800px;
+    padding: 1rem 2rem 110px 2rem;
 }

@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "alt-react";
+import AccountStore from "stores/AccountStore";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import { isIncognito } from "feature_detect";
@@ -13,7 +15,7 @@ const FlagImage = ({flag, width = 50, height = 50}) => {
      return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
-export default class LoginSelector extends React.Component {
+class LoginSelector extends React.Component {
 
     constructor(props){
         super(props);
@@ -23,6 +25,18 @@ export default class LoginSelector extends React.Component {
             locales: SettingsStore.getState().defaults.locale,
             currentLocale: SettingsStore.getState().settings.get("locale")
         };
+    }
+
+    componentDidUpdate() {
+        const myAccounts = AccountStore.getMyAccounts();
+
+        // use ChildCount to make sure user is on /create-account page except /create-account/*
+        // to prevent redirect when user just registered and need to make backup of wallet or password
+        const childCount = React.Children.count(this.props.children);
+
+        // do redirect to portfolio if user already logged in
+        if(Array.isArray(myAccounts) && myAccounts.length !== 0 && childCount === 0)
+            this.props.router.push("/account/"+this.props.currentAccount);
     }
 
     componentWillMount(){
@@ -36,11 +50,13 @@ export default class LoginSelector extends React.Component {
     }
 
     render() {
+        const translator = require("counterpart");
+        
         const childCount = React.Children.count(this.props.children);
         
         const flagDropdown = <ActionSheet>
             <ActionSheet.Button title="" style={{width:"64px"}}>
-                <a style={{padding: "1rem", border: "none"}} className="button">
+                <a style={{padding: "1rem", border: "none"}} className="button arrow-down">
                     <FlagImage flag={this.state.currentLocale} />
                 </a>
             </ActionSheet.Button>
@@ -65,76 +81,61 @@ export default class LoginSelector extends React.Component {
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
                         <div><img src={logo}/></div>
-                        <Translate content="account.intro_text_title" component="h4"/>
-                        <Translate unsafe content="account.intro_text_1" component="p" />
-                       
-                        <div className="shrink text-center">
-                            <div className="grp-menu-item overflow-visible account-drop-down">
-                                <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}}>
-                                {flagDropdown}
+                        {childCount == 0 ? null :
+                            <div>
+                                <Translate content="header.create_account" component="h4"/>
+                            </div>
+                        }
+
+                        {childCount == 1 ? null :
+                            <div>
+                                <Translate content="account.intro_text_title" component="h4"/>
+                                <Translate unsafe content="account.intro_text_1" component="p" />
+                               
+                                <div className="shrink text-center">
+                                    <div className="grp-menu-item overflow-visible account-drop-down">
+                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}} data-intro={translator.translate("walkthrough.language_flag")}>
+                                        {flagDropdown}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                         
                         {!!childCount ? null :
-                        <div className="button-group">
-                            <label style={{textAlign: "left"}}><Translate content="account.new_user" /><br/>
-                                <Link to="/create-account/password">
-                                    <div className="button">
-                                        <Translate content="header.create_account" />
-                                    </div>
-                                </Link>
-                            </label>
+                        <div className="grid-block account-login-options">
+                            <Link to="/create-account/password" className="button primary" data-intro={translator.translate("walkthrough.create_cloud_wallet")}>
+                                <Translate content="header.create_account" />
+                            </Link>
 
-                            <label style={{textAlign: "left"}}><Translate content="account.existing_user" /><br/>
-                                <div className="button success" onClick={() => {
-                                    SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-                                    WalletUnlockActions.unlock.defer();
-                                }}>
-                                    <Translate content="header.unlock_short" />
-                                </div>
-                            </label>
+                            <span className="button hollow primary" onClick={() => {
+                                SettingsActions.changeSetting({setting: "passwordLogin", value: true});
+                                WalletUnlockActions.unlock.defer();
+                            }}>
+                                <Translate content="header.unlock_short" />
+                            </span>
                         </div>}
 
                         {!!childCount ? null :
-                        <div className="creation-options">
-                            <div><Link to="/wallet/backup/restore"><Translate content="account.restore" /></Link></div>
-                            <div><Link to="/create-account/wallet"><Translate content="account.advanced" /></Link></div>
+                        <div className="additional-account-options">
+                            <p>Optionally, <Link to="/wallet/backup/restore" data-intro={translator.translate("walkthrough.restore_account")}>restore your account</Link> or create an account using the <Link to="/create-account/wallet" data-intro={translator.translate("walkthrough.create_local_wallet")}>advanced form</Link>.</p>
                         </div>}
 
                         {this.props.children}
                     </div>
-                {/* <div className="grid-block no-margin no-padding vertical medium-horizontal no-overflow login-selector">
-
-                    {this.state.incognito ? null : <div className="box small-12 medium-5 large-4" onClick={this.onSelect.bind(this, "wallet")}>
-                        <div className="block-content-header" style={{position: "relative"}}>
-                            <Translate content="wallet.wallet_model" component="h4" />
-                        </div>
-                        <div className="box-content">
-                            <Translate content="wallet.wallet_model_1" component="p" />
-                            <Translate content="wallet.wallet_model_2" component="p" />
-
-                            <Translate unsafe content="wallet.wallet_model_3" component="ul" />
-                        </div>
-                        <div className="button"><Link to="/create-account/wallet"><Translate content="wallet.use_wallet" /></Link></div>
-
-                    </div>}
-
-                    <div className="box small-12 medium-5 large-4 vertical" onClick={this.onSelect.bind(this, "password")}>
-                        <div className="block-content-header" style={{position: "relative"}}>
-                            <Translate content="wallet.password_model" component="h4" />
-                        </div>
-                        <div className="box-content">
-                            <Translate content="wallet.password_model_1" component="p" />
-                            <Translate content="wallet.password_model_2" unsafe component="p" />
-
-                            <Translate unsafe content="wallet.password_model_3" component="ul" />
-                        </div>
-                        <div className="button"><Link to="/create-account/password"><Translate content="wallet.use_password" /></Link></div>
-                    </div>
-                </div> */}
                 </div>
             </div>
         );
     }
 }
+
+export default connect(LoginSelector, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+        };
+    }
+});

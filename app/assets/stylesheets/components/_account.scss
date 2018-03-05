@@ -31,23 +31,27 @@
 }
 
 @keyframes flash {
-  from, 50%, to {
-    opacity: 1;
-  }
+    from,
+    50%,
+    to {
+        opacity: 1;
+    }
 
-  25%, 75% {
-    opacity: 0;
-  }
+    25%,
+    75% {
+        opacity: 0;
+    }
 }
 
 .flash {
-  animation-name: flash;
+    animation-name: flash;
 }
 
 .account-info {
     text-align: center;
     .account-title {
-        transition: opacity 0.25s linear, transform 0.25s linear, color 0.25s linear;
+        transition: opacity 0.25s linear, transform 0.25s linear,
+            color 0.25s linear;
         margin-bottom: 0;
         font-weight: 600;
         &.flash {
@@ -61,7 +65,6 @@
     }
 
     .account-image {
-
         padding-bottom: 1rem;
         > canvas {
             padding: 1rem;
@@ -91,7 +94,7 @@
     > li {
         &.menu-subheader {
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             padding: 1.5rem 0.5rem 0.25rem 0.5rem;
             text-align: center;
             border-bottom: none !important;
@@ -139,42 +142,46 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
-div.hide-selector {
-    padding-bottom: 10px;
-    > div {
-        font-size: 1.15rem;
-        cursor: pointer;
-        &:nth-of-type(n + 2) {
-            padding-left: 10px;
+div.header-selector {
+    > .filter {
+        margin-right: 1rem;
+        input {
+            margin: 0;
+            height: 2rem;
+            padding: 0 10px;
         }
-        &.inactive {
-            color: grey;
+    }
+    > .selector div {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        &:nth-of-type(n + 1) {
+            padding-left: 10px;
+            padding-right: 10px;
+            border-right: 1px solid white; // TODO: FIX
         }
         &:hover.inactive {
             color: inherit;
         }
     }
+    > .selector div:last-of-type {
+        border-right: 0px;
+    }
 }
 
 div.account-tabs {
+    .padding {
+        padding: 20px;
+    }
+
     > div.service-selector {
         margin-bottom: 0;
         border: none;
         overflow-x: hidden;
     }
 
-    div.hide-selector {
-        padding-left: 12px;
-        padding-bottom: 17px;
-    }
-
-    > div.tab-content {
-
-         @include breakpoint(large) {
-             max-width: rem-calc(1200);
-             margin-left: auto !important;
-             margin-right: auto !important;
-         }
+    div.header-selector {
+        padding: 1rem;
     }
 
     &.with-buttons ul.account-overview > li:not(.total-value) > a {
@@ -228,18 +235,19 @@ ul.account-overview {
 }
 
 table.table.dashboard-table {
-    > thead > tr > th:first-of-type, > tbody > tr > td:first-of-type {
+    > thead > tr > th:first-of-type,
+    > tbody > tr > td:first-of-type {
         padding-left: 1.5rem;
     }
     > thead > tr > th {
-        font-weight: 600;
-        font-size: 80%;
+        @include RobotoMedium;
+        font-size: 0.875rem;
         text-align: center;
         border: none;
     }
     > tbody > tr {
         > td {
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             text-align: center;
             border: none;
 
@@ -256,6 +264,11 @@ table.table.dashboard-table {
                     font-size: 90%;
                 }
             }
+
+            &.worker-id {
+                width: 3rem;
+                max-width: 5rem;
+            }
         }
         &.total-value {
             td {
@@ -268,30 +281,30 @@ table.table.dashboard-table {
             td:first-of-type {
                 text-align: left;
                 text-transform: uppercase;
-                font-weight: 600;
+                @include RobotoMedium;
             }
             td:nth-child(3) {
-                font-weight: 600;
+                @include RobotoMedium;
                 text-align: right;
             }
         }
     }
 }
 
-div.hide-selector > div.new-worker-button {
+div.header-selector > div.new-worker-button {
     padding-left: 0;
     padding-top: 10px;
 
     @include breakpoint(medium) {
         padding-top: 0;
         position: relative;
-        top: -10px;
+        top: -20px;
         float: right;
         clear: both;
     }
 }
 
-.shuffle-rev { 
+.shuffle-rev {
     > a span.icon > svg {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
@@ -303,7 +316,10 @@ div.hide-selector > div.new-worker-button {
 }
 
 .trading-pair {
-    > a span.icon > svg { margin-left: 10px; margin-right: 10px; }
+    > a span.icon > svg {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }
 
 div.tabs-container {
@@ -317,7 +333,6 @@ div.tabs-container {
         font-size: 1.2em;
     }
 
-    div.tab-content,
     div.permissions-buttons {
         margin: 0 1rem;
     }
@@ -345,5 +360,12 @@ div.tabs-container {
             min-width: 5rem;
             margin-left: 0.5rem;
         }
+    }
+}
+
+.account-treemap {
+    padding: 10px;
+    text {
+        @include RobotoRegular;
     }
 }

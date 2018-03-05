@@ -1,7 +1,7 @@
 .footer {
+    @include RobotoRegular;
     text-transform: lowercase;
     font-variant: small-caps;
-    font-weight: bold;
     div.footer-status {
         position: absolute;
         right: 0;
@@ -36,8 +36,6 @@
     .logo {
         padding-right: 0.5rem;
         border-right: 1px solid $border-color;
-        font-weight: bold;
-        font-size: 1.1rem;
         line-height: 2rem;
         .version {
             font-size: 75%;
