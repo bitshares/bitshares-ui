@@ -4,7 +4,6 @@ import FormattedAsset from "./FormattedAsset";
 import FloatingDropdown from "./FloatingDropdown";
 import Immutable from "immutable";
 import counterpart from "counterpart";
-import AssetListWrapper from "./AssetListWrapper";
 import AssetWrapper from "./AssetWrapper";
 import utils from "common/utils";
 
@@ -52,7 +51,7 @@ class AssetSelector extends React.Component {
     }
 }
 
-AssetSelector = AssetListWrapper(AssetSelector);
+AssetSelector = AssetWrapper(AssetSelector, {asList: true});
 
 class AmountSelector extends React.Component {
     static propTypes = {

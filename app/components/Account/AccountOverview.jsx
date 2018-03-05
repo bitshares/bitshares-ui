@@ -36,7 +36,6 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import AccountTreemap from "./AccountTreemap";
 import {getBackedCoin} from "common/gatewayUtils";
 import AssetWrapper from "../Utility/AssetWrapper";
-import AssetListWrapper from "../Utility/AssetListWrapper";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -1354,9 +1353,10 @@ class AccountOverview extends React.Component {
     }
 }
 
-AccountOverview = AssetWrapper(AccountOverview, {propName: "core_asset"});
-AccountOverview = AssetListWrapper(AccountOverview, {
-    propNames: ["balanceAssets"]
+AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
+AccountOverview = AssetWrapper(AccountOverview, {
+    propNames: ["balanceAssets"],
+    asList: true
 });
 
 export default class AccountOverviewWrapper extends React.Component {
