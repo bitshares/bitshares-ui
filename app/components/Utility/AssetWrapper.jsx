@@ -111,7 +111,7 @@ function AssetWrapper(Component, options = {}) {
         render() {
             return (
                 <AssetsResolver {...this.props}>
-                    <Component />
+                    <Component ref="bound_component" />
                 </AssetsResolver>
             );
         }
