@@ -1770,8 +1770,7 @@ class Exchange extends React.Component {
                                     {name: "market", index: 2},
                                     {name: "vol", index: 3},
                                     {name: "price", index: 4},
-                                    {name: "change", index: 5},
-                                    {name: "quoteSupply", index: 6}
+                                    {name: "change", index: 5}
                                 ]}
                                 findColumns={[
                                     {name: "market", index: 1},

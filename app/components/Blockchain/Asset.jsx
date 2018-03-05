@@ -304,7 +304,7 @@ class Asset extends React.Component {
 
     renderSummary(asset) {
         // TODO: confidential_supply: 0 USD   [IF NOT ZERO OR NOT DISABLE CONFIDENTIAL]
-        let dynamic = this.props.getDynamicObject(asset.id);
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
 
@@ -532,7 +532,7 @@ class Asset extends React.Component {
     }
 
     renderFeePool(asset) {
-        let dynamic = this.props.getDynamicObject(asset.id);
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
         return (
