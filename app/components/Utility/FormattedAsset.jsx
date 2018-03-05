@@ -3,13 +3,12 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import {PropTypes} from "react";
-import ChainTypes from "./ChainTypes";
-import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
 import {ChainStore} from "bitsharesjs/es";
+import AssetWrapper from "./AssetWrapper";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -23,7 +22,6 @@ import {ChainStore} from "bitsharesjs/es";
 class FormattedAsset extends React.Component {
     static propTypes = {
         amount: PropTypes.any.isRequired,
-        asset: ChainTypes.ChainAsset.isRequired,
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
@@ -168,6 +166,6 @@ class FormattedAsset extends React.Component {
         );
     }
 }
-FormattedAsset = BindToChainState(FormattedAsset);
+FormattedAsset = AssetWrapper(FormattedAsset);
 
 export default FormattedAsset;

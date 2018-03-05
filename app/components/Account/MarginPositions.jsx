@@ -3,6 +3,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AssetListWrapper from "../Utility/AssetListWrapper";
 import AssetName from "../Utility/AssetName";
 import BorrowModal from "../Modal/BorrowModal";
 import WalletApi from "api/WalletApi";
@@ -21,16 +22,15 @@ import Immutable from "immutable";
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
 /**
- *  Given a collateral position object (call order) and account, 
+ *  Given a collateral position object (call order) and account,
  *  display it in a pretty way
-*
+ *
  *  Expects property, 'object' which should be a call order id
- *  and another property called 'account' which should be an 
+ *  and another property called 'account' which should be an
  *  account.
  */
 
 class MarginPosition extends React.Component {
-
     static propTypes = {
         debtAsset: ChainTypes.ChainAsset.isRequired,
         collateralAsset: ChainTypes.ChainAsset.isRequired
@@ -46,7 +46,9 @@ class MarginPosition extends React.Component {
 
     _onUpdatePosition(e) {
         e.preventDefault();
-        let ref = "cp_modal_" + this.props.object.getIn(["call_price", "quote", "asset_id"]);
+        let ref =
+            "cp_modal_" +
+            this.props.object.getIn(["call_price", "quote", "asset_id"]);
         this.refs[ref].show();
     }
 
@@ -55,41 +57,53 @@ class MarginPosition extends React.Component {
         let tr = WalletApi.new_transaction();
 
         tr.add_type_operation("call_order_update", {
-            "fee": {
+            fee: {
                 amount: 0,
                 asset_id: 0
             },
-            "funding_account": this.props.object.get("borrower"),
-            "delta_collateral": {
-                "amount": -this.props.object.get("collateral"),
-                "asset_id": this.props.object.getIn(["call_price", "base", "asset_id"])
+            funding_account: this.props.object.get("borrower"),
+            delta_collateral: {
+                amount: -this.props.object.get("collateral"),
+                asset_id: this.props.object.getIn([
+                    "call_price",
+                    "base",
+                    "asset_id"
+                ])
             },
-            "delta_debt": {
-                "amount": -this.props.object.get("debt"),
-                "asset_id": this.props.object.getIn(["call_price", "quote", "asset_id"])
-            }});
+            delta_debt: {
+                amount: -this.props.object.get("debt"),
+                asset_id: this.props.object.getIn([
+                    "call_price",
+                    "quote",
+                    "asset_id"
+                ])
+            }
+        });
 
         WalletDb.process_transaction(tr, null, true);
     }
 
-    // how many units of the debt asset the borrower has 
-    // in his/her wallet. This has nothing to do with 
+    // how many units of the debt asset the borrower has
+    // in his/her wallet. This has nothing to do with
     // how many of the asset the borrower has borrowed.
     _getBalance() {
         let account = this.props.account;
         // the debt asset id which we want to display
-        let row_asset_id = 
-            this.props.object.getIn(["call_price", "quote", "asset_id"]);
+        let row_asset_id = this.props.object.getIn([
+            "call_price",
+            "quote",
+            "asset_id"
+        ]);
 
         let account_balances = account.get("balances");
 
         let balance = 0;
 
-        // really this iteration should be called once, and 
+        // really this iteration should be called once, and
         // each asset_id matched once with its balance
 
-        // for every debt the account has, we iterate 
-        // through every balance the user has 
+        // for every debt the account has, we iterate
+        // through every balance the user has
         if (account_balances) {
             account_balances.forEach((a, asset_type) => {
                 if (asset_type == row_asset_id) {
@@ -101,34 +115,57 @@ class MarginPosition extends React.Component {
             });
         }
 
-        // it's possible that the account doesn't hold 
+        // it's possible that the account doesn't hold
         // any of the asset here
         return balance;
     }
 
     _getFeedPrice() {
-
         if (!this.props) {
             return 1;
         }
 
-        return 1 / utils.get_asset_price(
-            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"]),
-            this.props.collateralAsset,
-            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"]),
-            this.props.debtAsset
+        return (
+            1 /
+            utils.get_asset_price(
+                this.props.debtAsset.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "settlement_price",
+                    "quote",
+                    "amount"
+                ]),
+                this.props.collateralAsset,
+                this.props.debtAsset.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "settlement_price",
+                    "base",
+                    "amount"
+                ]),
+                this.props.debtAsset
+            )
         );
     }
 
     _getCollateralRatio() {
         const co = this.props.object.toJS();
-        const c = utils.get_asset_amount(co.collateral, this.props.collateralAsset);
+        const c = utils.get_asset_amount(
+            co.collateral,
+            this.props.collateralAsset
+        );
         const d = utils.get_asset_amount(co.debt, this.props.debtAsset);
         return c / (d / this._getFeedPrice());
     }
 
     _getMR() {
-        return this.props.debtAsset.getIn(["bitasset", "current_feed", "maintenance_collateral_ratio"]) / 1000;
+        return (
+            this.props.debtAsset.getIn([
+                "bitasset",
+                "current_feed",
+                "maintenance_collateral_ratio"
+            ]) / 1000
+        );
     }
 
     _getStatusClass() {
@@ -138,7 +175,7 @@ class MarginPosition extends React.Component {
         if (isNaN(cr)) return null;
         if (cr < mr) {
             return "danger";
-        } else if (cr < (mr + 0.5)) {
+        } else if (cr < mr + 0.5) {
             return "warning";
         } else {
             return "";
@@ -174,20 +211,30 @@ class MarginPosition extends React.Component {
         const statusClass = this._getStatusClass();
 
         const assetDetailURL = `/asset/${debtAsset.get("symbol")}`;
-        const marketURL = `/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`;
+        const marketURL = `/market/${debtAsset.get(
+            "symbol"
+        )}_${collateralAsset.get("symbol")}`;
         const assetInfoLinks = (
-        <ul>
-            <li>
-                <a href={assetDetailURL} onClick={this._onNavigate.bind(this, assetDetailURL)}>
-                    <Translate content="account.asset_details"/>
-                </a>
-            </li>
-            <li>
-                <a href={marketURL} onClick={this._onNavigate.bind(this, marketURL)}>
-                    <AssetName name={debtAsset.get("symbol")} /> : <AssetName name={collateralAsset.get("symbol")} />
-                </a>
-            </li>
-        </ul>);
+            <ul>
+                <li>
+                    <a
+                        href={assetDetailURL}
+                        onClick={this._onNavigate.bind(this, assetDetailURL)}
+                    >
+                        <Translate content="account.asset_details" />
+                    </a>
+                </li>
+                <li>
+                    <a
+                        href={marketURL}
+                        onClick={this._onNavigate.bind(this, marketURL)}
+                    >
+                        <AssetName name={debtAsset.get("symbol")} /> :{" "}
+                        <AssetName name={collateralAsset.get("symbol")} />
+                    </a>
+                </li>
+            </ul>
+        );
 
         return (
             <tr className="margin-row">
@@ -198,11 +245,11 @@ class MarginPosition extends React.Component {
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
-                       amount={balance}
-                       asset={co.call_price.quote.asset_id}
-                       assetInfo={assetInfoLinks}
-                       hide_asset
-                    />                  
+                        amount={balance}
+                        asset={co.call_price.quote.asset_id}
+                        assetInfo={assetInfoLinks}
+                        hide_asset
+                    />
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
@@ -219,36 +266,66 @@ class MarginPosition extends React.Component {
                         asset={co.call_price.base.asset_id}
                     />
                 </td>
-                <td data-place="bottom" data-tip={this._getCRTip()} className={"center-content "+ statusClass} >{utils.format_number(cr, 2)}</td>
-                <td style={alignRight} >
+                <td
+                    data-place="bottom"
+                    data-tip={this._getCRTip()}
+                    className={"center-content " + statusClass}
+                >
+                    {utils.format_number(cr, 2)}
+                </td>
+                <td style={alignRight}>
                     <TotalBalanceValue
                         noTip
                         balances={List()}
-                        debt={{[debtAsset.get("id")] : co.debt}}
-                        collateral={{[collateralAsset.get("id")]: parseInt(co.collateral, 10)}}
+                        debt={{[debtAsset.get("id")]: co.debt}}
+                        collateral={{
+                            [collateralAsset.get("id")]: parseInt(
+                                co.collateral,
+                                10
+                            )
+                        }}
                         hide_asset
                     />
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
                     <FormattedPrice
-                        base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
-                        quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                        base_amount={co.call_price.base.amount}
+                        base_asset={co.call_price.base.asset_id}
+                        quote_amount={co.call_price.quote.amount}
+                        quote_asset={co.call_price.quote.asset_id}
                         hide_symbols
                     />
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
                     <FormattedPrice
-                        base_amount={debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"])}
+                        base_amount={debtAsset.getIn([
+                            "bitasset",
+                            "current_feed",
+                            "settlement_price",
+                            "base",
+                            "amount"
+                        ])}
                         base_asset={co.call_price.quote.asset_id}
-                        quote_amount={debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
+                        quote_amount={debtAsset.getIn([
+                            "bitasset",
+                            "current_feed",
+                            "settlement_price",
+                            "quote",
+                            "amount"
+                        ])}
                         quote_asset={co.call_price.base.asset_id}
                         hide_symbols
                     />
                 </td>
-                <td className={"center-content column-hide-small"} style={alignLeft}>
+                <td
+                    className={"center-content column-hide-small"}
+                    style={alignLeft}
+                >
                     <FormattedPrice
-                        base_amount={co.call_price.base.amount} base_asset={co.call_price.base.asset_id}
-                        quote_amount={co.call_price.quote.amount} quote_asset={co.call_price.quote.asset_id}
+                        base_amount={co.call_price.base.amount}
+                        base_asset={co.call_price.base.asset_id}
+                        quote_amount={co.call_price.quote.amount}
+                        quote_asset={co.call_price.quote.asset_id}
                         hide_value
                     />
                 </td>
@@ -257,18 +334,26 @@ class MarginPosition extends React.Component {
                 <td>
                     <div
                         data-place="left"
-                        data-tip={counterpart.translate("tooltip.update_position")}
+                        data-tip={counterpart.translate(
+                            "tooltip.update_position"
+                        )}
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Icon name="adjust" className="icon-14px rotate90" />
+                            <Icon
+                                name="adjust"
+                                className="icon-14px rotate90"
+                            />
                         </a>
                     </div>
                 </td>
                 <td>
                     <div
                         data-place="left"
-                        data-tip={counterpart.translate("tooltip.close_position", {amount: d, asset: debtAsset.get("symbol")})}
+                        data-tip={counterpart.translate(
+                            "tooltip.close_position",
+                            {amount: d, asset: debtAsset.get("symbol")}
+                        )}
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onClosePosition.bind(this)}>
@@ -280,11 +365,15 @@ class MarginPosition extends React.Component {
                             ref={"cp_modal_" + co.call_price.quote.asset_id}
                             modalId={"cp_modal_" + co.call_price.quote.asset_id}
                             quote_asset={co.call_price.quote.asset_id}
-                            backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                            backing_asset={debtAsset.getIn([
+                                "bitasset",
+                                "options",
+                                "short_backing_asset"
+                            ])}
                             account={this.props.account}
-                        />) : null}
+                        />
+                    ) : null}
                 </td>
-
             </tr>
         );
     }
@@ -301,18 +390,22 @@ class MarginPositionWrapper extends React.Component {
         let debtAsset = object.getIn(["call_price", "quote", "asset_id"]);
         let collateralAsset = object.getIn(["call_price", "base", "asset_id"]);
 
-        return <MarginPosition 
-                    debtAsset={debtAsset} 
-                    collateralAsset={collateralAsset} 
-                    account={account}
-                    {...this.props} />;
+        return (
+            <MarginPosition
+                debtAsset={debtAsset}
+                collateralAsset={collateralAsset}
+                account={account}
+                {...this.props}
+            />
+        );
     }
 }
 
-MarginPositionWrapper = BindToChainState(MarginPositionWrapper, {keep_updating: true});
+MarginPositionWrapper = BindToChainState(MarginPositionWrapper, {
+    keep_updating: true
+});
 
 class MarginPositionPlaceHolder extends React.Component {
-
     static propTypes = {
         debtAsset: ChainTypes.ChainAsset.isRequired,
         collateralAsset: ChainTypes.ChainAsset.isRequired
@@ -333,16 +426,30 @@ class MarginPositionPlaceHolder extends React.Component {
     }
 
     _getFeedPrice() {
-
         if (!this.props) {
             return 1;
         }
 
-        return 1 / utils.get_asset_price(
-            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"]),
-            this.props.collateralAsset,
-            this.props.debtAsset.getIn(["bitasset", "current_feed", "settlement_price", "base", "amount"]),
-            this.props.debtAsset
+        return (
+            1 /
+            utils.get_asset_price(
+                this.props.debtAsset.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "settlement_price",
+                    "quote",
+                    "amount"
+                ]),
+                this.props.collateralAsset,
+                this.props.debtAsset.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "settlement_price",
+                    "base",
+                    "amount"
+                ]),
+                this.props.debtAsset
+            )
         );
     }
 
@@ -363,11 +470,11 @@ class MarginPositionPlaceHolder extends React.Component {
 
         let balance = 0;
 
-        // really this iteration should be called once, and 
+        // really this iteration should be called once, and
         // each asset_id matched once with its balance
 
-        // for every debt the account has, we iterate 
-        // through every balance the user has 
+        // for every debt the account has, we iterate
+        // through every balance the user has
         if (account_balances) {
             account_balances.forEach((a, asset_type) => {
                 if (asset_type == row_asset_id) {
@@ -380,20 +487,30 @@ class MarginPositionPlaceHolder extends React.Component {
         }
 
         const assetDetailURL = `/asset/${debtAsset.get("symbol")}`;
-        const marketURL = `/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`;
+        const marketURL = `/market/${debtAsset.get(
+            "symbol"
+        )}_${collateralAsset.get("symbol")}`;
         const assetInfoLinks = (
-        <ul>
-            <li>
-                <a href={assetDetailURL} onClick={this._onNavigate.bind(this, assetDetailURL)}>
-                    <Translate content="account.asset_details"/>
-                </a>
-            </li>
-            <li>
-                <a href={marketURL} onClick={this._onNavigate.bind(this, marketURL)}>
-                    <AssetName name={debtAsset.get("symbol")} /> : <AssetName name={collateralAsset.get("symbol")} />
-                </a>
-            </li>
-        </ul>);
+            <ul>
+                <li>
+                    <a
+                        href={assetDetailURL}
+                        onClick={this._onNavigate.bind(this, assetDetailURL)}
+                    >
+                        <Translate content="account.asset_details" />
+                    </a>
+                </li>
+                <li>
+                    <a
+                        href={marketURL}
+                        onClick={this._onNavigate.bind(this, marketURL)}
+                    >
+                        <AssetName name={debtAsset.get("symbol")} /> :{" "}
+                        <AssetName name={collateralAsset.get("symbol")} />
+                    </a>
+                </li>
+            </ul>
+        );
 
         return (
             <tr className="margin-row">
@@ -404,11 +521,11 @@ class MarginPositionPlaceHolder extends React.Component {
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
-                       amount={balance}
-                       asset={debtAsset.get("id")}
-                       assetInfo={assetInfoLinks}
-                       hide_asset
-                    />                  
+                        amount={balance}
+                        asset={debtAsset.get("id")}
+                        assetInfo={assetInfoLinks}
+                        hide_asset
+                    />
                 </td>
                 <td style={alignRight}>
                     <FormattedAsset
@@ -425,44 +542,47 @@ class MarginPositionPlaceHolder extends React.Component {
                         asset={collateralAsset.get("id")}
                     />
                 </td>
-                <td></td>
-                <td style={alignRight} >
-
-                </td>
-                <td style={alignRight} className={"column-hide-small"}>
-
-                </td>
-                <td style={alignRight} className={"column-hide-small"}>
-
-                </td>
-                <td className={"center-content column-hide-small"} style={alignLeft}>
-
-                </td>
+                <td />
+                <td style={alignRight} />
+                <td style={alignRight} className={"column-hide-small"} />
+                <td style={alignRight} className={"column-hide-small"} />
+                <td
+                    className={"center-content column-hide-small"}
+                    style={alignLeft}
+                />
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
 
                 <td>
                     <div
                         data-place="left"
-                        data-tip={counterpart.translate("tooltip.update_position")}
+                        data-tip={counterpart.translate(
+                            "tooltip.update_position"
+                        )}
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Icon name="adjust" className="icon-14px rotate90" />
+                            <Icon
+                                name="adjust"
+                                className="icon-14px rotate90"
+                            />
                         </a>
                     </div>
                 </td>
                 <td>
-
                     {debtAsset ? (
                         <BorrowModal
                             ref={"cp_modal_" + debtAsset.get("id")}
                             modalId={"cp_modal_" + debtAsset.get("id")}
                             quote_asset={debtAsset.get("id")}
-                            backing_asset={debtAsset.getIn(["bitasset", "options", "short_backing_asset"])}
+                            backing_asset={debtAsset.getIn([
+                                "bitasset",
+                                "options",
+                                "short_backing_asset"
+                            ])}
                             account={this.props.account}
-                        />) : null}
+                        />
+                    ) : null}
                 </td>
-
             </tr>
         );
     }
@@ -477,8 +597,8 @@ class PlaceHolderWrapper extends React.Component {
     };
 
     static defaultProps = {
-        optionals: Immutable.List(["1.3.103", "1.3.113", "1.3.120", "1.3.121", "1.3.958", "1.3.1325", "1.3.1362", "1.3.105","1.3.106",])
-    }
+        optionals: Immutable.List()
+    };
 
     render() {
         let {account, objects, optionals} = this.props;
@@ -488,7 +608,11 @@ class PlaceHolderWrapper extends React.Component {
         objects.forEach(object => {
             if (object) {
                 let index = optionals.findIndex(o => {
-                    return o && o.get("id") === object.getIn(["call_price", "quote", "asset_id"]);
+                    return (
+                        o &&
+                        o.get("id") ===
+                            object.getIn(["call_price", "quote", "asset_id"])
+                    );
                 });
                 if (index !== -1) {
                     optionals.splice(index, 1);
@@ -498,64 +622,130 @@ class PlaceHolderWrapper extends React.Component {
 
         if (!optionals.length) return null;
         let rows = optionals.map(a => {
-            return <MarginPositionPlaceHolder 
-                        key={a.get("id")} 
-                        debtAsset={a.get("id")} 
-                        collateralAsset={a.getIn(["bitasset", "options", "short_backing_asset"])} 
-                        account = {account}
-                        {...this.props} />;
+            return (
+                <MarginPositionPlaceHolder
+                    key={a.get("id")}
+                    debtAsset={a.get("id")}
+                    collateralAsset={a.getIn([
+                        "bitasset",
+                        "options",
+                        "short_backing_asset"
+                    ])}
+                    account={account}
+                    {...this.props}
+                />
+            );
         });
 
         return <tbody>{rows}</tbody>;
     }
 }
 
-PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper, {keep_updating: true});
+PlaceHolderWrapper = AssetListWrapper(PlaceHolderWrapper, {
+    propNames: ["optionals"],
+    defaultProps: {
+        optionals: [
+            "1.3.103",
+            "1.3.113",
+            "1.3.120",
+            "1.3.121",
+            "1.3.958",
+            "1.3.1325",
+            "1.3.1362",
+            "1.3.105",
+            "1.3.106"
+        ]
+    }
+});
 
-const CollateralTable = ({callOrders, account, className, children, preferredUnit}) => {
-
+const CollateralTable = ({
+    callOrders,
+    account,
+    className,
+    children,
+    preferredUnit
+}) => {
     return (
         <table className={"table table-hover " + className}>
             <thead>
-            <tr>
-                <th style={alignLeft}><Translate content="explorer.asset.title" /></th>
-                <th style={alignRight}><Translate content="exchange.balance" /></th>
-                <th style={alignRight}><Translate content="transaction.borrow_amount" /></th>
-                <th style={alignRight} className="column-hide-medium"><Translate content="transaction.collateral" /></th>
-                <th>
-                    <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.coll_ratio")}>
-                        <Translate content="borrow.coll_ratio" />
-                    </div>
-                </th>
-                <th>
-                    <TranslateWithLinks
-                        noLink
-                        string="account.total"
-                        keys={[
-                            {type: "asset", value: preferredUnit, arg: "asset"}
-                        ]}
-                    />
-                </th>
-                <th style={alignRight} className="column-hide-small">
-                    <div className="tooltip inline-block" data-place="top" data-tip={counterpart.translate("tooltip.call_price")}>
-                        <Translate content="exchange.call" />
-                    </div>
-                </th>
-                <th style={alignRight} className="column-hide-small">
-                    <Translate content="exchange.price" />
-                </th>
-                <th className="column-hide-small" style={alignLeft}><Translate content="explorer.assets.units" /></th>
-                <th><Translate content="borrow.adjust_short" /></th>
-                <th><Translate content="transfer.close" /></th>
-            </tr>
+                <tr>
+                    <th style={alignLeft}>
+                        <Translate content="explorer.asset.title" />
+                    </th>
+                    <th style={alignRight}>
+                        <Translate content="exchange.balance" />
+                    </th>
+                    <th style={alignRight}>
+                        <Translate content="transaction.borrow_amount" />
+                    </th>
+                    <th style={alignRight} className="column-hide-medium">
+                        <Translate content="transaction.collateral" />
+                    </th>
+                    <th>
+                        <div
+                            className="tooltip inline-block"
+                            data-place="top"
+                            data-tip={counterpart.translate(
+                                "tooltip.coll_ratio"
+                            )}
+                        >
+                            <Translate content="borrow.coll_ratio" />
+                        </div>
+                    </th>
+                    <th>
+                        <TranslateWithLinks
+                            noLink
+                            string="account.total"
+                            keys={[
+                                {
+                                    type: "asset",
+                                    value: preferredUnit,
+                                    arg: "asset"
+                                }
+                            ]}
+                        />
+                    </th>
+                    <th style={alignRight} className="column-hide-small">
+                        <div
+                            className="tooltip inline-block"
+                            data-place="top"
+                            data-tip={counterpart.translate(
+                                "tooltip.call_price"
+                            )}
+                        >
+                            <Translate content="exchange.call" />
+                        </div>
+                    </th>
+                    <th style={alignRight} className="column-hide-small">
+                        <Translate content="exchange.price" />
+                    </th>
+                    <th className="column-hide-small" style={alignLeft}>
+                        <Translate content="explorer.assets.units" />
+                    </th>
+                    <th>
+                        <Translate content="borrow.adjust_short" />
+                    </th>
+                    <th>
+                        <Translate content="transfer.close" />
+                    </th>
+                </tr>
             </thead>
             <tbody>
-                { callOrders.sort((a, b) => (a.split(".")[2] - b.split(".")[2])).map(id => <MarginPositionWrapper key={id} object={id} account={account}/>) }
+                {callOrders
+                    .sort((a, b) => a.split(".")[2] - b.split(".")[2])
+                    .map(id => (
+                        <MarginPositionWrapper
+                            key={id}
+                            object={id}
+                            account={account}
+                        />
+                    ))}
             </tbody>
-            <PlaceHolderWrapper account={account} objects={Immutable.List(callOrders)} />
-            <tbody>
-                { children }
-            </tbody>
+            <PlaceHolderWrapper
+                account={account}
+                objects={Immutable.List(callOrders)}
+            />
+            <tbody>{children}</tbody>
         </table>
     );
 };

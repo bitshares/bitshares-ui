@@ -16,9 +16,7 @@ import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import {Link} from "react-router/es";
-import ChainTypes from "../Utility/ChainTypes";
 import EquivalentPrice from "../Utility/EquivalentPrice";
-import BindToChainState from "../Utility/BindToChainState";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
@@ -37,17 +35,10 @@ import PulseIcon from "../Icon/PulseIcon";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import AccountTreemap from "./AccountTreemap";
 import {getBackedCoin} from "common/gatewayUtils";
+import AssetWrapper from "../Utility/AssetWrapper";
+import AssetListWrapper from "../Utility/AssetListWrapper";
 
 class AccountOverview extends React.Component {
-    static propTypes = {
-        balanceAssets: ChainTypes.ChainAssetsList,
-        core_asset: ChainTypes.ChainAsset.isRequired
-    };
-
-    static defaultProps = {
-        core_asset: "1.3.0"
-    };
-
     constructor(props) {
         super();
         this.state = {
@@ -1363,7 +1354,10 @@ class AccountOverview extends React.Component {
     }
 }
 
-AccountOverview = BindToChainState(AccountOverview);
+AccountOverview = AssetWrapper(AccountOverview, {propName: "core_asset"});
+AccountOverview = AssetListWrapper(AccountOverview, {
+    propNames: ["balanceAssets"]
+});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {
