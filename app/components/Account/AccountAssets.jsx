@@ -233,7 +233,9 @@ class AccountAssets extends React.Component {
                     desc = desc.substr(0, 100) + "...";
                 }
 
-                const dynamicObject = this.props.getDynamicObject(asset.id);
+                const dynamicObject = this.props.getDynamicObject(
+                    asset.dynamic_asset_data_id
+                );
 
                 return (
                     <tr key={asset.symbol}>

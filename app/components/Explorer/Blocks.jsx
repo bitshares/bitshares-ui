@@ -187,8 +187,9 @@ class Blocks extends React.Component {
             coreAsset
         } = this.props;
         let {blocksHeight, operationsHeight} = this.state;
-        const dynamicObject = this.props.getDynamicObject("1.3.0");
-
+        const dynamicObject = this.props.getDynamicObject(
+            coreAsset.get("dynamic_asset_data_id")
+        );
         let blocks = null,
             transactions = null;
         let headBlock = null;
@@ -434,11 +435,15 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h3 className="txtlabel">
-                                <FormattedAsset
-                                    amount={dynamicObject.get("current_supply")}
-                                    asset={coreAsset.get("id")}
-                                    decimalOffset={5}
-                                />
+                                {dynamicObject ? (
+                                    <FormattedAsset
+                                        amount={dynamicObject.get(
+                                            "current_supply"
+                                        )}
+                                        asset={coreAsset.get("id")}
+                                        decimalOffset={5}
+                                    />
+                                ) : null}
                             </h3>
                         </div>
                     </div>
@@ -483,13 +488,15 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h3 className="txtlabel">
-                                <FormattedAsset
-                                    amount={dynamicObject.get(
-                                        "confidential_supply"
-                                    )}
-                                    asset={coreAsset.get("id")}
-                                    decimalOffset={5}
-                                />
+                                {dynamicObject ? (
+                                    <FormattedAsset
+                                        amount={dynamicObject.get(
+                                            "confidential_supply"
+                                        )}
+                                        asset={coreAsset.get("id")}
+                                        decimalOffset={5}
+                                    />
+                                ) : null}
                             </h3>
                         </div>
                     </div>

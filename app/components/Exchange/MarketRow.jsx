@@ -68,8 +68,12 @@ class MarketRow extends React.Component {
 
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + ":" + base.get("symbol");
-        let dynamic_data = this.props.getDynamicObject(quote.get("id"));
-        let base_dynamic_data = this.props.getDynamicObject(base.get("id"));
+        let dynamic_data = this.props.getDynamicObject(
+            quote.get("dynamic_asset_data_id")
+        );
+        let base_dynamic_data = this.props.getDynamicObject(
+            base.get("dynamic_asset_data_id")
+        );
 
         let price = utils.convertPrice(quote, base);
 

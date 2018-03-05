@@ -18,9 +18,9 @@ class DynamicObjectResolver extends React.Component {
         this.getDynamicObject = this.getDynamicObject.bind(this);
     }
 
-    getDynamicObject(assetID) {
+    getDynamicObject(id) {
         return this.props.dos.find(a => {
-            return a && a.get("asset_id") === assetID;
+            return a && a.get("id") === id;
         });
     }
 

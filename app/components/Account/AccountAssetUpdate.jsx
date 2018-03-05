@@ -821,7 +821,9 @@ class AccountAssetUpdate extends React.Component {
             </span>
         );
 
-        const dynamicObject = this.props.getDynamicObject(asset.get("id"));
+        const dynamicObject = this.props.getDynamicObject(
+            asset.get("dynamic_asset_data_id")
+        );
         let unclaimedBalance = dynamicObject
             ? dynamicObject.get("accumulated_fees")
             : 0;
