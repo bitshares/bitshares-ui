@@ -18,7 +18,6 @@ class DepositWithdrawAssetSelector extends React.Component {
         const {props} = this;
         const {include} = props;
         let idMap = {};
-        console.log('props are', props);
 
         let getCoinOption = item => {
             /* Gateway Specific Settings */
